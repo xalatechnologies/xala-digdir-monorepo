@@ -112,7 +112,7 @@ async function importSeeds(): Promise<void> {
 
     // Translations
     console.log('   └─ Translations...');
-    for (const trans of translationsData.translations || []) {
+    for (const trans of translationsData) {
       await sql`
         INSERT INTO platform.translations (
           tenant_id, namespace, key, language, value, is_system_default

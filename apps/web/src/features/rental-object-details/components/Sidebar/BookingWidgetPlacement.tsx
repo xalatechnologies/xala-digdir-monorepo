@@ -10,8 +10,10 @@ import { Heading, Paragraph, Button } from '@xala/ds';
 import { bookingService, auditService, type CreateBookingDTO, useOrganizations } from '@digilist/client-sdk';
 import type { BookingConfig } from '../../types';
 import { BookingDialog, type BookingFormData, type BookingSlot } from '../BookingDialog';
+import { CalendarSection } from '../CalendarSection';
 import { useAuth } from '../../../../hooks/useAuth';
 import { useT } from '@xala/i18n';
+import type { CalendarSelection, CalendarCell } from '@xala/ds';
 
 import { BookingStepperHeader, type BookingStep } from './components/BookingStepperHeader';
 import { BookingCartSidebar, type SlotDetail } from './components/BookingCartSidebar';
@@ -134,6 +136,31 @@ const DEFAULT_OPENING_HOURS: Record<number, OpeningHours> = {
   5: { open: '08:00', close: '21:00' },
   6: { open: '10:00', close: '18:00' },
 };
+
+// =============================================================================
+// Booking Mode to Calendar Mode Mapping
+// =============================================================================
+
+/**
+ * Maps booking mode to calendar display mode
+ */
+function getCalendarModeForBookingMode(bookingMode: BookingMode): 'TIME_SLOTS' | 'ALL_DAY' | 'MULTI_DAY' {
+  switch (bookingMode) {
+    case 'SINGLE_SLOT':
+    case 'RECURRING':
+    case 'IN_GAME':
+    case 'ACTIVITY_REGISTRATION':
+      return 'TIME_SLOTS';
+    case 'RANGE':
+      return 'MULTI_DAY';
+    case 'ALL_DAY':
+      return 'ALL_DAY';
+    case 'SEASON_RENTAL':
+      return 'ALL_DAY'; // Season rentals use day-based selection
+    default:
+      return 'TIME_SLOTS';
+  }
+}
 
 // =============================================================================
 // Helper Functions
@@ -261,6 +288,20 @@ export function BookingWidgetPlacement({
 
   // Booking mode state
   const [bookingMode, setBookingMode] = React.useState<BookingMode>(availableBookingModes[0] ?? 'SINGLE_SLOT');
+  
+  // Calendar selection state (for CalendarSection component)
+  const [calendarSelection, setCalendarSelection] = React.useState<CalendarSelection | undefined>(undefined);
+  
+  // Range selection state (for RANGE mode)
+  const [rangeSelection, setRangeSelection] = React.useState<{
+    startDate: string;
+    endDate: string;
+    startTime?: string;
+    endTime?: string;
+  } | null>(null);
+  
+  // All-day selection state (for ALL_DAY mode)
+  const [allDaySelection, setAllDaySelection] = React.useState<string[]>([]); // Array of ISO date strings
 
   // Recurring booking state
   const [recurringPattern, setRecurringPattern] = React.useState<RecurringPattern>({
@@ -370,31 +411,89 @@ export function BookingWidgetPlacement({
     setDialogOpen(true);
   };
 
+  // Handle calendar selection from CalendarSection component
+  const handleCalendarSelection = React.useCallback((selection: CalendarSelection) => {
+    setCalendarSelection(selection);
+    
+    if (bookingMode === 'SINGLE_SLOT') {
+      // For single slot mode, open drawer when a slot is selected
+      if (selection.cells.length > 0) {
+        const firstCell = selection.cells[0];
+        if (firstCell) {
+          const startDate = new Date(firstCell.start);
+          const startTime = startDate.toTimeString().slice(0, 5); // HH:mm
+          const endDate = new Date(firstCell.end);
+          const endTime = endDate.toTimeString().slice(0, 5); // HH:mm
+          
+          setSelectedSlotForDialog({
+            date: startDate,
+            startTime,
+            endTime,
+          });
+          setDialogOpen(true);
+        }
+      }
+    } else if (bookingMode === 'RANGE' && selection.range) {
+      // For range mode, store the range selection
+      setRangeSelection({
+        startDate: selection.range.startDate,
+        endDate: selection.range.endDate,
+        startTime: selection.range.startTime,
+        endTime: selection.range.endTime,
+      });
+      // Open drawer for range details
+      if (selection.range.startDate && selection.range.endDate) {
+        setDialogOpen(true);
+      }
+    } else if (bookingMode === 'ALL_DAY' && selection.cells.length > 0) {
+      // For all-day mode, collect selected dates
+      const selectedDates = selection.cells.map(cell => {
+        const date = new Date(cell.start);
+        return date.toISOString().split('T')[0]!;
+      });
+      setAllDaySelection(selectedDates);
+      // Open drawer if dates are selected
+      if (selectedDates.length > 0) {
+        setDialogOpen(true);
+      }
+    }
+  }, [bookingMode]);
+
   const handleDialogConfirm = (data: BookingFormData): void => {
-    if (!selectedSlotForDialog) return;
+    if (bookingMode === 'SINGLE_SLOT' && selectedSlotForDialog) {
+      const dayIndex = Math.floor(
+        (selectedSlotForDialog.date.getTime() - weekStart.getTime()) / (1000 * 60 * 60 * 24)
+      );
+      const slotKey = `${dayIndex}-${selectedSlotForDialog.startTime}`;
 
-    const dayIndex = Math.floor(
-      (selectedSlotForDialog.date.getTime() - weekStart.getTime()) / (1000 * 60 * 60 * 24)
-    );
-    const slotKey = `${dayIndex}-${selectedSlotForDialog.startTime}`;
+      // Calculate duration from startTime and endTime
+      const [startH, startM] = data.startTime.split(':').map(Number);
+      const [endH, endM] = data.endTime.split(':').map(Number);
+      const duration = ((endH ?? 0) * 60 + (endM ?? 0)) - ((startH ?? 0) * 60 + (startM ?? 0));
 
-    // Calculate duration from startTime and endTime
-    const [startH, startM] = data.startTime.split(':').map(Number);
-    const [endH, endM] = data.endTime.split(':').map(Number);
-    const duration = ((endH ?? 0) * 60 + (endM ?? 0)) - ((startH ?? 0) * 60 + (startM ?? 0));
-
-    setSelectedSlots(prev => new Set(prev).add(slotKey));
-    setSlotDetails(prev => ({
-      ...prev,
-      [slotKey]: {
-        duration: duration > 0 ? duration : 60,
-        purpose: data.purpose,
-        attendees: data.attendees,
-        activityType: data.activityType,
-      },
-    }));
-    setDialogOpen(false);
-    setSelectedSlotForDialog(undefined);
+      setSelectedSlots(prev => new Set(prev).add(slotKey));
+      setSlotDetails(prev => ({
+        ...prev,
+        [slotKey]: {
+          duration: duration > 0 ? duration : 60,
+          purpose: data.purpose,
+          attendees: data.attendees,
+          activityType: data.activityType,
+        },
+      }));
+      setDialogOpen(false);
+      setSelectedSlotForDialog(undefined);
+    } else if (bookingMode === 'RANGE' && rangeSelection) {
+      // For RANGE mode, the selection is already stored in rangeSelection
+      // Store form data for later use in booking submission
+      // The drawer is just for collecting booking details
+      setDialogOpen(false);
+    } else if (bookingMode === 'ALL_DAY' && allDaySelection.length > 0) {
+      // For ALL_DAY mode, the selection is already stored in allDaySelection
+      // Store form data for later use in booking submission
+      // The drawer is just for collecting booking details
+      setDialogOpen(false);
+    }
   };
 
   const handleRemoveSlot = (slotKey: string): void => {
@@ -739,242 +838,106 @@ export function BookingWidgetPlacement({
                 recurringConstraints={recurringConstraints}
               />
 
-              {/* SINGLE_SLOT Mode: Calendar Header */}
-              {bookingMode === 'SINGLE_SLOT' && (
-              <>
-              <div
-                style={{
-                  padding: 'var(--ds-spacing-3) var(--ds-spacing-4)',
-                  display: 'flex',
-                  flexDirection: isMobile ? 'column' : 'row',
-                  justifyContent: 'space-between',
-                  alignItems: 'center',
-                  borderBottom: '1px solid var(--ds-color-neutral-border-subtle)',
-                  gap: 'var(--ds-spacing-3)',
-                  minHeight: '48px',
-                  boxSizing: 'border-box',
-                }}
-              >
-                <Button type="button" variant="tertiary" data-size="sm" onClick={goToToday}>
-                  {t('bookingWidget.today')}
-                </Button>
-
-                <div
-                  className="booking-date-nav"
-                  style={{ display: 'flex', alignItems: 'center', gap: 'var(--ds-spacing-2)' }}
-                >
-                  <button
-                    type="button"
-                    onClick={() => navigateWeek('prev')}
-                    style={{
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      width: '32px',
-                      height: '32px',
-                      border: '1px solid var(--ds-color-neutral-border-default)',
-                      borderRadius: 'var(--ds-border-radius-md)',
-                      backgroundColor: 'var(--ds-color-neutral-background-default)',
-                      cursor: 'pointer',
-                    }}
-                    aria-label={t('bookingWidget.previousWeek')}
-                  >
-                    <ChevronLeftIcon size={16} />
-                  </button>
-                  <Paragraph
-                    data-size="sm"
-                    style={{ margin: 0, fontWeight: 'var(--ds-font-weight-medium)', minWidth: '180px', textAlign: 'center' }}
-                  >
-                    {getDateRangeString()}
-                  </Paragraph>
-                  <button
-                    type="button"
-                    onClick={() => navigateWeek('next')}
-                    style={{
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      width: '32px',
-                      height: '32px',
-                      border: '1px solid var(--ds-color-neutral-border-default)',
-                      borderRadius: 'var(--ds-border-radius-md)',
-                      backgroundColor: 'var(--ds-color-neutral-background-default)',
-                      cursor: 'pointer',
-                    }}
-                    aria-label={t('bookingWidget.nextWeek')}
-                  >
-                    <ChevronRightIcon size={16} />
-                  </button>
+              {/* SINGLE_SLOT Mode: Use CalendarSection component */}
+              {bookingMode === 'SINGLE_SLOT' && rentalObjectId && (
+                <div style={{ flex: 1, overflow: 'auto', padding: 'var(--ds-spacing-4)' }}>
+                  <CalendarSection
+                    rentalObjectId={rentalObjectId}
+                    bookingType="SINGLE_SLOT"
+                    forceMode="TIME_SLOTS"
+                    onSelectionChange={handleCalendarSelection}
+                    readOnly={false}
+                  />
                 </div>
+              )}
 
-                {/* Legend */}
-                <div style={{ display: 'flex', gap: 'var(--ds-spacing-3)', fontSize: 'var(--ds-font-size-xs)' }}>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--ds-spacing-1)' }}>
-                    <div style={{ width: '12px', height: '12px', borderRadius: 'var(--ds-border-radius-sm)', backgroundColor: 'var(--ds-color-success-surface-default)', border: '1px solid var(--ds-color-success-border-default)' }} />
-                    <span>{t('bookingWidget.legend.available')}</span>
+              {/* RANGE Mode: Use CalendarSection with MULTI_DAY mode */}
+              {bookingMode === 'RANGE' && rentalObjectId && (
+                <div style={{ flex: 1, overflow: 'auto', padding: 'var(--ds-spacing-4)' }}>
+                  <div style={{ marginBottom: 'var(--ds-spacing-4)' }}>
+                    <Heading level={3} data-size="sm" style={{ margin: 0, marginBottom: 'var(--ds-spacing-2)' }}>
+                      {t('bookingWidget.range.selectPeriod')}
+                    </Heading>
+                    <Paragraph data-size="sm" style={{ margin: 0, color: 'var(--ds-color-neutral-text-subtle)' }}>
+                      {t('bookingWidget.range.selectPeriodDesc')}
+                    </Paragraph>
                   </div>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--ds-spacing-1)' }}>
-                    <div style={{ width: '12px', height: '12px', borderRadius: 'var(--ds-border-radius-sm)', backgroundColor: 'var(--ds-color-danger-surface-default)', border: '1px solid var(--ds-color-danger-border-default)' }} />
-                    <span>{t('bookingWidget.legend.occupied')}</span>
-                  </div>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--ds-spacing-1)' }}>
-                    <div style={{ width: '12px', height: '12px', borderRadius: 'var(--ds-border-radius-sm)', backgroundColor: 'var(--ds-color-accent-base-default)' }} />
-                    <span>{t('bookingWidget.legend.selected')}</span>
-                  </div>
-                </div>
-              </div>
-
-              {/* Calendar Grid */}
-              <div style={{ flex: 1, overflow: 'auto', padding: 'var(--ds-spacing-4)' }}>
-                <div
-                  style={{
-                    display: 'grid',
-                    gridTemplateColumns: `60px repeat(7, 1fr)`,
-                    gap: '1px',
-                    backgroundColor: 'var(--ds-color-neutral-border-subtle)',
-                    border: '1px solid var(--ds-color-neutral-border-subtle)',
-                    borderRadius: 'var(--ds-border-radius-md)',
-                    overflow: 'hidden',
-                  }}
-                >
-                  {/* Header Row */}
-                  <div style={{ backgroundColor: 'var(--ds-color-neutral-surface-default)', padding: 'var(--ds-spacing-2)' }} />
-                  {calendarData.map((day, idx) => (
-                    <div
-                      key={idx}
-                      style={{
-                        backgroundColor: day.isToday ? 'var(--ds-color-accent-surface-default)' : 'var(--ds-color-neutral-surface-default)',
-                        padding: 'var(--ds-spacing-2)',
-                        textAlign: 'center',
-                      }}
-                    >
-                      <Paragraph data-size="xs" style={{ margin: 0, fontWeight: 'var(--ds-font-weight-medium)' }}>
-                        {day.dayName}
+                  <CalendarSection
+                    rentalObjectId={rentalObjectId}
+                    bookingType="RANGE"
+                    forceMode="MULTI_DAY"
+                    onSelectionChange={handleCalendarSelection}
+                    readOnly={false}
+                  />
+                  {rangeSelection && (
+                    <div style={{ 
+                      marginTop: 'var(--ds-spacing-4)', 
+                      padding: 'var(--ds-spacing-3)', 
+                      backgroundColor: 'var(--ds-color-info-surface-default)',
+                      borderRadius: 'var(--ds-border-radius-md)',
+                      border: '1px solid var(--ds-color-info-border-default)',
+                    }}>
+                      <Paragraph data-size="sm" style={{ margin: 0, fontWeight: 'var(--ds-font-weight-medium)', marginBottom: 'var(--ds-spacing-2)' }}>
+                        {t('bookingWidget.range.selectedPeriod')}
                       </Paragraph>
-                      <Paragraph
-                        data-size="md"
-                        style={{
-                          margin: 0,
-                          fontWeight: day.isToday ? 'var(--ds-font-weight-bold)' : 'var(--ds-font-weight-regular)',
-                          color: day.isToday ? 'var(--ds-color-accent-text-default)' : 'inherit',
-                        }}
-                      >
-                        {day.dayNumber}
+                      <Paragraph data-size="sm" style={{ margin: 0 }}>
+                        {new Date(rangeSelection.startDate).toLocaleDateString('nb-NO')} - {new Date(rangeSelection.endDate).toLocaleDateString('nb-NO')}
+                        {rangeSelection.startTime && rangeSelection.endTime && (
+                          <> ({rangeSelection.startTime} - {rangeSelection.endTime})</>
+                        )}
                       </Paragraph>
                     </div>
-                  ))}
-
-                  {/* Time Rows */}
-                  {Array.from({ length: visibleRows }, (_, rowIdx) => {
-                    const firstDaySlots = calendarData[0]?.slots ?? [];
-                    const slot = firstDaySlots[rowIdx];
-                    if (!slot) return null;
-
-                    return (
-                      <React.Fragment key={rowIdx}>
-                        <div
-                          style={{
-                            backgroundColor: 'var(--ds-color-neutral-surface-default)',
-                            padding: 'var(--ds-spacing-2)',
-                            display: 'flex',
-                            alignItems: 'center',
-                            justifyContent: 'center',
-                          }}
-                        >
-                          <Paragraph data-size="xs" style={{ margin: 0, fontVariantNumeric: 'tabular-nums' }}>
-                            {slot.time}
-                          </Paragraph>
-                        </div>
-                        {calendarData.map((day, dayIdx) => {
-                          const daySlot = day.slots[rowIdx];
-                          if (!daySlot) return <div key={dayIdx} style={{ backgroundColor: 'var(--ds-color-neutral-background-default)' }} />;
-
-                          const bgColor =
-                            daySlot.status === 'selected'
-                              ? 'var(--ds-color-accent-base-default)'
-                              : daySlot.status === 'occupied'
-                                ? 'var(--ds-color-danger-surface-default)'
-                                : daySlot.status === 'unavailable'
-                                  ? 'var(--ds-color-neutral-surface-default)'
-                                  : 'var(--ds-color-success-surface-default)';
-
-                          const isClickable = daySlot.status === 'available' || daySlot.status === 'selected';
-
-                          return (
-                            <button
-                              key={dayIdx}
-                              type="button"
-                              onClick={() => isClickable && handleSlotClick(dayIdx, daySlot.time)}
-                              disabled={!isClickable}
-                              style={{
-                                backgroundColor: bgColor,
-                                border: 'none',
-                                cursor: isClickable ? 'pointer' : 'default',
-                                padding: 'var(--ds-spacing-1)',
-                                minHeight: '32px',
-                                transition: 'all 150ms ease',
-                                opacity: daySlot.status === 'unavailable' ? 0.5 : 1,
-                              }}
-                              aria-label={`${day.dayName} ${day.dayNumber}, ${daySlot.time}`}
-                            />
-                          );
-                        })}
-                      </React.Fragment>
-                    );
-                  })}
+                  )}
                 </div>
+              )}
 
-                {/* Expand/Collapse */}
-                {!isCalendarExpanded && (calendarData[0]?.slots.length ?? 0) > visibleRows && (
-                  <div style={{ display: 'flex', justifyContent: 'center', paddingTop: 'var(--ds-spacing-3)' }}>
-                    <button
-                      type="button"
-                      onClick={() => setIsCalendarExpanded(true)}
-                      style={{
-                        display: 'flex',
-                        alignItems: 'center',
-                        gap: 'var(--ds-spacing-2)',
-                        padding: 'var(--ds-spacing-2) var(--ds-spacing-4)',
-                        backgroundColor: 'var(--ds-color-neutral-surface-default)',
-                        border: '1px solid var(--ds-color-neutral-border-default)',
-                        borderRadius: 'var(--ds-border-radius-md)',
-                        cursor: 'pointer',
-                        fontSize: 'var(--ds-font-size-sm)',
-                      }}
-                    >
-                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                        <polyline points="6 9 12 15 18 9" />
-                      </svg>
-                      {t('bookingWidget.showMore')}
-                    </button>
+              {/* ALL_DAY Mode: Use CalendarSection with ALL_DAY mode */}
+              {bookingMode === 'ALL_DAY' && rentalObjectId && (
+                <div style={{ flex: 1, overflow: 'auto', padding: 'var(--ds-spacing-4)' }}>
+                  <div style={{ marginBottom: 'var(--ds-spacing-4)' }}>
+                    <Heading level={3} data-size="sm" style={{ margin: 0, marginBottom: 'var(--ds-spacing-2)' }}>
+                      {t('bookingWidget.allDay.selectDays')}
+                    </Heading>
+                    <Paragraph data-size="sm" style={{ margin: 0, color: 'var(--ds-color-neutral-text-subtle)' }}>
+                      {t('bookingWidget.allDay.selectDaysDesc')}
+                    </Paragraph>
                   </div>
-                )}
-                {isCalendarExpanded && (
-                  <div style={{ display: 'flex', justifyContent: 'center', paddingTop: 'var(--ds-spacing-3)' }}>
-                    <button
-                      type="button"
-                      onClick={() => setIsCalendarExpanded(false)}
-                      style={{
-                        display: 'flex',
-                        alignItems: 'center',
-                        gap: 'var(--ds-spacing-2)',
-                        padding: 'var(--ds-spacing-2) var(--ds-spacing-4)',
-                        backgroundColor: 'var(--ds-color-neutral-surface-default)',
-                        border: '1px solid var(--ds-color-neutral-border-default)',
-                        borderRadius: 'var(--ds-border-radius-md)',
-                        cursor: 'pointer',
-                        fontSize: 'var(--ds-font-size-sm)',
-                      }}
-                    >
-                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                        <polyline points="18 15 12 9 6 15" />
-                      </svg>
-                      {t('bookingWidget.showLess')}
-                    </button>
-                  </div>
-                )}
-              </div>
-              </>
+                  <CalendarSection
+                    rentalObjectId={rentalObjectId}
+                    bookingType="ALL_DAY"
+                    forceMode="ALL_DAY"
+                    onSelectionChange={handleCalendarSelection}
+                    readOnly={false}
+                  />
+                  {allDaySelection.length > 0 && (
+                    <div style={{ 
+                      marginTop: 'var(--ds-spacing-4)', 
+                      padding: 'var(--ds-spacing-3)', 
+                      backgroundColor: 'var(--ds-color-info-surface-default)',
+                      borderRadius: 'var(--ds-border-radius-md)',
+                      border: '1px solid var(--ds-color-info-border-default)',
+                    }}>
+                      <Paragraph data-size="sm" style={{ margin: 0, fontWeight: 'var(--ds-font-weight-medium)', marginBottom: 'var(--ds-spacing-2)' }}>
+                        {t('bookingWidget.allDay.selectedDays', { count: allDaySelection.length })}
+                      </Paragraph>
+                      <div style={{ display: 'flex', flexWrap: 'wrap', gap: 'var(--ds-spacing-2)' }}>
+                        {allDaySelection.map((date) => (
+                          <span
+                            key={date}
+                            style={{
+                              padding: 'var(--ds-spacing-1) var(--ds-spacing-2)',
+                              backgroundColor: 'var(--ds-color-accent-surface-default)',
+                              borderRadius: 'var(--ds-border-radius-sm)',
+                              fontSize: 'var(--ds-font-size-xs)',
+                            }}
+                          >
+                            {new Date(date).toLocaleDateString('nb-NO', { day: 'numeric', month: 'short' })}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                </div>
               )}
 
               {/* RECURRING Mode: Pattern Builder + Preview */}
@@ -1366,7 +1329,12 @@ export function BookingWidgetPlacement({
             }}
             disabled={
               !isBookable ||
-              (currentStep === 0 && selectedSlots.size === 0) ||
+              (currentStep === 0 && (
+                (bookingMode === 'SINGLE_SLOT' && selectedSlots.size === 0) ||
+                (bookingMode === 'RANGE' && !rangeSelection) ||
+                (bookingMode === 'ALL_DAY' && allDaySelection.length === 0) ||
+                (bookingMode === 'RECURRING' && selectedRecurringIndices.size === 0)
+              )) ||
               (currentStep === 1 && (!selectedPriceGroup || !termsAccepted)) ||
               (currentStep === 2 && (!isAuthenticated || !isAccountTypeConfirmed)) ||
               isSubmitting
@@ -1376,11 +1344,23 @@ export function BookingWidgetPlacement({
             {isSubmitting
               ? t('bookingWidget.submitting')
               : currentStep === 0
-                ? selectedSlots.size > 0
-                  ? selectedSlots.size > 1
-                    ? t('bookingWidget.continueWithSlotsPlural', { count: selectedSlots.size })
-                    : t('bookingWidget.continueWithSlots', { count: selectedSlots.size })
-                  : t('bookingWidget.selectTimeToContiue')
+                ? (() => {
+                    if (bookingMode === 'SINGLE_SLOT' && selectedSlots.size > 0) {
+                      return selectedSlots.size > 1
+                        ? t('bookingWidget.continueWithSlotsPlural', { count: selectedSlots.size })
+                        : t('bookingWidget.continueWithSlots', { count: selectedSlots.size });
+                    }
+                    if (bookingMode === 'RANGE' && rangeSelection) {
+                      return t('bookingWidget.continueWithRange');
+                    }
+                    if (bookingMode === 'ALL_DAY' && allDaySelection.length > 0) {
+                      return t('bookingWidget.continueWithDays', { count: allDaySelection.length });
+                    }
+                    if (bookingMode === 'RECURRING' && selectedRecurringIndices.size > 0) {
+                      return t('bookingWidget.continueWithRecurring', { count: selectedRecurringIndices.size });
+                    }
+                    return t('bookingWidget.selectTimeToContiue');
+                  })()
                 : currentStep === 1
                   ? t('bookingWidget.continueToConfirmation')
                   : currentStep === 2

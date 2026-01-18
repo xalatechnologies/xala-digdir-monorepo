@@ -28,6 +28,8 @@ export interface CalendarSectionProps {
   rentalObjectId: string;
   /** Optional booking type filter */
   bookingType?: string;
+  /** Force a specific calendar mode (overrides API config) */
+  forceMode?: 'TIME_SLOTS' | 'ALL_DAY' | 'MULTI_DAY';
   /** Callback when selection changes */
   onSelectionChange?: (selection: CalendarSelection) => void;
   /** Whether the calendar is read-only (view mode) */
@@ -114,6 +116,7 @@ function mapToCalendarCell(cell: {
 export function CalendarSection({
   rentalObjectId,
   bookingType,
+  forceMode,
   onSelectionChange,
   readOnly = false,
   className,
@@ -138,11 +141,12 @@ export function CalendarSection({
   // Extract config from response
   const config = configResponse?.data;
 
-  // Determine calendar mode from config
+  // Determine calendar mode: use forceMode if provided, otherwise use config
   const calendarMode: CalendarMode = React.useMemo(() => {
+    if (forceMode) return forceMode;
     if (!config) return 'TIME_SLOTS';
     return config.granularity as CalendarMode;
-  }, [config]);
+  }, [forceMode, config]);
 
   // Calculate date range based on mode and current date
   const dateRange = React.useMemo(() => {

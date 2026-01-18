@@ -8,6 +8,8 @@ import cookie from '@fastify/cookie';
 import rateLimit from '@fastify/rate-limit';
 import fastifyStatic from '@fastify/static';
 import fastifyMultipart from '@fastify/multipart';
+import swagger from '@fastify/swagger';
+import swaggerUi from '@fastify/swagger-ui';
 import path from 'path';
 import 'reflect-metadata';
 import { container, type Constructor } from '../core/container';
@@ -93,6 +95,58 @@ export async function createFastifyApp(
     methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization', 'X-Tenant-Id', 'X-User-Id', 'X-Correlation-Id', 'X-License-Key', 'Accept', 'Origin', 'Cache-Control'],
     exposedHeaders: ['Set-Cookie'],
+  });
+
+  // Register Swagger for API documentation
+  await app.register(swagger, {
+    openapi: {
+      info: {
+        title: 'Digilist API',
+        description: 'REST API for the Digilist platform - rental management, bookings, and administration',
+        version: '1.0.0',
+      },
+      servers: [
+        {
+          url: 'https://api.digilist.no',
+          description: 'Production server',
+        },
+        {
+          url: 'http://localhost:4000',
+          description: 'Development server',
+        },
+      ],
+      tags: [
+        { name: 'auth', description: 'Authentication endpoints' },
+        { name: 'rental-objects', description: 'Rental object management' },
+        { name: 'bookings', description: 'Booking management' },
+        { name: 'users', description: 'User management' },
+        { name: 'admin', description: 'Admin endpoints' },
+      ],
+      components: {
+        securitySchemes: {
+          cookieAuth: {
+            type: 'apiKey',
+            in: 'cookie',
+            name: 'dl_at',
+          },
+          bearerAuth: {
+            type: 'http',
+            scheme: 'bearer',
+            bearerFormat: 'JWT',
+          },
+        },
+      },
+    },
+  });
+
+  // Register Swagger UI
+  await app.register(swaggerUi, {
+    routePrefix: '/docs',
+    uiConfig: {
+      docExpansion: 'list',
+      deepLinking: true,
+    },
+    staticCSP: true,
   });
 
   // Register cookie plugin for HTTP-only cookie support
