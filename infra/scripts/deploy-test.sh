@@ -177,8 +177,15 @@ echo ""
 
 # Step 6: Run migrations
 echo "🔄 Step 6: Running database migrations..."
-ssh ${VPS_USER}@${VPS_HOST} "cd ${DEPLOY_PATH} && DATABASE_URL='postgresql://${DB_USER}:${DB_PASSWORD}@${DB_HOST}:${DB_PORT}/${DB_NAME}' pnpm --filter @digilist/database-schema db:push"
-log_info "Migrations applied"
+ssh ${VPS_USER}@${VPS_HOST} << ENDSSH
+set -e
+cd ${DEPLOY_PATH}/packages/database-schema
+export DATABASE_URL='${DB_URL}'
+echo "Running migrations with DATABASE_URL: \${DATABASE_URL}"
+pnpm db:generate 2>/dev/null || echo "No schema changes to generate"
+pnpm db:migrate
+ENDSSH
+log_info "Database migrations complete"
 echo ""
 
 # Step 7: Deploy storage files (seed images)
