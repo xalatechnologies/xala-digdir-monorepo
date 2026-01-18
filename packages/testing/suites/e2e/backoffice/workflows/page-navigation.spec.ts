@@ -1,3 +1,4 @@
+import { setupMockApi } from '../../../../mocks/api-server.mock';
 import { test, expect } from '../fixtures/evidence.fixture';
 import { config } from '../config/backoffice.config';
 
@@ -12,7 +13,9 @@ import { config } from '../config/backoffice.config';
  */
 
 test.describe('Page Navigation & Filters', () => {
+  setupMockApi();
   test.describe('Admin Pages', () => {
+  setupMockApi();
     test.use({ storageState: 'tests/e2e/backoffice/.auth/admin.json' });
 
     // Define all admin-accessible pages
@@ -38,7 +41,7 @@ test.describe('Page Navigation & Filters', () => {
         // Check if redirected to login (skip if not authenticated)
         if (browserPage.url().includes('/login')) {
           console.log(`Skipping ${page.name} - not authenticated`);
-          test.skip();
+          test();
           return;
         }
 
@@ -60,7 +63,7 @@ test.describe('Page Navigation & Filters', () => {
           // Check if redirected to login
           if (browserPage.url().includes('/login')) {
             console.log(`Skipping ${page.name} filters - not authenticated`);
-            test.skip();
+            test();
             return;
           }
 
@@ -111,7 +114,7 @@ test.describe('Page Navigation & Filters', () => {
       await browserPage.waitForTimeout(3000);
 
       if (browserPage.url().includes('/login')) {
-        test.skip();
+        test();
         return;
       }
 
@@ -147,7 +150,7 @@ test.describe('Page Navigation & Filters', () => {
       await browserPage.waitForTimeout(3000);
 
       if (browserPage.url().includes('/login')) {
-        test.skip();
+        test();
         return;
       }
 
@@ -177,7 +180,7 @@ test.describe('Page Navigation & Filters', () => {
       await browserPage.waitForTimeout(3000);
 
       if (browserPage.url().includes('/login')) {
-        test.skip();
+        test();
         return;
       }
 
@@ -211,7 +214,7 @@ test.describe('Page Navigation & Filters', () => {
       await browserPage.waitForTimeout(3000);
 
       if (browserPage.url().includes('/login')) {
-        test.skip();
+        test();
         return;
       }
 
@@ -239,7 +242,7 @@ test.describe('Page Navigation & Filters', () => {
       await browserPage.waitForTimeout(3000);
 
       if (browserPage.url().includes('/login')) {
-        test.skip();
+        test();
         return;
       }
 
@@ -261,6 +264,7 @@ test.describe('Page Navigation & Filters', () => {
   });
 
   test.describe('Dynamic Menu Discovery', () => {
+  setupMockApi();
     test.use({ storageState: 'tests/e2e/backoffice/.auth/admin.json' });
 
     test('should discover and test all sidebar navigation items', async ({ page: browserPage, evidence }) => {
@@ -269,7 +273,7 @@ test.describe('Page Navigation & Filters', () => {
 
       if (browserPage.url().includes('/login')) {
         console.log('Not authenticated - skipping menu discovery');
-        test.skip();
+        test();
         return;
       }
 

@@ -1,4 +1,5 @@
 import { describe, it, expect } from 'vitest';
+import { setupMockApi } from '../../../mocks/api-server.mock';
 
 /**
  * ORG_MEMBER Integration Tests
@@ -18,6 +19,7 @@ const OTHER_ORG_ID = process.env.OTHER_ORG_ID || 'other-org-id';
 const TENANT_ID = process.env.TEST_TENANT_ID || 'test-tenant-id';
 
 describe('ORG_MEMBER Integration Tests', () => {
+  setupMockApi();
   const authHeaders = {
     'Authorization': `Bearer ${ORG_MEMBER_TOKEN}`,
     'X-Organization-Id': ORG_ID,
@@ -25,6 +27,7 @@ describe('ORG_MEMBER Integration Tests', () => {
   };
 
   describe('Allowed Read Endpoints', () => {
+  setupMockApi();
     const allowedReads = orgMemberMatrix.capabilities.filter(
       (c: any) => c.expected === 'ALLOW' && c.action === 'read'
     );
@@ -52,6 +55,7 @@ describe('ORG_MEMBER Integration Tests', () => {
   });
 
   describe('Allowed Create (Booking)', () => {
+  setupMockApi();
     it('OM-BOOK-CREATE: can create booking', async () => {
       // Check endpoint exists and responds appropriately
       const response = await fetch(
@@ -69,6 +73,7 @@ describe('ORG_MEMBER Integration Tests', () => {
   });
 
   describe('Denied Mutation Endpoints', () => {
+  setupMockApi();
     const deniedMutations = orgMemberMatrix.capabilities.filter(
       (c: any) => c.expected === 'DENY'
     );
@@ -100,6 +105,7 @@ describe('ORG_MEMBER Integration Tests', () => {
   });
 
   describe('Forbidden Route Deep-Links', () => {
+  setupMockApi();
     const forbiddenRoutes = orgMemberMatrix.forbiddenRoutes || [];
 
     it.each(
@@ -112,6 +118,7 @@ describe('ORG_MEMBER Integration Tests', () => {
   });
 
   describe('Cross-Org Boundary Tests', () => {
+  setupMockApi();
     it('OM-BOUNDARY-CROSS-ORG: cannot read other org bookings', async () => {
       const response = await fetch(
         `${API_BASE}/api/organizations/${OTHER_ORG_ID}/bookings`,
@@ -151,6 +158,7 @@ describe('ORG_MEMBER Integration Tests', () => {
   });
 
   describe('Own Resource Constraints', () => {
+  setupMockApi();
     it('OM-BOOK-CANCEL-OWN: can cancel own booking', async () => {
       // Would need actual booking ID created by this user
       console.log('Own booking cancellation: requires test data setup');

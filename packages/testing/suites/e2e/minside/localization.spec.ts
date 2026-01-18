@@ -1,3 +1,4 @@
+import { setupMockApi } from '../../../mocks/api-server.mock';
 import { test, expect } from '@playwright/test';
 
 /**
@@ -11,15 +12,17 @@ import { test, expect } from '@playwright/test';
  */
 
 test.describe('MinSide - Localization', () => {
+  setupMockApi();
   test.use({ storageState: 'tests/e2e/minside/.auth/user.json' });
 
   test.describe('Language Switching', () => {
+  setupMockApi();
     test.beforeEach(async ({ page }) => {
       await page.goto('/', { waitUntil: 'domcontentloaded' });
       await page.waitForTimeout(3000);
       
       if (page.url().includes('/login')) {
-        test.skip();
+        test();
       }
     });
 
@@ -76,12 +79,13 @@ test.describe('MinSide - Localization', () => {
   });
 
   test.describe('No Missing Translation Keys', () => {
+  setupMockApi();
     test.beforeEach(async ({ page }) => {
       await page.goto('/', { waitUntil: 'domcontentloaded' });
       await page.waitForTimeout(3000);
       
       if (page.url().includes('/login')) {
-        test.skip();
+        test();
       }
     });
 
@@ -149,12 +153,13 @@ test.describe('MinSide - Localization', () => {
   });
 
   test.describe('Date and Number Formatting', () => {
+  setupMockApi();
     test.beforeEach(async ({ page }) => {
       await page.goto('/bookings', { waitUntil: 'domcontentloaded' });
       await page.waitForTimeout(3000);
       
       if (page.url().includes('/login')) {
-        test.skip();
+        test();
       }
     });
 
@@ -197,12 +202,13 @@ test.describe('MinSide - Localization', () => {
   });
 
   test.describe('Content Completeness', () => {
+  setupMockApi();
     test('all navigation items have translated labels', async ({ page }) => {
       await page.goto('/', { waitUntil: 'domcontentloaded' });
       await page.waitForTimeout(2000);
       
       if (page.url().includes('/login')) {
-        test.skip();
+        test();
         return;
       }
       
@@ -236,7 +242,7 @@ test.describe('MinSide - Localization', () => {
       await page.waitForTimeout(2000);
       
       if (page.url().includes('/login')) {
-        test.skip();
+        test();
         return;
       }
       

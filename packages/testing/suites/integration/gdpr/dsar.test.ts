@@ -8,6 +8,7 @@
  */
 
 import { describe, it, expect, beforeAll, afterAll } from 'vitest';
+import { setupMockApi } from '../../../mocks/api-server.mock';
 
 const API_URL = process.env.API_URL || 'http://localhost:3000/api';
 
@@ -36,6 +37,7 @@ async function getAuthCookie(): Promise<string | null> {
 // =============================================================================
 
 describe('Right to Access (Data Export)', () => {
+  setupMockApi();
   beforeAll(async () => {
     authToken = await getAuthCookie();
   });
@@ -91,6 +93,7 @@ describe('Right to Access (Data Export)', () => {
 // =============================================================================
 
 describe('Right to Erasure (Delete)', () => {
+  setupMockApi();
   it('should allow user to request account deletion', async () => {
     if (!authToken) return;
 
@@ -143,6 +146,7 @@ describe('Right to Erasure (Delete)', () => {
 // =============================================================================
 
 describe('Right to Rectification', () => {
+  setupMockApi();
   it('should allow user to update personal information', async () => {
     if (!authToken) return;
 
@@ -173,6 +177,7 @@ describe('Right to Rectification', () => {
 // =============================================================================
 
 describe('Consent Management', () => {
+  setupMockApi();
   it('should have consent status endpoint', async () => {
     if (!authToken) return;
 
@@ -231,6 +236,7 @@ describe('Consent Management', () => {
 // =============================================================================
 
 describe('Data Minimization', () => {
+  setupMockApi();
   it('public endpoints should not expose unnecessary data', async () => {
     const response = await fetch(`${API_URL}/public/rental-objects`);
     
@@ -270,6 +276,7 @@ describe('Data Minimization', () => {
 // =============================================================================
 
 describe('GDPR Audit Trail', () => {
+  setupMockApi();
   it('should log GDPR-related actions', async () => {
     // Verify audit events exist for GDPR actions
     const response = await fetch(`${API_URL}/audit?action=gdpr`);
@@ -294,6 +301,7 @@ describe('GDPR Audit Trail', () => {
 // =============================================================================
 
 describe('Data Retention', () => {
+  setupMockApi();
   it('should have retention policy endpoint', async () => {
     const response = await fetch(`${API_URL}/settings/retention-policy`);
     

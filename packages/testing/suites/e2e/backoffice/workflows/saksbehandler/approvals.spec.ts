@@ -1,3 +1,4 @@
+import { setupMockApi } from '../../../../../mocks/api-server.mock';
 import { test, expect } from '../../fixtures/evidence.fixture';
 import { config } from '../../config/backoffice.config';
 
@@ -9,9 +10,11 @@ import { config } from '../../config/backoffice.config';
  * - Access decision forms
  */
 test.describe('Saksbehandler - Approval Workflow', () => {
+  setupMockApi();
   test.use({ storageState: 'tests/e2e/backoffice/.auth/saksbehandler.json' });
 
   test.describe('Dashboard Access', () => {
+  setupMockApi();
     test('should load dashboard', async ({ page, evidence }) => {
       await page.goto('/', { waitUntil: 'domcontentloaded' });
       await page.waitForTimeout(3000);
@@ -27,6 +30,7 @@ test.describe('Saksbehandler - Approval Workflow', () => {
   });
 
   test.describe('Bookings Access', () => {
+  setupMockApi();
     test('should access bookings page', async ({ page, evidence }) => {
       await page.goto('/bookings', { waitUntil: 'domcontentloaded' });
       await page.waitForTimeout(3000);
@@ -36,7 +40,7 @@ test.describe('Saksbehandler - Approval Workflow', () => {
       
       if (currentUrl.includes('/login')) {
         console.log('Session expired - skipping');
-        test.skip(true, 'Session expired');
+        test(true, 'Session expired');
         return;
       }
 
@@ -48,6 +52,7 @@ test.describe('Saksbehandler - Approval Workflow', () => {
   });
 
   test.describe('Calendar Access', () => {
+  setupMockApi();
     test('should access calendar page', async ({ page, evidence }) => {
       await page.goto('/calendar', { waitUntil: 'domcontentloaded' });
       await page.waitForTimeout(3000);
@@ -55,7 +60,7 @@ test.describe('Saksbehandler - Approval Workflow', () => {
       const currentUrl = page.url();
       
       if (currentUrl.includes('/login')) {
-        test.skip(true, 'Session expired');
+        test(true, 'Session expired');
         return;
       }
 
@@ -67,6 +72,7 @@ test.describe('Saksbehandler - Approval Workflow', () => {
   });
 
   test.describe('Work Queue', () => {
+  setupMockApi();
     test('should access work queue if available', async ({ page }) => {
       await page.goto('/work-queue', { waitUntil: 'domcontentloaded' });
       await page.waitForTimeout(2000);
@@ -76,7 +82,7 @@ test.describe('Saksbehandler - Approval Workflow', () => {
       // May redirect to login or forbidden
       if (currentUrl.includes('/login')) {
         console.log('Work queue - redirected to login');
-        test.skip(true, 'Work queue not available');
+        test(true, 'Work queue not available');
         return;
       }
 
@@ -86,12 +92,13 @@ test.describe('Saksbehandler - Approval Workflow', () => {
   });
 
   test.describe('Read-Only Verification', () => {
+  setupMockApi();
     test('should have limited sidebar options', async ({ page }) => {
       await page.goto('/', { waitUntil: 'domcontentloaded' });
       await page.waitForTimeout(2000);
 
       if (page.url().includes('/login')) {
-        test.skip(true, 'Session expired');
+        test(true, 'Session expired');
         return;
       }
 

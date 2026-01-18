@@ -11,6 +11,7 @@
  * 4. Query Key & Cache Invalidation - TanStack Query patterns
  */
 import { describe, it, expect } from 'vitest';
+import { setupMockApi } from '../../../../../mocks/api-server.mock';
 
 // ==============================================================================
 // Mock API Server
@@ -72,7 +73,9 @@ const mockServer = {
 // ==============================================================================
 
 describe('Contract Compliance - DTO Standard', () => {
+  setupMockApi();
   describe('B1: Naming & Field Conventions', () => {
+  setupMockApi();
     it('should use camelCase for all field names', () => {
       const listing = mockServer.listings[0];
       const fields = Object.keys(listing);
@@ -91,6 +94,7 @@ describe('Contract Compliance - DTO Standard', () => {
   });
 
   describe('B2: Envelope Rules', () => {
+  setupMockApi();
     it('should return data in consistent envelope format', () => {
       const response = {
         data: mockServer.listings,
@@ -127,6 +131,7 @@ describe('Contract Compliance - DTO Standard', () => {
   });
 
   describe('B4: RFC7807 Error Contract', () => {
+  setupMockApi();
     it('should format validation errors correctly', () => {
       const validationError = {
         type: 'https://digilist.no/errors/validation',
@@ -173,7 +178,9 @@ describe('Contract Compliance - DTO Standard', () => {
 // ==============================================================================
 
 describe('Authorization-First Response Design', () => {
+  setupMockApi();
   describe('D1: Standard AuthZ Payload', () => {
+  setupMockApi();
     it('should include permissions object on listing DTO', () => {
       const listing = mockServer.listings[0];
       
@@ -219,6 +226,7 @@ describe('Authorization-First Response Design', () => {
   });
 
   describe('D3: Tenant/Org Context', () => {
+  setupMockApi();
     it('should vary permissions based on user role', () => {
       // Public user - can view, can book
       const publicListing = { ...mockServer.listings[0] };
@@ -240,6 +248,7 @@ describe('Authorization-First Response Design', () => {
 // ==============================================================================
 
 describe('TanStack Query Key Contract', () => {
+  setupMockApi();
   // Canonical query keys following the master architecture
   const queryKeys = {
     listing: {
@@ -288,6 +297,7 @@ describe('TanStack Query Key Contract', () => {
 // ==============================================================================
 
 describe('Cache Invalidation Policy', () => {
+  setupMockApi();
   it('should invalidate listing.availability after booking creation', () => {
     const invalidationRules = {
       'booking.create': [
@@ -332,6 +342,7 @@ describe('Cache Invalidation Policy', () => {
 // ==============================================================================
 
 describe('SDK Selectors - View Slices', () => {
+  setupMockApi();
   // Pure, deterministic selectors that derive view data
   const selectors = {
     listing: {
@@ -398,11 +409,13 @@ describe('SDK Selectors - View Slices', () => {
 // ==============================================================================
 
 describe('RBAC Integration Tests', () => {
+  setupMockApi();
   // Role definitions for future parameterized tests
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const roles = ['public', 'user', 'saksbehandler', 'admin', 'tenantAdmin'] as const;
 
   describe('Listing permissions by role', () => {
+  setupMockApi();
     it('public: can view, can book (if enabled), cannot edit', () => {
       const publicPerms = { canView: true, canBook: true, canEdit: false, canDelete: false };
       expect(publicPerms.canView).toBe(true);

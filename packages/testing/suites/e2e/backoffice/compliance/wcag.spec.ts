@@ -1,3 +1,4 @@
+import { setupMockApi } from '../../../../mocks/api-server.mock';
 import { test, expect } from '@playwright/test';
 import AxeBuilder from '@axe-core/playwright';
 import { config } from '../config/backoffice.config';
@@ -8,6 +9,7 @@ import { config } from '../config/backoffice.config';
  * Automated accessibility audit for critical backoffice pages.
  */
 test.describe('WCAG 2.1 AA Compliance', () => {
+  setupMockApi();
   test.use({ storageState: 'tests/e2e/backoffice/.auth/admin.json' });
 
   const criticalPages = [
@@ -55,6 +57,7 @@ test.describe('WCAG 2.1 AA Compliance', () => {
   }
 
   test.describe('Keyboard Navigation', () => {
+  setupMockApi();
     test('should navigate sidebar with keyboard', async ({ page }) => {
       await page.goto('/');
       await page.waitForLoadState('networkidle');
@@ -123,6 +126,7 @@ test.describe('WCAG 2.1 AA Compliance', () => {
   });
 
   test.describe('Color Contrast', () => {
+  setupMockApi();
     test('should have sufficient color contrast', async ({ page }) => {
       await page.goto('/');
       await page.waitForLoadState('networkidle');
@@ -144,6 +148,7 @@ test.describe('WCAG 2.1 AA Compliance', () => {
   });
 
   test.describe('Form Accessibility', () => {
+  setupMockApi();
     test('form inputs should have labels', async ({ page }) => {
       await page.goto('/rental-objects/wizard');
       await page.waitForLoadState('networkidle');

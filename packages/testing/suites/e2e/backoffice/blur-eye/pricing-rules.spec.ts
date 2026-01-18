@@ -24,7 +24,7 @@ test.describe('Pricing Rules (Prisregler) E2E', () => {
     await page.waitForTimeout(3000);
     
     if (page.url().includes('/login')) {
-      test.skip();
+      test();
     }
   });
 

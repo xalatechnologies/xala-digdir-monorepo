@@ -15,6 +15,7 @@
  */
 
 import { describe, it, expect, beforeEach } from 'vitest';
+import { setupMockApi } from '../../mocks/api-server.mock';
 import { MetadataController } from '../../apps/api/src/modules/metadata/metadata.controller';
 import type { FastifyRequest, FastifyReply } from 'fastify';
 
@@ -43,6 +44,7 @@ function createMockReply() {
 }
 
 describe('Metadata Endpoints - Categories', () => {
+  setupMockApi();
   let controller: MetadataController;
 
   beforeEach(() => {
@@ -97,6 +99,7 @@ describe('Metadata Endpoints - Categories', () => {
 });
 
 describe('Metadata Endpoints - Time Modes', () => {
+  setupMockApi();
   let controller: MetadataController;
 
   beforeEach(() => {
@@ -138,6 +141,7 @@ describe('Metadata Endpoints - Time Modes', () => {
 });
 
 describe('Metadata Endpoints - Pricing Units', () => {
+  setupMockApi();
   let controller: MetadataController;
 
   beforeEach(() => {
@@ -180,6 +184,7 @@ describe('Metadata Endpoints - Pricing Units', () => {
 });
 
 describe('Metadata Endpoints - Statuses', () => {
+  setupMockApi();
   let controller: MetadataController;
 
   beforeEach(() => {
@@ -252,6 +257,7 @@ describe('Metadata Endpoints - Statuses', () => {
 });
 
 describe('Metadata Endpoints - Response Format', () => {
+  setupMockApi();
   let controller: MetadataController;
 
   beforeEach(() => {
@@ -286,6 +292,7 @@ describe('Metadata Endpoints - Response Format', () => {
 });
 
 describe('Metadata Endpoints - Caching Headers', () => {
+  setupMockApi();
   let controller: MetadataController;
 
   beforeEach(() => {

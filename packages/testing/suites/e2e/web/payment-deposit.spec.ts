@@ -1,3 +1,4 @@
+import { setupMockApi } from '../../../mocks/api-server.mock';
 /**
  * Payment and Deposit E2E Tests
  * Tests for deposit requirements and payment flow
@@ -10,6 +11,7 @@
 import { test, expect } from '@playwright/test';
 
 test.describe('Payment and Deposit', () => {
+  setupMockApi();
   test.beforeEach(async ({ page }) => {
     // Navigate to a rental object that requires deposit
     await page.goto('/lokaler/rental-object-with-deposit');

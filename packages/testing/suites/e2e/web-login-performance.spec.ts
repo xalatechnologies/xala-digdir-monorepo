@@ -1,3 +1,4 @@
+import { setupMockApi } from '../../mocks/api-server.mock';
 /**
  * Web App Login Flow - Performance Tests
  *
@@ -28,6 +29,7 @@ async function mockSession(page: any) {
 }
 
 test.describe('Web Login Flow - Performance Tests', () => {
+  setupMockApi();
   test('PERF-001: Homepage loads within acceptable time', async ({ page }) => {
     const startTime = Date.now();
 

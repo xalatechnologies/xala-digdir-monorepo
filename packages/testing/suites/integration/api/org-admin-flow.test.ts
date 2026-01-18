@@ -13,6 +13,7 @@
  * - RBAC for org_admin role
  */
 import { describe, it, expect, beforeAll, afterAll } from 'vitest';
+import { setupMockApi } from '../../../mocks/api-server.mock';
 
 // Test configuration
 const API_URL = process.env.API_URL || 'http://localhost:4000';
@@ -98,6 +99,7 @@ describeOrSkip('Organization Admin Flow Integration Tests', () => {
   // =========================================================================
 
   describe('Org Dashboard Endpoints', () => {
+  setupMockApi();
     it('should return scoped stats for org_admin', async () => {
       const response = await makeRequest('/api/org-dashboard/stats');
 
@@ -158,6 +160,7 @@ describeOrSkip('Organization Admin Flow Integration Tests', () => {
   // =========================================================================
 
   describe('Blocks CRUD with Scope Enforcement', () => {
+  setupMockApi();
     let createdBlockId: string | null = null;
 
     it('should list blocks for assigned rental objects only', async () => {
@@ -278,6 +281,7 @@ describeOrSkip('Organization Admin Flow Integration Tests', () => {
   // =========================================================================
 
   describe('Scope Enforcement', () => {
+  setupMockApi();
     it('should not allow access to unassigned rental object details', async () => {
       const response = await makeRequest('/api/rental-objects/unassigned-object-id');
 
@@ -310,6 +314,7 @@ describeOrSkip('Organization Admin Flow Integration Tests', () => {
   // =========================================================================
 
   describe('Capabilities for org_admin', () => {
+  setupMockApi();
     it('should return correct capabilities for org_admin role', async () => {
       const response = await makeRequest('/api/capabilities/backoffice');
 
@@ -348,6 +353,7 @@ describeOrSkip('Organization Admin Flow Integration Tests', () => {
   // =========================================================================
 
   describe('RFC 7807 Error Responses', () => {
+  setupMockApi();
     it('should return RFC 7807 format for 404 errors', async () => {
       const response = await makeRequest('/api/blocks/non-existent-id');
 

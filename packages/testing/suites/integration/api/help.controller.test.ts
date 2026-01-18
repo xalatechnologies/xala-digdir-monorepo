@@ -4,6 +4,7 @@
  * Target: 95%+ coverage
  */
 import { describe, it, expect, beforeAll, afterAll } from 'vitest';
+import { setupMockApi } from '../../../mocks/api-server.mock';
 
 const API_URL = process.env.API_URL || 'http://localhost:4000';
 const TENANT_ID = 'f47ac10b-58cc-4372-a567-0e02b2c3d479';
@@ -14,10 +15,12 @@ const headers = {
 };
 
 describe('HelpController', () => {
+  setupMockApi();
   // =========================================================================
   // GET /api/help/faq
   // =========================================================================
   describe('GET /api/help/faq', () => {
+  setupMockApi();
     it('should return all FAQs without category filter', async () => {
       const res = await fetch(`${API_URL}/api/help/faq`, { headers });
       expect(res.status).toBe(200);
@@ -65,6 +68,7 @@ describe('HelpController', () => {
   // GET /api/help/guides
   // =========================================================================
   describe('GET /api/help/guides', () => {
+  setupMockApi();
     it('should return guides for user role by default', async () => {
       const res = await fetch(`${API_URL}/api/help/guides`, { headers });
       expect(res.status).toBe(200);
@@ -107,6 +111,7 @@ describe('HelpController', () => {
   // GET /api/help/training
   // =========================================================================
   describe('GET /api/help/training', () => {
+  setupMockApi();
     it('should return training plan', async () => {
       const res = await fetch(`${API_URL}/api/help/training`, { headers });
       expect(res.status).toBe(200);
@@ -146,6 +151,7 @@ describe('HelpController', () => {
   // GET /api/help/tooltips
   // =========================================================================
   describe('GET /api/help/tooltips', () => {
+  setupMockApi();
     it('should return tooltip dictionary', async () => {
       const res = await fetch(`${API_URL}/api/help/tooltips`, { headers });
       expect(res.status).toBe(200);
@@ -177,6 +183,7 @@ describe('HelpController', () => {
   // POST /api/help/contact
   // =========================================================================
   describe('POST /api/help/contact', () => {
+  setupMockApi();
     it('should create support ticket with valid data', async () => {
       const res = await fetch(`${API_URL}/api/help/contact`, {
         method: 'POST',

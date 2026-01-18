@@ -1,3 +1,4 @@
+import { setupMockApi } from '../../../mocks/api-server.mock';
 /**
  * E2E Tests: Organization Member Flow
  *
@@ -200,6 +201,7 @@ async function mockOrgMemberApiResponses(page: Page) {
 // ============================================================================
 
 test.describe('Organization Member - Sidebar Navigation', () => {
+  setupMockApi();
   test.beforeEach(async ({ page }) => {
     await mockOrgMemberApiResponses(page);
   });
@@ -254,6 +256,7 @@ test.describe('Organization Member - Sidebar Navigation', () => {
 // ============================================================================
 
 test.describe('Organization Member - Forbidden Routes', () => {
+  setupMockApi();
   test.beforeEach(async ({ page }) => {
     await mockOrgMemberApiResponses(page);
   });
@@ -305,6 +308,7 @@ test.describe('Organization Member - Forbidden Routes', () => {
 // ============================================================================
 
 test.describe('Organization Member - Scoped Bookings', () => {
+  setupMockApi();
   test.beforeEach(async ({ page }) => {
     await mockOrgMemberApiResponses(page);
   });
@@ -354,6 +358,7 @@ test.describe('Organization Member - Scoped Bookings', () => {
 // ============================================================================
 
 test.describe('Organization Member - Read-Only Calendar', () => {
+  setupMockApi();
   test.beforeEach(async ({ page }) => {
     await mockOrgMemberApiResponses(page);
   });
@@ -389,6 +394,7 @@ test.describe('Organization Member - Read-Only Calendar', () => {
 // ============================================================================
 
 test.describe('Organization Member - Task-Oriented Dashboard', () => {
+  setupMockApi();
   test.beforeEach(async ({ page }) => {
     await mockOrgMemberApiResponses(page);
   });

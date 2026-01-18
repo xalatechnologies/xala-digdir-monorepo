@@ -4,6 +4,7 @@
  * Target: 95%+ coverage
  */
 import { describe, it, expect } from 'vitest';
+import { setupMockApi } from '../../../mocks/api-server.mock';
 
 const API_URL = process.env.API_URL || 'http://localhost:4000';
 const TENANT_ID = 'f47ac10b-58cc-4372-a567-0e02b2c3d479';
@@ -14,10 +15,12 @@ const headers = {
 };
 
 describe('SeasonalLeaseController - Suggestions Endpoint', () => {
+  setupMockApi();
   // =========================================================================
   // GET /api/seasonal-leases/suggestions
   // =========================================================================
   describe('GET /api/seasonal-leases/suggestions', () => {
+  setupMockApi();
     it('should return suggestions with algorithm info', async () => {
       const res = await fetch(`${API_URL}/api/seasonal-leases/suggestions`, { headers });
       expect(res.status).toBe(200);

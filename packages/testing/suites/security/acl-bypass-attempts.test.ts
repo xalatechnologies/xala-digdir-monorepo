@@ -13,6 +13,7 @@
  */
 
 import { describe, it, expect, beforeEach } from 'vitest';
+import { setupMockApi } from '../../mocks/api-server.mock';
 import { toDomain, toCardProjection, toDetailsProjection, toPersistence, type DbRentalObject } from '../../apps/api/src/acl/rental-objects/rental-object.mapper';
 import type { RentalObject } from '../../apps/api/src/domain/rental-objects';
 
@@ -62,6 +63,7 @@ const mockDbRentalObject: DbRentalObject = {
 // =============================================================================
 
 describe('ACL Security - Authorization Bypass Attempts', () => {
+  setupMockApi();
   it('should prevent direct tenant ID manipulation in queries', () => {
     const maliciousDb = {
       ...mockDbRentalObject,
@@ -178,6 +180,7 @@ describe('ACL Security - Authorization Bypass Attempts', () => {
 // =============================================================================
 
 describe('ACL Security - Injection Attacks', () => {
+  setupMockApi();
   it('should sanitize SQL injection attempts in name field', () => {
     const sqlInjectionVectors: AttackVector[] = [
       {
@@ -313,6 +316,7 @@ describe('ACL Security - Injection Attacks', () => {
 // =============================================================================
 
 describe('ACL Security - Mass Assignment Protection', () => {
+  setupMockApi();
   it('should prevent mass assignment of protected fields via metadata', () => {
     const maliciousUpdate: Partial<RentalObject> = {
       id: 'attacker-controlled-id', // Protected field
@@ -390,6 +394,7 @@ describe('ACL Security - Mass Assignment Protection', () => {
 // =============================================================================
 
 describe('ACL Security - Sensitive Data Exposure', () => {
+  setupMockApi();
   it('should not expose internal database IDs in projections', () => {
     const domain = toDomain(mockDbRentalObject);
     const projection = toCardProjection(domain);
@@ -452,6 +457,7 @@ describe('ACL Security - Sensitive Data Exposure', () => {
 // =============================================================================
 
 describe('ACL Security - Access Control Enforcement', () => {
+  setupMockApi();
   it('should enforce read access control at service layer', () => {
     const domain = toDomain(mockDbRentalObject);
 
@@ -531,6 +537,7 @@ describe('ACL Security - Access Control Enforcement', () => {
 // =============================================================================
 
 describe('ACL Security - OWASP Top 10 Coverage', () => {
+  setupMockApi();
   it('A01:2021 - Broken Access Control', () => {
     // Covered by:
     // - Authorization bypass tests
@@ -644,6 +651,7 @@ describe('ACL Security - OWASP Top 10 Coverage', () => {
 // =============================================================================
 
 describe('ACL Security - Test Coverage Summary', () => {
+  setupMockApi();
   it('should have comprehensive security test coverage', () => {
     const testCategories = {
       'Authorization Bypass': 6,

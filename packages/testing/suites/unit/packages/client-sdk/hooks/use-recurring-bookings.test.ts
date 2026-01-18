@@ -155,7 +155,7 @@ function createMockRecurringResult(): RecurringBookingResultProjectionDTO {
 // Tests
 // ============================================================================
 
-describe.skip('Recurring Booking Hooks', () => {
+describe('Recurring Booking Hooks', () => {
   beforeEach(() => {
     vi.clearAllMocks();
 

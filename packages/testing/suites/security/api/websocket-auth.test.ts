@@ -6,6 +6,7 @@
  * Run with: pnpm dev & pnpm test:security
  */
 import { describe, it, expect, beforeAll } from 'vitest';
+import { setupMockApi } from '../../../mocks/api-server.mock';
 import WebSocket from 'ws';
 
 const WS_URL = 'ws://localhost:4000';
@@ -86,7 +87,9 @@ function closeWebSocket(socket: WebSocket | null): void {
 }
 
 describe('WebSocket Authentication Security', () => {
+  setupMockApi();
   describe('/ws/audit endpoint', () => {
+  setupMockApi();
     it('should reject connection without X-Tenant-Id header', async () => {
       if (skipIfNoServer()) return;
 
@@ -201,6 +204,7 @@ describe('WebSocket Authentication Security', () => {
   });
 
   describe('/ws/events/:tenantId endpoint', () => {
+  setupMockApi();
     it('should reject connection without X-Tenant-Id header', async () => {
       if (skipIfNoServer()) return;
 
@@ -289,6 +293,7 @@ describe('WebSocket Authentication Security', () => {
   });
 
   describe('Cross-Tenant Isolation', () => {
+  setupMockApi();
     it('should prevent tenant A from accessing tenant B events', async () => {
       if (skipIfNoServer()) return;
 
@@ -321,6 +326,7 @@ describe('WebSocket Authentication Security', () => {
   });
 
   describe('Header Case Sensitivity', () => {
+  setupMockApi();
     it('should handle lowercase header names', async () => {
       if (skipIfNoServer()) return;
 
@@ -353,6 +359,7 @@ describe('WebSocket Authentication Security', () => {
   });
 
   describe('Connection Stability', () => {
+  setupMockApi();
     it('should maintain connection after authentication', async () => {
       if (skipIfNoServer()) return;
 
@@ -407,6 +414,7 @@ describe('WebSocket Authentication Security', () => {
   });
 
   describe('Multiple Connections', () => {
+  setupMockApi();
     it('should allow multiple authenticated connections from same tenant', async () => {
       if (skipIfNoServer()) return;
 

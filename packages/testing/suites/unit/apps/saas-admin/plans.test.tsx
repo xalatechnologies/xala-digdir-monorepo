@@ -42,12 +42,12 @@ function TestWrapper({ children }: { children: React.ReactNode }) {
   );
 }
 
-describe.skip('PlansListPage', () => {
+describe('PlansListPage', () => {
   beforeEach(() => {
     vi.clearAllMocks();
   });
 
-  describe.skip('Status Tab Filtering and Counts', () => {
+  describe('Status Tab Filtering and Counts', () => {
     it('should display status tabs with correct counts', async () => {
       mockUseSaasPlans.mockImplementation((params?: { status?: string }) => {
         if (!params || params.status === undefined) {
@@ -123,7 +123,7 @@ describe.skip('PlansListPage', () => {
     });
   });
 
-  describe.skip('Empty States', () => {
+  describe('Empty States', () => {
     it('should display empty state when no plans exist', async () => {
       mockUseSaasPlans.mockReturnValue({
         data: { data: [], meta: { total: 0, page: 1, totalPages: 1 } },

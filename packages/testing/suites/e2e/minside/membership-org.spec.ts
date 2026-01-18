@@ -1,3 +1,4 @@
+import { setupMockApi } from '../../../mocks/api-server.mock';
 /**
  * Membership Organization E2E Tests
  * Tests for Brreg integration and org management
@@ -10,6 +11,7 @@
 import { test, expect } from '@playwright/test';
 
 test.describe('Membership Organizations', () => {
+  setupMockApi();
   test.beforeEach(async ({ page }) => {
     // Navigate to org selection page
     await page.goto('/minside/organizations');

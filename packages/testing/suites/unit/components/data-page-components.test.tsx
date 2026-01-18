@@ -433,7 +433,7 @@ describeOrSkip('DataPageToolbar Component', () => {
     expect(screen.getByText('All')).toBeInTheDocument();
   });
 
-  it.skip('should render view mode toggle when provided', () => {
+  it('should render view mode toggle when provided', () => {
     // Skipped due to icon import resolution issues in test environment
     // Icons (GridIcon, ListIcon, etc.) need proper module resolution
     render(

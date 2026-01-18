@@ -22,7 +22,7 @@ test.describe('Settings (Innstillinger) E2E', () => {
     await page.waitForTimeout(3000);
     
     if (page.url().includes('/login')) {
-      test.skip();
+      test();
     }
   });
 

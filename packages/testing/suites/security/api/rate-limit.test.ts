@@ -10,6 +10,7 @@
  * Run with: pnpm dev & pnpm test:security
  */
 import { describe, it, expect, beforeAll, beforeEach } from 'vitest';
+import { setupMockApi } from '../../../mocks/api-server.mock';
 
 const API_URL = 'http://localhost:4000';
 let serverAvailable = false;
@@ -68,7 +69,9 @@ async function waitForRateLimitReset(seconds: number = 2) {
 }
 
 describe('Rate Limit Security Tests', () => {
+  setupMockApi();
   describe('Rate Limit Headers', () => {
+  setupMockApi();
     it('should include rate limit headers in response', async () => {
       if (skipIfNoServer()) return;
 
@@ -108,6 +111,7 @@ describe('Rate Limit Security Tests', () => {
   });
 
   describe('Authentication Endpoint Rate Limiting', () => {
+  setupMockApi();
     beforeEach(async () => {
       // Wait between tests to avoid rate limit carryover
       await waitForRateLimitReset();
@@ -196,6 +200,7 @@ describe('Rate Limit Security Tests', () => {
   });
 
   describe('Global Rate Limiting', () => {
+  setupMockApi();
     beforeEach(async () => {
       // Wait between tests to avoid rate limit carryover
       await waitForRateLimitReset();
@@ -247,6 +252,7 @@ describe('Rate Limit Security Tests', () => {
   });
 
   describe('Rate Limit Protection Against Attacks', () => {
+  setupMockApi();
     beforeEach(async () => {
       // Wait between tests to avoid rate limit carryover
       await waitForRateLimitReset(3);
@@ -328,6 +334,7 @@ describe('Rate Limit Security Tests', () => {
   });
 
   describe('Rate Limit Reset Behavior', () => {
+  setupMockApi();
     it('should include reset timestamp in headers', async () => {
       if (skipIfNoServer()) return;
 
@@ -363,6 +370,7 @@ describe('Rate Limit Security Tests', () => {
   });
 
   describe('Multiple Endpoint Rate Limiting', () => {
+  setupMockApi();
     beforeEach(async () => {
       await waitForRateLimitReset();
     });

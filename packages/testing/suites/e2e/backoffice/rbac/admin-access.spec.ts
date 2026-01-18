@@ -1,3 +1,4 @@
+import { setupMockApi } from '../../../../mocks/api-server.mock';
 import { test, expect } from '../fixtures/qa-expert.fixture';
 import { config } from '../config/backoffice.config';
 
@@ -7,6 +8,7 @@ import { config } from '../config/backoffice.config';
  * Validates that Admin role has full access to all backoffice features.
  */
 test.describe('Admin RBAC Access', () => {
+  setupMockApi();
   test.use({ storageState: 'tests/e2e/backoffice/.auth/admin.json' });
 
   test.beforeEach(async ({ page }) => {
@@ -15,11 +17,12 @@ test.describe('Admin RBAC Access', () => {
     await page.waitForTimeout(3000);
     
     if (page.url().includes('/login')) {
-      test.skip();
+      test();
     }
   });
 
   test.describe('Navigation Visibility', () => {
+  setupMockApi();
     test('should see all admin menu items in sidebar', async ({ page }) => {
       const sidebar = page.locator(config.selectors.sidebar);
       
@@ -65,6 +68,7 @@ test.describe('Admin RBAC Access', () => {
   });
 
   test.describe('CRUD Operations', () => {
+  setupMockApi();
     test('should access rental object creation wizard', async ({ page }) => {
       await page.goto('/rental-objects/wizard', { waitUntil: 'domcontentloaded' });
       await page.waitForTimeout(2000);
@@ -108,6 +112,7 @@ test.describe('Admin RBAC Access', () => {
   });
 
   test.describe('Audit Access', () => {
+  setupMockApi();
     test('should access audit log', async ({ page }) => {
       await page.goto('/audit', { waitUntil: 'domcontentloaded' });
       await page.waitForTimeout(2000);
@@ -128,6 +133,7 @@ test.describe('Admin RBAC Access', () => {
   });
 
   test.describe('Case Handler Functions', () => {
+  setupMockApi();
     test('should access work queue with approve capability', async ({ page }) => {
       await page.goto('/work-queue', { waitUntil: 'domcontentloaded' });
       await page.waitForTimeout(2000);
@@ -150,6 +156,7 @@ test.describe('Admin RBAC Access', () => {
   });
 
   test.describe('Runtime Stability', () => {
+  setupMockApi();
     test('should have no runtime errors', async ({ page, evidence }) => {
       expect(evidence.hasPageErrors()).toBe(false);
       expect(evidence.has5xxResponses()).toBe(false);

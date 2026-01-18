@@ -1,3 +1,4 @@
+import { setupMockApi } from '../../../mocks/api-server.mock';
 import { test } from '@playwright/test';
 import { TEST_CREDENTIALS } from '../../fixtures/auth/auth.fixture';
 

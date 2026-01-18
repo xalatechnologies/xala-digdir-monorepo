@@ -1,3 +1,4 @@
+import { setupMockApi } from '../../mocks/api-server.mock';
 /**
  * E2E Tests: Tenant Admin Flow
  *
@@ -138,6 +139,7 @@ async function waitForPageReady(page: Page) {
 // ============================================================================
 
 test.describe('Tenant Admin Login', () => {
+  setupMockApi();
   test('displays login page with correct branding', async ({ page }) => {
     await page.goto(`${TENANT_ADMIN_URL}/login`);
     await waitForPageReady(page);
@@ -190,6 +192,7 @@ test.describe('Tenant Admin Login', () => {
 // ============================================================================
 
 test.describe('Tenant Admin Dashboard', () => {
+  setupMockApi();
   test.beforeEach(async ({ page }) => {
     await page.goto(`${TENANT_ADMIN_URL}/login`);
     await mockTenantAdminAuth(page);
@@ -254,6 +257,7 @@ test.describe('Tenant Admin Dashboard', () => {
 // ============================================================================
 
 test.describe('Tenant Admin - Subscription (Read-Only)', () => {
+  setupMockApi();
   test.beforeEach(async ({ page }) => {
     await page.goto(`${TENANT_ADMIN_URL}/login`);
     await mockTenantAdminAuth(page);
@@ -317,6 +321,7 @@ test.describe('Tenant Admin - Subscription (Read-Only)', () => {
 // ============================================================================
 
 test.describe('Tenant Admin - Branding Settings', () => {
+  setupMockApi();
   test.beforeEach(async ({ page }) => {
     await page.goto(`${TENANT_ADMIN_URL}/login`);
     await mockTenantAdminAuth(page);
@@ -396,6 +401,7 @@ test.describe('Tenant Admin - Branding Settings', () => {
 // ============================================================================
 
 test.describe('Tenant Admin - Integrations (Masked Secrets)', () => {
+  setupMockApi();
   test.beforeEach(async ({ page }) => {
     await page.goto(`${TENANT_ADMIN_URL}/login`);
     await mockTenantAdminAuth(page);
@@ -496,6 +502,7 @@ test.describe('Tenant Admin - Integrations (Masked Secrets)', () => {
 // ============================================================================
 
 test.describe('Tenant Admin - Navigation', () => {
+  setupMockApi();
   test.beforeEach(async ({ page }) => {
     await page.goto(`${TENANT_ADMIN_URL}/login`);
     await mockTenantAdminAuth(page);
@@ -543,6 +550,7 @@ test.describe('Tenant Admin - Navigation', () => {
 // ============================================================================
 
 test.describe('Tenant Admin - Responsive Design', () => {
+  setupMockApi();
   test.beforeEach(async ({ page }) => {
     await page.goto(`${TENANT_ADMIN_URL}/login`);
     await mockTenantAdminAuth(page);
@@ -592,6 +600,7 @@ test.describe('Tenant Admin - Responsive Design', () => {
 // ============================================================================
 
 test.describe('Tenant Admin - Accessibility', () => {
+  setupMockApi();
   test.beforeEach(async ({ page }) => {
     await page.goto(`${TENANT_ADMIN_URL}/login`);
     await mockTenantAdminAuth(page);
@@ -651,6 +660,7 @@ test.describe('Tenant Admin - Accessibility', () => {
 // ============================================================================
 
 test.describe('Tenant Admin - RBAC', () => {
+  setupMockApi();
   test('unauthenticated users are redirected to login', async ({ page }) => {
     // Clear any existing auth
     await page.goto(`${TENANT_ADMIN_URL}/login`);
@@ -721,6 +731,7 @@ test.describe('Tenant Admin - RBAC', () => {
 // ============================================================================
 
 test.describe('Tenant Admin - Complete Flow', () => {
+  setupMockApi();
   test('can navigate through main tenant admin workflow', async ({ page }) => {
     // Step 1: Login
     await page.goto(`${TENANT_ADMIN_URL}/login`);

@@ -147,8 +147,8 @@ test.describe('Organization Creation Wizard', () => {
   });
 
   test.describe('Backend Verification', () => {
-    test.skip('verifies organization was created in database', async ({ request }) => {
-      test.skip(!organizationId, 'No organization ID available from previous test');
+    test('verifies organization was created in database', async ({ request }) => {
+      test(!organizationId, 'No organization ID available from previous test');
 
       // Verify organization exists via API
       const response = await request.get(`${API_URL}/api/organizations/${organizationId}`);
@@ -159,8 +159,8 @@ test.describe('Organization Creation Wizard', () => {
       expect(body.data.name).toContain('E2E Test');
     });
 
-    test.skip('verifies branding settings were saved', async ({ request }) => {
-      test.skip(!organizationId, 'No organization ID available from previous test');
+    test('verifies branding settings were saved', async ({ request }) => {
+      test(!organizationId, 'No organization ID available from previous test');
 
       // Verify branding settings via API
       const response = await request.get(`${API_URL}/api/organizations/${organizationId}/branding`);
@@ -178,8 +178,8 @@ test.describe('Organization Creation Wizard', () => {
       }
     });
 
-    test.skip('verifies audit log entry exists', async ({ request }) => {
-      test.skip(!organizationId, 'No organization ID available from previous test');
+    test('verifies audit log entry exists', async ({ request }) => {
+      test(!organizationId, 'No organization ID available from previous test');
 
       // Query audit logs for organization creation event
       const response = await request.get(`${API_URL}/api/audit-logs?entityType=organization&entityId=${organizationId}&action=create`);
@@ -197,8 +197,8 @@ test.describe('Organization Creation Wizard', () => {
       }
     });
 
-    test.skip('verifies default roles were assigned', async ({ request }) => {
-      test.skip(!organizationId, 'No organization ID available from previous test');
+    test('verifies default roles were assigned', async ({ request }) => {
+      test(!organizationId, 'No organization ID available from previous test');
 
       // Verify organization has default roles
       const response = await request.get(`${API_URL}/api/organizations/${organizationId}/roles`);

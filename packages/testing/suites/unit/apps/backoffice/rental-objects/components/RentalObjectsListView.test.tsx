@@ -168,7 +168,7 @@ const createTestWrapper = () => {
   );
 };
 
-describe.skip('RentalObjectsListView', () => {
+describe('RentalObjectsListView', () => {
   beforeEach(() => {
     vi.clearAllMocks();
   });

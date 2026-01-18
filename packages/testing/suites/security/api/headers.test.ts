@@ -6,6 +6,7 @@
  * Run with: pnpm dev & pnpm test:security
  */
 import { describe, it, expect, beforeAll } from 'vitest';
+import { setupMockApi } from '../../../mocks/api-server.mock';
 
 const API_URL = 'http://localhost:4000';
 let serverAvailable = false;
@@ -38,7 +39,9 @@ function skipIfNoServer() {
 }
 
 describe('Security Headers Tests', () => {
+  setupMockApi();
   describe('Content Security', () => {
+  setupMockApi();
     it('should set X-Content-Type-Options to nosniff', async () => {
       if (skipIfNoServer()) return;
       const res = await request('/health');
@@ -67,6 +70,7 @@ describe('Security Headers Tests', () => {
   });
 
   describe('Transport Security', () => {
+  setupMockApi();
     it('should set Strict-Transport-Security with 1 year max-age', async () => {
       if (skipIfNoServer()) return;
       const res = await request('/health');
@@ -99,6 +103,7 @@ describe('Security Headers Tests', () => {
   });
 
   describe('Privacy Headers', () => {
+  setupMockApi();
     it('should set Referrer-Policy to strict-origin-when-cross-origin', async () => {
       if (skipIfNoServer()) return;
       const res = await request('/health');
@@ -113,6 +118,7 @@ describe('Security Headers Tests', () => {
   });
 
   describe('Server Information Hiding', () => {
+  setupMockApi();
     it('should not expose X-Powered-By header', async () => {
       if (skipIfNoServer()) return;
       const res = await request('/health');
@@ -131,6 +137,7 @@ describe('Security Headers Tests', () => {
   });
 
   describe('All Critical Headers Present', () => {
+  setupMockApi();
     it('should include all required security headers', async () => {
       if (skipIfNoServer()) return;
       const res = await request('/health');
@@ -164,6 +171,7 @@ describe('Security Headers Tests', () => {
   });
 
   describe('API Endpoints Security', () => {
+  setupMockApi();
     it('should apply security headers to API endpoints', async () => {
       if (skipIfNoServer()) return;
       const res = await request('/api/tenants');

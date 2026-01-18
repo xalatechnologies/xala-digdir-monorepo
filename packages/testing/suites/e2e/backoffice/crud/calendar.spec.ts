@@ -1,3 +1,4 @@
+import { setupMockApi } from '../../../../mocks/api-server.mock';
 import { test, expect } from '../fixtures/evidence.fixture';
 
 /**
@@ -5,6 +6,7 @@ import { test, expect } from '../fixtures/evidence.fixture';
  * Full functionality testing: View, Navigate, Block, Events
  */
 test.describe('Calendar CRUD', () => {
+  setupMockApi();
   test.use({ storageState: 'tests/e2e/backoffice/.auth/admin.json' });
 
   test.beforeEach(async ({ page }) => {
@@ -12,11 +14,12 @@ test.describe('Calendar CRUD', () => {
     await page.waitForTimeout(3000);
     
     if (page.url().includes('/login')) {
-      test.skip();
+      test();
     }
   });
 
   test.describe('Page Layout', () => {
+  setupMockApi();
     test('should display calendar header', async ({ page }) => {
       const header = page.locator('h1, h2, [data-testid="page-title"]').first();
       await expect(header).toBeVisible({ timeout: 10000 });
@@ -35,6 +38,7 @@ test.describe('Calendar CRUD', () => {
   });
 
   test.describe('Navigation', () => {
+  setupMockApi();
     test('should have today button', async ({ page }) => {
       const todayBtn = page.locator('button:has-text("I dag"), button:has-text("Today")').first();
       
@@ -77,6 +81,7 @@ test.describe('Calendar CRUD', () => {
   });
 
   test.describe('Filter Operations', () => {
+  setupMockApi();
     test('should filter by rental object', async ({ page }) => {
       const objectFilter = page.locator('select[data-testid*="object"], [data-testid="rental-object-filter"]').first();
       
@@ -99,6 +104,7 @@ test.describe('Calendar CRUD', () => {
   });
 
   test.describe('Event Operations', () => {
+  setupMockApi();
     test('should display legend', async ({ page }) => {
       const legend = page.locator('[data-testid="calendar-legend"], [class*="legend"]').first();
       const visible = await legend.isVisible().catch(() => false);
@@ -120,6 +126,7 @@ test.describe('Calendar CRUD', () => {
   });
 
   test.describe('Block Operations', () => {
+  setupMockApi();
     test('should have block date button', async ({ page }) => {
       const blockBtn = page.locator('button:has-text("Blokker"), [data-testid="block-date"]').first();
       const visible = await blockBtn.isVisible().catch(() => false);
@@ -142,6 +149,7 @@ test.describe('Calendar CRUD', () => {
   });
 
   test.describe('Booking Operations', () => {
+  setupMockApi();
     test('should have quick booking button', async ({ page }) => {
       const bookBtn = page.locator('button:has-text("Ny booking"), [data-testid="quick-booking"]').first();
       const visible = await bookBtn.isVisible().catch(() => false);

@@ -1,3 +1,4 @@
+import { setupMockApi } from '../../../../mocks/api-server.mock';
 import { test, expect } from '../fixtures/evidence.fixture';
 import { config } from '../config/backoffice.config';
 
@@ -28,6 +29,7 @@ interface PageSnapshot {
 }
 
 test.describe('Sidebar Crawl - Admin Role', () => {
+  setupMockApi();
   test.use({ storageState: 'tests/e2e/backoffice/.auth/admin.json' });
 
   const allRoutes = [
@@ -105,6 +107,7 @@ test.describe('Sidebar Crawl - Admin Role', () => {
 });
 
 test.describe('Sidebar Crawl - Saksbehandler Role', () => {
+  setupMockApi();
   test.use({ storageState: 'tests/e2e/backoffice/.auth/saksbehandler.json' });
 
   // Saksbehandler can access shared routes
@@ -120,7 +123,7 @@ test.describe('Sidebar Crawl - Saksbehandler Role', () => {
       
       // Allow redirect to login if session expired
       if (currentUrl.includes('/login')) {
-        test.skip(true, 'Session expired, skipping');
+        test(true, 'Session expired, skipping');
         return;
       }
 
@@ -166,6 +169,7 @@ test.describe('Sidebar Crawl - Saksbehandler Role', () => {
 });
 
 test.describe('Sidebar Dynamic Enumeration', () => {
+  setupMockApi();
   test.use({ storageState: 'tests/e2e/backoffice/.auth/admin.json' });
 
   test('should enumerate all visible sidebar items', async ({ page }) => {

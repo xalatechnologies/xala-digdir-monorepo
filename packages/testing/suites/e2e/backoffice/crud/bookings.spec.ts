@@ -1,3 +1,4 @@
+import { setupMockApi } from '../../../../mocks/api-server.mock';
 import { test, expect } from '../fixtures/evidence.fixture';
 
 /**
@@ -5,6 +6,7 @@ import { test, expect } from '../fixtures/evidence.fixture';
  * Full functionality testing: List, View, Add, Edit, Cancel, Approve
  */
 test.describe('Bookings CRUD', () => {
+  setupMockApi();
   test.use({ storageState: 'tests/e2e/backoffice/.auth/admin.json' });
 
   test.beforeEach(async ({ page }) => {
@@ -12,11 +14,12 @@ test.describe('Bookings CRUD', () => {
     await page.waitForTimeout(3000);
     
     if (page.url().includes('/login')) {
-      test.skip();
+      test();
     }
   });
 
   test.describe('Page Layout', () => {
+  setupMockApi();
     test('should display page header with title', async ({ page }) => {
       const header = page.locator('h1, h2, [data-testid="page-title"]').first();
       await expect(header).toBeVisible({ timeout: 10000 });
@@ -53,6 +56,7 @@ test.describe('Bookings CRUD', () => {
   });
 
   test.describe('List Operations', () => {
+  setupMockApi();
     test('should display booking rows', async ({ page }) => {
       const rows = page.locator('tbody tr, [data-testid^="booking-row-"]');
       const rowCount = await rows.count();
@@ -93,6 +97,7 @@ test.describe('Bookings CRUD', () => {
   });
 
   test.describe('View Operations', () => {
+  setupMockApi();
     test('should open booking detail modal/page', async ({ page }) => {
       const firstRow = page.locator('tbody tr, [data-testid^="booking-row-"]').first();
       
@@ -127,6 +132,7 @@ test.describe('Bookings CRUD', () => {
   });
 
   test.describe('Create Operations', () => {
+  setupMockApi();
     test('should open create booking form', async ({ page }) => {
       const createBtn = page.locator('button:has-text("Ny booking"), button:has-text("Opprett"), a[href*="new"]').first();
       
@@ -141,6 +147,7 @@ test.describe('Bookings CRUD', () => {
   });
 
   test.describe('Status Operations', () => {
+  setupMockApi();
     test('should show approve button', async ({ page }) => {
       const approveBtn = page.locator('button:has-text("Godkjenn"), [data-testid="approve-button"]').first();
       const visible = await approveBtn.isVisible().catch(() => false);
@@ -161,6 +168,7 @@ test.describe('Bookings CRUD', () => {
   });
 
   test.describe('Export Operations', () => {
+  setupMockApi();
     test('should have export option', async ({ page }) => {
       const exportBtn = page.locator('button:has-text("Eksporter"), [data-testid="export-button"]').first();
       const visible = await exportBtn.isVisible().catch(() => false);

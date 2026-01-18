@@ -16,6 +16,7 @@
  */
 
 import { describe, it, expect, beforeAll, afterAll } from 'vitest';
+import { setupMockApi } from '../../../mocks/api-server.mock';
 import { z } from 'zod';
 
 // =============================================================================
@@ -102,7 +103,9 @@ const MOCK_TRANSLATIONS = {
 // =============================================================================
 
 describe('i18n Schema Validation', () => {
+  setupMockApi();
   describe('Translation Key Format', () => {
+  setupMockApi();
     it('accepts valid namespace.camelCaseKey format', () => {
       const validKeys = [
         'common.save',
@@ -133,6 +136,7 @@ describe('i18n Schema Validation', () => {
   });
 
   describe('Translations Response', () => {
+  setupMockApi();
     it('validates flat key-value object', () => {
       const result = TranslationsResponseSchema.safeParse(MOCK_TRANSLATIONS.nb);
       expect(result.success).toBe(true);
@@ -155,7 +159,9 @@ describe('i18n Schema Validation', () => {
 // =============================================================================
 
 describe('i18n Compliance', () => {
+  setupMockApi();
   describe('Key Naming Convention', () => {
+  setupMockApi();
     it('all keys follow namespace.camelCaseKey pattern', () => {
       const allKeys = Object.keys(MOCK_TRANSLATIONS.nb);
       
@@ -187,6 +193,7 @@ describe('i18n Compliance', () => {
   });
 
   describe('Language Parity', () => {
+  setupMockApi();
     it('nb and en have the same keys', () => {
       const nbKeys = new Set(Object.keys(MOCK_TRANSLATIONS.nb));
       const enKeys = new Set(Object.keys(MOCK_TRANSLATIONS.en));
@@ -215,7 +222,9 @@ describe('i18n Compliance', () => {
 // =============================================================================
 
 describe('i18n WCAG Compliance', () => {
+  setupMockApi();
   describe('Accessibility Keys', () => {
+  setupMockApi();
     it('button labels are descriptive', () => {
       const buttonKeys = ['common.save', 'common.cancel'];
       
@@ -243,6 +252,7 @@ describe('i18n WCAG Compliance', () => {
   });
 
   describe('Screen Reader Support', () => {
+  setupMockApi();
     it('action labels are complete sentences or clear actions', () => {
       const actionKeys = ['common.save', 'common.cancel', 'auth.login'];
       
@@ -261,9 +271,11 @@ describe('i18n WCAG Compliance', () => {
 // =============================================================================
 
 describe('i18n API Integration', () => {
+  setupMockApi();
   const itOrSkip = SKIP_INTEGRATION ? it.skip : it;
 
   describe('GET /api/i18n/:lang', () => {
+  setupMockApi();
     itOrSkip('returns translations for nb', async () => {
       const response = await fetch(`${API_BASE}/i18n/nb`);
       expect(response.ok).toBe(true);
@@ -295,6 +307,7 @@ describe('i18n API Integration', () => {
   });
 
   describe('GET /api/i18n/:lang/:namespace', () => {
+  setupMockApi();
     itOrSkip('returns translations for specific namespace', async () => {
       const response = await fetch(`${API_BASE}/i18n/nb/common`);
       expect(response.ok).toBe(true);
@@ -319,6 +332,7 @@ describe('i18n API Integration', () => {
   });
 
   describe('GET /api/i18n/keys', () => {
+  setupMockApi();
     itOrSkip('returns list of all translation keys', async () => {
       const response = await fetch(`${API_BASE}/i18n/keys`);
       expect(response.ok).toBe(true);
@@ -343,9 +357,11 @@ describe('i18n API Integration', () => {
 // =============================================================================
 
 describe('i18n API Contracts', () => {
+  setupMockApi();
   const itOrSkip = SKIP_INTEGRATION ? it.skip : it;
 
   describe('Error Responses', () => {
+  setupMockApi();
     itOrSkip('500 errors follow RFC 7807', async () => {
       // Force an error by querying with invalid params
       const response = await fetch(`${API_BASE}/i18n/../../../etc/passwd`);
@@ -360,6 +376,7 @@ describe('i18n API Contracts', () => {
   });
 
   describe('Response Headers', () => {
+  setupMockApi();
     itOrSkip('includes cache headers for translations', async () => {
       const response = await fetch(`${API_BASE}/i18n/nb`);
       
@@ -376,7 +393,9 @@ describe('i18n API Contracts', () => {
 // =============================================================================
 
 describe('i18n Edge Cases', () => {
+  setupMockApi();
   describe('Unicode Handling', () => {
+  setupMockApi();
     it('Norwegian characters are preserved', () => {
       const norwegianText = 'Søk etter æbler og øvelser';
       expect(norwegianText).toContain('ø');
@@ -399,6 +418,7 @@ describe('i18n Edge Cases', () => {
   });
 
   describe('Interpolation Placeholders', () => {
+  setupMockApi();
     it('{{variable}} placeholders are valid', () => {
       const withPlaceholders = {
         'payment.amount': 'Beløp: {{amount}} {{currency}}',
@@ -419,6 +439,7 @@ describe('i18n Edge Cases', () => {
   });
 
   describe('Empty and Boundary Values', () => {
+  setupMockApi();
     it('handles empty string translations', () => {
       const emptyValue = '';
       expect(emptyValue).toBe('');
@@ -438,6 +459,7 @@ Line 3`;
   });
 
   describe('Concurrent Access', () => {
+  setupMockApi();
     const itOrSkip = SKIP_INTEGRATION ? it.skip : it;
 
     itOrSkip('handles concurrent requests', async () => {
@@ -459,7 +481,9 @@ Line 3`;
 // =============================================================================
 
 describe('i18n Tenant Isolation', () => {
+  setupMockApi();
   describe('Override Behavior', () => {
+  setupMockApi();
     it('tenant overrides take precedence over system defaults', () => {
       // Simulated behavior test
       const systemDefault = { 'common.save': 'Lagre' };
@@ -483,7 +507,9 @@ describe('i18n Tenant Isolation', () => {
 // =============================================================================
 
 describe('i18n Database Consistency', () => {
+  setupMockApi();
   describe('Seeded Data', () => {
+  setupMockApi();
     it('seed file contains required keys count', () => {
       // Based on extraction: 9,312 records total
       const expectedMinKeys = 4000; // Per language minimum

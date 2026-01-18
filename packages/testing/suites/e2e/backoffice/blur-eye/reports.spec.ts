@@ -1,3 +1,4 @@
+import { setupMockApi } from '../../../../mocks/api-server.mock';
 import { test, expect } from '../fixtures/qa-expert.fixture';
 import { config } from '../config/backoffice.config';
 import {
@@ -19,6 +20,7 @@ import {
  */
 
 test.describe('Reports (Rapporter) E2E', () => {
+  setupMockApi();
   test.use({ storageState: 'tests/e2e/backoffice/.auth/admin.json' });
 
   test.beforeEach(async ({ page }) => {
@@ -26,11 +28,12 @@ test.describe('Reports (Rapporter) E2E', () => {
     await page.waitForTimeout(3000);
     
     if (page.url().includes('/login') || !page.url().includes('/reports')) {
-      test.skip();
+      test();
     }
   });
 
   test.describe('R1. Blur-Eye Structure', () => {
+  setupMockApi();
     test('R1.1 Page has clear header', async ({ page }) => {
       const title = page.locator('h1, h2, [data-testid="page-title"]').first();
       await expect(title).toBeVisible({ timeout: 10000 });
@@ -72,6 +75,7 @@ test.describe('Reports (Rapporter) E2E', () => {
   });
 
   test.describe('R2. Report Generation', () => {
+  setupMockApi();
     test('R2.1 Report type selection works', async ({ page }) => {
       const reportTypeSelector = page.locator(
         'select[data-testid*="report-type"], [data-testid*="report-select"], button:has-text("Type")'
@@ -92,6 +96,7 @@ test.describe('Reports (Rapporter) E2E', () => {
   });
 
   test.describe('R3. Filter Application', () => {
+  setupMockApi();
     test('R3.1 Date range filter works', async ({ page }) => {
       const dateInput = page.locator('input[type="date"]').first();
       
@@ -120,6 +125,7 @@ test.describe('Reports (Rapporter) E2E', () => {
   });
 
   test.describe('R4. Export Downloads', () => {
+  setupMockApi();
     test('R4.1 Export buttons exist', async ({ page }) => {
       const exportBtns = page.locator(
         'button:has-text("Eksporter"), button:has-text("Export"), button:has-text("CSV"), button:has-text("PDF"), [data-testid*="export"]'
@@ -159,6 +165,7 @@ test.describe('Reports (Rapporter) E2E', () => {
   });
 
   test.describe('R5. Performance Sanity', () => {
+  setupMockApi();
     test('R5.1 Page loads within timeout', async ({ page }) => {
       const startTime = Date.now();
       
@@ -187,6 +194,7 @@ test.describe('Reports (Rapporter) E2E', () => {
   });
 
   test.describe('R6. Feature Flag Visibility', () => {
+  setupMockApi();
     test('R6.1 Reports appears in sidebar when flag ON', async ({ page }) => {
       await page.goto('/');
       await page.waitForTimeout(2000);
@@ -199,6 +207,7 @@ test.describe('Reports (Rapporter) E2E', () => {
   });
 
   test.describe('R7. Runtime Stability', () => {
+  setupMockApi();
     test('R7.1 No runtime errors', async ({ page, evidence }) => {
       expect(evidence.hasPageErrors()).toBe(false);
       expect(evidence.has5xxResponses()).toBe(false);

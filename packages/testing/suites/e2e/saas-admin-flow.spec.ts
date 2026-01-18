@@ -1,3 +1,4 @@
+import { setupMockApi } from '../../mocks/api-server.mock';
 /**
  * E2E Tests: SaaS Admin Flow
  *
@@ -74,6 +75,7 @@ async function waitForPageReady(page: Page) {
 // ============================================================================
 
 test.describe('SaaS Admin Login', () => {
+  setupMockApi();
   test('displays login page with correct branding', async ({ page }) => {
     await page.goto(`${SAAS_ADMIN_URL}/login`);
     await waitForPageReady(page);
@@ -126,6 +128,7 @@ test.describe('SaaS Admin Login', () => {
 // ============================================================================
 
 test.describe('SaaS Admin Dashboard', () => {
+  setupMockApi();
   test.beforeEach(async ({ page }) => {
     await page.goto(`${SAAS_ADMIN_URL}/login`);
     await mockSaasAdminAuth(page);
@@ -158,6 +161,7 @@ test.describe('SaaS Admin Dashboard', () => {
 // ============================================================================
 
 test.describe('SaaS Admin - Tenants List', () => {
+  setupMockApi();
   test.beforeEach(async ({ page }) => {
     await page.goto(`${SAAS_ADMIN_URL}/login`);
     await mockSaasAdminAuth(page);
@@ -208,6 +212,7 @@ test.describe('SaaS Admin - Tenants List', () => {
 // ============================================================================
 
 test.describe('SaaS Admin - Tenant Detail', () => {
+  setupMockApi();
   test.beforeEach(async ({ page }) => {
     await page.goto(`${SAAS_ADMIN_URL}/login`);
     await mockSaasAdminAuth(page);
@@ -228,6 +233,7 @@ test.describe('SaaS Admin - Tenant Detail', () => {
 // ============================================================================
 
 test.describe('SaaS Admin - Feature Flags', () => {
+  setupMockApi();
   test.beforeEach(async ({ page }) => {
     await page.goto(`${SAAS_ADMIN_URL}/login`);
     await mockSaasAdminAuth(page);
@@ -247,6 +253,7 @@ test.describe('SaaS Admin - Feature Flags', () => {
 // ============================================================================
 
 test.describe('SaaS Admin - Plans', () => {
+  setupMockApi();
   test.beforeEach(async ({ page }) => {
     await page.goto(`${SAAS_ADMIN_URL}/login`);
     await mockSaasAdminAuth(page);
@@ -275,6 +282,7 @@ test.describe('SaaS Admin - Plans', () => {
 // ============================================================================
 
 test.describe('SaaS Admin - Responsive Design', () => {
+  setupMockApi();
   test.beforeEach(async ({ page }) => {
     await page.goto(`${SAAS_ADMIN_URL}/login`);
     await mockSaasAdminAuth(page);
@@ -314,6 +322,7 @@ test.describe('SaaS Admin - Responsive Design', () => {
 // ============================================================================
 
 test.describe('SaaS Admin - Accessibility', () => {
+  setupMockApi();
   test.beforeEach(async ({ page }) => {
     await page.goto(`${SAAS_ADMIN_URL}/login`);
     await mockSaasAdminAuth(page);
@@ -369,6 +378,7 @@ test.describe('SaaS Admin - Accessibility', () => {
 // ============================================================================
 
 test.describe('SaaS Admin - RBAC', () => {
+  setupMockApi();
   test('unauthenticated users are redirected to login', async ({ page }) => {
     // Clear any existing auth
     await page.goto(`${SAAS_ADMIN_URL}/login`);
@@ -402,6 +412,7 @@ test.describe('SaaS Admin - RBAC', () => {
 // ============================================================================
 
 test.describe('SaaS Admin - Complete Flow', () => {
+  setupMockApi();
   test('can navigate through main admin workflow', async ({ page }) => {
     // Step 1: Login
     await page.goto(`${SAAS_ADMIN_URL}/login`);

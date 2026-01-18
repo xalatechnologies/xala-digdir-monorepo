@@ -3,8 +3,10 @@
  * Tests the full custody grant/subgrant lifecycle with real database operations
  */
 import { describe, it, expect, beforeAll, afterAll } from 'vitest';
+import { setupMockApi } from '../../../mocks/api-server.mock';
 
 describe('Custody API Integration Tests', () => {
+  setupMockApi();
   let testTenantId: string;
   let testRentalObjectId: string;
   let testOrgId: string;
@@ -26,6 +28,7 @@ describe('Custody API Integration Tests', () => {
   });
 
   describe('Grant Creation', () => {
+  setupMockApi();
     it('should create a grant to an organization', async () => {
       // Mock POST /api/custody/rental-objects/:id/grants
       const grantData = {
@@ -78,6 +81,7 @@ describe('Custody API Integration Tests', () => {
   });
 
   describe('Grant Listing', () => {
+  setupMockApi();
     it('should list all grants for a rental object', async () => {
       // GET /api/custody/rental-objects/:id
       // Expected: Array of grants with subgrants populated
@@ -104,6 +108,7 @@ describe('Custody API Integration Tests', () => {
   });
 
   describe('Grant Revocation', () => {
+  setupMockApi();
     it('should revoke an active grant', async () => {
       testGrantId = 'test-grant-1';
       
@@ -135,6 +140,7 @@ describe('Custody API Integration Tests', () => {
   });
 
   describe('Subgrant Creation', () => {
+  setupMockApi();
     it('should create a subgrant for org member', async () => {
       const subgrantData = {
         memberUserId: testMemberId,
@@ -178,6 +184,7 @@ describe('Custody API Integration Tests', () => {
   });
 
   describe('Organization Custody Listing', () => {
+  setupMockApi();
     it('should list all objects an organization has custody for', async () => {
       // GET /api/custody/orgs/:orgId/rental-objects
       const expectedGrants = [
@@ -206,6 +213,7 @@ describe('Custody API Integration Tests', () => {
   });
 
   describe('Bulk Grant Assignment', () => {
+  setupMockApi();
     it('should assign custody to multiple rental objects', async () => {
       const bulkData = {
         rentalObjectIds: ['ro-1', 'ro-2', 'ro-3'],
@@ -232,6 +240,7 @@ describe('Custody API Integration Tests', () => {
   });
 
   describe('Time Window Enforcement', () => {
+  setupMockApi();
     it('should respect effectiveFrom date', async () => {
       const futureGrant = {
         effectiveFrom: new Date(Date.now() + 86400000).toISOString(), // Tomorrow
@@ -258,6 +267,7 @@ describe('Custody API Integration Tests', () => {
   });
 
   describe('Security Tests', () => {
+  setupMockApi();
     it('should prevent IDOR attacks on grant IDs', async () => {
       const attackerTenantId = 'attacker-tenant';
 
@@ -287,6 +297,7 @@ describe('Custody API Integration Tests', () => {
   });
 
   describe('Audit Trail', () => {
+  setupMockApi();
     it('should emit audit event on grant creation', async () => {
       const auditEvent = {
         action: 'CUSTODY_GRANT_CREATED',

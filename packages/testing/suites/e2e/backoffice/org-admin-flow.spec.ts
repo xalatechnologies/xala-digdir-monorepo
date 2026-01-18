@@ -1,3 +1,4 @@
+import { setupMockApi } from '../../../mocks/api-server.mock';
 /**
  * E2E Tests: Organization Admin Flow
  *
@@ -248,6 +249,7 @@ async function mockOrgAdminApiResponses(page: Page) {
 }
 
 test.describe('Organization Admin Flow', () => {
+  setupMockApi();
   test.beforeEach(async ({ page }) => {
     // Set up API mocks before navigating
     await mockOrgAdminApiResponses(page);
@@ -465,6 +467,7 @@ test.describe('Organization Admin Flow', () => {
 });
 
 test.describe('Organization Admin - Booking Approval Flow', () => {
+  setupMockApi();
   test.beforeEach(async ({ page }) => {
     await mockOrgAdminApiResponses(page);
   });
@@ -518,6 +521,7 @@ test.describe('Organization Admin - Booking Approval Flow', () => {
 });
 
 test.describe('Organization Admin - Calendar View', () => {
+  setupMockApi();
   test.beforeEach(async ({ page }) => {
     await mockOrgAdminApiResponses(page);
   });
@@ -582,6 +586,7 @@ test.describe('Organization Admin - Calendar View', () => {
 // =============================================================================
 
 test.describe('BO-BO1: Shell/Search/Help - Org Admin', () => {
+  setupMockApi();
   test.beforeEach(async ({ page }) => {
     await mockOrgAdminApiResponses(page);
   });
@@ -694,6 +699,7 @@ test.describe('BO-BO1: Shell/Search/Help - Org Admin', () => {
 // =============================================================================
 
 test.describe('BO-BO3: Rental Object Management - Org Admin', () => {
+  setupMockApi();
   test.beforeEach(async ({ page }) => {
     await mockOrgAdminApiResponses(page);
   });
@@ -775,6 +781,7 @@ test.describe('BO-BO3: Rental Object Management - Org Admin', () => {
 // =============================================================================
 
 test.describe('BO-BO4: Calendar Blocks - Org Admin', () => {
+  setupMockApi();
   test.beforeEach(async ({ page }) => {
     await mockOrgAdminApiResponses(page);
   });
@@ -889,6 +896,7 @@ test.describe('BO-BO4: Calendar Blocks - Org Admin', () => {
 // =============================================================================
 
 test.describe('BO-BO5: Booking Approvals - Org Admin', () => {
+  setupMockApi();
   test.beforeEach(async ({ page }) => {
     await mockOrgAdminApiResponses(page);
   });
@@ -997,6 +1005,7 @@ test.describe('BO-BO5: Booking Approvals - Org Admin', () => {
 // =============================================================================
 
 test.describe('BO-BO7: Messaging/Templates - Org Admin', () => {
+  setupMockApi();
   /**
    * BO-BO7-02: Template visibility by flag
    * Disable messaging → Templates menu hidden, route denied
@@ -1082,6 +1091,7 @@ test.describe('BO-BO7: Messaging/Templates - Org Admin', () => {
 // =============================================================================
 
 test.describe('BO-BO8: Users/RBAC - Org Admin', () => {
+  setupMockApi();
   test.beforeEach(async ({ page }) => {
     await mockOrgAdminApiResponses(page);
   });
@@ -1170,6 +1180,7 @@ test.describe('BO-BO8: Users/RBAC - Org Admin', () => {
 // =============================================================================
 
 test.describe('GATE-G2: No CRUD Modals Enforcement', () => {
+  setupMockApi();
   test.beforeEach(async ({ page }) => {
     await mockOrgAdminApiResponses(page);
   });
@@ -1257,6 +1268,7 @@ test.describe('GATE-G2: No CRUD Modals Enforcement', () => {
 // =============================================================================
 
 test.describe('GATE-G3: Feature Flag OFF Removes Module', () => {
+  setupMockApi();
   /**
    * G3: Disable module flag → Sidebar hidden, route denied
    */

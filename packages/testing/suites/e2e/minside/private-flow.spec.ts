@@ -1,3 +1,4 @@
+import { setupMockApi } from '../../../mocks/api-server.mock';
 import { test, expect } from '@playwright/test';
 import AxeBuilder from '@axe-core/playwright';
 
@@ -11,15 +12,17 @@ import AxeBuilder from '@axe-core/playwright';
  */
 
 test.describe('MinSide - Private User Flow', () => {
+  setupMockApi();
   test.use({ storageState: 'tests/e2e/minside/.auth/user.json' });
 
   test.describe('Dashboard', () => {
+  setupMockApi();
     test.beforeEach(async ({ page }) => {
       await page.goto('/', { waitUntil: 'domcontentloaded' });
       await page.waitForTimeout(3000);
       
       if (page.url().includes('/login')) {
-        test.skip();
+        test();
       }
     });
 
@@ -63,12 +66,13 @@ test.describe('MinSide - Private User Flow', () => {
   });
 
   test.describe('Bookings', () => {
+  setupMockApi();
     test.beforeEach(async ({ page }) => {
       await page.goto('/bookings', { waitUntil: 'domcontentloaded' });
       await page.waitForTimeout(3000);
       
       if (page.url().includes('/login')) {
-        test.skip();
+        test();
       }
     });
 
@@ -151,12 +155,13 @@ test.describe('MinSide - Private User Flow', () => {
   });
 
   test.describe('Messages', () => {
+  setupMockApi();
     test.beforeEach(async ({ page }) => {
       await page.goto('/messages', { waitUntil: 'domcontentloaded' });
       await page.waitForTimeout(3000);
       
       if (page.url().includes('/login')) {
-        test.skip();
+        test();
       }
     });
 
@@ -175,12 +180,13 @@ test.describe('MinSide - Private User Flow', () => {
   });
 
   test.describe('Settings', () => {
+  setupMockApi();
     test.beforeEach(async ({ page }) => {
       await page.goto('/settings', { waitUntil: 'domcontentloaded' });
       await page.waitForTimeout(3000);
       
       if (page.url().includes('/login')) {
-        test.skip();
+        test();
       }
     });
 
@@ -214,12 +220,13 @@ test.describe('MinSide - Private User Flow', () => {
   });
 
   test.describe('Favorites', () => {
+  setupMockApi();
     test.beforeEach(async ({ page }) => {
       await page.goto('/favorites', { waitUntil: 'domcontentloaded' });
       await page.waitForTimeout(3000);
       
       if (page.url().includes('/login')) {
-        test.skip();
+        test();
       }
     });
 
@@ -238,12 +245,13 @@ test.describe('MinSide - Private User Flow', () => {
   });
 
   test.describe('Accessibility', () => {
+  setupMockApi();
     test('dashboard passes accessibility scan', async ({ page }) => {
       await page.goto('/', { waitUntil: 'domcontentloaded' });
       await page.waitForTimeout(3000);
       
       if (page.url().includes('/login')) {
-        test.skip();
+        test();
         return;
       }
       
@@ -271,7 +279,7 @@ test.describe('MinSide - Private User Flow', () => {
       await page.waitForTimeout(3000);
       
       if (page.url().includes('/login')) {
-        test.skip();
+        test();
         return;
       }
       

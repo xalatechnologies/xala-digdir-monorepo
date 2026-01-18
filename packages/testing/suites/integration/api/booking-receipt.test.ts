@@ -4,6 +4,7 @@
  * Target: 95%+ coverage
  */
 import { describe, it, expect, beforeAll } from 'vitest';
+import { setupMockApi } from '../../../mocks/api-server.mock';
 
 const API_URL = process.env.API_URL || 'http://localhost:4000';
 const TENANT_ID = 'f47ac10b-58cc-4372-a567-0e02b2c3d479';
@@ -14,6 +15,7 @@ const headers = {
 };
 
 describe('BookingController - Receipt Endpoint', () => {
+  setupMockApi();
   let testBookingId: string;
 
   beforeAll(async () => {
@@ -29,6 +31,7 @@ describe('BookingController - Receipt Endpoint', () => {
   // GET /api/bookings/:id/receipt
   // =========================================================================
   describe('GET /api/bookings/:id/receipt', () => {
+  setupMockApi();
     it('should return receipt with all required fields', async () => {
       if (!testBookingId) {
         console.log('Skipping test: no booking available');

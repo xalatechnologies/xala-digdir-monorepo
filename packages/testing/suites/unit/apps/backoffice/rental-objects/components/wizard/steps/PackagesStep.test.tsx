@@ -24,7 +24,7 @@ vi.mock('@xala/ds', async () => {
   };
 });
 
-describe.skip('PackagesStep', () => {
+describe('PackagesStep', () => {
   let mockWizard: UseRentalObjectWizardReturn;
 
   beforeEach(() => {
@@ -51,7 +51,7 @@ describe.skip('PackagesStep', () => {
     } as unknown as UseRentalObjectWizardReturn;
   });
 
-  describe.skip('Rendering', () => {
+  describe('Rendering', () => {
     it('should render header with icon and title', () => {
       render(<PackagesStep wizard={mockWizard} />);
 
@@ -90,7 +90,7 @@ describe.skip('PackagesStep', () => {
     });
   });
 
-  describe.skip('Package Management', () => {
+  describe('Package Management', () => {
     it('should add new package when add button clicked', () => {
       render(<PackagesStep wizard={mockWizard} />);
 
@@ -255,7 +255,7 @@ describe.skip('PackagesStep', () => {
     });
   });
 
-  describe.skip('Validation', () => {
+  describe('Validation', () => {
     it('should render required name field label', () => {
       mockWizard.formData.packages = [
         { id: 'pkg-1', name: '', description: '', price: 0, includedInBasePrice: false },
@@ -288,7 +288,7 @@ describe.skip('PackagesStep', () => {
     });
   });
 
-  describe.skip('Accessibility', () => {
+  describe('Accessibility', () => {
     it('should render decorative icons', () => {
       render(<PackagesStep wizard={mockWizard} />);
 

@@ -1,3 +1,4 @@
+import { setupMockApi } from '../../../../mocks/api-server.mock';
 import { test, expect } from '../fixtures/evidence.fixture';
 import { config } from '../config/backoffice.config';
 
@@ -8,7 +9,9 @@ import { config } from '../config/backoffice.config';
  * Tests critical paths for both Admin and Saksbehandler roles.
  */
 test.describe('Backoffice Smoke Tests', () => {
+  setupMockApi();
   test.describe('Authentication', () => {
+  setupMockApi();
     test('should display login page with demo options', async ({ page }) => {
       await page.goto('/login', { waitUntil: 'domcontentloaded' });
       await page.waitForTimeout(3000);
@@ -26,6 +29,7 @@ test.describe('Backoffice Smoke Tests', () => {
   });
 
   test.describe('Admin Role', () => {
+  setupMockApi();
     test.use({ storageState: 'tests/e2e/backoffice/.auth/admin.json' });
 
     test('should load dashboard', async ({ page, evidence }) => {
@@ -47,7 +51,7 @@ test.describe('Backoffice Smoke Tests', () => {
       // Check if we got redirected to login
       if (page.url().includes('/login')) {
         console.log('Redirected to login - skipping sidebar test');
-        test.skip();
+        test();
         return;
       }
       
@@ -84,6 +88,7 @@ test.describe('Backoffice Smoke Tests', () => {
   });
 
   test.describe('Saksbehandler Role', () => {
+  setupMockApi();
     test.use({ storageState: 'tests/e2e/backoffice/.auth/saksbehandler.json' });
 
     test('should load dashboard', async ({ page, evidence }) => {
@@ -105,7 +110,7 @@ test.describe('Backoffice Smoke Tests', () => {
       // Check if we got redirected to login
       if (page.url().includes('/login')) {
         console.log('Redirected to login - skipping sidebar test');
-        test.skip();
+        test();
         return;
       }
       
@@ -133,6 +138,7 @@ test.describe('Backoffice Smoke Tests', () => {
   });
 
   test.describe('Critical Page Checks', () => {
+  setupMockApi();
     test.use({ storageState: 'tests/e2e/backoffice/.auth/admin.json' });
 
     test('should not display forbidden terminology', async ({ page }) => {

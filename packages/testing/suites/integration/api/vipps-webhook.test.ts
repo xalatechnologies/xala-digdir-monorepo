@@ -5,6 +5,7 @@
  */
 
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
+import { setupMockApi } from '../../../mocks/api-server.mock';
 import { createHmac } from 'crypto';
 
 // Mock environment variables
@@ -18,6 +19,7 @@ const mockEnv = {
 };
 
 describe('Vipps Webhook Handler', () => {
+  setupMockApi();
   let originalEnv: NodeJS.ProcessEnv;
 
   beforeEach(() => {
@@ -31,6 +33,7 @@ describe('Vipps Webhook Handler', () => {
   });
 
   describe('Signature Validation', () => {
+  setupMockApi();
     it('validates correct HMAC signature', () => {
       const secret = 'test-webhook-secret';
       const payload = JSON.stringify({
@@ -68,6 +71,7 @@ describe('Vipps Webhook Handler', () => {
   });
 
   describe('Idempotency', () => {
+  setupMockApi();
     it('tracks processed events correctly', () => {
       const processedEvents = new Map<string, Date>();
       const eventId = 'test-event-123';
@@ -99,6 +103,7 @@ describe('Vipps Webhook Handler', () => {
   });
 
   describe('Booking ID Extraction', () => {
+  setupMockApi();
     it('extracts booking ID from reference', () => {
       const reference = 'digilist-booking-abc123-1234567890';
       const match = reference.match(/^digilist-(.+)-\d+$/);
@@ -125,6 +130,7 @@ describe('Vipps Webhook Handler', () => {
   });
 
   describe('Event Type Handling', () => {
+  setupMockApi();
     it('recognizes checkout session events', () => {
       const validEventTypes = [
         'checkout.session.completed',
@@ -156,6 +162,7 @@ describe('Vipps Webhook Handler', () => {
   });
 
   describe('Webhook Event Structure', () => {
+  setupMockApi();
     it('validates required fields', () => {
       const validEvent = {
         eventId: 'test-123',
@@ -193,6 +200,7 @@ describe('Vipps Webhook Handler', () => {
 });
 
 describe('Payment Status Mapping', () => {
+  setupMockApi();
   it('maps all Vipps states correctly', () => {
     const stateMap: Record<string, string> = {
       'CREATED': 'CREATED',

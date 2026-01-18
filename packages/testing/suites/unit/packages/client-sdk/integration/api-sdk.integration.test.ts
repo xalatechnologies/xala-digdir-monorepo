@@ -6,6 +6,7 @@
  * @note Tests skipped - MSW server setup requires additional configuration
  */
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
+import { setupMockApi } from '../../../../../mocks/api-server.mock';
 import { http, HttpResponse } from 'msw';
 import { setupServer } from 'msw/node';
 
@@ -246,6 +247,7 @@ describeSkip('API-SDK Integration Tests', () => {
   });
 
   describe('RentalObjectService Integration', () => {
+  setupMockApi();
     it('fetches list of rental objects', async () => {
       const result = await rentalObjectService.getAll({ limit: 5 });
       
@@ -302,6 +304,7 @@ describeSkip('API-SDK Integration Tests', () => {
   });
 
   describe('BookingService Integration', () => {
+  setupMockApi();
     it('fetches bookings', async () => {
       const result = await bookingService.getAll();
       
@@ -335,6 +338,7 @@ describeSkip('API-SDK Integration Tests', () => {
   });
 
   describe('AuthzService Integration', () => {
+  setupMockApi();
     it('fetches user permissions', async () => {
       const result = await authzService.getPermissions();
       
@@ -356,6 +360,7 @@ describeSkip('API-SDK Integration Tests', () => {
   });
 
   describe('Error Handling Integration', () => {
+  setupMockApi();
     it('handles validation errors with field details', async () => {
       server.use(
         http.post('https://api.digilist.no/api/rental-objects', () => {
@@ -440,6 +445,7 @@ describeSkip('API-SDK Integration Tests', () => {
   });
 
   describe('Pagination Integration', () => {
+  setupMockApi();
     it('handles pagination parameters', async () => {
       const page1 = await rentalObjectService.getAll({ limit: 10, offset: 0 });
       const page2 = await rentalObjectService.getAll({ limit: 10, offset: 10 });

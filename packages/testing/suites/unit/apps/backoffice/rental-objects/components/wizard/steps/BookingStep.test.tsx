@@ -24,7 +24,7 @@ vi.mock('@xala/ds', async () => {
   };
 });
 
-describe.skip('BookingStep', () => {
+describe('BookingStep', () => {
   let mockWizard: UseRentalObjectWizardReturn;
 
   beforeEach(() => {
@@ -57,7 +57,7 @@ describe.skip('BookingStep', () => {
     } as unknown as UseRentalObjectWizardReturn;
   });
 
-  describe.skip('Rendering', () => {
+  describe('Rendering', () => {
     it('should render header with icon and title', () => {
       render(<BookingStep wizard={mockWizard} />);
 
@@ -104,7 +104,7 @@ describe.skip('BookingStep', () => {
     });
   });
 
-  describe.skip('Pricing Fields', () => {
+  describe('Pricing Fields', () => {
     it('should render base price field with description', () => {
       render(<BookingStep wizard={mockWizard} />);
 
@@ -167,7 +167,7 @@ describe.skip('BookingStep', () => {
     });
   });
 
-  describe.skip('Category-Specific Fields', () => {
+  describe('Category-Specific Fields', () => {
     it('should render weekend price modifier for LOKALER_OG_BANER', () => {
       mockWizard.formData.category = 'LOKALER_OG_BANER';
 
@@ -189,7 +189,7 @@ describe.skip('BookingStep', () => {
     });
   });
 
-  describe.skip('Policies Section', () => {
+  describe('Policies Section', () => {
     it('should render cancellation policy textarea', () => {
       render(<BookingStep wizard={mockWizard} />);
 
@@ -220,7 +220,7 @@ describe.skip('BookingStep', () => {
     });
   });
 
-  describe.skip('Restrictions Section', () => {
+  describe('Restrictions Section', () => {
     it('should render minimum advance notice field', () => {
       render(<BookingStep wizard={mockWizard} />);
 
@@ -262,7 +262,7 @@ describe.skip('BookingStep', () => {
     });
   });
 
-  describe.skip('Existing Data Display', () => {
+  describe('Existing Data Display', () => {
     it('should display existing basePrice value', () => {
       mockWizard.formData.basePrice = 15000;
 
@@ -300,7 +300,7 @@ describe.skip('BookingStep', () => {
     });
   });
 
-  describe.skip('Accessibility', () => {
+  describe('Accessibility', () => {
     it('should render decorative icons', () => {
       render(<BookingStep wizard={mockWizard} />);
 

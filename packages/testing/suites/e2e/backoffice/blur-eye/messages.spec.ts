@@ -1,3 +1,4 @@
+import { setupMockApi } from '../../../../mocks/api-server.mock';
 import { test, expect } from '../fixtures/qa-expert.fixture';
 import { config } from '../config/backoffice.config';
 import {
@@ -17,6 +18,7 @@ import {
  */
 
 test.describe('Messages (Meldinger) E2E', () => {
+  setupMockApi();
   test.use({ storageState: 'tests/e2e/backoffice/.auth/admin.json' });
 
   test.beforeEach(async ({ page }) => {
@@ -25,11 +27,12 @@ test.describe('Messages (Meldinger) E2E', () => {
     
     // Check if redirected (feature flag off or no access)
     if (page.url().includes('/login') || !page.url().includes('/messages')) {
-      test.skip();
+      test();
     }
   });
 
   test.describe('M1. Blur-Eye Structure', () => {
+  setupMockApi();
     test('M1.1 Page has clear header', async ({ page }) => {
       const moduleConfig = config.modules.messages;
       const result = await assertBlurEyeListView(page, {
@@ -77,6 +80,7 @@ test.describe('Messages (Meldinger) E2E', () => {
   });
 
   test.describe('M2. Message List Behavior', () => {
+  setupMockApi();
     test('M2.1 Search filters messages', async ({ page }) => {
       const search = page.locator('input[type="search"], input[placeholder*="søk" i]').first();
       
@@ -117,6 +121,7 @@ test.describe('Messages (Meldinger) E2E', () => {
   });
 
   test.describe('M3. Feature Flag Visibility', () => {
+  setupMockApi();
     test('M3.1 Messages appears in sidebar when flag ON', async ({ page }) => {
       await page.goto('/');
       await page.waitForTimeout(2000);
@@ -130,6 +135,7 @@ test.describe('Messages (Meldinger) E2E', () => {
   });
 
   test.describe('M4. Runtime Stability', () => {
+  setupMockApi();
     test('M4.1 No runtime errors', async ({ page, evidence }) => {
       expect(evidence.hasPageErrors()).toBe(false);
       expect(evidence.has5xxResponses()).toBe(false);

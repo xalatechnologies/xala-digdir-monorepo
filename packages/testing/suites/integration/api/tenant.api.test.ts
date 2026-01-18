@@ -2,10 +2,13 @@
  * Tenant API Integration Tests
  */
 import { describe, it, expect } from 'vitest';
+import { setupMockApi } from '../../../mocks/api-server.mock';
 import { request, skipIfNoServer } from './setup';
 
 describe('Tenant API', () => {
+  setupMockApi();
   describe('GET /health', () => {
+  setupMockApi();
     it('should return healthy status', async () => {
       if (skipIfNoServer()) return;
       const res = await request('GET', '/health');
@@ -15,6 +18,7 @@ describe('Tenant API', () => {
   });
 
   describe('GET /api/tenants', () => {
+  setupMockApi();
     it('should return list of tenants', async () => {
       if (skipIfNoServer()) return;
       const res = await request('GET', '/api/tenants');
@@ -23,6 +27,7 @@ describe('Tenant API', () => {
   });
 
   describe('POST /api/tenants', () => {
+  setupMockApi();
     it('should validate required fields', async () => {
       if (skipIfNoServer()) return;
       const res = await request('POST', '/api/tenants', { body: { name: '' } });

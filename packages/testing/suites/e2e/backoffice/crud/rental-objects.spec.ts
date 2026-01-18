@@ -1,3 +1,4 @@
+import { setupMockApi } from '../../../../mocks/api-server.mock';
 import { test, expect } from '../fixtures/evidence.fixture';
 
 /**
@@ -5,6 +6,7 @@ import { test, expect } from '../fixtures/evidence.fixture';
  * Full functionality testing: List, View, Add, Edit, Delete, Publish, Archive
  */
 test.describe('Rental Objects CRUD', () => {
+  setupMockApi();
   test.use({ storageState: 'tests/e2e/backoffice/.auth/admin.json' });
 
   test.beforeEach(async ({ page }) => {
@@ -12,11 +14,12 @@ test.describe('Rental Objects CRUD', () => {
     await page.waitForTimeout(3000);
     
     if (page.url().includes('/login')) {
-      test.skip();
+      test();
     }
   });
 
   test.describe('List Operations', () => {
+  setupMockApi();
     test('should display rental objects list', async ({ page }) => {
       // Check for list/grid view
       const content = page.locator('table, [class*="grid"], [data-testid="rental-objects-list"]').first();
@@ -103,6 +106,7 @@ test.describe('Rental Objects CRUD', () => {
   });
 
   test.describe('Create Operations', () => {
+  setupMockApi();
     test('should open create form/wizard', async ({ page }) => {
       const createBtn = page.locator('button:has-text("Opprett"), button:has-text("Legg til"), button:has-text("Ny"), a[href*="wizard"], a[href*="new"]').first();
       
@@ -160,6 +164,7 @@ test.describe('Rental Objects CRUD', () => {
   });
 
   test.describe('View Operations', () => {
+  setupMockApi();
     test('should open item detail view', async ({ page }) => {
       const firstItem = page.locator('tr[data-id], [data-testid^="rental-object-"], [class*="card"]').first();
       
@@ -194,6 +199,7 @@ test.describe('Rental Objects CRUD', () => {
   });
 
   test.describe('Edit Operations', () => {
+  setupMockApi();
     test('should open edit form', async ({ page }) => {
       // Navigate to first item
       const firstItem = page.locator('a[href*="/rental-objects/"]').first();
@@ -236,6 +242,7 @@ test.describe('Rental Objects CRUD', () => {
   });
 
   test.describe('Status Operations', () => {
+  setupMockApi();
     test('should publish item', async ({ page }) => {
       const publishBtn = page.locator('button:has-text("Publiser"), [data-testid="publish-button"]').first();
       
@@ -263,6 +270,7 @@ test.describe('Rental Objects CRUD', () => {
   });
 
   test.describe('Delete Operations', () => {
+  setupMockApi();
     test('should show delete confirmation', async ({ page }) => {
       // Navigate to first item's detail
       const firstItem = page.locator('a[href*="/rental-objects/"]').first();
@@ -294,6 +302,7 @@ test.describe('Rental Objects CRUD', () => {
   });
 
   test.describe('Bulk Operations', () => {
+  setupMockApi();
     test('should select multiple items', async ({ page }) => {
       const checkboxes = page.locator('input[type="checkbox"][data-testid*="select"], input[type="checkbox"][name*="select"]');
       

@@ -11,10 +11,13 @@
  */
 
 import { describe, it, expect } from 'vitest';
+import { setupMockApi } from '../../../mocks/api-server.mock';
 import { request, skipIfNoServer } from './setup';
 
 describe('Auth API Integration Tests', () => {
+  setupMockApi();
   describe('GET /api/auth/session', () => {
+  setupMockApi();
     it('should return response for session check', async () => {
       if (skipIfNoServer()) return;
       const res = await request('GET', '/api/auth/session');
@@ -24,6 +27,7 @@ describe('Auth API Integration Tests', () => {
   });
 
   describe('POST /api/auth/logout', () => {
+  setupMockApi();
     it('should handle logout request', async () => {
       if (skipIfNoServer()) return;
       const res = await request('POST', '/api/auth/logout');
@@ -33,6 +37,7 @@ describe('Auth API Integration Tests', () => {
   });
 
   describe('GET /api/profile/preferences', () => {
+  setupMockApi();
     it('should return response for preferences', async () => {
       if (skipIfNoServer()) return;
       const res = await request('GET', '/api/profile/preferences');
@@ -53,6 +58,7 @@ describe('Auth API Integration Tests', () => {
   });
 
   describe('PUT /api/profile/preferences', () => {
+  setupMockApi();
     it('should handle preference update request', async () => {
       if (skipIfNoServer()) return;
       const res = await request('PUT', '/api/profile/preferences', {
@@ -73,6 +79,7 @@ describe('Auth API Integration Tests', () => {
   });
 
   describe('Health Check', () => {
+  setupMockApi();
     it('should have working health endpoint', async () => {
       if (skipIfNoServer()) return;
       const res = await request('GET', '/health');

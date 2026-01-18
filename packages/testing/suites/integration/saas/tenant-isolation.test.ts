@@ -8,6 +8,7 @@
  */
 
 import { describe, it, expect, beforeAll, afterAll, beforeEach } from 'vitest';
+import { setupMockApi } from '../../../mocks/api-server.mock';
 
 // ============================================================================
 // Test Data
@@ -50,7 +51,9 @@ const TENANT_B_USER = {
 // ============================================================================
 
 describe('Tenant Isolation - Data Access', () => {
+  setupMockApi();
   describe('Direct Resource Access', () => {
+  setupMockApi();
     it('tenant A user cannot read tenant B data', async () => {
       const request = {
         userId: TENANT_A_USER.id,
@@ -91,6 +94,7 @@ describe('Tenant Isolation - Data Access', () => {
   });
 
   describe('Nested Resource Access', () => {
+  setupMockApi();
     it('prevents cross-tenant access to organizations', async () => {
       const request = {
         userTenantId: TENANT_A.id,
@@ -142,6 +146,7 @@ describe('Tenant Isolation - Data Access', () => {
 // ============================================================================
 
 describe('Tenant Isolation - License Keys', () => {
+  setupMockApi();
   it('tenant A key cannot authenticate as tenant B', async () => {
     const authAttempt = {
       providedKey: TENANT_A.licenseKey,
@@ -183,6 +188,7 @@ describe('Tenant Isolation - License Keys', () => {
 // ============================================================================
 
 describe('Tenant Isolation - Feature Flags', () => {
+  setupMockApi();
   it('tenant A flag changes do not affect tenant B', async () => {
     const tenantAFlags = {
       tenantId: TENANT_A.id,
@@ -232,6 +238,7 @@ describe('Tenant Isolation - Feature Flags', () => {
 // ============================================================================
 
 describe('Tenant Isolation - Billing Data', () => {
+  setupMockApi();
   it('tenant A cannot view tenant B invoices', async () => {
     const request = {
       userTenantId: TENANT_A.id,
@@ -265,6 +272,7 @@ describe('Tenant Isolation - Billing Data', () => {
 // ============================================================================
 
 describe('Tenant Isolation - Integration Secrets', () => {
+  setupMockApi();
   it('tenant A cannot view tenant B secrets', async () => {
     const request = {
       userTenantId: TENANT_A.id,
@@ -309,6 +317,7 @@ describe('Tenant Isolation - Integration Secrets', () => {
 // ============================================================================
 
 describe('Tenant Isolation - Organizations', () => {
+  setupMockApi();
   it('organizations belong to single tenant', async () => {
     const org = {
       id: 'org-123',
@@ -337,6 +346,7 @@ describe('Tenant Isolation - Organizations', () => {
 // ============================================================================
 
 describe('Tenant Isolation - Audit Logs', () => {
+  setupMockApi();
   it('audit logs are tenant-scoped', async () => {
     const tenantAAudit = {
       tenantId: TENANT_A.id,
@@ -380,6 +390,7 @@ describe('Tenant Isolation - Audit Logs', () => {
 // ============================================================================
 
 describe('Tenant Isolation - Response Filtering', () => {
+  setupMockApi();
   it('list endpoints filter by tenant', async () => {
     // When tenant A lists resources, they only see tenant A resources
     const response = {
@@ -419,6 +430,7 @@ describe('Tenant Isolation - Response Filtering', () => {
 // ============================================================================
 
 describe('Tenant Isolation - Database Constraints', () => {
+  setupMockApi();
   it('RLS policies enforce tenant isolation', async () => {
     // This would be verified with actual DB queries
     // Simulating the expected behavior

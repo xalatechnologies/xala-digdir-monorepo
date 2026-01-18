@@ -1,3 +1,4 @@
+import { setupMockApi } from '../../../../mocks/api-server.mock';
 import { test, expect } from '../fixtures/evidence.fixture';
 
 /**
@@ -16,6 +17,7 @@ import { test, expect } from '../fixtures/evidence.fixture';
  * - Amenities/Facilities
  */
 test.describe('Rental Object Wizard', () => {
+  setupMockApi();
   test.use({ storageState: 'tests/e2e/backoffice/.auth/admin.json' });
 
   test.beforeEach(async ({ page }) => {
@@ -24,7 +26,7 @@ test.describe('Rental Object Wizard', () => {
     await page.waitForTimeout(3000);
     
     if (page.url().includes('/login')) {
-      test.skip();
+      test();
       return;
     }
 
@@ -37,6 +39,7 @@ test.describe('Rental Object Wizard', () => {
   });
 
   test.describe('Wizard Layout', () => {
+  setupMockApi();
     test('should display step indicator', async ({ page }) => {
       const steps = page.locator('[data-testid="wizard-steps"], [class*="stepper"], [role="tablist"]').first();
       const visible = await steps.isVisible().catch(() => false);
@@ -67,6 +70,7 @@ test.describe('Rental Object Wizard', () => {
   });
 
   test.describe('Step 1: Basic Information', () => {
+  setupMockApi();
     test('should have name input (required)', async ({ page }) => {
       const nameInput = page.locator('input[name="name"], input[data-testid="name-input"], input[placeholder*="navn" i]').first();
       
@@ -129,6 +133,7 @@ test.describe('Rental Object Wizard', () => {
   });
 
   test.describe('Image Upload', () => {
+  setupMockApi();
     test('should have image upload area', async ({ page }) => {
       const uploadArea = page.locator('input[type="file"][accept*="image"], [data-testid="image-upload"], [class*="dropzone"]').first();
       const visible = await uploadArea.isVisible().catch(() => false);
@@ -155,6 +160,7 @@ test.describe('Rental Object Wizard', () => {
   });
 
   test.describe('Location & Address', () => {
+  setupMockApi();
     test('should have address input', async ({ page }) => {
       const addressInput = page.locator('input[name="address"], input[data-testid="address-input"], input[placeholder*="adresse" i]').first();
       
@@ -208,6 +214,7 @@ test.describe('Rental Object Wizard', () => {
   });
 
   test.describe('Capacity & Details', () => {
+  setupMockApi();
     test('should have capacity input (number)', async ({ page }) => {
       const capacityInput = page.locator('input[name="capacity"], input[type="number"][data-testid*="capacity"]').first();
       
@@ -231,6 +238,7 @@ test.describe('Rental Object Wizard', () => {
   });
 
   test.describe('Amenities/Facilities', () => {
+  setupMockApi();
     test('should have amenities checkbox list', async ({ page }) => {
       const amenities = page.locator('[data-testid="amenities"], [class*="amenities"], input[type="checkbox"][name*="amenit"]');
       const count = await amenities.count();
@@ -254,6 +262,7 @@ test.describe('Rental Object Wizard', () => {
   });
 
   test.describe('Pricing', () => {
+  setupMockApi();
     test('should have base price input', async ({ page }) => {
       const priceInput = page.locator('input[name="basePrice"], input[name="price"], input[data-testid="price-input"]').first();
       
@@ -283,6 +292,7 @@ test.describe('Rental Object Wizard', () => {
   });
 
   test.describe('Opening Hours', () => {
+  setupMockApi();
     test('should have opening hours section', async ({ page }) => {
       const openingHours = page.locator('[data-testid="opening-hours"], [class*="opening-hours"], :has-text("Åpningstider")').first();
       const visible = await openingHours.isVisible().catch(() => false);
@@ -321,6 +331,7 @@ test.describe('Rental Object Wizard', () => {
   });
 
   test.describe('FAQ Section', () => {
+  setupMockApi();
     test('should have FAQ section', async ({ page }) => {
       const faqSection = page.locator('[data-testid="faq-section"], [class*="faq"], :has-text("FAQ")').first();
       const visible = await faqSection.isVisible().catch(() => false);
@@ -363,6 +374,7 @@ test.describe('Rental Object Wizard', () => {
   });
 
   test.describe('Rules Section', () => {
+  setupMockApi();
     test('should have rules/regler section', async ({ page }) => {
       const rulesSection = page.locator('[data-testid="rules-section"], [class*="rules"], :has-text("Regler")').first();
       const visible = await rulesSection.isVisible().catch(() => false);
@@ -389,6 +401,7 @@ test.describe('Rental Object Wizard', () => {
   });
 
   test.describe('Contact Information', () => {
+  setupMockApi();
     test('should have contact email input', async ({ page }) => {
       const emailInput = page.locator('input[type="email"][name*="contact"], input[data-testid="contact-email"]').first();
       const visible = await emailInput.isVisible().catch(() => false);
@@ -409,6 +422,7 @@ test.describe('Rental Object Wizard', () => {
   });
 
   test.describe('Wizard Navigation', () => {
+  setupMockApi();
     test('should navigate to next step', async ({ page }) => {
       const nextBtn = page.locator('button:has-text("Neste"), button:has-text("Next")').first();
       

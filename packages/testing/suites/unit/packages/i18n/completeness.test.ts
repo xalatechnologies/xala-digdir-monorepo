@@ -6,7 +6,7 @@ import { en } from '../locales/en';
  * Translation completeness tests
  * Verifies that all locale files have the same keys (parity)
  */
-describe.skip('Translation Completeness', () => {
+describe('Translation Completeness', () => {
   const nbKeys = Object.keys(nb).sort();
   const enKeys = Object.keys(en).sort();
 
@@ -56,7 +56,7 @@ describe.skip('Translation Completeness', () => {
     expect(inconsistentKeys).toEqual([]);
   });
 
-  describe.skip('Domain coverage', () => {
+  describe('Domain coverage', () => {
     const expectedDomains = [
       'common',
       'nav',

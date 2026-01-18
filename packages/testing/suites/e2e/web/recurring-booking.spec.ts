@@ -1,3 +1,4 @@
+import { setupMockApi } from '../../../mocks/api-server.mock';
 /**
  * Recurring Booking E2E Tests
  * Tests for recurring booking creation with conflict detection
@@ -9,6 +10,7 @@
 import { test, expect } from '@playwright/test';
 
 test.describe('Recurring Booking Conflicts', () => {
+  setupMockApi();
   test.beforeEach(async ({ page }) => {
     // Navigate to a rental object detail page
     await page.goto('/lokaler/rental-object-1');

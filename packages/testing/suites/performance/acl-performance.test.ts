@@ -14,6 +14,7 @@
  */
 
 import { describe, it, expect, beforeEach } from 'vitest';
+import { setupMockApi } from '../../mocks/api-server.mock';
 import {
   toDomain,
   toCardProjection,
@@ -202,6 +203,7 @@ const mockDbRentalObject: DbRentalObject = {
 // =============================================================================
 
 describe('ACL Performance - Single Transformation Latency', () => {
+  setupMockApi();
   it('should transform DB → Domain in <50ms p95', () => {
     const result = measurePerformance(() => {
       toDomain(mockDbRentalObject);
@@ -263,6 +265,7 @@ describe('ACL Performance - Single Transformation Latency', () => {
 // =============================================================================
 
 describe('ACL Performance - Batch Transformations', () => {
+  setupMockApi();
   it('should handle batch of 10 objects in <100ms total', () => {
     const batch = Array.from({ length: 10 }, (_, i) => ({
       ...mockDbRentalObject,
@@ -358,6 +361,7 @@ describe('ACL Performance - Batch Transformations', () => {
 // =============================================================================
 
 describe('ACL Performance - Large Dataset Handling', () => {
+  setupMockApi();
   it('should handle objects with 100+ images efficiently', () => {
     const largeImageDb = {
       ...mockDbRentalObject,
@@ -423,6 +427,7 @@ describe('ACL Performance - Large Dataset Handling', () => {
 // =============================================================================
 
 describe('ACL Performance - Complex Object Transformation', () => {
+  setupMockApi();
   it('should handle full round-trip transformation efficiently', () => {
     const result = measurePerformance(() => {
       const domain = toDomain(mockDbRentalObject);
@@ -469,6 +474,7 @@ describe('ACL Performance - Complex Object Transformation', () => {
 // =============================================================================
 
 describe('ACL Performance - Memory Efficiency', () => {
+  setupMockApi();
   it('should not create excessive intermediate objects', () => {
     // Baseline memory
     if (global.gc) global.gc();
@@ -525,6 +531,7 @@ describe('ACL Performance - Memory Efficiency', () => {
 // =============================================================================
 
 describe('ACL Performance - Regression Detection', () => {
+  setupMockApi();
   it('should establish baseline performance metrics', () => {
     const metrics = {
       toDomain: measurePerformance(() => toDomain(mockDbRentalObject), 500),
@@ -579,6 +586,7 @@ describe('ACL Performance - Regression Detection', () => {
 // =============================================================================
 
 describe('ACL Performance - Test Coverage Summary', () => {
+  setupMockApi();
   it('should have comprehensive performance test coverage', () => {
     const testCategories = {
       'Single Transformation': 4,

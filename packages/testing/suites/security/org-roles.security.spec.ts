@@ -1,4 +1,5 @@
 import { describe, it, expect, beforeAll, afterAll, beforeEach } from 'vitest';
+import { setupMockApi } from '../../mocks/api-server.mock';
 
 /**
  * Security Baseline Tests for Org Roles
@@ -27,6 +28,7 @@ const describeOrSkip = SKIP_INTEGRATION ? describe.skip : describe;
 
 describeOrSkip('Org Roles Security Baseline', () => {
   describe('SEC-INJ: Injection String Handling', () => {
+  setupMockApi();
     const injectionPayloads = [
       { name: 'SQL Injection', value: "'; DROP TABLE users; --" },
       { name: 'XSS Basic', value: '<script>alert("xss")</script>' },
@@ -39,6 +41,7 @@ describeOrSkip('Org Roles Security Baseline', () => {
     ];
 
     describe('Org Name Field', () => {
+  setupMockApi();
       it.each(injectionPayloads)(
         'should safely handle $name in org name',
         async ({ name, value }) => {
@@ -75,6 +78,7 @@ describeOrSkip('Org Roles Security Baseline', () => {
     });
 
     describe('Booking Notes Field', () => {
+  setupMockApi();
       it.each(injectionPayloads.slice(0, 3))(
         'should safely handle $name in booking notes',
         async ({ name, value }) => {
@@ -99,6 +103,7 @@ describeOrSkip('Org Roles Security Baseline', () => {
     });
 
     describe('Search Parameters', () => {
+  setupMockApi();
       it.each(injectionPayloads.slice(0, 3))(
         'should safely handle $name in search query',
         async ({ name, value }) => {
@@ -118,6 +123,7 @@ describeOrSkip('Org Roles Security Baseline', () => {
   });
 
   describe('SEC-ENC: Output Encoding', () => {
+  setupMockApi();
     it('should return JSON with proper content-type', async () => {
       const response = await fetch(
         `${API_BASE}/api/organizations/${ORG_ID}`,
@@ -178,6 +184,7 @@ describeOrSkip('Org Roles Security Baseline', () => {
   });
 
   describe('SEC-PII: PII Leak Detection', () => {
+  setupMockApi();
     it('should not include sensitive fields in list responses', async () => {
       const response = await fetch(
         `${API_BASE}/api/organizations/${ORG_ID}/members`,
@@ -253,6 +260,7 @@ describeOrSkip('Org Roles Security Baseline', () => {
   });
 
   describe('SEC-RATE: Rate Limiting Awareness', () => {
+  setupMockApi();
     it('should include rate limit headers', async () => {
       const response = await fetch(
         `${API_BASE}/api/organizations/${ORG_ID}/bookings`,
@@ -285,6 +293,7 @@ describeOrSkip('Org Roles Security Baseline', () => {
   });
 
   describe('SEC-AUDIT: Audit Trail Verification', () => {
+  setupMockApi();
     it('mutation should return correlation ID', async () => {
       const response = await fetch(
         `${API_BASE}/api/organizations/${ORG_ID}`,

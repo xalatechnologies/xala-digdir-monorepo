@@ -1,3 +1,4 @@
+import { setupMockApi } from '../../../../mocks/api-server.mock';
 import { test, expect } from '../fixtures/evidence.fixture';
 
 /**
@@ -5,6 +6,7 @@ import { test, expect } from '../fixtures/evidence.fixture';
  * Full functionality testing: List, View, Add, Edit, Delete, Role Management
  */
 test.describe('Users CRUD', () => {
+  setupMockApi();
   test.use({ storageState: 'tests/e2e/backoffice/.auth/admin.json' });
 
   test.beforeEach(async ({ page }) => {
@@ -12,11 +14,12 @@ test.describe('Users CRUD', () => {
     await page.waitForTimeout(3000);
     
     if (page.url().includes('/login')) {
-      test.skip();
+      test();
     }
   });
 
   test.describe('Page Layout', () => {
+  setupMockApi();
     test('should display page header', async ({ page }) => {
       const header = page.locator('h1, h2, [data-testid="page-title"]').first();
       await expect(header).toBeVisible({ timeout: 10000 });
@@ -41,6 +44,7 @@ test.describe('Users CRUD', () => {
   });
 
   test.describe('List Operations', () => {
+  setupMockApi();
     test('should display user rows with columns', async ({ page }) => {
       const headers = page.locator('thead th, [data-testid="table-header"]');
       const headerCount = await headers.count();
@@ -84,6 +88,7 @@ test.describe('Users CRUD', () => {
   });
 
   test.describe('Create Operations', () => {
+  setupMockApi();
     test('should open invite/create user form', async ({ page }) => {
       const createBtn = page.locator('button:has-text("Inviter"), button:has-text("Legg til"), button:has-text("Ny bruker")').first();
       
@@ -115,6 +120,7 @@ test.describe('Users CRUD', () => {
   });
 
   test.describe('View Operations', () => {
+  setupMockApi();
     test('should open user detail', async ({ page }) => {
       const firstRow = page.locator('tbody tr').first();
       
@@ -132,6 +138,7 @@ test.describe('Users CRUD', () => {
   });
 
   test.describe('Edit Operations', () => {
+  setupMockApi();
     test('should show edit button for user', async ({ page }) => {
       const editBtn = page.locator('button:has-text("Rediger"), [data-testid="edit-user-button"]').first();
       const visible = await editBtn.isVisible().catch(() => false);
@@ -146,6 +153,7 @@ test.describe('Users CRUD', () => {
   });
 
   test.describe('Status Operations', () => {
+  setupMockApi();
     test('should show activate/deactivate user', async ({ page }) => {
       const toggleBtn = page.locator('button:has-text("Deaktiver"), button:has-text("Aktiver"), [data-testid="toggle-status"]').first();
       const visible = await toggleBtn.isVisible().catch(() => false);
@@ -160,6 +168,7 @@ test.describe('Users CRUD', () => {
   });
 
   test.describe('Delete Operations', () => {
+  setupMockApi();
     test('should show delete/remove user button', async ({ page }) => {
       const deleteBtn = page.locator('button:has-text("Slett"), button:has-text("Fjern"), [data-testid="delete-user"]').first();
       const visible = await deleteBtn.isVisible().catch(() => false);

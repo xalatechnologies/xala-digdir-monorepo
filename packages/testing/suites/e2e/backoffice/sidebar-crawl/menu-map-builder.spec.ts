@@ -1,3 +1,4 @@
+import { setupMockApi } from '../../../../mocks/api-server.mock';
 import { test, expect } from '../fixtures/evidence.fixture';
 import { config } from '../config/backoffice.config';
 import { EXPECTED_MENU_MODEL, MenuItem } from '../config/expected-menu';
@@ -22,6 +23,7 @@ interface MenuDiscoveryResult {
 }
 
 test.describe('Menu Map Builder', () => {
+  setupMockApi();
   test.use({ storageState: 'tests/e2e/backoffice/.auth/admin.json' });
 
   test('should discover all sidebar items', async ({ page }) => {
@@ -158,6 +160,7 @@ test.describe('Menu Map Builder', () => {
 });
 
 test.describe('Menu Map Builder - Saksbehandler', () => {
+  setupMockApi();
   test.use({ storageState: 'tests/e2e/backoffice/.auth/saksbehandler.json' });
 
   test('should have restricted menu for saksbehandler', async ({ page }) => {

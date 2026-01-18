@@ -4,6 +4,7 @@
  * Verifies buffer time validation between bookings
  */
 import { describe, it, expect, beforeAll, afterAll } from 'vitest';
+import { setupMockApi } from '../../../mocks/api-server.mock';
 
 const API_URL = process.env.API_URL || 'http://localhost:3000';
 const TENANT_ID = 'f47ac10b-58cc-4372-a567-0e02b2c3d479';
@@ -14,6 +15,7 @@ const headers = {
 };
 
 describe('Buffer Time Enforcement', () => {
+  setupMockApi();
   let testListingId: string;
   let firstBookingId: string;
   let secondBookingId: string;
@@ -90,6 +92,7 @@ describe('Buffer Time Enforcement', () => {
   });
 
   describe('Buffer Time Validation', () => {
+  setupMockApi();
     it('should successfully book a slot 10:00-11:00', async () => {
       if (!testListingId) {
         console.log('Skipping test: no listing available');
@@ -247,6 +250,7 @@ describe('Buffer Time Enforcement', () => {
   });
 
   describe('Availability Endpoint with Buffer Time', () => {
+  setupMockApi();
     it('should reflect buffer time in availability check', async () => {
       if (!testListingId || !firstBookingId) {
         console.log('Skipping test: prerequisite booking not created');
@@ -316,6 +320,7 @@ describe('Buffer Time Enforcement', () => {
   });
 
   describe('Edge Cases', () => {
+  setupMockApi();
     it('should handle 0-minute buffer time (back-to-back bookings allowed)', async () => {
       if (!testListingId) {
         console.log('Skipping test: no listing available');
@@ -523,6 +528,7 @@ describe('Buffer Time Enforcement', () => {
   });
 
   describe('Calendar View Buffer Zone Visualization (Backend Support)', () => {
+  setupMockApi();
     it('should return calendar events with buffer time metadata', async () => {
       if (!testListingId) {
         console.log('Skipping test: no listing available');

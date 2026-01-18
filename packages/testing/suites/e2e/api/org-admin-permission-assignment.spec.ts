@@ -127,7 +127,7 @@ test.describe('Org Admin Permission Assignment Flow', () => {
 
   test('2. Assign RO_BOOK permission to member via org-scoped endpoint', async ({ request }) => {
     // Skip if prerequisites not met
-    test.skip(!organizationId || !rentalObjectId, 'Prerequisites not met: org or rental object missing');
+    test(!organizationId || !rentalObjectId, 'Prerequisites not met: org or rental object missing');
 
     const response = await request.put(
       `${API_URL}/api/organizations/${organizationId}/rental-objects/${rentalObjectId}/permissions/${TEST_MEMBER.id}`,
@@ -152,7 +152,7 @@ test.describe('Org Admin Permission Assignment Flow', () => {
 
   test('3. Verify permission assignment via query', async ({ request }) => {
     // Skip if assignment not created
-    test.skip(!permissionAssignmentId, 'Permission assignment not created');
+    test(!permissionAssignmentId, 'Permission assignment not created');
 
     const response = await request.get(
       `${API_URL}/api/organizations/${organizationId}/rental-objects/${rentalObjectId}/permissions/${TEST_MEMBER.id}`,
@@ -168,7 +168,7 @@ test.describe('Org Admin Permission Assignment Flow', () => {
   });
 
   test('4. Add additional permission (RO_BOOK_EDIT)', async ({ request }) => {
-    test.skip(!organizationId || !rentalObjectId, 'Prerequisites not met');
+    test(!organizationId || !rentalObjectId, 'Prerequisites not met');
 
     const response = await request.put(
       `${API_URL}/api/organizations/${organizationId}/rental-objects/${rentalObjectId}/permissions/${TEST_MEMBER.id}`,
@@ -187,7 +187,7 @@ test.describe('Org Admin Permission Assignment Flow', () => {
   });
 
   test('5. Query permission assignments by organization', async ({ request }) => {
-    test.skip(!organizationId, 'Organization not created');
+    test(!organizationId, 'Organization not created');
 
     const response = await request.get(
       `${API_URL}/api/permission-assignments?orgId=${organizationId}`,
@@ -205,7 +205,7 @@ test.describe('Org Admin Permission Assignment Flow', () => {
   });
 
   test('6. Query permissions by rental object', async ({ request }) => {
-    test.skip(!organizationId || !rentalObjectId, 'Prerequisites not met');
+    test(!organizationId || !rentalObjectId, 'Prerequisites not met');
 
     const response = await request.get(
       `${API_URL}/api/organizations/${organizationId}/rental-objects/${rentalObjectId}/permissions`,
@@ -221,7 +221,7 @@ test.describe('Org Admin Permission Assignment Flow', () => {
   });
 
   test('7. Revoke permissions', async ({ request }) => {
-    test.skip(!organizationId || !rentalObjectId, 'Prerequisites not met');
+    test(!organizationId || !rentalObjectId, 'Prerequisites not met');
 
     const response = await request.delete(
       `${API_URL}/api/organizations/${organizationId}/rental-objects/${rentalObjectId}/permissions/${TEST_MEMBER.id}`,
@@ -240,7 +240,7 @@ test.describe('Org Admin Permission Assignment Flow', () => {
   });
 
   test('8. Verify revoked permissions no longer active', async ({ request }) => {
-    test.skip(!organizationId || !rentalObjectId, 'Prerequisites not met');
+    test(!organizationId || !rentalObjectId, 'Prerequisites not met');
 
     const response = await request.get(
       `${API_URL}/api/organizations/${organizationId}/rental-objects/${rentalObjectId}/permissions/${TEST_MEMBER.id}`,

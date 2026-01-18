@@ -1,3 +1,4 @@
+import { setupMockApi } from '../../../mocks/api-server.mock';
 import { test, expect } from '@playwright/test';
 import AxeBuilder from '@axe-core/playwright';
 
@@ -8,8 +9,10 @@ import AxeBuilder from '@axe-core/playwright';
  */
 
 test.describe('Web - Pack 6: Accessibility & Localization', () => {
+  setupMockApi();
 
   test.describe('Accessibility (Axe WCAG 2.1 AA)', () => {
+  setupMockApi();
     test('home page passes accessibility scan', async ({ page }) => {
       await page.goto('/', { waitUntil: 'domcontentloaded' });
       await page.waitForTimeout(3000);
@@ -166,6 +169,7 @@ test.describe('Web - Pack 6: Accessibility & Localization', () => {
   });
 
   test.describe('Localization', () => {
+  setupMockApi();
     test('default language is Norwegian', async ({ page }) => {
       await page.goto('/', { waitUntil: 'domcontentloaded' });
       await page.waitForTimeout(2000);
@@ -250,6 +254,7 @@ test.describe('Web - Pack 6: Accessibility & Localization', () => {
   });
 
   test.describe('Color Contrast', () => {
+  setupMockApi();
     test('text has sufficient contrast', async ({ page }) => {
       await page.goto('/', { waitUntil: 'domcontentloaded' });
       await page.waitForTimeout(2000);

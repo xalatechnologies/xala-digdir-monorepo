@@ -1,3 +1,4 @@
+import { setupMockApi } from '../../../../mocks/api-server.mock';
 import { test, expect } from '../fixtures/evidence.fixture';
 
 /**
@@ -12,15 +13,17 @@ import { test, expect } from '../fixtures/evidence.fixture';
  */
 
 test.describe('Complete Rental Objects Workflow', () => {
+  setupMockApi();
   test.use({ storageState: 'tests/e2e/backoffice/.auth/admin.json' });
 
   test.describe('1. Header & Global Navigation', () => {
+  setupMockApi();
     test.beforeEach(async ({ page }) => {
       await page.goto('/', { waitUntil: 'domcontentloaded' });
       await page.waitForTimeout(3000);
       
       if (page.url().includes('/login')) {
-        test.skip();
+        test();
       }
     });
 
@@ -76,12 +79,13 @@ test.describe('Complete Rental Objects Workflow', () => {
   });
 
   test.describe('2. Sidebar Navigation', () => {
+  setupMockApi();
     test.beforeEach(async ({ page }) => {
       await page.goto('/', { waitUntil: 'domcontentloaded' });
       await page.waitForTimeout(3000);
       
       if (page.url().includes('/login')) {
-        test.skip();
+        test();
       }
     });
 
@@ -107,12 +111,13 @@ test.describe('Complete Rental Objects Workflow', () => {
   });
 
   test.describe('3. Rental Objects List Page', () => {
+  setupMockApi();
     test.beforeEach(async ({ page }) => {
       await page.goto('/rental-objects', { waitUntil: 'domcontentloaded' });
       await page.waitForTimeout(3000);
       
       if (page.url().includes('/login')) {
-        test.skip();
+        test();
       }
     });
 
@@ -204,12 +209,13 @@ test.describe('Complete Rental Objects Workflow', () => {
   });
 
   test.describe('4. Detail View & Actions', () => {
+  setupMockApi();
     test.beforeEach(async ({ page }) => {
       await page.goto('/rental-objects', { waitUntil: 'domcontentloaded' });
       await page.waitForTimeout(3000);
       
       if (page.url().includes('/login')) {
-        test.skip();
+        test();
       }
     });
 
@@ -265,13 +271,14 @@ test.describe('Complete Rental Objects Workflow', () => {
   });
 
   test.describe('5. Action Buttons', () => {
+  setupMockApi();
     test.beforeEach(async ({ page }) => {
       // Navigate to first item's detail page
       await page.goto('/rental-objects', { waitUntil: 'domcontentloaded' });
       await page.waitForTimeout(3000);
       
       if (page.url().includes('/login')) {
-        test.skip();
+        test();
         return;
       }
       
@@ -347,12 +354,13 @@ test.describe('Complete Rental Objects Workflow', () => {
   });
 
   test.describe('6. Action Functionality Tests', () => {
+  setupMockApi();
     test.beforeEach(async ({ page }) => {
       await page.goto('/rental-objects', { waitUntil: 'domcontentloaded' });
       await page.waitForTimeout(3000);
       
       if (page.url().includes('/login')) {
-        test.skip();
+        test();
         return;
       }
       
@@ -466,12 +474,13 @@ test.describe('Complete Rental Objects Workflow', () => {
   });
 
   test.describe('7. Breadcrumbs & Navigation', () => {
+  setupMockApi();
     test.beforeEach(async ({ page }) => {
       await page.goto('/rental-objects', { waitUntil: 'domcontentloaded' });
       await page.waitForTimeout(3000);
       
       if (page.url().includes('/login')) {
-        test.skip();
+        test();
       }
     });
 

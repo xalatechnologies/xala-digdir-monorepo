@@ -204,7 +204,7 @@ test.describe('Case Handler Scope Enforcement', () => {
 
   test('1. Case handler scope is created successfully', async ({ request }) => {
     // Verify that the case handler scope was created
-    test.skip(!caseHandlerScopeId, 'Case handler scope not created - endpoint may not exist');
+    test(!caseHandlerScopeId, 'Case handler scope not created - endpoint may not exist');
 
     const response = await request.get(`${API_URL}/api/case-handler-scopes/${caseHandlerScopeId}`, {
       headers: { 'x-tenant-id': TENANT_ID },
@@ -222,7 +222,7 @@ test.describe('Case Handler Scope Enforcement', () => {
   });
 
   test('2. Admin can approve any booking (bypasses scope check)', async ({ request }) => {
-    test.skip(!scopedBookingId, 'Scoped booking not created');
+    test(!scopedBookingId, 'Scoped booking not created');
 
     // First, reset the booking status if needed
     await request.put(`${API_URL}/api/bookings/${scopedBookingId}/status`, {
@@ -260,8 +260,8 @@ test.describe('Case Handler Scope Enforcement', () => {
   });
 
   test('3. Case handler CAN approve booking for SCOPED rental object', async ({ request }) => {
-    test.skip(!scopedBookingId || !testCaseHandlerId, 'Prerequisites not met');
-    test.skip(!caseHandlerScopeId, 'Case handler scope not created - endpoint may not exist');
+    test(!scopedBookingId || !testCaseHandlerId, 'Prerequisites not met');
+    test(!caseHandlerScopeId, 'Case handler scope not created - endpoint may not exist');
 
     const response = await request.post(`${API_URL}/api/bookings/${scopedBookingId}/approve`, {
       headers: {
@@ -283,7 +283,7 @@ test.describe('Case Handler Scope Enforcement', () => {
   });
 
   test('4. Case handler CANNOT approve booking for NON-SCOPED rental object (403)', async ({ request }) => {
-    test.skip(!nonScopedBookingId || !testCaseHandlerId, 'Prerequisites not met');
+    test(!nonScopedBookingId || !testCaseHandlerId, 'Prerequisites not met');
 
     const response = await request.post(`${API_URL}/api/bookings/${nonScopedBookingId}/approve`, {
       headers: {
@@ -306,7 +306,7 @@ test.describe('Case Handler Scope Enforcement', () => {
   });
 
   test('5. Case handler CANNOT deny booking for NON-SCOPED rental object (403)', async ({ request }) => {
-    test.skip(!nonScopedBookingId || !testCaseHandlerId, 'Prerequisites not met');
+    test(!nonScopedBookingId || !testCaseHandlerId, 'Prerequisites not met');
 
     const response = await request.post(`${API_URL}/api/bookings/${nonScopedBookingId}/deny`, {
       headers: {
@@ -328,7 +328,7 @@ test.describe('Case Handler Scope Enforcement', () => {
   });
 
   test('6. Verify audit log entry for successful approval', async ({ request }) => {
-    test.skip(!scopedBookingId, 'Scoped booking not created');
+    test(!scopedBookingId, 'Scoped booking not created');
 
     // Query audit logs for the booking approval
     const response = await request.get(`${API_URL}/api/audit-logs`, {

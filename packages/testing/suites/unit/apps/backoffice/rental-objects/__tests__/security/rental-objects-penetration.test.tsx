@@ -5,6 +5,7 @@
 
 import React from 'react';
 import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { setupMockApi } from '../../../../../../../mocks/api-server.mock';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { BrowserRouter } from 'react-router-dom';
@@ -149,12 +150,12 @@ const createWrapper = () => {
   );
 };
 
-describe.skip('Rental Objects Penetration Tests', () => {
+describe('Rental Objects Penetration Tests', () => {
   beforeEach(() => {
     vi.clearAllMocks();
   });
 
-  describe.skip('XSS (Cross-Site Scripting) Protection', () => {
+  describe('XSS (Cross-Site Scripting) Protection', () => {
     it('should sanitize user input in search field', async () => {
       const user = userEvent.setup();
       const maliciousScript = '<script>alert("XSS")</script>';
@@ -196,7 +197,7 @@ describe.skip('Rental Objects Penetration Tests', () => {
     });
   });
 
-  describe.skip('SQL Injection Protection', () => {
+  describe('SQL Injection Protection', () => {
     it('should handle SQL injection attempts in search', async () => {
       const user = userEvent.setup();
       const sqlInjection = "'; DROP TABLE rental_objects; --";
@@ -227,7 +228,7 @@ describe.skip('Rental Objects Penetration Tests', () => {
     });
   });
 
-  describe.skip('Authorization & Access Control', () => {
+  describe('Authorization & Access Control', () => {
     it('should prevent unauthorized access to create button', () => {
       // Mock user without create permission for this test
       const { useListingPermissions } = require('../../rental-objects/hooks/useListingPermissions');
@@ -282,7 +283,7 @@ describe.skip('Rental Objects Penetration Tests', () => {
     });
   });
 
-  describe.skip('CSRF Protection', () => {
+  describe('CSRF Protection', () => {
     it('should include CSRF tokens in form submissions', async () => {
       render(<RentalObjectWizard />, {
         wrapper: createWrapper(),
@@ -294,7 +295,7 @@ describe.skip('Rental Objects Penetration Tests', () => {
     });
   });
 
-  describe.skip('Input Validation', () => {
+  describe('Input Validation', () => {
     it('should reject oversized inputs', async () => {
       render(<RentalObjectWizard />, {
         wrapper: createWrapper(),
@@ -316,7 +317,7 @@ describe.skip('Rental Objects Penetration Tests', () => {
     });
   });
 
-  describe.skip('Rate Limiting', () => {
+  describe('Rate Limiting', () => {
     it('should handle rapid API calls gracefully', async () => {
       const user = userEvent.setup();
       
@@ -337,7 +338,7 @@ describe.skip('Rental Objects Penetration Tests', () => {
     });
   });
 
-  describe.skip('Sensitive Data Exposure', () => {
+  describe('Sensitive Data Exposure', () => {
     it('should not expose internal IDs in URLs', () => {
       render(<RentalObjectDetailView slug="test" />, {
         wrapper: createWrapper(),

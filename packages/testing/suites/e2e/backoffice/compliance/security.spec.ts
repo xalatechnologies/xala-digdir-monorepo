@@ -1,3 +1,4 @@
+import { setupMockApi } from '../../../../mocks/api-server.mock';
 import { test, expect } from '../fixtures/evidence.fixture';
 import { config } from '../config/backoffice.config';
 
@@ -7,7 +8,9 @@ import { config } from '../config/backoffice.config';
  * RBAC enforcement, IDOR protection, and security headers.
  */
 test.describe('Security - RBAC Enforcement', () => {
+  setupMockApi();
   test.describe('Admin Authorization', () => {
+  setupMockApi();
     test.use({ storageState: 'tests/e2e/backoffice/.auth/admin.json' });
 
     test('should access all admin endpoints', async ({ page, evidence }) => {
@@ -33,6 +36,7 @@ test.describe('Security - RBAC Enforcement', () => {
   });
 
   test.describe('Saksbehandler Restrictions', () => {
+  setupMockApi();
     test.use({ storageState: 'tests/e2e/backoffice/.auth/saksbehandler.json' });
 
     test('should be blocked from admin endpoints with proper error', async ({ page, evidence }) => {
@@ -64,6 +68,7 @@ test.describe('Security - RBAC Enforcement', () => {
 });
 
 test.describe('Security - IDOR Protection', () => {
+  setupMockApi();
   test.use({ storageState: 'tests/e2e/backoffice/.auth/saksbehandler.json' });
 
   test('should not access resources from other tenants', async ({ page, evidence }) => {
@@ -94,6 +99,7 @@ test.describe('Security - IDOR Protection', () => {
 });
 
 test.describe('Security - Error Response Privacy', () => {
+  setupMockApi();
   test.use({ storageState: 'tests/e2e/backoffice/.auth/admin.json' });
 
   test('error pages should not leak stack traces', async ({ page }) => {
@@ -123,6 +129,7 @@ test.describe('Security - Error Response Privacy', () => {
 });
 
 test.describe('Security - Session Handling', () => {
+  setupMockApi();
   test('should redirect to login when session expired', async ({ page }) => {
     // Use no storage state (unauthenticated)
     await page.goto('/');
@@ -154,6 +161,7 @@ test.describe('Security - Session Handling', () => {
 });
 
 test.describe('Security - Console/DOM Leaks', () => {
+  setupMockApi();
   test.use({ storageState: 'tests/e2e/backoffice/.auth/admin.json' });
 
   test('should not leak tokens in console', async ({ page, evidence }) => {

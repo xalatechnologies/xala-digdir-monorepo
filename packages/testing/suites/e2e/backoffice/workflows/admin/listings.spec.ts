@@ -1,3 +1,4 @@
+import { setupMockApi } from '../../../../../mocks/api-server.mock';
 import { test, expect } from '../../fixtures/evidence.fixture';
 import { config } from '../../config/backoffice.config';
 
@@ -11,9 +12,11 @@ import { config } from '../../config/backoffice.config';
  * - Status transitions
  */
 test.describe('Admin - Listings Management', () => {
+  setupMockApi();
   test.use({ storageState: 'tests/e2e/backoffice/.auth/admin.json' });
 
   test.describe('List View', () => {
+  setupMockApi();
     test('should display listings list', async ({ page, evidence }) => {
       await page.goto('/rental-objects', { waitUntil: 'domcontentloaded' });
       await page.waitForTimeout(3000);
@@ -55,6 +58,7 @@ test.describe('Admin - Listings Management', () => {
   });
 
   test.describe('Create Listing (Wizard)', () => {
+  setupMockApi();
     test('should access creation page or wizard', async ({ page }) => {
       await page.goto('/rental-objects', { waitUntil: 'domcontentloaded' });
       await page.waitForTimeout(2000);
@@ -83,6 +87,7 @@ test.describe('Admin - Listings Management', () => {
   });
 
   test.describe('Listing Detail', () => {
+  setupMockApi();
     test('should access listing detail if listings exist', async ({ page }) => {
       await page.goto('/rental-objects', { waitUntil: 'domcontentloaded' });
       await page.waitForTimeout(3000);
@@ -103,7 +108,7 @@ test.describe('Admin - Listings Management', () => {
         expect(page.url()).toMatch(/\/rental-objects\/[a-zA-Z0-9-]+/);
       } else {
         console.log('No listing links found');
-        test.skip(true, 'No listings available');
+        test(true, 'No listings available');
       }
     });
   });

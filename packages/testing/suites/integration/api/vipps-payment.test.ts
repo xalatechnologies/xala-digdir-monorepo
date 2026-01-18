@@ -5,6 +5,7 @@
  */
 
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
+import { setupMockApi } from '../../../mocks/api-server.mock';
 import { VippsCheckoutService, clearVippsCheckoutService } from '../../integrations/vipps/vipps-checkout.service';
 import { clearVippsConfigCache, VIPPS_PAYMENT_STATUS } from '../../config/vipps.config';
 import { clearVippsClient } from '../../integrations/vipps/vipps.client';
@@ -24,6 +25,7 @@ const mockFetch = vi.fn();
 global.fetch = mockFetch;
 
 describe('VippsCheckoutService', () => {
+  setupMockApi();
   let originalEnv: NodeJS.ProcessEnv;
 
   beforeEach(() => {
@@ -41,6 +43,7 @@ describe('VippsCheckoutService', () => {
   });
 
   describe('createCheckoutSession', () => {
+  setupMockApi();
     it('creates checkout session with correct parameters', async () => {
       // Mock access token response
       mockFetch.mockResolvedValueOnce({
@@ -149,6 +152,7 @@ describe('VippsCheckoutService', () => {
   });
 
   describe('getPaymentStatus', () => {
+  setupMockApi();
     it('returns payment status correctly', async () => {
       mockFetch.mockResolvedValueOnce({
         ok: true,
@@ -214,6 +218,7 @@ describe('VippsCheckoutService', () => {
   });
 
   describe('capturePayment', () => {
+  setupMockApi();
     it('captures full payment amount', async () => {
       // Mock access token
       mockFetch.mockResolvedValueOnce({
@@ -295,6 +300,7 @@ describe('VippsCheckoutService', () => {
   });
 
   describe('refundPayment', () => {
+  setupMockApi();
     it('refunds full payment', async () => {
       mockFetch.mockResolvedValueOnce({
         ok: true,
@@ -378,6 +384,7 @@ describe('VippsCheckoutService', () => {
 });
 
 describe('Payment Status Mapping', () => {
+  setupMockApi();
   it('maps all Vipps states correctly', () => {
     const stateMap: Record<string, string> = {
       'CREATED': VIPPS_PAYMENT_STATUS.CREATED,
@@ -396,7 +403,9 @@ describe('Payment Status Mapping', () => {
 });
 
 describe('Vipps Webhook Processing', () => {
+  setupMockApi();
   describe('Idempotency', () => {
+  setupMockApi();
     it('prevents duplicate event processing', () => {
       // Test idempotency logic
       const processedEvents = new Map<string, Date>();
@@ -413,6 +422,7 @@ describe('Vipps Webhook Processing', () => {
   });
 
   describe('Booking ID Extraction', () => {
+  setupMockApi();
     it('extracts booking ID from payment reference', () => {
       const reference = 'digilist-booking-abc123-1234567890';
       const match = reference.match(/^digilist-(.+)-\d+$/);

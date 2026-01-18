@@ -1,3 +1,4 @@
+import { setupMockApi } from '../../../mocks/api-server.mock';
 /**
  * Message Templates E2E Tests
  * Tests for templates CRUD and preview functionality
@@ -10,6 +11,7 @@
 import { test, expect } from '@playwright/test';
 
 test.describe('Message Templates', () => {
+  setupMockApi();
   test.beforeEach(async ({ page }) => {
     // Navigate to templates page
     await page.goto('/backoffice/templates');

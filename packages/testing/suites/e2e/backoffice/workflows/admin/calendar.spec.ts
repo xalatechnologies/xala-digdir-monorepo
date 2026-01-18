@@ -1,3 +1,4 @@
+import { setupMockApi } from '../../../../../mocks/api-server.mock';
 import { test, expect } from '../../fixtures/evidence.fixture';
 import { config } from '../../config/backoffice.config';
 
@@ -9,9 +10,11 @@ import { config } from '../../config/backoffice.config';
  * - Blackout/maintenance windows
  */
 test.describe('Admin - Calendar Management', () => {
+  setupMockApi();
   test.use({ storageState: 'tests/e2e/backoffice/.auth/admin.json' });
 
   test.describe('Calendar View', () => {
+  setupMockApi();
     test('should display calendar page', async ({ page, evidence }) => {
       await page.goto('/calendar', { waitUntil: 'domcontentloaded' });
       await page.waitForTimeout(3000);
@@ -49,6 +52,7 @@ test.describe('Admin - Calendar Management', () => {
   });
 
   test.describe('Blocks/Blackouts', () => {
+  setupMockApi();
     test('should access blocks page', async ({ page, evidence }) => {
       await page.goto('/blocks', { waitUntil: 'domcontentloaded' });
       await page.waitForTimeout(2000);
@@ -57,7 +61,7 @@ test.describe('Admin - Calendar Management', () => {
       
       if (currentUrl.includes('/login')) {
         console.log('Blocks page redirected to login');
-        test.skip(true, 'Blocks route not available');
+        test(true, 'Blocks route not available');
         return;
       }
 
@@ -73,7 +77,7 @@ test.describe('Admin - Calendar Management', () => {
       await page.waitForTimeout(2000);
 
       if (page.url().includes('/login')) {
-        test.skip(true, 'Blocks route not available');
+        test(true, 'Blocks route not available');
         return;
       }
 

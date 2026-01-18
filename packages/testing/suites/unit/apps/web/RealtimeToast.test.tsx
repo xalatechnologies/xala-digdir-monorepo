@@ -28,14 +28,14 @@ vi.mock('../providers', () => ({
   },
 }));
 
-describe.skip('RealtimeToast', () => {
+describe('RealtimeToast', () => {
   beforeEach(() => {
     // Clear any stored callbacks
     delete (global as any).__realtimeBookingCallback;
     delete (global as any).__realtimeNotificationCallback;
   });
 
-  describe.skip('Accessibility Compliance', () => {
+  describe('Accessibility Compliance', () => {
     it('should not have accessibility violations when empty', async () => {
       await testAccessibility(<RealtimeToast />);
     });
@@ -59,7 +59,7 @@ describe.skip('RealtimeToast', () => {
     });
   });
 
-  describe.skip('Screen Reader Announcements', () => {
+  describe('Screen Reader Announcements', () => {
     it('should have aria-live region for toast container', async () => {
       const { container } = await testAccessibility(<RealtimeToast />);
 
@@ -121,7 +121,7 @@ describe.skip('RealtimeToast', () => {
     });
   });
 
-  describe.skip('Toast Content', () => {
+  describe('Toast Content', () => {
     it('should have accessible close button', async () => {
       const { container } = await testAccessibility(<RealtimeToast />);
 
@@ -162,7 +162,7 @@ describe.skip('RealtimeToast', () => {
     });
   });
 
-  describe.skip('Design Token Compliance', () => {
+  describe('Design Token Compliance', () => {
     it('should use design tokens for colors', async () => {
       const { container } = await testAccessibility(<RealtimeToast />);
 
@@ -185,7 +185,7 @@ describe.skip('RealtimeToast', () => {
     });
   });
 
-  describe.skip('Toast Types', () => {
+  describe('Toast Types', () => {
     it('should render success toast correctly', async () => {
       const { container } = await testAccessibility(<RealtimeToast />);
 
@@ -237,7 +237,7 @@ describe.skip('RealtimeToast', () => {
     });
   });
 
-  describe.skip('Keyboard Interaction', () => {
+  describe('Keyboard Interaction', () => {
     it('should allow dismissing toast with close button', async () => {
       const { container } = await testAccessibility(<RealtimeToast />);
 
@@ -260,7 +260,7 @@ describe.skip('RealtimeToast', () => {
     });
   });
 
-  describe.skip('Auto-dismiss Behavior', () => {
+  describe('Auto-dismiss Behavior', () => {
     it('should not auto-dismiss immediately (5 second delay)', async () => {
       const { container } = await testAccessibility(<RealtimeToast />);
 
@@ -281,7 +281,7 @@ describe.skip('RealtimeToast', () => {
     });
   });
 
-  describe.skip('Multiple Toasts', () => {
+  describe('Multiple Toasts', () => {
     it('should stack multiple toasts correctly', async () => {
       const { container } = await testAccessibility(<RealtimeToast />);
 
@@ -305,7 +305,7 @@ describe.skip('RealtimeToast', () => {
     });
   });
 
-  describe.skip('Design System Compliance', () => {
+  describe('Design System Compliance', () => {
     it('should only import from @xala/ds', () => {
       // This test verifies the imports at build time
       // The actual test is in the ESLint rules

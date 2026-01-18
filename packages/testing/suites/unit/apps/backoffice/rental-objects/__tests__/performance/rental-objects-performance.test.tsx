@@ -5,6 +5,7 @@
 
 import React from 'react';
 import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { setupMockApi } from '../../../../../../../mocks/api-server.mock';
 import { render } from '@testing-library/react';
 import { BrowserRouter } from 'react-router-dom';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
@@ -162,12 +163,12 @@ const createWrapper = () => {
   );
 };
 
-describe.skip('Rental Objects Performance Tests', () => {
+describe('Rental Objects Performance Tests', () => {
   beforeEach(() => {
     vi.clearAllMocks();
   });
 
-  describe.skip('List View Performance', () => {
+  describe('List View Performance', () => {
     it('should render 1000+ items efficiently', () => {
       const startTime = performance.now();
       
@@ -220,7 +221,7 @@ describe.skip('Rental Objects Performance Tests', () => {
     });
   });
 
-  describe.skip('Detail View Performance', () => {
+  describe('Detail View Performance', () => {
     it('should render complex detail view quickly', () => {
       const startTime = performance.now();
       
@@ -258,7 +259,7 @@ describe.skip('Rental Objects Performance Tests', () => {
     });
   });
 
-  describe.skip('Wizard Performance', () => {
+  describe('Wizard Performance', () => {
     it('should render wizard form efficiently', () => {
       const startTime = performance.now();
       
@@ -298,7 +299,7 @@ describe.skip('Rental Objects Performance Tests', () => {
     });
   });
 
-  describe.skip('Memory Leak Tests', () => {
+  describe('Memory Leak Tests', () => {
     it('should not leak memory on component unmount', () => {
       const { unmount } = render(<RentalObjectsListView />, {
         wrapper: createWrapper(),

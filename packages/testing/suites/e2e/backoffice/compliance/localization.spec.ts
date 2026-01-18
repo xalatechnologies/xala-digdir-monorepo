@@ -1,3 +1,4 @@
+import { setupMockApi } from '../../../../mocks/api-server.mock';
 import { test, expect } from '../fixtures/evidence.fixture';
 import { config } from '../config/backoffice.config';
 
@@ -11,6 +12,7 @@ import { config } from '../config/backoffice.config';
  * - Proper date/time formatting
  */
 test.describe('Localization - Norwegian (nb)', () => {
+  setupMockApi();
   test.use({ storageState: 'tests/e2e/backoffice/.auth/admin.json' });
 
   test('should display Norwegian UI by default', async ({ page }) => {
@@ -79,6 +81,7 @@ test.describe('Localization - Norwegian (nb)', () => {
 });
 
 test.describe('Localization - English (en)', () => {
+  setupMockApi();
   test.use({ storageState: 'tests/e2e/backoffice/.auth/admin.json' });
 
   test('should switch to English', async ({ page }) => {
@@ -110,12 +113,13 @@ test.describe('Localization - English (en)', () => {
       expect(hasEnglish, 'Page should display English text after switch').toBe(true);
     } else {
       console.log('Language switcher not found - skipping English test');
-      test.skip(true, 'No language switcher available');
+      test(true, 'No language switcher available');
     }
   });
 });
 
 test.describe('Localization - Page-specific', () => {
+  setupMockApi();
   test.use({ storageState: 'tests/e2e/backoffice/.auth/admin.json' });
 
   const pagesToCheck = [
@@ -151,6 +155,7 @@ test.describe('Localization - Page-specific', () => {
 });
 
 test.describe('Date/Time Formatting', () => {
+  setupMockApi();
   test.use({ storageState: 'tests/e2e/backoffice/.auth/admin.json' });
 
   test('should use Norwegian date format on calendar', async ({ page }) => {

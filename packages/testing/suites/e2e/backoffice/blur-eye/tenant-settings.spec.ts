@@ -25,7 +25,7 @@ test.describe('Tenant Settings E2E', () => {
       await page.waitForTimeout(3000);
       
       if (page.url().includes('/login')) {
-        test.skip();
+        test();
       }
     });
 
@@ -79,7 +79,7 @@ test.describe('Tenant Settings E2E', () => {
       await page.waitForTimeout(3000);
       
       if (page.url().includes('/login')) {
-        test.skip();
+        test();
       }
     });
 
@@ -122,7 +122,7 @@ test.describe('Tenant Settings E2E', () => {
       await page.waitForTimeout(3000);
       
       if (page.url().includes('/login')) {
-        test.skip();
+        test();
       }
     });
 
@@ -164,7 +164,7 @@ test.describe('Tenant Settings E2E', () => {
       await page.waitForTimeout(3000);
       
       if (page.url().includes('/login')) {
-        test.skip();
+        test();
       }
     });
 
@@ -228,7 +228,7 @@ test.describe('Tenant Settings E2E', () => {
         await page.waitForTimeout(2000);
         
         if (page.url().includes('/login')) {
-          test.skip();
+          test();
           return;
         }
         

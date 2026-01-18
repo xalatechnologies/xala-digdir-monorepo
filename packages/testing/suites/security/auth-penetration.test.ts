@@ -15,6 +15,7 @@
  * Based on OWASP Top 10 and common authentication vulnerabilities
  */
 import { describe, it, expect, beforeAll } from 'vitest';
+import { setupMockApi } from '../../mocks/api-server.mock';
 
 const API_URL = process.env.API_URL || 'http://localhost:4000';
 const TEST_TENANT_ID = 'test-tenant';
@@ -24,6 +25,7 @@ const describeOrSkip = SKIP_INTEGRATION ? describe.skip : describe;
 
 describeOrSkip('Authentication Security & Penetration Tests', () => {
   describe('Session Security', () => {
+  setupMockApi();
     it('should prevent session fixation attacks', async () => {
       // Attempt to set custom session ID before authentication
       const maliciousSessionId = 'attacker-controlled-session-id';
@@ -135,6 +137,7 @@ describeOrSkip('Authentication Security & Penetration Tests', () => {
   });
 
   describe('SQL Injection Prevention', () => {
+  setupMockApi();
     it('should prevent SQL injection in role parameter', async () => {
       const sqlInjections = [
         "admin'; DROP TABLE users;--",
@@ -189,6 +192,7 @@ describeOrSkip('Authentication Security & Penetration Tests', () => {
   });
 
   describe('XSS Prevention', () => {
+  setupMockApi();
     it('should sanitize XSS in user input', async () => {
       const xssPayloads = [
         '<script>alert("XSS")</script>',
@@ -237,6 +241,7 @@ describeOrSkip('Authentication Security & Penetration Tests', () => {
   });
 
   describe('Authorization Bypass Attempts', () => {
+  setupMockApi();
     it('should prevent privilege escalation via role manipulation', async () => {
       // Login as regular user
       const userLogin = await fetch(`${API_URL}/api/auth/test-login`, {
@@ -328,6 +333,7 @@ describeOrSkip('Authentication Security & Penetration Tests', () => {
   });
 
   describe('Brute Force Protection', () => {
+  setupMockApi();
     it('should not expose timing information on invalid users', async () => {
       const validUserTime: number[] = [];
       const invalidUserTime: number[] = [];
@@ -383,6 +389,7 @@ describeOrSkip('Authentication Security & Penetration Tests', () => {
   });
 
   describe('CSRF Protection', () => {
+  setupMockApi();
     it('should use HttpOnly cookies (not vulnerable to JS-based CSRF)', async () => {
       const loginResponse = await fetch(`${API_URL}/api/auth/test-login`, {
         method: 'POST',
@@ -417,6 +424,7 @@ describeOrSkip('Authentication Security & Penetration Tests', () => {
   });
 
   describe('Input Validation', () => {
+  setupMockApi();
     it('should reject oversized payloads', async () => {
       const oversizedRole = 'a'.repeat(10000);
 
@@ -485,6 +493,7 @@ describeOrSkip('Authentication Security & Penetration Tests', () => {
   });
 
   describe('Rate Limiting', () => {
+  setupMockApi();
     it('should not accept unlimited login attempts', async () => {
       // Note: This test assumes some form of rate limiting exists
       // If no rate limiting is implemented, this test documents the need for it
@@ -515,6 +524,7 @@ describeOrSkip('Authentication Security & Penetration Tests', () => {
   });
 
   describe('Production Environment Protection', () => {
+  setupMockApi();
     it('should block test-login endpoint in production', async () => {
       // Note: This test would need to set NODE_ENV=production
       // Documenting expected behavior
@@ -522,6 +532,7 @@ describeOrSkip('Authentication Security & Penetration Tests', () => {
   });
 
   describe('Error Information Disclosure', () => {
+  setupMockApi();
     it('should not expose stack traces in errors', async () => {
       // Trigger an error
       const response = await fetch(`${API_URL}/api/auth/test-login`, {

@@ -2,10 +2,13 @@
  * User API Integration Tests
  */
 import { describe, it, expect } from 'vitest';
+import { setupMockApi } from '../../../mocks/api-server.mock';
 import { request, skipIfNoServer } from './setup';
 
 describe('User API', () => {
+  setupMockApi();
   describe('GET /api/users', () => {
+  setupMockApi();
     it('should return response', async () => {
       if (skipIfNoServer()) return;
       const res = await request('GET', '/api/users');
@@ -15,6 +18,7 @@ describe('User API', () => {
   });
 
   describe('POST /api/users', () => {
+  setupMockApi();
     it('should validate email format', async () => {
       if (skipIfNoServer()) return;
       const res = await request('POST', '/api/users', {

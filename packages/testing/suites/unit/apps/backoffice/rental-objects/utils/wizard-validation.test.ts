@@ -6,8 +6,8 @@
 import { describe, it, expect } from 'vitest';
 import { validateStep, validateAllSteps, canPublish } from './wizard-validation';
 
-describe.skip('wizard-validation', () => {
-  describe.skip('validateStep - basics', () => {
+describe('wizard-validation', () => {
+  describe('validateStep - basics', () => {
     it('should require name', () => {
       const result = validateStep('basics', {}, 'LOKALER_OG_BANER');
       expect(result.isValid).toBe(false);
@@ -37,7 +37,7 @@ describe.skip('wizard-validation', () => {
     });
   });
 
-  describe.skip('validateStep - location', () => {
+  describe('validateStep - location', () => {
     it('should require address for LOKALER_OG_BANER', () => {
       const result = validateStep('location', {}, 'LOKALER_OG_BANER');
       expect(result.isValid).toBe(false);
@@ -59,7 +59,7 @@ describe.skip('wizard-validation', () => {
     });
   });
 
-  describe.skip('validateStep - capacity', () => {
+  describe('validateStep - capacity', () => {
     it('should reject negative capacity', () => {
       const result = validateStep('capacity', { capacity: -1 }, 'LOKALER_OG_BANER');
       expect(result.isValid).toBe(false);
@@ -81,7 +81,7 @@ describe.skip('wizard-validation', () => {
     });
   });
 
-  describe.skip('validateStep - openingHours', () => {
+  describe('validateStep - openingHours', () => {
     it('should require at least one day for LOKALER_OG_BANER', () => {
       const result = validateStep('opening-hours', {}, 'LOKALER_OG_BANER');
       expect(result.isValid).toBe(false);
@@ -97,7 +97,7 @@ describe.skip('wizard-validation', () => {
     });
   });
 
-  describe.skip('validateStep - inventory', () => {
+  describe('validateStep - inventory', () => {
     it('should require totalQuantity for UTSTYR_OG_INVENTAR', () => {
       const result = validateStep('inventory', {}, 'UTSTYR_OG_INVENTAR');
       expect(result.isValid).toBe(false);
@@ -122,7 +122,7 @@ describe.skip('wizard-validation', () => {
     });
   });
 
-  describe.skip('validateStep - pickup', () => {
+  describe('validateStep - pickup', () => {
     it('should require pickupLocation when pickup is enabled for UTSTYR_OG_INVENTAR', () => {
       const result = validateStep(
         'pickup',
@@ -147,7 +147,7 @@ describe.skip('wizard-validation', () => {
     });
   });
 
-  describe.skip('validateStep - requirements', () => {
+  describe('validateStep - requirements', () => {
     it('should require licenseTypes when licenseRequired is true', () => {
       const result = validateStep(
         'requirements',
@@ -172,7 +172,7 @@ describe.skip('wizard-validation', () => {
     });
   });
 
-  describe.skip('validateStep - packages', () => {
+  describe('validateStep - packages', () => {
     it('should require name for each package', () => {
       const result = validateStep(
         'packages',
@@ -207,7 +207,7 @@ describe.skip('wizard-validation', () => {
     });
   });
 
-  describe.skip('validateStep - schedule', () => {
+  describe('validateStep - schedule', () => {
     it('should require at least one session for OPPLEVELSER_OG_ARRANGEMENT', () => {
       const result = validateStep('schedule', {}, 'OPPLEVELSER_OG_ARRANGEMENT');
       expect(result.isValid).toBe(false);
@@ -227,7 +227,7 @@ describe.skip('wizard-validation', () => {
     });
   });
 
-  describe.skip('validateStep - content', () => {
+  describe('validateStep - content', () => {
     it('should reject overly long description', () => {
       const longDescription = 'a'.repeat(10001);
       const result = validateStep(
@@ -248,7 +248,7 @@ describe.skip('wizard-validation', () => {
     });
   });
 
-  describe.skip('validateStep - booking', () => {
+  describe('validateStep - booking', () => {
     it('should reject invalid slot duration', () => {
       const result = validateStep(
         'booking',
@@ -304,7 +304,7 @@ describe.skip('wizard-validation', () => {
     });
   });
 
-  describe.skip('validateAllSteps', () => {
+  describe('validateAllSteps', () => {
     it('should validate all steps and return all errors', () => {
       const steps = [
         { id: 'basics' as const, titleKey: 'basics', completed: false, hasErrors: false },
@@ -338,7 +338,7 @@ describe.skip('wizard-validation', () => {
     });
   });
 
-  describe.skip('canPublish', () => {
+  describe('canPublish', () => {
     it('should require name, category, and description', () => {
       const result = canPublish({}, 'LOKALER_OG_BANER');
       expect(result.canPublish).toBe(false);

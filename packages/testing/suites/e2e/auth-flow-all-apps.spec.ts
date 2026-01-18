@@ -1,3 +1,4 @@
+import { setupMockApi } from '../../mocks/api-server.mock';
 /**
  * Authentication Flow - All Apps E2E Tests
  * Tests authentication "One Truth" fix across all 4 applications
@@ -116,6 +117,7 @@ async function verifySessionEndpointHeaders(page: Page, apiUrl: string): Promise
 // Run tests for each app
 for (const app of APPS) {
   test.describe(`${app.name} Auth Flow`, () => {
+  setupMockApi();
     test(`should redirect protected route to login with returnTo`, async ({ page }) => {
       // Visit protected route directly
       await page.goto(`${app.url}${app.protectedRoute}`);
@@ -264,6 +266,7 @@ for (const app of APPS) {
 
 // Cross-app session tests
 test.describe('Cross-App Session Behavior', () => {
+  setupMockApi();
   test('should share session across all apps (SSO)', async ({ page, context }) => {
     // Login to Backoffice
     const backoffice = APPS[0];
@@ -306,6 +309,7 @@ test.describe('Cross-App Session Behavior', () => {
 
 // Session validation tests
 test.describe('Session Validation - Self-Verifying Endpoint', () => {
+  setupMockApi();
   test('should validate session without relying on middleware', async ({ page, request }) => {
     // Login via Backoffice
     const app = APPS[0];
@@ -352,7 +356,8 @@ test.describe('Session Validation - Self-Verifying Endpoint', () => {
 
 // Token refresh tests
 test.describe('Token Refresh Flow', () => {
-  test.skip('should automatically refresh token before expiry', async ({ page }) => {
+  setupMockApi();
+  test('should automatically refresh token before expiry', async ({ page }) => {
     // This test requires waiting 13+ minutes for token refresh
     // Mark as skip for regular test runs
     // Run manually with: npx playwright test --grep "automatically refresh"
@@ -399,6 +404,7 @@ test.describe('Token Refresh Flow', () => {
 
 // Browser compatibility tests
 test.describe('Browser Compatibility', () => {
+  setupMockApi();
   // Run on Chrome, Firefox, Safari (configured in playwright.config.ts)
 
   test('should work in all browsers', async ({ page, browserName }) => {

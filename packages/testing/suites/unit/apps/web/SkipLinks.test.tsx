@@ -10,7 +10,7 @@ import { SkipLinks } from './SkipLinks';
 import { testAccessibility, testKeyboardNavigation } from '../test-utils/accessibility';
 import { useT } from '@xala/i18n';
 
-describe.skip('SkipLinks', () => {
+describe('SkipLinks', () => {
   beforeEach(() => {
     // Add target elements for skip links
     document.body.innerHTML = `
@@ -19,7 +19,7 @@ describe.skip('SkipLinks', () => {
     `;
   });
 
-  describe.skip('Accessibility Compliance', () => {
+  describe('Accessibility Compliance', () => {
     it('should not have any accessibility violations', async () => {
       await testAccessibility(<SkipLinks />);
     });
@@ -44,7 +44,7 @@ describe.skip('SkipLinks', () => {
     });
   });
 
-  describe.skip('Keyboard Navigation', () => {
+  describe('Keyboard Navigation', () => {
     it('should be keyboard accessible', async () => {
       const { tabForward, getFocusedElement } = await testKeyboardNavigation(<SkipLinks />);
 
@@ -81,7 +81,7 @@ describe.skip('SkipLinks', () => {
     });
   });
 
-  describe.skip('Visual Behavior', () => {
+  describe('Visual Behavior', () => {
     it('should be visually hidden by default', async () => {
       const { container } = await testAccessibility(<SkipLinks />);
       const skipLink = screen.getByText('Hopp til hovedinnhold');
@@ -108,7 +108,7 @@ describe.skip('SkipLinks', () => {
     });
   });
 
-  describe.skip('High Contrast Mode Support', () => {
+  describe('High Contrast Mode Support', () => {
     it('should have contrast mode CSS defined', async () => {
       const { container } = await testAccessibility(<SkipLinks />);
       const style = container.querySelector('style');
@@ -118,7 +118,7 @@ describe.skip('SkipLinks', () => {
     });
   });
 
-  describe.skip('Norwegian Language', () => {
+  describe('Norwegian Language', () => {
     it('should use correct Norwegian labels', async () => {
       await testAccessibility(<SkipLinks />);
 
@@ -127,7 +127,7 @@ describe.skip('SkipLinks', () => {
     });
   });
 
-  describe.skip('Semantic HTML', () => {
+  describe('Semantic HTML', () => {
     it('should use proper anchor elements', async () => {
       await testAccessibility(<SkipLinks />);
 
@@ -152,7 +152,7 @@ describe.skip('SkipLinks', () => {
     });
   });
 
-  describe.skip('Design Token Compliance', () => {
+  describe('Design Token Compliance', () => {
     it('should use design tokens for styling', async () => {
       const { container } = await testAccessibility(<SkipLinks />);
       const style = container.querySelector('style');
@@ -177,7 +177,7 @@ describe.skip('SkipLinks', () => {
     });
   });
 
-  describe.skip('Z-Index Layering', () => {
+  describe('Z-Index Layering', () => {
     it('should have high z-index to appear above all content', async () => {
       const { container } = await testAccessibility(<SkipLinks />);
       const skipLinksContainer = container.querySelector('.skip-links');

@@ -1,3 +1,4 @@
+import { setupMockApi } from '../../../../mocks/api-server.mock';
 import { test, expect } from '../fixtures/evidence.fixture';
 import { config } from '../config/backoffice.config';
 import { FEATURE_FLAGS, getItemsForFlag, type FeatureFlagId } from '../config/expected-menu';
@@ -18,6 +19,7 @@ interface FeatureFlagState {
 }
 
 test.describe('Feature Flags - Read State', () => {
+  setupMockApi();
   test.use({ storageState: 'tests/e2e/backoffice/.auth/admin.json' });
 
   test('should read feature flag state from UI or API', async ({ page, evidence }) => {
@@ -72,6 +74,7 @@ test.describe('Feature Flags - Read State', () => {
 });
 
 test.describe('Feature Flags - Toggle & Verify', () => {
+  setupMockApi();
   test.use({ storageState: 'tests/e2e/backoffice/.auth/admin.json' });
 
   // Flags that are safe to toggle in demo environment
@@ -81,13 +84,14 @@ test.describe('Feature Flags - Toggle & Verify', () => {
     const flag = FEATURE_FLAGS[flagId];
 
     test.describe(`Toggle ${flag.name}`, () => {
+  setupMockApi();
       test('should toggle OFF and verify UI changes', async ({ page }) => {
         // Step 1: Navigate to feature flags page
         await page.goto('/tenant/features');
         await page.waitForLoadState('networkidle');
 
         if (!page.url().includes('/tenant/features')) {
-          test.skip(true, 'Feature flags UI not accessible');
+          test(true, 'Feature flags UI not accessible');
           return;
         }
 
@@ -98,7 +102,7 @@ test.describe('Feature Flags - Toggle & Verify', () => {
 
         if (!(await toggle.isVisible())) {
           console.log(`Toggle for ${flagId} not found`);
-          test.skip(true, `Toggle for ${flagId} not found`);
+          test(true, `Toggle for ${flagId} not found`);
           return;
         }
 
@@ -173,7 +177,9 @@ test.describe('Feature Flags - Toggle & Verify', () => {
 });
 
 test.describe('Feature Flags - RBAC + Flags Combined', () => {
+  setupMockApi();
   test.describe('Flag ON + Role Permitted', () => {
+  setupMockApi();
     test.use({ storageState: 'tests/e2e/backoffice/.auth/admin.json' });
 
     test('admin should access flagged feature when flag ON', async ({ page }) => {
@@ -190,6 +196,7 @@ test.describe('Feature Flags - RBAC + Flags Combined', () => {
   });
 
   test.describe('Flag ON + Role Blocked', () => {
+  setupMockApi();
     test.use({ storageState: 'tests/e2e/backoffice/.auth/saksbehandler.json' });
 
     test('saksbehandler should NOT access admin-only flagged feature', async ({ page, evidence }) => {
@@ -210,6 +217,7 @@ test.describe('Feature Flags - RBAC + Flags Combined', () => {
   });
 
   test.describe('Flag OFF + Role Permitted', () => {
+  setupMockApi();
     test.use({ storageState: 'tests/e2e/backoffice/.auth/admin.json' });
 
     test('admin should NOT access feature when flag OFF', async ({ page }) => {
@@ -219,7 +227,7 @@ test.describe('Feature Flags - RBAC + Flags Combined', () => {
       await page.waitForLoadState('networkidle');
 
       if (!page.url().includes('/tenant/features')) {
-        test.skip(true, 'Cannot verify flag state');
+        test(true, 'Cannot verify flag state');
         return;
       }
 
@@ -236,6 +244,7 @@ test.describe('Feature Flags - RBAC + Flags Combined', () => {
 });
 
 test.describe('Feature Flags - Persistence', () => {
+  setupMockApi();
   test.use({ storageState: 'tests/e2e/backoffice/.auth/admin.json' });
 
   test('flag state should persist after page reload', async ({ page }) => {
@@ -243,7 +252,7 @@ test.describe('Feature Flags - Persistence', () => {
     await page.waitForLoadState('networkidle');
 
     if (!page.url().includes('/tenant/features')) {
-      test.skip(true, 'Feature flags UI not accessible');
+      test(true, 'Feature flags UI not accessible');
       return;
     }
 
@@ -251,7 +260,7 @@ test.describe('Feature Flags - Persistence', () => {
     const firstToggle = page.locator('input[type="checkbox"]').first();
     
     if (!(await firstToggle.isVisible())) {
-      test.skip(true, 'No toggles found');
+      test(true, 'No toggles found');
       return;
     }
 
@@ -281,7 +290,7 @@ test.describe('Feature Flags - Persistence', () => {
     await page.waitForLoadState('networkidle');
 
     if (!page.url().includes('/tenant/features')) {
-      test.skip(true, 'Feature flags UI not accessible');
+      test(true, 'Feature flags UI not accessible');
       await context.close();
       return;
     }

@@ -1,3 +1,4 @@
+import { setupMockApi } from '../../../mocks/api-server.mock';
 /**
  * Demo Login E2E Test with Mocked API
  *
@@ -9,6 +10,7 @@ import { LoginPage } from '../../helpers/pages/LoginPage';
 import { TEST_CREDENTIALS } from '../../fixtures/auth/auth.fixture';
 
 test.describe('Demo Login (Mocked API)', () => {
+  setupMockApi();
   test('Minside login with mocked API', async ({ page }) => {
     // Mock the demo-token API endpoint
     await page.route('**/api/auth/demo-token', async (route) => {

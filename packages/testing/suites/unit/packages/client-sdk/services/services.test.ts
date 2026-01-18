@@ -37,7 +37,7 @@ import {
   calendarSyncService
 } from '../../services/integration.service';
 
-describe.skip('Services', () => {
+describe('Services', () => {
   // ListingService tests skipped - service not implemented
   // PublicListingService tests skipped - service not implemented
 

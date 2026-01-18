@@ -8,6 +8,7 @@
  */
 
 import { describe, it, expect, beforeAll, afterAll, beforeEach } from 'vitest';
+import { setupMockApi } from '../../../mocks/api-server.mock';
 
 // ============================================================================
 // Test Setup
@@ -64,7 +65,9 @@ const TEST_TENANT_DATA = {
 // ============================================================================
 
 describe('SaaS API - Tenant CRUD', () => {
+  setupMockApi();
   describe('Create Tenant', () => {
+  setupMockApi();
     it('creates tenant with valid data', async () => {
       // Test would call: POST /api/saas/tenants
       const tenantData = {
@@ -118,6 +121,7 @@ describe('SaaS API - Tenant CRUD', () => {
   });
 
   describe('Read Tenant', () => {
+  setupMockApi();
     it('lists tenants with pagination', async () => {
       // Test would call: GET /api/saas/tenants?page=1&limit=10
       const response = {
@@ -163,6 +167,7 @@ describe('SaaS API - Tenant CRUD', () => {
   });
 
   describe('Update Tenant', () => {
+  setupMockApi();
     it('updates tenant name', async () => {
       // Test would call: PATCH /api/saas/tenants/:id
       const updateData = { name: 'Updated Kommune' };
@@ -196,6 +201,7 @@ describe('SaaS API - Tenant CRUD', () => {
   });
 
   describe('Suspend/Activate Tenant', () => {
+  setupMockApi();
     it('suspends tenant with reason', async () => {
       // Test would call: POST /api/saas/tenants/:id/suspend
       const suspendData = { reason: 'Payment overdue' };
@@ -226,7 +232,9 @@ describe('SaaS API - Tenant CRUD', () => {
 // ============================================================================
 
 describe('SaaS API - License Keys', () => {
+  setupMockApi();
   describe('Rotate License Key', () => {
+  setupMockApi();
     it('generates new license key on rotation', async () => {
       // Test would call: POST /api/saas/tenants/:id/rotate-license
       const response = {
@@ -280,7 +288,9 @@ describe('SaaS API - License Keys', () => {
 // ============================================================================
 
 describe('SaaS API - Feature Flags', () => {
+  setupMockApi();
   describe('Get Feature Flags Catalog', () => {
+  setupMockApi();
     it('returns all global flags', async () => {
       // Test would call: GET /api/saas/feature-flags
       const catalog = {
@@ -308,6 +318,7 @@ describe('SaaS API - Feature Flags', () => {
   });
 
   describe('Update Tenant Flags', () => {
+  setupMockApi();
     it('updates tenant flag overrides', async () => {
       // Test would call: PUT /api/saas/tenants/:id/flags
       const updateData = {
@@ -349,7 +360,9 @@ describe('SaaS API - Feature Flags', () => {
 // ============================================================================
 
 describe('SaaS API - Plans', () => {
+  setupMockApi();
   describe('Create Plan', () => {
+  setupMockApi();
     it('creates plan with entitlements', async () => {
       const planData = {
         name: 'Premium Plan',
@@ -377,6 +390,7 @@ describe('SaaS API - Plans', () => {
   });
 
   describe('Assign Plan to Tenant', () => {
+  setupMockApi();
     it('assigns plan and updates tenant entitlements', async () => {
       // Test would call: PUT /api/saas/tenants/:id/plan
       const assignData = { planId: 'premium-plan-id' };
@@ -403,7 +417,9 @@ describe('SaaS API - Plans', () => {
 // ============================================================================
 
 describe('SaaS API - RBAC Enforcement', () => {
+  setupMockApi();
   describe('SAAS_SUPER_ADMIN Role', () => {
+  setupMockApi();
     it('can create tenants', async () => {
       const canCreate = SUPER_ADMIN_CONTEXT.permissions.includes('saas:tenants:create');
 
@@ -424,6 +440,7 @@ describe('SaaS API - RBAC Enforcement', () => {
   });
 
   describe('SAAS_BILLING_ADMIN Role', () => {
+  setupMockApi();
     it('cannot create tenants', async () => {
       const canCreate = BILLING_ADMIN_CONTEXT.permissions.includes('saas:tenants:create');
 
@@ -444,6 +461,7 @@ describe('SaaS API - RBAC Enforcement', () => {
   });
 
   describe('SAAS_SUPPORT_AGENT Role', () => {
+  setupMockApi();
     it('can only read tenants', async () => {
       const canRead = SUPPORT_AGENT_CONTEXT.permissions.includes('saas:tenants:read');
       const canCreate = SUPPORT_AGENT_CONTEXT.permissions.includes('saas:tenants:create');

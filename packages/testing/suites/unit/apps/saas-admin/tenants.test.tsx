@@ -46,12 +46,12 @@ function TestWrapper({ children }: { children: React.ReactNode }) {
   );
 }
 
-describe.skip('TenantsListPage', () => {
+describe('TenantsListPage', () => {
   beforeEach(() => {
     vi.clearAllMocks();
   });
 
-  describe.skip('Status Tab Filtering and Counts', () => {
+  describe('Status Tab Filtering and Counts', () => {
     it('should display status tabs with correct counts', async () => {
       // Mock data with different statuses
       mockUseSaasTenants.mockImplementation((params?: { status?: string }) => {
@@ -148,7 +148,7 @@ describe.skip('TenantsListPage', () => {
     });
   });
 
-  describe.skip('Filter Chips Removal and Reset', () => {
+  describe('Filter Chips Removal and Reset', () => {
     it('should display filter chips when filters are active', async () => {
       mockUseSaasTenants.mockReturnValue({
         data: {
@@ -274,7 +274,7 @@ describe.skip('TenantsListPage', () => {
     });
   });
 
-  describe.skip('Empty States', () => {
+  describe('Empty States', () => {
     it('should display empty state when no tenants exist', async () => {
       mockUseSaasTenants.mockReturnValue({
         data: { data: [], meta: { total: 0, page: 1, totalPages: 1 } },
@@ -356,7 +356,7 @@ describe.skip('TenantsListPage', () => {
     });
   });
 
-  describe.skip('i18n Translations', () => {
+  describe('i18n Translations', () => {
     it('should display translated status labels', async () => {
       mockUseSaasTenants.mockReturnValue({
         data: {
@@ -412,7 +412,7 @@ describe.skip('TenantsListPage', () => {
     });
   });
 
-  describe.skip('Responsive Behavior', () => {
+  describe('Responsive Behavior', () => {
     it('should handle status tabs overflow on mobile', async () => {
       // Mock mobile viewport
       Object.defineProperty(window, 'innerWidth', {

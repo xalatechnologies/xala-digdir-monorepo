@@ -1,3 +1,4 @@
+import { setupMockApi } from '../../../../mocks/api-server.mock';
 import { test, expect } from '../fixtures/evidence.fixture';
 
 /**
@@ -6,6 +7,7 @@ import { test, expect } from '../fixtures/evidence.fixture';
  */
 
 test.describe('Settings', () => {
+  setupMockApi();
   test.use({ storageState: 'tests/e2e/backoffice/.auth/admin.json' });
 
   test.beforeEach(async ({ page }) => {
@@ -13,11 +15,12 @@ test.describe('Settings', () => {
     await page.waitForTimeout(3000);
     
     if (page.url().includes('/login')) {
-      test.skip();
+      test();
     }
   });
 
   test.describe('Page Layout', () => {
+  setupMockApi();
     test('should display settings page', async ({ page }) => {
       const header = page.locator('h1, h2, [data-testid="page-title"]').first();
       await expect(header).toBeVisible({ timeout: 10000 });
@@ -31,6 +34,7 @@ test.describe('Settings', () => {
   });
 
   test.describe('General Settings', () => {
+  setupMockApi();
     test('should display tenant name setting', async ({ page }) => {
       const nameInput = page.locator('input[name="name"], [data-testid="tenant-name"]').first();
       const visible = await nameInput.isVisible().catch(() => false);
@@ -51,6 +55,7 @@ test.describe('Settings', () => {
   });
 
   test.describe('Branding Settings', () => {
+  setupMockApi();
     test('should navigate to branding section', async ({ page }) => {
       const brandingLink = page.locator('a[href*="branding"], button:has-text("Merkevare")').first();
       
@@ -75,6 +80,7 @@ test.describe('Settings', () => {
   });
 
   test.describe('Integration Settings', () => {
+  setupMockApi();
     test('should navigate to integrations section', async ({ page }) => {
       const integLink = page.locator('a[href*="integrations"], button:has-text("Integrasjoner")').first();
       
@@ -88,6 +94,7 @@ test.describe('Settings', () => {
 });
 
 test.describe('Audit Log', () => {
+  setupMockApi();
   test.use({ storageState: 'tests/e2e/backoffice/.auth/admin.json' });
 
   test.beforeEach(async ({ page }) => {
@@ -95,11 +102,12 @@ test.describe('Audit Log', () => {
     await page.waitForTimeout(3000);
     
     if (page.url().includes('/login')) {
-      test.skip();
+      test();
     }
   });
 
   test.describe('Page Layout', () => {
+  setupMockApi();
     test('should display audit log page', async ({ page }) => {
       const header = page.locator('h1, h2, [data-testid="page-title"]').first();
       await expect(header).toBeVisible({ timeout: 10000 });
@@ -118,6 +126,7 @@ test.describe('Audit Log', () => {
   });
 
   test.describe('Filter Operations', () => {
+  setupMockApi();
     test('should filter by action type', async ({ page }) => {
       const actionFilter = page.locator('select[data-testid*="action"], button:has-text("Handling")').first();
       
@@ -156,6 +165,7 @@ test.describe('Audit Log', () => {
   });
 
   test.describe('View Operations', () => {
+  setupMockApi();
     test('should display log entry details', async ({ page }) => {
       const rows = page.locator('tbody tr');
       const count = await rows.count();
@@ -180,6 +190,7 @@ test.describe('Audit Log', () => {
   });
 
   test.describe('Export Operations', () => {
+  setupMockApi();
     test('should have export button', async ({ page }) => {
       const exportBtn = page.locator('button:has-text("Eksporter"), [data-testid="export-button"]').first();
       const visible = await exportBtn.isVisible().catch(() => false);
@@ -188,6 +199,7 @@ test.describe('Audit Log', () => {
   });
 
   test.describe('Pagination', () => {
+  setupMockApi();
     test('should have pagination controls', async ({ page }) => {
       const pagination = page.locator('[data-testid="pagination"], nav[aria-label*="pagination" i]').first();
       const visible = await pagination.isVisible().catch(() => false);
@@ -197,6 +209,7 @@ test.describe('Audit Log', () => {
 });
 
 test.describe('Work Queue', () => {
+  setupMockApi();
   test.use({ storageState: 'tests/e2e/backoffice/.auth/admin.json' });
 
   test.beforeEach(async ({ page }) => {
@@ -204,11 +217,12 @@ test.describe('Work Queue', () => {
     await page.waitForTimeout(3000);
     
     if (page.url().includes('/login')) {
-      test.skip();
+      test();
     }
   });
 
   test.describe('Page Layout', () => {
+  setupMockApi();
     test('should display work queue page', async ({ page }) => {
       const header = page.locator('h1, h2, [data-testid="page-title"]').first();
       await expect(header).toBeVisible({ timeout: 10000 });
@@ -221,6 +235,7 @@ test.describe('Work Queue', () => {
   });
 
   test.describe('Queue Operations', () => {
+  setupMockApi();
     test('should filter by type', async ({ page }) => {
       const typeFilter = page.locator('select[data-testid*="type"], button:has-text("Type")').first();
       
@@ -256,6 +271,7 @@ test.describe('Work Queue', () => {
 });
 
 test.describe('Messages', () => {
+  setupMockApi();
   test.use({ storageState: 'tests/e2e/backoffice/.auth/admin.json' });
 
   test.beforeEach(async ({ page }) => {
@@ -263,11 +279,12 @@ test.describe('Messages', () => {
     await page.waitForTimeout(3000);
     
     if (page.url().includes('/login')) {
-      test.skip();
+      test();
     }
   });
 
   test.describe('Page Layout', () => {
+  setupMockApi();
     test('should display messages page', async ({ page }) => {
       const header = page.locator('h1, h2, [data-testid="page-title"]').first();
       await expect(header).toBeVisible({ timeout: 10000 });
@@ -280,6 +297,7 @@ test.describe('Messages', () => {
   });
 
   test.describe('Message Operations', () => {
+  setupMockApi();
     test('should have new message button', async ({ page }) => {
       const newBtn = page.locator('button:has-text("Ny melding"), button:has-text("Skriv")').first();
       const visible = await newBtn.isVisible().catch(() => false);

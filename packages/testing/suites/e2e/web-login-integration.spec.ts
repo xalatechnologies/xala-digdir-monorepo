@@ -1,3 +1,4 @@
+import { setupMockApi } from '../../mocks/api-server.mock';
 /**
  * Web App Login Flow - Integration Tests (Real Server)
  *
@@ -10,6 +11,7 @@ import { test, expect } from '@playwright/test';
 const WEB_URL = process.env.WEB_URL || 'http://localhost:5173';
 
 test.describe('Web Login Flow - Real Server Integration', () => {
+  setupMockApi();
   test('INT-001: Homepage loads and shows correct content', async ({ page }) => {
     // Navigate and wait for network to be idle (SPA loads JS)
     await page.goto(WEB_URL, { waitUntil: 'networkidle' });

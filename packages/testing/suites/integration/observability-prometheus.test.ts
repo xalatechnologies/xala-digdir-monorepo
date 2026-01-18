@@ -4,16 +4,19 @@
  */
 
 import { describe, it, expect } from 'vitest';
+import { setupMockApi } from '../../mocks/api-server.mock';
 import { readFileSync } from 'fs';
 import { resolve } from 'path';
 import { parse } from 'yaml';
 
 describe('Prometheus Integration', () => {
+  setupMockApi();
   const prometheusConfig = parse(
     readFileSync(resolve(__dirname, '../../prometheus/prometheus.yml'), 'utf-8')
   );
 
   describe('Configuration', () => {
+  setupMockApi();
     it('should have valid global configuration', () => {
       expect(prometheusConfig.global).toBeDefined();
       expect(prometheusConfig.global.scrape_interval).toBeDefined();
@@ -34,6 +37,7 @@ describe('Prometheus Integration', () => {
   });
 
   describe('Scrape Configurations', () => {
+  setupMockApi();
     it('should have scrape configs defined', () => {
       expect(prometheusConfig.scrape_configs).toBeDefined();
       expect(Array.isArray(prometheusConfig.scrape_configs)).toBe(true);
@@ -71,6 +75,7 @@ describe('Prometheus Integration', () => {
   });
 
   describe('Scrape Intervals', () => {
+  setupMockApi();
     it('should have appropriate scrape intervals', () => {
       prometheusConfig.scrape_configs.forEach((config: any) => {
         if (config.scrape_interval) {

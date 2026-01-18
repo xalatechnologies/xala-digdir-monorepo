@@ -3,9 +3,11 @@
  * Tests run against the actual API with mock database
  */
 import { describe, it, expect, beforeAll, afterAll } from 'vitest';
+import { setupMockApi } from '../../../mocks/api-server.mock';
 import { createTestApp, TestContext, TEST_IDS } from '../test-utils';
 
 describe('Integration Tests', () => {
+  setupMockApi();
   let ctx: TestContext;
 
   beforeAll(async () => {
@@ -20,7 +22,9 @@ describe('Integration Tests', () => {
   // Auth Controller Tests
   // ==========================================================================
   describe('Auth Controller', () => {
+  setupMockApi();
     describe('POST /api/auth/login', () => {
+  setupMockApi();
       it('should login with valid email', async () => {
         const res = await ctx.app.inject({
           method: 'POST',
@@ -54,6 +58,7 @@ describe('Integration Tests', () => {
     });
 
     describe('GET /api/auth/session', () => {
+  setupMockApi();
       it('should return session with user header', async () => {
         const res = await ctx.app.inject({
           method: 'GET',
@@ -74,6 +79,7 @@ describe('Integration Tests', () => {
     });
 
     describe('POST /api/auth/logout', () => {
+  setupMockApi();
       it('should logout successfully', async () => {
         const res = await ctx.app.inject({
           method: 'POST',
@@ -85,6 +91,7 @@ describe('Integration Tests', () => {
     });
 
     describe('POST /api/auth/refresh', () => {
+  setupMockApi();
       it('should refresh token', async () => {
         const res = await ctx.app.inject({
           method: 'POST',
@@ -96,6 +103,7 @@ describe('Integration Tests', () => {
     });
 
     describe('GET /api/auth/providers', () => {
+  setupMockApi();
       it('should return auth providers', async () => {
         const res = await ctx.app.inject({
           method: 'GET',
@@ -109,6 +117,7 @@ describe('Integration Tests', () => {
     });
 
     describe('GET /api/auth/csrf', () => {
+  setupMockApi();
       it('should return CSRF token', async () => {
         const res = await ctx.app.inject({
           method: 'GET',
@@ -121,6 +130,7 @@ describe('Integration Tests', () => {
     });
 
     describe('POST /api/auth/email', () => {
+  setupMockApi();
       it('should login with email/password', async () => {
         const res = await ctx.app.inject({
           method: 'POST',
@@ -146,7 +156,9 @@ describe('Integration Tests', () => {
   // RBAC/Authz Controller Tests
   // ==========================================================================
   describe('Authz Controller', () => {
+  setupMockApi();
     describe('GET /api/authz/permissions', () => {
+  setupMockApi();
       it('should return admin permissions', async () => {
         const res = await ctx.app.inject({
           method: 'GET',
@@ -184,6 +196,7 @@ describe('Integration Tests', () => {
     });
 
     describe('GET /api/authz/check', () => {
+  setupMockApi();
       it('should allow admin to delete bookings', async () => {
         const res = await ctx.app.inject({
           method: 'GET',
@@ -230,7 +243,9 @@ describe('Integration Tests', () => {
   // Public Controller Tests
   // ==========================================================================
   describe('Public Controller', () => {
+  setupMockApi();
     describe('GET /api/public/listings', () => {
+  setupMockApi();
       it('should return listings without auth', async () => {
         const res = await ctx.app.inject({
           method: 'GET',
@@ -254,6 +269,7 @@ describe('Integration Tests', () => {
     });
 
     describe('GET /api/public/listings/:id', () => {
+  setupMockApi();
       it('should return listing by ID', async () => {
         const res = await ctx.app.inject({
           method: 'GET',
@@ -273,6 +289,7 @@ describe('Integration Tests', () => {
     });
 
     describe('GET /api/public/listings/:id/availability', () => {
+  setupMockApi();
       it('should return availability', async () => {
         const res = await ctx.app.inject({
           method: 'GET',
@@ -284,6 +301,7 @@ describe('Integration Tests', () => {
     });
 
     describe('GET /api/public/categories', () => {
+  setupMockApi();
       it('should return categories', async () => {
         const res = await ctx.app.inject({
           method: 'GET',
@@ -295,6 +313,7 @@ describe('Integration Tests', () => {
     });
 
     describe('GET /api/public/cities', () => {
+  setupMockApi();
       it('should return cities', async () => {
         const res = await ctx.app.inject({
           method: 'GET',
@@ -308,6 +327,7 @@ describe('Integration Tests', () => {
     });
 
     describe('GET /api/public/municipalities', () => {
+  setupMockApi();
       it('should return municipalities', async () => {
         const res = await ctx.app.inject({
           method: 'GET',
@@ -319,6 +339,7 @@ describe('Integration Tests', () => {
     });
 
     describe('GET /api/public/featured', () => {
+  setupMockApi();
       it('should return featured listings', async () => {
         const res = await ctx.app.inject({
           method: 'GET',
@@ -334,7 +355,9 @@ describe('Integration Tests', () => {
   // Settings Controller Tests
   // ==========================================================================
   describe('Settings Controller', () => {
+  setupMockApi();
     describe('GET /api/settings', () => {
+  setupMockApi();
       it('should return tenant settings', async () => {
         const res = await ctx.app.inject({
           method: 'GET',
@@ -367,6 +390,7 @@ describe('Integration Tests', () => {
     });
 
     describe('PUT /api/settings', () => {
+  setupMockApi();
       it('should update settings', async () => {
         const res = await ctx.app.inject({
           method: 'PUT',
@@ -389,6 +413,7 @@ describe('Integration Tests', () => {
     });
 
     describe('GET /api/settings/integrations', () => {
+  setupMockApi();
       it('should return integration settings', async () => {
         const res = await ctx.app.inject({
           method: 'GET',
@@ -405,6 +430,7 @@ describe('Integration Tests', () => {
     });
 
     describe('PUT /api/settings/integrations/:provider', () => {
+  setupMockApi();
       it('should update vipps settings', async () => {
         const res = await ctx.app.inject({
           method: 'PUT',
@@ -422,7 +448,9 @@ describe('Integration Tests', () => {
   // Discount Codes Controller Tests
   // ==========================================================================
   describe('Discount Codes Controller', () => {
+  setupMockApi();
     describe('GET /api/discount-codes', () => {
+  setupMockApi();
       it('should list discount codes', async () => {
         const res = await ctx.app.inject({
           method: 'GET',
@@ -434,6 +462,7 @@ describe('Integration Tests', () => {
     });
 
     describe('POST /api/discount-codes', () => {
+  setupMockApi();
       it('should create percentage code', async () => {
         const res = await ctx.app.inject({
           method: 'POST',
@@ -481,6 +510,7 @@ describe('Integration Tests', () => {
     });
 
     describe('GET /api/discount-codes/:id', () => {
+  setupMockApi();
       it('should get code by ID', async () => {
         const res = await ctx.app.inject({
           method: 'GET',
@@ -500,6 +530,7 @@ describe('Integration Tests', () => {
     });
 
     describe('PUT /api/discount-codes/:id', () => {
+  setupMockApi();
       it('should update code', async () => {
         await ctx.app.inject({
           method: 'POST',
@@ -518,6 +549,7 @@ describe('Integration Tests', () => {
     });
 
     describe('DELETE /api/discount-codes/:id', () => {
+  setupMockApi();
       it('should delete code', async () => {
         await ctx.app.inject({
           method: 'POST',
@@ -539,6 +571,7 @@ describe('Integration Tests', () => {
     });
 
     describe('POST /api/discount-codes/validate', () => {
+  setupMockApi();
       it('should validate active code', async () => {
         const res = await ctx.app.inject({
           method: 'POST',
@@ -575,7 +608,9 @@ describe('Integration Tests', () => {
   // Health Controller Tests
   // ==========================================================================
   describe('Health Controller', () => {
+  setupMockApi();
     describe('GET /api/health', () => {
+  setupMockApi();
       it('should return health status', async () => {
         const res = await ctx.app.inject({
           method: 'GET',
@@ -588,6 +623,7 @@ describe('Integration Tests', () => {
     });
 
     describe('GET /api/health/ready', () => {
+  setupMockApi();
       it('should return readiness status', async () => {
         const res = await ctx.app.inject({
           method: 'GET',
@@ -600,6 +636,7 @@ describe('Integration Tests', () => {
     });
 
     describe('GET /api/health/live', () => {
+  setupMockApi();
       it('should return liveness status', async () => {
         const res = await ctx.app.inject({
           method: 'GET',

@@ -22,7 +22,7 @@ test.describe('Economy Invoices (Fakturaer) E2E', () => {
     await page.waitForTimeout(3000);
     
     if (page.url().includes('/login') || !page.url().includes('/economy')) {
-      test.skip();
+      test();
     }
   });
 

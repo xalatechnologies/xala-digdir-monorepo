@@ -1,3 +1,4 @@
+import { setupMockApi } from '../../../mocks/api-server.mock';
 import { test, expect } from '@playwright/test';
 import AxeBuilder from '@axe-core/playwright';
 
@@ -8,8 +9,10 @@ import AxeBuilder from '@axe-core/playwright';
  */
 
 test.describe('Web - Pack 1: Public Discovery', () => {
+  setupMockApi();
 
   test.describe('Listing Search', () => {
+  setupMockApi();
     test.beforeEach(async ({ page }) => {
       await page.goto('/', { waitUntil: 'domcontentloaded' });
       await page.waitForTimeout(3000);
@@ -108,6 +111,7 @@ test.describe('Web - Pack 1: Public Discovery', () => {
   });
 
   test.describe('Listing Details', () => {
+  setupMockApi();
     test.beforeEach(async ({ page }) => {
       await page.goto('/', { waitUntil: 'domcontentloaded' });
       await page.waitForTimeout(2000);
@@ -125,7 +129,7 @@ test.describe('Web - Pack 1: Public Discovery', () => {
       
       if (!onDetail) {
         console.log('Not on detail page - skipping');
-        test.skip();
+        test();
         return;
       }
       
@@ -176,7 +180,7 @@ test.describe('Web - Pack 1: Public Discovery', () => {
         }
       } else {
         console.log('Calendar not visible on this page - skipping');
-        test.skip();
+        test();
       }
     });
 
@@ -189,6 +193,7 @@ test.describe('Web - Pack 1: Public Discovery', () => {
   });
 
   test.describe('Calendar Slot States', () => {
+  setupMockApi();
     test.beforeEach(async ({ page }) => {
       await page.goto('/', { waitUntil: 'domcontentloaded' });
       await page.waitForTimeout(2000);
@@ -205,7 +210,7 @@ test.describe('Web - Pack 1: Public Discovery', () => {
       
       if (!await calendar.isVisible()) {
         console.log('Calendar not visible - skipping');
-        test.skip();
+        test();
         return;
       }
       

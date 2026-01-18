@@ -15,6 +15,7 @@
  * - Protected endpoints
  */
 import { describe, it, expect, beforeAll, afterAll, beforeEach } from 'vitest';
+import { setupMockApi } from '../../mocks/api-server.mock';
 import type { FastifyInstance } from 'fastify';
 
 // Test configuration
@@ -79,6 +80,7 @@ describeOrSkip('RBAC Flow Integration Tests', () => {
   }
 
   describe('Authentication Flow', () => {
+  setupMockApi();
     it('should create session for admin role', async () => {
       const cookie = await loginAs('admin');
 
@@ -133,6 +135,7 @@ describeOrSkip('RBAC Flow Integration Tests', () => {
   });
 
   describe('Session Validation', () => {
+  setupMockApi();
     beforeEach(async () => {
       await loginAs('admin');
       await loginAs('saksbehandler');
@@ -222,6 +225,7 @@ describeOrSkip('RBAC Flow Integration Tests', () => {
   });
 
   describe('Logout Flow', () => {
+  setupMockApi();
     beforeEach(async () => {
       await loginAs('admin');
     });
@@ -274,6 +278,7 @@ describeOrSkip('RBAC Flow Integration Tests', () => {
   });
 
   describe('Permission-Based Access Control', () => {
+  setupMockApi();
     beforeEach(async () => {
       await loginAs('admin');
       await loginAs('saksbehandler');
@@ -335,6 +340,7 @@ describeOrSkip('RBAC Flow Integration Tests', () => {
   });
 
   describe('Multi-Tenant Isolation', () => {
+  setupMockApi();
     it('should include tenant context in session', async () => {
       await loginAs('admin');
 
@@ -379,6 +385,7 @@ describeOrSkip('RBAC Flow Integration Tests', () => {
   });
 
   describe('Security Headers', () => {
+  setupMockApi();
     beforeEach(async () => {
       await loginAs('admin');
     });
@@ -405,6 +412,7 @@ describeOrSkip('RBAC Flow Integration Tests', () => {
   });
 
   describe('Error Handling', () => {
+  setupMockApi();
     it('should return 401 for missing authorization', async () => {
       const response = await fetch(`${API_URL}/api/auth/session`);
 
@@ -424,6 +432,7 @@ describeOrSkip('RBAC Flow Integration Tests', () => {
   });
 
   describe('Audit Logging', () => {
+  setupMockApi();
     it('should log test_login action for each authentication', async () => {
       await loginAs('admin');
 

@@ -23,7 +23,7 @@ vi.mock('@xala/ds', async () => {
   };
 });
 
-describe.skip('ScheduleStep', () => {
+describe('ScheduleStep', () => {
   let mockWizard: UseRentalObjectWizardReturn;
 
   beforeEach(() => {
@@ -54,7 +54,7 @@ describe.skip('ScheduleStep', () => {
     } as unknown as UseRentalObjectWizardReturn;
   });
 
-  describe.skip('Rendering', () => {
+  describe('Rendering', () => {
     it('should render header with icon and title', () => {
       render(<ScheduleStep wizard={mockWizard} />);
 
@@ -87,7 +87,7 @@ describe.skip('ScheduleStep', () => {
     });
   });
 
-  describe.skip('Schedule Type Selection', () => {
+  describe('Schedule Type Selection', () => {
     it('should render fixed schedule option', () => {
       render(<ScheduleStep wizard={mockWizard} />);
 
@@ -125,7 +125,7 @@ describe.skip('ScheduleStep', () => {
     });
   });
 
-  describe.skip('Fixed Schedule Configuration', () => {
+  describe('Fixed Schedule Configuration', () => {
     beforeEach(() => {
       mockWizard.formData.scheduleType = 'fixed';
     });
@@ -193,7 +193,7 @@ describe.skip('ScheduleStep', () => {
     });
   });
 
-  describe.skip('Days of Week Selection', () => {
+  describe('Days of Week Selection', () => {
     beforeEach(() => {
       mockWizard.formData.scheduleType = 'fixed';
       mockWizard.formData.recurringPattern = 'weekly';
@@ -264,7 +264,7 @@ describe.skip('ScheduleStep', () => {
     });
   });
 
-  describe.skip('On-Demand Configuration', () => {
+  describe('On-Demand Configuration', () => {
     beforeEach(() => {
       mockWizard.formData.scheduleType = 'on-demand';
     });
@@ -284,7 +284,7 @@ describe.skip('ScheduleStep', () => {
     });
   });
 
-  describe.skip('Existing Data Display', () => {
+  describe('Existing Data Display', () => {
     it('should display existing scheduleType', () => {
       mockWizard.formData.scheduleType = 'on-demand';
 
@@ -319,7 +319,7 @@ describe.skip('ScheduleStep', () => {
     });
   });
 
-  describe.skip('Accessibility', () => {
+  describe('Accessibility', () => {
     it('should have proper aria-hidden on decorative icons', () => {
       render(<ScheduleStep wizard={mockWizard} />);
 

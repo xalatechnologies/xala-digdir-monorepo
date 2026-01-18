@@ -3,7 +3,7 @@ import userEvent from '@testing-library/user-event';
 import { ConflictIndicator, getConflictStyles, getConflictColors } from './ConflictIndicator';
 import { useT } from '@xala/i18n';
 
-describe.skip('ConflictIndicator', () => {
+describe('ConflictIndicator', () => {
   const mockConflicts = [
     { id: 'event-1', title: 'Møte A', listingName: 'Møterom 1' },
     { id: 'event-2', title: 'Møte B', listingName: 'Møterom 2' },
@@ -124,7 +124,7 @@ describe.skip('ConflictIndicator', () => {
   });
 });
 
-describe.skip('getConflictStyles', () => {
+describe('getConflictStyles', () => {
   it('should return empty object when no conflict', () => {
     const styles = getConflictStyles(false);
     expect(styles).toEqual({});
@@ -140,7 +140,7 @@ describe.skip('getConflictStyles', () => {
   });
 });
 
-describe.skip('getConflictColors', () => {
+describe('getConflictColors', () => {
   it('should return null when no conflict', () => {
     const colors = getConflictColors(false);
     expect(colors).toBeNull();

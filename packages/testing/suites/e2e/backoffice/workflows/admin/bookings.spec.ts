@@ -1,3 +1,4 @@
+import { setupMockApi } from '../../../../../mocks/api-server.mock';
 import { test, expect } from '../../fixtures/evidence.fixture';
 import { config } from '../../config/backoffice.config';
 
@@ -10,9 +11,11 @@ import { config } from '../../config/backoffice.config';
  * - Work queue
  */
 test.describe('Admin - Booking Management', () => {
+  setupMockApi();
   test.use({ storageState: 'tests/e2e/backoffice/.auth/admin.json' });
 
   test.describe('Bookings List', () => {
+  setupMockApi();
     test('should display bookings page', async ({ page, evidence }) => {
       await page.goto('/bookings', { waitUntil: 'domcontentloaded' });
       await page.waitForTimeout(3000);
@@ -50,6 +53,7 @@ test.describe('Admin - Booking Management', () => {
   });
 
   test.describe('Booking Details', () => {
+  setupMockApi();
     test('should navigate to booking detail if exists', async ({ page }) => {
       await page.goto('/bookings', { waitUntil: 'domcontentloaded' });
       await page.waitForTimeout(3000);
@@ -65,12 +69,13 @@ test.describe('Admin - Booking Management', () => {
         expect(page.url()).toMatch(/\/bookings\/[a-zA-Z0-9-]+/);
       } else {
         console.log('No booking links found');
-        test.skip(true, 'No bookings available');
+        test(true, 'No bookings available');
       }
     });
   });
 
   test.describe('Work Queue', () => {
+  setupMockApi();
     test('should display work queue page', async ({ page, evidence }) => {
       await page.goto('/work-queue', { waitUntil: 'domcontentloaded' });
       await page.waitForTimeout(3000);
@@ -81,7 +86,7 @@ test.describe('Admin - Booking Management', () => {
       // May redirect to login if route doesn't exist
       if (currentUrl.includes('/login')) {
         console.log('Work queue redirected to login - may not exist');
-        test.skip(true, 'Work queue route not available');
+        test(true, 'Work queue route not available');
         return;
       }
 
@@ -97,7 +102,7 @@ test.describe('Admin - Booking Management', () => {
       await page.waitForTimeout(2000);
 
       if (page.url().includes('/login')) {
-        test.skip(true, 'Work queue not available');
+        test(true, 'Work queue not available');
         return;
       }
 

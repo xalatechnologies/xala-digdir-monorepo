@@ -4,10 +4,12 @@
  */
 
 import { describe, it, expect, beforeAll, afterAll } from 'vitest';
+import { setupMockApi } from '../../../mocks/api-server.mock';
 import { FeatureFlagsService } from '../services/feature-flags.service';
 import type { NodePgDatabase } from 'drizzle-orm/node-postgres';
 
 describe('Feature Flags Integration Tests', () => {
+  setupMockApi();
   let service: FeatureFlagsService;
   let db: NodePgDatabase<any>;
   let testTenantId: string;
@@ -37,7 +39,8 @@ describe('Feature Flags Integration Tests', () => {
   });
 
   describe('Full Feature Flag Workflow', () => {
-    it.skip('should create tenant with default features', async () => {
+  setupMockApi();
+    it('should create tenant with default features', async () => {
       // Test tenant creation with default feature flags
       const features = await service.getTenantFeatures(testTenantId);
 
@@ -46,7 +49,7 @@ describe('Feature Flags Integration Tests', () => {
       expect(features.featureFlags).toBeDefined();
     });
 
-    it.skip('should update tenant features', async () => {
+    it('should update tenant features', async () => {
       // Update features
       const updates = {
         featureFlags: {
@@ -63,7 +66,7 @@ describe('Feature Flags Integration Tests', () => {
       expect(updated.enabledRentalObjectCategories).toContain('EQUIPMENT');
     });
 
-    it.skip('should enforce feature restrictions', async () => {
+    it('should enforce feature restrictions', async () => {
       // Disable a feature
       await service.updateTenantFeatures(testTenantId, {
         featureFlags: { 'backoffice.reporting': false },
@@ -78,7 +81,7 @@ describe('Feature Flags Integration Tests', () => {
       });
     });
 
-    it.skip('should enforce category restrictions', async () => {
+    it('should enforce category restrictions', async () => {
       // Set only LOCALE category
       await service.updateTenantFeatures(testTenantId, {
         enabledRentalObjectCategories: ['LOCALE'],
@@ -100,7 +103,8 @@ describe('Feature Flags Integration Tests', () => {
   });
 
   describe('Demo Tenant Configuration', () => {
-    it.skip('should have correct demo preset', async () => {
+  setupMockApi();
+    it('should have correct demo preset', async () => {
       // Test Cheyenne Kommune demo configuration
       const demoTenantId = 'cheyenne-kommune';
       const features = await service.getTenantFeatures(demoTenantId);
@@ -119,7 +123,8 @@ describe('Feature Flags Integration Tests', () => {
   });
 
   describe('Performance', () => {
-    it.skip('should handle concurrent feature checks', async () => {
+  setupMockApi();
+    it('should handle concurrent feature checks', async () => {
       const promises = Array.from({ length: 100 }, () =>
         service.isFeatureEnabled(testTenantId, 'backoffice.orgManagement')
       );
@@ -129,7 +134,7 @@ describe('Feature Flags Integration Tests', () => {
       expect(results.every(r => typeof r === 'boolean')).toBe(true);
     });
 
-    it.skip('should cache tenant features efficiently', async () => {
+    it('should cache tenant features efficiently', async () => {
       const start = Date.now();
 
       // First call - should hit database
@@ -148,7 +153,8 @@ describe('Feature Flags Integration Tests', () => {
   });
 
   describe('Edge Cases', () => {
-    it.skip('should handle empty feature flags', async () => {
+  setupMockApi();
+    it('should handle empty feature flags', async () => {
       await service.updateTenantFeatures(testTenantId, {
         featureFlags: {},
       });
@@ -158,7 +164,7 @@ describe('Feature Flags Integration Tests', () => {
       expect(features.featureFlags).toEqual({});
     });
 
-    it.skip('should handle empty categories', async () => {
+    it('should handle empty categories', async () => {
       await service.updateTenantFeatures(testTenantId, {
         enabledRentalObjectCategories: [],
       });
@@ -168,13 +174,13 @@ describe('Feature Flags Integration Tests', () => {
       expect(categories).toEqual([]);
     });
 
-    it.skip('should handle invalid tenant ID', async () => {
+    it('should handle invalid tenant ID', async () => {
       await expect(
         service.getTenantFeatures('invalid-tenant-id')
       ).rejects.toThrow('Tenant not found');
     });
 
-    it.skip('should preserve existing flags when updating', async () => {
+    it('should preserve existing flags when updating', async () => {
       // Set initial flags
       await service.updateTenantFeatures(testTenantId, {
         featureFlags: {

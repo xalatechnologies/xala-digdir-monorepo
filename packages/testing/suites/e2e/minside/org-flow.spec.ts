@@ -1,3 +1,4 @@
+import { setupMockApi } from '../../../mocks/api-server.mock';
 import { test, expect } from '@playwright/test';
 
 /**
@@ -11,8 +12,10 @@ import { test, expect } from '@playwright/test';
  */
 
 test.describe('MinSide - Organization Context', () => {
+  setupMockApi();
   
   test.describe('Context Switch (User with Org)', () => {
+  setupMockApi();
     test.use({ storageState: 'tests/e2e/minside/.auth/org-admin.json' });
 
     test.beforeEach(async ({ page }) => {
@@ -20,7 +23,7 @@ test.describe('MinSide - Organization Context', () => {
       await page.waitForTimeout(3000);
       
       if (page.url().includes('/login')) {
-        test.skip();
+        test();
       }
     });
 
@@ -80,7 +83,7 @@ test.describe('MinSide - Organization Context', () => {
       await page.waitForTimeout(2000);
       
       if (page.url().includes('/login')) {
-        test.skip();
+        test();
         return;
       }
       
@@ -105,7 +108,7 @@ test.describe('MinSide - Organization Context', () => {
       await page.waitForTimeout(2000);
       
       if (page.url().includes('/login')) {
-        test.skip();
+        test();
         return;
       }
       
@@ -127,6 +130,7 @@ test.describe('MinSide - Organization Context', () => {
   });
 
   test.describe('Organization Dashboard', () => {
+  setupMockApi();
     test.use({ storageState: 'tests/e2e/minside/.auth/org-admin.json' });
 
     test.beforeEach(async ({ page }) => {
@@ -134,7 +138,7 @@ test.describe('MinSide - Organization Context', () => {
       await page.waitForTimeout(3000);
       
       if (page.url().includes('/login')) {
-        test.skip();
+        test();
       }
     });
 
@@ -157,6 +161,7 @@ test.describe('MinSide - Organization Context', () => {
   });
 
   test.describe('Organization Bookings', () => {
+  setupMockApi();
     test.use({ storageState: 'tests/e2e/minside/.auth/org-admin.json' });
 
     test.beforeEach(async ({ page }) => {
@@ -164,7 +169,7 @@ test.describe('MinSide - Organization Context', () => {
       await page.waitForTimeout(3000);
       
       if (page.url().includes('/login')) {
-        test.skip();
+        test();
       }
     });
 
@@ -190,6 +195,7 @@ test.describe('MinSide - Organization Context', () => {
   });
 
   test.describe('Organization Members (Admin Only)', () => {
+  setupMockApi();
     test.use({ storageState: 'tests/e2e/minside/.auth/org-admin.json' });
 
     test.beforeEach(async ({ page }) => {
@@ -197,7 +203,7 @@ test.describe('MinSide - Organization Context', () => {
       await page.waitForTimeout(3000);
       
       if (page.url().includes('/login')) {
-        test.skip();
+        test();
       }
     });
 
@@ -234,6 +240,7 @@ test.describe('MinSide - Organization Context', () => {
   });
 
   test.describe('Access Control (Member vs Admin)', () => {
+  setupMockApi();
     test.use({ storageState: 'tests/e2e/minside/.auth/user.json' });
 
     test('regular member should not access org settings', async ({ page }) => {
@@ -241,7 +248,7 @@ test.describe('MinSide - Organization Context', () => {
       await page.waitForTimeout(3000);
       
       if (page.url().includes('/login')) {
-        test.skip();
+        test();
         return;
       }
       
@@ -259,7 +266,7 @@ test.describe('MinSide - Organization Context', () => {
       await page.waitForTimeout(3000);
       
       if (page.url().includes('/login')) {
-        test.skip();
+        test();
         return;
       }
       

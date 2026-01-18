@@ -1,3 +1,4 @@
+import { setupMockApi } from '../../../../mocks/api-server.mock';
 import { test, expect } from '../fixtures/qa-expert.fixture';
 import { config } from '../config/backoffice.config';
 
@@ -16,16 +17,18 @@ import { config } from '../config/backoffice.config';
 // For now, use existing auth and test org-member specific behaviors
 
 test.describe('ORG_MEMBER E2E Journeys', () => {
+  setupMockApi();
   // Using admin auth for now - would use org_member in production
   test.use({ storageState: 'tests/e2e/backoffice/.auth/admin.json' });
 
   test.describe('OM1. Login & Limited Dashboard', () => {
+  setupMockApi();
     test('OM1.1 Lands on dashboard after login', async ({ page }) => {
       await page.goto('/', { waitUntil: 'domcontentloaded' });
       await page.waitForTimeout(3000);
       
       if (page.url().includes('/login')) {
-        test.skip();
+        test();
         return;
       }
       
@@ -85,12 +88,13 @@ test.describe('ORG_MEMBER E2E Journeys', () => {
   });
 
   test.describe('OM2. Booking Visibility', () => {
+  setupMockApi();
     test.beforeEach(async ({ page }) => {
       await page.goto('/bookings', { waitUntil: 'domcontentloaded' });
       await page.waitForTimeout(3000);
       
       if (page.url().includes('/login')) {
-        test.skip();
+        test();
       }
     });
 
@@ -142,6 +146,7 @@ test.describe('ORG_MEMBER E2E Journeys', () => {
   });
 
   test.describe('OM3. Forbidden Actions', () => {
+  setupMockApi();
     test('OM3.1 Cannot invite members', async ({ page }) => {
       await page.goto('/organizations', { waitUntil: 'domcontentloaded' });
       await page.waitForTimeout(2000);
@@ -210,6 +215,7 @@ test.describe('ORG_MEMBER E2E Journeys', () => {
   });
 
   test.describe('OM4. Deep-Link Blocking', () => {
+  setupMockApi();
     const forbiddenRoutes = [
       { path: '/org/members', name: 'Members Page' },
       { path: '/org/settings', name: 'Org Settings' },
@@ -243,6 +249,7 @@ test.describe('ORG_MEMBER E2E Journeys', () => {
   });
 
   test.describe('OM5. Runtime Stability', () => {
+  setupMockApi();
     test('OM5.1 No runtime errors on accessible routes', async ({ page, evidence }) => {
       const accessibleRoutes = ['/', '/bookings', '/calendar'];
       
@@ -283,6 +290,7 @@ test.describe('ORG_MEMBER E2E Journeys', () => {
   });
 
   test.describe('OM6. Boundary Enforcement', () => {
+  setupMockApi();
     test('OM6.1 Cannot see other org bookings', async ({ page }) => {
       await page.goto('/bookings', { waitUntil: 'domcontentloaded' });
       await page.waitForTimeout(2000);

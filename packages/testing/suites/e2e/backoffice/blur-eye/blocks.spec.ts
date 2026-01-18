@@ -21,7 +21,7 @@ test.describe('Blocks (Blokkeringer) E2E', () => {
     await page.waitForTimeout(3000);
     
     if (page.url().includes('/login') || !page.url().includes('/blocks')) {
-      test.skip();
+      test();
     }
   });
 

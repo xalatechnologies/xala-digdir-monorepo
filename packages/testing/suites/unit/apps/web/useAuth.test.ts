@@ -66,7 +66,7 @@ Object.defineProperty(window, 'location', {
   writable: true,
 });
 
-describe.skip('useAuth', () => {
+describe('useAuth', () => {
   beforeEach(() => {
     vi.clearAllMocks();
     localStorageMock.clear();
@@ -76,7 +76,7 @@ describe.skip('useAuth', () => {
     vi.resetAllMocks();
   });
 
-  describe.skip('Initial State', () => {
+  describe('Initial State', () => {
     it('should have isLoading property', () => {
       const { result } = renderHook(() => useAuth());
 
@@ -126,7 +126,7 @@ describe.skip('useAuth', () => {
     });
   });
 
-  describe.skip('Login', () => {
+  describe('Login', () => {
     it('should redirect to OAuth provider', () => {
       const { result } = renderHook(() => useAuth());
 
@@ -135,7 +135,7 @@ describe.skip('useAuth', () => {
     });
   });
 
-  describe.skip('Login with Flow Context', () => {
+  describe('Login with Flow Context', () => {
     it('should save flow context before OAuth redirect', async () => {
       const { authService } = await import('@digilist/client-sdk');
 
@@ -162,7 +162,7 @@ describe.skip('useAuth', () => {
     });
   });
 
-  describe.skip('Logout', () => {
+  describe('Logout', () => {
     it('should clear user from state and localStorage', async () => {
       const storedUser = { id: '1', name: 'Test User', email: 'test@example.com' };
       localStorageMock.getItem.mockReturnValue(JSON.stringify(storedUser));
@@ -181,7 +181,7 @@ describe.skip('useAuth', () => {
     });
   });
 
-  describe.skip('Flow Context Management', () => {
+  describe('Flow Context Management', () => {
     it('should check for stored flow context', async () => {
       const { result } = renderHook(() => useAuth());
 
@@ -224,7 +224,7 @@ describe.skip('useAuth', () => {
     });
   });
 
-  describe.skip('URL Validation', () => {
+  describe('URL Validation', () => {
     it('should validate returnTo URLs', async () => {
       const { validateReturnToUrl } = await import('@digilist/client-sdk');
 
@@ -241,7 +241,7 @@ describe.skip('useAuth', () => {
     });
   });
 
-  describe.skip('Context TTL', () => {
+  describe('Context TTL', () => {
     it('should return context TTL', async () => {
       const { result } = renderHook(() => useAuth());
 

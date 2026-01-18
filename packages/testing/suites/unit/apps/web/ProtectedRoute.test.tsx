@@ -60,7 +60,7 @@ function renderWithRouter(
   );
 }
 
-describe.skip('ProtectedRoute', () => {
+describe('ProtectedRoute', () => {
   beforeEach(() => {
     vi.clearAllMocks();
   });
@@ -69,7 +69,7 @@ describe.skip('ProtectedRoute', () => {
     vi.resetAllMocks();
   });
 
-  describe.skip('Authentication States', () => {
+  describe('Authentication States', () => {
     it('should show loading spinner when auth is loading', async () => {
       mockUseAuth.mockReturnValue({
         isAuthenticated: false,
@@ -149,7 +149,7 @@ describe.skip('ProtectedRoute', () => {
     });
   });
 
-  describe.skip('Flow Context Preservation', () => {
+  describe('Flow Context Preservation', () => {
     it('should save flow context before redirecting', async () => {
       const { createFlowContext, saveFlowContextToStorage } = await import('@digilist/client-sdk');
 
@@ -224,7 +224,7 @@ describe.skip('ProtectedRoute', () => {
     });
   });
 
-  describe.skip('Login State', () => {
+  describe('Login State', () => {
     it('should pass location state to login page', async () => {
       mockUseAuth.mockReturnValue({
         isAuthenticated: false,
@@ -263,7 +263,7 @@ describe.skip('ProtectedRoute', () => {
     });
   });
 
-  describe.skip('Edge Cases', () => {
+  describe('Edge Cases', () => {
     it('should not save flow context when already authenticated', async () => {
       const { saveFlowContextToStorage } = await import('@digilist/client-sdk');
 
@@ -324,7 +324,7 @@ describe.skip('ProtectedRoute', () => {
     });
   });
 
-  describe.skip('Accessibility', () => {
+  describe('Accessibility', () => {
     it('should have accessible loading state', async () => {
       mockUseAuth.mockReturnValue({
         isAuthenticated: false,

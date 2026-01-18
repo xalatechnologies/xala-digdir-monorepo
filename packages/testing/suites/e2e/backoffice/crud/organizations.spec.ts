@@ -1,3 +1,4 @@
+import { setupMockApi } from '../../../../mocks/api-server.mock';
 import { test, expect } from '../fixtures/evidence.fixture';
 
 /**
@@ -5,6 +6,7 @@ import { test, expect } from '../fixtures/evidence.fixture';
  * Full functionality testing: List, View, Add, Edit, Delete, Members
  */
 test.describe('Organizations CRUD', () => {
+  setupMockApi();
   test.use({ storageState: 'tests/e2e/backoffice/.auth/admin.json' });
 
   test.beforeEach(async ({ page }) => {
@@ -12,11 +14,12 @@ test.describe('Organizations CRUD', () => {
     await page.waitForTimeout(3000);
     
     if (page.url().includes('/login')) {
-      test.skip();
+      test();
     }
   });
 
   test.describe('Page Layout', () => {
+  setupMockApi();
     test('should display page header', async ({ page }) => {
       const header = page.locator('h1, h2, [data-testid="page-title"]').first();
       await expect(header).toBeVisible({ timeout: 10000 });
@@ -41,6 +44,7 @@ test.describe('Organizations CRUD', () => {
   });
 
   test.describe('List Operations', () => {
+  setupMockApi();
     test('should display organization rows/cards', async ({ page }) => {
       const items = page.locator('tbody tr, [data-testid^="org-"], [class*="card"]');
       const count = await items.count();
@@ -79,6 +83,7 @@ test.describe('Organizations CRUD', () => {
   });
 
   test.describe('Create Operations', () => {
+  setupMockApi();
     test('should have create organization button', async ({ page }) => {
       const createBtn = page.locator('button:has-text("Ny organisasjon"), button:has-text("Opprett"), a[href*="new"]').first();
       const visible = await createBtn.isVisible().catch(() => false);
@@ -100,6 +105,7 @@ test.describe('Organizations CRUD', () => {
   });
 
   test.describe('View Operations', () => {
+  setupMockApi();
     test('should open organization detail', async ({ page }) => {
       const firstItem = page.locator('tbody tr, a[href*="/organizations/"]').first();
       
@@ -127,6 +133,7 @@ test.describe('Organizations CRUD', () => {
   });
 
   test.describe('Member Management', () => {
+  setupMockApi();
     test('should show members section', async ({ page }) => {
       const firstItem = page.locator('a[href*="/organizations/"]').first();
       
@@ -151,6 +158,7 @@ test.describe('Organizations CRUD', () => {
   });
 
   test.describe('Edit Operations', () => {
+  setupMockApi();
     test('should have edit button', async ({ page }) => {
       const editBtn = page.locator('button:has-text("Rediger"), [data-testid="edit-button"]').first();
       const visible = await editBtn.isVisible().catch(() => false);
@@ -159,6 +167,7 @@ test.describe('Organizations CRUD', () => {
   });
 
   test.describe('Verification Operations', () => {
+  setupMockApi();
     test('should have verify organization button', async ({ page }) => {
       const verifyBtn = page.locator('button:has-text("Verifiser"), [data-testid="verify-button"]').first();
       const visible = await verifyBtn.isVisible().catch(() => false);

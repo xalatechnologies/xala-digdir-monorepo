@@ -1,3 +1,4 @@
+import { setupMockApi } from '../../../mocks/api-server.mock';
 /**
  * Recurring Booking E2E Tests
  *
@@ -41,6 +42,7 @@ async function loginAsRole(page: any, role: string) {
 // =============================================================================
 
 test.describe('Recurring Booking Preview', () => {
+  setupMockApi();
   test('API should preview recurring booking slots', async ({ request }) => {
     // Get a valid rental object
     const listResponse = await request.get(`${API_URL}/public/rental-objects?limit=1`);
@@ -48,7 +50,7 @@ test.describe('Recurring Booking Preview', () => {
     const rentalObjectId = list.data?.[0]?.id;
 
     if (!rentalObjectId) {
-      test.skip();
+      test();
       return;
     }
 
@@ -95,7 +97,7 @@ test.describe('Recurring Booking Preview', () => {
     const rentalObjectId = list.data?.[0]?.id;
 
     if (!rentalObjectId) {
-      test.skip();
+      test();
       return;
     }
 
@@ -125,6 +127,7 @@ test.describe('Recurring Booking Preview', () => {
 // =============================================================================
 
 test.describe('Recurring Booking Creation', () => {
+  setupMockApi();
   test('Should require authentication', async ({ request }) => {
     const response = await request.post(`${API_URL}/bookings/recurring`, {
       data: {
@@ -182,6 +185,7 @@ test.describe('Recurring Booking Creation', () => {
 // =============================================================================
 
 test.describe('Seasonal Leasing', () => {
+  setupMockApi();
   test('Should list available seasons', async ({ request }) => {
     const response = await request.get(`${API_URL}/seasons`);
     
@@ -223,6 +227,7 @@ test.describe('Seasonal Leasing', () => {
 // =============================================================================
 
 test.describe('Backoffice Recurring Management', () => {
+  setupMockApi();
   test('Admin can view recurring bookings', async ({ page }) => {
     await loginAsRole(page, 'admin');
     
@@ -261,6 +266,7 @@ test.describe('Backoffice Recurring Management', () => {
 // =============================================================================
 
 test.describe('Recurring Conflict Resolution', () => {
+  setupMockApi();
   test('Should suggest alternative slots when conflicts exist', async ({ request }) => {
     const response = await request.post(`${API_URL}/bookings/recurring/preview`, {
       data: {
@@ -311,6 +317,7 @@ test.describe('Recurring Conflict Resolution', () => {
 // =============================================================================
 
 test.describe('Timezone Handling', () => {
+  setupMockApi();
   test('Should handle Europe/Oslo timezone correctly', async ({ request }) => {
     const response = await request.post(`${API_URL}/bookings/recurring/preview`, {
       data: {

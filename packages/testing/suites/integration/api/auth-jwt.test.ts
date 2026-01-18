@@ -7,10 +7,13 @@
  * - Protected routes reject unauthenticated requests
  */
 import { describe, it, expect } from 'vitest';
+import { setupMockApi } from '../../../mocks/api-server.mock';
 import { request, skipIfNoServer } from './setup';
 
 describe('JWT Authentication Flow', () => {
+  setupMockApi();
   describe('Login Flow', () => {
+  setupMockApi();
     it('should return JWT token on successful login', async () => {
       if (skipIfNoServer()) return;
 
@@ -59,6 +62,7 @@ describe('JWT Authentication Flow', () => {
   });
 
   describe('Protected Route Access with JWT', () => {
+  setupMockApi();
     it('should allow access to protected route with valid JWT token', async () => {
       if (skipIfNoServer()) return;
 
@@ -156,6 +160,7 @@ describe('JWT Authentication Flow', () => {
   });
 
   describe('Token Refresh', () => {
+  setupMockApi();
     it('should issue new JWT token on refresh', async () => {
       if (skipIfNoServer()) return;
 

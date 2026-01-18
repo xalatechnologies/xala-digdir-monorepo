@@ -1,3 +1,4 @@
+import { setupMockApi } from '../../../mocks/api-server.mock';
 import { test, expect } from '@playwright/test';
 
 /**
@@ -7,9 +8,11 @@ import { test, expect } from '@playwright/test';
  */
 
 test.describe('Web - Pack 2: Single-Slot Booking', () => {
+  setupMockApi();
   test.use({ storageState: 'tests/e2e/web/.auth/user.json' });
 
   test.describe('Booking Flow', () => {
+  setupMockApi();
     test.beforeEach(async ({ page }) => {
       await page.goto('/', { waitUntil: 'domcontentloaded' });
       await page.waitForTimeout(2000);
@@ -27,7 +30,7 @@ test.describe('Web - Pack 2: Single-Slot Booking', () => {
       
       if (!await calendar.isVisible()) {
         console.log('Calendar not visible - skipping');
-        test.skip();
+        test();
         return;
       }
       
@@ -52,7 +55,7 @@ test.describe('Web - Pack 2: Single-Slot Booking', () => {
       const calendar = page.locator('[data-testid="calendar"], [class*="calendar"]').first();
       
       if (!await calendar.isVisible()) {
-        test.skip();
+        test();
         return;
       }
       
@@ -86,7 +89,7 @@ test.describe('Web - Pack 2: Single-Slot Booking', () => {
       const calendar = page.locator('[data-testid="calendar"]:visible, [class*="calendar"]:visible').first();
       
       if (!await calendar.isVisible()) {
-        test.skip();
+        test();
         return;
       }
       
@@ -107,7 +110,7 @@ test.describe('Web - Pack 2: Single-Slot Booking', () => {
 
     test('confirm button triggers auth or booking', async ({ page }) => {
       if (page.url().includes('/login')) {
-        test.skip();
+        test();
         return;
       }
       
@@ -134,6 +137,7 @@ test.describe('Web - Pack 2: Single-Slot Booking', () => {
   });
 
   test.describe('Auth Boundary', () => {
+  setupMockApi();
     test('anonymous user is redirected to login on booking attempt', async ({ page }) => {
       // Clear auth
       await page.context().clearCookies();
@@ -166,10 +170,11 @@ test.describe('Web - Pack 2: Single-Slot Booking', () => {
   });
 
   test.describe('Error States', () => {
+  setupMockApi();
     test('shows error when slot becomes unavailable', async ({ page }) => {
       // This is a theoretical test - would need to simulate concurrent booking
       console.log('Conflict handling: requires simulated concurrent access');
-      test.skip();
+      test();
     });
 
     test('validation errors are shown', async ({ page }) => {

@@ -1,3 +1,4 @@
+import { setupMockApi } from '../../../mocks/api-server.mock';
 /**
  * Review Moderation E2E Tests
  * Tests for review approval/rejection workflow
@@ -10,6 +11,7 @@
 import { test, expect } from '@playwright/test';
 
 test.describe('Review Moderation', () => {
+  setupMockApi();
   test.beforeEach(async ({ page }) => {
     // Navigate to reviews moderation page
     await page.goto('/backoffice/reviews/moderation');

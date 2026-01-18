@@ -4,6 +4,7 @@
  */
 
 import { describe, it, expect, beforeAll, afterAll, beforeEach } from 'vitest';
+import { setupMockApi } from '../../mocks/api-server.mock';
 import { JwtService } from '../../apps/api/src/core/auth/jwt.service';
 import { SessionService } from '../../apps/api/src/modules/auth/session.service';
 import { COOKIE_CONFIG, validateCookieConfig } from '../../apps/api/src/config/cookies';
@@ -23,6 +24,7 @@ describeOrSkip('Authentication Security Audit', () => {
   // 1. COOKIE SECURITY CONFIGURATION
   // =============================================================================
   describe('Cookie Security Configuration', () => {
+  setupMockApi();
     it('should have proper cookie names without sensitive info', () => {
       expect(COOKIE_CONFIG.ACCESS.name).toBe('dl_at');
       expect(COOKIE_CONFIG.REFRESH.name).toBe('dl_rt');
@@ -71,6 +73,7 @@ describeOrSkip('Authentication Security Audit', () => {
   // 2. JWT TOKEN SECURITY
   // =============================================================================
   describe('JWT Token Security', () => {
+  setupMockApi();
     const userId = 'user-123';
     const tenantId = 'tenant-456';
 
@@ -189,6 +192,7 @@ describeOrSkip('Authentication Security Audit', () => {
   // 3. SESSION MANAGEMENT SECURITY
   // =============================================================================
   describe('Session Management Security', () => {
+  setupMockApi();
     it('should generate cryptographically secure refresh tokens', () => {
       const sessionService = new SessionService();
       
@@ -234,6 +238,7 @@ describeOrSkip('Authentication Security Audit', () => {
   // 4. SECURITY HEADERS & PROTECTION
   // =============================================================================
   describe('Security Headers & Protection', () => {
+  setupMockApi();
     it('should enforce HttpOnly on access and refresh cookies', () => {
       // Access token: HttpOnly = true (prevents XSS)
       // Refresh token: HttpOnly = true (prevents XSS)
@@ -265,6 +270,7 @@ describeOrSkip('Authentication Security Audit', () => {
   // 5. TOKEN EXPIRY & REFRESH FLOW
   // =============================================================================
   describe('Token Expiry & Refresh Flow', () => {
+  setupMockApi();
     it('should have short-lived access tokens (15 min)', () => {
       const accessTokenExpiry = COOKIE_CONFIG.ACCESS.maxAge;
       expect(accessTokenExpiry).toBe(15 * 60);
@@ -328,6 +334,7 @@ describeOrSkip('Authentication Security Audit', () => {
   // 6. SECURITY BEST PRACTICES COMPLIANCE
   // =============================================================================
   describe('Security Best Practices Compliance', () => {
+  setupMockApi();
     it('should follow OWASP recommendations for JWT', () => {
       // ✅ Use strong signing algorithm (HS256)
       // ✅ Validate signature on every request
@@ -396,6 +403,7 @@ describeOrSkip('Authentication Security Audit', () => {
   // 7. ENTERPRISE READINESS CHECKLIST
   // =============================================================================
   describe('Enterprise Readiness Checklist', () => {
+  setupMockApi();
     it('✅ Implements industry-standard JWT (RFC 7519)', () => {
       const result = jwtService.generateToken('user-123', 'tenant-456');
       expect(result.token.split('.')).toHaveLength(3); // header.payload.signature

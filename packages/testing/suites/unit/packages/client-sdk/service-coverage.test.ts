@@ -153,7 +153,7 @@ describe('BookingService Coverage', () => {
       );
     });
 
-    it.skip('delete calls DELETE /api/bookings/:id', async () => {
+    it('delete calls DELETE /api/bookings/:id', async () => {
       // Skip: requires proper service instantiation with mocked client
       await service.delete('123');
       expect(mockClient.delete).toHaveBeenCalledWith(expect.stringContaining('/api/bookings/123'));
@@ -161,19 +161,19 @@ describe('BookingService Coverage', () => {
   });
 
   describe('Workflow Operations', () => {
-    it.skip('confirm calls PUT /api/bookings/:id/confirm', async () => {
+    it('confirm calls PUT /api/bookings/:id/confirm', async () => {
       // Skip: mock client not properly injected into service singleton
       await service.confirm('123');
       expect(mockClient.put).toHaveBeenCalledWith(expect.stringContaining('/api/bookings/123/confirm'));
     });
 
-    it.skip('cancel calls PUT /api/bookings/:id/cancel', async () => {
+    it('cancel calls PUT /api/bookings/:id/cancel', async () => {
       // Skip: mock client not properly injected into service singleton
       await service.cancel('123');
       expect(mockClient.put).toHaveBeenCalledWith(expect.stringContaining('/api/bookings/123/cancel'));
     });
 
-    it.skip('complete calls PUT /api/bookings/:id/complete', async () => {
+    it('complete calls PUT /api/bookings/:id/complete', async () => {
       // Skip: mock client not properly injected into service singleton
       await service.complete('123');
       expect(mockClient.put).toHaveBeenCalledWith(expect.stringContaining('/api/bookings/123/complete'));
@@ -205,7 +205,7 @@ describe('BookingService Coverage', () => {
   });
 
   describe('Recurring Bookings', () => {
-    it.skip('getRecurring calls GET /api/bookings/recurring', async () => {
+    it('getRecurring calls GET /api/bookings/recurring', async () => {
       // Skip: mock client not properly injected into service singleton
       await service.getRecurring();
       expect(mockClient.get).toHaveBeenCalledWith(expect.stringContaining('/api/bookings/recurring'), expect.anything());
@@ -300,12 +300,12 @@ describe('OrganizationService Coverage', () => {
     expect(mockClient.delete).toHaveBeenCalledWith(expect.stringContaining('/api/organizations/123'));
   });
 
-  it.skip('verify calls POST /api/organizations/:id/verify', async () => {
+  it('verify calls POST /api/organizations/:id/verify', async () => {
     await service.verify('123');
     expect(mockClient.post).toHaveBeenCalledWith(expect.stringContaining('/api/organizations/123/verify'));
   });
 
-  it.skip('getMembers calls GET /api/organizations/:id/members', async () => {
+  it('getMembers calls GET /api/organizations/:id/members', async () => {
     await service.getMembers('123');
     expect(mockClient.get).toHaveBeenCalledWith(expect.stringContaining('/api/organizations/123/members'), expect.anything());
   });
@@ -369,13 +369,13 @@ describe('GdprService Coverage', () => {
     expect(mockClient.get).toHaveBeenCalledWith(expect.stringContaining('/api/gdpr/consent-types'));
   });
 
-  it.skip('getMyConsents calls GET /api/gdpr/consents', async () => {
+  it('getMyConsents calls GET /api/gdpr/consents', async () => {
     // Skip: method may not exist on service
     await service.getMyConsents();
     expect(mockClient.get).toHaveBeenCalledWith(expect.stringContaining('/api/gdpr/consents'));
   });
 
-  it.skip('grantConsent calls POST /api/gdpr/consents', async () => {
+  it('grantConsent calls POST /api/gdpr/consents', async () => {
     // Skip: method may not exist on service
     const data = { consentTypeId: 'consent-1', granted: true };
     await service.grantConsent(data);
@@ -408,7 +408,7 @@ describe('ProfileService Coverage', () => {
   });
 });
 
-describe.skip('Service Base Path Consistency', () => {
+describe('Service Base Path Consistency', () => {
   const serviceBasePaths = [
     { service: 'RentalObjectService', path: '/api/rental-objects' },
     { service: 'BookingService', path: '/api/bookings' },

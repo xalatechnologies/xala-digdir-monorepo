@@ -1,3 +1,4 @@
+import { setupMockApi } from '../../../mocks/api-server.mock';
 import { test, expect } from '@playwright/test';
 
 /**
@@ -11,8 +12,10 @@ import { test, expect } from '@playwright/test';
  */
 
 test.describe('MinSide - Auth Boundaries', () => {
+  setupMockApi();
 
   test.describe('Login Flow', () => {
+  setupMockApi();
     test.beforeEach(async ({ page }) => {
       // Clear cookies to ensure logged out state
       await page.context().clearCookies();
@@ -45,7 +48,7 @@ test.describe('MinSide - Auth Boundaries', () => {
       
       if (!await demoBtn.isVisible()) {
         console.log('Demo login not available');
-        test.skip();
+        test();
         return;
       }
       
@@ -77,6 +80,7 @@ test.describe('MinSide - Auth Boundaries', () => {
   });
 
   test.describe('Return to Previous URL', () => {
+  setupMockApi();
     test.beforeEach(async ({ page }) => {
       await page.context().clearCookies();
     });
@@ -137,6 +141,7 @@ test.describe('MinSide - Auth Boundaries', () => {
   });
 
   test.describe('Session Handling', () => {
+  setupMockApi();
     test.use({ storageState: 'tests/e2e/minside/.auth/user.json' });
 
     test('session persists across page navigation', async ({ page }) => {
@@ -145,7 +150,7 @@ test.describe('MinSide - Auth Boundaries', () => {
       
       if (page.url().includes('/login')) {
         console.log('Not logged in - skipping');
-        test.skip();
+        test();
         return;
       }
       
@@ -171,7 +176,7 @@ test.describe('MinSide - Auth Boundaries', () => {
       
       if (page.url().includes('/login')) {
         console.log('Not logged in - skipping');
-        test.skip();
+        test();
         return;
       }
       
@@ -187,6 +192,7 @@ test.describe('MinSide - Auth Boundaries', () => {
   });
 
   test.describe('Logout Flow', () => {
+  setupMockApi();
     test.use({ storageState: 'tests/e2e/minside/.auth/user.json' });
 
     test('logout redirects to login page', async ({ page }) => {
@@ -195,7 +201,7 @@ test.describe('MinSide - Auth Boundaries', () => {
       
       if (page.url().includes('/login')) {
         console.log('Not logged in - skipping');
-        test.skip();
+        test();
         return;
       }
       
@@ -234,6 +240,7 @@ test.describe('MinSide - Auth Boundaries', () => {
   });
 
   test.describe('OAuth Callback', () => {
+  setupMockApi();
     test('handles OAuth callback parameters', async ({ page }) => {
       // Simulate OAuth callback
       await page.goto('/login?code=test&state=test', { waitUntil: 'domcontentloaded' });

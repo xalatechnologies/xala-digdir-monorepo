@@ -14,6 +14,7 @@
  * Attempt 5: Failed → No more retries (max attempts reached)
  */
 import { describe, it, expect, beforeAll } from 'vitest';
+import { setupMockApi } from '../../../mocks/api-server.mock';
 
 const API_URL = process.env.API_URL || 'http://localhost:3002';
 const TENANT_ID = 'f47ac10b-58cc-4372-a567-0e02b2c3d479';
@@ -24,12 +25,14 @@ const headers = {
 };
 
 describe('NotificationController - Retry Mechanism', () => {
+  setupMockApi();
   let testNotificationId: string;
 
   // =========================================================================
   // POST /api/notifications/send
   // =========================================================================
   describe('POST /api/notifications/send', () => {
+  setupMockApi();
     it('should send notification and track delivery attempt', async () => {
       const payload = {
         type: 'email',
@@ -67,6 +70,7 @@ describe('NotificationController - Retry Mechanism', () => {
   // GET /api/notifications/delivery-status/:id
   // =========================================================================
   describe('GET /api/notifications/delivery-status/:id', () => {
+  setupMockApi();
     it('should return delivery status with attempts', async () => {
       if (!testNotificationId) {
         console.log('Skipping: no notification ID available');
@@ -160,6 +164,7 @@ describe('NotificationController - Retry Mechanism', () => {
   // POST /api/notifications/retry-failed
   // =========================================================================
   describe('POST /api/notifications/retry-failed', () => {
+  setupMockApi();
     it('should retry failed notifications', async () => {
       const res = await fetch(`${API_URL}/api/notifications/retry-failed`, {
         method: 'POST',
@@ -209,6 +214,7 @@ describe('NotificationController - Retry Mechanism', () => {
   // Exponential Backoff Verification
   // =========================================================================
   describe('Exponential Backoff Calculation', () => {
+  setupMockApi();
     it('should calculate correct delay for attempt 1', () => {
       const attemptNumber = 1;
       const expectedDelayMinutes = 1; // 2^0 * 1 = 1 minute
@@ -269,6 +275,7 @@ describe('NotificationController - Retry Mechanism', () => {
   // GET /api/notifications/delivery-reports
   // =========================================================================
   describe('GET /api/notifications/delivery-reports', () => {
+  setupMockApi();
     it('should return delivery reports', async () => {
       const res = await fetch(`${API_URL}/api/notifications/delivery-reports`, {
         headers,
@@ -328,6 +335,7 @@ describe('NotificationController - Retry Mechanism', () => {
   // Retry Time Window Verification
   // =========================================================================
   describe('Retry Time Window Validation', () => {
+  setupMockApi();
     it('should have nextRetryAt in future for failed notifications', async () => {
       if (!testNotificationId) return;
 
@@ -377,6 +385,7 @@ describe('NotificationController - Retry Mechanism', () => {
   // Max Retry Attempts Verification
   // =========================================================================
   describe('Max Retry Attempts', () => {
+  setupMockApi();
     it('should not exceed 5 retry attempts', async () => {
       if (!testNotificationId) return;
 

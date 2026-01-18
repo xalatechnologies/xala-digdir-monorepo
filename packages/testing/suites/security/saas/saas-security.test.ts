@@ -8,6 +8,7 @@
  */
 
 import { describe, it, expect } from 'vitest';
+import { setupMockApi } from '../../../mocks/api-server.mock';
 
 // ============================================================================
 // Test Context Setup
@@ -51,7 +52,9 @@ const NON_SAAS_USER = {
 // ============================================================================
 
 describe('SaaS Security - IDOR Prevention', () => {
+  setupMockApi();
   describe('Tenant Isolation', () => {
+  setupMockApi();
     it('prevents access to other tenant data', async () => {
       // Test: User from Tenant A tries to access Tenant B
       const request = {
@@ -103,6 +106,7 @@ describe('SaaS Security - IDOR Prevention', () => {
   });
 
   describe('License Key Scoping', () => {
+  setupMockApi();
     it('license key A cannot be used for tenant B', async () => {
       const validation = {
         tenantId: TENANT_B.id,
@@ -134,7 +138,9 @@ describe('SaaS Security - IDOR Prevention', () => {
 // ============================================================================
 
 describe('SaaS Security - Privilege Escalation', () => {
+  setupMockApi();
   describe('Role Boundary Enforcement', () => {
+  setupMockApi();
     it('BILLING_ADMIN cannot create tenants', async () => {
       const action = 'saas:tenants:create';
       const billingAdminPermissions = [
@@ -195,6 +201,7 @@ describe('SaaS Security - Privilege Escalation', () => {
   });
 
   describe('API Endpoint Access', () => {
+  setupMockApi();
     it('returns 401 for unauthenticated requests', async () => {
       const request = {
         headers: {}, // No auth header
@@ -226,7 +233,9 @@ describe('SaaS Security - Privilege Escalation', () => {
 // ============================================================================
 
 describe('SaaS Security - Secret Leakage', () => {
+  setupMockApi();
   describe('License Key Protection', () => {
+  setupMockApi();
     it('full license key never in API response after creation', async () => {
       // GET /api/saas/tenants/:id should return masked key
       const apiResponse = {
@@ -264,6 +273,7 @@ describe('SaaS Security - Secret Leakage', () => {
   });
 
   describe('Secrets Redaction', () => {
+  setupMockApi();
     it('integration secrets are masked in API response', async () => {
       const secretsResponse = {
         secrets: [
@@ -303,6 +313,7 @@ describe('SaaS Security - Secret Leakage', () => {
   });
 
   describe('Audit Log Protection', () => {
+  setupMockApi();
     it('audit logs redact sensitive values', async () => {
       const auditEntry = {
         action: 'secrets.update',
@@ -339,7 +350,9 @@ describe('SaaS Security - Secret Leakage', () => {
 // ============================================================================
 
 describe('SaaS Security - Input Validation', () => {
+  setupMockApi();
   describe('Slug Validation', () => {
+  setupMockApi();
     it('rejects SQL injection in slug', async () => {
       const maliciousSlug = "test'; DROP TABLE tenants; --";
 
@@ -367,6 +380,7 @@ describe('SaaS Security - Input Validation', () => {
   });
 
   describe('UUID Validation', () => {
+  setupMockApi();
     it('rejects invalid UUID in path', async () => {
       const invalidIds = ['not-a-uuid', '12345', "'; DROP TABLE;--"];
 
@@ -391,7 +405,9 @@ describe('SaaS Security - Input Validation', () => {
 // ============================================================================
 
 describe('SaaS Security - Rate Limiting', () => {
+  setupMockApi();
   describe('License Key Verification', () => {
+  setupMockApi();
     it('should rate limit verify endpoint', async () => {
       // Verify endpoint should have rate limiting to prevent brute force
       const rateLimitConfig = {
@@ -421,6 +437,7 @@ describe('SaaS Security - Rate Limiting', () => {
   });
 
   describe('Mutation Endpoints', () => {
+  setupMockApi();
     it('should rate limit tenant creation', async () => {
       const rateLimitConfig = {
         endpoint: 'POST /api/saas/tenants',
@@ -438,6 +455,7 @@ describe('SaaS Security - Rate Limiting', () => {
 // ============================================================================
 
 describe('SaaS Security - HTTP Headers', () => {
+  setupMockApi();
   it('includes security headers in response', async () => {
     const expectedHeaders = [
       'X-Content-Type-Options',

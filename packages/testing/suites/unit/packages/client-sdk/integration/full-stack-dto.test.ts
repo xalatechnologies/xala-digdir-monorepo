@@ -11,6 +11,7 @@
  * 4. RFC7807 errors flow correctly
  */
 import { describe, it, expect } from 'vitest';
+import { setupMockApi } from '../../../../../mocks/api-server.mock';
 
 // Import from our SDK
 import {
@@ -112,7 +113,9 @@ const mockApiResponse = {
 // ==============================================================================
 
 describe('Layer 1: Xala SDK → API DTO Flow', () => {
+  setupMockApi();
   describe('Listing DTO Structure', () => {
+  setupMockApi();
     it('should have all required fields for ListingDetailsProjection', () => {
       const listing = mockApiResponse.listing;
       
@@ -159,6 +162,7 @@ describe('Layer 1: Xala SDK → API DTO Flow', () => {
   });
 
   describe('Booking DTO Structure', () => {
+  setupMockApi();
     it('should have all required fields for BookingDetailsProjection', () => {
       const booking = mockApiResponse.booking;
       
@@ -204,7 +208,9 @@ describe('Layer 1: Xala SDK → API DTO Flow', () => {
 // ==============================================================================
 
 describe('Layer 2: API → Client SDK Type Flow', () => {
+  setupMockApi();
   describe('ActionCode Enum Integration', () => {
+  setupMockApi();
     it('should recognize all listing actions from API', () => {
       const apiActions = ['view', 'book', 'edit', 'delete', 'favorite', 'share'];
       
@@ -228,6 +234,7 @@ describe('Layer 2: API → Client SDK Type Flow', () => {
   });
 
   describe('Action Helper Functions', () => {
+  setupMockApi();
     it('isActionEnabled should work correctly', () => {
       const actions = mockApiResponse.listing.availableActions;
       
@@ -244,6 +251,7 @@ describe('Layer 2: API → Client SDK Type Flow', () => {
   });
 
   describe('PolicyReasonKey Validation', () => {
+  setupMockApi();
     it('should recognize common policy reasons', () => {
       const knownReasons = [
         PolicyReasonKey.ROLE_INSUFFICIENT,
@@ -264,7 +272,9 @@ describe('Layer 2: API → Client SDK Type Flow', () => {
 // ==============================================================================
 
 describe('Layer 3: Client SDK → Frontend App Consumption', () => {
+  setupMockApi();
   describe('Projection Registry Integration', () => {
+  setupMockApi();
     it('should have all listing projections registered', () => {
       const listingProjections = getProjectionsForEntity('Listing');
       
@@ -295,6 +305,7 @@ describe('Layer 3: Client SDK → Frontend App Consumption', () => {
   });
 
   describe('Cache Configuration', () => {
+  setupMockApi();
     it('should return correct cache config for projections', () => {
       const listingCardConfig = getCacheConfigForProjection('ListingCardProjectionDTO');
       const availabilityConfig = getCacheConfigForProjection('ListingCalendarProjectionDTO');
@@ -314,6 +325,7 @@ describe('Layer 3: Client SDK → Frontend App Consumption', () => {
   });
 
   describe('Frontend Consumption Patterns', () => {
+  setupMockApi();
     it('should allow direct permission checking on DTOs', () => {
       const listing = mockApiResponse.listing;
       
@@ -355,7 +367,9 @@ describe('Layer 3: Client SDK → Frontend App Consumption', () => {
 // ==============================================================================
 
 describe('Layer 4: RFC7807 Error Contract Flow', () => {
+  setupMockApi();
   describe('Error Structure Validation', () => {
+  setupMockApi();
     it('should have all required RFC7807 fields', () => {
       const error = mockApiResponse.rfc7807Error;
       
@@ -391,6 +405,7 @@ describe('Layer 4: RFC7807 Error Contract Flow', () => {
   });
 
   describe('Error Handling in SDK', () => {
+  setupMockApi();
     it('should detect validation errors by type', () => {
       const error = mockApiResponse.rfc7807Error;
       
@@ -413,7 +428,9 @@ describe('Layer 4: RFC7807 Error Contract Flow', () => {
 // ==============================================================================
 
 describe('Layer 5: Cross-Layer Consistency', () => {
+  setupMockApi();
   describe('Action Codes Match Across Layers', () => {
+  setupMockApi();
     it('should use same action codes in API and SDK', () => {
       // API uses string actions
       const apiActions = mockApiResponse.listing.availableActions.map(a => a.action);
@@ -428,6 +445,7 @@ describe('Layer 5: Cross-Layer Consistency', () => {
   });
 
   describe('Projection IDs Match Registry', () => {
+  setupMockApi();
     it('should have matching projection names', () => {
       const registeredIds = Object.keys(projectionRegistry);
       
@@ -441,6 +459,7 @@ describe('Layer 5: Cross-Layer Consistency', () => {
   });
 
   describe('DTO Contract Stability', () => {
+  setupMockApi();
     it('should not have breaking changes in listing structure', () => {
       const listing = mockApiResponse.listing;
       

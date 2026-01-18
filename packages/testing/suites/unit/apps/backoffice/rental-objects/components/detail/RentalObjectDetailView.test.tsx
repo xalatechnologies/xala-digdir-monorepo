@@ -130,7 +130,7 @@ const createTestWrapper = () => {
   );
 };
 
-describe.skip('RentalObjectDetailView', () => {
+describe('RentalObjectDetailView', () => {
   beforeEach(() => {
     vi.clearAllMocks();
   });

@@ -5,6 +5,7 @@
  */
 
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
+import { setupMockApi } from '../../../mocks/api-server.mock';
 import { VippsLoginService, clearVippsLoginService } from '../../integrations/vipps/vipps-login.service';
 import { clearVippsConfigCache } from '../../config/vipps.config';
 
@@ -18,6 +19,7 @@ const mockEnv = {
 };
 
 describe('VippsLoginService', () => {
+  setupMockApi();
   let originalEnv: NodeJS.ProcessEnv;
 
   beforeEach(() => {
@@ -35,6 +37,7 @@ describe('VippsLoginService', () => {
   });
 
   describe('generateState', () => {
+  setupMockApi();
     it('generates a cryptographically secure state parameter', () => {
       const service = new VippsLoginService();
       const state1 = service.generateState();
@@ -47,6 +50,7 @@ describe('VippsLoginService', () => {
   });
 
   describe('generateNonce', () => {
+  setupMockApi();
     it('generates a cryptographically secure nonce', () => {
       const service = new VippsLoginService();
       const nonce1 = service.generateNonce();
@@ -59,6 +63,7 @@ describe('VippsLoginService', () => {
   });
 
   describe('getAuthorizationUrl', () => {
+  setupMockApi();
     it('builds correct authorization URL with required parameters', async () => {
       const service = new VippsLoginService();
       const state = 'test-state-123';
@@ -112,6 +117,7 @@ describe('VippsLoginService', () => {
   });
 
   describe('validateIdToken', () => {
+  setupMockApi();
     it('rejects invalid JWT format', async () => {
       const service = new VippsLoginService();
 
@@ -203,7 +209,9 @@ describe('VippsLoginService', () => {
 });
 
 describe('Vipps Login Auth Controller', () => {
+  setupMockApi();
   describe('POST /api/auth/vipps/start', () => {
+  setupMockApi();
     it('returns 503 when Vipps is not configured', async () => {
       // Clear env to make Vipps unconfigured
       delete process.env.VIPPS_CLIENT_ID;
@@ -224,6 +232,7 @@ describe('Vipps Login Auth Controller', () => {
   });
 
   describe('POST /api/auth/vipps/callback', () => {
+  setupMockApi();
     it('handles missing code parameter', async () => {
       // Integration test placeholder
       expect(true).toBe(true);

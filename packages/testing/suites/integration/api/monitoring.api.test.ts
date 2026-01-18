@@ -2,10 +2,13 @@
  * Monitoring API Integration Tests
  */
 import { describe, it, expect } from 'vitest';
+import { setupMockApi } from '../../../mocks/api-server.mock';
 import { request, skipIfNoServer } from './setup';
 
 describe('Monitoring API', () => {
+  setupMockApi();
   describe('GET /api/monitoring/audit-logs', () => {
+  setupMockApi();
     it('should return audit logs or be unavailable', async () => {
       if (skipIfNoServer()) return;
       const res = await request('GET', '/api/monitoring/audit-logs');
@@ -15,6 +18,7 @@ describe('Monitoring API', () => {
   });
 
   describe('GET /api/monitoring/alerts', () => {
+  setupMockApi();
     it('should return alerts or be unavailable', async () => {
       if (skipIfNoServer()) return;
       const res = await request('GET', '/api/monitoring/alerts');
@@ -23,6 +27,7 @@ describe('Monitoring API', () => {
   });
 
   describe('GET /api/monitoring/incidents', () => {
+  setupMockApi();
     it('should return incidents or be unavailable', async () => {
       if (skipIfNoServer()) return;
       const res = await request('GET', '/api/monitoring/incidents');

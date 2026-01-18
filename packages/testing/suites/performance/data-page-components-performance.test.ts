@@ -1,3 +1,4 @@
+import { setupMockApi } from '../../mocks/api-server.mock';
 /**
  * Performance Tests: Data Page Components
  * 
@@ -53,6 +54,7 @@ function generateLargeDataset(count: number) {
 // ============================================================================
 
 test.describe('Status Tabs Performance', () => {
+  setupMockApi();
   test('should render status tabs quickly with large counts', async ({ page }) => {
     await page.goto(`${SAAS_ADMIN_URL}/login`);
     await mockAuth(page, 'saas-admin');
@@ -115,6 +117,7 @@ test.describe('Status Tabs Performance', () => {
 // ============================================================================
 
 test.describe('Filter Chips Performance', () => {
+  setupMockApi();
   test('should render many filter chips efficiently', async ({ page }) => {
     await page.goto(`${SAAS_ADMIN_URL}/login`);
     await mockAuth(page, 'saas-admin');
@@ -144,6 +147,7 @@ test.describe('Filter Chips Performance', () => {
 // ============================================================================
 
 test.describe('Empty State Performance', () => {
+  setupMockApi();
   test('should render empty state quickly', async ({ page }) => {
     await page.goto(`${SAAS_ADMIN_URL}/login`);
     await mockAuth(page, 'saas-admin');
@@ -175,6 +179,7 @@ test.describe('Empty State Performance', () => {
 // ============================================================================
 
 test.describe('Large Dataset Filtering Performance', () => {
+  setupMockApi();
   test('should filter large datasets efficiently', async ({ page }) => {
     await page.goto(`${SAAS_ADMIN_URL}/login`);
     await mockAuth(page, 'saas-admin');
@@ -243,6 +248,7 @@ test.describe('Large Dataset Filtering Performance', () => {
 // ============================================================================
 
 test.describe('Memory Usage', () => {
+  setupMockApi();
   test('should not cause memory leaks with repeated filtering', async ({ page }) => {
     await page.goto(`${SAAS_ADMIN_URL}/login`);
     await mockAuth(page, 'saas-admin');
@@ -281,6 +287,7 @@ test.describe('Memory Usage', () => {
 // ============================================================================
 
 test.describe('Render Performance Benchmarks', () => {
+  setupMockApi();
   test('should meet performance budgets', async ({ page }) => {
     await page.goto(`${SAAS_ADMIN_URL}/login`);
     await mockAuth(page, 'saas-admin');

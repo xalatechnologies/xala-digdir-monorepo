@@ -5,6 +5,7 @@
 
 import React from 'react';
 import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { setupMockApi } from '../../../../../../../../mocks/api-server.mock';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { BrowserRouter } from 'react-router-dom';
@@ -150,11 +151,13 @@ const createWrapper = () => {
 };
 
 describe('Rental Objects Penetration Tests', () => {
+  setupMockApi();
   beforeEach(() => {
     vi.clearAllMocks();
   });
 
   describe('XSS (Cross-Site Scripting) Protection', () => {
+  setupMockApi();
     it('should sanitize user input in search field', async () => {
       const user = userEvent.setup();
       const maliciousScript = '<script>alert("XSS")</script>';
@@ -197,6 +200,7 @@ describe('Rental Objects Penetration Tests', () => {
   });
 
   describe('SQL Injection Protection', () => {
+  setupMockApi();
     it('should handle SQL injection attempts in search', async () => {
       const user = userEvent.setup();
       const sqlInjection = "'; DROP TABLE rental_objects; --";
@@ -228,6 +232,7 @@ describe('Rental Objects Penetration Tests', () => {
   });
 
   describe('Authorization & Access Control', () => {
+  setupMockApi();
     it('should prevent unauthorized access to create button', () => {
       // Mock user without create permission for this test
       const { useListingPermissions } = require('../../rental-objects/hooks/useListingPermissions');
@@ -283,6 +288,7 @@ describe('Rental Objects Penetration Tests', () => {
   });
 
   describe('CSRF Protection', () => {
+  setupMockApi();
     it('should include CSRF tokens in form submissions', async () => {
       render(<RentalObjectWizard />, {
         wrapper: createWrapper(),
@@ -295,6 +301,7 @@ describe('Rental Objects Penetration Tests', () => {
   });
 
   describe('Input Validation', () => {
+  setupMockApi();
     it('should reject oversized inputs', async () => {
       render(<RentalObjectWizard />, {
         wrapper: createWrapper(),
@@ -317,6 +324,7 @@ describe('Rental Objects Penetration Tests', () => {
   });
 
   describe('Rate Limiting', () => {
+  setupMockApi();
     it('should handle rapid API calls gracefully', async () => {
       const user = userEvent.setup();
       
@@ -338,6 +346,7 @@ describe('Rental Objects Penetration Tests', () => {
   });
 
   describe('Sensitive Data Exposure', () => {
+  setupMockApi();
     it('should not expose internal IDs in URLs', () => {
       render(<RentalObjectDetailView slug="test" />, {
         wrapper: createWrapper(),

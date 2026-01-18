@@ -1,3 +1,4 @@
+import { setupMockApi } from '../../../../mocks/api-server.mock';
 import { test, expect, MenuMap } from '../fixtures/qa-expert.fixture';
 import { config } from '../config/backoffice.config';
 
@@ -13,8 +14,10 @@ import { config } from '../config/backoffice.config';
  */
 
 test.describe('A. Backoffice Shell Blur-Eye', () => {
+  setupMockApi();
   
   test.describe('A1. Login & Session Flow', () => {
+  setupMockApi();
     
     test('A1.1 Login page loads with clear structure', async ({ page, evidence }) => {
       await page.goto('/login', { waitUntil: 'domcontentloaded' });
@@ -141,7 +144,7 @@ test.describe('A. Backoffice Shell Blur-Eye', () => {
       
       if (page.url().includes('/login')) {
         console.log('Not authenticated - skipping session persistence test');
-        test.skip();
+        test();
         return;
       }
       
@@ -169,7 +172,7 @@ test.describe('A. Backoffice Shell Blur-Eye', () => {
       
       if (page.url().includes('/login')) {
         console.log('Not authenticated - skipping logout test');
-        test.skip();
+        test();
         return;
       }
       
@@ -210,6 +213,7 @@ test.describe('A. Backoffice Shell Blur-Eye', () => {
   });
 
   test.describe('A2. Header Bar (Global Navigation)', () => {
+  setupMockApi();
     test.use({ storageState: 'tests/e2e/backoffice/.auth/admin.json' });
 
     test.beforeEach(async ({ page }) => {
@@ -217,7 +221,7 @@ test.describe('A. Backoffice Shell Blur-Eye', () => {
       await page.waitForTimeout(3000);
       
       if (page.url().includes('/login')) {
-        test.skip();
+        test();
       }
     });
 
@@ -275,7 +279,7 @@ test.describe('A. Backoffice Shell Blur-Eye', () => {
       await page.waitForTimeout(2000);
       
       if (page.url().includes('/login')) {
-        test.skip();
+        test();
         return;
       }
       
@@ -329,7 +333,7 @@ test.describe('A. Backoffice Shell Blur-Eye', () => {
       
       if (!await searchInput.isVisible().catch(() => false)) {
         console.log('Global search not enabled - skipping');
-        test.skip();
+        test();
         return;
       }
       
@@ -382,6 +386,7 @@ test.describe('A. Backoffice Shell Blur-Eye', () => {
   });
 
   test.describe('A3. Sidebar Menu Information Architecture', () => {
+  setupMockApi();
     test.use({ storageState: 'tests/e2e/backoffice/.auth/admin.json' });
 
     test.beforeEach(async ({ page }) => {
@@ -389,7 +394,7 @@ test.describe('A. Backoffice Shell Blur-Eye', () => {
       await page.waitForTimeout(3000);
       
       if (page.url().includes('/login')) {
-        test.skip();
+        test();
       }
     });
 

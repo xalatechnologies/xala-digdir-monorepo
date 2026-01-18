@@ -1,3 +1,4 @@
+import { setupMockApi } from '../../../../mocks/api-server.mock';
 import { test, expect } from '../fixtures/qa-expert.fixture';
 import { config } from '../config/backoffice.config';
 import * as fs from 'fs';
@@ -26,6 +27,7 @@ interface RedundancyReport {
 }
 
 test.describe('Redundancy & Menu Hygiene', () => {
+  setupMockApi();
   test.use({ storageState: 'tests/e2e/backoffice/.auth/admin.json' });
 
   test('RC1. Detect duplicate sidebar items by route', async ({ page }) => {

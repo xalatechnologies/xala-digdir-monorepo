@@ -1,3 +1,4 @@
+import { setupMockApi } from '../../../mocks/api-server.mock';
 import { test, expect } from '@playwright/test';
 
 /**
@@ -7,8 +8,10 @@ import { test, expect } from '@playwright/test';
  */
 
 test.describe('Web - Pack 7: Data Accuracy & Caching', () => {
+  setupMockApi();
 
   test.describe('Data Source Verification', () => {
+  setupMockApi();
     test('listing data matches API response', async ({ page }) => {
       // Intercept API calls
       const apiResponses: any[] = [];
@@ -91,6 +94,7 @@ test.describe('Web - Pack 7: Data Accuracy & Caching', () => {
   });
 
   test.describe('Loading States', () => {
+  setupMockApi();
     test('shows loading state while fetching', async ({ page }) => {
       // Slow down network to see loading state
       await page.route('**/api/**', async route => {
@@ -128,6 +132,7 @@ test.describe('Web - Pack 7: Data Accuracy & Caching', () => {
   });
 
   test.describe('Error Handling', () => {
+  setupMockApi();
     test('displays error message on API failure', async ({ page }) => {
       // Intercept and fail API
       await page.route('**/api/listings**', route => {
@@ -172,6 +177,7 @@ test.describe('Web - Pack 7: Data Accuracy & Caching', () => {
   });
 
   test.describe('Cache Behavior', () => {
+  setupMockApi();
     test('data is cached on navigation', async ({ page }) => {
       let apiCallCount = 0;
       

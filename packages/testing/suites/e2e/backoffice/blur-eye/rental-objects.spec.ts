@@ -21,7 +21,7 @@ test.describe('B. Rental Objects E2E', () => {
       await page.waitForTimeout(3000);
       
       if (page.url().includes('/login')) {
-        test.skip();
+        test();
       }
     });
 
@@ -182,7 +182,7 @@ test.describe('B. Rental Objects E2E', () => {
       await page.waitForTimeout(3000);
       
       if (page.url().includes('/login')) {
-        test.skip();
+        test();
       }
     });
 
@@ -288,7 +288,7 @@ test.describe('B. Rental Objects E2E', () => {
       await page.waitForTimeout(3000);
       
       if (page.url().includes('/login')) {
-        test.skip();
+        test();
         return;
       }
       
@@ -419,7 +419,7 @@ test.describe('B. Rental Objects E2E', () => {
       await page.waitForTimeout(3000);
       
       if (page.url().includes('/login')) {
-        test.skip();
+        test();
         return;
       }
       
@@ -477,7 +477,7 @@ test.describe('B. Rental Objects E2E', () => {
     test('B4.3 Changes persist after save and reload', async ({ page }) => {
       // This is a verification test - skip for now to avoid modifying data
       console.log('Skipping save verification to avoid modifying production data');
-      test.skip();
+      test();
     });
   });
 
@@ -487,7 +487,7 @@ test.describe('B. Rental Objects E2E', () => {
       await page.waitForTimeout(3000);
       
       if (page.url().includes('/login')) {
-        test.skip();
+        test();
         return;
       }
       
@@ -525,7 +525,7 @@ test.describe('B. Rental Objects E2E', () => {
       await page.waitForTimeout(3000);
       
       if (page.url().includes('/login')) {
-        test.skip();
+        test();
         return;
       }
       

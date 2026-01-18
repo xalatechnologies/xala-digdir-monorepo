@@ -127,7 +127,7 @@ const createWrapper = () => {
   return Wrapper;
 };
 
-describe.skip('useRentalObjectWizard', () => {
+describe('useRentalObjectWizard', () => {
   beforeEach(() => {
     vi.clearAllMocks();
     localStorage.clear();
@@ -156,7 +156,7 @@ describe.skip('useRentalObjectWizard', () => {
     localStorage.clear();
   });
 
-  describe.skip('Initialization', () => {
+  describe('Initialization', () => {
     it('should initialize with default form data in create mode', () => {
       const { result } = renderHook(() => useRentalObjectWizard(), {
         wrapper: createWrapper(),
@@ -209,7 +209,7 @@ describe.skip('useRentalObjectWizard', () => {
     });
   });
 
-  describe.skip('Step Navigation', () => {
+  describe('Step Navigation', () => {
     it('should navigate to next step', async () => {
       const { result } = renderHook(() => useRentalObjectWizard(), {
         wrapper: createWrapper(),
@@ -294,7 +294,7 @@ describe.skip('useRentalObjectWizard', () => {
     });
   });
 
-  describe.skip('Form Data Management', () => {
+  describe('Form Data Management', () => {
     it('should update form data', () => {
       const { result } = renderHook(() => useRentalObjectWizard(), {
         wrapper: createWrapper(),
@@ -342,7 +342,7 @@ describe.skip('useRentalObjectWizard', () => {
     });
   });
 
-  describe.skip('Validation', () => {
+  describe('Validation', () => {
     it('should validate current step', async () => {
       const { result } = renderHook(() => useRentalObjectWizard(), {
         wrapper: createWrapper(),
@@ -418,7 +418,7 @@ describe.skip('useRentalObjectWizard', () => {
     });
   });
 
-  describe.skip('Save and Publish', () => {
+  describe('Save and Publish', () => {
     it('should save draft in create mode', async () => {
       const createMutation = {
         mutateAsync: vi.fn().mockResolvedValue({
@@ -511,7 +511,7 @@ describe.skip('useRentalObjectWizard', () => {
     });
   });
 
-  describe.skip('Category-Specific Steps', () => {
+  describe('Category-Specific Steps', () => {
     it('should show correct steps for LOKALER_OG_BANER', () => {
       const { result } = renderHook(() => useRentalObjectWizard(), {
         wrapper: createWrapper(),
@@ -533,7 +533,7 @@ describe.skip('useRentalObjectWizard', () => {
     });
   });
 
-  describe.skip('Error Handling', () => {
+  describe('Error Handling', () => {
     it('should handle save errors', async () => {
       const createMutation = {
         mutateAsync: vi.fn().mockRejectedValue(new Error('Save failed')),
@@ -558,7 +558,7 @@ describe.skip('useRentalObjectWizard', () => {
     });
   });
 
-  describe.skip('Auto-save', () => {
+  describe('Auto-save', () => {
     it('should auto-save to localStorage in create mode', () => {
       const { result } = renderHook(() => useRentalObjectWizard(), {
         wrapper: createWrapper(),

@@ -1,10 +1,12 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest';
+import { setupMockApi } from '../../mocks/api-server.mock';
 import { CustodyService } from '../../apps/api/src/modules/custody/custody.service';
 import { CustodyEvaluator } from '../../apps/api/src/modules/custody/custody.evaluator';
 import { CustodyScope, UserContext } from '../../apps/api/src/modules/custody/types';
 import { Roles } from '../../apps/api/src/modules/auth/rbac';
 
 describe('Custody Flow Integration', () => {
+  setupMockApi();
   let custodyService: CustodyService;
   let custodyEvaluator: CustodyEvaluator;
   let mockDb: any;
@@ -49,6 +51,7 @@ describe('Custody Flow Integration', () => {
   });
 
   describe('Grant and Evaluate Flow', () => {
+  setupMockApi();
     it('should create a grant and then allow access', async () => {
       // 1. Create Grant
       mockDb.query.rentalObjects.findFirst.mockResolvedValue({ id: rentalObjectId, tenantId });

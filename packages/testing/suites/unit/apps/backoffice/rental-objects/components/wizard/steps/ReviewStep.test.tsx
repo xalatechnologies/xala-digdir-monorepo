@@ -25,7 +25,7 @@ vi.mock('@xala/ds', async () => {
   };
 });
 
-describe.skip('ReviewStep', () => {
+describe('ReviewStep', () => {
   let mockWizard: UseRentalObjectWizardReturn;
 
   beforeEach(() => {
@@ -60,7 +60,7 @@ describe.skip('ReviewStep', () => {
     } as unknown as UseRentalObjectWizardReturn;
   });
 
-  describe.skip('Rendering', () => {
+  describe('Rendering', () => {
     it('should render header with icon and title', () => {
       render(<ReviewStep wizard={mockWizard} />);
 
@@ -94,7 +94,7 @@ describe.skip('ReviewStep', () => {
     });
   });
 
-  describe.skip('Basic Information Section', () => {
+  describe('Basic Information Section', () => {
     it('should render name field', () => {
       render(<ReviewStep wizard={mockWizard} />);
 
@@ -125,7 +125,7 @@ describe.skip('ReviewStep', () => {
     });
   });
 
-  describe.skip('Media Section', () => {
+  describe('Media Section', () => {
     it('should render image count when images exist', () => {
       render(<ReviewStep wizard={mockWizard} />);
 
@@ -158,7 +158,7 @@ describe.skip('ReviewStep', () => {
     });
   });
 
-  describe.skip('Category-Specific Sections - LOKALER_OG_BANER', () => {
+  describe('Category-Specific Sections - LOKALER_OG_BANER', () => {
     beforeEach(() => {
       mockWizard.formData.category = 'LOKALER_OG_BANER';
     });
@@ -187,7 +187,7 @@ describe.skip('ReviewStep', () => {
     });
   });
 
-  describe.skip('Category-Specific Sections - UTSTYR_OG_INVENTAR', () => {
+  describe('Category-Specific Sections - UTSTYR_OG_INVENTAR', () => {
     beforeEach(() => {
       mockWizard.formData.category = 'UTSTYR_OG_INVENTAR';
       mockWizard.formData.totalQuantity = 10;
@@ -216,7 +216,7 @@ describe.skip('ReviewStep', () => {
     });
   });
 
-  describe.skip('Category-Specific Sections - KJORETOY_OG_TRANSPORT', () => {
+  describe('Category-Specific Sections - KJORETOY_OG_TRANSPORT', () => {
     beforeEach(() => {
       mockWizard.formData.category = 'KJORETOY_OG_TRANSPORT';
       mockWizard.formData.totalQuantity = 5;
@@ -246,7 +246,7 @@ describe.skip('ReviewStep', () => {
     });
   });
 
-  describe.skip('Category-Specific Sections - OPPLEVELSER_OG_ARRANGEMENT', () => {
+  describe('Category-Specific Sections - OPPLEVELSER_OG_ARRANGEMENT', () => {
     beforeEach(() => {
       mockWizard.formData.category = 'OPPLEVELSER_OG_ARRANGEMENT';
       mockWizard.formData.capacity = 20;
@@ -279,7 +279,7 @@ describe.skip('ReviewStep', () => {
     });
   });
 
-  describe.skip('Booking Configuration Section', () => {
+  describe('Booking Configuration Section', () => {
     it('should render base price', () => {
       render(<ReviewStep wizard={mockWizard} />);
 
@@ -302,7 +302,7 @@ describe.skip('ReviewStep', () => {
     });
   });
 
-  describe.skip('Content Section', () => {
+  describe('Content Section', () => {
     it('should render rich content preview', () => {
       mockWizard.formData.richContent = 'This is a very long content description';
 
@@ -332,7 +332,7 @@ describe.skip('ReviewStep', () => {
     });
   });
 
-  describe.skip('Edit Navigation', () => {
+  describe('Edit Navigation', () => {
     it('should call goToStep when edit button clicked', () => {
       render(<ReviewStep wizard={mockWizard} />);
 
@@ -351,7 +351,7 @@ describe.skip('ReviewStep', () => {
     });
   });
 
-  describe.skip('Accessibility', () => {
+  describe('Accessibility', () => {
     it('should have proper aria-hidden on decorative icons', () => {
       render(<ReviewStep wizard={mockWizard} />);
 

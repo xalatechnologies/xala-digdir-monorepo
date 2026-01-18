@@ -4,6 +4,7 @@
  * Verifies <1 second update latency with concurrent clients
  */
 import { describe, it, expect, beforeAll, afterAll } from 'vitest';
+import { setupMockApi } from '../../../mocks/api-server.mock';
 
 const API_URL = process.env.API_URL || 'http://localhost:3000';
 const WS_URL = process.env.WS_URL || 'ws://localhost:3000';
@@ -86,6 +87,7 @@ function setupLatencyListener(
 }
 
 describe('WebSocket Latency Performance', () => {
+  setupMockApi();
   let testListingId: string;
   let testBookingId: string;
 
@@ -143,6 +145,7 @@ describe('WebSocket Latency Performance', () => {
   });
 
   describe('Single Booking Event Latency', () => {
+  setupMockApi();
     it('should broadcast booking event to single client within 1 second', async () => {
       if (!testListingId) {
         console.log('Skipping test: no listing available');
@@ -211,6 +214,7 @@ describe('WebSocket Latency Performance', () => {
   });
 
   describe('Concurrent Clients Latency', () => {
+  setupMockApi();
     it('should broadcast to 10 concurrent clients within 1 second', async () => {
       if (!testListingId) {
         console.log('Skipping test: no listing available');
@@ -333,6 +337,7 @@ describe('WebSocket Latency Performance', () => {
   });
 
   describe('Multiple Events Latency', () => {
+  setupMockApi();
     it('should maintain low latency across multiple consecutive events', async () => {
       if (!testListingId) {
         console.log('Skipping test: no listing available');
@@ -470,6 +475,7 @@ describe('WebSocket Latency Performance', () => {
   });
 
   describe('Peak Load Latency', () => {
+  setupMockApi();
     it('should handle rapid sequential bookings with consistent latency', async () => {
       if (!testListingId) {
         console.log('Skipping test: no listing available');

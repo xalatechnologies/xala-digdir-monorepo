@@ -12,6 +12,7 @@
  */
 
 import { describe, it, expect, beforeAll, afterAll, beforeEach } from 'vitest';
+import { setupMockApi } from '../../mocks/api-server.mock';
 import { toDomain, toCardProjection, toDetailsProjection, type DbRentalObject } from '../../apps/api/src/acl/rental-objects/rental-object.mapper';
 import type { RentalObject } from '../../apps/api/src/domain/rental-objects';
 
@@ -319,6 +320,7 @@ class RentalObjectController {
 // =============================================================================
 
 describe('ACL Integration - Role-Based Access', () => {
+  setupMockApi();
   let service: RentalObjectService;
   let controller: RentalObjectController;
 
@@ -328,6 +330,7 @@ describe('ACL Integration - Role-Based Access', () => {
   });
 
   describe('CITIZEN Role', () => {
+  setupMockApi();
     it('should allow CITIZEN to view published rental objects', async () => {
       const request: MockRequest = {
         user: mockUsers.citizen,
@@ -387,6 +390,7 @@ describe('ACL Integration - Role-Based Access', () => {
   });
 
   describe('CASEWORKER Role', () => {
+  setupMockApi();
     it('should allow CASEWORKER to view rental objects', async () => {
       const request: MockRequest = {
         user: mockUsers.caseworker,
@@ -417,6 +421,7 @@ describe('ACL Integration - Role-Based Access', () => {
   });
 
   describe('ADMIN Role', () => {
+  setupMockApi();
     it('should allow ADMIN to view rental objects', async () => {
       const request: MockRequest = {
         user: mockUsers.admin,
@@ -468,6 +473,7 @@ describe('ACL Integration - Role-Based Access', () => {
   });
 
   describe('SAAS_ADMIN Role', () => {
+  setupMockApi();
     it('should allow SAAS_ADMIN to view rental objects across tenants', async () => {
       const request: MockRequest = {
         user: mockUsers.saasAdmin,
@@ -502,6 +508,7 @@ describe('ACL Integration - Role-Based Access', () => {
 // =============================================================================
 
 describe('ACL Integration - Tenant Isolation', () => {
+  setupMockApi();
   let service: RentalObjectService;
   let controller: RentalObjectController;
 
@@ -651,6 +658,7 @@ describe('ACL Integration - Tenant Isolation', () => {
 // =============================================================================
 
 describe('ACL Integration - Data Transformation Consistency', () => {
+  setupMockApi();
   let service: RentalObjectService;
   let controller: RentalObjectController;
 
@@ -811,6 +819,7 @@ describe('ACL Integration - Data Transformation Consistency', () => {
 // =============================================================================
 
 describe('ACL Integration - Error Handling', () => {
+  setupMockApi();
   let service: RentalObjectService;
   let controller: RentalObjectController;
 
@@ -991,6 +1000,7 @@ describe('ACL Integration - Error Handling', () => {
 // =============================================================================
 
 describe('ACL Integration - Test Coverage Summary', () => {
+  setupMockApi();
   it('should have comprehensive integration test coverage', () => {
     const testCategories = {
       'Role-Based Access': 12,

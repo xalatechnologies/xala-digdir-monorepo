@@ -1,3 +1,4 @@
+import { setupMockApi } from '../../../mocks/api-server.mock';
 import { test } from '@playwright/test';
 
 test('check for browser errors preventing React mount', async ({ page }) => {

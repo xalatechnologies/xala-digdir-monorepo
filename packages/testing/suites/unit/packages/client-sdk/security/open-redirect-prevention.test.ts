@@ -14,6 +14,7 @@
  * Plus additional attack variations to ensure comprehensive coverage.
  */
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
+import { setupMockApi } from '../../../../../mocks/api-server.mock';
 import {
   validateReturnToUrl,
   sanitizeReturnToUrl,
@@ -21,6 +22,7 @@ import {
 } from '../../utils/flow-context';
 
 describe('Security Verification - Open Redirect Prevention', () => {
+  setupMockApi();
   beforeEach(() => {
     // Mock window.location for URL validation tests
     vi.stubGlobal('window', {
@@ -41,7 +43,9 @@ describe('Security Verification - Open Redirect Prevention', () => {
   // ===========================================================================
 
   describe('Required Test Vectors (subtask-8-4)', () => {
+  setupMockApi();
     describe('https://evil.com - External HTTPS URL', () => {
+  setupMockApi();
       it('should reject https://evil.com', () => {
         expect(validateReturnToUrl('https://evil.com')).toBe(false);
       });
@@ -69,6 +73,7 @@ describe('Security Verification - Open Redirect Prevention', () => {
     });
 
     describe('javascript:alert(1) - XSS Protocol Attack', () => {
+  setupMockApi();
       it('should reject javascript:alert(1)', () => {
         expect(validateReturnToUrl('javascript:alert(1)')).toBe(false);
       });
@@ -95,6 +100,7 @@ describe('Security Verification - Open Redirect Prevention', () => {
     });
 
     describe('//evil.com - Protocol-Relative URL Attack', () => {
+  setupMockApi();
       it('should reject //evil.com', () => {
         expect(validateReturnToUrl('//evil.com')).toBe(false);
       });
@@ -122,6 +128,7 @@ describe('Security Verification - Open Redirect Prevention', () => {
     });
 
     describe('http://evil.com - External HTTP URL', () => {
+  setupMockApi();
       it('should reject http://evil.com', () => {
         expect(validateReturnToUrl('http://evil.com')).toBe(false);
       });
@@ -150,7 +157,9 @@ describe('Security Verification - Open Redirect Prevention', () => {
   // ===========================================================================
 
   describe('Additional Open Redirect Attack Vectors', () => {
+  setupMockApi();
     describe('Domain Confusion Attacks', () => {
+  setupMockApi();
       it('should reject digilist.evil.com (subdomain attack)', () => {
         expect(validateReturnToUrl('https://digilist.evil.com/')).toBe(false);
       });
@@ -173,6 +182,7 @@ describe('Security Verification - Open Redirect Prevention', () => {
     });
 
     describe('Additional Dangerous Protocol Attacks', () => {
+  setupMockApi();
       it('should reject data: protocol URLs', () => {
         expect(validateReturnToUrl('data:text/html,<script>alert(1)</script>')).toBe(false);
       });
@@ -195,6 +205,7 @@ describe('Security Verification - Open Redirect Prevention', () => {
     });
 
     describe('Encoding Bypass Attempts', () => {
+  setupMockApi();
       it('should reject URL-encoded javascript', () => {
         // %6a = j, attempting to bypass pattern detection
         expect(validateReturnToUrl('%6aavascript:alert(1)')).toBe(false);
@@ -215,6 +226,7 @@ describe('Security Verification - Open Redirect Prevention', () => {
     });
 
     describe('Whitespace Manipulation Attacks', () => {
+  setupMockApi();
       it('should reject javascript with leading whitespace', () => {
         expect(validateReturnToUrl('  javascript:alert(1)')).toBe(false);
       });
@@ -233,6 +245,7 @@ describe('Security Verification - Open Redirect Prevention', () => {
     });
 
     describe('Triple Slash Protocol-Relative Variations', () => {
+  setupMockApi();
       it('should reject ///evil.com', () => {
         expect(validateReturnToUrl('///evil.com')).toBe(false);
       });
@@ -252,6 +265,7 @@ describe('Security Verification - Open Redirect Prevention', () => {
   // ===========================================================================
 
   describe('Valid Internal URLs Should Pass', () => {
+  setupMockApi();
     it('should accept / (root)', () => {
       expect(validateReturnToUrl('/')).toBe(true);
     });
@@ -299,6 +313,7 @@ describe('Security Verification - Open Redirect Prevention', () => {
   // ===========================================================================
 
   describe('Sanitization Always Returns Safe Default', () => {
+  setupMockApi();
     const maliciousUrls = [
       'https://evil.com',
       'http://evil.com',
@@ -328,6 +343,7 @@ describe('Security Verification - Open Redirect Prevention', () => {
   // ===========================================================================
 
   describe('Full Flow Context Integration', () => {
+  setupMockApi();
     it('should prevent open redirect when creating flow context with malicious returnTo', () => {
       // createFlowContext uses sanitizeReturnToUrl internally
       const context = createFlowContext('https://evil.com/steal-data', 'test-tenant');

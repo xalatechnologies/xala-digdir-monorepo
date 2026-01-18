@@ -37,7 +37,7 @@ test.describe('Docs Feature Flags', () => {
 
   // Note: To test disabled sections, you would need to mock feature flags
   // This is typically done via API mocking or test fixtures
-  test.skip('Disabled section redirects to home', async ({ page }) => {
+  test('Disabled section redirects to home', async ({ page }) => {
     // This test requires feature flag mocking
     // When docs.section.api.enabled = false, navigating to /api should redirect
 

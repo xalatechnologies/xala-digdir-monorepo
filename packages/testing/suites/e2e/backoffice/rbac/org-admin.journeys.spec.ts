@@ -1,3 +1,4 @@
+import { setupMockApi } from '../../../../mocks/api-server.mock';
 import { test, expect } from '../fixtures/qa-expert.fixture';
 import { config } from '../config/backoffice.config';
 
@@ -18,15 +19,17 @@ import { config } from '../config/backoffice.config';
 // For now, use admin auth and test org-admin specific routes
 
 test.describe('ORG_ADMIN E2E Journeys', () => {
+  setupMockApi();
   test.use({ storageState: 'tests/e2e/backoffice/.auth/admin.json' });
 
   test.describe('OA1. Login & Context Selection', () => {
+  setupMockApi();
     test('OA1.1 Lands on org dashboard after login', async ({ page }) => {
       await page.goto('/', { waitUntil: 'domcontentloaded' });
       await page.waitForTimeout(3000);
       
       if (page.url().includes('/login')) {
-        test.skip();
+        test();
         return;
       }
       
@@ -63,12 +66,13 @@ test.describe('ORG_ADMIN E2E Journeys', () => {
   });
 
   test.describe('OA2. Member Management', () => {
+  setupMockApi();
     test.beforeEach(async ({ page }) => {
       await page.goto('/organizations', { waitUntil: 'domcontentloaded' });
       await page.waitForTimeout(3000);
       
       if (page.url().includes('/login')) {
-        test.skip();
+        test();
       }
     });
 
@@ -166,6 +170,7 @@ test.describe('ORG_ADMIN E2E Journeys', () => {
   });
 
   test.describe('OA3. Org Profile Management', () => {
+  setupMockApi();
     test('OA3.1 Can view org profile', async ({ page }) => {
       await page.goto('/organizations', { waitUntil: 'domcontentloaded' });
       await page.waitForTimeout(2000);
@@ -211,12 +216,13 @@ test.describe('ORG_ADMIN E2E Journeys', () => {
   });
 
   test.describe('OA4. Booking On-Behalf-Of', () => {
+  setupMockApi();
     test.beforeEach(async ({ page }) => {
       await page.goto('/bookings', { waitUntil: 'domcontentloaded' });
       await page.waitForTimeout(3000);
       
       if (page.url().includes('/login')) {
-        test.skip();
+        test();
       }
     });
 
@@ -266,12 +272,13 @@ test.describe('ORG_ADMIN E2E Journeys', () => {
   });
 
   test.describe('OA5. Reporting/Export', () => {
+  setupMockApi();
     test('OA5.1 Can access reports page', async ({ page }) => {
       await page.goto('/reports', { waitUntil: 'domcontentloaded' });
       await page.waitForTimeout(2000);
       
       if (page.url().includes('/login')) {
-        test.skip();
+        test();
         return;
       }
       
@@ -300,6 +307,7 @@ test.describe('ORG_ADMIN E2E Journeys', () => {
   });
 
   test.describe('OA6. Forbidden Actions', () => {
+  setupMockApi();
     test('OA6.1 Cannot access tenant settings', async ({ page }) => {
       await page.goto('/tenant/settings', { waitUntil: 'domcontentloaded' });
       await page.waitForTimeout(2000);
@@ -336,6 +344,7 @@ test.describe('ORG_ADMIN E2E Journeys', () => {
   });
 
   test.describe('OA7. Runtime Stability', () => {
+  setupMockApi();
     test('OA7.1 No runtime errors on org admin routes', async ({ page, evidence }) => {
       const routes = ['/', '/bookings', '/calendar', '/organizations'];
       

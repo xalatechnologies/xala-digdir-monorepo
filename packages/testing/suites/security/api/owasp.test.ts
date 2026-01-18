@@ -6,6 +6,7 @@
  * Run with: pnpm dev & pnpm test:security
  */
 import { describe, it, expect, beforeAll } from 'vitest';
+import { setupMockApi } from '../../../mocks/api-server.mock';
 
 const API_URL = 'http://localhost:4000';
 let serverAvailable = false;
@@ -53,7 +54,9 @@ function skipIfNoServer() {
 }
 
 describe('Security Tests', () => {
+  setupMockApi();
   describe('OWASP A01: Broken Access Control', () => {
+  setupMockApi();
     it('should require tenant header for protected endpoints', async () => {
       if (skipIfNoServer()) return;
       const res = await request('/api/users');
@@ -70,6 +73,7 @@ describe('Security Tests', () => {
   });
 
   describe('OWASP A02: Cryptographic Failures', () => {
+  setupMockApi();
     it('should not expose sensitive data in error messages', async () => {
       if (skipIfNoServer()) return;
       const res = await request('/api/users/invalid-id');
@@ -79,6 +83,7 @@ describe('Security Tests', () => {
   });
 
   describe('OWASP A03: Injection', () => {
+  setupMockApi();
     it('should reject SQL injection in query params', async () => {
       if (skipIfNoServer()) return;
       const res = await request('/api/tenants?name=test\'; DROP TABLE tenants; --');
@@ -97,6 +102,7 @@ describe('Security Tests', () => {
   });
 
   describe('OWASP A04: Insecure Design', () => {
+  setupMockApi();
     it('should validate enum values', async () => {
       if (skipIfNoServer()) return;
       const res = await request('/api/tenants', {
@@ -121,6 +127,7 @@ describe('Security Tests', () => {
   });
 
   describe('OWASP A05: Security Misconfiguration', () => {
+  setupMockApi();
     it('should return RFC 7807 error format', async () => {
       if (skipIfNoServer()) return;
       const res = await request('/api/nonexistent');
@@ -140,6 +147,7 @@ describe('Security Tests', () => {
   });
 
   describe('OWASP A06: Vulnerable Components', () => {
+  setupMockApi();
     it('should not expose server version', async () => {
       if (skipIfNoServer()) return;
       const res = await request('/health');
@@ -148,6 +156,7 @@ describe('Security Tests', () => {
   });
 
   describe('Rate Limiting', () => {
+  setupMockApi();
     it('should include rate limit headers in responses', async () => {
       if (skipIfNoServer()) return;
       const res = await request('/health');
@@ -201,6 +210,7 @@ describe('Security Tests', () => {
   });
 
   describe('Input Validation', () => {
+  setupMockApi();
     it('should validate required fields', async () => {
       if (skipIfNoServer()) return;
       const res = await request('/api/tenants', {

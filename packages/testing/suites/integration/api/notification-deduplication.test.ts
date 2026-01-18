@@ -7,6 +7,7 @@
  * Run with: pnpm dev (in separate terminal), then pnpm test:integration
  */
 import { describe, it, expect, beforeAll } from 'vitest';
+import { setupMockApi } from '../../../mocks/api-server.mock';
 
 const API_URL = process.env.API_URL || 'http://localhost:3002';
 const TENANT_ID = 'f47ac10b-58cc-4372-a567-0e02b2c3d479';
@@ -17,6 +18,7 @@ const headers = {
 };
 
 describe('NotificationsController - Deduplication', () => {
+  setupMockApi();
   // =========================================================================
   // POST /api/notifications/send - Deduplication Tests
   // =========================================================================
@@ -24,6 +26,7 @@ describe('NotificationsController - Deduplication', () => {
   // to keep test suite fast. Deduplication window logic is tested in unit tests.
   // =========================================================================
   describe('POST /api/notifications/send - Deduplication', () => {
+  setupMockApi();
     it('should create notification on first send', async () => {
       const notification = {
         type: 'email',
@@ -236,6 +239,7 @@ describe('NotificationsController - Deduplication', () => {
   // GET /api/notifications/delivery-status/:id - Verify Duplicate Detection
   // =========================================================================
   describe('GET /api/notifications/delivery-status/:id', () => {
+  setupMockApi();
     it('should retrieve delivery status for first notification', async () => {
       const notification = {
         type: 'email',
@@ -273,6 +277,7 @@ describe('NotificationsController - Deduplication', () => {
   // Validation Tests
   // =========================================================================
   describe('POST /api/notifications/send - Validation', () => {
+  setupMockApi();
     it('should reject notification without required fields', async () => {
       const invalidNotification = {
         type: 'email',

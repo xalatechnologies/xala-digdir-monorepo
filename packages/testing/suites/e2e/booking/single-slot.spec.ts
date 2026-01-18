@@ -1,3 +1,4 @@
+import { setupMockApi } from '../../../mocks/api-server.mock';
 /**
  * Single Slot Booking E2E Tests
  *
@@ -41,7 +42,9 @@ async function loginAsRole(page: any, role: string) {
 // =============================================================================
 
 test.describe('Citizen Booking Journey', () => {
+  setupMockApi();
   test.describe('Public Browsing', () => {
+  setupMockApi();
     test('should browse rental objects without authentication', async ({ page }) => {
       await page.goto(WEB_URL);
       
@@ -93,6 +96,7 @@ test.describe('Citizen Booking Journey', () => {
   });
 
   test.describe('Authenticated Booking', () => {
+  setupMockApi();
     test('should redirect to login for booking', async ({ page }) => {
       await page.goto(`${WEB_URL}/search`);
       
@@ -146,6 +150,7 @@ test.describe('Citizen Booking Journey', () => {
 // =============================================================================
 
 test.describe('Availability', () => {
+  setupMockApi();
   test('API should return availability for rental object', async ({ request }) => {
     // Get a rental object first
     const listResponse = await request.get(`${API_URL}/public/rental-objects?limit=1`);
@@ -178,6 +183,7 @@ test.describe('Availability', () => {
 // =============================================================================
 
 test.describe('Conflict Detection', () => {
+  setupMockApi();
   test('API should prevent double booking', async ({ request }) => {
     // This test requires a booking to already exist
     // For now, verify the endpoint responds correctly
@@ -200,6 +206,7 @@ test.describe('Conflict Detection', () => {
 // =============================================================================
 
 test.describe('Booking Cancellation', () => {
+  setupMockApi();
   test('API should reject unauthorized cancellation', async ({ request }) => {
     const response = await request.delete(`${API_URL}/bookings/nonexistent-id`);
     
@@ -235,6 +242,7 @@ test.describe('Booking Cancellation', () => {
 // =============================================================================
 
 test.describe('Admin Booking Management', () => {
+  setupMockApi();
   test('Admin can view all bookings', async ({ page }) => {
     await loginAsRole(page, 'admin');
     

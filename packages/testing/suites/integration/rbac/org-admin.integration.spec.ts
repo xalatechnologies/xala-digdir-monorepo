@@ -1,4 +1,5 @@
 import { describe, it, expect, beforeAll, afterAll } from 'vitest';
+import { setupMockApi } from '../../../mocks/api-server.mock';
 import type { RBACMatrixRule } from './types';
 
 /**
@@ -29,6 +30,7 @@ interface TestContext {
 }
 
 describe('ORG_ADMIN Integration Tests', () => {
+  setupMockApi();
   const ctx: TestContext = {
     authHeaders: {
       'Authorization': `Bearer ${ORG_ADMIN_TOKEN}`,
@@ -39,6 +41,7 @@ describe('ORG_ADMIN Integration Tests', () => {
   };
 
   describe('Allowed Endpoints (ALLOW)', () => {
+  setupMockApi();
     const allowedRules = orgAdminMatrix.capabilities.filter(
       (c: any) => c.expected === 'ALLOW'
     );
@@ -69,6 +72,7 @@ describe('ORG_ADMIN Integration Tests', () => {
   });
 
   describe('Denied Endpoints (DENY)', () => {
+  setupMockApi();
     const deniedRules = orgAdminMatrix.capabilities.filter(
       (c: any) => c.expected === 'DENY'
     );
@@ -96,6 +100,7 @@ describe('ORG_ADMIN Integration Tests', () => {
   });
 
   describe('Cross-Org Boundary Tests (IDOR)', () => {
+  setupMockApi();
     it('OA-BOUNDARY-CROSS-ORG: cannot read other org bookings', async () => {
       const response = await fetch(
         `${ctx.baseUrl}/api/organizations/${OTHER_ORG_ID}/bookings`,
@@ -144,6 +149,7 @@ describe('ORG_ADMIN Integration Tests', () => {
   });
 
   describe('Unauthenticated Access', () => {
+  setupMockApi();
     it('should return 401 without token', async () => {
       const response = await fetch(
         `${ctx.baseUrl}/api/organizations/${ORG_ID}/bookings`,
@@ -158,6 +164,7 @@ describe('ORG_ADMIN Integration Tests', () => {
   });
 
   describe('RFC 7807 Error Format', () => {
+  setupMockApi();
     it('should return RFC 7807 format for 403 errors', async () => {
       const response = await fetch(
         `${ctx.baseUrl}/api/users`, // Org admin cannot access users

@@ -8,6 +8,7 @@
  */
 
 import { describe, it, expect, beforeAll } from 'vitest';
+import { setupMockApi } from '../../../mocks/api-server.mock';
 import * as fs from 'fs';
 
 const API_URL = process.env.API_URL || 'http://localhost:3000/api';
@@ -172,9 +173,11 @@ async function getSessionCookie(role: string): Promise<string | null> {
 // =============================================================================
 
 describe('RBAC Matrix Tests', () => {
+  setupMockApi();
   const results: { rule: RBACRule; passed: boolean; actual: number }[] = [];
 
   describe('Public Role Access', () => {
+  setupMockApi();
     const publicRules = RBAC_MATRIX.filter(r => r.role === 'public');
 
     for (const rule of publicRules) {
@@ -200,6 +203,7 @@ describe('RBAC Matrix Tests', () => {
   });
 
   describe('User Role Access', () => {
+  setupMockApi();
     const userRules = RBAC_MATRIX.filter(r => r.role === 'user');
     let sessionCookie: string | null = null;
 
@@ -234,6 +238,7 @@ describe('RBAC Matrix Tests', () => {
   });
 
   describe('Saksbehandler Role Access', () => {
+  setupMockApi();
     const saksRules = RBAC_MATRIX.filter(r => r.role === 'saksbehandler');
     let sessionCookie: string | null = null;
 
@@ -268,6 +273,7 @@ describe('RBAC Matrix Tests', () => {
   });
 
   describe('Admin Role Access', () => {
+  setupMockApi();
     const adminRules = RBAC_MATRIX.filter(r => r.role === 'admin');
     let sessionCookie: string | null = null;
 
@@ -300,6 +306,7 @@ describe('RBAC Matrix Tests', () => {
   });
 
   describe('Cross-Tenant Isolation', () => {
+  setupMockApi();
     it('should not allow reading other tenant data', async () => {
       const sessionCookie = await getSessionCookie('admin');
       if (!sessionCookie) return;
@@ -335,6 +342,7 @@ describe('RBAC Matrix Tests', () => {
 
   // Generate RBAC Matrix JSON
   describe('RBAC Matrix Report', () => {
+  setupMockApi();
     it('should generate RBAC-MATRIX.json', async () => {
       const report = {
         timestamp: new Date().toISOString(),

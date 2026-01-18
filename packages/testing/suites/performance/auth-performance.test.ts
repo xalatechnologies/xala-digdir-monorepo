@@ -18,7 +18,9 @@
  * - Concurrent requests: 100 req/s without errors
  */
 import { describe, it, expect, beforeAll } from 'vitest';
+import { setupMockApi } from '../../mocks/api-server.mock';
 import type { TestContext } from 'vitest';
+import { setupMockApi } from '../../mocks/api-server.mock';
 
 const API_URL = process.env.API_URL || 'http://localhost:4000';
 const TEST_TENANT_ID = 'test-tenant';
@@ -54,6 +56,7 @@ async function measureLatency<T>(
 }
 
 describe('Authentication Performance Tests', () => {
+  setupMockApi();
   let sessionCookie: string;
 
   beforeAll(async () => {
@@ -73,6 +76,7 @@ describe('Authentication Performance Tests', () => {
   });
 
   describe('Login Performance', () => {
+  setupMockApi();
     it('should complete login within 1 second (P95)', async () => {
       const stats = await measureLatency(
         async () => {
@@ -131,6 +135,7 @@ describe('Authentication Performance Tests', () => {
   });
 
   describe('Session Validation Performance', () => {
+  setupMockApi();
     it('should validate session in < 100ms (P50)', async () => {
       const stats = await measureLatency(
         async () => {
@@ -205,6 +210,7 @@ describe('Authentication Performance Tests', () => {
   });
 
   describe('RBAC Permission Check Performance', () => {
+  setupMockApi();
     it('should retrieve permissions quickly', async () => {
       const stats = await measureLatency(
         async () => {
@@ -262,6 +268,7 @@ describe('Authentication Performance Tests', () => {
   });
 
   describe('Logout Performance', () => {
+  setupMockApi();
     it('should complete logout within 500ms (P95)', async () => {
       // Create multiple sessions for logout testing
       const sessions: string[] = [];
@@ -300,6 +307,7 @@ describe('Authentication Performance Tests', () => {
   });
 
   describe('Cookie Parsing Overhead', () => {
+  setupMockApi();
     it('should parse session cookie efficiently', async () => {
       const iterations = 100;
       const start = performance.now();
@@ -341,6 +349,7 @@ describe('Authentication Performance Tests', () => {
   });
 
   describe('Database Query Performance', () => {
+  setupMockApi();
     it('should retrieve user data efficiently', async () => {
       const stats = await measureLatency(
         async () => {
@@ -362,6 +371,7 @@ describe('Authentication Performance Tests', () => {
   });
 
   describe('Throughput Tests', () => {
+  setupMockApi();
     it('should handle 100 requests per second', async () => {
       const duration = 5000; // 5 seconds
       const targetRps = 100;
@@ -411,6 +421,7 @@ describe('Authentication Performance Tests', () => {
   });
 
   describe('Resource Usage', () => {
+  setupMockApi();
     it('should not leak memory during repeated operations', async () => {
       const iterations = 1000;
 

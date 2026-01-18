@@ -16,6 +16,7 @@
  * - POST /api/bookings/:id/deny (requires case handler scope)
  */
 import { describe, it, expect, beforeAll } from 'vitest';
+import { setupMockApi } from '../../../mocks/api-server.mock';
 import { request, skipIfNoServer } from './setup';
 
 /**
@@ -55,11 +56,13 @@ function expectRFC7807Format(body: any, expectedStatus: number): void {
 }
 
 describe('RFC7807 Authorization Error Responses', () => {
+  setupMockApi();
   const TENANT_ID = 'test-tenant';
   const UNAUTHORIZED_USER_ID = 'unauthorized-user-123';
   const REGULAR_USER_ID = 'regular-user-123';
 
   describe('401 Unauthorized - Missing Authentication', () => {
+  setupMockApi();
     it('should return RFC7807 format for missing authentication on protected endpoint', async () => {
       if (skipIfNoServer()) return;
 
@@ -82,6 +85,7 @@ describe('RFC7807 Authorization Error Responses', () => {
   });
 
   describe('403 Forbidden - Access Grant Endpoints', () => {
+  setupMockApi();
     it('POST /api/access-grants - non-admin user should get 403', async () => {
       if (skipIfNoServer()) return;
 
@@ -145,6 +149,7 @@ describe('RFC7807 Authorization Error Responses', () => {
   });
 
   describe('403 Forbidden - Permission Assignment Endpoints', () => {
+  setupMockApi();
     it('POST /api/permission-assignments - non-org-admin should get 403', async () => {
       if (skipIfNoServer()) return;
 
@@ -194,6 +199,7 @@ describe('RFC7807 Authorization Error Responses', () => {
   });
 
   describe('403 Forbidden - Case Handler Scope Endpoints', () => {
+  setupMockApi();
     it('POST /api/case-handler-scopes - non-admin user should get 403', async () => {
       if (skipIfNoServer()) return;
 
@@ -235,6 +241,7 @@ describe('RFC7807 Authorization Error Responses', () => {
   });
 
   describe('403 Forbidden - Booking Approval/Denial Endpoints', () => {
+  setupMockApi();
     it('POST /api/bookings/:id/approve - case handler without scope should get 403', async () => {
       if (skipIfNoServer()) return;
 
@@ -302,6 +309,7 @@ describe('RFC7807 Authorization Error Responses', () => {
   });
 
   describe('403 Forbidden - Capabilities/Me Endpoints', () => {
+  setupMockApi();
     it('GET /api/me/capabilities - missing authentication should fail gracefully', async () => {
       if (skipIfNoServer()) return;
 
@@ -321,6 +329,7 @@ describe('RFC7807 Authorization Error Responses', () => {
   });
 
   describe('RFC7807 Error Format Consistency', () => {
+  setupMockApi();
     it('should include timestamp in error responses', async () => {
       if (skipIfNoServer()) return;
 
@@ -379,6 +388,7 @@ describe('RFC7807 Authorization Error Responses', () => {
 });
 
 describe('Error Class Integration', () => {
+  setupMockApi();
   it('ForbiddenError generates correct RFC7807 format', () => {
     // This is a unit test for the error class
     // Import would fail if the module doesn't exist, which is fine for integration tests

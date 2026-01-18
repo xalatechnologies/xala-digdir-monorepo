@@ -5,6 +5,7 @@
 
 import React from 'react';
 import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { setupMockApi } from '../../../../../../../../mocks/api-server.mock';
 import { render } from '@testing-library/react';
 import { BrowserRouter } from 'react-router-dom';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
@@ -163,11 +164,13 @@ const createWrapper = () => {
 };
 
 describe('Rental Objects Performance Tests', () => {
+  setupMockApi();
   beforeEach(() => {
     vi.clearAllMocks();
   });
 
   describe('List View Performance', () => {
+  setupMockApi();
     it('should render 1000+ items efficiently', () => {
       const startTime = performance.now();
       
@@ -221,6 +224,7 @@ describe('Rental Objects Performance Tests', () => {
   });
 
   describe('Detail View Performance', () => {
+  setupMockApi();
     it('should render complex detail view quickly', () => {
       const startTime = performance.now();
       
@@ -259,6 +263,7 @@ describe('Rental Objects Performance Tests', () => {
   });
 
   describe('Wizard Performance', () => {
+  setupMockApi();
     it('should render wizard form efficiently', () => {
       const startTime = performance.now();
       
@@ -299,6 +304,7 @@ describe('Rental Objects Performance Tests', () => {
   });
 
   describe('Memory Leak Tests', () => {
+  setupMockApi();
     it('should not leak memory on component unmount', () => {
       const { unmount } = render(<RentalObjectsListView />, {
         wrapper: createWrapper(),

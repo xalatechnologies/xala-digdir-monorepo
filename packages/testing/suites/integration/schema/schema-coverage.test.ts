@@ -8,6 +8,7 @@
  */
 
 import { describe, it, expect, beforeAll, afterAll } from 'vitest';
+import { setupMockApi } from '../../../mocks/api-server.mock';
 
 // =============================================================================
 // Configuration
@@ -172,7 +173,9 @@ const REQUIRED_INDEXES = {
 // =============================================================================
 
 describe('Schema Existence', () => {
+  setupMockApi();
   describe('Platform Schema', () => {
+  setupMockApi();
     it('should have all expected platform tables', async () => {
       const tables = await getTables('platform');
       const tableNames = tables.map(t => t.table_name);
@@ -184,6 +187,7 @@ describe('Schema Existence', () => {
   });
 
   describe('Domain Schema', () => {
+  setupMockApi();
     it('should have all expected domain tables', async () => {
       const tables = await getTables('domain');
       const tableNames = tables.map(t => t.table_name);
@@ -195,6 +199,7 @@ describe('Schema Existence', () => {
   });
 
   describe('SaaS Schema', () => {
+  setupMockApi();
     it('should have all expected saas tables', async () => {
       const tables = await getTables('saas');
       const tableNames = tables.map(t => t.table_name);
@@ -211,10 +216,12 @@ describe('Schema Existence', () => {
 // =============================================================================
 
 describe('Column Coverage', () => {
+  setupMockApi();
   for (const [tableKey, requiredColumns] of Object.entries(CRITICAL_TABLES_WITH_REQUIRED_COLUMNS)) {
     const [schema, table] = tableKey.split('.');
 
     describe(`${tableKey}`, () => {
+  setupMockApi();
       it('should have all required columns', async () => {
         const columns = await getColumns(schema, table);
         const columnNames = columns.map(c => c.column_name);
@@ -252,7 +259,9 @@ describe('Column Coverage', () => {
 // =============================================================================
 
 describe('Constraints', () => {
+  setupMockApi();
   describe('Primary Keys', () => {
+  setupMockApi();
     for (const [schema, tables] of Object.entries(EXPECTED_TABLES)) {
       for (const table of tables) {
         it(`${schema}.${table} should have a primary key`, async () => {
@@ -265,6 +274,7 @@ describe('Constraints', () => {
   });
 
   describe('Foreign Keys', () => {
+  setupMockApi();
     it('platform.sessions should reference users', async () => {
       const constraints = await getConstraints('platform', 'sessions');
       const fks = constraints.filter(c => c.constraint_type === 'FOREIGN KEY');
@@ -285,6 +295,7 @@ describe('Constraints', () => {
   });
 
   describe('Unique Constraints', () => {
+  setupMockApi();
     it('platform.tenants should have unique slug', async () => {
       const constraints = await getConstraints('platform', 'tenants');
       const unique = constraints.find(
@@ -306,10 +317,12 @@ describe('Constraints', () => {
 // =============================================================================
 
 describe('Indexes', () => {
+  setupMockApi();
   for (const [tableKey, expectedIndexes] of Object.entries(REQUIRED_INDEXES)) {
     const [schema, table] = tableKey.split('.');
 
     describe(`${tableKey}`, () => {
+  setupMockApi();
       it('should have required indexes for query performance', async () => {
         const indexes = await getIndexes(schema, table);
         const indexNames = indexes.map(i => i.indexname);
@@ -330,6 +343,7 @@ describe('Indexes', () => {
 // =============================================================================
 
 describe('Multi-Tenant Isolation', () => {
+  setupMockApi();
   it('domain tables should have tenant_id column', async () => {
     const tenantScopedTables = [
       'rental_objects',
@@ -359,6 +373,7 @@ describe('Multi-Tenant Isolation', () => {
 // =============================================================================
 
 describe('Audit Trail', () => {
+  setupMockApi();
   it('domain.audit_events table should exist', async () => {
     const tables = await getTables('domain');
     const auditTable = tables.find(t => t.table_name === 'audit_events');
@@ -382,6 +397,7 @@ describe('Audit Trail', () => {
 // =============================================================================
 
 describe('Schema Coverage Report', () => {
+  setupMockApi();
   it('should generate coverage report', async () => {
     const report = {
       timestamp: new Date().toISOString(),

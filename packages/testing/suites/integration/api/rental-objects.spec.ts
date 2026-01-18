@@ -3,10 +3,12 @@
  */
 
 import { describe, it, expect, beforeAll, afterAll } from 'vitest';
+import { setupMockApi } from '../../../mocks/api-server.mock';
 import { createFastifyApp } from '../../adapters/fastify.adapter';
 import type { FastifyInstance } from 'fastify';
 
 describe('Rental Objects API Integration Tests', () => {
+  setupMockApi();
   let app: FastifyInstance;
   let authToken: string;
   let testTenantId: string;
@@ -27,6 +29,7 @@ describe('Rental Objects API Integration Tests', () => {
   });
 
   describe('GET /api/rental-objects', () => {
+  setupMockApi();
     it('should return list of rental objects', async () => {
       const response = await app.inject({
         method: 'GET',
@@ -125,6 +128,7 @@ describe('Rental Objects API Integration Tests', () => {
   });
 
   describe('GET /api/rental-objects/:id', () => {
+  setupMockApi();
     it('should return rental object by ID', async () => {
       // First create a rental object to get its ID
       const createResponse = await app.inject({
@@ -178,6 +182,7 @@ describe('Rental Objects API Integration Tests', () => {
   });
 
   describe('POST /api/rental-objects', () => {
+  setupMockApi();
     it('should create a new rental object', async () => {
       const payload = {
         name: 'New Test Rental Object',
@@ -240,6 +245,7 @@ describe('Rental Objects API Integration Tests', () => {
   });
 
   describe('PUT /api/rental-objects/:id', () => {
+  setupMockApi();
     it('should update an existing rental object', async () => {
       // First create a rental object
       const createResponse = await app.inject({
@@ -301,6 +307,7 @@ describe('Rental Objects API Integration Tests', () => {
   });
 
   describe('DELETE /api/rental-objects/:id', () => {
+  setupMockApi();
     it('should delete a rental object', async () => {
       // First create a rental object
       const createResponse = await app.inject({
@@ -362,6 +369,7 @@ describe('Rental Objects API Integration Tests', () => {
   });
 
   describe('POST /api/rental-objects/:id/publish', () => {
+  setupMockApi();
     it('should publish a rental object', async () => {
       // First create a draft rental object
       const createResponse = await app.inject({

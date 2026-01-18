@@ -1,3 +1,4 @@
+import { setupMockApi } from '../../../mocks/api-server.mock';
 /**
  * E2E Test: Tenant Admin User Management
  *
@@ -13,6 +14,7 @@
 import { test, expect } from '@playwright/test';
 
 test.describe('Tenant Admin User Management', () => {
+  setupMockApi();
   test.beforeEach(async ({ page }) => {
     // Login as tenant admin
     await page.goto('/login');

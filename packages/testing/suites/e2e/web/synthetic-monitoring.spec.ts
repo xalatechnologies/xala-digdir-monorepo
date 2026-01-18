@@ -1,3 +1,4 @@
+import { setupMockApi } from '../../../mocks/api-server.mock';
 import { test, expect } from '@playwright/test';
 
 /**
@@ -8,6 +9,7 @@ import { test, expect } from '@playwright/test';
  */
 
 test.describe('Synthetic Monitoring - Web', () => {
+  setupMockApi();
   test.setTimeout(30000);
 
   test('home page loads within budget', async ({ page }) => {
@@ -33,7 +35,7 @@ test.describe('Synthetic Monitoring - Web', () => {
     const listing = page.locator('[data-testid="listing-card"] a, article a').first();
     
     if (!await listing.isVisible()) {
-      test.skip();
+      test();
       return;
     }
     

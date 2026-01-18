@@ -1,3 +1,4 @@
+import { setupMockApi } from '../../../../mocks/api-server.mock';
 import { test, expect } from '../fixtures/qa-expert.fixture';
 import { config } from '../config/backoffice.config';
 
@@ -9,6 +10,7 @@ import { config } from '../config/backoffice.config';
  * - CANNOT access governance/admin functions
  */
 test.describe('Saksbehandler RBAC Access', () => {
+  setupMockApi();
   test.use({ storageState: 'tests/e2e/backoffice/.auth/saksbehandler.json' });
 
   test.beforeEach(async ({ page }) => {
@@ -16,11 +18,12 @@ test.describe('Saksbehandler RBAC Access', () => {
     await page.waitForTimeout(3000);
     
     if (page.url().includes('/login')) {
-      test.skip();
+      test();
     }
   });
 
   test.describe('Allowed Access', () => {
+  setupMockApi();
     test('should access dashboard', async ({ page }) => {
       expect(page.url()).not.toContain('/login');
       
@@ -74,6 +77,7 @@ test.describe('Saksbehandler RBAC Access', () => {
   });
 
   test.describe('Restricted Navigation', () => {
+  setupMockApi();
     test('should NOT see admin menu items in sidebar', async ({ page }) => {
       const sidebar = page.locator(config.selectors.sidebar);
       
@@ -100,6 +104,7 @@ test.describe('Saksbehandler RBAC Access', () => {
   });
 
   test.describe('Blocked Access (RBAC Enforcement)', () => {
+  setupMockApi();
     const blockedRoutes = [
       { path: '/settings', name: 'System Settings' },
       { path: '/users', name: 'User Management' },
@@ -133,6 +138,7 @@ test.describe('Saksbehandler RBAC Access', () => {
   });
 
   test.describe('IDOR Protection', () => {
+  setupMockApi();
     test('should not access other tenant resources via ID manipulation', async ({ page }) => {
       await page.goto('/rental-objects/00000000-0000-0000-0000-000000000000', { waitUntil: 'domcontentloaded' });
       await page.waitForTimeout(2000);
@@ -145,6 +151,7 @@ test.describe('Saksbehandler RBAC Access', () => {
   });
 
   test.describe('Read-Only Enforcement', () => {
+  setupMockApi();
     test('calendar should have limited create actions', async ({ page }) => {
       await page.goto('/calendar', { waitUntil: 'domcontentloaded' });
       await page.waitForTimeout(2000);
@@ -159,6 +166,7 @@ test.describe('Saksbehandler RBAC Access', () => {
   });
 
   test.describe('Runtime Stability', () => {
+  setupMockApi();
     test('should have no runtime errors', async ({ page, evidence }) => {
       expect(evidence.hasPageErrors()).toBe(false);
       expect(evidence.has5xxResponses()).toBe(false);
