@@ -1382,11 +1382,13 @@ export function BookingWidgetPlacement({
               slotDetails={slotDetails}
               weekStart={weekStart}
               onRemoveSlot={handleRemoveSlot}
-              onChangeDuration={handleChangeDuration}
-              onChangeAttendees={handleChangeAttendees}
-              onChangeActivityType={handleChangeActivityType}
-              onChangePurpose={handleChangePurpose}
               lastUpdated={lastUpdated}
+              priceGroups={priceGroups}
+              additionalServices={additionalServices}
+              selectedPriceGroup={selectedPriceGroup}
+              selectedServices={selectedServices}
+              onPriceGroupChange={setSelectedPriceGroup}
+              onServiceToggle={handleServiceToggle}
             />
           </div>
         )}

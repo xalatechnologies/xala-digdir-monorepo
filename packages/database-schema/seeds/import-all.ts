@@ -145,7 +145,12 @@ async function importSeeds(): Promise<void> {
           ${r.category_key || 'LOKALER_OG_BANER'}, 'published', ${r.capacity || null}, ${r.requires_approval || false},
           ${JSON.stringify(r.images || [])}::jsonb, ${JSON.stringify(r.pricing || {})}::jsonb, ${JSON.stringify(r.metadata || {})}::jsonb
         )
-        ON CONFLICT (id) DO UPDATE SET name = EXCLUDED.name, status = 'published'
+        ON CONFLICT (id) DO UPDATE SET 
+          name = EXCLUDED.name, 
+          status = 'published',
+          metadata = EXCLUDED.metadata,
+          images = EXCLUDED.images,
+          pricing = EXCLUDED.pricing
       `;
       rentalObjects++;
     }
