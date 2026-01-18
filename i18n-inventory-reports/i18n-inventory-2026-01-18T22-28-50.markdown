@@ -1,0 +1,157 @@
+# i18n Inventory Report
+
+**Generated:** 2026-01-18 22:28:50  
+**App Filter:** web  
+**Include Packages:** false
+
+---
+
+## 📊 Summary
+
+| Metric | Count |
+|--------|-------|
+| Total Files Scanned | 76 |
+| Files with Translations | 48 |
+| Files with Hard-coded Strings | 0 |
+| Total Translation Keys Used | 451 |
+| Unique Translation Keys | 398 |
+| Unique Namespaces | 73 |
+| Total Hard-coded Strings | 0 |
+| Violations | 0 |
+
+---
+
+## 🔑 Translation Keys by Namespace
+
+| Namespace | Usage Count |
+|-----------|-------------|
+| bookingWidget | 55 |
+| common | 37 |
+| months | 26 |
+| recurringPattern | 24 |
+| payment | 20 |
+| listing | 15 |
+| recurringPreview | 14 |
+| auth | 14 |
+| bookingCart | 13 |
+| status | 12 |
+| weekdays | 12 |
+| booking | 10 |
+| bookings | 10 |
+| activityCalendar | 10 |
+| state | 9 |
+| action | 8 |
+| calendar | 8 |
+| services | 8 |
+| overview | 8 |
+| actions | 7 |
+| time | 7 |
+| weekday | 7 |
+| activity | 4 |
+| listings | 4 |
+| velg | 3 |
+| hver | 3 |
+| logg | 3 |
+| bookingMode | 3 |
+| bookingVisibility | 3 |
+| gdpr | 3 |
+| app | 2 |
+| brand | 2 |
+| for | 2 |
+| error | 2 |
+| check | 2 |
+| legg | 2 |
+| formål | 2 |
+| til | 2 |
+| slotStatus | 2 |
+| booke | 2 |
+| nav | 2 |
+| ny | 1 |
+| tilkobling | 1 |
+| lukk | 1 |
+| context | 1 |
+| testing | 1 |
+| first | 1 |
+| add | 1 |
+| verify | 1 |
+| minside | 1 |
+| favorites | 1 |
+| trekk | 1 |
+| feks | 1 |
+| antall | 1 |
+| rule | 1 |
+| betal | 1 |
+| delvis | 1 |
+| noen | 1 |
+| ingen | 1 |
+| validation | 1 |
+| informasjon | 1 |
+| hvordan | 1 |
+| som | 1 |
+| paa | 1 |
+| du | 1 |
+| avbestillingsregler | 1 |
+| ansvar | 1 |
+| ordensregler | 1 |
+| reviews | 1 |
+| form | 1 |
+| alle | 1 |
+| søk | 1 |
+| accessibility | 1 |
+
+---
+
+## ⚠️ Top Violations
+
+| File | Type | Message | Severity |
+|------|------|---------|----------|
+
+
+---
+
+## 📝 Files with Most Hard-coded Strings
+
+| File | Count | Uses i18n? |
+|------|-------|------------|
+
+
+---
+
+## 🎯 Most Used Translation Keys
+
+| Key | Usage Count |
+|-----|-------------|
+| `state.loading` | 7 |
+| `common.goToHome` | 4 |
+| `payment.orderId` | 4 |
+| `status.available` | 3 |
+| `action.close` | 3 |
+| `påkrevd` | 3 |
+| `dato` | 3 |
+| `tidspunkt` | 3 |
+| `listing.closed` | 3 |
+| `common.showLess` | 3 |
+| `common.showMore` | 3 |
+| `app.name` | 2 |
+| `brand.tagline` | 2 |
+| `booking.bekreftet` | 2 |
+| `booking.kansellert` | 2 |
+| `booking.oppdatert` | 2 |
+| `formål.med.bookingen` | 2 |
+| `til.dato` | 2 |
+| `action.cancel` | 2 |
+| `state.booked` | 2 |
+| `listing.faq` | 2 |
+| `bookings.time.minutes` | 2 |
+| `bookings.time.hours` | 2 |
+| `recurringPattern.from` | 2 |
+| `recurringPattern.to` | 2 |
+| `slotStatus.${key}` | 2 |
+| `status` | 2 |
+| `listing.rules` | 2 |
+| `common.share` | 2 |
+| `bookingWidget.back` | 2 |
+
+---
+
+*End of Report*

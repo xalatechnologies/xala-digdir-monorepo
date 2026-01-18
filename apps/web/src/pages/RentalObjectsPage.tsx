@@ -362,10 +362,10 @@ export function RentalObjectsPage(): React.ReactElement {
         footer={
           <Stack spacing="var(--ds-spacing-3)">
             <Text size="sm" color="var(--ds-color-neutral-text-subtle)" style={{ textAlign: 'center' }}>
-              Viser {filteredListings.length} resultater
+              {t('filter.showingResults', { count: filteredListings.length })}
             </Text>
             <Button type="button" variant="primary" style={{ width: '100%' }} onClick={() => setIsFilterOpen(false)}>
-              Vis resultater
+              {t('filter.showResults')}
             </Button>
           </Stack>
         }

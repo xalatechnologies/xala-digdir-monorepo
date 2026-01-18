@@ -1,8 +1,8 @@
 {
   "metadata": {
-    "generatedAt": "2026-01-18T22:22:01.276Z",
-    "totalStrings": 58,
-    "uniqueKeys": 20,
+    "generatedAt": "2026-01-18T22:31:03.418Z",
+    "totalStrings": 20,
+    "uniqueKeys": 3,
     "newKeys": 0
   },
   "conversions": [
@@ -10,29 +10,26 @@
       "key": "backoffice.text.status",
       "norwegianText": "Status",
       "englishText": "Status",
-      "usageCount": 6,
+      "usageCount": 3,
       "files": [
-        "apps/backoffice/src/features/reviews/components/ReviewModerationTable.tsx",
-        "apps/backoffice/src/pages/PermissionManagement/PermissionManagement.tsx",
-        "apps/backoffice/src/routes/pricing-rules.tsx",
         "apps/backoffice/src/routes/season-applications.tsx",
         "apps/backoffice/src/routes/users-management.tsx",
         "apps/backoffice/src/routes/users.tsx"
       ],
       "examples": [
         {
-          "file": "apps/backoffice/src/features/reviews/components/ReviewModerationTable.tsx",
-          "line": 381,
+          "file": "apps/backoffice/src/routes/season-applications.tsx",
+          "line": 220,
           "type": "jsx-text"
         },
         {
-          "file": "apps/backoffice/src/pages/PermissionManagement/PermissionManagement.tsx",
-          "line": 205,
+          "file": "apps/backoffice/src/routes/users-management.tsx",
+          "line": 218,
           "type": "jsx-text"
         },
         {
-          "file": "apps/backoffice/src/routes/pricing-rules.tsx",
-          "line": 169,
+          "file": "apps/backoffice/src/routes/users.tsx",
+          "line": 204,
           "type": "jsx-text"
         }
       ]
@@ -41,27 +38,20 @@
       "key": "backoffice.text.user",
       "norwegianText": "Bruker",
       "englishText": "User",
-      "usageCount": 5,
+      "usageCount": 2,
       "files": [
-        "apps/backoffice/src/features/reviews/components/ReviewModerationTable.tsx",
-        "apps/backoffice/src/pages/PermissionManagement/PermissionManagement.tsx",
         "apps/backoffice/src/routes/tenant/audit-log.tsx",
         "apps/backoffice/src/routes/users-management.tsx"
       ],
       "examples": [
         {
-          "file": "apps/backoffice/src/features/reviews/components/ReviewModerationTable.tsx",
-          "line": 380,
+          "file": "apps/backoffice/src/routes/tenant/audit-log.tsx",
+          "line": 186,
           "type": "jsx-text"
         },
         {
-          "file": "apps/backoffice/src/pages/PermissionManagement/PermissionManagement.tsx",
-          "line": 218,
-          "type": "jsx-text"
-        },
-        {
-          "file": "apps/backoffice/src/pages/PermissionManagement/PermissionManagement.tsx",
-          "line": 312,
+          "file": "apps/backoffice/src/routes/users-management.tsx",
+          "line": 216,
           "type": "jsx-text"
         }
       ]
@@ -70,341 +60,6 @@
       "key": "backoffice.text.handlinger",
       "norwegianText": "Handlinger",
       "englishText": "Handlinger",
-      "usageCount": 4,
-      "files": [
-        "apps/backoffice/src/routes/requests.tsx",
-        "apps/backoffice/src/routes/season-applications.tsx",
-        "apps/backoffice/src/routes/users-management.tsx",
-        "apps/backoffice/src/routes/users.tsx"
-      ],
-      "examples": [
-        {
-          "file": "apps/backoffice/src/routes/requests.tsx",
-          "line": 359,
-          "type": "jsx-text"
-        },
-        {
-          "file": "apps/backoffice/src/routes/season-applications.tsx",
-          "line": 222,
-          "type": "jsx-text"
-        },
-        {
-          "file": "apps/backoffice/src/routes/users-management.tsx",
-          "line": 220,
-          "type": "jsx-text"
-        }
-      ]
-    },
-    {
-      "key": "seasons.text.organization",
-      "norwegianText": "Organisasjon",
-      "englishText": "Organization",
-      "usageCount": 3,
-      "files": [
-        "apps/backoffice/src/components/seasons/AppealProcess.tsx",
-        "apps/backoffice/src/components/seasons/SeasonAllocationManagement.tsx",
-        "apps/backoffice/src/components/seasons/SeasonApplicationManagement.tsx"
-      ],
-      "examples": [
-        {
-          "file": "apps/backoffice/src/components/seasons/AppealProcess.tsx",
-          "line": 325,
-          "type": "jsx-text"
-        },
-        {
-          "file": "apps/backoffice/src/components/seasons/SeasonAllocationManagement.tsx",
-          "line": 224,
-          "type": "jsx-text"
-        },
-        {
-          "file": "apps/backoffice/src/components/seasons/SeasonApplicationManagement.tsx",
-          "line": 216,
-          "type": "jsx-text"
-        }
-      ]
-    },
-    {
-      "key": "seasons.text.status",
-      "norwegianText": "Status",
-      "englishText": "Status",
-      "usageCount": 3,
-      "files": [
-        "apps/backoffice/src/components/seasons/PriorityRulesConfig.tsx",
-        "apps/backoffice/src/components/seasons/SeasonAllocationManagement.tsx",
-        "apps/backoffice/src/components/seasons/SeasonApplicationManagement.tsx"
-      ],
-      "examples": [
-        {
-          "file": "apps/backoffice/src/components/seasons/PriorityRulesConfig.tsx",
-          "line": 336,
-          "type": "jsx-text"
-        },
-        {
-          "file": "apps/backoffice/src/components/seasons/SeasonAllocationManagement.tsx",
-          "line": 228,
-          "type": "jsx-text"
-        },
-        {
-          "file": "apps/backoffice/src/components/seasons/SeasonApplicationManagement.tsx",
-          "line": 220,
-          "type": "jsx-text"
-        }
-      ]
-    },
-    {
-      "key": "backoffice.text.type",
-      "norwegianText": "Type",
-      "englishText": "Type",
-      "usageCount": 3,
-      "files": [
-        "apps/backoffice/src/routes/pricing-rules.tsx",
-        "apps/backoffice/src/routes/tenant/audit-log.tsx"
-      ],
-      "examples": [
-        {
-          "file": "apps/backoffice/src/routes/pricing-rules.tsx",
-          "line": 166,
-          "type": "jsx-text"
-        },
-        {
-          "file": "apps/backoffice/src/routes/tenant/audit-log.tsx",
-          "line": 183,
-          "type": "jsx-text"
-        },
-        {
-          "file": "apps/backoffice/src/routes/tenant/audit-log.tsx",
-          "line": 226,
-          "type": "jsx-text"
-        }
-      ]
-    },
-    {
-      "key": "seasons.text.lokale",
-      "norwegianText": "Lokale",
-      "englishText": "Lokale",
-      "usageCount": 2,
-      "files": [
-        "apps/backoffice/src/components/seasons/AppealProcess.tsx",
-        "apps/backoffice/src/components/seasons/SeasonApplicationManagement.tsx"
-      ],
-      "examples": [
-        {
-          "file": "apps/backoffice/src/components/seasons/AppealProcess.tsx",
-          "line": 326,
-          "type": "jsx-text"
-        },
-        {
-          "file": "apps/backoffice/src/components/seasons/SeasonApplicationManagement.tsx",
-          "line": 217,
-          "type": "jsx-text"
-        }
-      ]
-    },
-    {
-      "key": "settings.placeholder.oslo",
-      "norwegianText": "Oslo",
-      "englishText": "Oslo",
-      "usageCount": 2,
-      "files": [
-        "apps/monitoring/src/features/settings/components/AddressesTab.tsx"
-      ],
-      "examples": [
-        {
-          "file": "apps/monitoring/src/features/settings/components/AddressesTab.tsx",
-          "line": 132,
-          "type": "placeholder"
-        },
-        {
-          "file": "apps/monitoring/src/features/settings/components/AddressesTab.tsx",
-          "line": 209,
-          "type": "placeholder"
-        }
-      ]
-    },
-    {
-      "key": "settings.text.norge",
-      "norwegianText": "Norge",
-      "englishText": "Norge",
-      "usageCount": 2,
-      "files": [
-        "apps/monitoring/src/features/settings/components/AddressesTab.tsx"
-      ],
-      "examples": [
-        {
-          "file": "apps/monitoring/src/features/settings/components/AddressesTab.tsx",
-          "line": 157,
-          "type": "jsx-text"
-        },
-        {
-          "file": "apps/monitoring/src/features/settings/components/AddressesTab.tsx",
-          "line": 234,
-          "type": "jsx-text"
-        }
-      ]
-    },
-    {
-      "key": "settings.text.sverige",
-      "norwegianText": "Sverige",
-      "englishText": "Sverige",
-      "usageCount": 2,
-      "files": [
-        "apps/monitoring/src/features/settings/components/AddressesTab.tsx"
-      ],
-      "examples": [
-        {
-          "file": "apps/monitoring/src/features/settings/components/AddressesTab.tsx",
-          "line": 158,
-          "type": "jsx-text"
-        },
-        {
-          "file": "apps/monitoring/src/features/settings/components/AddressesTab.tsx",
-          "line": 235,
-          "type": "jsx-text"
-        }
-      ]
-    },
-    {
-      "key": "settings.text.danmark",
-      "norwegianText": "Danmark",
-      "englishText": "Danmark",
-      "usageCount": 2,
-      "files": [
-        "apps/monitoring/src/features/settings/components/AddressesTab.tsx"
-      ],
-      "examples": [
-        {
-          "file": "apps/monitoring/src/features/settings/components/AddressesTab.tsx",
-          "line": 159,
-          "type": "jsx-text"
-        },
-        {
-          "file": "apps/monitoring/src/features/settings/components/AddressesTab.tsx",
-          "line": 236,
-          "type": "jsx-text"
-        }
-      ]
-    },
-    {
-      "key": "settings.text.finland",
-      "norwegianText": "Finland",
-      "englishText": "Finland",
-      "usageCount": 2,
-      "files": [
-        "apps/monitoring/src/features/settings/components/AddressesTab.tsx"
-      ],
-      "examples": [
-        {
-          "file": "apps/monitoring/src/features/settings/components/AddressesTab.tsx",
-          "line": 160,
-          "type": "jsx-text"
-        },
-        {
-          "file": "apps/monitoring/src/features/settings/components/AddressesTab.tsx",
-          "line": 237,
-          "type": "jsx-text"
-        }
-      ]
-    },
-    {
-      "key": "organizations.placeholder.4712345678",
-      "norwegianText": "+47 12 34 56 78",
-      "englishText": "+47 12 34 56 78",
-      "usageCount": 1,
-      "files": [
-        "apps/backoffice/src/components/organizations/OrganizationForm.tsx"
-      ],
-      "examples": [
-        {
-          "file": "apps/backoffice/src/components/organizations/OrganizationForm.tsx",
-          "line": 209,
-          "type": "placeholder"
-        }
-      ]
-    },
-    {
-      "key": "seasons.text.prioritet",
-      "norwegianText": "Prioritet",
-      "englishText": "Prioritet",
-      "usageCount": 1,
-      "files": [
-        "apps/backoffice/src/components/seasons/PriorityRulesConfig.tsx"
-      ],
-      "examples": [
-        {
-          "file": "apps/backoffice/src/components/seasons/PriorityRulesConfig.tsx",
-          "line": 334,
-          "type": "jsx-text"
-        }
-      ]
-    },
-    {
-      "key": "seasons.text.ukedag",
-      "norwegianText": "Ukedag",
-      "englishText": "Ukedag",
-      "usageCount": 1,
-      "files": [
-        "apps/backoffice/src/components/seasons/SeasonApplicationManagement.tsx"
-      ],
-      "examples": [
-        {
-          "file": "apps/backoffice/src/components/seasons/SeasonApplicationManagement.tsx",
-          "line": 218,
-          "type": "jsx-text"
-        }
-      ]
-    },
-    {
-      "key": "seasons.text.handlinger",
-      "norwegianText": "Handlinger",
-      "englishText": "Handlinger",
-      "usageCount": 1,
-      "files": [
-        "apps/backoffice/src/components/seasons/SeasonVenueManagement.tsx"
-      ],
-      "examples": [
-        {
-          "file": "apps/backoffice/src/components/seasons/SeasonVenueManagement.tsx",
-          "line": 180,
-          "type": "jsx-text"
-        }
-      ]
-    },
-    {
-      "key": "backoffice.text.ventende",
-      "norwegianText": "Ventende",
-      "englishText": "Ventende",
-      "usageCount": 1,
-      "files": [
-        "apps/backoffice/src/routes/season-applications.tsx"
-      ],
-      "examples": [
-        {
-          "file": "apps/backoffice/src/routes/season-applications.tsx",
-          "line": 169,
-          "type": "jsx-text"
-        }
-      ]
-    },
-    {
-      "key": "backoffice.text.organization",
-      "norwegianText": "Organisasjon",
-      "englishText": "Organization",
-      "usageCount": 1,
-      "files": [
-        "apps/backoffice/src/routes/season-applications.tsx"
-      ],
-      "examples": [
-        {
-          "file": "apps/backoffice/src/routes/season-applications.tsx",
-          "line": 216,
-          "type": "jsx-text"
-        }
-      ]
-    },
-    {
-      "key": "backoffice.status.active",
-      "norwegianText": "Aktiv",
-      "englishText": "Active",
       "usageCount": 1,
       "files": [
         "apps/backoffice/src/routes/users.tsx"
@@ -412,23 +67,7 @@
       "examples": [
         {
           "file": "apps/backoffice/src/routes/users.tsx",
-          "line": 164,
-          "type": "jsx-text"
-        }
-      ]
-    },
-    {
-      "key": "backoffice.status.inactive",
-      "norwegianText": "Inaktiv",
-      "englishText": "Inactive",
-      "usageCount": 1,
-      "files": [
-        "apps/backoffice/src/routes/users.tsx"
-      ],
-      "examples": [
-        {
-          "file": "apps/backoffice/src/routes/users.tsx",
-          "line": 167,
+          "line": 206,
           "type": "jsx-text"
         }
       ]

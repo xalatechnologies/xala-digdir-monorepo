@@ -1,8 +1,6 @@
 /**
  * BookingCartSidebar Component
- * Displays a sidebar with selected booking slots and their details.
- * Shows: time slots, attendees, activity type (as cards), and description.
- * Pricing is handled in a later step.
+ * Displays a sidebar with selected booking slots, pricing, and additional services.
  */
 
 import * as React from 'react';
@@ -40,17 +38,6 @@ function ClockIcon({ size = 20 }: { size?: number }): React.ReactElement {
   );
 }
 
-function UsersIcon({ size = 20 }: { size?: number }): React.ReactElement {
-  return (
-    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-      <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
-      <circle cx="9" cy="7" r="4" />
-      <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
-      <path d="M16 3.13a4 4 0 0 1 0 7.75" />
-    </svg>
-  );
-}
-
 function ChevronDownIcon({ size = 16 }: { size?: number }): React.ReactElement {
   return (
     <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -59,15 +46,36 @@ function ChevronDownIcon({ size = 16 }: { size?: number }): React.ReactElement {
   );
 }
 
-// Activity type configuration - labels are translated in component
-const ACTIVITY_TYPE_CONFIGS = [
-  { id: 'meeting', icon: '👥' },
-  { id: 'event', icon: '🎉' },
-  { id: 'training', icon: '⚽' },
-  { id: 'class', icon: '📚' },
-  { id: 'rehearsal', icon: '🎭' },
-  { id: 'other', icon: '📌' },
-] as const;
+function TagIcon({ size = 18 }: { size?: number }): React.ReactElement {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z" />
+      <line x1="7" y1="7" x2="7.01" y2="7" />
+    </svg>
+  );
+}
+
+function PlusIcon({ size = 16 }: { size?: number }): React.ReactElement {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <line x1="12" y1="5" x2="12" y2="19" />
+      <line x1="5" y1="12" x2="19" y2="12" />
+    </svg>
+  );
+}
+
+// Types for pricing
+export interface PriceGroup {
+  id: string;
+  label: string;
+  pricePerHour: number;
+}
+
+export interface AdditionalService {
+  id: string;
+  label: string;
+  price: number;
+}
 
 export interface SlotDetail {
   duration: number;
@@ -81,11 +89,14 @@ export interface BookingCartSidebarProps {
   slotDetails: Record<string, SlotDetail>;
   weekStart: Date;
   onRemoveSlot: (slotKey: string) => void;
-  onChangeDuration?: (slotKey: string, duration: number) => void;
-  onChangeAttendees?: (slotKey: string, attendees: string) => void;
-  onChangeActivityType?: (slotKey: string, activityType: string) => void;
-  onChangePurpose?: (slotKey: string, purpose: string) => void;
   lastUpdated?: Date;
+  // Pricing props
+  priceGroups?: PriceGroup[];
+  additionalServices?: AdditionalService[];
+  selectedPriceGroup?: string;
+  selectedServices?: Set<string>;
+  onPriceGroupChange?: (groupId: string) => void;
+  onServiceToggle?: (serviceId: string, checked: boolean) => void;
 }
 
 export function BookingCartSidebar({
@@ -93,11 +104,13 @@ export function BookingCartSidebar({
   slotDetails,
   weekStart,
   onRemoveSlot,
-  onChangeDuration,
-  onChangeAttendees,
-  onChangeActivityType,
-  onChangePurpose,
   lastUpdated,
+  priceGroups = [],
+  additionalServices = [],
+  selectedPriceGroup = '',
+  selectedServices = new Set(),
+  onPriceGroupChange,
+  onServiceToggle,
 }: BookingCartSidebarProps): React.ReactElement {
   const t = useT();
   const [expandedSlot, setExpandedSlot] = React.useState<string | null>(null);
@@ -109,14 +122,6 @@ export function BookingCartSidebar({
     t('months.full.jul'), t('months.full.aug'), t('months.full.sep'),
     t('months.full.oct'), t('months.full.nov'), t('months.full.dec'),
   ], [t]);
-
-  // Translated activity types
-  const activityTypes = React.useMemo(() => ACTIVITY_TYPE_CONFIGS.map(config => ({
-    id: config.id,
-    icon: config.icon,
-    label: t(`bookingWidget.purpose.${config.id}`),
-    description: t(`bookingWidget.purpose.${config.id}Desc`),
-  })), [t]);
 
   // Format last updated timestamp
   const formatLastUpdated = (date: Date): string => {
@@ -242,8 +247,6 @@ export function BookingCartSidebar({
             const slotDate = new Date(weekStart);
             slotDate.setDate(weekStart.getDate() + dayIdx);
 
-            const selectedActivity = activityTypes.find(a => a.id === details.activityType);
-
             return (
               <div
                 key={slotKey}
@@ -283,14 +286,6 @@ export function BookingCartSidebar({
                         {timeStr} - {endTime} ({details.duration / 60}t)
                       </Paragraph>
                     </div>
-                    {selectedActivity && (
-                      <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--ds-spacing-1)', marginTop: 'var(--ds-spacing-1)' }}>
-                        <span style={{ fontSize: 'var(--ds-font-size-4)' }}>{selectedActivity.icon}</span>
-                        <Paragraph data-size="sm" style={{ margin: 0, color: 'var(--ds-color-neutral-text-subtle)' }}>
-                          {selectedActivity.label}
-                        </Paragraph>
-                      </div>
-                    )}
                   </div>
                   <span style={{ transform: isExpanded ? 'rotate(180deg)' : 'rotate(0)', transition: 'transform 200ms ease' }}>
                     <ChevronDownIcon size={16} />
@@ -299,122 +294,7 @@ export function BookingCartSidebar({
 
                 {/* Expanded Details */}
                 {isExpanded && (
-                  <div style={{ padding: 'var(--ds-spacing-3)', borderTop: '1px solid var(--ds-color-neutral-border-subtle)', display: 'flex', flexDirection: 'column', gap: 'var(--ds-spacing-4)' }}>
-                    {/* Duration Selector */}
-                    {onChangeDuration && (
-                      <div>
-                        <Paragraph data-size="sm" style={{ margin: 0, marginBottom: 'var(--ds-spacing-2)', fontWeight: 'var(--ds-font-weight-medium)' }}>
-                          {t('bookingCart.duration')}
-                        </Paragraph>
-                        <div style={{ display: 'flex', gap: 'var(--ds-spacing-2)', flexWrap: 'wrap' }}>
-                          {[60, 90, 120, 180].map(dur => (
-                            <button
-                              key={dur}
-                              type="button"
-                              onClick={() => onChangeDuration(slotKey, dur)}
-                              style={{
-                                padding: 'var(--ds-spacing-2) var(--ds-spacing-3)',
-                                backgroundColor: details.duration === dur ? 'var(--ds-color-accent-base-default)' : 'var(--ds-color-neutral-surface-default)',
-                                color: details.duration === dur ? 'var(--ds-color-accent-contrast-default)' : 'var(--ds-color-neutral-text-default)',
-                                border: details.duration === dur ? 'none' : '1px solid var(--ds-color-neutral-border-default)',
-                                borderRadius: 'var(--ds-border-radius-md)',
-                                cursor: 'pointer',
-                                fontSize: 'var(--ds-font-size-sm)',
-                                fontWeight: details.duration === dur ? 'var(--ds-font-weight-semibold)' : 'var(--ds-font-weight-regular)',
-                              }}
-                            >
-                              {dur / 60} {dur > 60 ? t('bookingCart.hours') : t('bookingCart.hour')}
-                            </button>
-                          ))}
-                        </div>
-                      </div>
-                    )}
-
-                    {/* Attendees Input */}
-                    {onChangeAttendees && (
-                      <div>
-                        <Paragraph data-size="sm" style={{ margin: 0, marginBottom: 'var(--ds-spacing-2)', fontWeight: 'var(--ds-font-weight-medium)', display: 'flex', alignItems: 'center', gap: 'var(--ds-spacing-1)' }}>
-                          <UsersIcon size={16} />
-                          {t('bookingCart.attendeesLabel')}
-                        </Paragraph>
-                        <input
-                          type="number"
-                          min="1"
-                          max="500"
-                          value={details.attendees || ''}
-                          onChange={(e) => onChangeAttendees(slotKey, e.target.value)}
-                          placeholder={t('bookingCart.attendeesPlaceholder')}
-                          style={{
-                            width: '100%',
-                            padding: 'var(--ds-spacing-2) var(--ds-spacing-3)',
-                            border: '1px solid var(--ds-color-neutral-border-default)',
-                            borderRadius: 'var(--ds-border-radius-md)',
-                            fontSize: 'var(--ds-font-size-md)',
-                            backgroundColor: 'var(--ds-color-neutral-background-default)',
-                          }}
-                        />
-                      </div>
-                    )}
-
-                    {/* Activity Type Cards (2 per row) */}
-                    {onChangeActivityType && (
-                      <div>
-                        <Paragraph data-size="sm" style={{ margin: 0, marginBottom: 'var(--ds-spacing-2)', fontWeight: 'var(--ds-font-weight-medium)' }}>
-                          {t('bookingCart.activityType')}
-                        </Paragraph>
-                        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 'var(--ds-spacing-2)' }}>
-                          {activityTypes.map(activity => (
-                            <button
-                              key={activity.id}
-                              type="button"
-                              onClick={() => onChangeActivityType(slotKey, activity.id)}
-                              style={{
-                                display: 'flex',
-                                flexDirection: 'column',
-                                alignItems: 'center',
-                                padding: 'var(--ds-spacing-3)',
-                                backgroundColor: details.activityType === activity.id ? 'var(--ds-color-accent-surface-default)' : 'var(--ds-color-neutral-surface-default)',
-                                border: details.activityType === activity.id ? '2px solid var(--ds-color-accent-base-default)' : '1px solid var(--ds-color-neutral-border-default)',
-                                borderRadius: 'var(--ds-border-radius-md)',
-                                cursor: 'pointer',
-                                transition: 'all 150ms ease',
-                              }}
-                            >
-                              <span style={{ fontSize: 'var(--ds-font-size-6)', marginBottom: 'var(--ds-spacing-1)' }}>{activity.icon}</span>
-                              <Paragraph data-size="sm" style={{ margin: 0, fontWeight: 'var(--ds-font-weight-medium)', textAlign: 'center' }}>
-                                {activity.label}
-                              </Paragraph>
-                            </button>
-                          ))}
-                        </div>
-                      </div>
-                    )}
-
-                    {/* Purpose/Description */}
-                    {onChangePurpose && (
-                      <div>
-                        <Paragraph data-size="sm" style={{ margin: 0, marginBottom: 'var(--ds-spacing-2)', fontWeight: 'var(--ds-font-weight-medium)' }}>
-                          {t('bookingCart.descriptionLabel')}
-                        </Paragraph>
-                        <textarea
-                          value={details.purpose || ''}
-                          onChange={(e) => onChangePurpose(slotKey, e.target.value)}
-                          placeholder={t('bookingCart.descriptionPlaceholder')}
-                          rows={3}
-                          style={{
-                            width: '100%',
-                            padding: 'var(--ds-spacing-2) var(--ds-spacing-3)',
-                            border: '1px solid var(--ds-color-neutral-border-default)',
-                            borderRadius: 'var(--ds-border-radius-md)',
-                            fontSize: 'var(--ds-font-size-md)',
-                            backgroundColor: 'var(--ds-color-neutral-background-default)',
-                            resize: 'vertical',
-                            fontFamily: 'inherit',
-                          }}
-                        />
-                      </div>
-                    )}
-
+                  <div style={{ padding: 'var(--ds-spacing-3)', borderTop: '1px solid var(--ds-color-neutral-border-subtle)', display: 'flex', flexDirection: 'column', gap: 'var(--ds-spacing-3)' }}>
                     {/* Remove Button */}
                     <button
                       type="button"
@@ -443,6 +323,119 @@ export function BookingCartSidebar({
           })
         )}
       </div>
+
+      {/* Pricing Section - Only show when slots are selected */}
+      {slotCount > 0 && priceGroups.length > 0 && (
+        <div
+          style={{
+            borderTop: '1px solid var(--ds-color-neutral-border-subtle)',
+            paddingTop: 'var(--ds-spacing-4)',
+          }}
+        >
+          {/* Price Group Selection */}
+          <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--ds-spacing-2)', marginBottom: 'var(--ds-spacing-3)' }}>
+            <TagIcon size={18} />
+            <Heading level={4} data-size="xs" style={{ margin: 0 }}>
+              {t('bookingCart.priceGroup')}
+            </Heading>
+          </div>
+          
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: 'var(--ds-spacing-2)', marginBottom: 'var(--ds-spacing-4)' }}>
+            {priceGroups.map(group => {
+              const isSelected = selectedPriceGroup === group.id;
+              return (
+                <button
+                  key={group.id}
+                  type="button"
+                  onClick={() => onPriceGroupChange?.(isSelected ? '' : group.id)}
+                  style={{
+                    flex: '1 1 auto',
+                    minWidth: '80px',
+                    padding: 'var(--ds-spacing-2) var(--ds-spacing-3)',
+                    borderRadius: 'var(--ds-border-radius-md)',
+                    border: isSelected
+                      ? '2px solid var(--ds-color-accent-base-default)'
+                      : '1px solid var(--ds-color-neutral-border-default)',
+                    backgroundColor: isSelected
+                      ? 'var(--ds-color-accent-surface-default)'
+                      : 'var(--ds-color-neutral-background-default)',
+                    color: isSelected
+                      ? 'var(--ds-color-accent-text-default)'
+                      : 'var(--ds-color-neutral-text-default)',
+                    cursor: 'pointer',
+                    transition: 'all 150ms ease',
+                    textAlign: 'center',
+                  }}
+                >
+                  <Paragraph data-size="sm" style={{ margin: 0, fontWeight: isSelected ? 'var(--ds-font-weight-semibold)' : 'var(--ds-font-weight-regular)' }}>
+                    {group.label}
+                  </Paragraph>
+                  <Paragraph data-size="xs" style={{ margin: 0, marginTop: 'var(--ds-spacing-1)', opacity: 0.8 }}>
+                    {group.pricePerHour} kr/t
+                  </Paragraph>
+                </button>
+              );
+            })}
+          </div>
+
+          {/* Additional Services */}
+          {additionalServices.length > 0 && (
+            <>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--ds-spacing-2)', marginBottom: 'var(--ds-spacing-3)' }}>
+                <PlusIcon size={16} />
+                <Heading level={4} data-size="xs" style={{ margin: 0 }}>
+                  {t('bookingCart.additionalServices')}
+                </Heading>
+              </div>
+              
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--ds-spacing-2)' }}>
+                {additionalServices.map(service => {
+                  const isChecked = selectedServices.has(service.id);
+                  return (
+                    <label
+                      key={service.id}
+                      style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: 'var(--ds-spacing-3)',
+                        padding: 'var(--ds-spacing-3)',
+                        backgroundColor: isChecked
+                          ? 'var(--ds-color-accent-surface-default)'
+                          : 'var(--ds-color-neutral-background-default)',
+                        borderRadius: 'var(--ds-border-radius-md)',
+                        border: isChecked
+                          ? '2px solid var(--ds-color-accent-base-default)'
+                          : '1px solid var(--ds-color-neutral-border-subtle)',
+                        cursor: 'pointer',
+                        transition: 'all 150ms ease',
+                      }}
+                    >
+                      <input
+                        type="checkbox"
+                        checked={isChecked}
+                        onChange={(e) => onServiceToggle?.(service.id, e.target.checked)}
+                        style={{
+                          width: '18px',
+                          height: '18px',
+                          accentColor: 'var(--ds-color-accent-base-default)',
+                        }}
+                      />
+                      <div style={{ flex: 1 }}>
+                        <Paragraph data-size="sm" style={{ margin: 0, fontWeight: 'var(--ds-font-weight-medium)' }}>
+                          {service.label}
+                        </Paragraph>
+                      </div>
+                      <Paragraph data-size="sm" style={{ margin: 0, fontWeight: 'var(--ds-font-weight-semibold)' }}>
+                        +{service.price} kr
+                      </Paragraph>
+                    </label>
+                  );
+                })}
+              </div>
+            </>
+          )}
+        </div>
+      )}
     </div>
   );
 }

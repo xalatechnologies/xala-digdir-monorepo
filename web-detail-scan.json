@@ -1,0 +1,96 @@
+🔍 Digilist Platform - i18n Inventory Scanner
+=============================================
+
+📂 Scanning directories...
+  Scanning: /Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/web
+  ✓ apps/web/src/App.tsx
+  ✓ apps/web/src/components/LazyRentalObjectMap.tsx
+  ✓ apps/web/src/components/PaymentStatusBadge.tsx
+  ✓ apps/web/src/components/ProtectedRoute.tsx
+  ✓ apps/web/src/components/RealtimeToast.tsx
+  ✓ apps/web/src/components/SentryTestComponent.tsx
+  ✓ apps/web/src/components/SkipLinks.tsx
+  ✓ apps/web/src/components/UserMenu.tsx
+  ✓ apps/web/src/components/index.ts
+  ✓ apps/web/src/features/rental-object-details/adapters/auditProvider.ts
+  ✓ apps/web/src/features/rental-object-details/adapters/favoritesProvider.ts
+  ✓ apps/web/src/features/rental-object-details/adapters/index.ts
+  ✓ apps/web/src/features/rental-object-details/adapters/realtimeClient.ts
+  ✓ apps/web/src/features/rental-object-details/adapters/shareTracker.ts
+  ✓ apps/web/src/features/rental-object-details/components/ActivityTab.tsx
+  ✓ apps/web/src/features/rental-object-details/components/BookingDialog.tsx
+  ✓ apps/web/src/features/rental-object-details/components/BookingModeSelector.tsx
+  ✓ apps/web/src/features/rental-object-details/components/CalendarSection.tsx
+  ✓ apps/web/src/features/rental-object-details/components/FaqTab.tsx
+  ✓ apps/web/src/features/rental-object-details/components/FavoriteButton.tsx
+  ✓ apps/web/src/features/rental-object-details/components/KeyFactsRow.tsx
+  ✓ apps/web/src/features/rental-object-details/components/OverviewTab.tsx
+  ✓ apps/web/src/features/rental-object-details/components/PaymentSection.tsx
+  ✓ apps/web/src/features/rental-object-details/components/RecurringPatternBuilder.tsx
+  ✓ apps/web/src/features/rental-object-details/components/RecurringPreviewTable.tsx
+  ✓ apps/web/src/features/rental-object-details/components/RecurringResultSummary.tsx
+  ✓ apps/web/src/features/rental-object-details/components/RentalObjectCalendarSection.tsx
+  ✓ apps/web/src/features/rental-object-details/components/RentalObjectDetailsLayout.tsx
+  ✓ apps/web/src/features/rental-object-details/components/RentalObjectHeader.tsx
+  ✓ apps/web/src/features/rental-object-details/components/RulesTab.tsx
+  ✓ apps/web/src/features/rental-object-details/components/ShareButton.tsx
+  ✓ apps/web/src/features/rental-object-details/components/Sidebar/BookingWidgetPlacement.tsx
+  ✓ apps/web/src/features/rental-object-details/components/Sidebar/ContactWidget.tsx
+  ✓ apps/web/src/features/rental-object-details/components/Sidebar/MapWidget.tsx
+  ✓ apps/web/src/features/rental-object-details/components/Sidebar/OpeningHoursWidget.tsx
+  ✓ apps/web/src/features/rental-object-details/components/Sidebar/components/BookingAddOnsSelector.tsx
+  ✓ apps/web/src/features/rental-object-details/components/Sidebar/components/BookingAvailabilityConflictDialog.tsx
+  ✓ apps/web/src/features/rental-object-details/components/Sidebar/components/BookingCartSidebar.tsx
+  ✓ apps/web/src/features/rental-object-details/components/Sidebar/components/BookingConfirmationStep.tsx
+  ✓ apps/web/src/features/rental-object-details/components/Sidebar/components/BookingContextSelector.tsx
+  ✓ apps/web/src/features/rental-object-details/components/Sidebar/components/BookingModeSelector.tsx
+  ✓ apps/web/src/features/rental-object-details/components/Sidebar/components/BookingPricingStep.tsx
+  ✓ apps/web/src/features/rental-object-details/components/Sidebar/components/BookingSelectedSlotsSidebar.tsx
+  ✓ apps/web/src/features/rental-object-details/components/Sidebar/components/BookingStepperHeader.tsx
+  ✓ apps/web/src/features/rental-object-details/components/Sidebar/components/BookingVisibilitySelector.tsx
+  ✓ apps/web/src/features/rental-object-details/components/Sidebar/components/ConflictResolver.tsx
+  ✓ apps/web/src/features/rental-object-details/components/Sidebar/components/PriceBreakdown.tsx
+  ✓ apps/web/src/features/rental-object-details/components/Sidebar/components/RecurringBuilder.tsx
+  ✓ apps/web/src/features/rental-object-details/components/Sidebar/components/RecurringPreview.tsx
+  ✓ apps/web/src/features/rental-object-details/components/Sidebar/index.ts
+  ✓ apps/web/src/features/rental-object-details/components/index.ts
+  ✓ apps/web/src/features/rental-object-details/index.ts
+  ✓ apps/web/src/features/rental-object-details/presenters/rentalObjectTypePresenter.ts
+  ✓ apps/web/src/features/rental-object-details/types.ts
+  ✓ apps/web/src/features/reviews/components/ReviewCard.tsx
+  ✓ apps/web/src/features/reviews/components/ReviewForm.tsx
+  ✓ apps/web/src/features/reviews/components/ReviewList.tsx
+  ✓ apps/web/src/hooks/useAuth.ts
+  ✓ apps/web/src/hooks/useDemoLogin.tsx
+  ✓ apps/web/src/lib/sentry.ts
+  ✓ apps/web/src/main.tsx
+  ✓ apps/web/src/pages/ActivityCalendar/ActivityCalendar.tsx
+  ✓ apps/web/src/pages/PaymentCallbackPage.tsx
+  ✓ apps/web/src/pages/PrivacySettingsPage.tsx
+  ✓ apps/web/src/pages/RentalObjectDetailPage.tsx
+  ✓ apps/web/src/pages/RentalObjectsPage.tsx
+  ✓ apps/web/src/pages/login.tsx
+  ✓ apps/web/src/providers/AccessibilityMonitoringProvider.tsx
+  ✓ apps/web/src/providers/RealtimeProvider.tsx
+  ✓ apps/web/src/providers/index.ts
+  ✓ apps/web/src/test-utils/accessibility.ts
+  ✓ apps/web/src/test-utils/index.ts
+  ✓ apps/web/src/test-utils/setup.ts
+  ✓ apps/web/src/vite-env.d.ts
+  ✓ apps/web/vite.config.ts
+  ✓ apps/web/vitest.config.ts
+
+📊 Scan Summary
+===============
+Total files scanned:           76
+Files with translations:       48
+Files with hard-coded strings: 0
+Total translation keys used:   451
+Unique translation keys:       398
+Unique namespaces:             73
+Total hard-coded strings:      0
+Violations found:              0
+
+✅ JSON report saved to: /Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/i18n-inventory-reports/i18n-inventory-2026-01-18T22-28-40.json
+
+🎉 Scan complete!

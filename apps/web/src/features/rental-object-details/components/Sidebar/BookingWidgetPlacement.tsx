@@ -47,6 +47,58 @@ function ChevronRightIcon({ size = 20 }: { size?: number }): React.ReactElement 
   );
 }
 
+// =============================================================================
+// Calendar Legend Component
+// =============================================================================
+
+interface LegendItemProps {
+  color: string;
+  label: string;
+}
+
+function LegendItem({ color, label }: LegendItemProps): React.ReactElement {
+  return (
+    <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--ds-spacing-2)' }}>
+      <div
+        style={{
+          width: '12px',
+          height: '12px',
+          borderRadius: '2px',
+          backgroundColor: color,
+        }}
+      />
+      <span style={{ fontSize: 'var(--ds-font-size-xs)', color: 'var(--ds-color-neutral-text-subtle)' }}>
+        {label}
+      </span>
+    </div>
+  );
+}
+
+interface CalendarLegendProps {
+  t: (key: string) => string;
+}
+
+function CalendarLegend({ t }: CalendarLegendProps): React.ReactElement {
+  return (
+    <div
+      style={{
+        display: 'flex',
+        flexWrap: 'wrap',
+        gap: 'var(--ds-spacing-4)',
+        padding: 'var(--ds-spacing-3)',
+        backgroundColor: 'var(--ds-color-neutral-surface-subtle)',
+        borderRadius: 'var(--ds-border-radius-md)',
+        marginBottom: 'var(--ds-spacing-4)',
+      }}
+    >
+      <LegendItem color="var(--ds-color-success-surface-default)" label={t('bookingWidget.legend.available')} />
+      <LegendItem color="var(--ds-color-accent-surface-default)" label={t('bookingWidget.legend.selected')} />
+      <LegendItem color="var(--ds-color-danger-surface-default)" label={t('bookingWidget.legend.booked')} />
+      <LegendItem color="var(--ds-color-neutral-surface-default)" label={t('bookingWidget.legend.blocked')} />
+    </div>
+  );
+}
+
 function CheckCircleIcon({ size = 18 }: { size?: number }): React.ReactElement {
   return (
     <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -841,6 +893,9 @@ export function BookingWidgetPlacement({
               {/* SINGLE_SLOT Mode: Use CalendarSection component */}
               {bookingMode === 'SINGLE_SLOT' && rentalObjectId && (
                 <div style={{ flex: 1, overflow: 'auto', padding: 'var(--ds-spacing-4)' }}>
+                  {/* Calendar Legend */}
+                  <CalendarLegend t={t} />
+                  
                   <CalendarSection
                     rentalObjectId={rentalObjectId}
                     bookingType="SINGLE_SLOT"
@@ -848,6 +903,24 @@ export function BookingWidgetPlacement({
                     onSelectionChange={handleCalendarSelection}
                     readOnly={false}
                   />
+                  
+                  {/* Selection count indicator */}
+                  {selectedSlots.size > 0 && (
+                    <div style={{
+                      marginTop: 'var(--ds-spacing-4)',
+                      padding: 'var(--ds-spacing-3)',
+                      backgroundColor: 'var(--ds-color-accent-surface-default)',
+                      borderRadius: 'var(--ds-border-radius-md)',
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: 'var(--ds-spacing-2)',
+                    }}>
+                      <CheckCircleIcon size={18} />
+                      <Paragraph data-size="sm" style={{ margin: 0, fontWeight: 'var(--ds-font-weight-medium)' }}>
+                        {t('bookingWidget.info.selectedCount', { count: selectedSlots.size })}
+                      </Paragraph>
+                    </div>
+                  )}
                 </div>
               )}
 
@@ -862,6 +935,10 @@ export function BookingWidgetPlacement({
                       {t('bookingWidget.range.selectPeriodDesc')}
                     </Paragraph>
                   </div>
+                  
+                  {/* Calendar Legend */}
+                  <CalendarLegend t={t} />
+                  
                   <CalendarSection
                     rentalObjectId={rentalObjectId}
                     bookingType="RANGE"
@@ -869,21 +946,30 @@ export function BookingWidgetPlacement({
                     onSelectionChange={handleCalendarSelection}
                     readOnly={false}
                   />
+                  
+                  {/* Selected period summary */}
                   {rangeSelection && (
                     <div style={{ 
                       marginTop: 'var(--ds-spacing-4)', 
                       padding: 'var(--ds-spacing-3)', 
-                      backgroundColor: 'var(--ds-color-info-surface-default)',
+                      backgroundColor: 'var(--ds-color-accent-surface-default)',
                       borderRadius: 'var(--ds-border-radius-md)',
-                      border: '1px solid var(--ds-color-info-border-default)',
+                      border: '1px solid var(--ds-color-accent-border-default)',
                     }}>
-                      <Paragraph data-size="sm" style={{ margin: 0, fontWeight: 'var(--ds-font-weight-medium)', marginBottom: 'var(--ds-spacing-2)' }}>
-                        {t('bookingWidget.range.selectedPeriod')}
-                      </Paragraph>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--ds-spacing-2)', marginBottom: 'var(--ds-spacing-2)' }}>
+                        <CheckCircleIcon size={18} />
+                        <Paragraph data-size="sm" style={{ margin: 0, fontWeight: 'var(--ds-font-weight-medium)' }}>
+                          {t('bookingWidget.range.selectedPeriod')}
+                        </Paragraph>
+                      </div>
                       <Paragraph data-size="sm" style={{ margin: 0 }}>
-                        {new Date(rangeSelection.startDate).toLocaleDateString('nb-NO')} - {new Date(rangeSelection.endDate).toLocaleDateString('nb-NO')}
+                        {new Date(rangeSelection.startDate).toLocaleDateString('nb-NO', { weekday: 'short', day: 'numeric', month: 'short', year: 'numeric' })} 
+                        {' → '}
+                        {new Date(rangeSelection.endDate).toLocaleDateString('nb-NO', { weekday: 'short', day: 'numeric', month: 'short', year: 'numeric' })}
                         {rangeSelection.startTime && rangeSelection.endTime && (
-                          <> ({rangeSelection.startTime} - {rangeSelection.endTime})</>
+                          <span style={{ display: 'block', marginTop: 'var(--ds-spacing-1)', color: 'var(--ds-color-neutral-text-subtle)' }}>
+                            {rangeSelection.startTime} - {rangeSelection.endTime}
+                          </span>
                         )}
                       </Paragraph>
                     </div>
@@ -902,6 +988,10 @@ export function BookingWidgetPlacement({
                       {t('bookingWidget.allDay.selectDaysDesc')}
                     </Paragraph>
                   </div>
+                  
+                  {/* Calendar Legend */}
+                  <CalendarLegend t={t} />
+                  
                   <CalendarSection
                     rentalObjectId={rentalObjectId}
                     bookingType="ALL_DAY"
@@ -909,29 +999,36 @@ export function BookingWidgetPlacement({
                     onSelectionChange={handleCalendarSelection}
                     readOnly={false}
                   />
+                  
+                  {/* Selected days summary */}
                   {allDaySelection.length > 0 && (
                     <div style={{ 
                       marginTop: 'var(--ds-spacing-4)', 
                       padding: 'var(--ds-spacing-3)', 
-                      backgroundColor: 'var(--ds-color-info-surface-default)',
+                      backgroundColor: 'var(--ds-color-accent-surface-default)',
                       borderRadius: 'var(--ds-border-radius-md)',
-                      border: '1px solid var(--ds-color-info-border-default)',
+                      border: '1px solid var(--ds-color-accent-border-default)',
                     }}>
-                      <Paragraph data-size="sm" style={{ margin: 0, fontWeight: 'var(--ds-font-weight-medium)', marginBottom: 'var(--ds-spacing-2)' }}>
-                        {t('bookingWidget.allDay.selectedDays', { count: allDaySelection.length })}
-                      </Paragraph>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--ds-spacing-2)', marginBottom: 'var(--ds-spacing-3)' }}>
+                        <CheckCircleIcon size={18} />
+                        <Paragraph data-size="sm" style={{ margin: 0, fontWeight: 'var(--ds-font-weight-medium)' }}>
+                          {t('bookingWidget.allDay.selectedDays', { count: allDaySelection.length })}
+                        </Paragraph>
+                      </div>
                       <div style={{ display: 'flex', flexWrap: 'wrap', gap: 'var(--ds-spacing-2)' }}>
                         {allDaySelection.map((date) => (
                           <span
                             key={date}
                             style={{
                               padding: 'var(--ds-spacing-1) var(--ds-spacing-2)',
-                              backgroundColor: 'var(--ds-color-accent-surface-default)',
+                              backgroundColor: 'var(--ds-color-neutral-background-default)',
                               borderRadius: 'var(--ds-border-radius-sm)',
                               fontSize: 'var(--ds-font-size-xs)',
+                              fontWeight: 'var(--ds-font-weight-medium)',
+                              border: '1px solid var(--ds-color-accent-border-default)',
                             }}
                           >
-                            {new Date(date).toLocaleDateString('nb-NO', { day: 'numeric', month: 'short' })}
+                            {new Date(date).toLocaleDateString('nb-NO', { weekday: 'short', day: 'numeric', month: 'short' })}
                           </span>
                         ))}
                       </div>
@@ -952,6 +1049,9 @@ export function BookingWidgetPlacement({
                       <Paragraph data-size="sm" style={{ margin: 0, marginBottom: 'var(--ds-spacing-4)', color: 'var(--ds-color-neutral-text-subtle)' }}>
                         {t('bookingWidget.recurring.selectFirstTimeDesc')}
                       </Paragraph>
+                      
+                      {/* Calendar Legend */}
+                      <CalendarLegend t={t} />
                       {/* Calendar for selecting base slot */}
                       <div
                         style={{

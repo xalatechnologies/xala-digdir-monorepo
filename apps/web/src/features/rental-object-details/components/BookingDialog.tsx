@@ -652,110 +652,6 @@ export function BookingDialog({
               </label>
             </div>
 
-            {/* Recurring Toggle */}
-            <div
-              style={{
-                opacity: isVisible ? 1 : 0,
-                transform: isVisible ? 'translateY(0)' : 'translateY(20px)',
-                transition: 'all 400ms cubic-bezier(0.32, 0.72, 0, 1)',
-                transitionDelay: `${baseDelay + 150}ms`,
-              }}
-            >
-              <button
-                type="button"
-                onClick={() => updateField('isRecurring', !formData.isRecurring)}
-                aria-expanded={formData.isRecurring}
-                style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'space-between',
-                  width: '100%',
-                  padding: 'var(--ds-spacing-4)',
-                  backgroundColor: formData.isRecurring ? 'var(--ds-color-accent-surface-default)' : 'var(--ds-color-neutral-surface-default)',
-                  borderRadius: 'var(--ds-border-radius-lg)',
-                  border: `2px solid ${formData.isRecurring ? 'var(--ds-color-accent-border-default)' : 'var(--ds-color-neutral-border-subtle)'}`,
-                  cursor: 'pointer',
-                  transition: 'all 200ms ease',
-                }}
-              >
-                <span style={{ display: 'flex', alignItems: 'center', gap: 'var(--ds-spacing-3)' }}>
-                  <span style={{ color: formData.isRecurring ? 'var(--ds-color-accent-base-default)' : 'var(--ds-color-neutral-text-subtle)', transition: 'color 200ms ease' }}>{Icons.repeat}</span>
-                  <Paragraph data-size="md" style={{ margin: 0, fontWeight: 500 }}>{t('common.text.gjentakendeBooking')}</Paragraph>
-                </span>
-                <div
-                  style={{
-                    width: '52px',
-                    height: '28px',
-                    borderRadius: '14px',
-                    backgroundColor: formData.isRecurring ? 'var(--ds-color-accent-base-default)' : 'var(--ds-color-neutral-border-default)',
-                    position: 'relative',
-                    transition: 'background-color 200ms ease',
-                    boxShadow: 'inset 0 2px 4px rgba(0, 0, 0, 0.1)',
-                  }}
-                >
-                  <div
-                    style={{
-                      width: '24px',
-                      height: '24px',
-                      borderRadius: '50%',
-                      backgroundColor: 'white',
-                      position: 'absolute',
-                      top: '2px',
-                      left: formData.isRecurring ? '26px' : '2px',
-                      transition: 'left 200ms cubic-bezier(0.34, 1.56, 0.64, 1)',
-                      boxShadow: '0 2px 6px rgba(0, 0, 0, 0.2)',
-                    }}
-                  />
-                </div>
-              </button>
-
-              {/* Recurring Options */}
-              <div style={{ maxHeight: formData.isRecurring ? '280px' : '0', overflow: 'hidden', transition: 'max-height 350ms cubic-bezier(0.32, 0.72, 0, 1)' }}>
-                <div style={{ paddingTop: 'var(--ds-spacing-4)', display: 'flex', flexDirection: 'column', gap: 'var(--ds-spacing-4)' }}>
-                  <div>
-                    <Label style={{ marginBottom: 'var(--ds-spacing-2)' }}>{t('velg.ukedager')}</Label>
-                    <div style={{ display: 'flex', gap: 'var(--ds-spacing-2)', flexWrap: 'wrap' }}>
-                      {weekdays.map((day) => (
-                        <button
-                          key={day.key}
-                          type="button"
-                          onClick={() => toggleDay(day.key)}
-                          style={{
-                            minWidth: '52px',
-                            height: '48px',
-                            borderRadius: 'var(--ds-border-radius-lg)',
-                            border: 'none',
-                            backgroundColor: formData.selectedDays.includes(day.key) ? 'var(--ds-color-accent-base-default)' : 'var(--ds-color-neutral-surface-hover)',
-                            color: formData.selectedDays.includes(day.key) ? 'white' : 'var(--ds-color-neutral-text-default)',
-                            fontSize: 'var(--ds-font-size-md)',
-                            fontWeight: 600,
-                            cursor: 'pointer',
-                            transition: 'all 200ms cubic-bezier(0.34, 1.56, 0.64, 1)',
-                            transform: formData.selectedDays.includes(day.key) ? 'scale(1.05)' : 'scale(1)',
-                          }}
-                        >
-                          {day.label}
-                        </button>
-                      ))}
-                    </div>
-                  </div>
-                  <div className="booking-recurring-grid" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 'var(--ds-spacing-3)' }}>
-                    <div>
-                      <Label style={{ marginBottom: 'var(--ds-spacing-2)' }}>{t('til.dato')}</Label>
-                      <Textfield aria-label={t('til.dato')} value={formData.endDate} onChange={(e: React.ChangeEvent<HTMLInputElement>) => updateField('endDate', e.target.value)} placeholder={t('ddmmyyyy')} style={{ width: '100%' }} />
-                    </div>
-                    <div>
-                      <Label style={{ marginBottom: 'var(--ds-spacing-2)' }}>{t('gjentagelse')}</Label>
-                      <Select value={formData.repetition} onChange={(e: React.ChangeEvent<HTMLSelectElement>) => updateField('repetition', e.target.value)} style={{ width: '100%' }}>
-                        <SelectOption value="weekly">{t('hver.uke')}</SelectOption>
-                        <SelectOption value="biweekly">{t('hver.2.uke')}</SelectOption>
-                        <SelectOption value="monthly">{t('hver.måned')}</SelectOption>
-                      </Select>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
 
             {/* Attendees & Activity */}
             <div
@@ -812,27 +708,6 @@ export function BookingDialog({
               <Textarea value={formData.description} onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => updateField('description', e.target.value)} placeholder={t('legg.til.en.kort.beskrivelse')} rows={2} style={{ width: '100%' }} />
             </div>
 
-            {/* Payment Section */}
-            <div
-              style={{
-                opacity: isVisible ? 1 : 0,
-                transform: isVisible ? 'translateY(0)' : 'translateY(20px)',
-                transition: 'all 400ms cubic-bezier(0.32, 0.72, 0, 1)',
-                transitionDelay: `${baseDelay + 300}ms`,
-              }}
-            >
-              <PaymentSection
-                amount={500}
-                currency="NOK"
-                description={`Booking: ${formData.purpose || 'Tidspunkt'}`}
-                bookingId={undefined}
-                onPaymentInitiated={(paymentUrl, orderId) => {
-                  // Store payment info before redirect
-                  sessionStorage.setItem('pendingPayment', JSON.stringify({ orderId, formData }));
-                }}
-                disabled={!isFormValid}
-              />
-            </div>
           </div>
 
           {/* Footer */}

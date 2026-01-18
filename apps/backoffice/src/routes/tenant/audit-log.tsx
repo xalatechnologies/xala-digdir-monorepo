@@ -183,7 +183,7 @@ export function TenantAuditLogPage() {
             <Label style={{ display: 'block', marginBottom: 'var(--ds-spacing-2)', fontSize: 'var(--ds-font-size-sm)', fontWeight: 'var(--ds-font-weight-medium)' }}>{t('backoffice.text.type')}</Label>
             <Select value={typeFilter} onChange={(e) => setTypeFilter(e.target.value as EventType | 'all')} style={{ width: '100%' }}>
               <option value="all">{t('common.alle_typer')}</option>
-              <option value="user">Bruker</option>
+              <option value="user">{t('backoffice.text.user')}</option>
               <option value="booking">{t('backoffice.text.booking')}</option>
               <option value="system">{t('backoffice.text.system')}</option>
               <option value="security">{t("rule.safety")}</option>

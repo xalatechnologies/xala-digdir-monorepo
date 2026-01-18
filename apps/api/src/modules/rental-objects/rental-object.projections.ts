@@ -262,8 +262,27 @@ function getCoordinates(obj: DbRentalObject): { lat: number | null; lng: number 
   const meta = obj.metadata || {};
   const location = (meta.location || {}) as Record<string, unknown>;
 
-  const lat = safeNumber(location.lat) || safeNumber(location.latitude) || null;
-  const lng = safeNumber(location.lng) || safeNumber(location.longitude) || null;
+  // Try multiple formats:
+  // 1. location.coordinates.latitude/longitude (seed data format)
+  // 2. location.lat/lng (flat format)
+  // 3. location.latitude/longitude (alternative flat format)
+  
+  const coords = location.coordinates as Record<string, unknown> | undefined;
+  
+  let lat: number | null = null;
+  let lng: number | null = null;
+  
+  if (coords && typeof coords === 'object') {
+    // Handle coordinates object: {latitude: number, longitude: number}
+    lat = safeNumber(coords.latitude) || safeNumber(coords.lat) || null;
+    lng = safeNumber(coords.longitude) || safeNumber(coords.lng) || null;
+  }
+  
+  // Fallback to flat structure
+  if (!lat || !lng) {
+    lat = safeNumber(location.lat) || safeNumber(location.latitude) || null;
+    lng = safeNumber(location.lng) || safeNumber(location.longitude) || null;
+  }
 
   if (lat && lng && lat !== 0 && lng !== 0) {
     return { lat, lng };

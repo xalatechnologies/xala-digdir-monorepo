@@ -69,6 +69,36 @@ function LayersIcon(): React.ReactElement {
   );
 }
 
+function DateRangeIcon(): React.ReactElement {
+  return (
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
+      <line x1="16" y1="2" x2="16" y2="6" />
+      <line x1="8" y1="2" x2="8" y2="6" />
+      <line x1="3" y1="10" x2="21" y2="10" />
+      <line x1="8" y1="14" x2="16" y2="14" />
+      <line x1="8" y1="14" x2="8" y2="18" />
+      <line x1="16" y1="14" x2="16" y2="18" />
+    </svg>
+  );
+}
+
+function SunIcon(): React.ReactElement {
+  return (
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <circle cx="12" cy="12" r="5" />
+      <line x1="12" y1="1" x2="12" y2="3" />
+      <line x1="12" y1="21" x2="12" y2="23" />
+      <line x1="4.22" y1="4.22" x2="5.64" y2="5.64" />
+      <line x1="18.36" y1="18.36" x2="19.78" y2="19.78" />
+      <line x1="1" y1="12" x2="3" y2="12" />
+      <line x1="21" y1="12" x2="23" y2="12" />
+      <line x1="4.22" y1="19.78" x2="5.64" y2="18.36" />
+      <line x1="18.36" y1="5.64" x2="19.78" y2="4.22" />
+    </svg>
+  );
+}
+
 // =============================================================================
 // Constants
 // =============================================================================
@@ -79,8 +109,8 @@ const MODE_ICONS: Record<BookingMode, React.ReactElement> = {
   RECURRING: <RepeatIcon />,
   SEASON_RENTAL: <LayersIcon />,
   IN_GAME: <CalendarIcon />,
-  RANGE: <CalendarIcon />,
-  ALL_DAY: <CalendarIcon />,
+  RANGE: <DateRangeIcon />,
+  ALL_DAY: <SunIcon />,
   ACTIVITY_REGISTRATION: <CalendarIcon />,
 };
 
@@ -119,9 +149,14 @@ export function BookingModeSelector({
     };
   }, [t]);
 
-  // Only show the main three modes in the tabs
+  // Show relevant booking modes in the tabs
   const displayModes = availableModes.filter(
-    (mode) => mode === 'SINGLE_SLOT' || mode === 'RECURRING' || mode === 'SEASON_RENTAL'
+    (mode) => 
+      mode === 'SINGLE_SLOT' || 
+      mode === 'RECURRING' || 
+      mode === 'SEASON_RENTAL' ||
+      mode === 'RANGE' ||
+      mode === 'ALL_DAY'
   );
 
   // If only one mode, don't show selector
@@ -137,7 +172,7 @@ export function BookingModeSelector({
         gap: 'var(--ds-spacing-2)',
         padding: 'var(--ds-spacing-3) var(--ds-spacing-4)',
         borderBottom: '1px solid var(--ds-color-neutral-border-subtle)',
-        backgroundColor: 'var(--ds-color-neutral-surface-default)',
+        backgroundColor: 'var(--ds-color-neutral-surface-subtle)',
         overflowX: 'auto',
       }}
     >
@@ -153,13 +188,14 @@ export function BookingModeSelector({
             disabled={disabled}
             style={{
               display: 'flex',
+              flexDirection: 'column',
               alignItems: 'center',
-              gap: 'var(--ds-spacing-2)',
-              padding: 'var(--ds-spacing-2) var(--ds-spacing-4)',
-              borderRadius: 'var(--ds-border-radius-md)',
+              gap: 'var(--ds-spacing-1)',
+              padding: 'var(--ds-spacing-3)',
+              borderRadius: 'var(--ds-border-radius-lg)',
               border: isSelected
-                ? '2px solid var(--ds-color-accent-border-default)'
-                : '1px solid var(--ds-color-neutral-border-default)',
+                ? '2px solid var(--ds-color-accent-base-default)'
+                : '2px solid transparent',
               backgroundColor: isSelected
                 ? 'var(--ds-color-accent-surface-default)'
                 : 'var(--ds-color-neutral-background-default)',
@@ -168,30 +204,58 @@ export function BookingModeSelector({
                 : 'var(--ds-color-neutral-text-default)',
               cursor: disabled ? 'not-allowed' : 'pointer',
               opacity: disabled ? 0.6 : 1,
-              transition: 'all 0.15s ease',
+              transition: 'all 0.2s cubic-bezier(0.4, 0, 0.2, 1)',
               whiteSpace: 'nowrap',
-              minWidth: 'fit-content',
+              minWidth: '90px',
+              flex: 1,
+              boxShadow: isSelected 
+                ? '0 2px 8px rgba(0,0,0,0.1)' 
+                : 'none',
             }}
             title={config.description}
+            onMouseEnter={(e) => {
+              if (!isSelected && !disabled) {
+                e.currentTarget.style.backgroundColor = 'var(--ds-color-neutral-surface-hover)';
+                e.currentTarget.style.transform = 'translateY(-1px)';
+              }
+            }}
+            onMouseLeave={(e) => {
+              if (!isSelected && !disabled) {
+                e.currentTarget.style.backgroundColor = 'var(--ds-color-neutral-background-default)';
+                e.currentTarget.style.transform = 'translateY(0)';
+              }
+            }}
           >
-            <span
+            {/* Icon with background circle */}
+            <div
               style={{
+                width: '36px',
+                height: '36px',
+                borderRadius: 'var(--ds-border-radius-full)',
                 display: 'flex',
                 alignItems: 'center',
-                color: isSelected
+                justifyContent: 'center',
+                backgroundColor: isSelected
                   ? 'var(--ds-color-accent-base-default)'
+                  : 'var(--ds-color-neutral-surface-default)',
+                color: isSelected
+                  ? 'var(--ds-color-accent-contrast-default)'
                   : 'var(--ds-color-neutral-text-subtle)',
+                transition: 'all 0.2s ease',
               }}
             >
               {config.icon}
-            </span>
+            </div>
+            
+            {/* Label */}
             <Paragraph
-              data-size="sm"
+              data-size="xs"
               style={{
                 margin: 0,
                 fontWeight: isSelected
                   ? 'var(--ds-font-weight-semibold)'
                   : 'var(--ds-font-weight-regular)',
+                textAlign: 'center',
               }}
             >
               {config.label}
@@ -199,7 +263,7 @@ export function BookingModeSelector({
 
             {/* Show constraint hint for recurring */}
             {mode === 'RECURRING' && recurringConstraints?.maxOccurrences && (
-              <Badge data-color="info" data-size="sm">
+              <Badge data-color="info" data-size="sm" style={{ marginTop: 'var(--ds-spacing-1)' }}>
                 {t('bookingMode.max')} {recurringConstraints.maxOccurrences}
               </Badge>
             )}

@@ -217,7 +217,7 @@ export function SeasonApplicationsReviewPage() {
                 <Table.HeaderCell>{t('backoffice.text.season')}</Table.HeaderCell>
                 <Table.HeaderCell>{t('backoffice.text.timer')}</Table.HeaderCell>
                 <Table.HeaderCell>{t('backoffice.text.prioritet')}</Table.HeaderCell>
-                <Table.HeaderCell>Status</Table.HeaderCell>
+                <Table.HeaderCell>{t('backoffice.text.status')}</Table.HeaderCell>
                 <Table.HeaderCell>{t('backoffice.text.mottatt')}</Table.HeaderCell>
                 <Table.HeaderCell style={{ width: '180px' }}>{t('backoffice.text.handlinger')}</Table.HeaderCell>
               </Table.Row>

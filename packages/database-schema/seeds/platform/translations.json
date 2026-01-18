@@ -117366,5 +117366,101 @@
     "language": "nb",
     "value": "Upload Failed",
     "isSystemDefault": true
+  },
+  {
+    "tenantId": null,
+    "namespace": "filter",
+    "key": "showingResults",
+    "language": "nb",
+    "value": "Viser {{count}} resultater",
+    "isSystemDefault": true
+  },
+  {
+    "tenantId": null,
+    "namespace": "filter",
+    "key": "showingResults",
+    "language": "en",
+    "value": "Showing {{count}} results",
+    "isSystemDefault": true
+  },
+  {
+    "tenantId": null,
+    "namespace": "filter",
+    "key": "showResults",
+    "language": "nb",
+    "value": "Vis resultater",
+    "isSystemDefault": true
+  },
+  {
+    "tenantId": null,
+    "namespace": "filter",
+    "key": "showResults",
+    "language": "en",
+    "value": "Show results",
+    "isSystemDefault": true
+  },
+  {
+    "tenantId": null,
+    "namespace": "sdk",
+    "key": "rentalObject.category.LOKALER_OG_BANER",
+    "language": "nb",
+    "value": "Lokaler og baner",
+    "isSystemDefault": true
+  },
+  {
+    "tenantId": null,
+    "namespace": "sdk",
+    "key": "rentalObject.category.LOKALER_OG_BANER",
+    "language": "en",
+    "value": "Venues & Courts",
+    "isSystemDefault": true
+  },
+  {
+    "tenantId": null,
+    "namespace": "sdk",
+    "key": "rentalObject.category.UTSTYR_OG_INVENTAR",
+    "language": "nb",
+    "value": "Utstyr og inventar",
+    "isSystemDefault": true
+  },
+  {
+    "tenantId": null,
+    "namespace": "sdk",
+    "key": "rentalObject.category.UTSTYR_OG_INVENTAR",
+    "language": "en",
+    "value": "Equipment & Inventory",
+    "isSystemDefault": true
+  },
+  {
+    "tenantId": null,
+    "namespace": "sdk",
+    "key": "rentalObject.category.KJORETOY_OG_TRANSPORT",
+    "language": "nb",
+    "value": "Kjøretøy og transport",
+    "isSystemDefault": true
+  },
+  {
+    "tenantId": null,
+    "namespace": "sdk",
+    "key": "rentalObject.category.KJORETOY_OG_TRANSPORT",
+    "language": "en",
+    "value": "Vehicles & Transport",
+    "isSystemDefault": true
+  },
+  {
+    "tenantId": null,
+    "namespace": "sdk",
+    "key": "rentalObject.category.OPPLEVELSER_OG_ARRANGEMENT",
+    "language": "nb",
+    "value": "Opplevelser og arrangement",
+    "isSystemDefault": true
+  },
+  {
+    "tenantId": null,
+    "namespace": "sdk",
+    "key": "rentalObject.category.OPPLEVELSER_OG_ARRANGEMENT",
+    "language": "en",
+    "value": "Experiences & Events",
+    "isSystemDefault": true
   }
 ]

@@ -19,6 +19,24 @@ function CheckCircleIcon({ size = 18 }: { size?: number }): React.ReactElement {
   );
 }
 
+function ShieldIcon({ size = 24 }: { size?: number }): React.ReactElement {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+    </svg>
+  );
+}
+
+function UserCheckIcon({ size = 24 }: { size?: number }): React.ReactElement {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+      <circle cx="8.5" cy="7" r="4" />
+      <polyline points="17 11 19 13 23 9" />
+    </svg>
+  );
+}
+
 /**
  * Booking state to be captured before authentication redirect
  * This data is serialized into FlowContext for session-safe return-to-flow
@@ -257,14 +275,38 @@ export function BookingConfirmationStep({
   if (!isAuthenticated) {
     return (
       <div style={{ padding: 'var(--ds-spacing-6)' }}>
-        <Heading level={3} data-size="md" style={{ margin: 0, marginBottom: 'var(--ds-spacing-2)', color: 'var(--ds-color-neutral-text-default)' }}>
-          {t('logg.inn.for.aa.fullfoere')}
-        </Heading>
-        <Paragraph data-size="sm" style={{ margin: 0, marginBottom: 'var(--ds-spacing-5)', color: 'var(--ds-color-neutral-text-subtle)' }}>
-          {t('for.aa.sende.bookingforespoersel')}
-        </Paragraph>
+        {/* Visual header with icon */}
+        <div style={{ 
+          display: 'flex', 
+          flexDirection: 'column', 
+          alignItems: 'center', 
+          textAlign: 'center',
+          marginBottom: 'var(--ds-spacing-6)',
+        }}>
+          <div
+            style={{
+              width: '64px',
+              height: '64px',
+              borderRadius: 'var(--ds-border-radius-full)',
+              background: 'linear-gradient(135deg, var(--ds-color-accent-surface-default) 0%, var(--ds-color-accent-surface-hover) 100%)',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              marginBottom: 'var(--ds-spacing-4)',
+              color: 'var(--ds-color-accent-base-default)',
+            }}
+          >
+            <UserCheckIcon size={28} />
+          </div>
+          <Heading level={3} data-size="md" style={{ margin: 0, marginBottom: 'var(--ds-spacing-2)', color: 'var(--ds-color-neutral-text-default)' }}>
+            {t('logg.inn.for.aa.fullfoere')}
+          </Heading>
+          <Paragraph data-size="sm" style={{ margin: 0, color: 'var(--ds-color-neutral-text-subtle)' }}>
+            {t('for.aa.sende.bookingforespoersel')}
+          </Paragraph>
+        </div>
 
-        {/* Simple Login Buttons */}
+        {/* Login Buttons with enhanced styling */}
         <div
           style={{
             display: 'flex',
@@ -274,6 +316,7 @@ export function BookingConfirmationStep({
             margin: '0 auto',
           }}
         >
+          {/* Vipps Button */}
           <Button
             type="button"
             variant="primary"
@@ -283,13 +326,31 @@ export function BookingConfirmationStep({
             disabled={isLoggingIn}
             style={{
               width: '100%',
-              backgroundColor: 'var(--ds-color-warning-base-default)',
-              color: 'var(--ds-color-warning-base-contrast-default)',
+              backgroundColor: '#ff5b24',
+              color: 'white',
+              fontWeight: 'var(--ds-font-weight-semibold)',
+              boxShadow: '0 2px 8px rgba(255, 91, 36, 0.3)',
+              transition: 'all 0.2s ease',
             }}
           >
             {isLoggingIn ? t('common.logger_inn') : t('logg.inn.med.vipps')}
           </Button>
 
+          {/* Divider */}
+          <div style={{ 
+            display: 'flex', 
+            alignItems: 'center', 
+            gap: 'var(--ds-spacing-3)', 
+            margin: 'var(--ds-spacing-2) 0' 
+          }}>
+            <div style={{ flex: 1, height: '1px', backgroundColor: 'var(--ds-color-neutral-border-subtle)' }} />
+            <Paragraph data-size="xs" style={{ margin: 0, color: 'var(--ds-color-neutral-text-subtle)' }}>
+              {t('common.or')}
+            </Paragraph>
+            <div style={{ flex: 1, height: '1px', backgroundColor: 'var(--ds-color-neutral-border-subtle)' }} />
+          </div>
+
+          {/* BankID Button */}
           <Button
             type="button"
             variant="secondary"
@@ -304,26 +365,43 @@ export function BookingConfirmationStep({
           </Button>
         </div>
 
-        {/* Privacy notice */}
-        <div style={{ display: 'flex', gap: 'var(--ds-spacing-2)', marginTop: 'var(--ds-spacing-4)' }}>
-          <div
-            style={{
-              width: '16px',
-              height: '16px',
-              borderRadius: 'var(--ds-border-radius-full)',
-              backgroundColor: 'var(--ds-color-success-base-default)',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              flexShrink: 0,
-              marginTop: '2px',
-            }}
-          >
-            <CheckCircleIcon size={10} />
+        {/* Security badges */}
+        <div
+          style={{
+            marginTop: 'var(--ds-spacing-6)',
+            padding: 'var(--ds-spacing-4)',
+            backgroundColor: 'var(--ds-color-neutral-surface-subtle)',
+            borderRadius: 'var(--ds-border-radius-lg)',
+            display: 'flex',
+            flexDirection: 'column',
+            gap: 'var(--ds-spacing-3)',
+          }}
+        >
+          <div style={{ display: 'flex', alignItems: 'flex-start', gap: 'var(--ds-spacing-3)' }}>
+            <div
+              style={{
+                width: '32px',
+                height: '32px',
+                borderRadius: 'var(--ds-border-radius-md)',
+                backgroundColor: 'var(--ds-color-success-surface-default)',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                flexShrink: 0,
+                color: 'var(--ds-color-success-base-default)',
+              }}
+            >
+              <ShieldIcon size={18} />
+            </div>
+            <div>
+              <Paragraph data-size="sm" style={{ margin: 0, fontWeight: 'var(--ds-font-weight-medium)' }}>
+                {t('bookingWidget.security.title')}
+              </Paragraph>
+              <Paragraph data-size="xs" style={{ margin: 0, marginTop: 'var(--ds-spacing-1)', color: 'var(--ds-color-neutral-text-subtle)' }}>
+                {t('informasjon.behandles.sikkert')}
+              </Paragraph>
+            </div>
           </div>
-          <Paragraph data-size="xs" style={{ margin: 0, color: 'var(--ds-color-neutral-text-subtle)' }}>
-            {t('informasjon.behandles.sikkert')}
-          </Paragraph>
         </div>
       </div>
     );

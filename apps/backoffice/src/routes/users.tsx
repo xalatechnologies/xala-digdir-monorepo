@@ -201,9 +201,9 @@ export function UsersPage() {
                 <Table.HeaderCell>E-post</Table.HeaderCell>
                 <Table.HeaderCell>{t('backoffice.text.phone')}</Table.HeaderCell>
                 <Table.HeaderCell>{t('backoffice.text.role')}</Table.HeaderCell>
-                <Table.HeaderCell>Status</Table.HeaderCell>
+                <Table.HeaderCell>{t('backoffice.text.status')}</Table.HeaderCell>
                 <Table.HeaderCell>{t('common.sist_innlogget')}</Table.HeaderCell>
-                <Table.HeaderCell style={{ width: '80px' }}>Handlinger</Table.HeaderCell>
+                <Table.HeaderCell style={{ width: '80px' }}>{t('backoffice.text.handlinger')}</Table.HeaderCell>
               </Table.Row>
             </Table.Head>
             <Table.Body>
