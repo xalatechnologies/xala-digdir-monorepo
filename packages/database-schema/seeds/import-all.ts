@@ -25,7 +25,7 @@ async function importSeeds(): Promise<void> {
   console.log(' @digilist/database-schema - Unified Seed Import');
   console.log('='.repeat(60) + '\n');
 
-  let tenants = 0, organizations = 0, users = 0, rentalObjects = 0, bookings = 0;
+  let tenants = 0, organizations = 0, users = 0, rentalObjects = 0, bookings = 0, translations = 0;
 
   try {
     const rentalData = JSON.parse(
@@ -33,6 +33,9 @@ async function importSeeds(): Promise<void> {
     );
     const bookingsData = JSON.parse(
       readFileSync(join(__dirname, 'domain/bookings-calendar.json'), 'utf-8')
+    );
+    const translationsData = JSON.parse(
+      readFileSync(join(__dirname, 'platform/translations.json'), 'utf-8')
     );
 
     // ========== PLATFORM ==========
@@ -72,7 +75,25 @@ async function importSeeds(): Promise<void> {
       `;
       users++;
     }
-    console.log(`      ✅ ${users} users\n`);
+    console.log(`      ✅ ${users} users`);
+
+    // Translations
+    console.log('   └─ Translations...');
+    for (const trans of translationsData.translations || []) {
+      await sql`
+        INSERT INTO platform.translations (
+          tenant_id, namespace, key, language, value, is_system_default
+        )
+        VALUES (
+          ${trans.tenantId}, ${trans.namespace}, ${trans.key},
+          ${trans.language}, ${trans.value}, ${trans.isSystemDefault}
+        )
+        ON CONFLICT (tenant_id, namespace, key, language) 
+        DO UPDATE SET value = EXCLUDED.value
+      `;
+      translations++;
+    }
+    console.log(`      ✅ ${translations} translations\n`);
 
     // ========== DOMAIN ==========
     console.log('📦 Phase 2: Domain Seeds\n' + '-'.repeat(40));
@@ -118,7 +139,7 @@ async function importSeeds(): Promise<void> {
     console.log('='.repeat(60));
     console.log(' ✅ Seed import completed!');
     console.log('='.repeat(60));
-    console.log(`\nPlatform: ${tenants} tenants, ${organizations} orgs, ${users} users`);
+    console.log(`\nPlatform: ${tenants} tenants, ${organizations} orgs, ${users} users, ${translations} translations`);
     console.log(`Domain: ${rentalObjects} rental objects, ${bookings} bookings\n`);
 
   } catch (error: any) {

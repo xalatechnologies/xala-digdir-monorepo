@@ -79,6 +79,8 @@ import { StorageController } from './modules/storage/storage.controller';
 import { StorageService } from './modules/storage/storage.service';
 // Scanners
 import scannerRoutes from './routes/scanners.routes';
+// i18n
+import { i18nRoutes } from './routes/i18n.routes';
 
 /**
  * Initialize SDK adapters (mock for demo)
@@ -315,8 +317,9 @@ async function bootstrap() {
   await app.register(addonsRoutes, { prefix: '/api' });
   await app.register(favoritesRoutes, { prefix: '/api' });
   await app.register(featuresRoutes, { prefix: '/api' });
+  await app.register(i18nRoutes, { prefix: '/api' });
   await app.register(scannerRoutes);
-  console.log('✓ Fastify plugin routes registered (amenities, addons, favorites, features, scanners)');
+  console.log('✓ Fastify plugin routes registered (amenities, addons, favorites, features, i18n, scanners)');
 
   // Register WebSocket routes for real-time events
   await registerWebSocketRoutes(app);
