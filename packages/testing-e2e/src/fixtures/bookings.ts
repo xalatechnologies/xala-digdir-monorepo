@@ -45,3 +45,27 @@ export function createMockBooking(overrides: Partial<typeof mockBooking> = {}) {
     ...overrides,
   };
 }
+
+// Validation Constants
+export const APPROVAL_REASON = 'Approved by admin for testing purposes';
+
+export const BOOKING_STATES = {
+  PENDING: 'pending',
+  APPROVED: 'approved',
+  REJECTED: 'rejected',
+  CANCELLED: 'cancelled',
+} as const;
+
+export function getTestBookingData() {
+  const tomorrow = new Date();
+  tomorrow.setDate(tomorrow.getDate() + 1);
+  
+  return {
+    title: `Test Booking ${Date.now()}`,
+    date: tomorrow.toISOString().split('T')[0],
+    startTime: '10:00',
+    endTime: '12:00',
+    notes: 'Please approve this test booking',
+    rentalObjectId: 'rental-1',
+  };
+}

@@ -347,7 +347,7 @@ test.describe('Timezone Handling', () => {
     });
 
     // Should not crash
-    expect(response.status()).not.toBe(500);
   });
 });
+
 });

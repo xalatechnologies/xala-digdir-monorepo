@@ -208,6 +208,8 @@ const API_BASE_URL = process.env.API_BASE_URL || process.env.PUBLIC_API_URL || '
 function toAbsoluteUrl(url: string): string {
   if (!url) return '';
   if (url.startsWith('http://') || url.startsWith('https://')) return url;
+  // Keep /storage/ paths relative so they're served from the frontend domain
+  if (url.startsWith('/storage/')) return url;
   return `${API_BASE_URL}${url.startsWith('/') ? '' : '/'}${url}`;
 }
 

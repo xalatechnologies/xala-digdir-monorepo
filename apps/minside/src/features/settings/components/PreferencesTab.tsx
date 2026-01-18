@@ -28,10 +28,10 @@ export function PreferencesTab() {
         <Stack spacing={4}>
           <div>
             <Heading level={3} data-size="sm" style={{ marginBottom: 'var(--ds-spacing-2)' }}>
-              Språk
+              {t('common.spraak')}
             </Heading>
             <Paragraph data-size="sm" style={{ color: 'var(--ds-color-neutral-text-subtle)' }}>
-              Velg språk for brukergrensesnittet
+              {t('common.velg.spraak.for.brukergrensesnittet')}
             </Paragraph>
           </div>
 
@@ -50,10 +50,10 @@ export function PreferencesTab() {
         <Stack spacing={4}>
           <div>
             <Heading level={3} data-size="sm" style={{ marginBottom: 'var(--ds-spacing-2)' }}>
-              Utseende
+              {t('common.utseende')}
             </Heading>
             <Paragraph data-size="sm" style={{ color: 'var(--ds-color-neutral-text-subtle)' }}>
-              Tilpass hvordan systemet ser ut
+              {t('common.tilpass.hvordan.systemet.ser.ut')}
             </Paragraph>
           </div>
 
@@ -63,7 +63,7 @@ export function PreferencesTab() {
             borderRadius: 'var(--ds-border-radius-md)'
           }}>
             <Paragraph data-size="sm" style={{ margin: 0, color: 'var(--ds-color-neutral-text-subtle)' }}>
-              Tema og utseendeinnstillinger kommer snart
+              {t('common.tema.og.utseende.kommer.snart')}
             </Paragraph>
           </div>
         </Stack>
@@ -74,10 +74,10 @@ export function PreferencesTab() {
         <Stack spacing={4}>
           <div>
             <Heading level={3} data-size="sm" style={{ marginBottom: 'var(--ds-spacing-2)' }}>
-              Økt og sikkerhet
+              {t('common.okt.og.sikkerhet')}
             </Heading>
             <Paragraph data-size="sm" style={{ color: 'var(--ds-color-neutral-text-subtle)' }}>
-              Administrer din pålogging og sikkerhet
+              {t('common.administrer.din.paalogging.og.sikkerhet')}
             </Paragraph>
           </div>
 
@@ -91,14 +91,14 @@ export function PreferencesTab() {
           }}>
             <div>
               <Paragraph data-size="sm" style={{ margin: 0, fontWeight: 'var(--ds-font-weight-medium)' }}>
-                Logg ut
+                {t('common.logg_ut')}
               </Paragraph>
               <Paragraph data-size="xs" style={{ margin: 0, marginTop: 'var(--ds-spacing-1)', color: 'var(--ds-color-neutral-text-subtle)' }}>
-                Logg ut av din konto på denne enheten
+                {t('common.logg.ut.av.konto.paa.enhet')}
               </Paragraph>
             </div>
             <Button variant="secondary" data-size="sm" onClick={logout} type="button">
-              Logg ut
+              {t('common.logg_ut')}
             </Button>
           </div>
         </Stack>

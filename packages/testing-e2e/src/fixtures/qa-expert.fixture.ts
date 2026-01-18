@@ -400,7 +400,21 @@ export const test = base.extend<{
   evidence: EvidenceCollector;
   menuMap: () => Promise<MenuMap>;
   qualityGates: () => Promise<void>;
+  userPage: Page;
+  adminPage: Page;
 }>({
+  userPage: async ({ browser }, use) => {
+    const context = await browser.newContext();
+    const page = await context.newPage();
+    await use(page);
+    await context.close();
+  },
+  adminPage: async ({ browser }, use) => {
+    const context = await browser.newContext();
+    const page = await context.newPage();
+    await use(page);
+    await context.close();
+  },
   evidence: async ({ page }, use, testInfo) => {
     const collector = createEvidenceCollector(page);
     

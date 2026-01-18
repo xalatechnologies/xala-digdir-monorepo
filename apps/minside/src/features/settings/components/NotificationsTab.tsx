@@ -18,8 +18,8 @@ import {
 import { useNotificationSettings } from '../hooks/useNotificationSettings';
 
 export function NotificationsTab() {
-  const {
   const t = useT();
+  const {
     notificationData,
     updateField,
     saveNotificationSettings,
@@ -32,10 +32,10 @@ export function NotificationsTab() {
       <Stack spacing={5}>
         <div>
           <Heading level={3} data-size="sm" style={{ marginBottom: 'var(--ds-spacing-3)' }}>
-            Varslingsinnstillinger
+            {t('common.varslingsinnstillinger')}
           </Heading>
           <Paragraph data-size="sm" style={{ color: 'var(--ds-color-neutral-text-subtle)' }}>
-            Konfigurer hvordan systemet sender varsler
+            {t('common.konfigurer.hvordan.systemet.sender.varsler')}
           </Paragraph>
         </div>
 
@@ -45,7 +45,7 @@ export function NotificationsTab() {
               checked={notificationData.emailEnabled}
               onChange={(checked) => updateField('emailEnabled', checked)}
             >
-              Send varsler på e-post
+              {t('common.send.varsler.paa.epost')}
             </Switch>
           </FormField>
 
@@ -54,7 +54,7 @@ export function NotificationsTab() {
               checked={notificationData.smsEnabled}
               onChange={(checked) => updateField('smsEnabled', checked)}
             >
-              Send varsler på SMS
+              {t('common.send.varsler.paa.sms')}
             </Switch>
           </FormField>
 
@@ -63,7 +63,7 @@ export function NotificationsTab() {
               checked={notificationData.pushEnabled}
               onChange={(checked) => updateField('pushEnabled', checked)}
             >
-              Send push-varsler til mobilapp
+              {t('common.send.pushvarsler.til.mobilapp')}
             </Switch>
           </FormField>
 
@@ -74,16 +74,16 @@ export function NotificationsTab() {
             marginTop: 'var(--ds-spacing-2)',
           }}>
             <Paragraph data-size="sm" style={{ fontWeight: 'var(--ds-font-weight-semibold)', marginBottom: 'var(--ds-spacing-3)' }}>
-              Automatiske varsler
+              {t('common.automatiske.varsler')}
             </Paragraph>
 
             <Stack spacing={3}>
-              <FormField label="Bookingbekreftelse">
+              <FormField label={t('common.bookingbekreftelse')}>
                 <Switch
                   checked={notificationData.bookingConfirmation}
                   onChange={(checked) => updateField('bookingConfirmation', checked)}
                 >
-                  Send bekreftelse når booking er godkjent
+                  {t('common.send.bekreftelse.naar.booking.er.godkjent')}
                 </Switch>
               </FormField>
 
@@ -92,7 +92,7 @@ export function NotificationsTab() {
                   checked={notificationData.bookingReminder}
                   onChange={(checked) => updateField('bookingReminder', checked)}
                 >
-                  Send påminnelse før booking starter
+                  {t('common.send.paaminnelse.for.booking.starter')}
                 </Switch>
               </FormField>
 
@@ -107,7 +107,7 @@ export function NotificationsTab() {
                     onChange={(e) => updateField('reminderHoursBefore', parseInt(e.target.value) || 24)}
                     type="number"
                     min="1"
-                    suffix="timer før"
+                    suffix={t('common.timer.for')}
                   />
                 </FormField>
               )}
@@ -123,7 +123,7 @@ export function NotificationsTab() {
             aria-label={isSaving ? t('common.lagrer_endringer') : 'Lagre endringer'}
           >
             <SaveIcon />
-            {isSaving ? t('common.lagrer') : 'Lagre endringer'}
+            {isSaving ? t('common.lagrer') : t('common.lagre_endringer')}
           </Button>
         </div>
       </Stack>

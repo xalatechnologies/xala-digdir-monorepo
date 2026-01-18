@@ -130,10 +130,10 @@ export function ProfileTab() {
         <Stack spacing={5}>
           <div>
             <Heading level={3} data-size="sm" style={{ marginBottom: 'var(--ds-spacing-3)' }}>
-              Profilbilde
+              {t('common.profilbilde')}
             </Heading>
             <Paragraph data-size="sm" style={{ color: 'var(--ds-color-neutral-text-subtle)' }}>
-              Last opp et profilbilde som vises i systemet
+              {t('common.last.opp.profilbilde')}
             </Paragraph>
           </div>
 
@@ -181,10 +181,10 @@ export function ProfileTab() {
                 aria-label={t('common.endre_profilbilde')}
               >
                 <CameraIcon />
-                {isUploadingAvatar ? t('common.laster_opp') : 'Endre bilde'}
+                {isUploadingAvatar ? t('common.laster_opp') : t('common.endre.bilde')}
               </Button>
               <Paragraph data-size="xs" style={{ color: 'var(--ds-color-neutral-text-subtle)' }}>
-                JPG, PNG eller GIF (maks 5MB)
+                {t('common.jpg.png.eller.gif.maks.5mb')}
               </Paragraph>
             </Stack>
           </div>
@@ -196,10 +196,10 @@ export function ProfileTab() {
         <Stack spacing={5}>
           <div>
             <Heading level={3} data-size="sm" style={{ marginBottom: 'var(--ds-spacing-3)' }}>
-              Personlig informasjon
+              {t('common.personlig.informasjon')}
             </Heading>
             <Paragraph data-size="sm" style={{ color: 'var(--ds-color-neutral-text-subtle)' }}>
-              Din grunnleggende kontaktinformasjon
+              {t('common.din.grunnleggende.kontaktinformasjon')}
             </Paragraph>
           </div>
 
@@ -223,13 +223,13 @@ export function ProfileTab() {
               />
             </FormField>
 
-            <FormField label="Telefonnummer">
+            <FormField label={t('common.telefonnummer')}>
               <Textfield
                 type="tel"
                 value={profileData.phone}
                 onChange={(e) => setProfileData(prev => ({ ...prev, phone: e.target.value }))}
                 placeholder="+47 123 45 678"
-                aria-label="Telefonnummer"
+                aria-label={t('common.telefonnummer')}
               />
             </FormField>
 
@@ -258,7 +258,7 @@ export function ProfileTab() {
           <div style={{ paddingTop: 'var(--ds-spacing-4)', borderTop: '1px solid var(--ds-color-neutral-border-subtle)' }}>
             <Button onClick={handleSaveProfile} disabled={isSaving} type="button" aria-label={t('common.lagre_profilinnstillinger')}>
               <SaveIcon />
-              {isSaving ? t('common.lagrer') : 'Lagre endringer'}
+              {isSaving ? t('common.lagrer') : t('common.lagre_endringer')}
             </Button>
           </div>
         </Stack>

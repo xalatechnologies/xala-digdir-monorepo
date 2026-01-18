@@ -229,11 +229,11 @@ export function SearchResults({
               <thead>
                 <tr>
                   <th>ID</th>
-                  <th>Lokale</th>
-                  <th>Organisasjon</th>
-                  <th>Tidspunkt</th>
-                  <th>Status</th>
-                  <th>Pris</th>
+                  <th>{t('common.lokale')}</th>
+                  <th>{t('common.organisasjon')}</th>
+                  <th>{t('common.tidspunkt')}</th>
+                  <th>{t('common.status')}</th>
+                  <th>{t('common.price')}</th>
                   <th></th>
                 </tr>
               </thead>
@@ -308,11 +308,11 @@ export function SearchResults({
               <thead>
                 <tr>
                   <th>ID</th>
-                  <th>Navn</th>
-                  <th>Type</th>
-                  <th>Lokasjon</th>
-                  <th>Kapasitet</th>
-                  <th>Pris/time</th>
+                  <th>{t('common.navn')}</th>
+                  <th>{t('common.type')}</th>
+                  <th>{t('common.lokasjon')}</th>
+                  <th>{t('common.capacity')}</th>
+                  <th>{t('common.price')}/time</th>
                   <th></th>
                 </tr>
               </thead>
@@ -383,11 +383,11 @@ export function SearchResults({
               <thead>
                 <tr>
                   <th>ID</th>
-                  <th>Navn</th>
+                  <th>{t('common.navn')}</th>
                   <th>{t('common.orgnr')}</th>
-                  <th>Type</th>
+                  <th>{t('common.type')}</th>
                   <th>{t('common.epost')}</th>
-                  <th>Telefon</th>
+                  <th>{t('common.telefonnummer')}</th>
                   <th></th>
                 </tr>
               </thead>
