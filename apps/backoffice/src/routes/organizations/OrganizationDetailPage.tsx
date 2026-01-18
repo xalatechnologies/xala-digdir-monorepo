@@ -137,7 +137,7 @@ export function OrganizationDetailPage() {
   if (isLoading) {
     return (
       <div style={{ display: 'flex', justifyContent: 'center', padding: 'var(--ds-spacing-8)' }}>
-        <Spinner data-size="lg" aria-label={t("ui.loading")} />
+        <Spinner data-size="lg" aria-label={t("state.loading")} />
       </div>
     );
   }
@@ -236,8 +236,8 @@ export function OrganizationDetailPage() {
 
           <div style={{ display: 'flex', gap: 'var(--ds-spacing-2)' }}>
             <Link to={`/organizations/${id}/edit`}>
-              <Button variant="secondary" data-size="sm" type="button" aria-label={t("ui.edit")}>
-                <EditIcon /> {t("ui.edit")}
+              <Button variant="secondary" data-size="sm" type="button" aria-label={t("action.edit")}>
+                <EditIcon /> {t("action.edit")}
               </Button>
             </Link>
             {!organization.verified && (
@@ -246,8 +246,8 @@ export function OrganizationDetailPage() {
                 {t('organizations.verify')}
               </Button>
             )}
-            <Button variant="danger" data-size="sm" onClick={handleDelete} type="button" aria-label={t("ui.delete")}>
-              <TrashIcon /> {t("ui.delete")}
+            <Button variant="danger" data-size="sm" onClick={handleDelete} type="button" aria-label={t("action.delete")}>
+              <TrashIcon /> {t("action.delete")}
             </Button>
           </div>
         </div>
@@ -464,7 +464,7 @@ export function OrganizationDetailPage() {
           <Card>
             {loadingBookings ? (
               <div style={{ display: 'flex', justifyContent: 'center', padding: 'var(--ds-spacing-6)' }}>
-                <Spinner aria-label={t('organizations.bookings.loading')} />
+                <Spinner aria-label={t('state.loading')} />
               </div>
             ) : bookings.length === 0 ? (
               <div style={{ textAlign: 'center', padding: 'var(--ds-spacing-8)' }}>
@@ -480,7 +480,7 @@ export function OrganizationDetailPage() {
               <>
                 <div style={{ marginBottom: 'var(--ds-spacing-4)' }}>
                   <Heading level={3} data-size="sm">
-                    {t('organizations.bookings.title')} ({bookings.length})
+                    {t('organizations.bookings.page.title')} ({bookings.length})
                   </Heading>
                 </div>
                 <div style={{ overflow: 'auto' }}>
@@ -548,7 +548,7 @@ export function OrganizationDetailPage() {
           <Card>
             {loadingSeasons ? (
               <div style={{ display: 'flex', justifyContent: 'center', padding: 'var(--ds-spacing-6)' }}>
-                <Spinner aria-label={t('organizations.seasons.loading')} />
+                <Spinner aria-label={t('state.loading')} />
               </div>
             ) : seasonalLeases.length === 0 ? (
               <div style={{ textAlign: 'center', padding: 'var(--ds-spacing-8)' }}>
@@ -564,7 +564,7 @@ export function OrganizationDetailPage() {
               <>
                 <div style={{ marginBottom: 'var(--ds-spacing-4)' }}>
                   <Heading level={3} data-size="sm">
-                    {t('organizations.seasons.title')} ({seasonalLeases.length})
+                    {t('organizations.seasons.page.title')} ({seasonalLeases.length})
                   </Heading>
                 </div>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--ds-spacing-3)' }}>

@@ -138,7 +138,7 @@ export function AllocationPlannerPage() {
       <Card style={{ padding: 0, overflow: 'auto' }}>
         {isLoading ? (
           <div style={{ display: 'flex', justifyContent: 'center', padding: 'var(--ds-spacing-8)' }}>
-            <Spinner aria-label={t("ui.loading")} data-size="lg" />
+            <Spinner aria-label={t("state.loading")} data-size="lg" />
           </div>
         ) : (
           <div style={{ minWidth: '800px' }}>

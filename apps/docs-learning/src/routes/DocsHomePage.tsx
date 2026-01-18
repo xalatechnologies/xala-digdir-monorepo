@@ -36,10 +36,10 @@ export function DocsHomePage() {
       {/* Hero Section */}
       <header className={styles.hero}>
         <Heading level={1}>
-          {t('docs.home.title')}
+          {t('docs.home.page.title')}
         </Heading>
         <Paragraph data-size="lg" className={styles.heroSubtitle}>
-          {t('docs.home.subtitle')}
+          {t('docs.home.page.description')}
         </Paragraph>
       </header>
 

@@ -123,7 +123,7 @@ export function NotificationsTab() {
             aria-label={isSaving ? t('common.lagrer_endringer') : 'Lagre endringer'}
           >
             <SaveIcon />
-            {isSaving ? t('common.lagrer') : t('common.lagre_endringer')}
+            {isSaving ? t('state.saving') : t('common.lagre_endringer')}
           </Button>
         </div>
       </Stack>

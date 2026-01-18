@@ -72,7 +72,7 @@ export function PlanDetailPage() {
   if (isLoading) {
     return (
       <div style={{ display: 'flex', justifyContent: 'center', padding: 'var(--ds-spacing-8)' }}>
-        <Spinner size="lg" aria-label={t('common.loading')} />
+        <Spinner size="lg" aria-label={t('state.loading')} />
       </div>
     );
   }
@@ -86,7 +86,7 @@ export function PlanDetailPage() {
         <Link to="/plans">
           <Button variant="secondary" style={{ marginTop: 'var(--ds-spacing-4)' }} type="button">
             <ArrowLeftIcon />
-            {t('common.back')}
+            {t('action.back')}
           </Button>
         </Link>
       </div>
@@ -99,7 +99,7 @@ export function PlanDetailPage() {
       <Link to="/plans">
         <Button variant="tertiary" size="sm" style={{ marginBottom: 'var(--ds-spacing-4)' }} type="button">
           <ArrowLeftIcon />
-          {t('common.back')}
+          {t('action.back')}
         </Button>
       </Link>
 
@@ -122,7 +122,7 @@ export function PlanDetailPage() {
         <Link to={`/plans/${id}/edit`}>
           <Button variant="secondary" type="button">
             <EditIcon />
-            {t('common.edit')}
+            {t('action.edit')}
           </Button>
         </Link>
       </div>
@@ -294,7 +294,7 @@ export function PlanDetailPage() {
         </Heading>
 
         {loadingTenants ? (
-          <Spinner aria-label={t('common.loading')} />
+          <Spinner aria-label={t('state.loading')} />
         ) : tenants.length === 0 ? (
           <Paragraph style={{ color: 'var(--ds-color-neutral-text-subtle)' }}>
             {t('saasAdmin.planDetail.noTenants', { defaultValue: 'Ingen tenanter bruker denne planen.' })}
@@ -303,9 +303,9 @@ export function PlanDetailPage() {
           <Table>
             <Table.Head>
               <Table.Row>
-                <Table.HeaderCell>{t('common.name')}</Table.HeaderCell>
+                <Table.HeaderCell>{t('label.name')}</Table.HeaderCell>
                 <Table.HeaderCell>Slug</Table.HeaderCell>
-                <Table.HeaderCell>{t('common.status')}</Table.HeaderCell>
+                <Table.HeaderCell>{t('label.status')}</Table.HeaderCell>
                 <Table.HeaderCell>{t('saasAdmin.tenants.createdAt')}</Table.HeaderCell>
               </Table.Row>
             </Table.Head>

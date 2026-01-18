@@ -185,7 +185,7 @@ export function OrganizationForm({ organization, onSubmit, onCancel }: Organizat
         <FormSection title="Kontaktinformasjon">
           <Stack spacing={4}>
             <FormField
-              label={t('common.epost')}
+              label={t('label.email')}
               error={errors.email || undefined}
               description={t('common.primaer_epostadresse')}
             >
@@ -194,7 +194,7 @@ export function OrganizationForm({ organization, onSubmit, onCancel }: Organizat
                 value={formData.email || ''}
                 onChange={(e) => handleChange('email')(e.target.value)}
                 placeholder="kontakt@organisasjon.no"
-                aria-label={t('common.epost')}
+                aria-label={t('label.email')}
               />
             </FormField>
 

@@ -52,5 +52,10 @@
   "ingen.lisensnokkel": "No license key",
   "aktiv": "Active",
   "inaktiv": "Inactive",
-  "utlopt": "Expired"
+  "utlopt": "Expired",
+  "ledig": "Available",
+  "reservert": "Reserved",
+  "blokkert": "Blocked",
+  "utilgjengelig": "Unavailable",
+  "stengt": "Closed"
 }

@@ -16,17 +16,16 @@ import { useReviews, type ReviewStatus, type Review } from '@digilist/client-sdk
 import { ReviewModerationTable } from './components/ReviewModerationTable';
 import { useT } from '@xala/i18n';
 
-// Status filter options
+// Status filter options - hardcoded Norwegian to avoid module-level t() calls
 const STATUS_OPTIONS = [
   { id: 'all', label: 'Alle' },
-  { id: 'pending', label: t("status.pending") },
+  { id: 'pending', label: 'Venter' },
   { id: 'approved', label: 'Godkjent' },
-  { id: 'rejected', label: t('common.avslaatt') },
+  { id: 'rejected', label: 'Avslått' },
 ] as const;
 
 export function ReviewModerationPage() {
-  // Translation function available for future localization
-  const _t = useT(); // eslint-disable-line @typescript-eslint/no-unused-vars
+  const t = useT();
   // State
   const [searchQuery, setSearchQuery] = useState('');
   const [statusFilter, setStatusFilter] = useState<ReviewStatus | 'all'>('pending');
@@ -34,7 +33,6 @@ export function ReviewModerationPage() {
 
   // Build query params based on status filter
   const reviewParams = useMemo(() => {
-  const t = useT();
     const params: { status?: ReviewStatus } = {};
     if (statusFilter !== 'all') {
       params.status = statusFilter as ReviewStatus;
@@ -160,7 +158,7 @@ export function ReviewModerationPage() {
       <div style={{ display: 'flex', gap: 'var(--ds-spacing-3)', flexWrap: 'wrap', alignItems: 'center' }}>
         <div style={{ flex: '1 1 300px', minWidth: '200px' }}>
           <HeaderSearch
-            placeholder={t('common.sok_etter_anmeldelse_objekt')}
+            placeholder="Søk etter anmeldelse, objekt..."
             value={searchQuery}
             onChange={(e: React.ChangeEvent<HTMLInputElement>) => setSearchQuery(e.target.value)}
             onClear={() => setSearchQuery('')}
@@ -186,7 +184,7 @@ export function ReviewModerationPage() {
               padding: 'var(--ds-spacing-10)',
             }}
           >
-            <Spinner aria-label={t('common.laster_anmeldelser')} />
+            <Spinner aria-label="Laster anmeldelser" />
           </div>
         ) : (
           <ReviewModerationTable

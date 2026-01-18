@@ -33,69 +33,7 @@ export interface RolesStepProps {
 /**
  * Default role templates based on actor type
  */
-const DEFAULT_ROLES: Record<string, RoleDefinition[]> = {
-  municipality: [
-    {
-      id: 'admin',
-      name: 'Administrator',
-      description: t('common.full_tilgang_til_alle'),
-      permissions: [
-        'organization:manage',
-        'users:manage',
-        'listings:manage',
-        'bookings:manage',
-        'settings:manage',
-        'reports:view',
-        'audit:view',
-      ],
-    },
-    {
-      id: 'manager',
-      name: 'Manager',
-      description: t('common.administrer_anlegg_og_bookinger'),
-      permissions: [
-        'listings:manage',
-        'bookings:manage',
-        'reports:view',
-      ],
-    },
-    {
-      id: 'member',
-      name: 'Medlem',
-      description: t('common.grunnleggende_medlem_med_visnings'),
-      permissions: [
-        'listings:view',
-        'bookings:create',
-        'bookings:view',
-      ],
-      isDefault: true,
-    },
-  ],
-  organization: [
-    {
-      id: 'admin',
-      name: 'Administrator',
-      description: t('common.full_tilgang_til_organisasjonsfunksjoner'),
-      permissions: [
-        'organization:manage',
-        'users:manage',
-        'bookings:manage',
-        'settings:manage',
-      ],
-    },
-    {
-      id: 'member',
-      name: 'Medlem',
-      description: t('common.standard_medlem_med_bookingtilgang'),
-      permissions: [
-        'listings:view',
-        'bookings:create',
-        'bookings:view',
-      ],
-      isDefault: true,
-    },
-  ],
-};
+
 
 // =============================================================================
 // Component
@@ -103,14 +41,81 @@ const DEFAULT_ROLES: Record<string, RoleDefinition[]> = {
 
 export function RolesStep({ actorType = 'municipality', selectedRoles = ['admin'], onChange, errors = [] }: RolesStepProps) {
   // Translation function available for future localization
-  const _t = useT(); // eslint-disable-line @typescript-eslint/no-unused-vars
+  const t = useT();
+
+  /**
+   * Default role templates based on actor type
+   */
+  const DEFAULT_ROLES: Record<string, RoleDefinition[]> = {
+    municipality: [
+      {
+        id: 'admin',
+        name: 'Administrator',
+        description: t('common.full_tilgang_til_alle'),
+        permissions: [
+          'organization:manage',
+          'users:manage',
+          'listings:manage',
+          'bookings:manage',
+          'settings:manage',
+          'reports:view',
+          'audit:view',
+        ],
+      },
+      {
+        id: 'manager',
+        name: 'Manager',
+        description: t('common.administrer_anlegg_og_bookinger'),
+        permissions: [
+          'listings:manage',
+          'bookings:manage',
+          'reports:view',
+        ],
+      },
+      {
+        id: 'member',
+        name: 'Medlem',
+        description: t('common.grunnleggende_medlem_med_visnings'),
+        permissions: [
+          'listings:view',
+          'bookings:create',
+          'bookings:view',
+        ],
+        isDefault: true,
+      },
+    ],
+    organization: [
+      {
+        id: 'admin',
+        name: 'Administrator',
+        description: t('common.full_tilgang_til_organisasjonsfunksjoner'),
+        permissions: [
+          'organization:manage',
+          'users:manage',
+          'bookings:manage',
+          'settings:manage',
+        ],
+      },
+      {
+        id: 'member',
+        name: 'Medlem',
+        description: t('common.standard_medlem_med_bookingtilgang'),
+        permissions: [
+          'listings:view',
+          'bookings:create',
+          'bookings:view',
+        ],
+        isDefault: true,
+      },
+    ],
+  };
+
   // Get roles for the actor type (fallback to organization roles if actorType is not found)
   const availableRoles = DEFAULT_ROLES[actorType] || DEFAULT_ROLES.organization || [];
 
   // Handle role toggle
   const handleRoleToggle = useCallback(
     (roleId: string) => {
-  const t = useT();
       // Admin role is always required
       if (roleId === 'admin') {
         return;

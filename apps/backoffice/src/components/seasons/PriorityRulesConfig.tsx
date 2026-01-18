@@ -422,10 +422,10 @@ export function PriorityRulesConfig({ seasonId, canEdit }: PriorityRulesConfigPr
                   {canEdit && (
                     <Table.Cell>
                       <div style={{ display: 'flex', gap: 'var(--ds-spacing-2)' }}>
-                        <Button variant="tertiary" data-size="sm" type="button" aria-label={t("ui.edit")} onClick={() => handleOpenEditModal(rule)}>
+                        <Button variant="tertiary" data-size="sm" type="button" aria-label={t("action.edit")} onClick={() => handleOpenEditModal(rule)}>
                           <EditIcon />
                         </Button>
-                        <Button variant="tertiary" data-size="sm" type="button" aria-label={t("ui.delete")} onClick={() => handleDelete(rule.id)} style={{ color: 'var(--ds-color-danger-text-default)' }}>
+                        <Button variant="tertiary" data-size="sm" type="button" aria-label={t("action.delete")} onClick={() => handleDelete(rule.id)} style={{ color: 'var(--ds-color-danger-text-default)' }}>
                           <TrashIcon />
                         </Button>
                       </div>
@@ -473,7 +473,7 @@ export function PriorityRulesConfig({ seasonId, canEdit }: PriorityRulesConfigPr
               <button
                 type="button"
                 onClick={handleCloseModal}
-                aria-label={t("ui.close")}
+                aria-label={t("action.close")}
                 style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 'var(--ds-spacing-1)', display: 'flex' }}
               >
                 <XIcon />
@@ -591,7 +591,7 @@ export function PriorityRulesConfig({ seasonId, canEdit }: PriorityRulesConfigPr
             </div>
 
             <div style={{ display: 'flex', justifyContent: 'flex-end', gap: 'var(--ds-spacing-3)', marginTop: 'var(--ds-spacing-6)' }}>
-              <Button variant="secondary" onClick={handleCloseModal} type="button">{t("ui.cancel")}</Button>
+              <Button variant="secondary" onClick={handleCloseModal} type="button">{t("action.cancel")}</Button>
               <Button
                 variant="primary"
                 onClick={handleSubmit}

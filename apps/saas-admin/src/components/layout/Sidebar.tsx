@@ -152,7 +152,7 @@ export function Sidebar() {
       title: t('saasAdmin.nav.sections.system'),
       items: [
         {
-          name: t('saasAdmin.aiSeed.title'),
+          name: t('saasAdmin.aiSeed.page.title'),
           description: t('saasAdmin.aiSeed.description'),
           href: '/ai-seeds',
           icon: <SparklesIcon />,
@@ -232,7 +232,7 @@ export function Sidebar() {
         <div className={styles.logoWrapper}>
           <img
             src="/logo.svg"
-            alt={t('common.brandName', { defaultValue: 'Digilist' })}
+            alt={t('app.name', { defaultValue: 'Digilist' })}
             className={styles.logoImage}
           />
           <div>

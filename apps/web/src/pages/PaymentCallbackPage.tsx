@@ -288,7 +288,7 @@ export function PaymentCallbackPage(): React.ReactElement {
                   {t('common.goToHome')}
                 </Button>
                 <Button type="button" onClick={() => navigate(-1)}>
-                  {t('common.back')}
+                  {t('action.back')}
                 </Button>
               </Stack>
             </Stack>

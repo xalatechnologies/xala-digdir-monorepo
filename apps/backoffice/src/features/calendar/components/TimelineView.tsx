@@ -215,7 +215,7 @@ export function TimelineView({
   if (isLoading) {
     return (
       <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-        <Spinner aria-label={t('timeline.loading')} />
+        <Spinner aria-label={t('state.loading')} />
       </div>
     );
   }

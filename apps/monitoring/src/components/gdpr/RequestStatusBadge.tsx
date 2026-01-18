@@ -116,7 +116,7 @@ function StatusTag({
 const gdprRequestStatusConfig: Record<GdprRequestStatus, StatusBadgeConfig> = {
   pending: { color: 'warning', label: 'Venter' },
   processing: { color: 'info', label: 'Behandles' },
-  completed: { color: 'success', label: t('common.fullfort') },
+  completed: { color: 'success', label: t('state.completed') },
   rejected: { color: 'danger', label: t('common.avslaatt') },
 };
 

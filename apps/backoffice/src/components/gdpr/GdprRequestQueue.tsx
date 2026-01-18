@@ -233,7 +233,7 @@ export function GdprRequestQueue({ onRequestClick }: GdprRequestQueueProps) {
           gap: 'var(--ds-spacing-4)',
         }}
       >
-        <Spinner aria-label={t('common.laster_foresporsler')} />
+        <Spinner aria-label={t('state.loading')} />
         <Text style={{ color: 'var(--ds-color-neutral-text-subtle)' }}>
           Laster forespørsler...
         </Text>

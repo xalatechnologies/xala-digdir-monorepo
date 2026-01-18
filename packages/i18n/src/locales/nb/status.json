@@ -52,5 +52,10 @@
   "ingen.lisensnokkel": "Ingen lisensnøkkel",
   "aktiv": "Aktiv",
   "inaktiv": "Inaktiv",
-  "utlopt": "Utløpt"
+  "utlopt": "Utløpt",
+  "ledig": "Ledig",
+  "reservert": "Reservert",
+  "blokkert": "Blokkert",
+  "utilgjengelig": "Utilgjengelig",
+  "stengt": "Stengt"
 }

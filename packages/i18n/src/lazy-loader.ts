@@ -76,10 +76,23 @@ const loadingPromises: Map<SupportedLocale, Promise<TranslationsRegistry[Support
  */
 const getApiBaseUrl = (): string => {
   // Check for environment variable or use default
+  let url = '';
   if (typeof window !== 'undefined' && (window as any).__VITE_API_URL__) {
-    return (window as any).__VITE_API_URL__;
+    url = (window as any).__VITE_API_URL__;
+  } else {
+    url = (import.meta.env as unknown as Record<string, string | undefined>)?.VITE_API_URL || '/api';
   }
-  return (import.meta.env as unknown as Record<string, string | undefined>)?.VITE_API_URL || '/api';
+
+  // If using default /api, return as is
+  if (url === '/api') return url;
+
+  // For absolute URLs, ensure /api suffix if not already present
+  // But be careful not to double append if VITE_API_URL already contains it
+  if (!url.endsWith('/api')) {
+    return `${url}/api`;
+  }
+  
+  return url;
 };
 
 /**

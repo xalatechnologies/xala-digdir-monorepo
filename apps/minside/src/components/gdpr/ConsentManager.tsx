@@ -129,7 +129,7 @@ export function ConsentManager() {
               disabled={updateConsents.isPending}
               style={{ minHeight: '44px', alignSelf: isMobile ? 'stretch' : 'flex-start' }}
             >
-              {updateConsents.isPending ? t('common.lagrer') : 'Lagre endringer'}
+              {updateConsents.isPending ? t('state.saving') : 'Lagre endringer'}
             </Button>
           )}
         </div>

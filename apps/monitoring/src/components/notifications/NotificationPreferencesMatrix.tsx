@@ -341,7 +341,7 @@ export function NotificationPreferencesMatrix({
       {showMasterToggles && masterToggles && onMasterToggleChange && (
         <Card style={{ padding: 'var(--ds-spacing-5)' }}>
           <Heading level={2} data-size="sm" style={{ margin: 0, marginBottom: 'var(--ds-spacing-4)' }}>
-            {t('notifications.masterToggles.title')}
+            {t('notifications.masterToggles.page.title')}
           </Heading>
           <Paragraph
             data-size="sm"
@@ -450,7 +450,7 @@ export function NotificationPreferencesMatrix({
       {/* Notification Matrix */}
       <Card style={{ padding: 'var(--ds-spacing-5)' }}>
         <Heading level={2} data-size="sm" style={{ margin: 0, marginBottom: 'var(--ds-spacing-2)' }}>
-          {title ?? t('notifications.matrix.title')}
+          {title ?? t('notifications.matrix.page.title')}
         </Heading>
         <Paragraph
           data-size="sm"

@@ -228,7 +228,7 @@ export function AppealProcess({ seasonId, canProcess }: AppealProcessProps) {
   if (isLoading) {
     return (
       <div style={{ display: 'flex', justifyContent: 'center', padding: 'var(--ds-spacing-8)' }}>
-        <Spinner data-size="lg" aria-label={t("ui.loading")} />
+        <Spinner data-size="lg" aria-label={t("state.loading")} />
       </div>
     );
   }
@@ -497,7 +497,7 @@ export function AppealProcess({ seasonId, canProcess }: AppealProcessProps) {
               <button
                 type="button"
                 onClick={() => setShowAppealModal(false)}
-                aria-label={t("ui.close")}
+                aria-label={t("action.close")}
                 style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 'var(--ds-spacing-1)', display: 'flex' }}
               >
                 <XIcon />
@@ -518,7 +518,7 @@ export function AppealProcess({ seasonId, canProcess }: AppealProcessProps) {
                       {selectedApplication.listingName}
                     </div>
                     <div>
-                      <span style={{ fontWeight: 'var(--ds-font-weight-semibold)' }}>{t('common.tid')}</span>{' '}
+                      <span style={{ fontWeight: 'var(--ds-font-weight-semibold)' }}>{t('label.time')}</span>{' '}
                       {weekdayLabels[selectedApplication.weekday]} {formatTime(selectedApplication.startTime)} – {formatTime(selectedApplication.endTime)}
                     </div>
                     {selectedApplication.rejectionReason && (

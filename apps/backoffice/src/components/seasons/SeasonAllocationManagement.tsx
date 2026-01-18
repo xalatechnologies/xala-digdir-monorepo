@@ -127,7 +127,7 @@ export function SeasonAllocationManagement({
   if (isLoading) {
     return (
       <div style={{ display: 'flex', justifyContent: 'center', padding: 'var(--ds-spacing-8)' }}>
-        <Spinner data-size="lg" aria-label={t("ui.loading")} />
+        <Spinner data-size="lg" aria-label={t("state.loading")} />
       </div>
     );
   }
@@ -272,7 +272,7 @@ export function SeasonAllocationManagement({
                             >
                               {allocating[application.id] ? (
                                 <>
-                                  <Spinner data-size="sm" aria-label={t("ui.loading")} /> Tildeler...
+                                  <Spinner data-size="sm" aria-label={t("state.loading")} /> Tildeler...
                                 </>
                               ) : (
                                 <>

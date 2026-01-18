@@ -380,7 +380,7 @@ export function BookingDialog({
             <button
               type="button"
               onClick={onClose}
-              aria-label={t('common.close')}
+              aria-label={t('action.close')}
               style={{
                 display: 'flex',
                 alignItems: 'center',
@@ -872,7 +872,7 @@ export function BookingDialog({
               </div>
             )}
             <div style={{ display: 'flex', gap: 'var(--ds-spacing-3)' }}>
-              <Button type="button" variant="secondary" onClick={onClose} style={{ flex: 1 }}>{t("ui.cancel")}</Button>
+              <Button type="button" variant="secondary" onClick={onClose} style={{ flex: 1 }}>{t("action.cancel")}</Button>
               <Button
                 type="submit"
                 variant="primary"

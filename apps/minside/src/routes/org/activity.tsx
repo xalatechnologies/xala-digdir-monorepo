@@ -24,20 +24,20 @@ const MOBILE_BREAKPOINT = 768;
 
 type ActivityType = 'booking' | 'member' | 'invoice' | 'season';
 
-// Mock activity data
+// Mock activity data - hardcoded Norwegian strings to avoid module-level t() calls
 const mockActivities = [
   {
     id: 'act-001',
     type: 'booking' as ActivityType,
-    title: t('common.ny_booking_opprettet'),
-    description: t('common.idrettshall_a_22_januar'),
+    title: 'Ny booking opprettet',
+    description: 'Idrettshall A - 22. januar',
     user: 'Ola Nordmann',
     timestamp: '2026-01-14T15:30:00Z',
   },
   {
     id: 'act-002',
     type: 'member' as ActivityType,
-    title: t('common.nytt_medlem_invitert'),
+    title: 'Nytt medlem invitert',
     description: 'kari@example.com ble invitert som medlem',
     user: 'Admin',
     timestamp: '2026-01-14T14:00:00Z',
@@ -45,24 +45,24 @@ const mockActivities = [
   {
     id: 'act-003',
     type: 'invoice' as ActivityType,
-    title: t('common.faktura_betalt'),
-    description: t('common.faktura_f2026001_er_betalt'),
+    title: 'Faktura betalt',
+    description: 'Faktura F2026-001 er betalt',
     user: 'System',
     timestamp: '2026-01-14T10:15:00Z',
   },
   {
     id: 'act-004',
     type: 'season' as ActivityType,
-    title: t('common.sesongsoknad_sendt'),
-    description: t('common.soknad_for_vaar_2026'),
+    title: 'Sesongsøknad sendt',
+    description: 'Søknad for vår 2026',
     user: 'Ola Nordmann',
     timestamp: '2026-01-13T16:45:00Z',
   },
   {
     id: 'act-005',
     type: 'booking' as ActivityType,
-    title: t('common.booking_kansellert'),
-    description: t('common.fotballbane_1_20_januar'),
+    title: 'Booking kansellert',
+    description: 'Fotballbane 1 - 20. januar',
     user: 'Kari Hansen',
     timestamp: '2026-01-13T11:00:00Z',
   },
@@ -182,7 +182,7 @@ export function OrganizationActivityPage() {
       <Card style={{ padding: 'var(--ds-spacing-5)' }}>
         {isLoading ? (
           <div style={{ display: 'flex', justifyContent: 'center', padding: 'var(--ds-spacing-8)' }}>
-            <Spinner aria-label={t('common.loading')} data-size="lg" />
+            <Spinner aria-label={t('state.loading')} data-size="lg" />
           </div>
         ) : filteredActivities.length === 0 ? (
           <div style={{ padding: 'var(--ds-spacing-8)', textAlign: 'center' }}>

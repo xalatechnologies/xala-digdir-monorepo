@@ -72,7 +72,7 @@ export function Header({ title: _title }: HeaderProps) {
           {isMobile ? (
             <img
               src="/logo.svg"
-              alt={t('common.brandName', { defaultValue: 'Digilist' })}
+              alt={t('app.name', { defaultValue: 'Digilist' })}
               style={{
                 height: '32px',
                 width: 'auto',
@@ -179,7 +179,7 @@ export function Header({ title: _title }: HeaderProps) {
                       }}
                     >
                       <LogOutIcon size={18} />
-                      {t('auth.logout')}
+                      {t('action.logout')}
                     </button>
                   </div>
                 )}
@@ -210,11 +210,11 @@ export function Header({ title: _title }: HeaderProps) {
                   variant="tertiary"
                   size="md"
                   onClick={logout}
-                  aria-label={t('auth.logout')}
+                  aria-label={t('action.logout')}
                   className={styles.logoutButton}
                 >
                   <LogOutIcon size={20} />
-                  {t('auth.logout')}
+                  {t('action.logout')}
                 </Button>
               )}
             </HeaderActions>

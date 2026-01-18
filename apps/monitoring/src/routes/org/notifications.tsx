@@ -252,7 +252,7 @@ export function OrganizationNotificationsPage(): React.ReactElement {
   if (isLoading) {
     return (
       <div style={{ display: 'flex', justifyContent: 'center', padding: 'var(--ds-spacing-8)' }}>
-        <Spinner aria-label={t('common.loading')} data-size="lg" />
+        <Spinner aria-label={t('state.loading')} data-size="lg" />
       </div>
     );
   }
@@ -287,7 +287,7 @@ export function OrganizationNotificationsPage(): React.ReactElement {
       >
         <div>
           <Heading level={1} data-size="lg" style={{ margin: 0 }}>
-            {t('notifications.org.title')}
+            {t('notifications.org.page.title')}
           </Heading>
           <Paragraph
             style={{
@@ -296,7 +296,7 @@ export function OrganizationNotificationsPage(): React.ReactElement {
               marginBottom: 0,
             }}
           >
-            {t('notifications.org.subtitle')}
+            {t('notifications.org.page.description')}
           </Paragraph>
         </div>
         <div style={{ display: 'flex', gap: 'var(--ds-spacing-2)' }}>
@@ -318,7 +318,7 @@ export function OrganizationNotificationsPage(): React.ReactElement {
             disabled={isSaving || !hasChanges}
             style={{ minHeight: '44px' }}
           >
-            {isSaving ? t('common.saving') : t('common.save')}
+            {isSaving ? t('state.saving') : t('action.save')}
             {hasChanges && !isSaving && (
               <Badge
                 data-size="sm"
@@ -361,7 +361,7 @@ export function OrganizationNotificationsPage(): React.ReactElement {
       {/* Recipients */}
       <Card style={{ padding: 'var(--ds-spacing-5)' }}>
         <Heading level={2} data-size="sm" style={{ margin: 0, marginBottom: 'var(--ds-spacing-4)' }}>
-          {t('notifications.org.recipients.title')}
+          {t('notifications.org.recipients.page.title')}
         </Heading>
 
         <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--ds-spacing-4)' }}>
@@ -414,7 +414,7 @@ export function OrganizationNotificationsPage(): React.ReactElement {
       {/* Contact Information */}
       <Card style={{ padding: 'var(--ds-spacing-5)' }}>
         <Heading level={2} data-size="sm" style={{ margin: 0, marginBottom: 'var(--ds-spacing-4)' }}>
-          {t('notifications.org.contact.title')}
+          {t('notifications.org.contact.page.title')}
         </Heading>
 
         <div
@@ -473,7 +473,7 @@ export function OrganizationNotificationsPage(): React.ReactElement {
         >
           <div>
             <Heading level={2} data-size="sm" style={{ margin: 0 }}>
-              {t('notifications.org.quietHours.title')}
+              {t('notifications.org.quietHours.page.title')}
             </Heading>
             <Paragraph
               data-size="sm"
@@ -555,7 +555,7 @@ export function OrganizationNotificationsPage(): React.ReactElement {
         >
           <Spinner data-size="sm" aria-hidden="true" />
           <Paragraph data-size="sm" style={{ margin: 0, color: 'var(--ds-color-brand-1-text-default)' }}>
-            {t('common.saving')}
+            {t('state.saving')}
           </Paragraph>
         </div>
       )}

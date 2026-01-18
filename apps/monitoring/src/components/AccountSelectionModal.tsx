@@ -162,11 +162,11 @@ export function AccountSelectionModal({ open }: AccountSelectionModalProps) {
         }}
       >
         <Heading level={2} data-size="md" style={{ margin: 0, marginBottom: 'var(--ds-spacing-2)' }}>
-          {step === 'account-type' ? t('components.accountModal.title') : t('components.accountModal.selectOrganization')}
+          {step === 'account-type' ? t('components.accountModal.page.title') : t('components.accountModal.selectOrganization')}
         </Heading>
         <Paragraph style={{ margin: 0, color: 'var(--ds-color-neutral-text-subtle)' }}>
           {step === 'account-type'
-            ? t('components.accountModal.subtitle')
+            ? t('components.accountModal.page.description')
             : t('components.accountModal.selectOrganizationSubtitle')}
         </Paragraph>
       </div>

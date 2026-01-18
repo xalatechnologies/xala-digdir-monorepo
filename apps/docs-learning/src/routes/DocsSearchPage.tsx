@@ -45,14 +45,14 @@ export function DocsSearchPage() {
   return (
     <div className={styles.container}>
       <header className={styles.header}>
-        <Heading level={1}>{t('docs.search.title')}</Heading>
+        <Heading level={1}>{t('docs.search.page.title')}</Heading>
       </header>
 
       <div className={styles.searchBox}>
         <Textfield
           type="search"
           label={t('docs.search.label')}
-          placeholder={t('docs.search.placeholder')}
+          placeholder={t('form.docs.search.placeholder')}
           value={query}
           onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleSearch(e.target.value)}
           className={styles.searchInput}

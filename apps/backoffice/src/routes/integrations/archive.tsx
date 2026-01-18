@@ -163,7 +163,7 @@ export function ArchivePage(): React.ReactElement {
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
             <div>
               <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--ds-spacing-3)' }}>
-                <Heading level={1} data-size="lg">{t('integrations.archive.title')}</Heading>
+                <Heading level={1} data-size="lg">{t('integrations.archive.page.title')}</Heading>
                 {isActive ? (
                   <Badge color="success">{t('integrations.archive.statusActive')}</Badge>
                 ) : (
@@ -223,12 +223,12 @@ export function ArchivePage(): React.ReactElement {
 
         <Card>
           <Stack spacing={4}>
-            <Heading level={3} data-size="sm">{t('integrations.archive.events.title')}</Heading>
+            <Heading level={3} data-size="sm">{t('integrations.archive.events.page.title')}</Heading>
 
             <div style={{ display: 'flex', gap: 'var(--ds-spacing-3)', flexWrap: 'wrap' }}>
               <div style={{ flex: 1, minWidth: '200px' }}>
                 <Textfield
-                  aria-label={t('common.search')}
+                  aria-label={t('action.search')}
                   placeholder={t('integrations.archive.events.searchPlaceholder')}
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
@@ -263,7 +263,7 @@ export function ArchivePage(): React.ReactElement {
               <thead>
                 <tr>
                   <th>{t('integrations.archive.table.type')}</th>
-                  <th>{t('integrations.archive.table.title')}</th>
+                  <th>{t('integrations.archive.table.page.title')}</th>
                   <th>{t('integrations.archive.table.caseNumber')}</th>
                   <th>{t('integrations.archive.table.status')}</th>
                   <th>{t('integrations.archive.table.timestamp')}</th>
@@ -332,7 +332,7 @@ export function ArchivePage(): React.ReactElement {
 
         <Card>
           <Stack spacing={3}>
-            <Heading level={3} data-size="sm">{t('integrations.archive.eventTypes.title')}</Heading>
+            <Heading level={3} data-size="sm">{t('integrations.archive.eventTypes.page.title')}</Heading>
             <Paragraph data-size="sm" style={{ color: 'var(--ds-color-neutral-text-subtle)' }}>
               {t('integrations.archive.eventTypes.description')}
             </Paragraph>

@@ -162,7 +162,7 @@ export default function GuidesPage(): React.ReactElement {
 
   return (
     <HelpLayout
-      title={t('help.guides.title')}
+      title={t('help.guides.page.title')}
       description={t('help.guides.description')}
       tocItems={tocItems}
       showBackButton

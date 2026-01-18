@@ -107,13 +107,13 @@ IMPORTANT: Return ONLY a valid JSON array. No explanations, no markdown, just th
         id: 'd0000001-0000-0000-0000-000000000001',
         tenantId: 'f47ac10b-58cc-4372-a567-0e02b2c3d479',
         organizationId: '11111111-1111-1111-1111-111111111111',
-        name: t('common.idrettshall_a'),
+        name: 'common.idrettshall_a',
         slug: 'idrettshall-a-0',
         type: 'SPACE',
         categoryKey: 'LOKALER_OG_BANER',
         timeMode: 'PERIOD',
         status: 'published',
-        description: t('common.moderne_idrettshall_i_skien'),
+        description: 'common.moderne_idrettshall_i_skien',
         capacity: 300,
         pricing: {
           basePrice: 1500,
@@ -121,7 +121,7 @@ IMPORTANT: Return ONLY a valid JSON array. No explanations, no markdown, just th
           unit: 'hour',
           tiers: [
             { type: 'hourly', price: 1500, label: 'Timepris' },
-            { type: 'half_day', price: 4500, duration: 4, label: t('common.halvdag_4_timer') },
+            { type: 'half_day', price: 4500, duration: 4, label: 'common.halvdag_4_timer' },
           ],
           discounts: [
             { type: 'member', percentage: 15, label: 'Medlemsrabatt' },

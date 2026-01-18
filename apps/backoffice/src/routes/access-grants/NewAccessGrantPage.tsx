@@ -163,7 +163,7 @@ export function NewAccessGrantPage() {
       <Card>
         {isLoading ? (
           <div style={{ display: 'flex', justifyContent: 'center', padding: 'var(--ds-spacing-8)' }}>
-            <Spinner data-size="lg" aria-label={t('accessGrants.loadingData')} />
+            <Spinner data-size="lg" aria-label={t('state.loading')} />
           </div>
         ) : (
           <form onSubmit={handleSubmit}>

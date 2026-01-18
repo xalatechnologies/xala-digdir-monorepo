@@ -146,7 +146,7 @@ export function MonitoringPage() {
   if (isLoading) {
     return (
       <div style={{ display: 'flex', justifyContent: 'center', padding: 'var(--ds-spacing-8)' }}>
-        <Spinner size="lg" aria-label={t('common.loading')} />
+        <Spinner size="lg" aria-label={t('state.loading')} />
       </div>
     );
   }
@@ -164,7 +164,7 @@ export function MonitoringPage() {
           <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--ds-spacing-3)', marginBottom: 'var(--ds-spacing-2)' }}>
             <SparklesIcon style={{ color: 'var(--ds-color-accent-text-default)', width: 32, height: 32 }} />
             <Heading level={1} size="lg">
-              {t('saasAdmin.monitoring.title', { defaultValue: 'Plattformovervåking' })}
+              {t('saasAdmin.monitoring.page.title', { defaultValue: 'Plattformovervåking' })}
             </Heading>
           </div>
           <Paragraph size="sm" style={{ color: 'var(--ds-color-neutral-text-subtle)' }}>
@@ -331,7 +331,7 @@ export function MonitoringPage() {
       <Card style={{ marginTop: 'var(--ds-spacing-6)', padding: 'var(--ds-spacing-6)' }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 'var(--ds-spacing-4)' }}>
           <Heading level={2} size="sm">
-            {t('saasAdmin.monitoring.scanners.title', { defaultValue: 'Kodekvalitet og samsvar' })}
+            {t('saasAdmin.monitoring.scanners.page.title', { defaultValue: 'Kodekvalitet og samsvar' })}
           </Heading>
         </div>
 

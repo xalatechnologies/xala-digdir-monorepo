@@ -108,7 +108,7 @@ export function DocsRightTOC({ items, onItemClick }: DocsRightTOCProps) {
   return (
     <nav className={styles.tocContainer} aria-label={t('docs.toc.label') || 'Innholdsfortegnelse'}>
       <Paragraph data-size="sm" className={styles.tocTitle}>
-        {t('docs.toc.title') || 'På denne siden'}
+        {t('docs.toc.page.title') || 'På denne siden'}
       </Paragraph>
       
       <ul className={styles.tocList}>

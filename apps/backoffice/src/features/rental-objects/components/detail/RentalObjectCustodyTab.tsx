@@ -235,7 +235,7 @@ export function RentalObjectCustodyTab({ rentalObjectId }: { rentalObjectId: str
                   onChange={(e) => setNewGrant({...newGrant, granteeId: e.target.value})}
                   style={{ width: '100%', padding: 'var(--ds-spacing-2)', borderRadius: 'var(--ds-border-radius-md)', border: '1px solid var(--ds-color-neutral-border-default)' }}
                 >
-                  <option value="">{t('common.velg')}</option>
+                  <option value="">{t('action.select')}</option>
                   {newGrant.granteeType === 'ORG' 
                     ? (orgs as any)?.data?.map((o: any) => <option key={o.id} value={o.id}>{o.name}</option>)
                     : (usersData as any)?.data?.map((u: any) => <option key={u.id} value={u.id}>{u.fullName}</option>)
@@ -296,7 +296,7 @@ export function RentalObjectCustodyTab({ rentalObjectId }: { rentalObjectId: str
               </div>
               
               <div style={{ display: 'flex', gap: 'var(--ds-spacing-2)', justifyContent: 'flex-end', marginTop: 'var(--ds-spacing-4)' }}>
-                <Button type="button" variant="secondary" onClick={() => setIsModalOpen(false)}>Avbryt</Button>
+                <Button type="button" variant="secondary" onClick={() => setIsModalOpen(false)}>{t('action.cancel')}</Button>
                 <Button 
                   type="button" 
                   variant="primary" 

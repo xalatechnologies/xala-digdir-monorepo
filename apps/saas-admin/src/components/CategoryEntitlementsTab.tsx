@@ -111,7 +111,7 @@ export function CategoryEntitlementsTab({ tenantId }: CategoryEntitlementsTabPro
     return (
       <Card style={{ padding: 'var(--ds-spacing-6)' }}>
         <div style={{ display: 'flex', justifyContent: 'center', padding: 'var(--ds-spacing-8)' }}>
-          <Spinner aria-label={t('common.laster_kategorier')} />
+          <Spinner aria-label={t('state.loading')} />
         </div>
       </Card>
     );

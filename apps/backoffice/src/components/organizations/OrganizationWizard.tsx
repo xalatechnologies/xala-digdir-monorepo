@@ -60,7 +60,7 @@ export interface OrganizationWizardProps {
 
 const WIZARD_STEPS: OrganizationWizardStep[] = [
   { id: 'basics', label: 'Grunnleggende', required: true },
-  { id: 'branding', label: t('common.visuell_identitet'), required: false },
+  { id: 'branding', label: 'Visuell identitet', required: false },
   { id: 'roles', label: 'Roller', required: false },
 ];
 
@@ -462,8 +462,8 @@ export function OrganizationWizard({
             variant="secondary"
             onClick={handleCancel}
             disabled={isSaving}
-            aria-label={t("ui.cancel")}
-          >{t("ui.cancel")}</Button>
+            aria-label={t("action.cancel")}
+          >{t("action.cancel")}</Button>
           <Button
             type="button"
             variant="secondary"
@@ -471,7 +471,7 @@ export function OrganizationWizard({
             disabled={isSaving}
             aria-label={t('common.lagre_utkast')}
           >
-            {isSaving ? <Spinner aria-label={t('common.lagrer')} /> : 'Lagre utkast'}
+            {isSaving ? <Spinner aria-label={t('state.saving')} /> : 'Lagre utkast'}
           </Button>
         </div>
 
@@ -505,7 +505,7 @@ export function OrganizationWizard({
               disabled={isSaving}
               aria-label={t('common.fullfor')}
             >
-              {isSaving ? <Spinner aria-label={t('common.lagrer')} /> : 'Fullfør'}
+              {isSaving ? <Spinner aria-label={t('state.saving')} /> : 'Fullfør'}
             </Button>
           )}
         </div>

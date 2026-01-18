@@ -226,7 +226,7 @@ export function OrganizationRentalObjectsPage() {
       <Container>
         <EmptyState
           icon={<BuildingIcon aria-hidden />}
-          title={t('common.error')}
+          title={t('error.generic')}
           description={t('tenantAdmin.organizations.notFound')}
         />
       </Container>
@@ -248,7 +248,7 @@ export function OrganizationRentalObjectsPage() {
           { label: t('nav.dashboard'), href: '/' },
           { label: t('nav.organizations'), href: '/organizations' },
           { label: organization.name, href: `/organizations/${organizationId}` },
-          { label: t('tenantAdmin.rentalObjects.title'), href: `/organizations/${organizationId}/rental-objects` },
+          { label: t('tenantAdmin.rentalObjects.page.title'), href: `/organizations/${organizationId}/rental-objects` },
         ]}
         actions={
           <Button
@@ -256,7 +256,7 @@ export function OrganizationRentalObjectsPage() {
             icon={<ArrowLeftIcon aria-hidden />}
             onClick={handleBack} type="button"
           >
-            {t('common.back')}
+            {t('action.back')}
           </Button>
         }
       />
@@ -274,7 +274,7 @@ export function OrganizationRentalObjectsPage() {
 
             {/* Search */}
             <Textfield
-              label={t('common.search')}
+              label={t('action.search')}
               placeholder={t('tenantAdmin.rentalObjects.searchPlaceholder')}
               value={searchAvailable}
               onChange={(e) => setSearchAvailable(e.target.value)}
@@ -357,7 +357,7 @@ export function OrganizationRentalObjectsPage() {
 
             {/* Search */}
             <Textfield
-              label={t('common.search')}
+              label={t('action.search')}
               placeholder={t('tenantAdmin.rentalObjects.searchPlaceholder')}
               value={searchAssigned}
               onChange={(e) => setSearchAssigned(e.target.value)}

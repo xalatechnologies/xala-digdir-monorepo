@@ -27,6 +27,7 @@ import { SeasonalLeaseController } from './modules/seasonal-lease/seasonal-lease
 import { MessagesController } from './modules/messages/messages.controller';
 import { ReportsController } from './modules/reports/reports.controller';
 import { OrganizationsController } from './modules/organizations/organizations.controller';
+import { GDPRController } from './modules/gdpr/gdpr.controller';
 import { ConversationsController } from './modules/conversations/conversations.controller';
 import { AllocationsController } from './modules/allocations/allocations.controller';
 import { AvailabilityController } from './modules/availability/availability.controller';
@@ -81,6 +82,8 @@ import { StorageService } from './modules/storage/storage.service';
 import scannerRoutes from './routes/scanners.routes';
 // i18n
 import { i18nRoutes } from './routes/i18n.routes';
+// Translations (from DB)
+import { TranslationsController } from './modules/translations/translations.controller';
 
 /**
  * Initialize SDK adapters (mock for demo)
@@ -206,6 +209,10 @@ async function bootstrap() {
   //   )
   // );
 
+  // Register GDPR Service
+  const { GDPRService } = await import('./modules/gdpr/gdpr.service');
+  container.registerFactory('GDPRService', () => new GDPRService(db));
+
   console.log('✓ Services registered');
 
   // Register controllers with their dependencies
@@ -234,6 +241,11 @@ async function bootstrap() {
   // container.registerFactory('NotificationsController', () =>
   //   new NotificationsController(container.resolve('NotificationService'))
   // );
+  
+  // Register GDPR Controller
+  container.registerFactory('GDPRController', () =>
+    new GDPRController(container.resolve('GDPRService'))
+  );
   console.log('✓ Controllers registered');
 
   // Load modules
@@ -260,6 +272,7 @@ async function bootstrap() {
     MessagesController,
     ReportsController,
     OrganizationsController,
+    GDPRController,
     ConversationsController,
     AllocationsController,
     AvailabilityController,
@@ -306,6 +319,8 @@ async function bootstrap() {
     CustodyController,
     // Storage
     StorageController,
+    // Translations (from DB)
+    TranslationsController,
   ];
 
   // Create Fastify app with controllers

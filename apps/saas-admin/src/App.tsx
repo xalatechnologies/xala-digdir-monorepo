@@ -1,6 +1,6 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { DesignsystemetProvider, ErrorBoundary, Heading, Paragraph } from '@xala/ds';
-import { I18nProvider, useT } from '@xala/i18n';
+import { LazyI18nProvider, useT } from '@xala/i18n';
 import { AuthProvider } from '@xala/auth';
 import { ToastProvider } from './providers';
 import { ProtectedRoute } from '@xala/ds';
@@ -30,7 +30,7 @@ function DashboardPage() {
   const t = useT();
   return (
     <div>
-      <Heading level={1} size="lg">{t('saasAdmin.dashboard.title')}</Heading>
+      <Heading level={1} size="lg">{t('saasAdmin.dashboard.page.title')}</Heading>
       <Paragraph>{t('saasAdmin.dashboard.welcome')}</Paragraph>
       <Paragraph>{t('saasAdmin.dashboard.description')}</Paragraph>
     </div>
@@ -39,7 +39,7 @@ function DashboardPage() {
 
 export function App() {
   return (
-    <I18nProvider>
+    <LazyI18nProvider>
       <DesignsystemetProvider theme="digilist" colorScheme="auto" size="md">
         <ErrorBoundary>
           <ToastProvider>
@@ -90,6 +90,6 @@ export function App() {
           </ToastProvider>
         </ErrorBoundary>
       </DesignsystemetProvider>
-    </I18nProvider>
+    </LazyI18nProvider>
   );
 }

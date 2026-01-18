@@ -296,7 +296,7 @@ export function RulesTab({
                         fontWeight: 'var(--ds-font-weight-medium)',
                       }}
                     >
-                      {t('rules.required')}
+                      {t('validation.required')}
                     </span>
                   )}
                 </div>

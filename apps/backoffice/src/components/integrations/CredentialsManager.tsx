@@ -98,7 +98,7 @@ export function CredentialsManager({
   if (isLoading) {
     return (
       <div className="flex items-center justify-center p-8">
-        <Spinner aria-label={t('common.laster_legitimasjoner')} />
+        <Spinner aria-label={t('state.loading')} />
       </div>
     );
   }
@@ -277,7 +277,7 @@ function CredentialCard({
             <div className="flex items-center gap-1">
               <span>{t('common.verdi')}</span>
               {isLoadingValue ? (
-                <Spinner aria-label={t("ui.loading")} data-size="sm" />
+                <Spinner aria-label={t("state.loading")} data-size="sm" />
               ) : isRevealed && revealedValue ? (
                 <code className="bg-gray-100 px-2 py-0.5 rounded font-mono text-xs">
                   {revealedValue}
@@ -359,7 +359,7 @@ function CredentialCard({
             data-size="sm"
             type="button"
             onClick={onDelete}
-            title={t("ui.delete")}
+            title={t("action.delete")}
           >
             <Trash2 className="w-4 h-4 text-red-500" />
           </Button>
@@ -450,13 +450,13 @@ function AddCredentialModal({
         )}
 
         <div className="flex justify-end gap-2 pt-4">
-          <Button data-variant="secondary" type="button" onClick={onClose}>{t("ui.cancel")}</Button>
+          <Button data-variant="secondary" type="button" onClick={onClose}>{t("action.cancel")}</Button>
           <Button
             data-variant="primary"
             type="submit"
             disabled={createCredential.isPending}
           >
-            {createCredential.isPending ? t('common.lagrer') : 'Legg til'}
+            {createCredential.isPending ? t('state.saving') : 'Legg til'}
           </Button>
         </div>
       </form>
@@ -533,7 +533,7 @@ function RotateCredentialModal({
         )}
 
         <div className="flex justify-end gap-2 pt-4">
-          <Button data-variant="secondary" type="button" onClick={onClose}>{t("ui.cancel")}</Button>
+          <Button data-variant="secondary" type="button" onClick={onClose}>{t("action.cancel")}</Button>
           <Button
             data-variant="primary"
             type="submit"
@@ -598,7 +598,7 @@ function DeleteConfirmModal({
       )}
 
       <div className="flex justify-end gap-2">
-        <Button data-variant="secondary" type="button" onClick={onClose}>{t("ui.cancel")}</Button>
+        <Button data-variant="secondary" type="button" onClick={onClose}>{t("action.cancel")}</Button>
         <Button
           data-variant="primary"
           data-color="danger"
@@ -606,7 +606,7 @@ function DeleteConfirmModal({
           onClick={handleDelete}
           disabled={deleteCredential.isPending}
         >
-          {deleteCredential.isPending ? 'Sletter...' : t("ui.delete")}
+          {deleteCredential.isPending ? 'Sletter...' : t("action.delete")}
         </Button>
       </div>
     </Modal>

@@ -446,7 +446,7 @@ export function SettingsPage() {
                       aria-label={t('settings.profile.changeAvatar')}
                     >
                       <CameraIcon />
-                      {isUploadingAvatar ? t('settings.profile.uploading') : t('settings.profile.changeImage')}
+                      {isUploadingAvatar ? t('state.loading') : t('settings.profile.changeImage')}
                     </Button>
                     <Paragraph data-size="xs" style={{ color: 'var(--ds-color-neutral-text-subtle)' }}>
                       {t('settings.profile.imageFormats')}
@@ -523,7 +523,7 @@ export function SettingsPage() {
                 <div style={{ paddingTop: 'var(--ds-spacing-4)', borderTop: '1px solid var(--ds-color-neutral-border-subtle)' }}>
                   <Button onClick={handleSaveProfile} disabled={isSaving} type="button" aria-label={t('settings.profile.save')}>
                     <SaveIcon />
-                    {isSaving ? t('settings.profile.saving') : t('settings.profile.save')}
+                    {isSaving ? t('state.saving') : t('settings.profile.save')}
                   </Button>
                 </div>
               </Stack>
@@ -734,7 +734,7 @@ export function SettingsPage() {
               <Stack spacing={4}>
                 <div>
                   <Heading level={3} data-size="sm" style={{ marginBottom: 'var(--ds-spacing-2)' }}>
-                    {t('settings.consent.title')}
+                    {t('settings.consent.page.title')}
                   </Heading>
                   <Paragraph data-size="sm" style={{ color: 'var(--ds-color-neutral-text-subtle)' }}>
                     {t('settings.consent.desc')}

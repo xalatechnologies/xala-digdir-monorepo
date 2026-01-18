@@ -24,7 +24,9 @@ import { fileURLToPath } from 'url';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
-const ROOT_DIR = path.resolve(__dirname, '..');
+// Assuming this script is at infra/scripts/legacy/scan-duplicates.js
+// We need to go up 3 levels to reach repo root (legacy -> scripts -> infra -> root)
+const ROOT_DIR = path.resolve(__dirname, '../../..');
 
 /**
  * Recursively find files matching a pattern

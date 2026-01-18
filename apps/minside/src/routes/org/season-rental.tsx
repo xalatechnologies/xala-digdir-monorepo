@@ -297,7 +297,7 @@ export function SeasonRentalPage() {
                       </Select>
                     </div>
                     <Button type="button" variant="tertiary" data-size="sm" onClick={() => removeSlot(index)} style={{ minHeight: '44px' }}>
-                      {t('common.remove')}
+                      {t('action.remove')}
                     </Button>
                   </div>
                 ))}
@@ -321,7 +321,7 @@ export function SeasonRentalPage() {
                 />
               </div>
               <div>
-                <label style={{ display: 'block', marginBottom: 'var(--ds-spacing-2)', fontWeight: 500 }}>{t('common.phone')}</label>
+                <label style={{ display: 'block', marginBottom: 'var(--ds-spacing-2)', fontWeight: 500 }}>{t('label.phone')}</label>
                 <Input
                   value={contactPhone}
                   onChange={(e) => setContactPhone(e.target.value)}
@@ -383,7 +383,7 @@ export function SeasonRentalPage() {
           disabled={currentStepIndex === 0}
           style={{ minHeight: '44px' }}
         >
-          {t('common.back')}
+          {t('action.back')}
         </Button>
         {currentStep === 'review' ? (
           <Button
@@ -405,7 +405,7 @@ export function SeasonRentalPage() {
             disabled={currentStep === 'season' && !selectedSeason}
             style={{ minHeight: '44px' }}
           >
-            {t('common.next')}
+            {t('action.next')}
           </Button>
         )}
       </div>

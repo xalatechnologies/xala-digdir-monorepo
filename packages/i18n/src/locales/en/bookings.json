@@ -81,5 +81,13 @@
   "action.reject": "Reject",
   "action.moreOptions": "More options",
   "action.approveBooking": "Approve booking",
-  "action.rejectBooking": "Reject booking"
+  "action.rejectBooking": "Reject booking",
+  "mode.single_slot": "Single booking",
+  "mode.in_game": "Quick booking",
+  "mode.recurring": "Recurring",
+  "mode.single_slot.description": "Book a single time slot",
+  "mode.in_game.description": "Quick booking with short notice",
+  "mode.recurring.description": "Weekly or monthly pattern",
+  "created_for": "Booking created for {{name}}",
+  "created": "A new booking was created"
 }

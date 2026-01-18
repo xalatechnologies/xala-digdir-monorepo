@@ -124,7 +124,7 @@ export function SeasonDetailPage() {
   if (isLoading) {
     return (
       <div style={{ display: 'flex', justifyContent: 'center', padding: 'var(--ds-spacing-8)' }}>
-        <Spinner data-size="lg" aria-label={t("ui.loading")} />
+        <Spinner data-size="lg" aria-label={t("state.loading")} />
       </div>
     );
   }
@@ -177,23 +177,23 @@ export function SeasonDetailPage() {
             {season.status === 'draft' && (
               <>
                 <Link to={`/seasons/${id}/edit`}>
-                  <Button variant="secondary" data-size="sm" type="button" aria-label={t("ui.edit")}>
-                    <EditIcon />{t("ui.edit")}</Button>
+                  <Button variant="secondary" data-size="sm" type="button" aria-label={t("action.edit")}>
+                    <EditIcon />{t("action.edit")}</Button>
                 </Link>
                 <Button variant="primary" data-size="sm" onClick={handleOpenSeason} type="button">
                   <UnlockIcon />
                   {t('seasons.openSeason')}
                 </Button>
-                <Button variant="danger" data-size="sm" onClick={handleDelete} type="button" aria-label={t("ui.delete")}>
-                  <TrashIcon />{t("ui.delete")}</Button>
+                <Button variant="danger" data-size="sm" onClick={handleDelete} type="button" aria-label={t("action.delete")}>
+                  <TrashIcon />{t("action.delete")}</Button>
               </>
             )}
 
             {season.status === 'open' && (
               <>
                 <Link to={`/seasons/${id}/edit`}>
-                  <Button variant="secondary" data-size="sm" type="button" aria-label={t("ui.edit")}>
-                    <EditIcon />{t("ui.edit")}</Button>
+                  <Button variant="secondary" data-size="sm" type="button" aria-label={t("action.edit")}>
+                    <EditIcon />{t("action.edit")}</Button>
                 </Link>
                 <Button variant="warning" data-size="sm" onClick={handleCloseSeason} type="button">
                   <LockIcon />
@@ -318,7 +318,7 @@ export function SeasonDetailPage() {
 
                   <div>
                     <div style={{ fontSize: 'var(--ds-font-size-sm)', color: 'var(--ds-color-neutral-text-subtle)', marginBottom: 'var(--ds-spacing-1)' }}>
-                      {t('common.status')}
+                      {t('label.status')}
                     </div>
                     <Badge color={statusVariants[season.status]}>
                       {getStatusLabel(season.status)}

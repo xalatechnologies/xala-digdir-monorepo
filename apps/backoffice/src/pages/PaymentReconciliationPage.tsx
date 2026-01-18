@@ -117,7 +117,7 @@ export function PaymentReconciliationPage() {
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
         <div>
           <Heading level={1} data-size="lg" style={{ margin: 0 }}>
-            {t('payments.reconciliation.title', 'Betalingsavstemminger')}
+            {t('payments.reconciliation.page.title', 'Betalingsavstemminger')}
           </Heading>
           <Paragraph
             style={{
@@ -126,7 +126,7 @@ export function PaymentReconciliationPage() {
               marginBottom: 0,
             }}
           >
-            {t('payments.reconciliation.subtitle', 'Oversikt over betalinger og transaksjoner')}
+            {t('payments.reconciliation.page.description', 'Oversikt over betalinger og transaksjoner')}
           </Paragraph>
         </div>
         <Button
@@ -281,7 +281,7 @@ export function PaymentReconciliationPage() {
       <Card style={{ padding: 'var(--ds-spacing-5)' }}>
         {isLoading ? (
           <div style={{ display: 'flex', justifyContent: 'center', padding: 'var(--ds-spacing-8)' }}>
-            <Spinner aria-label={t('common.loading', t("ui.loading"))} data-size="lg" />
+            <Spinner aria-label={t('state.loading', t("state.loading"))} data-size="lg" />
           </div>
         ) : !reconciliationData?.data || reconciliationData.data.length === 0 ? (
           <div style={{ textAlign: 'center', padding: 'var(--ds-spacing-8)' }}>

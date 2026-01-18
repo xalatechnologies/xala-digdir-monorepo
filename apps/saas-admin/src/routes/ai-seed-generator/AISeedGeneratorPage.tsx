@@ -145,7 +145,7 @@ export function AISeedGeneratorPage() {
       <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--ds-spacing-3)', marginBottom: 'var(--ds-spacing-2)' }}>
         <SparklesIcon style={{ color: 'var(--ds-color-accent-text-default)', width: 32, height: 32 }} />
         <Heading level={1} size="lg">
-          {t('saasAdmin.aiSeed.title', { defaultValue: 'AI Seed Generator' })}
+          {t('saasAdmin.aiSeed.page.title', { defaultValue: 'AI Seed Generator' })}
         </Heading>
       </div>
       <Paragraph size="sm" style={{ color: 'var(--ds-color-neutral-text-subtle)', marginBottom: 'var(--ds-spacing-6)' }}>
@@ -166,7 +166,7 @@ export function AISeedGeneratorPage() {
                 Velg tenant *
               </label>
               {loadingTenants ? (
-                <Spinner aria-label={t('common.laster_tenanter')} />
+                <Spinner aria-label={t('state.loading')} />
               ) : (
                 <Select
                   value={config.tenantId}
@@ -274,7 +274,7 @@ export function AISeedGeneratorPage() {
                 <strong>{selectedTenant?.name ?? '—'}</strong>
               </div>
               <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                <span style={{ color: 'var(--ds-color-neutral-text-subtle)' }}>{t('common.type')}</span>
+                <span style={{ color: 'var(--ds-color-neutral-text-subtle)' }}>{t('label.type')}</span>
                 <strong>{selectedEntityInfo ? t(selectedEntityInfo.labelKey) : '—'}</strong>
               </div>
               <div style={{ display: 'flex', justifyContent: 'space-between' }}>
@@ -299,7 +299,7 @@ export function AISeedGeneratorPage() {
                   <XCircleIcon style={{ color: 'var(--ds-color-danger-text-default)' }} />
                 )}
                 <Heading level={3} size="xs">
-                  {result.success ? t('common.fullfort') : 'Feilet'}
+                  {result.success ? t('state.completed') : 'Feilet'}
                 </Heading>
               </div>
               <Paragraph size="sm">{result.message}</Paragraph>

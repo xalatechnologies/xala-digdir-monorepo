@@ -57,16 +57,7 @@ const actorTypeColors: Record<ActorType, 'neutral' | 'info' | 'success' | 'warni
   municipality: 'success',
 };
 
-// Human-readable labels for permissions
-const permissionLabels: Record<RentalObjectPermission, string> = {
-  [RentalObjectPermission.RO_VIEW]: 'Vis',
-  [RentalObjectPermission.RO_BOOK]: 'Book',
-  [RentalObjectPermission.RO_BOOK_EDIT]: 'Rediger',
-  [RentalObjectPermission.RO_BOOK_CANCEL]: 'Kanseller',
-  [RentalObjectPermission.RO_ASSIGN_CASE_HANDLERS]: 'Tildel saksbehandlere',
-  [RentalObjectPermission.RO_ASSIGN_PERMISSIONS]: 'Tildel rettigheter',
-  [RentalObjectPermission.RO_MANAGE_MEMBERS]: t('actions.administrer_medlemmer'),
-};
+
 
 // Permissions that can be assigned to regular members
 const memberPermissions: RentalObjectPermission[] = [
@@ -81,6 +72,17 @@ export function PermissionAssignmentPage() {
   const t = useT();
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedRentalObject, setSelectedRentalObject] = useState<string | null>(null);
+
+  // Human-readable labels for permissions
+  const permissionLabels: Record<RentalObjectPermission, string> = {
+    [RentalObjectPermission.RO_VIEW]: 'Vis',
+    [RentalObjectPermission.RO_BOOK]: 'Book',
+    [RentalObjectPermission.RO_BOOK_EDIT]: 'Rediger',
+    [RentalObjectPermission.RO_BOOK_CANCEL]: 'Kanseller',
+    [RentalObjectPermission.RO_ASSIGN_CASE_HANDLERS]: 'Tildel saksbehandlere',
+    [RentalObjectPermission.RO_ASSIGN_PERMISSIONS]: 'Tildel rettigheter',
+    [RentalObjectPermission.RO_MANAGE_MEMBERS]: t('actions.administrer_medlemmer'),
+  };
 
   // Queries
   const { data: orgData, isLoading: orgLoading } = useOrganization(id!);

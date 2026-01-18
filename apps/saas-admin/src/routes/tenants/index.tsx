@@ -131,7 +131,7 @@ export function TenantsListPage() {
 
   // Status tabs configuration
   const statusTabs = useMemo(() => [
-    { id: 'all', label: t('common.all'), count: tabCounts.all },
+    { id: 'all', label: t('label.all'), count: tabCounts.all },
     { id: 'active', label: statusLabels.active, count: tabCounts.active, color: 'success' as const },
     { id: 'inactive', label: statusLabels.inactive, count: tabCounts.inactive, color: 'warning' as const },
     { id: 'suspended', label: statusLabels.suspended, count: tabCounts.suspended, color: 'danger' as const },
@@ -144,7 +144,7 @@ export function TenantsListPage() {
     if (statusFilter !== 'all') {
       chips.push({
         key: 'status',
-        label: `${t('common.status')}: ${statusLabels[statusFilter]}`,
+        label: `${t('label.status')}: ${statusLabels[statusFilter]}`,
         onRemove: () => setStatusFilter('all'),
       });
     }
@@ -160,7 +160,7 @@ export function TenantsListPage() {
     <div className={styles.page}>
       {/* Header */}
       <DataPageHeader
-        title={t('saasAdmin.tenants.title')}
+        title={t('saasAdmin.tenants.page.title')}
         count={tenantsData?.meta?.total ?? filteredTenants.length}
         countLabel={`{{count}} ${t('saasAdmin.nav.tenants').toLowerCase()}`}
         actions={
@@ -172,9 +172,9 @@ export function TenantsListPage() {
           </Link>
         }
       />
-      {t('saasAdmin.tenants.subtitle') && (
+      {t('saasAdmin.tenants.page.description') && (
         <Paragraph size="sm" style={{ marginTop: 'var(--ds-spacing-2)', marginBottom: 'var(--ds-spacing-4)' }}>
-          {t('saasAdmin.tenants.subtitle')}
+          {t('saasAdmin.tenants.page.description')}
         </Paragraph>
       )}
 
@@ -214,7 +214,7 @@ export function TenantsListPage() {
       <Card>
         {isLoading ? (
           <div className={styles.loadingContainer}>
-            <Spinner size="lg" aria-label={t('common.loading')} />
+            <Spinner size="lg" aria-label={t('state.loading')} />
           </div>
         ) : filteredTenants.length === 0 ? (
           <EmptyState
@@ -241,11 +241,11 @@ export function TenantsListPage() {
           <Table>
             <Table.Head>
               <Table.Row>
-                <Table.HeaderCell>{t('common.name')}</Table.HeaderCell>
+                <Table.HeaderCell>{t('label.name')}</Table.HeaderCell>
                 <Table.HeaderCell>Slug</Table.HeaderCell>
                 <Table.HeaderCell>{t('saasAdmin.tenants.domain')}</Table.HeaderCell>
                 <Table.HeaderCell>{t('saasAdmin.tenants.plan')}</Table.HeaderCell>
-                <Table.HeaderCell>{t('common.status')}</Table.HeaderCell>
+                <Table.HeaderCell>{t('label.status')}</Table.HeaderCell>
                 <Table.HeaderCell>{t('saasAdmin.tenants.createdAt')}</Table.HeaderCell>
                 <Table.HeaderCell className={styles.actionsCell}>{t('common.actions')}</Table.HeaderCell>
               </Table.Row>
@@ -302,7 +302,7 @@ export function TenantsListPage() {
                           <Dropdown.Item>
                             <Dropdown.Button onClick={() => navigate(`/tenants/${tenant.id}/edit`)}>
                               <EditIcon />
-                              {t('common.edit')}
+                              {t('action.edit')}
                             </Dropdown.Button>
                           </Dropdown.Item>
                           {tenant.status === 'active' && (
@@ -351,7 +351,7 @@ export function TenantsListPage() {
       {tenantsData?.meta && (
         <div className={styles.pagination}>
           <span>
-            {t('common.showing')} {filteredTenants.length} {t('common.of')} {tenantsData.meta.total} {t('saasAdmin.nav.tenants').toLowerCase()}
+            {t('pagination.showing')} {filteredTenants.length} {t('common.of')} {tenantsData.meta.total} {t('saasAdmin.nav.tenants').toLowerCase()}
           </span>
           <span>
             {t('common.page')} {tenantsData.meta.page} {t('common.of')} {tenantsData.meta.totalPages}

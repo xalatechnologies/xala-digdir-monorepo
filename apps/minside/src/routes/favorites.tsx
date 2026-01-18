@@ -65,8 +65,8 @@ export function FavoritesPage() {
     const confirmed = await confirm({
       title: t('favorites.removeTitle'),
       description: t('favorites.removeConfirm', { name: name || t('common.item') }),
-      confirmText: t('common.remove'),
-      cancelText: t('common.cancel'),
+      confirmText: t('action.remove'),
+      cancelText: t('action.cancel'),
       variant: 'danger',
     });
     if (confirmed) {
@@ -80,14 +80,14 @@ export function FavoritesPage() {
       <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--ds-spacing-6)' }}>
         <div>
           <Heading level={1} data-size="lg" style={{ margin: 0 }}>
-            {t('favorites.title')}
+            {t('favorites.page.title')}
           </Heading>
           <Paragraph style={{ color: 'var(--ds-color-neutral-text-subtle)', marginTop: 'var(--ds-spacing-2)', marginBottom: 0 }}>
             {t('favorites.description')}
           </Paragraph>
         </div>
         <div style={{ display: 'flex', justifyContent: 'center', padding: 'var(--ds-spacing-8)' }}>
-          <Spinner aria-label={t('common.loading')} data-size="lg" />
+          <Spinner aria-label={t('state.loading')} data-size="lg" />
         </div>
       </div>
     );
@@ -99,7 +99,7 @@ export function FavoritesPage() {
       <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--ds-spacing-6)' }}>
         <div>
           <Heading level={1} data-size="lg" style={{ margin: 0 }}>
-            {t('favorites.title')}
+            {t('favorites.page.title')}
           </Heading>
         </div>
         <Card style={{
@@ -109,7 +109,7 @@ export function FavoritesPage() {
           borderLeft: '4px solid var(--ds-color-danger-border-default)',
         }}>
           <Paragraph style={{ margin: 0, color: 'var(--ds-color-danger-text-default)' }}>
-            {t('common.error')}: {error.message}
+            {t('error.generic')}: {error.message}
           </Paragraph>
         </Card>
       </div>
@@ -128,7 +128,7 @@ export function FavoritesPage() {
       }}>
         <div>
           <Heading level={1} data-size="lg" style={{ margin: 0 }}>
-            {t('favorites.title')}
+            {t('favorites.page.title')}
           </Heading>
           <Paragraph style={{ color: 'var(--ds-color-neutral-text-subtle)', marginTop: 'var(--ds-spacing-2)', marginBottom: 0 }}>
             {t('favorites.description')}

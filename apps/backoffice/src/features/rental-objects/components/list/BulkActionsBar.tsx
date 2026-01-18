@@ -92,7 +92,7 @@ export function BulkActionsBar({
 
       {/* Clear Selection */}
       <Button variant="tertiary" size="sm" onClick={onClearSelection} type="button">
-        {t('common.cancel')}
+        {t('action.cancel')}
       </Button>
 
       {/* Animation */}

@@ -161,7 +161,7 @@ export function RequestsPage() {
       title: t('common.godkjenn_foresporsel'),
       description: t('common.er_du_sikker_paa'),
       confirmText: 'Godkjenn',
-      cancelText: t("ui.cancel"),
+      cancelText: t("action.cancel"),
       variant: 'primary',
     });
     if (confirmed) {
@@ -174,7 +174,7 @@ export function RequestsPage() {
       title: t('common.avslaa_foresporsel'),
       description: t('common.er_du_sikker_paa'),
       confirmText: 'Avslå',
-      cancelText: t("ui.cancel"),
+      cancelText: t("action.cancel"),
       variant: 'danger',
     });
     if (confirmed) {
@@ -321,7 +321,7 @@ export function RequestsPage() {
               onClear={() => setSearchQuery('')}
             />
           </div>
-          <Button variant="secondary" data-size="sm" onClick={() => setFilter('all')} type="button" aria-label={t('ui.filter')}>
+          <Button variant="secondary" data-size="sm" onClick={() => setFilter('all')} type="button" aria-label={t('action.filter')}>
             <FilterIcon />
             {filter === 'all' ? 'Alle' : filter === 'needs_info' ? 'Trenger info' : filter === 'urgent' ? 'Haster' : 'Ventende'}
           </Button>
@@ -332,7 +332,7 @@ export function RequestsPage() {
       <Card>
         {isLoading ? (
           <div style={{ display: 'flex', justifyContent: 'center', padding: 'var(--ds-spacing-8)' }}>
-            <Spinner data-size="lg" aria-label={t("ui.loading")} />
+            <Spinner data-size="lg" aria-label={t("state.loading")} />
           </div>
         ) : filteredRequests.length === 0 ? (
           <div style={{ textAlign: 'center', padding: 'var(--ds-spacing-8)' }}>

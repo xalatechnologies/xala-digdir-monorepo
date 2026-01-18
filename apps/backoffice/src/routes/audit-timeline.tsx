@@ -185,7 +185,7 @@ export function AuditTimelinePage() {
       <Card style={{ padding: 'var(--ds-spacing-5)' }}>
         {isLoading ? (
           <div style={{ display: 'flex', justifyContent: 'center', padding: 'var(--ds-spacing-8)' }}>
-            <Spinner aria-label={t("ui.loading")} data-size="lg" />
+            <Spinner aria-label={t("state.loading")} data-size="lg" />
           </div>
         ) : filteredEntries.length === 0 ? (
           <div style={{ padding: 'var(--ds-spacing-8)', textAlign: 'center' }}>

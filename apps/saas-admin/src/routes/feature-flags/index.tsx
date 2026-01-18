@@ -114,7 +114,7 @@ export function FeatureFlagsCatalogPage() {
       {/* Header */}
       <Stack direction="column" gap={1}>
         <Heading level={2} size="md">
-          {t('saasAdmin.featureFlagsCatalog.title')}
+          {t('saasAdmin.featureFlagsCatalog.page.title')}
         </Heading>
         <Paragraph size="sm" style={{ color: 'var(--ds-color-neutral-text-subtle)' }}>
           {t('saasAdmin.featureFlagsCatalog.description')}
@@ -235,12 +235,12 @@ export function FeatureFlagsCatalogPage() {
       <Card>
         {isLoading ? (
           <div style={{ display: 'flex', justifyContent: 'center', padding: 'var(--ds-spacing-8)' }}>
-            <Spinner size="lg" aria-label={t('saasAdmin.featureFlagsCatalog.loading')} />
+            <Spinner size="lg" aria-label={t('state.loading')} />
           </div>
         ) : filteredFlags.length === 0 ? (
           <EmptyState
             icon={<SettingsIcon size={48} />}
-            title={t('saasAdmin.featureFlagsCatalog.empty.title')}
+            title={t('saasAdmin.featureFlagsCatalog.empty.page.title')}
             description={
               searchQuery || categoryFilter !== 'all' || statusFilter !== 'all'
                 ? t('dataPage.emptyState.tryDifferentFilters')

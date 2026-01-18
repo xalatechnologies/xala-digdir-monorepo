@@ -181,7 +181,7 @@ export function ProfileTab() {
                 aria-label={t('common.endre_profilbilde')}
               >
                 <CameraIcon />
-                {isUploadingAvatar ? t('common.laster_opp') : t('common.endre.bilde')}
+                {isUploadingAvatar ? t('state.loading') : t('common.endre.bilde')}
               </Button>
               <Paragraph data-size="xs" style={{ color: 'var(--ds-color-neutral-text-subtle)' }}>
                 {t('common.jpg.png.eller.gif.maks.5mb')}
@@ -258,7 +258,7 @@ export function ProfileTab() {
           <div style={{ paddingTop: 'var(--ds-spacing-4)', borderTop: '1px solid var(--ds-color-neutral-border-subtle)' }}>
             <Button onClick={handleSaveProfile} disabled={isSaving} type="button" aria-label={t('common.lagre_profilinnstillinger')}>
               <SaveIcon />
-              {isSaving ? t('common.lagrer') : t('common.lagre_endringer')}
+              {isSaving ? t('state.saving') : t('common.lagre_endringer')}
             </Button>
           </div>
         </Stack>

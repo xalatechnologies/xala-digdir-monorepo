@@ -170,7 +170,7 @@ export function RecurringPreview({
       >
         <Spinner data-size="lg" />
         <Paragraph data-size="sm" style={{ margin: 0, color: 'var(--ds-color-neutral-text-subtle)' }}>
-          {t('recurringPreview.loading')}
+          {t('state.loading')}
         </Paragraph>
       </div>
     );
@@ -229,7 +229,7 @@ export function RecurringPreview({
         }}
       >
         <Heading level={3} data-size="sm" style={{ margin: 0 }}>
-          {t('recurringPreview.title')} ({t('recurringPreview.occurrenceCount', { count: occurrences.length })})
+          {t('recurringPreview.page.title')} ({t('recurringPreview.occurrenceCount', { count: occurrences.length })})
         </Heading>
         <div style={{ display: 'flex', gap: 'var(--ds-spacing-2)' }}>
           <Badge data-color="success" data-size="sm">
@@ -465,7 +465,7 @@ export function RecurringPreview({
           >
             {conflictCount > 1
               ? t('recurringPreview.conflictWarning.titlePlural', { count: conflictCount })
-              : t('recurringPreview.conflictWarning.title', { count: conflictCount })}
+              : t('recurringPreview.conflictWarning.page.title', { count: conflictCount })}
           </Paragraph>
           <Paragraph
             data-size="xs"

@@ -132,7 +132,7 @@ export function BookingTab() {
         <div style={{ paddingTop: 'var(--ds-spacing-3)', borderTop: '1px solid var(--ds-color-neutral-border-subtle)' }}>
           <Button onClick={saveBookingSettings} disabled={isSaving} type="button" aria-label={t('common.lagre_endringer')}>
             <SaveIcon />
-            {isSaving ? t('common.lagrer') : t('common.lagre_endringer')}
+            {isSaving ? t('state.saving') : t('common.lagre_endringer')}
           </Button>
         </div>
       </Stack>

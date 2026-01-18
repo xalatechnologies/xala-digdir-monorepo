@@ -129,7 +129,7 @@ export function GDPRManagementPage() {
       <Container maxWidth="1400px" style={{ padding: 'var(--ds-spacing-6)' }}>
         <Stack direction="column" gap="24px" style={{ alignItems: 'center', padding: '48px' }}>
           <Spinner size="lg" />
-          <Paragraph>{t('common.loading')}</Paragraph>
+          <Paragraph>{t('state.loading')}</Paragraph>
         </Stack>
       </Container>
     );
@@ -140,7 +140,7 @@ export function GDPRManagementPage() {
       <Stack direction="column" gap="24px">
         <Stack direction="row" gap="16px" style={{ justifyContent: 'space-between', alignItems: 'center' }}>
           <Stack direction="column" gap="8px">
-            <Heading size="xl">{t('gdpr.admin.title')}</Heading>
+            <Heading size="xl">{t('gdpr.admin.page.title')}</Heading>
             <Paragraph>{t('gdpr.admin.description')}</Paragraph>
           </Stack>
           <Badge color="neutral" size="lg">
@@ -302,14 +302,14 @@ export function GDPRManagementPage() {
                 onClick={handleCloseModal}
                 disabled={isUpdating} type="button"
               >
-                {t('common.cancel')}
+                {t('action.cancel')}
               </Button>
               <Button
                 variant="primary"
                 onClick={handleUpdateStatus}
                 disabled={isUpdating} type="button"
               >
-                {isUpdating ? t('common.saving') : t('common.save')}
+                {isUpdating ? t('state.saving') : t('action.save')}
               </Button>
             </Stack>
           </Stack>

@@ -97,7 +97,7 @@ function IntegrationCard({ integration }: { integration: IntegrationStatus }): R
       case 'ok':
         return <Badge color="success">{t('ui.ok')}</Badge>;
       case 'error':
-        return <Badge color="danger">{t('ui.error')}</Badge>;
+        return <Badge color="danger">{t('error.generic')}</Badge>;
       case 'warning':
         return <Badge color="warning">{t('integrations.status.warning')}</Badge>;
       case 'disabled':
@@ -305,7 +305,7 @@ export function IntegrationsOverviewPage(): React.ReactElement {
       <Stack spacing={6}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
           <div>
-            <Heading level={1} data-size="lg">{t('integrations.overview.title')}</Heading>
+            <Heading level={1} data-size="lg">{t('integrations.overview.page.title')}</Heading>
             <Paragraph style={{ color: 'var(--ds-color-neutral-text-subtle)' }}>
               {t('integrations.overview.description')}
             </Paragraph>
@@ -338,7 +338,7 @@ export function IntegrationsOverviewPage(): React.ReactElement {
           </Card>
           <Card style={{ textAlign: 'center', padding: 'var(--ds-spacing-4)' }}>
             <Heading level={2} data-size="xl" style={{ margin: 0, color: hasErrors ? 'var(--ds-color-danger-text-default)' : 'var(--ds-color-success-text-default)' }}>
-              {hasErrors ? t('ui.error') : t('ui.ok')}
+              {hasErrors ? t('error.generic') : t('ui.ok')}
             </Heading>
             <Paragraph data-size="sm" style={{ color: 'var(--ds-color-neutral-text-subtle)', margin: 0 }}>
               {t('integrations.overview.operationalStatus')}
@@ -382,7 +382,7 @@ export function IntegrationsOverviewPage(): React.ReactElement {
         {totalDeviations > 0 && (
           <Card>
             <Stack spacing={4}>
-              <Heading level={3} data-size="sm">{t('integrations.deviations.title')}</Heading>
+              <Heading level={3} data-size="sm">{t('integrations.deviations.page.title')}</Heading>
               <Table>
                 <thead>
                   <tr>
@@ -400,7 +400,7 @@ export function IntegrationsOverviewPage(): React.ReactElement {
                         <td>{integration.name}</td>
                         <td>
                           <Badge color={deviation.type === 'error' ? 'danger' : 'warning'}>
-                            {deviation.type === 'error' ? t('ui.error') : t('ui.warning')}
+                            {deviation.type === 'error' ? t('error.generic') : t('ui.warning')}
                           </Badge>
                         </td>
                         <td>{deviation.message}</td>

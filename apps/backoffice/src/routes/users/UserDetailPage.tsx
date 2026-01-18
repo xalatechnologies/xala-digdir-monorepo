@@ -99,7 +99,7 @@ export function UserDetailPage() {
   if (isLoading) {
     return (
       <div style={{ display: 'flex', justifyContent: 'center', padding: 'var(--ds-spacing-8)' }}>
-        <Spinner data-size="lg" aria-label={t("ui.loading")} />
+        <Spinner data-size="lg" aria-label={t("state.loading")} />
       </div>
     );
   }
@@ -149,8 +149,8 @@ export function UserDetailPage() {
           </div>
 
           <div style={{ display: 'flex', gap: 'var(--ds-spacing-2)' }}>
-            <Button variant="secondary" data-size="sm" onClick={handleEdit} type="button" aria-label={t("ui.edit")}>
-              <EditIcon />{t("ui.edit")}</Button>
+            <Button variant="secondary" data-size="sm" onClick={handleEdit} type="button" aria-label={t("action.edit")}>
+              <EditIcon />{t("action.edit")}</Button>
             {user.status === 'active' ? (
               <Button variant="secondary" data-size="sm" onClick={handleDeactivate} type="button">
                 <XCircleIcon />

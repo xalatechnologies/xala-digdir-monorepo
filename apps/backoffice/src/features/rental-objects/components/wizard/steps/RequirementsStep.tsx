@@ -21,7 +21,7 @@ export interface RequirementsStepProps {
 
 const LICENSE_TYPES = [
   { value: 'B', label: 'Klasse B', icon: '🚗', description: 'Personbil' },
-  { value: 'BE', label: 'Klasse BE', icon: '🚗🔗', description: t('common.personbil_med_tilhenger') },
+  { value: 'BE', label: 'Klasse BE', icon: '🚗🔗', description: 'Personbil med tilhenger' },
   { value: 'C', label: 'Klasse C', icon: '🚚', description: 'Lastebil' },
   { value: 'D', label: 'Klasse D', icon: '🚌', description: 'Buss' },
   { value: 'AM', label: 'Klasse AM', icon: '🛵', description: 'Moped' },

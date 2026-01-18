@@ -146,7 +146,7 @@ export function BookingVisibilitySelector({
           color: 'var(--ds-color-neutral-text-default)',
         }}
       >
-        {t('bookingVisibility.title')}
+        {t('bookingVisibility.page.title')}
       </Paragraph>
 
       <fieldset

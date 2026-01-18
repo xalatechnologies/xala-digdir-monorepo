@@ -173,8 +173,8 @@ export function CalendarSection({
   title,
   subtitle,
 }: CalendarSectionProps): React.ReactElement {
-  // Translation function available for future localization
-  const _t = useT(); // eslint-disable-line @typescript-eslint/no-unused-vars
+  // Translation function
+  const t = useT();
   // Current date for calendar navigation
   const [currentDate, setCurrentDate] = React.useState<Date>(new Date());
 
@@ -273,12 +273,12 @@ export function CalendarSection({
   const legend = React.useMemo(() => {
     if (!matrixResponse?.data?.legend) {
       return [
-        { status: 'AVAILABLE' as const, label: 'Ledig' },
-        { status: 'RESERVED' as const, label: 'Reservert' },
-        { status: 'BOOKED' as const, label: 'Booket' },
-        { status: 'BLOCKED' as const, label: 'Blokkert' },
-        { status: 'BLACKOUT' as const, label: 'Utilgjengelig' },
-        { status: 'CLOSED' as const, label: 'Stengt' },
+        { status: 'AVAILABLE' as const, label: t('state.available') },
+        { status: 'RESERVED' as const, label: t('state.reserved') },
+        { status: 'BOOKED' as const, label: t('state.booked') },
+        { status: 'BLOCKED' as const, label: t('state.blocked') },
+        { status: 'BLACKOUT' as const, label: t('state.unavailable') },
+        { status: 'CLOSED' as const, label: t('state.closed') },
       ];
     }
     return matrixResponse.data.legend.map((item: { status: string; labelKey: string }) => ({

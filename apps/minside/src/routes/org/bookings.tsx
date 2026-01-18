@@ -111,7 +111,7 @@ export function OrganizationBookingsPage() {
       <Card style={{ padding: 0, overflow: 'hidden' }}>
         {isLoading ? (
           <div style={{ display: 'flex', justifyContent: 'center', padding: 'var(--ds-spacing-8)' }}>
-            <Spinner aria-label={t('common.loading')} data-size="lg" />
+            <Spinner aria-label={t('state.loading')} data-size="lg" />
           </div>
         ) : bookings.length === 0 ? (
           <div style={{ padding: 'var(--ds-spacing-8)', textAlign: 'center' }}>
@@ -154,8 +154,8 @@ export function OrganizationBookingsPage() {
                 <Table.HeaderCell>{t('bookings.resource')}</Table.HeaderCell>
                 <Table.HeaderCell>{t('bookings.timespan')}</Table.HeaderCell>
                 <Table.HeaderCell>{t('org.bookedBy')}</Table.HeaderCell>
-                <Table.HeaderCell>{t('common.status')}</Table.HeaderCell>
-                <Table.HeaderCell>{t('common.price')}</Table.HeaderCell>
+                <Table.HeaderCell>{t('label.status')}</Table.HeaderCell>
+                <Table.HeaderCell>{t('label.price')}</Table.HeaderCell>
               </Table.Row>
             </Table.Head>
             <Table.Body>

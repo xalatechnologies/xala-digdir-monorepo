@@ -135,7 +135,7 @@ export function PlansListPage() {
 
   // Status tabs configuration
   const statusTabs = useMemo(() => [
-    { id: 'all', label: t('common.all'), count: tabCounts.all },
+    { id: 'all', label: t('label.all'), count: tabCounts.all },
     { id: 'active', label: statusLabels.active, count: tabCounts.active, color: 'success' as const },
     { id: 'inactive', label: statusLabels.inactive, count: tabCounts.inactive, color: 'warning' as const },
     { id: 'deprecated', label: statusLabels.deprecated, count: tabCounts.deprecated, color: 'danger' as const },
@@ -147,7 +147,7 @@ export function PlansListPage() {
     if (statusFilter !== 'all') {
       chips.push({
         key: 'status',
-        label: `${t('common.status')}: ${statusLabels[statusFilter]}`,
+        label: `${t('label.status')}: ${statusLabels[statusFilter]}`,
         onRemove: () => setStatusFilter('all'),
       });
     }
@@ -163,7 +163,7 @@ export function PlansListPage() {
     <div className={styles.page}>
       {/* Header */}
       <DataPageHeader
-        title={t('saasAdmin.plans.title')}
+        title={t('saasAdmin.plans.page.title')}
         count={plansData?.meta?.total ?? filteredPlans.length}
         countLabel={`{{count}} ${t('saasAdmin.nav.plans').toLowerCase()}`}
         actions={
@@ -175,9 +175,9 @@ export function PlansListPage() {
           </Link>
         }
       />
-      {t('saasAdmin.plans.subtitle') && (
+      {t('saasAdmin.plans.page.description') && (
         <Paragraph size="sm" style={{ marginTop: 'var(--ds-spacing-2)', marginBottom: 'var(--ds-spacing-4)' }}>
-          {t('saasAdmin.plans.subtitle')}
+          {t('saasAdmin.plans.page.description')}
         </Paragraph>
       )}
 
@@ -217,7 +217,7 @@ export function PlansListPage() {
       <Card>
         {isLoading ? (
           <div className={styles.loadingContainer}>
-            <Spinner size="lg" aria-label={t('common.loading')} />
+            <Spinner size="lg" aria-label={t('state.loading')} />
           </div>
         ) : filteredPlans.length === 0 ? (
           <EmptyState
@@ -244,12 +244,12 @@ export function PlansListPage() {
           <Table>
             <Table.Head>
               <Table.Row>
-                <Table.HeaderCell>{t('common.name')}</Table.HeaderCell>
+                <Table.HeaderCell>{t('label.name')}</Table.HeaderCell>
                 <Table.HeaderCell>{t('saasAdmin.plans.price')}</Table.HeaderCell>
                 <Table.HeaderCell>{t('saasAdmin.plans.interval')}</Table.HeaderCell>
                 <Table.HeaderCell>{t('saasAdmin.plans.trialPeriod')}</Table.HeaderCell>
                 <Table.HeaderCell>{t('saasAdmin.plans.limits')}</Table.HeaderCell>
-                <Table.HeaderCell>{t('common.status')}</Table.HeaderCell>
+                <Table.HeaderCell>{t('label.status')}</Table.HeaderCell>
                 <Table.HeaderCell>{t('saasAdmin.plans.visibility')}</Table.HeaderCell>
                 <Table.HeaderCell>{t('saasAdmin.tenants.createdAt')}</Table.HeaderCell>
                 <Table.HeaderCell className={styles.actionsCell}>{t('common.actions')}</Table.HeaderCell>
@@ -323,7 +323,7 @@ export function PlansListPage() {
                           <Dropdown.Item>
                             <Dropdown.Button onClick={() => navigate(`/plans/${plan.id}/edit`)}>
                               <EditIcon />
-                              {t('common.edit')}
+                              {t('action.edit')}
                             </Dropdown.Button>
                           </Dropdown.Item>
                           {plan.status === 'active' && (
@@ -371,7 +371,7 @@ export function PlansListPage() {
       {plansData?.meta && (
         <div className={styles.pagination}>
           <span>
-            {t('common.showing')} {filteredPlans.length} {t('common.of')} {plansData.meta.total} {t('saasAdmin.nav.plans').toLowerCase()}
+            {t('pagination.showing')} {filteredPlans.length} {t('common.of')} {plansData.meta.total} {t('saasAdmin.nav.plans').toLowerCase()}
           </span>
           <span>
             {t('common.page')} {plansData.meta.page} {t('common.of')} {plansData.meta.totalPages}

@@ -117,7 +117,7 @@ export function NotificationSettingsPage() {
   if (isLoadingPreferences || isLoadingSubscriptions) {
     return (
       <div style={{ display: 'flex', justifyContent: 'center', padding: 'var(--ds-spacing-8)' }}>
-        <Spinner aria-label={t('common.loading')} data-size="md" />
+        <Spinner aria-label={t('state.loading')} data-size="md" />
       </div>
     );
   }

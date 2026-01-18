@@ -62,7 +62,7 @@ export function ReviewStep({ wizard }: ReviewStepProps) {
           variant="tertiary"
           size="sm"
           onClick={() => goToStep(stepId)}
-          aria-label={t('ui.edit')}
+          aria-label={t('action.edit')}
         >
           <EditIcon
             style={{ width: '1rem', height: '1rem' }}

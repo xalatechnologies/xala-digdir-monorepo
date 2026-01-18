@@ -524,10 +524,10 @@ export function AuditPage() {
         >
           <div>
             <Heading level={1} data-size="lg" style={{ margin: 0 }}>
-              {t('audit.title')}
+              {t('audit.page.title')}
             </Heading>
             <Paragraph data-size="sm" style={{ margin: 0, marginTop: 'var(--ds-spacing-1)', color: 'var(--ds-color-neutral-text-subtle)' }}>
-              {t('audit.subtitle')}
+              {t('audit.page.description')}
             </Paragraph>
           </div>
         </div>
@@ -664,7 +664,7 @@ export function AuditPage() {
                 padding: 'var(--ds-spacing-10)',
               }}
             >
-              <Spinner aria-label={t("ui.loading")} />
+              <Spinner aria-label={t("state.loading")} />
             </div>
           ) : error ? (
             <div
@@ -674,7 +674,7 @@ export function AuditPage() {
               }}
             >
               <Paragraph style={{ color: 'var(--ds-color-danger-text-default)' }}>
-                {t('audit.loadingError')}
+                {t('state.loading')}
               </Paragraph>
             </div>
           ) : events.length === 0 ? (

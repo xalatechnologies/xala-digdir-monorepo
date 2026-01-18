@@ -23,45 +23,7 @@ import { useT } from '@xala/i18n';
 
 const MOBILE_BREAKPOINT = 768;
 
-// Mock pricing rules
-const mockRules = [
-  {
-    id: 'rule-001',
-    name: t('common.standard_timepris'),
-    type: 'hourly',
-    amount: 500,
-    currency: 'NOK',
-    conditions: 'Alle dager 08:00-16:00',
-    status: 'active',
-  },
-  {
-    id: 'rule-002',
-    name: 'Kveldspris',
-    type: 'hourly',
-    amount: 750,
-    currency: 'NOK',
-    conditions: 'Alle dager 16:00-22:00',
-    status: 'active',
-  },
-  {
-    id: 'rule-003',
-    name: 'Helgpris',
-    type: 'hourly',
-    amount: 600,
-    currency: 'NOK',
-    conditions: 'Lørdag-Søndag hele dagen',
-    status: 'active',
-  },
-  {
-    id: 'rule-004',
-    name: 'Organisasjonsrabatt',
-    type: 'discount',
-    amount: -20,
-    currency: '%',
-    conditions: 'For registrerte organisasjoner',
-    status: 'active',
-  },
-];
+
 
 export function PricingRulesPage() {
   const t = useT();
@@ -70,6 +32,46 @@ export function PricingRulesPage() {
   const [isMobile, setIsMobile] = useState(
     typeof window !== 'undefined' ? window.innerWidth < MOBILE_BREAKPOINT : false
   );
+
+  // Mock pricing rules
+  const mockRules = [
+    {
+      id: 'rule-001',
+      name: t('common.standard_timepris'),
+      type: 'hourly',
+      amount: 500,
+      currency: 'NOK',
+      conditions: 'Alle dager 08:00-16:00',
+      status: 'active',
+    },
+    {
+      id: 'rule-002',
+      name: 'Kveldspris',
+      type: 'hourly',
+      amount: 750,
+      currency: 'NOK',
+      conditions: 'Alle dager 16:00-22:00',
+      status: 'active',
+    },
+    {
+      id: 'rule-003',
+      name: 'Helgpris',
+      type: 'hourly',
+      amount: 600,
+      currency: 'NOK',
+      conditions: 'Lørdag-Søndag hele dagen',
+      status: 'active',
+    },
+    {
+      id: 'rule-004',
+      name: 'Organisasjonsrabatt',
+      type: 'discount',
+      amount: -20,
+      currency: '%',
+      conditions: 'For registrerte organisasjoner',
+      status: 'active',
+    },
+  ];
 
   useEffect(() => {
     const handleResize = () => setIsMobile(window.innerWidth < MOBILE_BREAKPOINT);
@@ -81,8 +83,8 @@ export function PricingRulesPage() {
     const confirmed = await confirm({
       title: t('common.slett_prisregel'),
       description: `t('common.er_du_sikker_paa')`,
-      confirmText: t("ui.delete"),
-      cancelText: t("ui.cancel"),
+      confirmText: t("action.delete"),
+      cancelText: t("action.cancel"),
       variant: 'danger',
     });
     if (confirmed) {
@@ -94,7 +96,7 @@ export function PricingRulesPage() {
     if (currency === '%') {
       return `${amount}%`;
     }
-    return `${amount.toLocaleString(locale === 'en' ? 'en-US' : 'nb-NO')} ${currency}`;
+    return `${amount.toLocaleString('nb-NO')} ${currency}`;
   };
 
   return (
@@ -154,7 +156,7 @@ export function PricingRulesPage() {
       <Card style={{ padding: 0, overflow: 'hidden' }}>
         {isLoading ? (
           <div style={{ display: 'flex', justifyContent: 'center', padding: 'var(--ds-spacing-8)' }}>
-            <Spinner aria-label={t("ui.loading")} data-size="lg" />
+            <Spinner aria-label={t("state.loading")} data-size="lg" />
           </div>
         ) : (
           <Table>
@@ -200,8 +202,8 @@ export function PricingRulesPage() {
                   </Table.Cell>
                   <Table.Cell>
                     <div style={{ display: 'flex', gap: 'var(--ds-spacing-2)' }}>
-                      <Button type="button" variant="tertiary" data-size="sm">{t("ui.edit")}</Button>
-                      <Button type="button" variant="secondary" data-size="sm" onClick={() => handleDelete(rule.id, rule.name)}>Slett</Button>
+                      <Button type="button" variant="tertiary" data-size="sm">{t("action.edit")}</Button>
+                      <Button type="button" variant="secondary" data-size="sm" onClick={() => handleDelete(rule.id, rule.name)}>{t('action.delete')}</Button>
                     </div>
                   </Table.Cell>
                 </Table.Row>

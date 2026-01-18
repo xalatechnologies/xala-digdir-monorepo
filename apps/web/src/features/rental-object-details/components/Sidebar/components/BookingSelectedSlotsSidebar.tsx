@@ -49,6 +49,7 @@ export function BookingSelectedSlotsSidebar({
   onAdjustTime,
   onChangeDuration,
 }: BookingSelectedSlotsSidebarProps): React.ReactElement {
+  const t = useT();
   const monthNames = ['januar', 'februar', 'mars', 'april', 'mai', 'juni', 'juli', 'august', 'september', 'oktober', 'november', 'desember'];
   const dayNames = ['Søndag', 'Mandag', 'Tirsdag', 'Onsdag', 'Torsdag', 'Fredag', 'Lørdag'];
 

@@ -352,7 +352,7 @@ export function ReportsPage() {
 
       {isLoading ? (
         <Card style={{ padding: 'var(--ds-spacing-12)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-          <Spinner aria-label={t('common.laster_rapporter')} />
+          <Spinner aria-label={t('state.loading')} />
         </Card>
       ) : (
         <>

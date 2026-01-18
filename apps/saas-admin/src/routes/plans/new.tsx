@@ -226,7 +226,7 @@ export function PlanCreatePage() {
       <Link to="/plans">
         <Button variant="tertiary" size="sm" style={{ marginBottom: 'var(--ds-spacing-4)' }} type="button">
           <ArrowLeftIcon />
-          {t('common.back')}
+          {t('action.back')}
         </Button>
       </Link>
 
@@ -255,7 +255,7 @@ export function PlanCreatePage() {
           <Stack direction="column" gap={16}>
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 'var(--ds-spacing-4)' }}>
               <Textfield
-                label={t('common.name')}
+                label={t('label.name')}
                 value={formData.name}
                 onChange={(e) => handleNameChange(e.target.value)}
                 error={errors.name}
@@ -274,7 +274,7 @@ export function PlanCreatePage() {
             </div>
 
             <Textfield
-              label={t('common.description')}
+              label={t('label.description')}
               value={formData.description}
               onChange={(e) => setFormData((prev) => ({ ...prev, description: e.target.value }))}
               placeholder={t('saasAdmin.planCreate.descriptionPlaceholder', { defaultValue: 'Fullverdig plan for mellomstore kommuner' })}
@@ -451,12 +451,12 @@ export function PlanCreatePage() {
         <div style={{ display: 'flex', gap: 'var(--ds-spacing-3)', justifyContent: 'flex-end' }}>
           <Link to="/plans">
             <Button variant="secondary" type="button">
-              {t('common.cancel')}
+              {t('action.cancel')}
             </Button>
           </Link>
           <Button type="submit" disabled={createMutation.isPending}>
             {createMutation.isPending ? (
-              <Spinner size="sm" aria-label={t('common.saving')} />
+              <Spinner size="sm" aria-label={t('state.saving')} />
             ) : (
               <>
                 <SaveIcon />

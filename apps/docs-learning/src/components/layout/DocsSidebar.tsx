@@ -223,7 +223,7 @@ export function DocsSidebar() {
           <img src="/logo.svg" alt="Digilist" className={styles.logoImage} />
           <div>
             <div className={styles.brandName}>DIGILIST</div>
-            <div className={styles.brandTagline}>{t('docs.title') || 'Dokumentasjon'}</div>
+            <div className={styles.brandTagline}>{t('docs.page.title') || 'Dokumentasjon'}</div>
           </div>
         </div>
       </div>

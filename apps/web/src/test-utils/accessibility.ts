@@ -132,7 +132,7 @@ export async function testKeyboardNavigation(ui: ReactElement, options?: RenderO
  *   const { findLiveRegion } = testScreenReaderAnnouncements(container);
  *
  *   const liveRegion = findLiveRegion('polite');
- *   expect(liveRegion).toHaveTextContent(t("ui.loading"));
+ *   expect(liveRegion).toHaveTextContent(t("state.loading"));
  * });
  * ```
  */

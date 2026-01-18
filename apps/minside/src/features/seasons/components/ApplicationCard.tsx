@@ -41,10 +41,10 @@ function MapPinIcon() {
   );
 }
 
-// Status configuration
+// Status configuration - hardcoded Norwegian strings to avoid module-level t() calls
 const APPLICATION_STATUS_CONFIG = {
   pending: {
-    label: t('common.til_behandling'),
+    label: 'Til behandling',
     color: 'var(--ds-color-warning-text-default)',
     bgColor: 'var(--ds-color-warning-surface-default)',
   },
@@ -54,7 +54,7 @@ const APPLICATION_STATUS_CONFIG = {
     bgColor: 'var(--ds-color-success-surface-default)',
   },
   rejected: {
-    label: t('common.avslaatt'),
+    label: 'Avslått',
     color: 'var(--ds-color-danger-text-default)',
     bgColor: 'var(--ds-color-danger-surface-default)',
   },

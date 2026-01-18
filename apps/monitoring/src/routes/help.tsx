@@ -111,7 +111,7 @@ export function HelpPage() {
       {/* Header */}
       <div>
         <Heading level={1} data-size="lg" style={{ margin: 0 }}>
-          {t('help.title')}
+          {t('help.page.title')}
         </Heading>
         <Paragraph style={{ color: 'var(--ds-color-neutral-text-subtle)', marginTop: 'var(--ds-spacing-2)', marginBottom: 0 }}>
           {t('help.description')}
@@ -202,7 +202,7 @@ export function HelpPage() {
       {/* Contact Form */}
       <Card style={{ padding: 'var(--ds-spacing-5)' }}>
         <Heading level={2} data-size="sm" style={{ margin: 0, marginBottom: 'var(--ds-spacing-4)' }}>
-          {t('help.contact.title')}
+          {t('help.contact.page.title')}
         </Heading>
         <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--ds-spacing-4)' }}>
           <div>

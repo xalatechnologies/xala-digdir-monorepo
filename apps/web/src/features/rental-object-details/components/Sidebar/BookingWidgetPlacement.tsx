@@ -1207,7 +1207,7 @@ export function BookingWidgetPlacement({
               {bookingMode === 'SEASON_RENTAL' && (
                 <div style={{ padding: 'var(--ds-spacing-6)', textAlign: 'center' }}>
                   <Heading level={3} data-size="md" style={{ margin: 0, marginBottom: 'var(--ds-spacing-3)' }}>
-                    {t('bookingWidget.season.title')}
+                    {t('bookingWidget.season.page.title')}
                   </Heading>
                   <Paragraph data-size="sm" style={{ margin: 0, marginBottom: 'var(--ds-spacing-4)', color: 'var(--ds-color-neutral-text-subtle)' }}>
                     {t('bookingWidget.season.description')}
@@ -1290,7 +1290,7 @@ export function BookingWidgetPlacement({
                 <CheckCircleIcon size={40} />
               </div>
               <Heading level={2} data-size="lg" style={{ margin: 0, marginBottom: 'var(--ds-spacing-2)' }}>
-                {t('bookingWidget.success.title')}
+                {t('bookingWidget.success.page.title')}
               </Heading>
               <Paragraph data-size="md" style={{ margin: 0, color: 'var(--ds-color-neutral-text-subtle)' }}>
                 {t('bookingWidget.success.message')}

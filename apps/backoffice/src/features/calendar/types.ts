@@ -4,7 +4,6 @@
  */
 
 import type { CalendarEvent, Block, BlockType, Conflict } from '@digilist/client-sdk';
-import { useT } from '@xala/i18n';
 
 export type CalendarViewType = 'day' | 'week' | 'month' | 'timeline';
 
@@ -90,35 +89,35 @@ export interface BlockTypeConfig {
 export const BLOCK_TYPE_CONFIG: Record<BlockType, BlockTypeConfig> = {
   maintenance: {
     label: 'Vedlikehold',
-    description: t('common.planlagt_vedlikehold_av_lokalet'),
+    description: 'common.planlagt_vedlikehold_av_lokalet',
     colorBg: 'var(--ds-color-neutral-surface-hover)',
     colorBorder: 'var(--ds-color-neutral-border-default)',
     colorText: 'var(--ds-color-neutral-text-subtle)',
   },
   closed: {
     label: 'Stengt',
-    description: t('common.lokalet_er_stengt_for'),
+    description: 'common.lokalet_er_stengt_for',
     colorBg: 'var(--ds-color-danger-surface-default)',
     colorBorder: 'var(--ds-color-danger-border-default)',
     colorText: 'var(--ds-color-danger-text-default)',
   },
   hold: {
-    label: t('common.intern_reservasjon'),
-    description: t('common.reservert_for_intern_bruk'),
+    label: 'common.intern_reservasjon',
+    description: 'common.reservert_for_intern_bruk',
     colorBg: 'var(--ds-color-warning-surface-default)',
     colorBorder: 'var(--ds-color-warning-border-default)',
     colorText: 'var(--ds-color-warning-text-default)',
   },
   emergency: {
-    label: t('common.nodstenging'),
-    description: t('common.akutt_stenging_av_lokalet'),
+    label: 'common.nodstenging',
+    description: 'common.akutt_stenging_av_lokalet',
     colorBg: 'var(--ds-color-danger-surface-default)',
     colorBorder: 'var(--ds-color-danger-border-default)',
     colorText: 'var(--ds-color-danger-text-default)',
   },
   internal: {
-    label: t('common.intern_aktivitet'),
-    description: t('common.internt_arrangement_eller_mote'),
+    label: 'common.intern_aktivitet',
+    description: 'common.internt_arrangement_eller_mote',
     colorBg: 'var(--ds-color-info-surface-default)',
     colorBorder: 'var(--ds-color-info-border-default)',
     colorText: 'var(--ds-color-info-text-default)',

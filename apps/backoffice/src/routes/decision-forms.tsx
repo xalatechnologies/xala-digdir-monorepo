@@ -80,7 +80,7 @@ export function DecisionFormsPage() {
       title: outcome === 'approved' ? t('common.bekreft_godkjenning') : outcome === 'rejected' ? t('common.bekreft_avslag') : 'Bekreft retur',
       description: `Er du sikker på at du vil ${outcome === 'approved' ? 'godkjenne' : outcome === 'rejected' ? 'avslå' : 'returnere'} denne saken?`,
       confirmText: outcome === 'approved' ? 'Godkjenn' : outcome === 'rejected' ? t('common.avslaa') : 'Returner',
-      cancelText: t("ui.cancel"),
+      cancelText: t("action.cancel"),
       variant: outcome === 'approved' ? 'success' : outcome === 'rejected' ? 'danger' : 'warning',
     });
     
@@ -165,7 +165,7 @@ export function DecisionFormsPage() {
           </div>
           {isLoading ? (
             <div style={{ display: 'flex', justifyContent: 'center', padding: 'var(--ds-spacing-8)' }}>
-              <Spinner aria-label={t("ui.loading")} data-size="lg" />
+              <Spinner aria-label={t("state.loading")} data-size="lg" />
             </div>
           ) : (
             <Table>

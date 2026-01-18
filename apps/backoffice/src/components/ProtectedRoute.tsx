@@ -229,7 +229,7 @@ export function ProtectedRoute({
           backgroundColor: 'var(--ds-color-neutral-background-default)',
         }}
       >
-        <Spinner aria-label={t("ui.loading")} data-data-size="lg" />
+        <Spinner aria-label={t("state.loading")} data-data-size="lg" />
       </div>
     );
   }

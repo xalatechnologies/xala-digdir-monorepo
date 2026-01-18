@@ -187,7 +187,7 @@ export function SeasonApplicationDrawer({
         >
           <div>
             <Heading level={2} data-size="md" style={{ margin: 0, marginBottom: 'var(--ds-spacing-1)' }}>
-              {t('seasons.drawer.title')}
+              {t('seasons.drawer.page.title')}
             </Heading>
             <Paragraph data-size="sm" style={{ margin: 0, color: 'var(--ds-color-neutral-text-subtle)' }}>
               {season.name}

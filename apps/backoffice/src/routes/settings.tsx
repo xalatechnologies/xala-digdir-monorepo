@@ -398,7 +398,7 @@ export function SettingsPage() {
                       disabled={isUploadingAvatar} type="button"
                     >
                       <CameraIcon />
-                      {isUploadingAvatar ? t("settings.profile.uploading") : t("settings.profile.changeImage")}
+                      {isUploadingAvatar ? t("state.loading") : t("settings.profile.changeImage")}
                     </Button>
                     <Paragraph data-size="xs" style={{ color: 'var(--ds-color-neutral-text-subtle)' }}>
                       {t("settings.profile.imageFormats")}
@@ -466,7 +466,7 @@ export function SettingsPage() {
                 <div style={{ paddingTop: 'var(--ds-spacing-3)', borderTop: '1px solid var(--ds-color-neutral-border-subtle)' }}>
                   <Button onClick={handleSaveProfile} disabled={isSaving} type="button">
                     <SaveIcon />
-                    {isSaving ? t("settings.profile.saving") : t("settings.profile.save")}
+                    {isSaving ? t("state.saving") : t("settings.profile.save")}
                   </Button>
                 </div>
               </Stack>
@@ -482,7 +482,7 @@ export function SettingsPage() {
               <Stack spacing={3}>
                 <div>
                   <Heading level={3} data-size="sm" style={{ marginBottom: 'var(--ds-spacing-2)' }}>
-                    {t("settings.address.title")}
+                    {t("settings.address.page.title")}
                   </Heading>
                   <Paragraph data-size="sm" style={{ color: 'var(--ds-color-neutral-text-subtle)' }}>
                     {t("settings.address.infoDesc")}
@@ -650,7 +650,7 @@ export function SettingsPage() {
             <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
               <Button onClick={handleSaveProfile} disabled={isSaving} type="button">
                 <SaveIcon />
-                {isSaving ? t("settings.profile.saving") : t("settings.profile.saveAddresses")}
+                {isSaving ? t("state.saving") : t("settings.profile.saveAddresses")}
               </Button>
             </div>
           </Stack>
@@ -662,7 +662,7 @@ export function SettingsPage() {
             <Stack spacing={5}>
               <div>
                 <Heading level={3} data-size="sm" style={{ marginBottom: 'var(--ds-spacing-3)' }}>
-                  {t("settings.general.title")}
+                  {t("settings.general.page.title")}
                 </Heading>
                 <Paragraph data-size="sm" style={{ color: 'var(--ds-color-neutral-text-subtle)' }}>
                   {t("settings.general.desc")}
@@ -755,7 +755,7 @@ export function SettingsPage() {
               <div style={{ paddingTop: 'var(--ds-spacing-3)', borderTop: '1px solid var(--ds-color-neutral-border-subtle)' }}>
                 <Button onClick={handleSave} disabled={isSaving} type="button">
                   <SaveIcon />
-                  {isSaving ? t("settings.profile.saving") : t("settings.profile.save")}
+                  {isSaving ? t("state.saving") : t("settings.profile.save")}
                 </Button>
               </div>
             </Stack>
@@ -768,7 +768,7 @@ export function SettingsPage() {
             <Stack spacing={5}>
               <div>
                 <Heading level={3} data-size="sm" style={{ marginBottom: 'var(--ds-spacing-3)' }}>
-                  {t("settings.booking.title")}
+                  {t("settings.booking.page.title")}
                 </Heading>
                 <Paragraph data-size="sm" style={{ color: 'var(--ds-color-neutral-text-subtle)' }}>
                   {t("settings.booking.desc")}
@@ -883,7 +883,7 @@ export function SettingsPage() {
               <div style={{ paddingTop: 'var(--ds-spacing-3)', borderTop: '1px solid var(--ds-color-neutral-border-subtle)' }}>
                 <Button onClick={handleSave} disabled={isSaving} type="button">
                   <SaveIcon />
-                  {isSaving ? t("settings.profile.saving") : t("settings.profile.save")}
+                  {isSaving ? t("state.saving") : t("settings.profile.save")}
                 </Button>
               </div>
             </Stack>
@@ -896,7 +896,7 @@ export function SettingsPage() {
             <Stack spacing={5}>
               <div>
                 <Heading level={3} data-size="sm" style={{ marginBottom: 'var(--ds-spacing-3)' }}>
-                  {t("settings.notifications.title")}
+                  {t("settings.notifications.page.title")}
                 </Heading>
                 <Paragraph data-size="sm" style={{ color: 'var(--ds-color-neutral-text-subtle)' }}>
                   {t("settings.notifications.desc")}
@@ -1003,7 +1003,7 @@ export function SettingsPage() {
               <div style={{ paddingTop: 'var(--ds-spacing-3)', borderTop: '1px solid var(--ds-color-neutral-border-subtle)' }}>
                 <Button onClick={handleSave} disabled={isSaving} type="button">
                   <SaveIcon />
-                  {isSaving ? t("settings.profile.saving") : t("settings.profile.save")}
+                  {isSaving ? t("state.saving") : t("settings.profile.save")}
                 </Button>
               </div>
             </Stack>
@@ -1031,9 +1031,9 @@ export function SettingsPage() {
                   </div>
                   <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--ds-spacing-2)' }}>
                     {integrations?.bankid?.enabled ? (
-                      <Badge color="success">{t("common.active")}</Badge>
+                      <Badge color="success">{t("state.active")}</Badge>
                     ) : (
-                      <Badge color="neutral">{t("common.inactive")}</Badge>
+                      <Badge color="neutral">{t("state.inactive")}</Badge>
                     )}
                     <Switch
                       checked={integrations?.bankid?.enabled || false}
@@ -1049,9 +1049,9 @@ export function SettingsPage() {
                   </div>
                   <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--ds-spacing-2)' }}>
                     {integrations?.idporten?.enabled ? (
-                      <Badge color="success">{t("common.active")}</Badge>
+                      <Badge color="success">{t("state.active")}</Badge>
                     ) : (
-                      <Badge color="neutral">{t("common.inactive")}</Badge>
+                      <Badge color="neutral">{t("state.inactive")}</Badge>
                     )}
                     <Switch
                       checked={integrations?.idporten?.enabled || false}
@@ -1078,9 +1078,9 @@ export function SettingsPage() {
                   </div>
                   <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--ds-spacing-2)' }}>
                     {integrations?.vipps?.enabled ? (
-                      <Badge color="success">{t("common.active")}</Badge>
+                      <Badge color="success">{t("state.active")}</Badge>
                     ) : (
-                      <Badge color="neutral">{t("common.inactive")}</Badge>
+                      <Badge color="neutral">{t("state.inactive")}</Badge>
                     )}
                     <Switch
                       checked={integrations?.vipps?.enabled || false}
@@ -1109,9 +1109,9 @@ export function SettingsPage() {
                   </div>
                   <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--ds-spacing-2)' }}>
                     {integrations?.rco?.enabled ? (
-                      <Badge color="success">{t("common.active")}</Badge>
+                      <Badge color="success">{t("state.active")}</Badge>
                     ) : (
-                      <Badge color="neutral">{t("common.inactive")}</Badge>
+                      <Badge color="neutral">{t("state.inactive")}</Badge>
                     )}
                     <Switch
                       checked={integrations?.rco?.enabled || false}
@@ -1140,9 +1140,9 @@ export function SettingsPage() {
                   </div>
                   <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--ds-spacing-2)' }}>
                     {integrations?.googleCalendar?.enabled ? (
-                      <Badge color="success">{t("common.active")}</Badge>
+                      <Badge color="success">{t("state.active")}</Badge>
                     ) : (
-                      <Badge color="neutral">{t("common.inactive")}</Badge>
+                      <Badge color="neutral">{t("state.inactive")}</Badge>
                     )}
                     <Switch
                       checked={integrations?.googleCalendar?.enabled || false}
@@ -1158,9 +1158,9 @@ export function SettingsPage() {
                   </div>
                   <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--ds-spacing-2)' }}>
                     {integrations?.outlook?.enabled ? (
-                      <Badge color="success">{t("common.active")}</Badge>
+                      <Badge color="success">{t("state.active")}</Badge>
                     ) : (
-                      <Badge color="neutral">{t("common.inactive")}</Badge>
+                      <Badge color="neutral">{t("state.inactive")}</Badge>
                     )}
                     <Switch
                       checked={integrations?.outlook?.enabled || false}
@@ -1189,9 +1189,9 @@ export function SettingsPage() {
                   </div>
                   <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--ds-spacing-2)' }}>
                     {integrations?.visma?.enabled ? (
-                      <Badge color="success">{t("common.active")}</Badge>
+                      <Badge color="success">{t("state.active")}</Badge>
                     ) : (
-                      <Badge color="neutral">{t("common.inactive")}</Badge>
+                      <Badge color="neutral">{t("state.inactive")}</Badge>
                     )}
                     <Switch
                       checked={integrations?.visma?.enabled || false}
@@ -1220,9 +1220,9 @@ export function SettingsPage() {
                   </div>
                   <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--ds-spacing-2)' }}>
                     {integrations?.brreg?.enabled ? (
-                      <Badge color="success">{t("common.active")}</Badge>
+                      <Badge color="success">{t("state.active")}</Badge>
                     ) : (
-                      <Badge color="neutral">{t("common.inactive")}</Badge>
+                      <Badge color="neutral">{t("state.inactive")}</Badge>
                     )}
                     <Switch
                       checked={integrations?.brreg?.enabled || false}
@@ -1241,7 +1241,7 @@ export function SettingsPage() {
             <Stack spacing={5}>
               <div>
                 <Heading level={3} data-size="sm" style={{ marginBottom: 'var(--ds-spacing-3)' }}>
-                  {t("settings.branding.title")}
+                  {t("settings.branding.page.title")}
                 </Heading>
                 <Paragraph data-size="sm" style={{ color: 'var(--ds-color-neutral-text-subtle)' }}>
                   {t("settings.branding.desc")}
@@ -1305,7 +1305,7 @@ export function SettingsPage() {
               <div style={{ paddingTop: 'var(--ds-spacing-3)', borderTop: '1px solid var(--ds-color-neutral-border-subtle)' }}>
                 <Button onClick={handleSave} disabled={isSaving} type="button">
                   <SaveIcon />
-                  {isSaving ? t("common.saving") : t("common.saveChanges")}
+                  {isSaving ? t("state.saving") : t("action.save")}
                 </Button>
               </div>
             </Stack>

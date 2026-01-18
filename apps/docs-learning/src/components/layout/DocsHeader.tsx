@@ -39,7 +39,7 @@ export function DocsHeader() {
             <SearchIcon className={styles.searchIcon} />
             <Textfield
               type="search"
-              placeholder={t('docs.search.placeholder') || 'Søk i dokumentasjon...'}
+              placeholder={t('form.docs.search.placeholder') || 'Søk i dokumentasjon...'}
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               className={styles.searchInput}

@@ -301,7 +301,7 @@ export function AccountSelector({
             title={t('minside.accountSelection.organizationTitle')}
             description={
               isLoadingOrganizations
-                ? t('minside.accountSelection.loadingOrgs')
+                ? t('state.loading')
                 : organizations.length === 0
                   ? t('minside.accountSelection.noOrgs')
                   : t('minside.accountSelection.organizationDescription')
@@ -346,7 +346,7 @@ export function AccountSelector({
         type="button"
         variant="tertiary"
         onClick={handleBack}
-        aria-label={t('common.back')}
+        aria-label={t('action.back')}
         style={{
           marginBottom: 'var(--ds-spacing-4)',
           display: 'flex',
@@ -355,13 +355,13 @@ export function AccountSelector({
         }}
       >
         <ArrowLeftIcon />
-        {t('common.back')}
+        {t('action.back')}
       </Button>
 
       {/* Organization List */}
       {isLoadingOrganizations ? (
         <div style={{ display: 'flex', justifyContent: 'center', padding: 'var(--ds-spacing-8)' }}>
-          <Spinner aria-label={t('minside.accountSelection.loadingOrgs')} />
+          <Spinner aria-label={t('state.loading')} />
         </div>
       ) : (
         <div

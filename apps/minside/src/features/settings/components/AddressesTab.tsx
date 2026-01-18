@@ -267,7 +267,7 @@ export function AddressesTab() {
           aria-label={isSaving ? t('common.lagrer_adresser') : 'Lagre adresser'}
         >
           <SaveIcon />
-          {isSaving ? t('common.lagrer') : t('common.lagre_adresser')}
+          {isSaving ? t('state.saving') : t('common.lagre_adresser')}
         </Button>
       </div>
     </Stack>

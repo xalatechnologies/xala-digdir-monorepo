@@ -208,7 +208,7 @@ export function BookingsPage() {
         </Card>
         <Card style={{ padding: 'var(--ds-spacing-5)' }}>
           <Paragraph data-size="sm" style={{ color: 'var(--ds-color-neutral-text-default)', margin: 0, fontWeight: 'var(--ds-font-weight-medium)' }}>
-            {t('booking.cancelled')}
+            {t('state.cancelled')}
           </Paragraph>
           <Heading level={2} data-size="xl" style={{ margin: 0, marginTop: 'var(--ds-spacing-2)' }}>
             {stats.cancelled}
@@ -322,7 +322,7 @@ export function BookingsPage() {
               flexShrink: 0,
             }}
           >
-            {t('booking.cancelled')}
+            {t('state.cancelled')}
           </Button>
         </div>
       </div>
@@ -330,7 +330,7 @@ export function BookingsPage() {
       {/* Bookings List - Responsive: cards on mobile, table on desktop */}
       {isLoading ? (
         <div style={{ display: 'flex', justifyContent: 'center', padding: 'var(--ds-spacing-8)' }}>
-          <Spinner aria-label={t('bookings.loadingBookings')} data-size="lg" />
+          <Spinner aria-label={t('state.loading')} data-size="lg" />
         </div>
       ) : bookings.length === 0 ? (
         <Card style={{ padding: 'var(--ds-spacing-8)', textAlign: 'center' }}>
@@ -413,7 +413,7 @@ export function BookingsPage() {
                       minHeight: '44px', // WCAG AA touch target
                     }}
                   >
-                    {t('common.cancel')}
+                    {t('action.cancel')}
                   </Button>
                 )}
                 <Button
@@ -440,8 +440,8 @@ export function BookingsPage() {
               <Table.Row>
                 <Table.HeaderCell>{t('bookings.resource')}</Table.HeaderCell>
                 <Table.HeaderCell>{t('bookings.timespan')}</Table.HeaderCell>
-                <Table.HeaderCell>{t('common.status')}</Table.HeaderCell>
-                <Table.HeaderCell>{t('common.price')}</Table.HeaderCell>
+                <Table.HeaderCell>{t('label.status')}</Table.HeaderCell>
+                <Table.HeaderCell>{t('label.price')}</Table.HeaderCell>
                 <Table.HeaderCell style={{ width: '80px' }}>{t('common.actions')}</Table.HeaderCell>
               </Table.Row>
             </Table.Head>
@@ -482,7 +482,7 @@ export function BookingsPage() {
                           onClick={() => handleCancel(booking.id)}
                           disabled={cancelBooking.isPending}
                         >
-                          {t('common.cancel')}
+                          {t('action.cancel')}
                         </Button>
                       )}
                       <Button

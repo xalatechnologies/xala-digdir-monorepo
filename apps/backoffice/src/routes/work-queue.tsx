@@ -112,8 +112,8 @@ export function WorkQueuePage() {
     const confirmed = await confirm({
       title: t('workQueue.approveRequest'),
       description: t('workQueue.confirmApprove'),
-      confirmText: t('common.approve'),
-      cancelText: t('common.cancel'),
+      confirmText: t('action.approve'),
+      cancelText: t('action.cancel'),
       variant: 'default',
     });
     if (confirmed) {
@@ -125,8 +125,8 @@ export function WorkQueuePage() {
     const confirmed = await confirm({
       title: t('workQueue.rejectRequest'),
       description: t('workQueue.confirmReject'),
-      confirmText: t('common.reject'),
-      cancelText: t('common.cancel'),
+      confirmText: t('action.reject'),
+      cancelText: t('action.cancel'),
       variant: 'danger',
     });
     if (confirmed) {
@@ -147,7 +147,7 @@ export function WorkQueuePage() {
       {/* Header */}
       <div>
         <Heading level={1} data-size="lg" style={{ margin: 0 }}>
-          {t('workQueue.title')}
+          {t('workQueue.page.title')}
         </Heading>
         <Paragraph style={{ color: 'var(--ds-color-neutral-text-subtle)', marginTop: 'var(--ds-spacing-2)', marginBottom: 0 }}>
           {t('workQueue.description')}
@@ -205,7 +205,7 @@ export function WorkQueuePage() {
             onClick={() => setTypeFilter(filter === 'all' ? undefined : filter as RequestType)}
             style={{ minHeight: '44px' }}
           >
-            {filter === 'all' ? t('common.all') : t(`workQueue.${filter.replace('-', '')}`)}
+            {filter === 'all' ? t('label.all') : t(`workQueue.${filter.replace('-', '')}`)}
           </Button>
         ))}
       </div>
@@ -214,7 +214,7 @@ export function WorkQueuePage() {
       <Card style={{ padding: 0, overflow: 'hidden' }}>
         {isLoading ? (
           <div style={{ display: 'flex', justifyContent: 'center', padding: 'var(--ds-spacing-8)' }}>
-            <Spinner aria-label={t('common.loading')} data-size="lg" />
+            <Spinner aria-label={t('state.loading')} data-size="lg" />
           </div>
         ) : queue.length === 0 ? (
           <div style={{ padding: 'var(--ds-spacing-8)', textAlign: 'center' }}>
@@ -270,7 +270,7 @@ export function WorkQueuePage() {
                         data-size="sm"
                         onClick={() => handleApprove(item.id)}
                       >
-                        {t('common.approve')}
+                        {t('action.approve')}
                       </Button>
                       <Button
                         type="button"
@@ -278,7 +278,7 @@ export function WorkQueuePage() {
                         data-size="sm"
                         onClick={() => handleReject(item.id)}
                       >
-                        {t('common.reject')}
+                        {t('action.reject')}
                       </Button>
                     </div>
                   </Table.Cell>

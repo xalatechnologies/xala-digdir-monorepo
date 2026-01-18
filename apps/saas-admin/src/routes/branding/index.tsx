@@ -45,7 +45,7 @@ export function BrandingListPage() {
   if (isLoading) {
     return (
       <div style={{ display: 'flex', justifyContent: 'center', padding: 'var(--ds-spacing-8)' }}>
-        <Spinner size="lg" aria-label={t('common.loading')} />
+        <Spinner size="lg" aria-label={t('state.loading')} />
       </div>
     );
   }
@@ -58,7 +58,7 @@ export function BrandingListPage() {
           <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--ds-spacing-3)', marginBottom: 'var(--ds-spacing-2)' }}>
             <SparklesIcon style={{ color: 'var(--ds-color-accent-text-default)', width: 32, height: 32 }} />
             <Heading level={1} size="lg">
-              {t('saasAdmin.branding.title', { defaultValue: 'Branding & Tema' })}
+              {t('saasAdmin.branding.page.title', { defaultValue: 'Branding & Tema' })}
             </Heading>
           </div>
           <Paragraph size="sm" style={{ color: 'var(--ds-color-neutral-text-subtle)' }}>
@@ -102,12 +102,12 @@ export function BrandingListPage() {
             <Textfield
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder={t('common.search', { defaultValue: 'Søk etter tenant...' })}
+              placeholder={t('action.search', { defaultValue: 'Søk etter tenant...' })}
             />
           </div>
           <Button variant="tertiary" type="button">
             <SearchIcon />
-            {t('common.search')}
+            {t('action.search')}
           </Button>
         </div>
       </Card>

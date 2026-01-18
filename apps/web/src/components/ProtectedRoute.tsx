@@ -157,7 +157,7 @@ export function ProtectedRoute({
           minHeight: '50vh',
         }}
       >
-        <Spinner aria-label={t('common.loading')} />
+        <Spinner aria-label={t('state.loading')} />
       </div>
     );
   }

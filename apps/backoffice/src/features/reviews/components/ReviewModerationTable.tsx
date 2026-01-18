@@ -198,7 +198,7 @@ function ReviewRowActions({ review, onActionComplete }: ReviewRowActionsProps) {
             {/* Approve - Only for pending reviews */}
             {review.status === 'pending' && (
               <Dropdown.Item>
-                <Dropdown.Button onClick={handleApprove}>Godkjenn</Dropdown.Button>
+                <Dropdown.Button onClick={handleApprove}>{t('action.approve')}</Dropdown.Button>
               </Dropdown.Item>
             )}
 
@@ -296,7 +296,7 @@ function ReviewRowActions({ review, onActionComplete }: ReviewRowActionsProps) {
               data-color="danger"
               onClick={handleDelete}
               loading={deleteMutation.isPending}
-            >{t("ui.delete")}</Button>
+            >{t("action.delete")}</Button>
           </div>
         </Dialog.Block>
       </Dialog>
@@ -329,7 +329,7 @@ export function ReviewModerationTable({
           padding: 'var(--ds-spacing-10)',
         }}
       >
-        <Spinner aria-label={t("ui.loading")} />
+        <Spinner aria-label={t("state.loading")} />
       </div>
     );
   }

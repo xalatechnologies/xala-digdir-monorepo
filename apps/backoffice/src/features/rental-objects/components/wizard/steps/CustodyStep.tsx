@@ -72,7 +72,7 @@ export function CustodyStep({ wizard }: CustodyStepProps) {
     <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--ds-spacing-6)' }}>
       <div>
         <Heading level={2} data-size="md" style={{ margin: 0, marginBottom: 'var(--ds-spacing-2)' }}>
-          {t('wizard.custody.title')}
+          {t('wizard.custody.page.title')}
         </Heading>
         <Paragraph style={{ margin: 0, color: 'var(--ds-color-neutral-text-subtle)' }}>
           {t('wizard.custody.description')}

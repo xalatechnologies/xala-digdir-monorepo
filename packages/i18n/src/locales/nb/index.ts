@@ -2,6 +2,7 @@
  * NB Translations Index
  * Auto-generated - do not edit manually
  */
+import core from './core.json';
 import common from './common.json';
 import nav from './nav.json';
 import auth from './auth.json';
@@ -31,6 +32,13 @@ import integrations from './integrations.json';
 import misc from './misc.json';
 
 export const nb = {
+  // Global/Common namespaces (exposed without prefix)
+  ...core,
+  ...common,
+  ...misc,
+
+  // Namespaced access
+  ...Object.fromEntries(Object.entries(core).map(([k, v]) => [`core.${k}`, v])),
   ...Object.fromEntries(Object.entries(common).map(([k, v]) => [`common.${k}`, v])),
   ...Object.fromEntries(Object.entries(nav).map(([k, v]) => [`nav.${k}`, v])),
   ...Object.fromEntries(Object.entries(auth).map(([k, v]) => [`auth.${k}`, v])),

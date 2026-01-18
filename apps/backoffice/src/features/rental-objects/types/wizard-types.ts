@@ -3,7 +3,7 @@
  * Type definitions for the rental object wizard
  */
 
-import type { RentalObject as ContractRentalObject } from '@xala/contracts';
+import type { RentalObject as ContractRentalObject } from '@digilist/client-sdk';
 
 /**
  * Re-export RentalObject from contracts
@@ -16,18 +16,12 @@ export type RentalObject = ContractRentalObject;
 export type WizardStepId =
   | 'category'
   | 'basics'
-  | 'media'
-  | 'location'
-  | 'capacity'
-  | 'inventory'
-  | 'opening-hours'
-  | 'pickup'
-  | 'requirements'
+  | 'details'      // Location + Capacity
+  | 'resources'    // Inventory + Pickup + Requirements
+  | 'availability' // Opening Hours + Schedule + Booking
   | 'packages'
-  | 'schedule'
-  | 'booking'
+  | 'media'
   | 'content'
-  | 'custody'
   | 'review';
 
 /**

@@ -112,7 +112,7 @@ export function SeasonApplicationsReviewPage() {
       title: t('common.godkjenn_soknad'),
       description: t('common.er_du_sikker_paa'),
       confirmText: 'Godkjenn',
-      cancelText: t("ui.cancel"),
+      cancelText: t("action.cancel"),
       variant: 'success',
     });
     if (confirmed) {
@@ -126,7 +126,7 @@ export function SeasonApplicationsReviewPage() {
       title: t('common.avslaa_soknad'),
       description: t('common.er_du_sikker_paa'),
       confirmText: 'Avslå',
-      cancelText: t("ui.cancel"),
+      cancelText: t("action.cancel"),
       variant: 'danger',
     });
     if (confirmed) {
@@ -201,7 +201,7 @@ export function SeasonApplicationsReviewPage() {
       <Card style={{ padding: 0, overflow: 'hidden' }}>
         {isLoading ? (
           <div style={{ display: 'flex', justifyContent: 'center', padding: 'var(--ds-spacing-8)' }}>
-            <Spinner aria-label={t("ui.loading")} data-size="lg" />
+            <Spinner aria-label={t("state.loading")} data-size="lg" />
           </div>
         ) : applications.length === 0 ? (
           <div style={{ padding: 'var(--ds-spacing-8)', textAlign: 'center' }}>

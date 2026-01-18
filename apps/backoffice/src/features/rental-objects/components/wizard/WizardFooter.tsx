@@ -44,7 +44,7 @@ export function WizardFooter({ wizard }: WizardFooterProps) {
         onClick={cancel}
         disabled={isSaving} type="button"
       >
-        {t('common.cancel')}
+        {t('action.cancel')}
       </Button>
 
       {/* Center - Step Navigation */}
@@ -68,7 +68,7 @@ export function WizardFooter({ wizard }: WizardFooterProps) {
             {isSaving ? (
               <Stack direction="row" gap={2} align="center">
                 <Spinner size="sm" />
-                {t('common.loading')}
+                {t('state.loading')}
               </Stack>
             ) : (
               t('wizard.goToNextStep')
@@ -88,7 +88,7 @@ export function WizardFooter({ wizard }: WizardFooterProps) {
           {isSaving ? (
             <Stack direction="row" gap={2} align="center">
               <Spinner size="sm" />
-              {t('common.loading')}
+              {t('state.loading')}
             </Stack>
           ) : (
             t('wizard.saveDraft')
@@ -105,7 +105,7 @@ export function WizardFooter({ wizard }: WizardFooterProps) {
             {isSaving ? (
               <Stack direction="row" gap={2} align="center">
                 <Spinner size="sm" />
-                {t('common.loading')}
+                {t('state.loading')}
               </Stack>
             ) : (
               t('wizard.saveAndPublish')

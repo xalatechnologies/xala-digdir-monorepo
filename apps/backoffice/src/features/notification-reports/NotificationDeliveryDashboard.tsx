@@ -204,7 +204,7 @@ export function NotificationDeliveryDashboard() {
             alignItems: 'center',
             padding: 'var(--ds-spacing-10)',
           }}>
-            <Spinner aria-label={t("ui.loading")} />
+            <Spinner aria-label={t("state.loading")} />
           </div>
         ) : reports.length === 0 ? (
           <div style={{

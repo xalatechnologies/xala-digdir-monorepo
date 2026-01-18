@@ -173,5 +173,8 @@
   "review.categoryDetails": "Kategoridetail",
   "review.bookingConfig": "Bookingkonfigurasjon",
   "review.pricing": "Prissetting",
-  "review.editSection": "Rediger {{section}}"
+  "review.editSection": "Rediger {{section}}",
+  "phone_number": "Telefonnummer",
+  "street_address": "Gateadresse",
+  "postal_code": "Poststed"
 }

@@ -142,6 +142,29 @@ export class DashboardController {
   /**
    * GET /api/dashboard/activity - Get recent activity from audit logs
    */
+  @Get('/pending')
+  async getPendingBookings(request: TenantRequest, reply: FastifyReply) {
+    const db = container.resolve<any>('Database');
+    const limit = Number((request.query as any)?.limit) || 5;
+
+    const result = await db
+      .select({
+        id: bookings.id,
+        title: bookings.title,
+        status: bookings.status,
+        startTime: bookings.startTime,
+        endTime: bookings.endTime,
+        userName: users.name,
+      })
+      .from(bookings)
+      .leftJoin(users, eq(bookings.userId, users.id))
+      .where(eq(bookings.status, 'pending'))
+      .orderBy(desc(bookings.createdAt))
+      .limit(limit);
+
+    return { data: result };
+  }
+
   @Get('/activity')
   async getRecentActivity(request: TenantRequest, reply: FastifyReply) {
     const db = container.resolve<any>('Database');

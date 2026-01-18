@@ -83,7 +83,7 @@ export function UsersManagementPage() {
       title: t('common.deaktiver_bruker'),
       description: `Er du sikker på at du vil deaktivere "${name}"?`,
       confirmText: 'Deaktiver',
-      cancelText: t("ui.cancel"),
+      cancelText: t("action.cancel"),
       variant: 'danger',
     });
     if (confirmed) {
@@ -209,7 +209,7 @@ export function UsersManagementPage() {
       <Card style={{ padding: 0, overflow: 'hidden' }}>
         {isLoading ? (
           <div style={{ display: 'flex', justifyContent: 'center', padding: 'var(--ds-spacing-8)' }}>
-            <Spinner aria-label={t("ui.loading")} data-size="lg" />
+            <Spinner aria-label={t("state.loading")} data-size="lg" />
           </div>
         ) : (
           <Table>

@@ -133,7 +133,7 @@ export function NotificationsPage() {
       }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--ds-spacing-3)' }}>
           <Heading level={1} data-size="lg" style={{ margin: 0 }}>
-            {t('notifications.title')}
+            {t('notifications.page.title')}
           </Heading>
           {unreadCount > 0 && (
             <Badge data-testid="notification-badge" style={{ backgroundColor: 'var(--ds-color-danger-surface-default)', color: 'var(--ds-color-danger-text-default)' }}>
@@ -166,7 +166,7 @@ export function NotificationsPage() {
       <Card style={{ padding: 'var(--ds-spacing-5)' }}>
         {isLoading ? (
           <div style={{ display: 'flex', justifyContent: 'center', padding: 'var(--ds-spacing-8)' }}>
-            <Spinner aria-label={t('common.loading')} data-size="lg" />
+            <Spinner aria-label={t('state.loading')} data-size="lg" />
           </div>
         ) : filteredNotifications.length === 0 ? (
           <div style={{ padding: 'var(--ds-spacing-8)', textAlign: 'center' }}>

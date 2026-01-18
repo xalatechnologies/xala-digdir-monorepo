@@ -39,7 +39,7 @@ function formatDate(dateStr: string): string {
   return date.toLocaleDateString('nb-NO', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
 }
 
-function getStatusBadge(status: string) {
+function getStatusBadge(status: string, t: (key: string) => string) {
   const normalizedStatus = status?.toLowerCase() || '';
 
   switch (normalizedStatus) {
@@ -68,7 +68,7 @@ export function EventDrawer({ isOpen, event, onClose, onEdit }: EventDrawerProps
 
   const startStr = event.start || event.startTime || '';
   const endStr = event.end || event.endTime || '';
-  const statusBadge = getStatusBadge(event.status);
+  const statusBadge = getStatusBadge(event.status, t);
   const isBlock = event.status === 'blocked' || event.status === 'maintenance';
   const isPending = event.status?.toLowerCase() === 'pending';
 
@@ -176,7 +176,7 @@ export function EventDrawer({ isOpen, event, onClose, onEdit }: EventDrawerProps
                 Type blokkering
               </Paragraph>
               <Paragraph data-size="sm" style={{ margin: 0, fontWeight: 'var(--ds-font-weight-medium)' }}>
-                {BLOCK_TYPE_CONFIG[event.status as BlockType]?.label || 'Blokkert'}
+{t(BLOCK_TYPE_CONFIG[event.status as BlockType]?.label || 'Blokkert')}
               </Paragraph>
             </div>
           )}
@@ -185,7 +185,7 @@ export function EventDrawer({ isOpen, event, onClose, onEdit }: EventDrawerProps
 
       <Dialog.Block>
         <div style={{ display: 'flex', gap: 'var(--ds-spacing-3)', justifyContent: 'flex-end', flexWrap: 'wrap' }}>
-          <Button type="button" variant="secondary" onClick={onClose}>{t("ui.close")}</Button>
+          <Button type="button" variant="secondary" onClick={onClose}>{t("action.close")}</Button>
 
           {/* Pending request actions */}
           {isPending && event.bookingId && permissions.canApproveRequests && (
@@ -229,7 +229,7 @@ export function EventDrawer({ isOpen, event, onClose, onEdit }: EventDrawerProps
                 disabled={deleteBlock.isPending}
                 data-color="danger"
               >
-                {deleteBlock.isPending ? <Spinner data-data-size="sm" aria-label="Sletter..." /> : t("ui.delete")}
+                {deleteBlock.isPending ? <Spinner data-data-size="sm" aria-label="Sletter..." /> : t("action.delete")}
               </Button>
             </>
           )}

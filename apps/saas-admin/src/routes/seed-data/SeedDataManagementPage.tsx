@@ -139,7 +139,7 @@ export function SeedDataManagementPage() {
       {/* Header */}
       <div style={{ marginBottom: 'var(--ds-spacing-6)' }}>
         <Heading level={1} size="lg" style={{ marginBottom: 'var(--ds-spacing-2)' }}>
-          {t('saasAdmin.seedData.title')}
+          {t('saasAdmin.seedData.page.title')}
         </Heading>
         <Paragraph style={{ color: 'var(--ds-color-neutral-text-subtle)' }}>
           {t('saasAdmin.seedData.description')}

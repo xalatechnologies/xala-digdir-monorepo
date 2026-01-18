@@ -32,6 +32,7 @@ import {
 } from './lazy-loader';
 import { interpolate } from './utils';
 import { persistLocale, getPersistedLocale } from './storage';
+import { I18nContext } from './context';
 
 /**
  * Lazy i18n context value
@@ -199,16 +200,32 @@ export function LazyI18nProvider({
     [locale, setLocale, t, isLoading]
   );
 
+  // I18nContext value for backward compatibility with useT(), useI18n(), useLocale()
+  const i18nContextValue = useMemo(
+    () => ({
+      locale,
+      setLocale,
+      t,
+    }),
+    [locale, setLocale, t]
+  );
+
   // Show loading fallback if provided and still loading
   if (isLoading && loadingFallback) {
     return (
-      <LazyI18nContext.Provider value={contextValue}>
-        {loadingFallback}
-      </LazyI18nContext.Provider>
+      <I18nContext.Provider value={i18nContextValue}>
+        <LazyI18nContext.Provider value={contextValue}>
+          {loadingFallback}
+        </LazyI18nContext.Provider>
+      </I18nContext.Provider>
     );
   }
 
-  return <LazyI18nContext.Provider value={contextValue}>{children}</LazyI18nContext.Provider>;
+  return (
+    <I18nContext.Provider value={i18nContextValue}>
+      <LazyI18nContext.Provider value={contextValue}>{children}</LazyI18nContext.Provider>
+    </I18nContext.Provider>
+  );
 }
 
 /**

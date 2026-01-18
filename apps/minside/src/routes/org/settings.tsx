@@ -89,7 +89,7 @@ export function OrganizationSettingsPage() {
           disabled={isSaving}
           style={{ minHeight: '44px' }}
         >
-          {isSaving ? t('common.saving') : t('common.save')}
+          {isSaving ? t('state.saving') : t('action.save')}
         </Button>
       </div>
 
@@ -101,7 +101,7 @@ export function OrganizationSettingsPage() {
         <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--ds-spacing-4)' }}>
           <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr', gap: 'var(--ds-spacing-4)' }}>
             <div>
-              <label style={{ display: 'block', marginBottom: 'var(--ds-spacing-2)', fontWeight: 500 }}>{t('common.name')}</label>
+              <label style={{ display: 'block', marginBottom: 'var(--ds-spacing-2)', fontWeight: 500 }}>{t('label.name')}</label>
               <Input
                 value={settings.orgName}
                 onChange={(e) => updateSetting('orgName', e.target.value)}
@@ -119,7 +119,7 @@ export function OrganizationSettingsPage() {
           </div>
           <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr', gap: 'var(--ds-spacing-4)' }}>
             <div>
-              <label style={{ display: 'block', marginBottom: 'var(--ds-spacing-2)', fontWeight: 500 }}>{t('common.email')}</label>
+              <label style={{ display: 'block', marginBottom: 'var(--ds-spacing-2)', fontWeight: 500 }}>{t('label.email')}</label>
               <Input
                 type="email"
                 value={settings.email}
@@ -128,7 +128,7 @@ export function OrganizationSettingsPage() {
               />
             </div>
             <div>
-              <label style={{ display: 'block', marginBottom: 'var(--ds-spacing-2)', fontWeight: 500 }}>{t('common.phone')}</label>
+              <label style={{ display: 'block', marginBottom: 'var(--ds-spacing-2)', fontWeight: 500 }}>{t('label.phone')}</label>
               <Input
                 value={settings.phone}
                 onChange={(e) => updateSetting('phone', e.target.value)}

@@ -41,10 +41,10 @@ export function BlockDetailPage(): React.ReactElement {
     if (!block) return;
 
     const confirmed = await confirm({
-      title: t('blocks.deleteConfirm.title'),
+      title: t('blocks.deleteConfirm.page.title'),
       description: t('blocks.deleteConfirm.description', { title: block.title }),
-      confirmLabel: t('common.delete'),
-      cancelLabel: t('common.cancel'),
+      confirmLabel: t('action.delete'),
+      cancelLabel: t('action.cancel'),
       variant: 'danger',
     });
 
@@ -99,15 +99,15 @@ export function BlockDetailPage(): React.ReactElement {
       <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--ds-spacing-6)' }}>
         <Breadcrumb
           breadcrumbs={[
-            { label: t('blocks.title'), href: '/blocks' },
-            { label: t('common.error') },
+            { label: t('blocks.page.title'), href: '/blocks' },
+            { label: t('error.generic') },
           ]}
         />
         <Card style={{ padding: 'var(--ds-spacing-6)', textAlign: 'center' }}>
           <Paragraph style={{ color: 'var(--ds-color-danger-text-default)' }}>
             {error?.message || t('blocks.notFound')}
           </Paragraph>
-          <Button type="button" variant="secondary" onClick={() => navigate('/blocks')} aria-label={t('ui.back')}>
+          <Button type="button" variant="secondary" onClick={() => navigate('/blocks')} aria-label={t('action.back')}>
             <ArrowLeftIcon />
             {t('blocks.backToList')}
           </Button>
@@ -121,7 +121,7 @@ export function BlockDetailPage(): React.ReactElement {
       {/* Breadcrumbs */}
       <Breadcrumb
         breadcrumbs={[
-          { label: t('blocks.title'), href: '/blocks' },
+          { label: t('blocks.page.title'), href: '/blocks' },
           { label: block.title },
         ]}
       />
@@ -145,9 +145,9 @@ export function BlockDetailPage(): React.ReactElement {
         </div>
         {canManageBlocks && (
           <div style={{ display: 'flex', gap: 'var(--ds-spacing-3)' }}>
-            <Button type="button" variant="secondary" onClick={() => navigate(`/blocks/${block.id}/edit`)} aria-label={t('ui.edit')}>
+            <Button type="button" variant="secondary" onClick={() => navigate(`/blocks/${block.id}/edit`)} aria-label={t('action.edit')}>
               <EditIcon />
-              {t('common.edit')}
+              {t('action.edit')}
             </Button>
             <Button
               type="button"
@@ -155,10 +155,10 @@ export function BlockDetailPage(): React.ReactElement {
               data-color="danger"
               onClick={handleDelete}
               disabled={deleteBlockMutation.isPending}
-              aria-label={t('ui.delete')}
+              aria-label={t('action.delete')}
             >
               <TrashIcon />
-              {t('common.delete')}
+              {t('action.delete')}
             </Button>
           </div>
         )}
@@ -316,7 +316,7 @@ export function BlockDetailPage(): React.ReactElement {
 
       {/* Back button */}
       <div>
-        <Button type="button" variant="tertiary" onClick={() => navigate('/blocks')} aria-label={t('ui.back')}>
+        <Button type="button" variant="tertiary" onClick={() => navigate('/blocks')} aria-label={t('action.back')}>
           <ArrowLeftIcon />
           {t('blocks.backToList')}
         </Button>

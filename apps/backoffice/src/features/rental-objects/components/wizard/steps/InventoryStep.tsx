@@ -149,7 +149,7 @@ export function InventoryStep({ wizard }: InventoryStepProps) {
           }}
         >
           <Paragraph data-size="sm" style={{ margin: 0 }}>
-            <strong>{t('form.inventory.tip.title')}</strong>
+            <strong>{t('form.inventory.tip.page.title')}</strong>
             <br />
             {t('form.inventory.tip.description')}
           </Paragraph>

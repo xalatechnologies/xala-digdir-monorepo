@@ -100,7 +100,7 @@ export function TenantBrandingPage() {
           disabled={isSaving}
           style={{ minHeight: '44px' }}
         >
-          {isSaving ? t('common.lagrer') : 'Lagre endringer'}
+          {isSaving ? t('state.saving') : 'Lagre endringer'}
         </Button>
       </div>
 

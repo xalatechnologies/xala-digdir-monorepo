@@ -153,7 +153,7 @@ export function TenantEditPage() {
   if (isLoading) {
     return (
       <div style={{ display: 'flex', justifyContent: 'center', padding: 'var(--ds-spacing-8)' }}>
-        <Spinner size="lg" aria-label={t('common.loading')} />
+        <Spinner size="lg" aria-label={t('state.loading')} />
       </div>
     );
   }
@@ -167,7 +167,7 @@ export function TenantEditPage() {
         <Link to="/tenants">
           <Button variant="secondary" style={{ marginTop: 'var(--ds-spacing-4)' }} type="button">
             <ArrowLeftIcon />
-            {t('common.back')}
+            {t('action.back')}
           </Button>
         </Link>
       </div>
@@ -187,13 +187,13 @@ export function TenantEditPage() {
       <Link to={`/tenants/${id}`}>
         <Button variant="tertiary" size="sm" style={{ marginBottom: 'var(--ds-spacing-4)' }} type="button">
           <ArrowLeftIcon />
-          {t('common.back')}
+          {t('action.back')}
         </Button>
       </Link>
 
       {/* Header */}
       <Heading level={1} size="lg" style={{ marginBottom: 'var(--ds-spacing-2)' }}>
-        {t('saasAdmin.tenantEdit.title', { defaultValue: 'Rediger tenant' })}
+        {t('saasAdmin.tenantEdit.page.title', { defaultValue: 'Rediger tenant' })}
       </Heading>
       <Paragraph size="sm" style={{ color: 'var(--ds-color-neutral-text-subtle)', marginBottom: 'var(--ds-spacing-6)' }}>
         {tenant.name}
@@ -222,7 +222,7 @@ export function TenantEditPage() {
 
           <Stack direction="column" gap={16}>
             <Textfield
-              label={t('common.name')}
+              label={t('label.name')}
               value={formData.name}
               onChange={(e) => handleFieldChange('name', e.target.value)}
               error={errors.name}
@@ -247,7 +247,7 @@ export function TenantEditPage() {
             />
 
             <Select
-              label={t('common.status')}
+              label={t('label.status')}
               value={formData.status}
               onChange={(e) => handleFieldChange('status', e.target.value)}
             >
@@ -267,7 +267,7 @@ export function TenantEditPage() {
           </Heading>
 
           {loadingPlans ? (
-            <Spinner aria-label={t('common.loading')} />
+            <Spinner aria-label={t('state.loading')} />
           ) : (
             <Select
               label={t('saasAdmin.tenants.plan')}
@@ -288,16 +288,16 @@ export function TenantEditPage() {
         <div style={{ display: 'flex', gap: 'var(--ds-spacing-3)', justifyContent: 'flex-end' }}>
           <Link to={`/tenants/${id}`}>
             <Button variant="secondary" type="button">
-              {t('common.cancel')}
+              {t('action.cancel')}
             </Button>
           </Link>
           <Button type="submit" disabled={updateMutation.isPending || !isDirty}>
             {updateMutation.isPending ? (
-              <Spinner size="sm" aria-label={t('common.saving')} />
+              <Spinner size="sm" aria-label={t('state.saving')} />
             ) : (
               <>
                 <SaveIcon />
-                {t('common.save')}
+                {t('action.save')}
               </>
             )}
           </Button>

@@ -112,7 +112,7 @@ export function TranslationsPage(): React.ReactElement {
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 'var(--ds-spacing-4)' }}>
           <div>
             <Heading level={1} size="lg">
-              {t('saasAdmin.translations.title')}
+              {t('saasAdmin.translations.page.title')}
             </Heading>
             <Paragraph size="md" style={{ color: 'var(--ds-color-neutral-text-subtle)' }}>
               {t('saasAdmin.translations.description')}
@@ -187,7 +187,7 @@ export function TranslationsPage(): React.ReactElement {
             </div>
             <div>
               <Textfield
-                label={t('common.search')}
+                label={t('action.search')}
                 placeholder={t('saasAdmin.translations.searchPlaceholder')}
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
@@ -234,7 +234,7 @@ export function TranslationsPage(): React.ReactElement {
                   </Table.Cell>
                   <Table.Cell>
                     <Button variant="tertiary" size="sm">
-                      {t('common.edit')}
+                      {t('action.edit')}
                     </Button>
                   </Table.Cell>
                 </Table.Row>
@@ -244,7 +244,7 @@ export function TranslationsPage(): React.ReactElement {
           
           {filteredTranslations.length === 0 && (
             <div style={{ textAlign: 'center', padding: 'var(--ds-spacing-8)' }}>
-              <Paragraph>{t('common.noResults')}</Paragraph>
+              <Paragraph>{t('empty.search')}</Paragraph>
             </div>
           )}
         </Card>
@@ -270,7 +270,7 @@ export function TranslationsPage(): React.ReactElement {
             gap: 'var(--ds-spacing-3)' 
           }}>
             <Button variant="secondary" onClick={() => setShowExportDialog(false)}>
-              {t('common.cancel')}
+              {t('action.cancel')}
             </Button>
             <Button onClick={handleExport}>
               {t('common.export')}

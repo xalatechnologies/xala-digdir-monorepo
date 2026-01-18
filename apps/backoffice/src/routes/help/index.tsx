@@ -135,14 +135,14 @@ export default function HelpPage(): React.ReactElement {
       <header style={{ marginBottom: 'var(--ds-spacing-8)' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--ds-spacing-3)', marginBottom: 'var(--ds-spacing-2)' }}>
           <Heading level={1} data-size="lg">
-            {t('help.title')}
+            {t('help.page.title')}
           </Heading>
           <Badge data-color="info" data-size="sm">
             {roleLabel}
           </Badge>
         </div>
         <Paragraph data-size="md" style={{ color: 'var(--ds-color-neutral-text-subtle)' }}>
-          {t('help.subtitle')}
+          {t('help.page.description')}
         </Paragraph>
       </header>
 
@@ -215,7 +215,7 @@ export default function HelpPage(): React.ReactElement {
       {/* Quick Start Guide - Role Aware */}
       <section>
         <Heading level={2} data-size="md" style={{ marginBottom: 'var(--ds-spacing-4)' }}>
-          {t('help.quickStartGuide.title')}
+          {t('help.quickStartGuide.page.title')}
         </Heading>
         <Paragraph
           data-size="sm"
@@ -224,7 +224,7 @@ export default function HelpPage(): React.ReactElement {
             marginBottom: 'var(--ds-spacing-4)',
           }}
         >
-          {t('help.quickStartGuide.subtitle', { role: roleLabel.toLowerCase() })}
+          {t('help.quickStartGuide.page.description', { role: roleLabel.toLowerCase() })}
         </Paragraph>
         <div
           style={{
@@ -259,7 +259,7 @@ export default function HelpPage(): React.ReactElement {
       {/* Keyboard Shortcuts */}
       <section style={{ marginTop: 'var(--ds-spacing-10)' }}>
         <Heading level={2} data-size="md" style={{ marginBottom: 'var(--ds-spacing-4)' }}>
-          {t('help.keyboardShortcuts.title')}
+          {t('help.keyboardShortcuts.page.title')}
         </Heading>
         <div
           style={{

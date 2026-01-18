@@ -38,38 +38,38 @@ interface IntegrationConfigModalProps {
 }
 
 // Integration-specific field configurations
-const INTEGRATION_FIELDS: Record<string, Array<{ key: string; label: string; type?: string; sensitive?: boolean; placeholder?: string }>> = {
+const INTEGRATION_FIELDS: Record<string, Array<{ key: string; labelKey: string; type?: string; sensitive?: boolean; placeholder?: string }>> = {
   idporten: [
-    { key: 'baseUrl', label: 'Base URL', placeholder: 'https://digilist.sandbox.signicat.com' },
-    { key: 'clientId', label: 'Client ID', sensitive: true },
-    { key: 'clientSecret', label: t('common.client_secret'), type: 'password', sensitive: true },
-    { key: 'redirectUri', label: 'Redirect URI', placeholder: 'https://api.digilist.no/api/auth/idporten/callback' },
-    { key: 'scopes', label: 'Scopes', placeholder: 'signicat-api' },
-    { key: 'acrValues', label: 'ACR Values', placeholder: 'idp:nbid' },
+    { key: 'baseUrl', labelKey: 'baseUrl', placeholder: 'https://digilist.sandbox.signicat.com' },
+    { key: 'clientId', labelKey: 'clientId', sensitive: true },
+    { key: 'clientSecret', labelKey: 'client.secret', type: 'password', sensitive: true },
+    { key: 'redirectUri', labelKey: 'redirectUri', placeholder: 'https://api.digilist.no/api/auth/idporten/callback' },
+    { key: 'scopes', labelKey: 'scopes', placeholder: 'signicat-api' },
+    { key: 'acrValues', labelKey: 'acrValues', placeholder: 'idp:nbid' },
   ],
   vipps: [
-    { key: 'baseUrl', label: 'Base URL', placeholder: 'https://apitest.vipps.no' },
-    { key: 'clientId', label: 'Client ID', sensitive: true },
-    { key: 'clientSecret', label: t('common.client_secret'), type: 'password', sensitive: true },
-    { key: 'merchantSerialNumber', label: t('common.merchant_serial_number'), sensitive: true },
-    { key: 'subscriptionKey', label: t('common.subscription_key_ocpapimsubscriptionkey'), type: 'password', sensitive: true },
-    { key: 'webhookSecret', label: t('common.webhook_secret'), type: 'password', sensitive: true },
+    { key: 'baseUrl', labelKey: 'baseUrl', placeholder: 'https://apitest.vipps.no' },
+    { key: 'clientId', labelKey: 'clientId', sensitive: true },
+    { key: 'clientSecret', labelKey: 'client.secret', type: 'password', sensitive: true },
+    { key: 'merchantSerialNumber', labelKey: 'merchant.serial.number', sensitive: true },
+    { key: 'subscriptionKey', labelKey: 'subscription.key.ocpapimsubscriptionkey', type: 'password', sensitive: true },
+    { key: 'webhookSecret', labelKey: 'webhook.secret', type: 'password', sensitive: true },
   ],
   visma: [
-    { key: 'baseUrl', label: 'Base URL', placeholder: 'https://api.visma.com' },
-    { key: 'apiKey', label: 'API Key', type: 'password', sensitive: true },
-    { key: 'companyId', label: t('common.company_id') },
+    { key: 'baseUrl', labelKey: 'baseUrl', placeholder: 'https://api.visma.com' },
+    { key: 'apiKey', labelKey: 'apiKey', type: 'password', sensitive: true },
+    { key: 'companyId', labelKey: 'company.id' },
   ],
   rco: [
-    { key: 'baseUrl', label: 'Base URL' },
-    { key: 'username', label: 'Username', sensitive: true },
-    { key: 'password', label: 'Password', type: 'password', sensitive: true },
-    { key: 'apiKey', label: 'API Key', type: 'password', sensitive: true },
+    { key: 'baseUrl', labelKey: 'baseUrl' },
+    { key: 'username', labelKey: 'username', sensitive: true },
+    { key: 'password', labelKey: 'password', type: 'password', sensitive: true },
+    { key: 'apiKey', labelKey: 'apiKey', type: 'password', sensitive: true },
   ],
   acos: [
-    { key: 'baseUrl', label: 'Base URL' },
-    { key: 'apiKey', label: 'API Key', type: 'password', sensitive: true },
-    { key: 'archiveId', label: 'Archive ID' },
+    { key: 'baseUrl', labelKey: 'baseUrl' },
+    { key: 'apiKey', labelKey: 'apiKey', type: 'password', sensitive: true },
+    { key: 'archiveId', labelKey: 'archiveId' },
   ],
 };
 
@@ -95,7 +95,7 @@ export function IntegrationConfigModal({
       case 'active':
         return <Badge color="success">Aktiv</Badge>;
       case 'error':
-        return <Badge color="danger">{t("ui.error")}</Badge>;
+        return <Badge color="danger">{t("error.generic")}</Badge>;
       default:
         return <Badge color="neutral">Inaktiv</Badge>;
     }
@@ -144,20 +144,20 @@ export function IntegrationConfigModal({
                   Konfigurer integrasjonsinnstillinger og API-legitimasjon
                 </Paragraph>
               </div>
-              <Button variant="tertiary" data-size="sm" onClick={onClose} type="button" aria-label={t('ui.close')}>
+              <Button variant="tertiary" data-size="sm" onClick={onClose} type="button" aria-label={t('action.close')}>
                 <XIcon />
               </Button>
             </div>
 
             {/* Status Field */}
-            <FormField label="Status" description={t('common.aktiveringdeaktivering_av_integrasjonen')}>
+            <FormField label="Status" description={t('aktiveringdeaktivering.av.integrasjonen')}>
               <Select
                 value={formData.status || status}
                 onChange={(e) => onFieldChange('status', e.target.value)}
               >
                 <option value="active">Aktiv</option>
                 <option value="inactive">Inaktiv</option>
-                <option value="error">{t("ui.error")}</option>
+                <option value="error">{t("error.generic")}</option>
               </Select>
             </FormField>
 
@@ -166,12 +166,12 @@ export function IntegrationConfigModal({
               {fields.map((field) => (
                 <FormField
                   key={field.key}
-                  label={field.label}
-                  description={field.sensitive ? t('common.sensitiv_informasjon_vises_maskert') : undefined}
+                  label={t(field.labelKey)}
+                  description={field.sensitive ? t('sensitiv.informasjon.vises.maskert') : undefined}
                 >
                   <Textfield
-                    aria-label={field.label}
-                    type={field.type || 'text'}
+                    aria-label={t(field.labelKey)}
+                    type={field.type as 'text' | 'password' || 'text'}
                     value={formData.config?.[field.key] || ''}
                     onChange={(e) => onFieldChange(`config.${field.key}`, e.target.value)}
                     placeholder={field.placeholder || field.sensitive ? '***' : ''}
@@ -199,7 +199,7 @@ export function IntegrationConfigModal({
                   )}
                   <div>
                     <Paragraph data-size="sm" style={{ fontWeight: 'var(--ds-font-weight-semibold)', margin: 0 }}>
-                      {testResult.success ? t('common.tilkobling_vellykket') : 'Tilkobling feilet'}
+                      {testResult.success ? t('tilkobling.vellykket') : 'Tilkobling feilet'}
                     </Paragraph>
                     <Paragraph data-size="sm" style={{ margin: 0, marginTop: 'var(--ds-spacing-1)' }}>
                       {testResult.message}
@@ -233,7 +233,7 @@ export function IntegrationConfigModal({
                 )}
               </Button>
               <div style={{ display: 'flex', gap: 'var(--ds-spacing-2)' }}>
-                <Button variant="secondary" onClick={onClose} disabled={isSaving} type="button">{t("ui.cancel")}</Button>
+                <Button variant="secondary" onClick={onClose} disabled={isSaving} type="button">{t("action.cancel")}</Button>
                 <Button variant="primary" onClick={onSave} disabled={isSaving} type="button">
                   {isSaving ? (
                     <>
@@ -242,7 +242,7 @@ export function IntegrationConfigModal({
                     </>
                   ) : (
                     <>
-                      <SaveIcon />{t("ui.save")}</>
+                      <SaveIcon />{t("action.save")}</>
                   )}
                 </Button>
               </div>

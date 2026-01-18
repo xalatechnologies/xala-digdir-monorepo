@@ -292,7 +292,7 @@ export function MessagesPage() {
         <div style={{ flex: 1, overflow: 'auto' }}>
           {loadingConversations ? (
             <div style={{ padding: 'var(--ds-spacing-8)', display: 'flex', justifyContent: 'center' }}>
-              <Spinner aria-label={t('messages.loadingConversations')} data-size="md" />
+              <Spinner aria-label={t('state.loading')} data-size="md" />
             </div>
           ) : filteredConversations.length === 0 ? (
             <div style={{
@@ -515,7 +515,7 @@ export function MessagesPage() {
             }}>
               {loadingMessages ? (
                 <div style={{ display: 'flex', justifyContent: 'center', padding: 'var(--ds-spacing-8)' }}>
-                  <Spinner aria-label={t('messages.loadingMessages')} data-size="md" />
+                  <Spinner aria-label={t('state.loading')} data-size="md" />
                 </div>
               ) : messages.length === 0 ? (
                 <div style={{

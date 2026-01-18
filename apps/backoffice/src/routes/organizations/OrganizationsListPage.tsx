@@ -104,7 +104,7 @@ export function OrganizationsListPage() {
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
         <div>
           <Heading level={2} data-size="md">
-            {t('organizations.title')}
+            {t('organizations.page.list.title')}
           </Heading>
           <Paragraph
             data-size="sm"
@@ -193,7 +193,7 @@ export function OrganizationsListPage() {
       <Card>
         {isLoading ? (
           <div style={{ display: 'flex', justifyContent: 'center', padding: 'var(--ds-spacing-8)' }}>
-            <Spinner data-size="lg" aria-label={t("ui.loading")} />
+            <Spinner data-size="lg" aria-label={t("state.loading")} />
           </div>
         ) : filteredOrgs.length === 0 ? (
           <div style={{ textAlign: 'center', padding: 'var(--ds-spacing-8)' }}>
@@ -281,7 +281,7 @@ export function OrganizationsListPage() {
                           </Dropdown.Item>
                           <Dropdown.Item>
                             <Dropdown.Button onClick={() => navigate(`/organizations/${org.id}/edit`)}>
-                              <EditIcon />{t("ui.edit")}</Dropdown.Button>
+                              <EditIcon />{t("action.edit")}</Dropdown.Button>
                           </Dropdown.Item>
                           {!org.verified && (
                             <Dropdown.Item>
@@ -293,7 +293,7 @@ export function OrganizationsListPage() {
                           )}
                           <Dropdown.Item>
                             <Dropdown.Button onClick={() => handleDelete(org.id)} data-color="danger">
-                              <TrashIcon />{t("ui.delete")}</Dropdown.Button>
+                              <TrashIcon />{t("action.delete")}</Dropdown.Button>
                           </Dropdown.Item>
                         </Dropdown.List>
                       </Dropdown>

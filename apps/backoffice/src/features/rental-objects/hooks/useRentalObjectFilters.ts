@@ -33,12 +33,12 @@ export const getTimeModeOptions = (t: ReturnType<typeof useT>) => [
 
 // Sort options factory
 export const getSortOptions = (t: ReturnType<typeof useT>) => [
-  { id: 'updated-desc', label: t('common.sist_oppdatert'), value: 'updated-desc', field: 'updatedAt', order: 'desc' },
-  { id: 'updated-asc', label: t('common.eldste_oppdatering'), value: 'updated-asc', field: 'updatedAt', order: 'asc' },
-  { id: 'name-asc', label: t('common.navn_aaa'), value: 'name-asc', field: 'name', order: 'asc' },
-  { id: 'name-desc', label: t('common.navn_aaa'), value: 'name-desc', field: 'name', order: 'desc' },
-  { id: 'created-desc', label: t('common.nyeste_forst'), value: 'created-desc', field: 'createdAt', order: 'desc' },
-  { id: 'created-asc', label: t('common.eldste_forst'), value: 'created-asc', field: 'createdAt', order: 'asc' },
+  { id: 'updated-desc', label: t('common.sist.oppdatert'), value: 'updated-desc', field: 'updatedAt', order: 'desc' },
+  { id: 'updated-asc', label: t('common.eldste.oppdatering'), value: 'updated-asc', field: 'updatedAt', order: 'asc' },
+  { id: 'name-asc', label: t('common.navn.aaa'), value: 'name-asc', field: 'name', order: 'asc' },
+  { id: 'name-desc', label: t('common.navn.aaa'), value: 'name-desc', field: 'name', order: 'desc' },
+  { id: 'created-desc', label: t('common.nyeste.forst'), value: 'created-desc', field: 'createdAt', order: 'desc' },
+  { id: 'created-asc', label: t('common.eldste.forst'), value: 'created-asc', field: 'createdAt', order: 'asc' },
 ];
 
 export interface RentalObjectFiltersState {
@@ -58,9 +58,10 @@ export interface RentalObjectFiltersState {
 export type ViewMode = 'grid' | 'table';
 
 export function useRentalObjectFilters() {
-  // Filter state object
-  const [filters, setFilters] = useState<RentalObjectFiltersState>({});
-  const t = useT();
+  // Filter state object with default limit of 100
+  const [filters, setFilters] = useState<RentalObjectFiltersState>({
+    limit: 100, // Default to fetching 100 items instead of API default (20)
+  });
   
   // View mode state
   const [viewMode, setViewMode] = useState<ViewMode>('grid');
@@ -78,7 +79,9 @@ export function useRentalObjectFilters() {
 
   // Reset all filters
   const resetFilters = useCallback(() => {
-    setFilters({});
+    setFilters({
+      limit: 100, // Preserve default limit when resetting
+    });
   }, []);
 
   // Count active filters (excluding page and limit)

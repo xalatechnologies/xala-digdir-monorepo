@@ -66,10 +66,10 @@ export function BlocksListPage(): React.ReactElement {
   // Handle delete
   const handleDelete = async (blockId: string, blockTitle: string) => {
     const confirmed = await confirm({
-      title: t('blocks.deleteConfirm.title'),
+      title: t('blocks.deleteConfirm.page.title'),
       description: t('blocks.deleteConfirm.description', { title: blockTitle }),
-      confirmLabel: t('common.delete'),
-      cancelLabel: t('common.cancel'),
+      confirmLabel: t('action.delete'),
+      cancelLabel: t('action.cancel'),
       variant: 'danger',
     });
 
@@ -138,10 +138,10 @@ export function BlocksListPage(): React.ReactElement {
     return (
       <Card style={{ padding: 'var(--ds-spacing-6)', textAlign: 'center' }}>
         <Paragraph style={{ color: 'var(--ds-color-danger-text-default)' }}>
-          {t('common.error')}: {error.message}
+          {t('error.generic')}: {error.message}
         </Paragraph>
         <Button type="button" variant="secondary" onClick={() => refetch()}>
-          {t('common.retry')}
+          {t('action.retry')}
         </Button>
       </Card>
     );
@@ -153,14 +153,14 @@ export function BlocksListPage(): React.ReactElement {
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
         <div>
           <Heading level={1} data-size="lg" style={{ margin: 0 }}>
-            {t('blocks.title')}
+            {t('blocks.page.title')}
           </Heading>
           <Paragraph style={{ color: 'var(--ds-color-neutral-text-subtle)', marginTop: 'var(--ds-spacing-2)', marginBottom: 0 }}>
             {t('blocks.description')}
           </Paragraph>
         </div>
         {canCreateBlock && (
-          <Button type="button" variant="primary" onClick={() => navigate('/blocks/new')} aria-label={t('ui.create')}>
+          <Button type="button" variant="primary" onClick={() => navigate('/blocks/new')} aria-label={t('action.create')}>
             <PlusIcon />
             {t('blocks.createBlock')}
           </Button>
@@ -176,7 +176,7 @@ export function BlocksListPage(): React.ReactElement {
               value={selectedRentalObjectId}
               onChange={(e) => setSelectedRentalObjectId(e.target.value)}
             >
-              <option value="">{t('common.all')}</option>
+              <option value="">{t('label.all')}</option>
               {rentalObjects.map((obj) => (
                 <option key={obj.id} value={obj.id}>
                   {obj.name}
@@ -190,7 +190,7 @@ export function BlocksListPage(): React.ReactElement {
               value={statusFilter}
               onChange={(e) => setStatusFilter(e.target.value)}
             >
-              <option value="">{t('common.all')}</option>
+              <option value="">{t('label.all')}</option>
               <option value="active">{t('blocks.status.active')}</option>
               <option value="cancelled">{t('blocks.status.cancelled')}</option>
               <option value="completed">{t('blocks.status.completed')}</option>
@@ -207,7 +207,7 @@ export function BlocksListPage(): React.ReactElement {
               {t('blocks.noBlocks')}
             </Paragraph>
             {canCreateBlock && (
-              <Button type="button" variant="secondary" onClick={() => navigate('/blocks/new')} style={{ marginTop: 'var(--ds-spacing-4)' }} aria-label={t('ui.create')}>
+              <Button type="button" variant="secondary" onClick={() => navigate('/blocks/new')} style={{ marginTop: 'var(--ds-spacing-4)' }} aria-label={t('action.create')}>
                 <PlusIcon />
                 {t('blocks.createFirstBlock')}
               </Button>
@@ -217,7 +217,7 @@ export function BlocksListPage(): React.ReactElement {
           <Table>
             <TableHead>
               <TableRow>
-                <TableHeaderCell>{t('blocks.table.title')}</TableHeaderCell>
+                <TableHeaderCell>{t('blocks.table.page.title')}</TableHeaderCell>
                 <TableHeaderCell>{t('blocks.table.rentalObject')}</TableHeaderCell>
                 <TableHeaderCell>{t('blocks.table.dateRange')}</TableHeaderCell>
                 <TableHeaderCell>{t('blocks.table.status')}</TableHeaderCell>
@@ -279,7 +279,7 @@ export function BlocksListPage(): React.ReactElement {
                             variant="tertiary"
                             data-size="sm"
                             onClick={() => navigate(`/blocks/${block.id}/edit`)}
-                            title={t('common.edit')}
+                            title={t('action.edit')}
                           >
                             <EditIcon />
                           </Button>
@@ -289,7 +289,7 @@ export function BlocksListPage(): React.ReactElement {
                             data-size="sm"
                             data-color="danger"
                             onClick={() => handleDelete(block.id, block.title)}
-                            title={t('common.delete')}
+                            title={t('action.delete')}
                             disabled={deleteBlockMutation.isPending}
                           >
                             <TrashIcon />

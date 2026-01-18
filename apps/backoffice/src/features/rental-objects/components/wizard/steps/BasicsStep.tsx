@@ -55,7 +55,7 @@ export function BasicsStep({ wizard }: BasicsStepProps) {
 
         {/* Name */}
         <Textfield
-          label={t('form.name')}
+          label={t('label.name')}
           value={formData.name || ''}
           onChange={(e) => updateFormData({ name: e.target.value })}
           required
@@ -67,12 +67,12 @@ export function BasicsStep({ wizard }: BasicsStepProps) {
           label={t('form.subcategory')}
           value={formData.subcategory || ''}
           onChange={(e) => updateFormData({ subcategory: e.target.value || undefined })}
-          placeholder={t('form.subcategory.placeholder')}
+          placeholder={t('form.form.subcategory.placeholder')}
         />
 
         {/* Description */}
         <Textarea
-          label={t('form.description')}
+          label={t('label.description')}
           value={formData.description || ''}
           onChange={(e) => updateFormData({ description: e.target.value })}
           rows={5}

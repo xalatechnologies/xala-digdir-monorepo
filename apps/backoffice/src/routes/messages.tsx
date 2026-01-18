@@ -332,7 +332,7 @@ export function MessagesPage() {
           <div style={{ flex: 1, overflow: 'auto' }}>
             {isLoadingConversations ? (
               <div style={{ padding: 'var(--ds-spacing-8)', display: 'flex', justifyContent: 'center' }}>
-                <Spinner aria-label="t('common.laster_samtaler')" data-data-size="md" />
+                <Spinner aria-label="t('state.loading')" data-data-size="md" />
               </div>
             ) : filteredConversations.length === 0 ? (
               <div style={{ padding: 'var(--ds-spacing-8)', textAlign: 'center' }}>

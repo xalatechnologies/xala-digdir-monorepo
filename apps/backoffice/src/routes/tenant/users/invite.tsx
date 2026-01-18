@@ -161,7 +161,7 @@ export function TenantUserInvitePage() {
             icon={<ArrowLeftIcon aria-hidden />}
             onClick={handleCancel} type="button"
           >
-            {t('common.back')}
+            {t('action.back')}
           </Button>
         }
       />
@@ -259,7 +259,7 @@ export function TenantUserInvitePage() {
                   variant="secondary"
                   onClick={handleCancel}
                 >
-                  {t('common.cancel')}
+                  {t('action.cancel')}
                 </Button>
                 <Button
                   type="submit"

@@ -69,17 +69,17 @@ export const i18nRoutes: FastifyPluginAsync = async (fastify) => {
         // Build result object, tenant overrides take precedence
         const result: Record<string, string> = {};
         
-        // First add all system defaults
+        // First add all system defaults (flat keys without namespace prefix)
         for (const row of rows) {
           if (row.isSystemDefault) {
-            result[`${row.namespace}.${row.key}`] = row.value;
+            result[row.key] = row.value;
           }
         }
         
         // Then overlay tenant overrides
         for (const row of rows) {
           if (!row.isSystemDefault && row.tenantId === tenantId) {
-            result[`${row.namespace}.${row.key}`] = row.value;
+            result[row.key] = row.value;
           }
         }
 

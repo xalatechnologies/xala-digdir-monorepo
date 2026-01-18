@@ -269,10 +269,10 @@ export function CreateBlockModal({
                     />
                     <div>
                       <div style={{ fontWeight: 'var(--ds-font-weight-medium)', fontSize: 'var(--ds-font-size-sm)' }}>
-                        {config.label}
+                        {t(config.label)}
                       </div>
                       <div style={{ fontSize: 'var(--ds-font-size-xs)', color: 'var(--ds-color-neutral-text-subtle)' }}>
-                        {config.description}
+                        {t(config.description)}
                       </div>
                     </div>
                   </label>
@@ -644,14 +644,14 @@ export function CreateBlockModal({
 
       <Dialog.Block>
         <div style={{ display: 'flex', gap: 'var(--ds-spacing-3)', justifyContent: 'flex-end' }}>
-          <Button type="button" variant="secondary" onClick={onClose}>{t("ui.cancel")}</Button>
+          <Button type="button" variant="secondary" onClick={onClose}>{t("action.cancel")}</Button>
           <Button
             type="button"
             variant="primary"
             onClick={handleSubmit}
             disabled={!canSubmit || createBlock.isPending}
           >
-            {createBlock.isPending ? 'Oppretter...' : t("ui.create")}
+            {createBlock.isPending ? 'Oppretter...' : t("action.create")}
           </Button>
         </div>
       </Dialog.Block>

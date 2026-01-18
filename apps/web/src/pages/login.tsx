@@ -142,7 +142,7 @@ export function Login(): React.ReactElement {
 
   // Branding configuration
   const brandConfig = {
-    name: t('brand.name'),
+    name: t('app.name'),
     tagline: t('brand.tagline'),
     logoHref: '/',
   };

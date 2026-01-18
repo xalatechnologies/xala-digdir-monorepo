@@ -112,7 +112,7 @@ export function BasicStep({ data, onChange, errors = [] }: BasicStepProps) {
           </Heading>
 
           <Stack gap="3">
-            <FormField label={t('common.epost')} htmlFor="email">
+            <FormField label={t('label.email')} htmlFor="email">
               <Textfield
                 id="email"
                 type="email"
@@ -122,7 +122,7 @@ export function BasicStep({ data, onChange, errors = [] }: BasicStepProps) {
               />
             </FormField>
 
-            <FormField label={t('common.telefon')} htmlFor="phone">
+            <FormField label={t('label.phone')} htmlFor="phone">
               <Textfield
                 id="phone"
                 type="tel"

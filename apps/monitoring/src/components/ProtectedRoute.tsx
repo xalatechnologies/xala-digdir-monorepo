@@ -144,7 +144,7 @@ export function ProtectedRoute({
           backgroundColor: 'var(--ds-color-neutral-background-default)',
         }}
       >
-        <Spinner aria-label={t('components.protected.loading')} data-size="lg" />
+        <Spinner aria-label={t('state.loading')} data-size="lg" />
       </div>
     );
   }

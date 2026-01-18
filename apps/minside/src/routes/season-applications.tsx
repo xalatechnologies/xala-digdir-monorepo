@@ -321,7 +321,7 @@ export function SeasonApplicationsPage() {
       {/* Applications List */}
       {isLoading ? (
         <div style={{ display: 'flex', justifyContent: 'center', padding: 'var(--ds-spacing-10)' }}>
-          <Spinner aria-label={t('common.laster_soknader')} />
+          <Spinner aria-label={t('state.loading')} />
         </div>
       ) : error ? (
         <Card style={{ padding: 'var(--ds-spacing-6)', textAlign: 'center' }}>

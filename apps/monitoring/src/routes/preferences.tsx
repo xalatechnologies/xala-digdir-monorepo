@@ -102,7 +102,7 @@ export function UserPreferencesPage() {
           disabled={isSaving}
           style={{ minHeight: '44px' }}
         >
-          {isSaving ? t('common.saving') : t('common.save')}
+          {isSaving ? t('state.saving') : t('action.save')}
         </Button>
       </div>
 

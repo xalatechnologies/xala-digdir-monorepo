@@ -114,7 +114,7 @@ export function BrandingEditorPage() {
   if (isLoading) {
     return (
       <div style={{ display: 'flex', justifyContent: 'center', padding: 'var(--ds-spacing-8)' }}>
-        <Spinner size="lg" aria-label={t('common.loading')} />
+        <Spinner size="lg" aria-label={t('state.loading')} />
       </div>
     );
   }

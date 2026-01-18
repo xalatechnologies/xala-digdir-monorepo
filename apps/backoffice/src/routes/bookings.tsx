@@ -348,7 +348,7 @@ export function BookingsPage() {
       <Drawer
         isOpen={isFilterOpen}
         onClose={() => setIsFilterOpen(false)}
-        title={t('bookings.filter.title')}
+        title={t('bookings.filter.page.title')}
         icon={<FilterIcon size={20} />}
         position="right"
 
@@ -561,7 +561,7 @@ export function BookingsPage() {
         <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--ds-spacing-3)' }}>
           <HeaderSearch
             data-testid="search-input"
-            placeholder={t('bookings.search.placeholder')}
+            placeholder={t('form.bookings.search.placeholder')}
             value={searchValue}
             onSearchChange={handleSearchChange}
             onSearch={handleSearch}
@@ -594,7 +594,7 @@ export function BookingsPage() {
                     disabled={confirmBooking.isPending}
                     style={{ color: 'var(--ds-color-success-text-default)' }}
                   >
-                    <CheckIcon /> {t('bookings.bulk.approve')}
+                    <CheckIcon /> {t('action.approve')}
                   </Button>
                   <Button
                     type="button"
@@ -623,7 +623,7 @@ export function BookingsPage() {
                 onClick={() => setSelectedIds([])}
                 style={{ marginLeft: 'auto' }}
               >
-                <CloseIcon />{t("ui.cancel")}</Button>
+                <CloseIcon />{t("action.cancel")}</Button>
             </div>
           )}
 
@@ -666,7 +666,7 @@ export function BookingsPage() {
               alignItems: 'center',
               padding: 'var(--ds-spacing-10)',
             }}>
-              <Spinner aria-label={t("ui.loading")} />
+              <Spinner aria-label={t("state.loading")} />
             </div>
           ) : bookings.length === 0 ? (
             <div style={{
@@ -842,7 +842,7 @@ export function BookingsPage() {
                                   data-size="md"
                                   onClick={() => handleConfirm(booking.id)}
                                   disabled={confirmBooking.isPending}
-                                  aria-label={t('bookings.action.approve')}
+                                  aria-label={t('action.approve')}
                                   title={t('bookings.action.approveBooking')}
                                 >
                                   <CheckIcon />

@@ -242,7 +242,7 @@ function getResultConfig(resultType: ResultType): {
     case 'success':
       return {
         title: t('booking.opprettet'),
-        description: t('status.booked'),
+        description: t('state.booked'),
         icon: <CheckCircleIcon size={40} />,
         color: 'var(--ds-color-success-text-default)',
         backgroundColor: 'var(--ds-color-success-surface-default)',

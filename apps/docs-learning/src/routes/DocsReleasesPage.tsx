@@ -35,9 +35,9 @@ export function DocsReleasesPage() {
   return (
     <div className={styles.container}>
       <header className={styles.header}>
-        <Heading level={1}>{t('docs.releases.title')}</Heading>
+        <Heading level={1}>{t('docs.releases.page.title')}</Heading>
         <Paragraph data-size="lg" className={styles.subtitle}>
-          {t('docs.releases.subtitle')}
+          {t('docs.releases.page.description')}
         </Paragraph>
       </header>
 

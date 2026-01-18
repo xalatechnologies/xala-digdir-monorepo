@@ -422,7 +422,7 @@ export function RecurringPatternBuilder({
             fontWeight: 'var(--ds-font-weight-medium)',
           }}
         >
-          {t('recurringPattern.title')}
+          {t('recurringPattern.page.title')}
         </Heading>
       </div>
 

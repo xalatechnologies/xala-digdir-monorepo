@@ -5,23 +5,16 @@
  */
 
 import { useT } from '@xala/i18n';
-import { Heading, Paragraph, Badge, Spinner } from '@xala/ds';
+import { Heading, Paragraph, Spinner } from '@xala/ds';
 import { useRentalObjectWizard } from '../../hooks/useRentalObjectWizard';
 import { WizardFooter } from './WizardFooter';
 import { CategorySelector } from './steps/CategorySelector';
+import { CloneSelectionStep } from './steps/CloneSelectionStep';
+import { useState } from 'react';
 import { BasicsStep } from './steps/BasicsStep';
 import { MediaStep } from './steps/MediaStep';
-import { LocationStep } from './steps/LocationStep';
-import { CapacityStep } from './steps/CapacityStep';
-import { InventoryStep } from './steps/InventoryStep';
-import { OpeningHoursStep } from './steps/OpeningHoursStep';
-import { PickupStep } from './steps/PickupStep';
-import { RequirementsStep } from './steps/RequirementsStep';
 import { PackagesStep } from './steps/PackagesStep';
-import { ScheduleStep } from './steps/ScheduleStep';
-import { BookingStep } from './steps/BookingStep';
 import { ContentStep } from './steps/ContentStep';
-import { CustodyStep } from './steps/CustodyStep';
 import { ReviewStep } from './steps/ReviewStep';
 import type { WizardStep } from '../../types';
 
@@ -32,7 +25,22 @@ export interface RentalObjectWizardProps {
 
 export function RentalObjectWizard({ slug }: RentalObjectWizardProps) {
   const t = useT();
+  // If slug is present, we are in edit mode, so clone selection is skipped.
+  // If slug is explicitly undefined, we are modifying a new creation flow.
+  const [isCloneStep, setIsCloneStep] = useState(!slug); 
   const wizard = useRentalObjectWizard({ slug });
+
+  // Handle clone selection
+  const handleCloneSelect = (_mode: 'create' | 'clone', _cloneSource?: any) => {
+      // Logic to initialize wizard with clone data would go here
+      // For now, we just exit the clone step to show the main wizard
+      setIsCloneStep(false);
+      // TODO: Populate form with cloneSource if mode === 'clone'
+  };
+
+  if (isCloneStep && !wizard.isLoading) {
+      return <CloneSelectionStep onSelect={handleCloneSelect} />;
+  }
 
   if (wizard.isLoading) {
     return (
@@ -46,8 +54,8 @@ export function RentalObjectWizard({ slug }: RentalObjectWizardProps) {
           gap: 'var(--ds-spacing-4)',
         }}
       >
-        <Spinner size="lg" />
-        <Paragraph>{t('common.loading')}</Paragraph>
+        <Spinner aria-label={t('state.loading')} />
+        <Paragraph>{t('state.loading')}</Paragraph>
       </div>
     );
   }
@@ -107,7 +115,10 @@ export function RentalObjectWizard({ slug }: RentalObjectWizardProps) {
         }}
       >
         <div style={{ maxWidth: '800px', margin: '0 auto' }}>
-          {renderStep(wizard.steps[wizard.currentStep], wizard)}
+          {(() => {
+            const step = wizard.steps[wizard.currentStep];
+            return step ? renderStep(step, wizard) : null;
+          })()}
         </div>
       </div>
 
@@ -124,6 +135,8 @@ interface WizardStepperProps {
   errors: Record<string, string[]>;
 }
 
+import { WIZARD_ICONS } from './WizardIcons';
+
 function WizardStepper({ steps, currentStep, onStepClick, errors }: WizardStepperProps) {
   const t = useT();
 
@@ -134,6 +147,8 @@ function WizardStepper({ steps, currentStep, onStepClick, errors }: WizardSteppe
         alignItems: 'center',
         gap: 'var(--ds-spacing-2)',
         position: 'relative',
+        overflowX: 'auto',
+        paddingBottom: 'var(--ds-spacing-2)', // Scrollbar space
       }}
     >
       {steps.map((step, index) => {
@@ -141,6 +156,7 @@ function WizardStepper({ steps, currentStep, onStepClick, errors }: WizardSteppe
         const isCompleted = index < currentStep;
         const hasErrors = errors[step.id]?.length > 0;
         const isClickable = index <= currentStep;
+        const Icon = WIZARD_ICONS[step.id] || WIZARD_ICONS['basics'];
 
         return (
           <div
@@ -149,87 +165,104 @@ function WizardStepper({ steps, currentStep, onStepClick, errors }: WizardSteppe
               display: 'flex',
               alignItems: 'center',
               gap: 'var(--ds-spacing-2)',
-              flex: 1,
+              flex: index === steps.length - 1 ? '0 0 auto' : '1 0 auto', // Last item doesn't stretch
+              minWidth: '120px',
             }}
           >
-            {/* Step Circle */}
+            {/* Step Button */}
             <button
               onClick={() => isClickable && onStepClick(index)}
               disabled={!isClickable}
+              type="button"
               style={{
                 display: 'flex',
-                flexDirection: 'column',
                 alignItems: 'center',
-                gap: 'var(--ds-spacing-2)',
-                flex: 1,
+                gap: 'var(--ds-spacing-3)',
                 border: 'none',
                 background: 'transparent',
                 cursor: isClickable ? 'pointer' : 'default',
                 padding: 'var(--ds-spacing-2)',
                 borderRadius: 'var(--ds-border-radius-md)',
-                transition: 'background-color 0.2s ease',
+                transition: 'all 0.2s ease',
+                opacity: isClickable ? 1 : 0.5,
               }}
               onMouseEnter={(e) => {
-                if (isClickable) {
+                if (isClickable && !isActive) {
                   e.currentTarget.style.backgroundColor = 'var(--ds-color-neutral-surface-hover)';
                 }
               }}
               onMouseLeave={(e) => {
                 e.currentTarget.style.backgroundColor = 'transparent';
-              }} type="button"
+              }}
             >
+              {/* Icon Circle */}
               <div
                 style={{
-                  width: '40px',
-                  height: '40px',
+                  width: '32px',
+                  height: '32px',
                   borderRadius: 'var(--ds-border-radius-full)',
                   backgroundColor: isActive
                     ? 'var(--ds-color-accent-base-default)'
                     : isCompleted
-                      ? 'var(--ds-color-success-base-default)'
+                      ? 'var(--ds-color-success-surface-subtle)'
                       : hasErrors
-                        ? 'var(--ds-color-danger-base-default)'
-                        : 'var(--ds-color-neutral-surface-hover)',
-                  color: isActive || isCompleted || hasErrors
+                        ? 'var(--ds-color-danger-surface-subtle)'
+                        : 'var(--ds-color-neutral-surface-subtle)',
+                  color: isActive
                     ? 'var(--ds-color-neutral-contrast-1)'
-                    : 'var(--ds-color-neutral-text-subtle)',
+                    : isCompleted
+                      ? 'var(--ds-color-success-text-default)'
+                      : hasErrors
+                        ? 'var(--ds-color-danger-text-default)'
+                        : 'var(--ds-color-neutral-text-subtle)',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
-                  fontWeight: 'var(--ds-font-weight-semibold)',
-                  fontSize: 'var(--ds-font-size-sm)',
-                  border: isActive ? '2px solid var(--ds-color-accent-border-strong)' : 'none',
+                  border: isActive
+                    ? 'none'
+                    : hasErrors
+                      ? '1px solid var(--ds-color-danger-border-default)'
+                      : isCompleted
+                        ? '1px solid var(--ds-color-success-border-default)'
+                        : '1px solid var(--ds-color-neutral-border-default)',
+                  flexShrink: 0,
                 }}
               >
-                {isCompleted ? '✓' : hasErrors ? '!' : index + 1}
+                {/* Clone icon to enforce size if needed, or rely on CSS inheritance */}
+                <div style={{ fontSize: '18px', display: 'flex' }}>
+                   {hasErrors ? '!' : isCompleted ? '✓' : Icon}
+                </div>
               </div>
 
-              <Paragraph
-                data-size="xs"
-                style={{
-                  margin: 0,
-                  textAlign: 'center',
-                  color: isActive
-                    ? 'var(--ds-color-accent-text-default)'
-                    : 'var(--ds-color-neutral-text-subtle)',
-                  fontWeight: isActive ? 'var(--ds-font-weight-semibold)' : 'var(--ds-font-weight-regular)',
-                }}
-              >
-                {t(`wizard.step.${step.id}`)}
-              </Paragraph>
+              {/* Label */}
+              <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}>
+                <Paragraph
+                  data-size="xs"
+                  style={{
+                    margin: 0,
+                    whiteSpace: 'nowrap',
+                    color: isActive
+                      ? 'var(--ds-color-accent-text-default)'
+                      : 'var(--ds-color-neutral-text-default)',
+                    fontWeight: isActive ? 'var(--ds-font-weight-semibold)' : 'var(--ds-font-weight-medium)',
+                  }}
+                >
+                  {t(`wizard.step.${step.id}`)}
+                </Paragraph>
+              </div>
             </button>
 
             {/* Connector Line */}
             {index < steps.length - 1 && (
               <div
                 style={{
-                  height: '2px',
+                  height: '1px',
                   flex: 1,
+                  minWidth: '20px',
                   backgroundColor: index < currentStep
                     ? 'var(--ds-color-success-base-default)'
                     : 'var(--ds-color-neutral-border-default)',
                   margin: '0 var(--ds-spacing-2)',
-                  marginTop: '-24px',
                 }}
               />
             )}
@@ -240,36 +273,28 @@ function WizardStepper({ steps, currentStep, onStepClick, errors }: WizardSteppe
   );
 }
 
+import { DetailsStep } from './steps/DetailsStep';
+import { ResourcesStep } from './steps/ResourcesStep';
+import { AvailabilityStep } from './steps/AvailabilityStep';
+
 function renderStep(step: WizardStep, wizard: ReturnType<typeof useRentalObjectWizard>) {
   switch (step.id) {
     case 'category':
       return <CategorySelector wizard={wizard} />;
     case 'basics':
       return <BasicsStep wizard={wizard} />;
-    case 'media':
-      return <MediaStep wizard={wizard} />;
-    case 'location':
-      return <LocationStep wizard={wizard} />;
-    case 'capacity':
-      return <CapacityStep wizard={wizard} />;
-    case 'inventory':
-      return <InventoryStep wizard={wizard} />;
-    case 'opening-hours':
-      return <OpeningHoursStep wizard={wizard} />;
-    case 'pickup':
-      return <PickupStep wizard={wizard} />;
-    case 'requirements':
-      return <RequirementsStep wizard={wizard} />;
+    case 'details':
+      return <DetailsStep wizard={wizard} />;
+    case 'resources':
+      return <ResourcesStep wizard={wizard} />;
+    case 'availability':
+      return <AvailabilityStep wizard={wizard} />;
     case 'packages':
       return <PackagesStep wizard={wizard} />;
-    case 'schedule':
-      return <ScheduleStep wizard={wizard} />;
-    case 'booking':
-      return <BookingStep wizard={wizard} />;
+    case 'media':
+      return <MediaStep wizard={wizard} />;
     case 'content':
       return <ContentStep wizard={wizard} />;
-    case 'custody':
-      return <CustodyStep wizard={wizard} />;
     case 'review':
       return <ReviewStep wizard={wizard} />;
     default:

@@ -115,7 +115,7 @@ export function OrganizationInvoicesPage() {
       <Card style={{ padding: 0, overflow: 'hidden' }}>
         {isLoading ? (
           <div style={{ display: 'flex', justifyContent: 'center', padding: 'var(--ds-spacing-8)' }}>
-            <Spinner aria-label={t('common.loading')} data-size="lg" />
+            <Spinner aria-label={t('state.loading')} data-size="lg" />
           </div>
         ) : invoices.length === 0 ? (
           <div style={{ padding: 'var(--ds-spacing-8)', textAlign: 'center' }}>
@@ -153,7 +153,7 @@ export function OrganizationInvoicesPage() {
                     onClick={() => handleDownload(invoice.id, invoice.invoiceNumber)}
                     style={{ minHeight: '44px' }}
                   >
-                    {t('common.download')}
+                    {t('action.download')}
                   </Button>
                 </div>
               </div>
@@ -166,7 +166,7 @@ export function OrganizationInvoicesPage() {
                 <Table.HeaderCell>{t('billing.invoiceNumber')}</Table.HeaderCell>
                 <Table.HeaderCell>{t('billing.dueDate')}</Table.HeaderCell>
                 <Table.HeaderCell>{t('common.amount')}</Table.HeaderCell>
-                <Table.HeaderCell>{t('common.status')}</Table.HeaderCell>
+                <Table.HeaderCell>{t('label.status')}</Table.HeaderCell>
                 <Table.HeaderCell style={{ width: '100px' }}>{t('common.actions')}</Table.HeaderCell>
               </Table.Row>
             </Table.Head>
@@ -188,7 +188,7 @@ export function OrganizationInvoicesPage() {
                       data-size="sm"
                       onClick={() => handleDownload(invoice.id, invoice.invoiceNumber)}
                     >
-                      {t('common.download')}
+                      {t('action.download')}
                     </Button>
                   </Table.Cell>
                 </Table.Row>

@@ -166,8 +166,8 @@ export function SavedFilters({
       const confirmed = await confirm({
         title: t('common.slett_lagret_filter'),
         description: `t('common.er_du_sikker_paa')`,
-        confirmText: t("ui.delete"),
-        cancelText: t("ui.cancel"),
+        confirmText: t("action.delete"),
+        cancelText: t("action.cancel"),
         variant: 'danger',
       });
 
@@ -313,7 +313,7 @@ export function SavedFilters({
             padding: 'var(--ds-spacing-8)',
           }}
         >
-          <Spinner aria-label={t("ui.loading")} />
+          <Spinner aria-label={t("state.loading")} />
         </div>
       );
     }
@@ -449,7 +449,7 @@ export function SavedFilters({
                     disabled={!newFilterName.trim() || createSavedFilter.isPending}
                     style={{ flex: 1 }} type="button"
                   >
-                    {createSavedFilter.isPending ? 'Lagrer...' : t("ui.save")}
+                    {createSavedFilter.isPending ? 'Lagrer...' : t("action.save")}
                   </Button>
                   <Button
                     variant="secondary"
@@ -457,7 +457,7 @@ export function SavedFilters({
                     onClick={handleCancelCreate}
                     disabled={createSavedFilter.isPending}
                     style={{ flex: 1 }} type="button"
-                  >{t("ui.cancel")}</Button>
+                  >{t("action.cancel")}</Button>
                 </div>
               </Stack>
             </div>

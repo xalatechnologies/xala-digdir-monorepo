@@ -68,8 +68,8 @@ export const ActivityCalendar: React.FC = () => {
   return (
     <div className="activity-calendar">
       <div className="activity-header">
-        <h1>{t('activityCalendar.title')}</h1>
-        <p>{t('activityCalendar.subtitle')}</p>
+        <h1>{t('activityCalendar.page.title')}</h1>
+        <p>{t('activityCalendar.page.description')}</p>
       </div>
 
       {/* Filters */}
@@ -93,7 +93,7 @@ export const ActivityCalendar: React.FC = () => {
 
       {/* Activities Grid */}
       {isLoading ? (
-        <div className="loading">{t('activityCalendar.loading')}</div>
+        <div className="loading">{t('state.loading')}</div>
       ) : activities.length === 0 ? (
         <div className="empty-state">
           <p>{t('activityCalendar.noActivities')}</p>

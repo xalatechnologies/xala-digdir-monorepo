@@ -180,7 +180,7 @@ export function BookingCartSidebar({
         >
           <ShoppingCartIcon size={20} />
           <Heading level={3} data-size="sm" style={{ margin: 0, flex: 1, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
-            {t('bookingCart.title')}
+            {t('bookingCart.page.title')}
           </Heading>
           {slotCount > 0 && (
             <span
@@ -219,7 +219,7 @@ export function BookingCartSidebar({
           >
             <CalendarIcon size={32} />
             <Paragraph data-size="md" style={{ margin: 0, marginTop: 'var(--ds-spacing-2)' }}>
-              {t('bookingCart.empty.title')}
+              {t('bookingCart.empty.page.title')}
             </Paragraph>
             <Paragraph data-size="sm" style={{ margin: 0, marginTop: 'var(--ds-spacing-1)' }}>
               {t('bookingCart.empty.description')}

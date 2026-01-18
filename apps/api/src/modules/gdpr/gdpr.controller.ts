@@ -37,6 +37,17 @@ export class GDPRController {
   }
 
   /**
+   * GET /api/gdpr/requests/pending - Get pending DSAR requests
+   * Returns list
+   */
+  @Get('/requests/pending')
+  async getPendingRequests(request: FastifyRequest, _reply: FastifyReply) {
+    const limit = Number((request.query as any)?.limit) || 5;
+    const requests = await this.service.getPendingRequests(limit);
+    return { data: requests };
+  }
+
+  /**
    * GET /api/gdpr/consents - Get user consents (Contract-First)
    * Returns ConsentDTO
    */

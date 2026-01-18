@@ -46,7 +46,7 @@ export function AuditLogPage() {
   if (isLoading) {
     return (
       <Stack direction="horizontal" justify="center" align="center" style={{ padding: 'var(--ds-spacing-8)' }}>
-        <Spinner size="lg" aria-label={t('common.loading')} />
+        <Spinner size="lg" aria-label={t('state.loading')} />
       </Stack>
     );
   }
@@ -95,7 +95,7 @@ export function AuditLogPage() {
       {/* Search */}
       <Card>
         <HeaderSearch
-          placeholder={t('common.search', { defaultValue: 'Search audit log...' })}
+          placeholder={t('action.search', { defaultValue: 'Search audit log...' })}
           value={searchQuery}
           onSearchChange={(value) => setSearchQuery(value)}
         />

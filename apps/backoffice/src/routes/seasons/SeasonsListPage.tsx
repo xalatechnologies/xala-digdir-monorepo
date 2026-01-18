@@ -123,7 +123,7 @@ export function SeasonsListPage() {
 
           <Dropdown.TriggerContext>
             <Dropdown.Trigger variant="secondary" data-size="sm">
-              {t('common.status')}: {statusFilter === 'all' ? t('seasons.statusAll') : getStatusLabel(statusFilter)}
+              {t('label.status')}: {statusFilter === 'all' ? t('seasons.statusAll') : getStatusLabel(statusFilter)}
             </Dropdown.Trigger>
             <Dropdown>
               <Dropdown.List>
@@ -158,7 +158,7 @@ export function SeasonsListPage() {
       <Card>
         {isLoading ? (
           <div style={{ display: 'flex', justifyContent: 'center', padding: 'var(--ds-spacing-8)' }}>
-            <Spinner data-size="lg" aria-label={t("ui.loading")} />
+            <Spinner data-size="lg" aria-label={t("state.loading")} />
           </div>
         ) : filteredSeasons.length === 0 ? (
           <div style={{ textAlign: 'center', padding: 'var(--ds-spacing-8)' }}>
@@ -239,12 +239,12 @@ export function SeasonsListPage() {
                           </Dropdown.Item>
                           <Dropdown.Item>
                             <Dropdown.Button onClick={() => navigate(`/seasons/${season.id}/edit`)}>
-                              <EditIcon />{t("ui.edit")}</Dropdown.Button>
+                              <EditIcon />{t("action.edit")}</Dropdown.Button>
                           </Dropdown.Item>
                           {season.status === 'draft' && (
                             <Dropdown.Item>
                               <Dropdown.Button onClick={() => handleDelete(season.id)} data-color="danger">
-                                <TrashIcon />{t("ui.delete")}</Dropdown.Button>
+                                <TrashIcon />{t("action.delete")}</Dropdown.Button>
                             </Dropdown.Item>
                           )}
                         </Dropdown.List>

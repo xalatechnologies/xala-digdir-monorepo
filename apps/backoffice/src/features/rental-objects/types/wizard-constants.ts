@@ -24,23 +24,23 @@ export interface CategoryConfig {
 export const CATEGORY_CONFIGS: Record<RentalObjectCategory, CategoryConfig> = {
   LOKALER_OG_BANER: {
     defaultTimeMode: 'PERIOD',
-    nameKey: 'rentalObjects.category.LOKALER_OG_BANER',
-    descriptionKey: 'rentalObjects.category.LOKALER_OG_BANER.description',
+    nameKey: 'rentalObjects.category.LOKALER-OG-BANER',
+    descriptionKey: 'rentalObjects.category.LOKALER-OG-BANER.description',
   },
   UTSTYR_OG_INVENTAR: {
     defaultTimeMode: 'ALL_DAY',
-    nameKey: 'rentalObjects.category.UTSTYR_OG_INVENTAR',
-    descriptionKey: 'rentalObjects.category.UTSTYR_OG_INVENTAR.description',
+    nameKey: 'rentalObjects.category.UTSTYR-OG-INVENTAR',
+    descriptionKey: 'rentalObjects.category.UTSTYR-OG-INVENTAR.description',
   },
   KJORETOY_OG_TRANSPORT: {
     defaultTimeMode: 'ALL_DAY',
-    nameKey: 'rentalObjects.category.KJORETOY_OG_TRANSPORT',
-    descriptionKey: 'rentalObjects.category.KJORETOY_OG_TRANSPORT.description',
+    nameKey: 'rentalObjects.category.KJORETOY-OG-TRANSPORT',
+    descriptionKey: 'rentalObjects.category.KJORETOY-OG-TRANSPORT.description',
   },
   OPPLEVELSER_OG_ARRANGEMENT: {
     defaultTimeMode: 'SLOT',
-    nameKey: 'rentalObjects.category.OPPLEVELSER_OG_ARRANGEMENT',
-    descriptionKey: 'rentalObjects.category.OPPLEVELSER_OG_ARRANGEMENT.description',
+    nameKey: 'rentalObjects.category.OPPLEVELSER-OG-ARRANGEMENT',
+    descriptionKey: 'rentalObjects.category.OPPLEVELSER-OG-ARRANGEMENT.description',
   },
 };
 
@@ -50,18 +50,12 @@ export const CATEGORY_CONFIGS: Record<RentalObjectCategory, CategoryConfig> = {
 export const ALL_WIZARD_STEPS: WizardStepId[] = [
   'category',
   'basics',
-  'media',
-  'location',
-  'capacity',
-  'inventory',
-  'opening-hours',
-  'pickup',
-  'requirements',
+  'details',
+  'resources',
+  'availability',
   'packages',
-  'schedule',
-  'booking',
+  'media',
   'content',
-  'custody',
   'review',
 ];
 
@@ -69,53 +63,46 @@ export const ALL_WIZARD_STEPS: WizardStepId[] = [
  * Wizard steps by rental object category
  * Different categories show different steps based on their requirements
  */
+/**
+ * Wizard steps by rental object category
+ * Consolidated professional steps
+ */
 export const WIZARD_STEPS_BY_CATEGORY: Record<RentalObjectCategory, WizardStepId[]> = {
   LOKALER_OG_BANER: [
     'category',
     'basics',
+    'details', // location + capacity
+    'availability', // opening-hours + booking
     'media',
-    'location',
-    'capacity',
-    'opening-hours',
-    'booking',
     'content',
-    'custody',
     'review',
   ],
   UTSTYR_OG_INVENTAR: [
     'category',
     'basics',
+    'resources', // inventory + pickup
+    'availability',
     'media',
-    'inventory',
-    'pickup',
-    'booking',
     'content',
-    'custody',
     'review',
   ],
   KJORETOY_OG_TRANSPORT: [
     'category',
     'basics',
+    'resources', // inventory + pickup + requirements
+    'availability',
     'media',
-    'inventory',
-    'pickup',
-    'requirements',
-    'booking',
     'content',
-    'custody',
     'review',
   ],
   OPPLEVELSER_OG_ARRANGEMENT: [
     'category',
     'basics',
+    'details', // location + capacity
+    'packages', // keep packages separate as it's complex
+    'availability', // schedule + booking
     'media',
-    'location',
-    'capacity',
-    'packages',
-    'schedule',
-    'booking',
     'content',
-    'custody',
     'review',
   ],
 };

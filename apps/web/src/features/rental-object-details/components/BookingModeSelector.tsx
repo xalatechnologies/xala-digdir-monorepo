@@ -8,6 +8,7 @@
 
 import * as React from 'react';
 import { Tabs, Paragraph } from '@xala/ds';
+import { useT } from '@xala/i18n';
 import type { BookingMode } from '../../types';
 
 // =============================================================================
@@ -151,6 +152,19 @@ export function BookingModeSelector({
   variant = 'default',
 }: BookingModeSelectorProps): React.ReactElement | null {
   const t = useT();
+
+  // Default labels and descriptions using translations
+  const MODE_LABELS: Record<BookingMode, string> = {
+    SINGLE_SLOT: t('bookings.mode.single_slot'),
+    IN_GAME: t('bookings.mode.in_game'),
+    RECURRING: t('bookings.mode.recurring'),
+  };
+
+  const MODE_DESCRIPTIONS: Record<BookingMode, string> = {
+    SINGLE_SLOT: t('bookings.mode.single_slot.description'),
+    IN_GAME: t('bookings.mode.in_game.description'),
+    RECURRING: t('bookings.mode.recurring.description'),
+  };
   // Filter to only enabled modes
   const enabledModes = modes.filter((m) => m.enabled);
 
@@ -161,12 +175,12 @@ export function BookingModeSelector({
 
   // Get display label for a mode
   const getLabel = (mode: BookingModeOption): string => {
-    return mode.label || DEFAULT_MODE_LABELS[mode.mode] || mode.mode;
+    return mode.label || MODE_LABELS[mode.mode] || mode.mode;
   };
 
   // Get description for a mode
   const getDescription = (mode: BookingModeOption): string | undefined => {
-    return mode.description || DEFAULT_MODE_DESCRIPTIONS[mode.mode];
+    return mode.description || MODE_DESCRIPTIONS[mode.mode];
   };
 
   // Get icon for a mode

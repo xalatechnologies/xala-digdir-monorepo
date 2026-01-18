@@ -125,7 +125,7 @@ export function BillingPage() {
       {/* Summary Cards */}
       {summaryLoading ? (
         <div style={{ display: 'flex', justifyContent: 'center', padding: 'var(--ds-spacing-4)' }}>
-          <Spinner aria-label={t('common.loading')} />
+          <Spinner aria-label={t('state.loading')} />
         </div>
       ) : summary ? (
         <div style={{
@@ -198,7 +198,7 @@ export function BillingPage() {
 
         {invoicesLoading ? (
           <div style={{ display: 'flex', justifyContent: 'center', padding: 'var(--ds-spacing-8)' }}>
-            <Spinner aria-label={t('common.loading')} data-size="lg" />
+            <Spinner aria-label={t('state.loading')} data-size="lg" />
           </div>
         ) : invoices.length === 0 ? (
           <div style={{ padding: 'var(--ds-spacing-8)', textAlign: 'center' }}>
@@ -240,7 +240,7 @@ export function BillingPage() {
                     disabled={downloadInvoice.isPending}
                     style={{ minHeight: '44px' }}
                   >
-                    {t('common.download')}
+                    {t('action.download')}
                   </Button>
                 </div>
               </div>
@@ -254,7 +254,7 @@ export function BillingPage() {
                 <Table.HeaderCell>{t('billing.invoiceNumber')}</Table.HeaderCell>
                 <Table.HeaderCell>{t('billing.dueDate')}</Table.HeaderCell>
                 <Table.HeaderCell>{t('common.amount')}</Table.HeaderCell>
-                <Table.HeaderCell>{t('common.status')}</Table.HeaderCell>
+                <Table.HeaderCell>{t('label.status')}</Table.HeaderCell>
                 <Table.HeaderCell style={{ width: '100px' }}>{t('common.actions')}</Table.HeaderCell>
               </Table.Row>
             </Table.Head>
@@ -279,7 +279,7 @@ export function BillingPage() {
                       onClick={() => handleDownload(invoice.id, invoice.invoiceNumber)}
                       disabled={downloadInvoice.isPending}
                     >
-                      {t('common.download')}
+                      {t('action.download')}
                     </Button>
                   </Table.Cell>
                 </Table.Row>

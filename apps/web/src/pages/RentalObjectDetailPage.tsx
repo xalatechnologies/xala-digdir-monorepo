@@ -349,9 +349,9 @@ export function RentalObjectDetailPage(): React.ReactElement {
       <ContentLayout maxWidth="1440px">
         <main id="main-content" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '60vh' }}>
           <div role="status" aria-live="polite" aria-busy="true" style={{ textAlign: 'center' }}>
-            <Spinner aria-label={t('common.loading')} />
+            <Spinner aria-label={t('state.loading')} />
             <Paragraph data-size="sm" style={{ marginTop: 'var(--ds-spacing-4)', color: 'var(--ds-color-neutral-text-subtle)' }}>
-              {t('listings.loading')}
+              {t('state.loading')}
             </Paragraph>
           </div>
         </main>

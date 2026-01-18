@@ -141,7 +141,7 @@ export function SearchPage() {
   if (!query) {
     return (
       <Stack spacing="lg" style={{ padding: 'var(--ds-spacing-6)' }}>
-        <Heading level={1}>{t("ui.search")}</Heading>
+        <Heading level={1}>{t("action.search")}</Heading>
         <Stack spacing="md" align="center" style={{ padding: 'var(--ds-spacing-8)' }}>
           <Text weight="medium">
             Ingen søk utført

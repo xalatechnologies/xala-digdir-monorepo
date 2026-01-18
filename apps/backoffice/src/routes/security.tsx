@@ -90,7 +90,7 @@ export function SecurityPage(): React.ReactElement {
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
         <div>
           <Heading level={1} data-size="lg" style={{ margin: 0 }}>
-            {t('security.title')}
+            {t('security.page.title')}
           </Heading>
           <Paragraph style={{ color: 'var(--ds-color-neutral-text-subtle)', marginTop: 'var(--ds-spacing-2)', marginBottom: 0 }}>
             {isAdmin
@@ -103,7 +103,7 @@ export function SecurityPage(): React.ReactElement {
       {/* Stats grid */}
       {isLoading ? (
         <div style={{ display: 'flex', justifyContent: 'center', padding: 'var(--ds-spacing-8)' }}>
-          <Spinner aria-label={t('security.loadingStats')} data-data-size="lg" />
+          <Spinner aria-label={t('state.loading')} data-data-size="lg" />
         </div>
       ) : (
         <div

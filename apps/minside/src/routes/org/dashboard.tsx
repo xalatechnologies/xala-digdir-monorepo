@@ -96,7 +96,7 @@ export function OrganizationDashboardPage() {
   if (orgLoading) {
     return (
       <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '50vh' }}>
-        <Spinner aria-label={t('common.loading')} data-size="lg" />
+        <Spinner aria-label={t('state.loading')} data-size="lg" />
       </div>
     );
   }

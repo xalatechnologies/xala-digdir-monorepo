@@ -133,7 +133,7 @@ export function SearchResults({
   if (isLoading) {
     return (
       <Stack spacing="lg" align="center" style={{ padding: 'var(--ds-spacing-12)', ...style }} className={className}>
-        <Spinner data-size="lg" aria-label={t("ui.loading")} />
+        <Spinner data-size="lg" aria-label={t("state.loading")} />
         <Text color="secondary">{t('common.soker')}</Text>
       </Stack>
     );
@@ -232,8 +232,8 @@ export function SearchResults({
                   <th>{t('common.lokale')}</th>
                   <th>{t('common.organisasjon')}</th>
                   <th>{t('common.tidspunkt')}</th>
-                  <th>{t('common.status')}</th>
-                  <th>{t('common.price')}</th>
+                  <th>{t('label.status')}</th>
+                  <th>{t('label.price')}</th>
                   <th></th>
                 </tr>
               </thead>
@@ -308,11 +308,11 @@ export function SearchResults({
               <thead>
                 <tr>
                   <th>ID</th>
-                  <th>{t('common.navn')}</th>
-                  <th>{t('common.type')}</th>
+                  <th>{t('label.name')}</th>
+                  <th>{t('label.type')}</th>
                   <th>{t('common.lokasjon')}</th>
                   <th>{t('common.capacity')}</th>
-                  <th>{t('common.price')}/time</th>
+                  <th>{t('label.price')}/time</th>
                   <th></th>
                 </tr>
               </thead>
@@ -383,10 +383,10 @@ export function SearchResults({
               <thead>
                 <tr>
                   <th>ID</th>
-                  <th>{t('common.navn')}</th>
+                  <th>{t('label.name')}</th>
                   <th>{t('common.orgnr')}</th>
-                  <th>{t('common.type')}</th>
-                  <th>{t('common.epost')}</th>
+                  <th>{t('label.type')}</th>
+                  <th>{t('label.email')}</th>
                   <th>{t('common.telefonnummer')}</th>
                   <th></th>
                 </tr>

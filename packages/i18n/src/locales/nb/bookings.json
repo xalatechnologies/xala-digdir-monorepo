@@ -81,5 +81,13 @@
   "action.reject": "Avvis",
   "action.moreOptions": "Flere valg",
   "action.approveBooking": "Godkjenn booking",
-  "action.rejectBooking": "Avvis booking"
+  "action.rejectBooking": "Avvis booking",
+  "mode.single_slot": "Enkeltbooking",
+  "mode.in_game": "Hurtigbooking",
+  "mode.recurring": "Gjentakende",
+  "mode.single_slot.description": "Book ett tidspunkt",
+  "mode.in_game.description": "Rask booking med kort varsel",
+  "mode.recurring.description": "Ukentlig eller månedlig mønster",
+  "created_for": "Booking opprettet for {{name}}",
+  "created": "En ny booking ble opprettet"
 }

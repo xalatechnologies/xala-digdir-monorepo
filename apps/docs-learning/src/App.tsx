@@ -1,6 +1,6 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { DesignsystemetProvider, ErrorBoundary } from '@xala/ds';
-import { I18nProvider } from '@xala/i18n';
+import { LazyI18nProvider } from '@xala/i18n';
 import { AuthProvider } from '@xala/auth';
 import { ToastProvider } from './providers';
 import { DocsLayout } from './components/layout/DocsLayout';
@@ -21,7 +21,7 @@ import { DocsReleasesPage } from './routes/DocsReleasesPage';
  */
 export function App() {
   return (
-    <I18nProvider>
+    <LazyI18nProvider>
       <DesignsystemetProvider theme="digilist" colorScheme="auto" size="md">
         <ErrorBoundary>
           <ToastProvider>
@@ -59,6 +59,6 @@ export function App() {
           </ToastProvider>
         </ErrorBoundary>
       </DesignsystemetProvider>
-    </I18nProvider>
+    </LazyI18nProvider>
   );
 }

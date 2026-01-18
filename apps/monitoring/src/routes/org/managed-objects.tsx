@@ -120,7 +120,7 @@ function ManagedObjectCard({ grant, orgId }: { grant: CustodyGrant, orgId: strin
                   onChange={(e) => setSelectedMemberId(e.target.value)}
                   style={{ width: '100%', padding: 'var(--ds-spacing-2)', borderRadius: 'var(--ds-border-radius-md)', border: '1px solid var(--ds-color-neutral-border-default)' }}
                 >
-                  <option value="">{t('common.velg')}</option>
+                  <option value="">{t('action.select')}</option>
                   {(members as any)?.data?.map((m: any) => (
                     <option key={m.userId} value={m.userId}>{m.name || m.userId}</option>
                   ))}
@@ -149,14 +149,14 @@ function ManagedObjectCard({ grant, orgId }: { grant: CustodyGrant, orgId: strin
               </div>
               
               <div style={{ display: 'flex', gap: 'var(--ds-spacing-2)', justifyContent: 'flex-end', marginTop: 'var(--ds-spacing-4)' }}>
-                <Button type="button" variant="secondary" onClick={() => setIsSubgrantOpen(false)}>Avbryt</Button>
+                <Button type="button" variant="secondary" onClick={() => setIsSubgrantOpen(false)}>{t('action.cancel')}</Button>
                 <Button 
                   type="button" 
                   variant="primary" 
                   onClick={handleCreateSubgrant}
                   disabled={createSubgrant.isPending || !selectedMemberId}
                 >
-                  {createSubgrant.isPending ? t('common.lagrer') : 'Gi tilgang'}
+                  {createSubgrant.isPending ? t('state.saving') : 'Gi tilgang'}
                 </Button>
               </div>
             </div>

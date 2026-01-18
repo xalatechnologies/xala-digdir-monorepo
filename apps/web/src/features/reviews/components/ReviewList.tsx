@@ -86,7 +86,7 @@ export function ReviewList({
           padding: 'var(--ds-spacing-8)',
         }}
       >
-        <Spinner aria-label={t('reviews.loading')} />
+        <Spinner aria-label={t('state.loading')} />
       </div>
     );
   }

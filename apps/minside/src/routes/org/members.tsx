@@ -75,8 +75,8 @@ export function OrganizationMembersPage() {
     const confirmed = await confirm({
       title: t('org.removeMember'),
       description: t('org.confirmRemoveMember', { name: memberName }),
-      confirmText: t('common.remove'),
-      cancelText: t('common.cancel'),
+      confirmText: t('action.remove'),
+      cancelText: t('action.cancel'),
       variant: 'danger',
     });
     
@@ -139,7 +139,7 @@ export function OrganizationMembersPage() {
           }}>
             <div>
               <Label style={{ display: 'block', marginBottom: 'var(--ds-spacing-2)', fontSize: 'var(--ds-font-size-sm)', fontWeight: 'var(--ds-font-weight-medium)' }}>
-                {t('common.email')}
+                {t('label.email')}
               </Label>
               <Input
                 type="email"
@@ -221,7 +221,7 @@ export function OrganizationMembersPage() {
 
         {isLoading ? (
           <div style={{ display: 'flex', justifyContent: 'center', padding: 'var(--ds-spacing-8)' }}>
-            <Spinner aria-label={t('common.loading')} data-size="lg" />
+            <Spinner aria-label={t('state.loading')} data-size="lg" />
           </div>
         ) : members.length === 0 ? (
           <div style={{ padding: 'var(--ds-spacing-8)', textAlign: 'center' }}>
@@ -286,7 +286,7 @@ export function OrganizationMembersPage() {
                     disabled={removeMember.isPending}
                     style={{ minHeight: '44px' }}
                   >
-                    {t('common.remove')}
+                    {t('action.remove')}
                   </Button>
                 </div>
               </div>

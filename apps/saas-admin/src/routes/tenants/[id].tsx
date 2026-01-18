@@ -58,11 +58,10 @@ import type {
   FeatureFlagCategory,
 } from '@digilist/client-sdk/types';
 
-const statusLabels: Record<SaasTenantStatus, string> = {
-  active: 'Aktiv',
-  inactive: 'Inaktiv',
-  suspended: 'Suspendert',
-  pending: 'Venter',
+const categoryLabels: Record<FeatureFlagCategory, string> = {
+  module: 'Moduler',
+  integration: 'Integrasjoner',
+  policy: 'Policyer',
 };
 
 const statusColors: Record<SaasTenantStatus, 'success' | 'warning' | 'danger' | 'info'> = {
@@ -70,12 +69,6 @@ const statusColors: Record<SaasTenantStatus, 'success' | 'warning' | 'danger' | 
   inactive: 'warning',
   suspended: 'danger',
   pending: 'info',
-};
-
-const categoryLabels: Record<FeatureFlagCategory, string> = {
-  module: 'Moduler',
-  integration: 'Integrasjoner',
-  policy: 'Policyer',
 };
 
 const categoryColors: Record<FeatureFlagCategory, 'info' | 'success' | 'warning'> = {
@@ -88,6 +81,13 @@ export function TenantDetailPage() {
   const { id } = useParams<{ id: string }>();
   const t = useT();
   const navigate = useNavigate();
+
+  const statusLabels: Record<SaasTenantStatus, string> = {
+    active: t('status.active'),
+    inactive: t('status.inactive'),
+    suspended: t('status.suspended'),
+    pending: t('status.pending'),
+  };
 
   // State for license key display (only shown once after rotation)
   const [newLicenseKey, setNewLicenseKey] = useState<string | null>(null);
@@ -476,7 +476,7 @@ export function TenantDetailPage() {
 
             {loadingFlags ? (
               <div className={styles.flagsLoading}>
-                <Spinner aria-label={t('common.laster_flags')} />
+                <Spinner aria-label={t('state.loading')} />
               </div>
             ) : (
               <div className={styles.flagsList}>
@@ -543,7 +543,7 @@ export function TenantDetailPage() {
           <Card>
             {loadingBilling ? (
               <div className={styles.billingLoading}>
-                <Spinner aria-label={t('common.laster_fakturering')} />
+                <Spinner aria-label={t('state.loading')} />
               </div>
             ) : billing ? (
               <div className={styles.billingContent}>
@@ -636,7 +636,7 @@ export function TenantDetailPage() {
 
             {loadingSecrets ? (
               <div className={styles.secretsLoading}>
-                <Spinner aria-label={t('common.laster_secrets')} />
+                <Spinner aria-label={t('state.loading')} />
               </div>
             ) : secrets.length === 0 ? (
               <div className={styles.secretsEmpty}>

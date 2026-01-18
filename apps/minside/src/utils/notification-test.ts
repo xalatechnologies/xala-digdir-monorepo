@@ -7,7 +7,6 @@
 
 import { realtimeClient } from '@digilist/client-sdk/realtime';
 import type { RealtimeEvent } from '@digilist/client-sdk/realtime';
-import { useT } from '@xala/i18n';
 
 export interface SimulateNotificationOptions {
   type?: 'booking_confirmed' | 'booking_reminder_24h' | 'booking_reminder_1h' | 'booking_cancelled' | 'booking_modified';
@@ -24,10 +23,9 @@ export interface SimulateNotificationOptions {
  */
 export function simulateNotificationEvent(options: SimulateNotificationOptions = {}) {
   const {
-  const t = useT();
     type = 'booking_confirmed',
     title = 'Test Notification',
-    message={t('common.this_is_a_test')},
+    message = 'Dette er en testmelding',
     priority = 'medium',
     bookingId = 'test-booking-123',
     listingId = 'test-listing-456',
@@ -70,8 +68,8 @@ export function simulateNotificationEvent(options: SimulateNotificationOptions =
 export function simulateBookingConfirmation() {
   return simulateNotificationEvent({
     type: 'booking_confirmed',
-    title: t('common.booking_bekreftet'),
-    message: t('common.din_booking_er_bekreftet'),
+    title: 'Booking bekreftet',
+    message: 'Din booking er bekreftet',
     priority: 'high',
   });
 }
@@ -82,8 +80,8 @@ export function simulateBookingConfirmation() {
 export function simulateBookingReminder24h() {
   return simulateNotificationEvent({
     type: 'booking_reminder_24h',
-    title: t('common.paaminnelse_booking_i_morgen'),
-    message: t('common.du_har_en_booking'),
+    title: 'Påminnelse: Booking i morgen',
+    message: 'Du har en booking i morgen',
     priority: 'medium',
   });
 }
@@ -94,8 +92,8 @@ export function simulateBookingReminder24h() {
 export function simulateBookingReminder1h() {
   return simulateNotificationEvent({
     type: 'booking_reminder_1h',
-    title: t('common.paaminnelse_booking_om_1'),
-    message: t('common.du_har_en_booking'),
+    title: 'Påminnelse: Booking om 1 time',
+    message: 'Du har en booking om 1 time',
     priority: 'urgent',
   });
 }
@@ -106,8 +104,8 @@ export function simulateBookingReminder1h() {
 export function simulateBookingCancellation() {
   return simulateNotificationEvent({
     type: 'booking_cancelled',
-    title: t('common.booking_kansellert'),
-    message: t('common.din_booking_for_moterom'),
+    title: 'Booking kansellert',
+    message: 'Din booking har blitt kansellert',
     priority: 'high',
   });
 }
@@ -118,8 +116,8 @@ export function simulateBookingCancellation() {
 export function simulateBookingModification() {
   return simulateNotificationEvent({
     type: 'booking_modified',
-    title: t('common.booking_endret'),
-    message: t('common.din_booking_har_blitt'),
+    title: 'Booking endret',
+    message: 'Din booking har blitt endret',
     priority: 'medium',
   });
 }

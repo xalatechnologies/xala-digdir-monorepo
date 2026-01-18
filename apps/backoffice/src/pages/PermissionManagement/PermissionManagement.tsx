@@ -63,6 +63,7 @@ interface PermissionFormData {
 }
 
 export const PermissionManagement: React.FC = () => {
+  const t = useT();
   const queryClient = useQueryClient();
   const [showForm, setShowForm] = useState(false);
   const [selectedPermission, setSelectedPermission] = useState<Permission | null>(null);

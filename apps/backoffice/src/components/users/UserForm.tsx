@@ -138,7 +138,7 @@ export function UserForm({ user, onSubmit, onCancel }: UserFormProps) {
             </FormField>
 
             <FormField
-              label={t('common.epost')}
+              label={t('label.email')}
               required
               error={errors.email || undefined}
               description={user ? t('common.brukerens_epostadresse') : 'Invitasjonen sendes til denne adressen'}

@@ -5,7 +5,7 @@
  * Reference: packages/client-sdk/src/types/advanced-contracts.ts
  */
 import { Injectable, Inject } from '../../core/decorators';
-import { eq } from 'drizzle-orm';
+import { eq, desc } from 'drizzle-orm';
 import { gdprRequests } from '../../database/schema/gdpr-requests';
 import { users } from '../../database/schema/index';
 import { NotFoundError, BadRequestError } from '../../core/errors/problem-details';
@@ -137,6 +137,37 @@ export class GDPRService {
         ? new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString()
         : undefined,
     };
+  }
+
+  /**
+   * Get pending DSAR requests
+   * Returns generic list
+   */
+  async getPendingRequests(limit: number = 5): Promise<any> {
+    const requests = await this.db
+      .select({
+        id: gdprRequests.id,
+        status: gdprRequests.status,
+        requestedAt: gdprRequests.requestedAt,
+        type: gdprRequests.requestType,
+        userId: gdprRequests.userId,
+      })
+      .from(gdprRequests)
+      .where(eq(gdprRequests.status, 'pending'))
+      .orderBy(desc(gdprRequests.requestedAt))
+      .limit(limit);
+
+    // Drizzle sort syntax might vary, let's just use standard limit if sort is tricky without import
+    // Re-checking imports: we don't have 'desc' imported in service.
+    // Let's import 'desc' from drizzle-orm.
+    
+    return requests.map((req: any) => ({
+      id: req.id,
+      status: req.status,
+      requestedAt: req.requestedAt.toISOString(),
+      type: req.type,
+      userId: req.userId,
+    }));
   }
 
   /**

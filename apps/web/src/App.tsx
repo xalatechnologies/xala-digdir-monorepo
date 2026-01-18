@@ -12,7 +12,7 @@ import {
 } from '@xala/ds';
 import { DesignsystemetProvider } from '@xala/ds';
 import { DEFAULT_THEME, type ThemeId } from '@xala/ds-themes';
-import { I18nProvider, useT } from '@xala/i18n';
+import { LazyI18nProvider, useT } from '@xala/i18n';
 import { useNotificationUnreadCount } from '@digilist/client-sdk';
 import { RentalObjectsPage } from './pages/RentalObjectsPage';
 import { RentalObjectDetailPage } from './pages/RentalObjectDetailPage';
@@ -107,7 +107,7 @@ function MainLayout() {
         logo={
           <HeaderLogo
             src="/logo.svg"
-            title={t('brand.name')}
+            title={t('app.name')}
             subtitle={t('brand.tagline')}
             href="/"
             height="40px"
@@ -117,7 +117,7 @@ function MainLayout() {
         search={
           <div className="header-search-desktop">
             <GlobalSearch
-              placeholder={t('common.search')}
+              placeholder={t('action.search')}
               showShortcut={true}
               enableGlobalShortcut={true}
             />
@@ -254,7 +254,7 @@ function AppContent() {
 
 export function App() {
   return (
-    <I18nProvider>
+    <LazyI18nProvider>
       <BrowserRouter
         future={{
           v7_startTransition: true,
@@ -267,7 +267,7 @@ export function App() {
           <AppContent />
         </AuthProvider>
       </BrowserRouter>
-    </I18nProvider>
+    </LazyI18nProvider>
   );
 }
 

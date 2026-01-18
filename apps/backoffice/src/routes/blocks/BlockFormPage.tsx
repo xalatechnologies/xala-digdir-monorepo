@@ -229,7 +229,7 @@ export function BlockFormPage(): React.ReactElement {
         <Paragraph style={{ color: 'var(--ds-color-danger-text-default)' }}>
           {t('common.accessDenied')}
         </Paragraph>
-        <Button type="button" variant="secondary" onClick={() => navigate('/blocks')} aria-label={t('ui.back')}>
+        <Button type="button" variant="secondary" onClick={() => navigate('/blocks')} aria-label={t('action.back')}>
           <ArrowLeftIcon />
           {t('blocks.backToList')}
         </Button>
@@ -242,7 +242,7 @@ export function BlockFormPage(): React.ReactElement {
       {/* Breadcrumbs */}
       <Breadcrumb
         items={[
-          { label: t('blocks.title'), href: '/blocks' },
+          { label: t('blocks.page.title'), href: '/blocks' },
           { label: isEditing ? t('blocks.editBlock') : t('blocks.createBlock') },
         ]}
       />
@@ -260,7 +260,7 @@ export function BlockFormPage(): React.ReactElement {
       {/* Error alert */}
       {submitError && (
         <Alert data-color="danger">
-          {submitError.message || t('common.error')}
+          {submitError.message || t('error.generic')}
         </Alert>
       )}
 
@@ -286,7 +286,7 @@ export function BlockFormPage(): React.ReactElement {
           <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--ds-spacing-5)' }}>
             {/* Title */}
             <Input
-              label={t('blocks.form.title')}
+              label={t('blocks.form.page.title')}
               value={formData.title}
               onChange={(e) => handleChange('title', e.target.value)}
               error={errors.title}
@@ -401,16 +401,16 @@ export function BlockFormPage(): React.ReactElement {
 
         {/* Form actions */}
         <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: 'var(--ds-spacing-6)' }}>
-          <Button type="button" variant="tertiary" onClick={() => navigate('/blocks')} aria-label={t('ui.cancel')}>
+          <Button type="button" variant="tertiary" onClick={() => navigate('/blocks')} aria-label={t('action.cancel')}>
             <ArrowLeftIcon />
-            {t('common.cancel')}
+            {t('action.cancel')}
           </Button>
-          <Button type="submit" variant="primary" disabled={isSubmitting} aria-label={t('ui.save')}>
+          <Button type="submit" variant="primary" disabled={isSubmitting} aria-label={t('action.save')}>
             <SaveIcon />
             {isSubmitting
-              ? t('common.saving')
+              ? t('state.saving')
               : isEditing
-              ? t('common.saveChanges')
+              ? t('action.save')
               : t('blocks.createBlock')}
           </Button>
         </div>

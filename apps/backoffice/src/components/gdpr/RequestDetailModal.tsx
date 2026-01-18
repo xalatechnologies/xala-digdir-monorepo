@@ -192,7 +192,7 @@ export function RequestDetailModal({
               gap: 'var(--ds-spacing-3)',
             }}
           >
-            <Spinner aria-label={t('gdpr.loadingRequest')} />
+            <Spinner aria-label={t('state.loading')} />
             <Text style={{ color: 'var(--ds-color-neutral-text-subtle)' }}>
               Laster forespørsel...
             </Text>
@@ -436,7 +436,7 @@ export function RequestDetailModal({
                 <textarea
                   value={rejectionReason}
                   onChange={(e) => setRejectionReason(e.target.value)}
-                  placeholder={t('gdpr.placeholder')}
+                  placeholder={t('form.gdpr.placeholder')}
                   rows={4}
                   style={{
                     width: '100%',
@@ -471,7 +471,7 @@ export function RequestDetailModal({
             {/* Cancel or Close button */}
             {!showRejectForm && (
               <Button type="button" variant="secondary" onClick={handleClose}>
-                {canTakeActions ? t("ui.cancel") : t("ui.close")}
+                {canTakeActions ? t("action.cancel") : t("action.close")}
               </Button>
             )}
 

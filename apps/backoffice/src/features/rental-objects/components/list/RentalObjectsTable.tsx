@@ -9,7 +9,6 @@ import { useT } from '@xala/i18n';
 import {
   Badge,
   Button,
-  Checkbox,
   Spinner,
   Paragraph,
 } from '@xala/ds';
@@ -34,30 +33,16 @@ export function RentalObjectsTable({
   isLoading = false,
   canEdit = false,
   canDelete = false,
-  selectedIds = [],
-  onSelectionChange,
+  // selectedIds = [],
+  // onSelectionChange,
   onSort,
   sortBy,
   sortOrder = 'asc',
 }: RentalObjectsTableProps) {
   const t = useT();
-  const navigate = useNavigate();
   const [hoveredRow, setHoveredRow] = useState<string | null>(null);
 
-  const handleSelectAll = (checked: boolean) => {
-    if (onSelectionChange) {
-      onSelectionChange(checked ? items.map((item) => item.id) : []);
-    }
-  };
 
-  const handleSelectRow = (id: string, checked: boolean) => {
-    if (onSelectionChange) {
-      const newSelection = checked
-        ? [...selectedIds, id]
-        : selectedIds.filter((selectedId) => selectedId !== id);
-      onSelectionChange(newSelection);
-    }
-  };
 
   const handleSortColumn = (column: SortableColumn) => {
     if (onSort) {
@@ -74,12 +59,12 @@ export function RentalObjectsTable({
   if (isLoading) {
     return (
       <div style={{ display: 'flex', justifyContent: 'center', padding: 'var(--ds-spacing-10)' }}>
-        <Spinner size="lg" />
+        <Spinner aria-label={t('common.loading')} />
       </div>
     );
   }
 
-  if (items.length === 0) {
+  if (!items || items.length === 0) {
     return (
       <div
         style={{
@@ -93,8 +78,7 @@ export function RentalObjectsTable({
     );
   }
 
-  const allSelected = items.length > 0 && selectedIds.length === items.length;
-  const someSelected = selectedIds.length > 0 && selectedIds.length < items.length;
+
 
   return (
     <div style={{ overflowX: 'auto' }}>
@@ -114,17 +98,7 @@ export function RentalObjectsTable({
               borderBottom: '2px solid var(--ds-color-neutral-border-default)',
             }}
           >
-            {/* Selection Checkbox */}
-            {onSelectionChange && (
-              <th style={{ width: '48px', padding: 'var(--ds-spacing-4)', textAlign: 'center' }}>
-                <Checkbox
-                  checked={allSelected}
-                  indeterminate={someSelected}
-                  onChange={(e) => handleSelectAll(e.target.checked)}
-                  aria-label={t('common.selectAll')}
-                />
-              </th>
-            )}
+
 
             {/* Thumbnail */}
             <th
@@ -265,13 +239,10 @@ export function RentalObjectsTable({
             <TableRow
               key={item.id}
               item={item}
-              isSelected={selectedIds.includes(item.id)}
               isHovered={hoveredRow === item.id}
               canEdit={canEdit}
               canDelete={canDelete}
-              onSelect={(checked) => handleSelectRow(item.id, checked)}
               onHover={(hover) => setHoveredRow(hover ? item.id : null)}
-              showSelection={!!onSelectionChange}
             />
           ))}
         </tbody>
@@ -291,23 +262,17 @@ export function RentalObjectsTable({
 
 interface TableRowProps {
   item: RentalObject;
-  isSelected: boolean;
   isHovered: boolean;
   canEdit: boolean;
   canDelete: boolean;
-  showSelection: boolean;
-  onSelect: (checked: boolean) => void;
   onHover: (hover: boolean) => void;
 }
 
 function TableRow({
   item,
-  isSelected,
   isHovered,
   canEdit,
   canDelete,
-  showSelection,
-  onSelect,
   onHover,
 }: TableRowProps) {
   const t = useT();
@@ -343,7 +308,7 @@ function TableRow({
 
   const handleView = () => navigate(`/rental-objects/${item.slug}`);
   const handleEdit = () => navigate(`/rental-objects/${item.slug}/edit`);
-  const handleDuplicate = () => navigate(`/rental-objects/${item.slug}/duplicate`);
+
   const handleDelete = () => {
     if (confirm(t('rentalObjects.confirmDelete', { name: item.name }))) {
       // TODO: Implement delete via SDK
@@ -354,9 +319,7 @@ function TableRow({
   return (
     <tr
       style={{
-        backgroundColor: isSelected
-          ? 'var(--ds-color-accent-surface-subtle)'
-          : isHovered
+        backgroundColor: isHovered
             ? 'var(--ds-color-neutral-surface-hover)'
             : 'transparent',
         borderBottom: '1px solid var(--ds-color-neutral-border-subtle)',
@@ -365,16 +328,7 @@ function TableRow({
       onMouseEnter={() => onHover(true)}
       onMouseLeave={() => onHover(false)}
     >
-      {/* Selection */}
-      {showSelection && (
-        <td style={{ padding: 'var(--ds-spacing-4)', textAlign: 'center' }}>
-          <Checkbox
-            checked={isSelected}
-            onChange={(e) => onSelect(e.target.checked)}
-            aria-label={t('common.select')}
-          />
-        </td>
-      )}
+
 
       {/* Thumbnail */}
       <td style={{ padding: 'var(--ds-spacing-4)' }}>
@@ -450,17 +404,17 @@ function TableRow({
       {/* Actions */}
       <td style={{ padding: 'var(--ds-spacing-4)', textAlign: 'right' }}>
         <div style={{ display: 'flex', gap: 'var(--ds-spacing-2)', justifyContent: 'flex-end' }}>
-          <Button variant="tertiary" size="sm" onClick={handleView} type="button">
+          <Button variant="tertiary" onClick={handleView} type="button">
             {t('common.view')}
           </Button>
           {canEdit && (
-            <Button variant="secondary" size="sm" onClick={handleEdit} type="button">
-              {t('common.edit')}
+            <Button variant="secondary" onClick={handleEdit} type="button">
+              {t('action.edit')}
             </Button>
           )}
           {canDelete && (
-            <Button variant="danger" size="sm" onClick={handleDelete} type="button">
-              {t('common.delete')}
+            <Button variant="secondary" data-color="danger" onClick={handleDelete} type="button">
+              {t('action.delete')}
             </Button>
           )}
         </div>

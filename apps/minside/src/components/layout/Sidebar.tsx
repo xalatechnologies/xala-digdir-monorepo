@@ -208,7 +208,7 @@ function SidebarContent({ navSections, user, onItemClick, t }: { navSections: Na
                 letterSpacing: 'var(--ds-font-letter-spacing-wide)',
               }}
             >
-              {t('components.sidebar.appName')}
+              {t('app.name')}
             </div>
             <div
               style={{

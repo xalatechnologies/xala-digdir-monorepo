@@ -1,7 +1,7 @@
 import React, { Suspense } from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { DesignsystemetProvider, DialogProvider, ErrorBoundary } from '@xala/ds';
-import { I18nProvider } from '@xala/i18n';
+import { LazyI18nProvider } from '@xala/i18n';
 
 import { AuthProvider, useOAuthCallback } from '@xala/auth';
 import { BackofficeRoleProvider } from './providers/BackofficeRoleProvider';
@@ -96,7 +96,7 @@ function AppWithTheme() {
   const { colorScheme } = useTheme();
   
   return (
-    <I18nProvider initialLocale="nb">
+    <LazyI18nProvider locale="nb">
       <DesignsystemetProvider theme="digilist" colorScheme={colorScheme} size="md">
       <DialogProvider>
       <ErrorBoundary>
@@ -115,7 +115,7 @@ function AppWithTheme() {
       </ErrorBoundary>
       </DialogProvider>
       </DesignsystemetProvider>
-    </I18nProvider>
+    </LazyI18nProvider>
   );
 }
 
@@ -276,7 +276,7 @@ function AppContent() {
                 }
               />
               
-              {/* Saksbehandler routes */}
+              {/* Saksbehandler routes - case_handler role only */}
               <Route
                 path="work-queue"
                 element={

@@ -267,7 +267,7 @@ export function CalendarSection({
       return [
         { status: 'AVAILABLE' as const, label: t('status.available') },
         { status: 'RESERVED' as const, label: t('status.reserved') },
-        { status: 'BOOKED' as const, label: t('status.booked') },
+        { status: 'BOOKED' as const, label: t('state.booked') },
         { status: 'BLOCKED' as const, label: t('status.blocked') },
         { status: 'BLACKOUT' as const, label: t('status.unavailable') },
         { status: 'CLOSED' as const, label: t('status.closed') },

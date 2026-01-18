@@ -140,7 +140,7 @@ export function TenantUsersListPage() {
       <Container>
         <EmptyState
           icon={<UsersIcon aria-hidden />}
-          title={t('common.error')}
+          title={t('error.generic')}
           description={t('tenantAdmin.users.loadError')}
         />
       </Container>
@@ -173,7 +173,7 @@ export function TenantUsersListPage() {
           <Stack gap="4">
             {/* Search */}
             <Textfield
-              label={t('common.search')}
+              label={t('action.search')}
               placeholder={t('tenantAdmin.users.searchPlaceholder')}
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
@@ -253,7 +253,7 @@ export function TenantUsersListPage() {
                     <Table.HeaderCell>{t('users.email')}</Table.HeaderCell>
                     <Table.HeaderCell>{t('users.role')}</Table.HeaderCell>
                     <Table.HeaderCell>{t('tenantAdmin.users.organization')}</Table.HeaderCell>
-                    <Table.HeaderCell>{t('common.status')}</Table.HeaderCell>
+                    <Table.HeaderCell>{t('label.status')}</Table.HeaderCell>
                     <Table.HeaderCell>{t('tenantAdmin.users.createdAt')}</Table.HeaderCell>
                     <Table.HeaderCell>{t('common.actions')}</Table.HeaderCell>
                   </Table.Row>
@@ -298,7 +298,7 @@ export function TenantUsersListPage() {
                               <UsersIcon aria-hidden /> {t('common.view')}
                             </DropdownItem>
                             <DropdownItem onClick={() => handleEditUser(user.id)}>
-                              <EditIcon aria-hidden /> {t('common.edit')}
+                              <EditIcon aria-hidden /> {t('action.edit')}
                             </DropdownItem>
                             {user.status === 'active' ? (
                               <DropdownItem onClick={() => handleDeactivateUser(user.id)}>
@@ -327,7 +327,7 @@ export function TenantUsersListPage() {
                   padding: 'var(--ds-spacing-4) var(--ds-spacing-6)',
                 }}>
                   <Paragraph size="sm">
-                    {t('common.showing')} {((page - 1) * limit) + 1}-{Math.min(page * limit, totalUsers)} {t('common.of')} {totalUsers}
+                    {t('pagination.showing')} {((page - 1) * limit) + 1}-{Math.min(page * limit, totalUsers)} {t('common.of')} {totalUsers}
                   </Paragraph>
                   <div style={{ display: 'flex', gap: 'var(--ds-spacing-2)' }}>
                     <Button
@@ -347,7 +347,7 @@ export function TenantUsersListPage() {
                       onClick={() => setPage(p => Math.min(totalPages, p + 1))}
                       disabled={page === totalPages} type="button"
                     >
-                      {t('common.next')}
+                      {t('action.next')}
                     </Button>
                   </div>
                 </div>

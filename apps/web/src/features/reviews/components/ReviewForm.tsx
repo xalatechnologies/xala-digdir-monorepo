@@ -235,7 +235,7 @@ export function ReviewForm({
             id="review-comment"
             value={comment}
             onChange={(e) => setComment(e.target.value)}
-            placeholder={t('reviews.placeholder')}
+            placeholder={t('form.reviews.placeholder')}
             disabled={isSubmitting}
             rows={5}
             maxLength={1000}
@@ -302,7 +302,7 @@ export function ReviewForm({
               variant="tertiary"
               onClick={handleCancel}
               disabled={isSubmitting}
-            >{t("ui.cancel")}</Button>
+            >{t("action.cancel")}</Button>
           )}
           <Button
             type="submit"

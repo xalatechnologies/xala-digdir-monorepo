@@ -162,7 +162,7 @@ export function TenantAuditLogPage() {
           <Heading level={2} data-size="xl" style={{ margin: 0, color: 'var(--ds-color-warning-text-default)' }}>12</Heading>
         </Card>
         <Card style={{ padding: 'var(--ds-spacing-4)' }}>
-          <Paragraph data-size="sm" style={{ color: 'var(--ds-color-neutral-text-subtle)', margin: 0 }}>{t("ui.error")}</Paragraph>
+          <Paragraph data-size="sm" style={{ color: 'var(--ds-color-neutral-text-subtle)', margin: 0 }}>{t("error.generic")}</Paragraph>
           <Heading level={2} data-size="xl" style={{ margin: 0, color: 'var(--ds-color-danger-text-default)' }}>3</Heading>
         </Card>
         <Card style={{ padding: 'var(--ds-spacing-4)' }}>
@@ -195,7 +195,7 @@ export function TenantAuditLogPage() {
               <option value="all">Alle</option>
               <option value="info">Info</option>
               <option value="warning">{t("ui.warning")}</option>
-              <option value="error">{t("ui.error")}</option>
+              <option value="error">{t("error.generic")}</option>
             </Select>
           </div>
           <div style={{ flex: 1 }}>
@@ -216,7 +216,7 @@ export function TenantAuditLogPage() {
       <Card style={{ padding: 0, overflow: 'hidden' }}>
         {isLoading ? (
           <div style={{ display: 'flex', justifyContent: 'center', padding: 'var(--ds-spacing-8)' }}>
-            <Spinner aria-label={t("ui.loading")} data-size="lg" />
+            <Spinner aria-label={t("state.loading")} data-size="lg" />
           </div>
         ) : (
           <Table>
@@ -242,7 +242,7 @@ export function TenantAuditLogPage() {
                     <Table.Cell><code style={{ fontSize: 'var(--ds-font-size-xs)' }}>{event.ip}</code></Table.Cell>
                     <Table.Cell>
                       <Badge style={{ backgroundColor: color.bg, color: color.text }}>
-                        {event.severity === 'info' ? 'Info' : event.severity === 'warning' ? t("ui.warning") : t("ui.error")}
+                        {event.severity === 'info' ? 'Info' : event.severity === 'warning' ? t("ui.warning") : t("error.generic")}
                       </Badge>
                     </Table.Cell>
                   </Table.Row>

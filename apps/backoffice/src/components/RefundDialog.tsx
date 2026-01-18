@@ -258,7 +258,7 @@ export function RefundDialog({
           <WarningIcon />
         </div>
         <Heading level={2} data-size="sm" style={{ margin: 0 }}>
-          {t('refund.title', 'Refunder betaling')}
+          {t('refund.page.title', 'Refunder betaling')}
         </Heading>
       </div>
 
@@ -463,7 +463,7 @@ export function RefundDialog({
           onClick={onClose}
           disabled={isPending}
         >
-          {t('common.cancel', t("ui.cancel"))}
+          {t('action.cancel', t("action.cancel"))}
         </Button>
         <Button
           type="button"

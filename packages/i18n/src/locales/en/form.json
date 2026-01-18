@@ -172,5 +172,8 @@
   "review.categoryDetails": "Category details",
   "review.bookingConfig": "Booking configuration",
   "review.pricing": "Pricing",
-  "review.editSection": "Edit {{section}}"
+  "review.editSection": "Edit {{section}}",
+  "phone_number": "Phone number",
+  "street_address": "Street address",
+  "postal_code": "Postal code"
 }

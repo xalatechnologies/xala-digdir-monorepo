@@ -36,13 +36,7 @@ interface SeasonApplicationManagementProps {
   canProcess: boolean; // Only allow in 'closed' status
 }
 
-const statusLabels: Record<ApplicationStatus, string> = {
-  pending: t("status.pending"),
-  approved: 'Godkjent',
-  rejected: 'Avslått',
-  allocated: 'Tildelt',
-};
-
+// Moved inside component to access t hook
 const statusVariants: Record<ApplicationStatus, 'warning' | 'success' | 'danger' | 'info'> = {
   pending: 'warning',
   approved: 'success',
@@ -56,6 +50,13 @@ export function SeasonApplicationManagement({ seasonId, canProcess }: SeasonAppl
   const [filterVenue, setFilterVenue] = useState<string | 'all'>('all');
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [selectedApplication, setSelectedApplication] = useState<SeasonApplication | null>(null);
+
+  const statusLabels: Record<ApplicationStatus, string> = {
+    pending: t("status.pending"),
+    approved: 'Godkjent',
+    rejected: 'Avslått',
+    allocated: 'Tildelt',
+  };
 
   // Queries
   const { data: applicationsData, isLoading } = useSeasonApplications(seasonId);
@@ -121,7 +122,7 @@ export function SeasonApplicationManagement({ seasonId, canProcess }: SeasonAppl
   if (isLoading) {
     return (
       <div style={{ display: 'flex', justifyContent: 'center', padding: 'var(--ds-spacing-8)' }}>
-        <Spinner data-size="lg" aria-label={t("ui.loading")} />
+        <Spinner data-size="lg" aria-label={t("state.loading")} />
       </div>
     );
   }

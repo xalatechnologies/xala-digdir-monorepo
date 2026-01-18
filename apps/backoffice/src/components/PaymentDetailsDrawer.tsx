@@ -129,7 +129,7 @@ export function PaymentDetailsDrawer({
       onClose={onClose}
       position="right"
       size="md"
-      title={t('payments.details.title', 'Betalingsdetaljer')}
+      title={t('payments.details.page.title', 'Betalingsdetaljer')}
       aria-label={t('payments.details.ariaLabel', 'Betalingsdetaljer for booking')}
     >
       {/* Loading State */}
@@ -143,7 +143,7 @@ export function PaymentDetailsDrawer({
           }}
         >
           <Spinner
-            aria-label={t('common.loading', t("ui.loading"))}
+            aria-label={t('state.loading', t("state.loading"))}
             data-size="lg"
           />
         </div>
@@ -151,7 +151,7 @@ export function PaymentDetailsDrawer({
 
       {/* Error State */}
       {error && !isLoading && (
-        <DrawerSection title={t('common.error', t("ui.error"))}>
+        <DrawerSection title={t('error.generic', t("error.generic"))}>
           <Text style={{ color: 'var(--ds-color-danger-text-default)' }}>
             {t('payments.details.errorLoading', 'Kunne ikke laste betalingshistorikk')}
           </Text>

@@ -130,7 +130,7 @@ export function SentryTestComponent() {
           <ol style={{ marginLeft: '1.5rem', lineHeight: '1.6' }}>
             <li>{t('first.set.tenant.and.user.context.optional.but.rec')}</li>
             <li>{t('add.some.breadcrumbs.to.test.breadcrumb.tracking')}</li>
-            <li>{t('click.any.error.button.to.trigger.a.test.error')}</li>
+            <li>{t('error.generic')}</li>
             <li>{t('check.the.browser.console.for.error.logs')}</li>
             <li>{t('check.your.sentry.dashboard.for.the.error.report')}</li>
             <li>{t('verify.context.tenant.user.and.breadcrumbs.appear.')}</li>

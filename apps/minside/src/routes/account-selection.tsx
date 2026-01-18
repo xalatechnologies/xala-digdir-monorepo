@@ -86,8 +86,8 @@ export function AccountSelectionPage(): React.ReactElement {
     <LoginLayout
       brandName="DIGILIST"
       brandTagline={t('common.enkel_booking')}
-      title={t('minside.accountSelection.title') || 'Velg konto'}
-      subtitle={t('minside.accountSelection.subtitle') || 'Hvordan vil du bruke tjenesten?'}
+      title={t('minside.accountSelection.page.title') || 'Velg konto'}
+      subtitle={t('minside.accountSelection.page.description') || 'Hvordan vil du bruke tjenesten?'}
       panelTitle="MIN SIDE"
       panelSubtitle={t('minside.accountSelection.panelTitle') || 'Personlig eller organisasjon'}
       panelDescription={t(

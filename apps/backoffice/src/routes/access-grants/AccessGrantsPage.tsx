@@ -101,13 +101,13 @@ export function AccessGrantsPage() {
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
         <div>
           <Heading level={2} data-size="md">
-            {t('accessGrants.title')}
+            {t('accessGrants.page.title')}
           </Heading>
           <Paragraph
             data-size="sm"
             style={{ color: 'var(--ds-color-neutral-text-subtle)', marginTop: 'var(--ds-spacing-1)' }}
           >
-            {t('accessGrants.subtitle')}
+            {t('accessGrants.page.description')}
           </Paragraph>
         </div>
         <Button type="button" onClick={() => navigate('/access-grants/new')}>
@@ -156,7 +156,7 @@ export function AccessGrantsPage() {
       <Card>
         {isLoading ? (
           <div style={{ display: 'flex', justifyContent: 'center', padding: 'var(--ds-spacing-8)' }}>
-            <Spinner data-size="lg" aria-label={t('accessGrants.loading')} />
+            <Spinner data-size="lg" aria-label={t('state.loading')} />
           </div>
         ) : filteredGrants.length === 0 ? (
           <div style={{ textAlign: 'center', padding: 'var(--ds-spacing-8)' }}>

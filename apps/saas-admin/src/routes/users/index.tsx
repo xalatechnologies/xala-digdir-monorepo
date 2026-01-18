@@ -43,7 +43,7 @@ export function UsersPage() {
   if (isLoading) {
     return (
       <Stack direction="horizontal" justify="center" align="center" style={{ padding: 'var(--ds-spacing-8)' }}>
-        <Spinner size="lg" aria-label={t('common.loading')} />
+        <Spinner size="lg" aria-label={t('state.loading')} />
       </Stack>
     );
   }
@@ -63,7 +63,7 @@ export function UsersPage() {
       {/* Search */}
       <Card>
         <HeaderSearch
-          placeholder={t('common.search', { defaultValue: 'Search users...' })}
+          placeholder={t('action.search', { defaultValue: 'Search users...' })}
           value={searchQuery}
           onSearchChange={(value) => setSearchQuery(value)}
         />
@@ -74,17 +74,17 @@ export function UsersPage() {
         {filteredUsers.length === 0 ? (
           <Stack direction="horizontal" justify="center" align="center" style={{ padding: 'var(--ds-spacing-8)' }}>
             <Paragraph size="sm" color="subtle">
-              {t('common.noResults')}
+              {t('empty.search')}
             </Paragraph>
           </Stack>
         ) : (
           <Table>
             <Table.Head>
               <Table.Row>
-                <Table.HeaderCell>{t('common.name')}</Table.HeaderCell>
+                <Table.HeaderCell>{t('label.name')}</Table.HeaderCell>
                 <Table.HeaderCell>{t('auth.email', { defaultValue: 'Email' })}</Table.HeaderCell>
                 <Table.HeaderCell>{t('saasAdmin.tenants.tenantName', { defaultValue: 'Tenant' })}</Table.HeaderCell>
-                <Table.HeaderCell>{t('common.status')}</Table.HeaderCell>
+                <Table.HeaderCell>{t('label.status')}</Table.HeaderCell>
               </Table.Row>
             </Table.Head>
             <Table.Body>
@@ -116,7 +116,7 @@ export function UsersPage() {
       {/* Results info */}
       <Stack direction="horizontal" justify="end" align="center">
         <Text size="sm" color="var(--ds-color-neutral-text-subtle)">
-          {t('common.showing', { defaultValue: 'Showing' })} {filteredUsers.length} {t('common.of', { defaultValue: 'of' })} {users.length} {t('saasAdmin.nav.users', { defaultValue: 'users' })}
+          {t('pagination.showing', { defaultValue: 'Showing' })} {filteredUsers.length} {t('common.of', { defaultValue: 'of' })} {users.length} {t('saasAdmin.nav.users', { defaultValue: 'users' })}
         </Text>
       </Stack>
     </Stack>

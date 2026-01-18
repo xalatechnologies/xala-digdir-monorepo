@@ -180,7 +180,7 @@ export function BookingAvailabilityConflictDialog({
           <button
             type="button"
             onClick={onClose}
-            aria-label={t('common.close')}
+            aria-label={t('action.close')}
             style={{
               display: 'flex',
               alignItems: 'center',

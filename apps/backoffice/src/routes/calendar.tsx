@@ -679,7 +679,7 @@ export function CalendarPage() {
             <Button type="button" variant="tertiary" data-data-size="sm" onClick={() => navigate('prev')} aria-label={t("ui.previous")}>
               <ChevronLeftIcon />
             </Button>
-            <Button type="button" variant="tertiary" data-data-size="sm" onClick={() => navigate('next')} aria-label={t("ui.next")}>
+            <Button type="button" variant="tertiary" data-data-size="sm" onClick={() => navigate('next')} aria-label={t("action.next")}>
               <ChevronRightIcon />
             </Button>
             <Heading level={2} data-size="sm" style={{ margin: 0, minWidth: '200px' }}>
@@ -777,7 +777,7 @@ export function CalendarPage() {
       <Card style={{ flex: 1, padding: 0, overflow: 'hidden', display: 'flex', flexDirection: 'column' }}>
         {isLoading ? (
           <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-            <Spinner aria-label={t('common.laster_kalender')} />
+            <Spinner aria-label={t('state.loading')} />
           </div>
         ) : (
           <>

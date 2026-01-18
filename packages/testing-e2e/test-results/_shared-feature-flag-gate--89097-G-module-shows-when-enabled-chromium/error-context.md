@@ -4,10 +4,10 @@
 - generic [ref=e4]:
   - complementary [ref=e5]:
     - generic [ref=e7]:
-      - img "name" [ref=e8]
+      - img "Digilist" [ref=e8]
       - generic [ref=e9]:
-        - generic [ref=e10]: NAME
-        - generic [ref=e11]: backoffice
+        - generic [ref=e10]: DIGILIST
+        - generic [ref=e11]: Backoffice
     - navigation [ref=e12]:
       - generic [ref=e13]:
         - paragraph [ref=e14]: Administrasjon
@@ -161,7 +161,7 @@
       - generic [ref=e247]: T
       - generic [ref=e248]:
         - paragraph [ref=e249]: Test User
-        - paragraph [ref=e250]: admin
+        - paragraph [ref=e250]: Administrator
   - generic [ref=e251]:
     - banner [ref=e252]:
       - generic [ref=e253]:
@@ -176,7 +176,7 @@
             - img [ref=e269]
           - button "Varsler" [ref=e271] [cursor=pointer]:
             - img [ref=e273]
-          - button "settings" [ref=e276] [cursor=pointer]:
+          - button "Innstillinger" [ref=e276] [cursor=pointer]:
             - img [ref=e278]
           - button "Logg ut" [ref=e282] [cursor=pointer]:
             - img [ref=e283]
@@ -238,5 +238,5 @@
                   - text: Administrer brukere
             - generic [ref=e364]:
               - paragraph [ref=e367]: Alle systemer operative
-              - paragraph [ref=e368]: "Sist oppdatert: 20:04"
+              - paragraph [ref=e368]: "Sist oppdatert: 20:16"
 ```

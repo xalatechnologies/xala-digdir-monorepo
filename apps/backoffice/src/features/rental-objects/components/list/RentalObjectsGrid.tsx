@@ -37,7 +37,7 @@ export function RentalObjectsGrid({
   if (isLoading) {
     return (
       <div style={{ display: 'flex', justifyContent: 'center', padding: 'var(--ds-spacing-10)' }}>
-        <Spinner aria-label={t('common.laster')} />
+        <Spinner aria-label={t('state.loading')} />
       </div>
     );
   }

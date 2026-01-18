@@ -277,7 +277,7 @@ export function MediaStep({ wizard }: MediaStepProps) {
             📸
           </div>
           <Heading level={4} data-size="xs" style={{ marginBottom: 'var(--ds-spacing-2)' }}>
-            {t('media.dropzone.title')}
+            {t('media.dropzone.page.title')}
           </Heading>
           <Paragraph data-size="sm" style={{ color: 'var(--ds-color-neutral-text-subtle)' }}>
             {t('media.dropzone.description')}
@@ -314,7 +314,7 @@ export function MediaStep({ wizard }: MediaStepProps) {
           }}
         >
           <Paragraph data-size="sm" style={{ margin: 0, marginBottom: 'var(--ds-spacing-2)' }}>
-            <strong>{t('media.requirements.title')}</strong>
+            <strong>{t('media.requirements.page.title')}</strong>
           </Paragraph>
           <ul style={{ margin: 0, paddingLeft: 'var(--ds-spacing-5)', fontSize: 'var(--ds-font-size-sm)' }}>
             <li>{t('media.requirements.formats')}</li>
@@ -439,7 +439,7 @@ export function MediaStep({ wizard }: MediaStepProps) {
                         color: 'var(--ds-color-danger-text-default)',
                       }}
                     >
-                      {t('common.delete')}
+                      {t('action.delete')}
                     </Button>
                   </Stack>
                 </div>

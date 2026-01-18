@@ -665,7 +665,7 @@ export function BookingConfirmationStep({
                       textDecoration: 'underline',
                       cursor: 'pointer',
                     }}
-                  >{t("ui.close")}</button>
+                  >{t("action.close")}</button>
                 )}
               </div>
             </div>

@@ -179,7 +179,7 @@ export function UsersPage() {
       <Card>
         {isLoading ? (
           <div style={{ display: 'flex', justifyContent: 'center', padding: 'var(--ds-spacing-8)' }}>
-            <Spinner data-size="lg" aria-label={t("ui.loading")} />
+            <Spinner data-size="lg" aria-label={t("state.loading")} />
           </div>
         ) : users.length === 0 ? (
           <div style={{ textAlign: 'center', padding: 'var(--ds-spacing-8)' }}>
@@ -259,7 +259,7 @@ export function UsersPage() {
                           </Dropdown.Item>
                           <Dropdown.Item>
                             <Dropdown.Button onClick={() => handleEdit(user)}>
-                              <EditIcon />{t("ui.edit")}</Dropdown.Button>
+                              <EditIcon />{t("action.edit")}</Dropdown.Button>
                           </Dropdown.Item>
                           {user.status === 'active' ? (
                             <Dropdown.Item>

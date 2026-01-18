@@ -183,7 +183,7 @@ export function UserMenu({ userName, onLogout, avatarUrl }: UserMenuProps) {
               }}
             >
               <LogOutIcon size={20} />
-              <span>{t('auth.logout')}</span>
+              <span>{t('action.logout')}</span>
             </button>
           </div>
         </div>
