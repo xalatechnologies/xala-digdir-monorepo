@@ -5,7 +5,7 @@
  */
 
 import { uuid, varchar, boolean, timestamp, jsonb, integer, text, index, unique } from 'drizzle-orm/pg-core';
-import { saasSchema } from './schemas';
+import { saasSchema } from '../schemas';
 
 // =============================================================================
 // Plan Entitlements

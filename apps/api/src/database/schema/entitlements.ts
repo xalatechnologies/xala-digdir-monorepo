@@ -14,7 +14,7 @@ export {
   navPolicies,
   globalKillSwitches,
   entitlementAuditLog,
-} from '@digilist/database-schema/entitlements';
+} from '@digilist/database-schema/saas/entitlements';
 
 // Re-export saasSchema for local use
 export { saasSchema } from '@digilist/database-schema';

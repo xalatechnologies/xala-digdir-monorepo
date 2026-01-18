@@ -1,7 +1,7 @@
 {
   "name": "@digilist/database-schema",
   "version": "1.0.0",
-  "description": "Drizzle ORM schemas for Digilist platform - modular schema definitions",
+  "description": "Drizzle ORM schemas for Digilist platform - single source of truth",
   "type": "module",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
@@ -10,9 +10,21 @@
       "types": "./dist/index.d.ts",
       "import": "./dist/index.js"
     },
-    "./entitlements": {
-      "types": "./dist/entitlements.d.ts",
-      "import": "./dist/entitlements.js"
+    "./core": {
+      "types": "./dist/core/index.d.ts",
+      "import": "./dist/core/index.js"
+    },
+    "./domain": {
+      "types": "./dist/domain/index.d.ts",
+      "import": "./dist/domain/index.js"
+    },
+    "./saas": {
+      "types": "./dist/saas/index.d.ts",
+      "import": "./dist/saas/index.js"
+    },
+    "./saas/entitlements": {
+      "types": "./dist/saas/entitlements.d.ts",
+      "import": "./dist/saas/entitlements.js"
     }
   },
   "scripts": {
@@ -21,12 +33,7 @@
     "typecheck": "tsc --noEmit",
     "db:generate": "drizzle-kit generate",
     "db:push": "drizzle-kit push",
-    "seed": "tsx seeds/import.ts",
-    "test": "vitest run",
-    "test:watch": "vitest",
-    "test:migration": "vitest run tests/migration.test.ts",
-    "test:seeds": "vitest run tests/seeds.test.ts",
-    "test:integration": "vitest run tests/integration.test.ts"
+    "seed": "tsx seeds/import.ts"
   },
   "dependencies": {
     "drizzle-orm": "0.36.4",
@@ -34,11 +41,10 @@
   },
   "devDependencies": {
     "@types/node": "^22.10.2",
-    "drizzle-kit": "0.24.2",
+    "drizzle-kit": "0.30.4",
     "tsup": "^8.3.5",
     "tsx": "^4.19.2",
-    "typescript": "^5.7.2",
-    "vitest": "^2.1.9"
+    "typescript": "^5.7.2"
   },
   "files": [
     "dist"
