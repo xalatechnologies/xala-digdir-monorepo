@@ -159,6 +159,20 @@ export function Sidebar() {
           roles: ['SAAS_SUPER_ADMIN'],
         },
         {
+          name: t('saasAdmin.nav.translations', { defaultValue: 'Oversettelser' }),
+          description: t('saasAdmin.nav.translationsDesc', { defaultValue: 'Administrer oversettelser' }),
+          href: '/translations',
+          icon: <SparklesIcon />,
+          roles: ['SAAS_SUPER_ADMIN'],
+        },
+        {
+          name: t('saasAdmin.nav.monitoring', { defaultValue: 'Overvåking' }),
+          description: t('saasAdmin.nav.monitoringDesc', { defaultValue: 'Plattformovervåking og helse' }),
+          href: '/monitoring',
+          icon: <ChartIcon />,
+          roles: ['SAAS_SUPER_ADMIN'],
+        },
+        {
           name: t('saasAdmin.nav.auditLog'),
           description: t('saasAdmin.nav.auditLogDesc'),
           href: '/audit',

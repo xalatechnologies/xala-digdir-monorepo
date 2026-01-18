@@ -1,13 +1,13 @@
 {
-  "timestamp": "2026-01-18T12:36:31.165Z",
+  "timestamp": "2026-01-18T12:56:51.470Z",
   "summary": {
     "totalApps": 3,
     "totalFiles": 359,
     "scannedFiles": 335,
     "skippedFiles": 24,
-    "hardcodedStrings": 139,
+    "hardcodedStrings": 126,
     "missingT": 1,
-    "totalIssues": 140
+    "totalIssues": 127
   },
   "apps": {
     "backoffice": {
@@ -1497,162 +1497,6 @@
           "language": "Unknown",
           "suggestedKey": "validation.demo_login_token_validation",
           "fix": "{t('validation.demo_login_token_validation')}"
-        },
-        {
-          "app": "web",
-          "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/web/src/pages/PaymentCallbackPage.tsx",
-          "line": 44,
-          "type": "heading_text",
-          "string": "Ugyldig betalingslenke",
-          "context": "<Heading size=\"lg\" level={1}>",
-          "severity": "high",
-          "language": "Likely Norwegian or English",
-          "suggestedKey": "titles.ugyldig_betalingslenke",
-          "fix": "{t('titles.ugyldig_betalingslenke')}"
-        },
-        {
-          "app": "web",
-          "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/web/src/pages/PaymentCallbackPage.tsx",
-          "line": 72,
-          "type": "heading_text",
-          "string": "Sjekker betalingsstatus",
-          "context": "<Heading size=\"md\" level={1}>",
-          "severity": "high",
-          "language": "Likely Norwegian or English",
-          "suggestedKey": "titles.sjekker_betalingsstatus",
-          "fix": "{t('titles.sjekker_betalingsstatus')}"
-        },
-        {
-          "app": "web",
-          "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/web/src/pages/PaymentCallbackPage.tsx",
-          "line": 116,
-          "type": "heading_text",
-          "string": "Betaling feilet",
-          "context": "<Heading size=\"lg\" level={1}>",
-          "severity": "high",
-          "language": "Likely Norwegian or English",
-          "suggestedKey": "titles.betaling_feilet",
-          "fix": "{t('titles.betaling_feilet')}"
-        },
-        {
-          "app": "web",
-          "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/web/src/pages/PaymentCallbackPage.tsx",
-          "line": 184,
-          "type": "heading_text",
-          "string": "Betaling vellykket!",
-          "context": "<Heading size=\"lg\" level={1}>",
-          "severity": "high",
-          "language": "Likely Norwegian or English",
-          "suggestedKey": "titles.betaling_vellykket",
-          "fix": "{t('titles.betaling_vellykket')}"
-        },
-        {
-          "app": "web",
-          "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/web/src/pages/PaymentCallbackPage.tsx",
-          "line": 227,
-          "type": "heading_text",
-          "string": "Betaling behandles",
-          "context": "<Heading size=\"lg\" level={1}>",
-          "severity": "high",
-          "language": "Likely Norwegian or English",
-          "suggestedKey": "titles.betaling_behandles",
-          "fix": "{t('titles.betaling_behandles')}"
-        },
-        {
-          "app": "web",
-          "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/web/src/pages/PaymentCallbackPage.tsx",
-          "line": 277,
-          "type": "heading_text",
-          "string": "Betaling avbrutt",
-          "context": "<Heading size=\"lg\" level={1}>",
-          "severity": "high",
-          "language": "Likely Norwegian or English",
-          "suggestedKey": "titles.betaling_avbrutt",
-          "fix": "{t('titles.betaling_avbrutt')}"
-        },
-        {
-          "app": "web",
-          "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/web/src/pages/PaymentCallbackPage.tsx",
-          "line": 47,
-          "type": "paragraph_text",
-          "string": "Betalingslenken er ugyldig eller mangler ordre-ID. Vennligst gå tilbake og prøv igjen.",
-          "context": "<Paragraph size=\"md\">",
-          "severity": "medium",
-          "language": "Norwegian",
-          "suggestedKey": "common.betalingslenken_er_ugyldig_eller",
-          "fix": "{t('common.betalingslenken_er_ugyldig_eller')}"
-        },
-        {
-          "app": "web",
-          "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/web/src/pages/PaymentCallbackPage.tsx",
-          "line": 75,
-          "type": "paragraph_text",
-          "string": "Vennligst vent mens vi bekrefter betalingen din...",
-          "context": "<Paragraph size=\"md\">",
-          "severity": "medium",
-          "language": "Likely Norwegian or English",
-          "suggestedKey": "common.vennligst_vent_mens_vi",
-          "fix": "{t('common.vennligst_vent_mens_vi')}"
-        },
-        {
-          "app": "web",
-          "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/web/src/pages/PaymentCallbackPage.tsx",
-          "line": 119,
-          "type": "paragraph_text",
-          "string": "Vi kunne ikke fullføre betalingen din. Dette kan skyldes at betalingen ble avbrutt eller at det oppstod en feil.",
-          "context": "<Paragraph size=\"md\">",
-          "severity": "medium",
-          "language": "Norwegian",
-          "suggestedKey": "common.vi_kunne_ikke_fullfore",
-          "fix": "{t('common.vi_kunne_ikke_fullfore')}"
-        },
-        {
-          "app": "web",
-          "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/web/src/pages/PaymentCallbackPage.tsx",
-          "line": 187,
-          "type": "paragraph_text",
-          "string": "Din betaling på",
-          "context": "<Paragraph size=\"md\">",
-          "severity": "medium",
-          "language": "Norwegian",
-          "suggestedKey": "common.din_betaling_paa",
-          "fix": "{t('common.din_betaling_paa')}"
-        },
-        {
-          "app": "web",
-          "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/web/src/pages/PaymentCallbackPage.tsx",
-          "line": 193,
-          "type": "paragraph_text",
-          "string": "Du vil motta en bekreftelse på e-post om kort tid.",
-          "context": "<Paragraph size=\"sm\">",
-          "severity": "medium",
-          "language": "Norwegian",
-          "suggestedKey": "common.du_vil_motta_en",
-          "fix": "{t('common.du_vil_motta_en')}"
-        },
-        {
-          "app": "web",
-          "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/web/src/pages/PaymentCallbackPage.tsx",
-          "line": 230,
-          "type": "paragraph_text",
-          "string": "Betalingen din er mottatt og behandles. Dette kan ta noen øyeblikk.",
-          "context": "<Paragraph size=\"md\">",
-          "severity": "medium",
-          "language": "Norwegian",
-          "suggestedKey": "common.betalingen_din_er_mottatt",
-          "fix": "{t('common.betalingen_din_er_mottatt')}"
-        },
-        {
-          "app": "web",
-          "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/web/src/pages/PaymentCallbackPage.tsx",
-          "line": 280,
-          "type": "paragraph_text",
-          "string": "Betalingen ble avbrutt eller fullført ikke. Ingen beløp er trukket fra kontoen din.",
-          "context": "<Paragraph size=\"md\">",
-          "severity": "medium",
-          "language": "Norwegian",
-          "suggestedKey": "common.betalingen_ble_avbrutt_eller",
-          "fix": "{t('common.betalingen_ble_avbrutt_eller')}"
         },
         {
           "app": "web",
@@ -9882,14 +9726,38 @@
     {
       "app": "web",
       "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/web/src/pages/PaymentCallbackPage.tsx",
-      "line": 71,
-      "key": "payment.checkingStatus"
+      "line": 51,
+      "key": "common.goToHome"
     },
     {
       "app": "web",
       "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/web/src/pages/PaymentCallbackPage.tsx",
-      "line": 226,
-      "key": "payment.processingPayment"
+      "line": 127,
+      "key": "common.goToHome"
+    },
+    {
+      "app": "web",
+      "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/web/src/pages/PaymentCallbackPage.tsx",
+      "line": 130,
+      "key": "common.tryAgain"
+    },
+    {
+      "app": "web",
+      "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/web/src/pages/PaymentCallbackPage.tsx",
+      "line": 197,
+      "key": "common.goToHome"
+    },
+    {
+      "app": "web",
+      "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/web/src/pages/PaymentCallbackPage.tsx",
+      "line": 237,
+      "key": "common.refreshStatus"
+    },
+    {
+      "app": "web",
+      "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/web/src/pages/PaymentCallbackPage.tsx",
+      "line": 288,
+      "key": "common.goToHome"
     },
     {
       "app": "web",
@@ -9990,10 +9858,6 @@
   ],
   "topFiles": [
     {
-      "file": "./apps/web/src/pages/PaymentCallbackPage.tsx",
-      "issueCount": 13
-    },
-    {
       "file": "./apps/backoffice/src/routes/organizations/PermissionAssignmentPage.tsx",
       "issueCount": 11
     },
@@ -10027,6 +9891,10 @@
     },
     {
       "file": "./apps/backoffice/src/components/gdpr/RequestDetailModal.tsx",
+      "issueCount": 3
+    },
+    {
+      "file": "./apps/backoffice/src/features/rental-objects/components/detail/RentalObjectDetailView.tsx",
       "issueCount": 3
     }
   ]

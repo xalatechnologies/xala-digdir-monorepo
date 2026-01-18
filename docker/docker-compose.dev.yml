@@ -1,0 +1,202 @@
+version: '3.8'
+
+# ==============================================================================
+# DIGILIST PLATFORM - DEVELOPMENT DOCKER COMPOSE
+# ==============================================================================
+# This configuration is for LOCAL DEVELOPMENT ONLY
+# Features:
+# - Auto-authentication bypass via DevTokenService
+# - Hot reload for API and frontend apps
+# - PostgreSQL and Redis for local testing
+# - All apps accessible on localhost
+# ==============================================================================
+
+services:
+  # PostgreSQL Database (Development)
+  postgres:
+    image: postgres:16
+    container_name: digilist-dev-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: digilist_dev
+      POSTGRES_PASSWORD: dev_password_2026
+      POSTGRES_DB: digilist_dev
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_dev_data:/var/lib/postgresql/data
+      - ../postgres/init.sql:/docker-entrypoint-initdb.d/init.sql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U digilist_dev -d digilist_dev"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - digilist-dev
+
+  # Redis (for sessions and queues)
+  redis:
+    image: redis:7-alpine
+    container_name: digilist-dev-redis
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_dev_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - digilist-dev
+
+  # API Server (Development with Hot Reload)
+  api:
+    build:
+      context: ..
+      dockerfile: apps/api/Dockerfile.dev
+      target: development
+    container_name: digilist-dev-api
+    restart: unless-stopped
+    env_file:
+      - .env.docker.dev
+    environment:
+      NODE_ENV: development
+      DATABASE_URL: postgresql://digilist_dev:dev_password_2026@postgres:5432/digilist_dev
+      REDIS_URL: redis://redis:6379
+      API_PORT: 4000
+      API_HOST: 0.0.0.0
+      
+      # 🔧 DEVELOPMENT AUTH BYPASS
+      AUTO_DEV_AUTH: "true"
+      DEV_AUTH_USER_ID: f47ac10b-58cc-4372-a567-0e02b2c3d479
+      DEV_AUTH_TENANT_ID: f47ac10b-58cc-4372-a567-0e02b2c3d479
+      DEV_AUTH_ROLE: admin
+      DEV_AUTH_TENANT_SLUG: digilist-kommune
+      
+      # JWT Secrets (dev only - not secure)
+      JWT_SECRET: dev_jwt_secret_not_for_production
+      JWT_REFRESH_SECRET: dev_refresh_secret_not_for_production
+      CSRF_SECRET: dev_csrf_secret_not_for_production
+      SESSION_SECRET: dev_session_secret_not_for_production
+      
+      # CORS
+      CORS_ORIGIN: http://localhost:5173,http://localhost:5174,http://localhost:5175,http://localhost:5176,http://localhost:5177,http://localhost:5179
+      
+      # Feature Flags (all enabled for dev)
+      FEATURE_VIPPS_LOGIN: "true"
+      FEATURE_VIPPS_PAYMENTS: "true"
+      FEATURE_IDPORTEN_LOGIN: "true"
+      VITE_ENABLE_DEMO_LOGIN: "true"
+      
+    ports:
+      - "4000:4000"
+    volumes:
+      - ../apps/api:/app/apps/api
+      - ../packages:/app/packages
+      - /app/node_modules
+      - /app/apps/api/node_modules
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:4000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    networks:
+      - digilist-dev
+    command: pnpm --filter @digilist/api dev
+
+  # Adminer (Database GUI)
+  adminer:
+    image: adminer:latest
+    container_name: digilist-dev-adminer
+    restart: unless-stopped
+    ports:
+      - "8080:8080"
+    environment:
+      ADMINER_DEFAULT_SERVER: postgres
+    depends_on:
+      - postgres
+    networks:
+      - digilist-dev
+
+  # Redis Commander (Redis GUI)
+  redis-commander:
+    image: rediscommander/redis-commander:latest
+    container_name: digilist-dev-redis-commander
+    restart: unless-stopped
+    ports:
+      - "8081:8081"
+    environment:
+      REDIS_HOSTS: local:redis:6379
+    depends_on:
+      - redis
+    networks:
+      - digilist-dev
+
+volumes:
+  postgres_dev_data:
+    driver: local
+  redis_dev_data:
+    driver: local
+
+networks:
+  digilist-dev:
+    name: digilist-dev-network
+    driver: bridge
+
+# ==============================================================================
+# USAGE INSTRUCTIONS
+# ==============================================================================
+# 
+# 1. Start all services:
+#    docker-compose -f docker-compose.dev.yml up -d
+#
+# 2. View logs:
+#    docker-compose -f docker-compose.dev.yml logs -f api
+#
+# 3. Stop all services:
+#    docker-compose -f docker-compose.dev.yml down
+#
+# 4. Reset database (WARNING: deletes all data):
+#    docker-compose -f docker-compose.dev.yml down -v
+#
+# 5. Access services:
+#    - API: http://localhost:4000
+#    - Adminer (DB GUI): http://localhost:8080
+#    - Redis Commander: http://localhost:8081
+#
+# 6. Run migrations:
+#    docker-compose -f docker-compose.dev.yml exec api pnpm db:migrate
+#
+# 7. Seed database:
+#    docker-compose -f docker-compose.dev.yml exec api pnpm db:seed
+#
+# ==============================================================================
+# AUTHENTICATION IN DEVELOPMENT
+# ==============================================================================
+#
+# This setup uses AUTO_DEV_AUTH=true which enables the DevTokenService.
+# 
+# How it works:
+# 1. DevTokenService generates a real JWT token for the configured dev user
+# 2. Token is automatically injected into HTTP-only cookies
+# 3. All API requests are authenticated as the dev user (admin role)
+# 4. Frontend apps can use /api/auth/demo-token endpoint for testing
+#
+# Security:
+# - DevTokenService ONLY works when NODE_ENV !== 'production'
+# - Fails-fast if someone tries to enable in production
+# - Tokens go through normal validation (same as production)
+# - Only difference: tokens are auto-generated for convenience
+#
+# Testing different users:
+# - Change DEV_AUTH_USER_ID and DEV_AUTH_ROLE in environment
+# - Or use /api/auth/demo-token endpoint with different credentials
+#
+# ==============================================================================

@@ -23,6 +23,7 @@ import {
   BrandingListPage,
   BrandingEditorPage,
   MonitoringPage,
+  TranslationsPage,
 } from './routes';
 
 function DashboardPage() {
@@ -80,6 +81,8 @@ export function App() {
                     <Route path="/branding/:tenantId" element={<BrandingEditorPage />} />
                     {/* Monitoring routes */}
                     <Route path="/monitoring" element={<MonitoringPage />} />
+                    {/* Translations route */}
+                    <Route path="/translations" element={<TranslationsPage />} />
                   </Route>
                 </Routes>
               </AuthProvider>
