@@ -261,21 +261,31 @@ function formatLocation(obj: DbRentalObject): { formatted: string; city: string 
 function getCoordinates(obj: DbRentalObject): { lat: number | null; lng: number | null } {
   const meta = obj.metadata || {};
   const location = (meta.location || {}) as Record<string, unknown>;
+  const address = (meta.address || {}) as Record<string, unknown>;
 
   // Try multiple formats:
-  // 1. location.coordinates.latitude/longitude (seed data format)
-  // 2. location.lat/lng (flat format)
-  // 3. location.latitude/longitude (alternative flat format)
-  
-  const coords = location.coordinates as Record<string, unknown> | undefined;
+  // 1. address.coordinates.latitude/longitude (comprehensive seed data format)
+  // 2. location.coordinates.latitude/longitude (alternative format)
+  // 3. location.lat/lng (flat format)
+  // 4. location.latitude/longitude (alternative flat format)
   
   let lat: number | null = null;
   let lng: number | null = null;
   
-  if (coords && typeof coords === 'object') {
-    // Handle coordinates object: {latitude: number, longitude: number}
-    lat = safeNumber(coords.latitude) || safeNumber(coords.lat) || null;
-    lng = safeNumber(coords.longitude) || safeNumber(coords.lng) || null;
+  // Check address.coordinates first (comprehensive seed data)
+  const addressCoords = address.coordinates as Record<string, unknown> | undefined;
+  if (addressCoords && typeof addressCoords === 'object') {
+    lat = safeNumber(addressCoords.latitude) || safeNumber(addressCoords.lat) || null;
+    lng = safeNumber(addressCoords.longitude) || safeNumber(addressCoords.lng) || null;
+  }
+  
+  // Fallback to location.coordinates
+  if (!lat || !lng) {
+    const locationCoords = location.coordinates as Record<string, unknown> | undefined;
+    if (locationCoords && typeof locationCoords === 'object') {
+      lat = safeNumber(locationCoords.latitude) || safeNumber(locationCoords.lat) || null;
+      lng = safeNumber(locationCoords.longitude) || safeNumber(locationCoords.lng) || null;
+    }
   }
   
   // Fallback to flat structure

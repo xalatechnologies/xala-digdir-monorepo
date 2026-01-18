@@ -333,12 +333,12 @@ export function BookingDialog({
           <div style={{ width: '40px', height: '5px', backgroundColor: 'var(--ds-color-neutral-border-default)', borderRadius: 'var(--ds-border-radius-full)' }} />
         </div>
 
-        {/* Header */}
+        {/* Compact Header */}
         <div
           style={{
-            padding: 'var(--ds-spacing-5) var(--ds-spacing-6)',
+            padding: 'var(--ds-spacing-3) var(--ds-spacing-4)',
             borderBottom: '1px solid var(--ds-color-neutral-border-subtle)',
-            background: 'linear-gradient(135deg, var(--ds-color-accent-surface-default) 0%, var(--ds-color-neutral-background-default) 100%)',
+            backgroundColor: 'var(--ds-color-accent-surface-default)',
           }}
         >
           <div
@@ -352,30 +352,14 @@ export function BookingDialog({
               transitionDelay: `${baseDelay}ms`,
             }}
           >
-            <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--ds-spacing-3)' }}>
-              <div
-                style={{
-                  width: '48px',
-                  height: '48px',
-                  borderRadius: 'var(--ds-border-radius-lg)',
-                  background: 'linear-gradient(135deg, var(--ds-color-accent-base-default) 0%, var(--ds-color-accent-base-hover) 100%)',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  color: 'white',
-                  boxShadow: '0 4px 12px rgba(0, 0, 0, 0.15)',
-                }}
-              >
-                {Icons.calendar}
-              </div>
-              <div>
-                <Heading level={2} data-size="sm" id="booking-dialog-title" style={{ margin: 0 }}>
-                  Book tidspunkt
-                </Heading>
-                <Paragraph data-size="sm" style={{ margin: 0, color: 'var(--ds-color-neutral-text-subtle)', marginTop: '2px' }}>
-                  Åpent {openingHours.open} – {openingHours.close}
-                </Paragraph>
-              </div>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--ds-spacing-2)' }}>
+              <span style={{ color: 'var(--ds-color-accent-base-default)' }}>{Icons.calendar}</span>
+              <Heading level={2} data-size="xs" id="booking-dialog-title" style={{ margin: 0 }}>
+                Book tidspunkt
+              </Heading>
+              <Paragraph data-size="xs" style={{ margin: 0, color: 'var(--ds-color-neutral-text-subtle)' }}>
+                ({openingHours.open} – {openingHours.close})
+              </Paragraph>
             </div>
             <button
               type="button"
@@ -385,23 +369,14 @@ export function BookingDialog({
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                width: '44px',
-                height: '44px',
+                width: '32px',
+                height: '32px',
                 border: 'none',
-                backgroundColor: 'var(--ds-color-neutral-surface-default)',
+                backgroundColor: 'transparent',
                 cursor: 'pointer',
                 color: 'var(--ds-color-neutral-text-subtle)',
                 borderRadius: 'var(--ds-border-radius-full)',
                 transition: 'all 200ms ease',
-                boxShadow: '0 2px 8px rgba(0, 0, 0, 0.08)',
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.backgroundColor = 'var(--ds-color-neutral-surface-hover)';
-                e.currentTarget.style.transform = 'scale(1.05)';
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.backgroundColor = 'var(--ds-color-neutral-surface-default)';
-                e.currentTarget.style.transform = 'scale(1)';
               }}
             >
               {Icons.close}
