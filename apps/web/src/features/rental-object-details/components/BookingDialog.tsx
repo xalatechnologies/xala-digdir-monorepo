@@ -333,10 +333,10 @@ export function BookingDialog({
           <div style={{ width: '40px', height: '5px', backgroundColor: 'var(--ds-color-neutral-border-default)', borderRadius: 'var(--ds-border-radius-full)' }} />
         </div>
 
-        {/* Compact Header */}
+        {/* Header */}
         <div
           style={{
-            padding: 'var(--ds-spacing-3) var(--ds-spacing-4)',
+            padding: 'var(--ds-spacing-4) var(--ds-spacing-5)',
             borderBottom: '1px solid var(--ds-color-neutral-border-subtle)',
             backgroundColor: 'var(--ds-color-accent-surface-default)',
           }}
@@ -352,25 +352,27 @@ export function BookingDialog({
               transitionDelay: `${baseDelay}ms`,
             }}
           >
-            <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--ds-spacing-2)' }}>
-              <span style={{ color: 'var(--ds-color-accent-base-default)' }}>{Icons.calendar}</span>
-              <Heading level={2} data-size="xs" id="booking-dialog-title" style={{ margin: 0 }}>
-                Book tidspunkt
-              </Heading>
-              <Paragraph data-size="xs" style={{ margin: 0, color: 'var(--ds-color-neutral-text-subtle)' }}>
-                ({openingHours.open} – {openingHours.close})
-              </Paragraph>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--ds-spacing-3)' }}>
+              <span style={{ color: 'var(--ds-color-accent-base-default)', display: 'flex' }}>{Icons.calendar}</span>
+              <div>
+                <Heading level={2} data-size="sm" id="booking-dialog-title" style={{ margin: 0 }}>
+                  {t('booking.selectTimeSlot')}
+                </Heading>
+                <Paragraph data-size="sm" style={{ margin: 0, color: 'var(--ds-color-neutral-text-subtle)' }}>
+                  {t('booking.openingHours')}: {openingHours.open} – {openingHours.close}
+                </Paragraph>
+              </div>
             </div>
             <button
               type="button"
               onClick={onClose}
-              aria-label={t('action.close')}
+              aria-label={t('common.close')}
               style={{
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                width: '32px',
-                height: '32px',
+                width: '36px',
+                height: '36px',
                 border: 'none',
                 backgroundColor: 'transparent',
                 cursor: 'pointer',
@@ -384,12 +386,12 @@ export function BookingDialog({
           </div>
         </div>
 
-        {/* Compact Time Selection Section */}
+        {/* Time Selection Section */}
         <div
           style={{
             borderBottom: '1px solid var(--ds-color-neutral-border-subtle)',
             backgroundColor: 'var(--ds-color-neutral-surface-default)',
-            padding: 'var(--ds-spacing-3) var(--ds-spacing-4)',
+            padding: 'var(--ds-spacing-4) var(--ds-spacing-5)',
             opacity: isVisible ? 1 : 0,
             transform: isVisible ? 'translateY(0)' : 'translateY(10px)',
             transition: 'all 400ms cubic-bezier(0.32, 0.72, 0, 1)',
@@ -397,11 +399,11 @@ export function BookingDialog({
           }}
         >
           {/* Date and Time in single row */}
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 'var(--ds-spacing-3)', flexWrap: 'wrap' }}>
-            {/* Selected Date - Compact */}
-            <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--ds-spacing-2)' }}>
-              <span style={{ color: 'var(--ds-color-accent-text-default)', fontSize: 'var(--ds-font-size-sm)' }}>{Icons.calendar}</span>
-              <Paragraph data-size="sm" style={{ margin: 0, fontWeight: 'var(--ds-font-weight-medium)' }}>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 'var(--ds-spacing-4)', flexWrap: 'wrap' }}>
+            {/* Selected Date */}
+            <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--ds-spacing-3)' }}>
+              <span style={{ color: 'var(--ds-color-accent-text-default)', display: 'flex' }}>{Icons.calendar}</span>
+              <Paragraph data-size="md" style={{ margin: 0, fontWeight: 'var(--ds-font-weight-semibold)' }}>
                 {dayNames[selectedDate.getDay()]} {selectedDate.getDate()}. {monthNames[selectedDate.getMonth()]}
               </Paragraph>
             </div>
@@ -420,7 +422,7 @@ export function BookingDialog({
                   const newTime = `${newH.toString().padStart(2, '0')}:${newM.toString().padStart(2, '0')}`;
                   selectTimeSlot(newTime);
                 }}
-                aria-label={t('trekk.fra.30.minutter')}
+                aria-label={t('booking.subtractThirtyMinutes')}
                 style={{
                   width: '28px',
                   height: '28px',
@@ -441,13 +443,15 @@ export function BookingDialog({
 
               <div
                 style={{
-                  padding: 'var(--ds-spacing-1) var(--ds-spacing-3)',
+                  padding: 'var(--ds-spacing-2) var(--ds-spacing-4)',
                   backgroundColor: 'var(--ds-color-accent-base-default)',
                   borderRadius: 'var(--ds-border-radius-md)',
                   color: 'var(--ds-color-accent-contrast-default)',
-                  fontWeight: 'var(--ds-font-weight-semibold)',
-                  fontSize: 'var(--ds-font-size-md)',
+                  fontWeight: 'var(--ds-font-weight-bold)',
+                  fontSize: 'var(--ds-font-size-lg)',
                   fontVariantNumeric: 'tabular-nums',
+                  minWidth: '80px',
+                  textAlign: 'center',
                 }}
               >
                 {formData.startTime || '08:00'}
@@ -465,7 +469,7 @@ export function BookingDialog({
                   const newTime = `${newH.toString().padStart(2, '0')}:${newM.toString().padStart(2, '0')}`;
                   selectTimeSlot(newTime);
                 }}
-                aria-label={t('legg.til.30.minutter')}
+                aria-label={t('booking.addThirtyMinutes')}
                 style={{
                   width: '28px',
                   height: '28px',
@@ -550,14 +554,14 @@ export function BookingDialog({
             >
               <Label style={{ display: 'flex', alignItems: 'center', gap: 'var(--ds-spacing-2)', marginBottom: 'var(--ds-spacing-2)' }}>
                 <span style={{ color: 'var(--ds-color-accent-text-default)' }}>{Icons.tag}</span>
-                <span>{t('formål.med.bookingen')}</span>
-                <span style={{ fontSize: 'var(--ds-font-size-xs)', color: 'var(--ds-color-danger-text-default)', marginLeft: 'auto' }}>{t('påkrevd')}</span>
+                <span>{t('booking.purpose')}</span>
+                <span style={{ fontSize: 'var(--ds-font-size-xs)', color: 'var(--ds-color-danger-text-default)', marginLeft: 'auto' }}>{t('common.required')}</span>
               </Label>
               <Textfield
-                aria-label={t('formål.med.bookingen')}
+                aria-label={t('booking.purpose')}
                 value={formData.purpose}
                 onChange={(e: React.ChangeEvent<HTMLInputElement>) => updateField('purpose', e.target.value)}
-                placeholder={t('feks.trening.styremøte.kurs')}
+                placeholder={t('booking.purposePlaceholder')}
                 style={{ width: '100%' }}
               />
               <label style={{ display: 'flex', alignItems: 'center', gap: 'var(--ds-spacing-2)', marginTop: 'var(--ds-spacing-3)', cursor: 'pointer' }}>
@@ -582,7 +586,7 @@ export function BookingDialog({
                 >
                   {formData.showPurposeInCalendar && Icons.check}
                 </div>
-                <Paragraph data-size="sm" style={{ margin: 0 }}>{t('common.text.visFormalIKalender')}</Paragraph>
+                <Paragraph data-size="sm" style={{ margin: 0 }}>{t('booking.showPurposeInCalendar')}</Paragraph>
               </label>
             </div>
 
@@ -603,24 +607,24 @@ export function BookingDialog({
               <div>
                 <Label style={{ display: 'flex', alignItems: 'center', gap: 'var(--ds-spacing-2)', marginBottom: 'var(--ds-spacing-2)', whiteSpace: 'nowrap' }}>
                   <span style={{ color: 'var(--ds-color-accent-text-default)' }}>{Icons.users}</span>
-                  <span>{t('antall')}</span>
-                  <span style={{ fontSize: 'var(--ds-font-size-xs)', color: 'var(--ds-color-danger-text-default)', marginLeft: 'auto' }}>{t('påkrevd')}</span>
+                  <span>{t('booking.attendees')}</span>
+                  <span style={{ fontSize: 'var(--ds-font-size-xs)', color: 'var(--ds-color-danger-text-default)', marginLeft: 'auto' }}>{t('common.required')}</span>
                 </Label>
-                <Textfield aria-label={t('antall.deltakere')} type="number" value={formData.attendees} onChange={(e: React.ChangeEvent<HTMLInputElement>) => updateField('attendees', e.target.value)} placeholder="0" min="1" style={{ width: '100%' }} />
+                <Textfield aria-label={t('booking.attendees')} type="number" value={formData.attendees} onChange={(e: React.ChangeEvent<HTMLInputElement>) => updateField('attendees', e.target.value)} placeholder="0" min="1" style={{ width: '100%' }} />
               </div>
               <div>
                 <Label style={{ display: 'flex', alignItems: 'center', gap: 'var(--ds-spacing-2)', marginBottom: 'var(--ds-spacing-2)', whiteSpace: 'nowrap' }}>
                   <span style={{ color: 'var(--ds-color-accent-text-default)' }}>{Icons.tag}</span>
-                  <span>{t('status.active')}</span>
-                  <span style={{ fontSize: 'var(--ds-font-size-xs)', color: 'var(--ds-color-danger-text-default)', marginLeft: 'auto' }}>{t('påkrevd')}</span>
+                  <span>{t('booking.activityType')}</span>
+                  <span style={{ fontSize: 'var(--ds-font-size-xs)', color: 'var(--ds-color-danger-text-default)', marginLeft: 'auto' }}>{t('common.required')}</span>
                 </Label>
                 <Select value={formData.activityType} onChange={(e: React.ChangeEvent<HTMLSelectElement>) => updateField('activityType', e.target.value)} style={{ width: '100%' }}>
-                  <SelectOption value="">{t('velg.type')}</SelectOption>
-                  <SelectOption value="trening">{t('trening')}</SelectOption>
-                  <SelectOption value="møte">{t('møte')}</SelectOption>
-                  <SelectOption value="kurs">{t('kurs')}</SelectOption>
-                  <SelectOption value="arrangement">{t('arrangement')}</SelectOption>
-                  <SelectOption value="annet">{t('annet')}</SelectOption>
+                  <SelectOption value="">{t('booking.selectType')}</SelectOption>
+                  <SelectOption value="trening">{t('booking.activity.training')}</SelectOption>
+                  <SelectOption value="møte">{t('booking.activity.meeting')}</SelectOption>
+                  <SelectOption value="kurs">{t('booking.activity.course')}</SelectOption>
+                  <SelectOption value="arrangement">{t('booking.activity.event')}</SelectOption>
+                  <SelectOption value="annet">{t('booking.activity.other')}</SelectOption>
                 </Select>
               </div>
             </div>
@@ -636,10 +640,10 @@ export function BookingDialog({
             >
               <Label style={{ display: 'flex', alignItems: 'center', gap: 'var(--ds-spacing-2)', marginBottom: 'var(--ds-spacing-2)' }}>
                 <span style={{ color: 'var(--ds-color-accent-text-default)' }}>{Icons.text}</span>
-                <span>{t('beskrivelse')}</span>
-                <span style={{ fontSize: 'var(--ds-font-size-xs)', color: 'var(--ds-color-neutral-text-subtle)', marginLeft: 'auto' }}>{t('valgfri')}</span>
+                <span>{t('common.description')}</span>
+                <span style={{ fontSize: 'var(--ds-font-size-xs)', color: 'var(--ds-color-neutral-text-subtle)', marginLeft: 'auto' }}>{t('common.optional')}</span>
               </Label>
-              <Textarea value={formData.description} onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => updateField('description', e.target.value)} placeholder={t('legg.til.en.kort.beskrivelse')} rows={2} style={{ width: '100%' }} />
+              <Textarea value={formData.description} onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => updateField('description', e.target.value)} placeholder={t('booking.descriptionPlaceholder')} rows={2} style={{ width: '100%' }} />
             </div>
 
           </div>

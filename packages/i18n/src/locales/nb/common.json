@@ -2,6 +2,8 @@
   "save": "Lagre",
   "cancel": "Avbryt",
   "delete": "Slett",
+  "required": "Påkrevd",
+  "optional": "Valgfri",
   "edit": "Rediger",
   "create": "Opprett",
   "search": "Søk",

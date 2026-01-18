@@ -142,7 +142,13 @@
     "userAdmin": "Brukeradministrasjon",
     "userAdminDesc": "Administrer brukere, roller og tilganger",
     "username": "Username",
-    "vippsDesc": "Rask innlogging med Vipps"
+    "vippsDesc": "Rask innlogging med Vipps",
+    "loginWithBankID": "Logg inn med BankID",
+    "loginWithVipps": "Logg inn med Vipps",
+    "welcome": "Velkommen",
+    "selectLoginMethod": "Velg innloggingsmetode",
+    "termsAndConditions": "Vilkår og betingelser",
+    "privacyPolicy": "Personvernerklæring"
   },
   "backoffice": {
     "ariaLabel": {
@@ -2297,9 +2303,7 @@
         }
       }
     },
-    "error": {
-      "tests": "Error Tests"
-    },
+    "error": "Feil",
     "errors": {
       "kunne_ikke_koble_til": "Kunne Ikke Koble Til",
       "ugyldig_epostadresse": "Ugyldig Epostadresse"
@@ -2386,11 +2390,7 @@
         "konferanser": "Festivaler, messer, konferanser"
       }
     },
-    "filter": {
-      "by": {
-        "category": "Filter by Category"
-      }
-    },
+    "filter": "Filtrer",
     "filternavn": {
       "feks": "Filternavn (f.eks. "
     },
@@ -3378,14 +3378,7 @@
     },
     "never": "Aldri",
     "next": "Neste",
-    "no": {
-      "_value": "Nei",
-      "custody": {
-        "grants": {
-          "assigned": "No custody grants assigned yet."
-        }
-      }
-    },
+    "no": "Nei",
     "nodstenging": "Nødstenging",
     "nodvendige": {
       "samtykker": "Nødvendige samtykker",
@@ -4658,7 +4651,15 @@
       }
     },
     "xlsx": "Excel-fil",
-    "yes": "Ja"
+    "yes": "Ja",
+    "showMore": "Vis mer",
+    "loading": "Laster...",
+    "success": "Suksess",
+    "edit": "Rediger",
+    "search": "Søk",
+    "sort": "Sorter",
+    "download": "Last ned",
+    "upload": "Last opp"
   },
   "core": {
     "action": {
@@ -10059,7 +10060,26 @@
     "users": "Brukere",
     "usersDesc": "Administrer brukere",
     "workQueue": "Arbeidskø",
-    "workQueueDesc": "Ventende forespørsler"
+    "workQueueDesc": "Ventende forespørsler",
+    "backoffice": {
+      "dashboard": "Dashbord",
+      "bookings": "Bookinger",
+      "listings": "Lokaler",
+      "calendar": "Kalender",
+      "users": "Brukere",
+      "reports": "Rapporter",
+      "settings": "Innstillinger",
+      "organizations": "Organisasjoner",
+      "messages": "Meldinger",
+      "audit": "Revisjonslogg"
+    },
+    "minside": {
+      "myBookings": "Mine bookinger",
+      "myProfile": "Min profil",
+      "myOrganizations": "Mine organisasjoner",
+      "favorites": "Favoritter",
+      "history": "Historikk"
+    }
   },
   "organizations": {
     "activate": "Aktiver",
@@ -12684,5 +12704,17 @@
         "OPPLEVELSER_OG_ARRANGEMENT": "Opplevelser og arrangement"
       }
     }
+  },
+  "amenities": {
+    "wifi": "WiFi",
+    "parking": "Parkering",
+    "kitchen": "Kjøkken",
+    "projector": "Projektor",
+    "sound_system": "Lydsystem",
+    "wheelchair_accessible": "Rullestoltilgjengelig",
+    "air_conditioning": "Klimaanlegg",
+    "heating": "Oppvarming",
+    "outdoor_area": "Utendørsområde",
+    "changing_rooms": "Garderober"
   }
 }

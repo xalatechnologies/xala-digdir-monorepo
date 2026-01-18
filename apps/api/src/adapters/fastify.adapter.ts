@@ -11,6 +11,8 @@ import fastifyMultipart from '@fastify/multipart';
 import swagger from '@fastify/swagger';
 import swaggerUi from '@fastify/swagger-ui';
 import path from 'path';
+import { fileURLToPath } from 'url';
+import { dirname } from 'path';
 import 'reflect-metadata';
 import { container, type Constructor } from '../core/container';
 import { getControllerMetadata } from '../core/decorators';
@@ -34,6 +36,10 @@ export async function createFastifyApp(
   controllers: Constructor[],
   options: FastifyAdapterOptions = {}
 ): Promise<FastifyInstance> {
+  // Get __dirname equivalent for ES modules
+  const __filename = fileURLToPath(import.meta.url);
+  const __dirname = dirname(__filename);
+  
   const app = Fastify({
     logger: options.logger ?? false,
     requestIdLogLabel: 'correlationId',
@@ -243,22 +249,19 @@ export async function createFastifyApp(
   });
 
   // Register static file serving for storage
-  // Serves files from apps/api/storage/ at /storage route
-  const storageDir = path.join(process.cwd(), 'storage');
+  // In development: serve from database-schema/seeds/storage
+  // In production: serve from apps/api/storage (or use CDN/S3)
+  const storageDir = process.env.NODE_ENV === 'production'
+    ? path.join(process.cwd(), 'storage')
+    : path.join(__dirname, '../../../packages/database-schema/seeds/storage');
+  
   await app.register(fastifyStatic, {
     root: storageDir,
     prefix: '/storage/',
     decorateReply: false, // Don't decorate to avoid conflicts
   });
-
-  // Register seed-images static file serving
-  // Serves files from apps/api/storage/seed-images/ at /seed-images route
-  const seedImagesDir = path.join(process.cwd(), 'storage', 'seed-images');
-  await app.register(fastifyStatic, {
-    root: seedImagesDir,
-    prefix: '/seed-images/',
-    decorateReply: false,
-  });
+  
+  console.log(`📁 Static files serving from: ${storageDir}`);
 
   // Register multipart for file uploads
   await app.register(fastifyMultipart, {

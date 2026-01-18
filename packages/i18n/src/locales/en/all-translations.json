@@ -142,7 +142,13 @@
     "userAdmin": "User Administration",
     "userAdminDesc": "Manage users, roles and permissions",
     "username": "Username",
-    "vippsDesc": "Quick login with Vipps"
+    "vippsDesc": "Quick login with Vipps",
+    "loginWithBankID": "Login with BankID",
+    "loginWithVipps": "Login with Vipps",
+    "welcome": "Welcome",
+    "selectLoginMethod": "Select login method",
+    "termsAndConditions": "Terms and Conditions",
+    "privacyPolicy": "Privacy Policy"
   },
   "backoffice": {
     "ariaLabel": {
@@ -2312,9 +2318,7 @@
         }
       }
     },
-    "error": {
-      "tests": "Error Tests"
-    },
+    "error": "Error",
     "errors": {
       "kunne_ikke_koble_til": "Kunne Ikke Koble Til",
       "ugyldig_epostadresse": "Ugyldig Epostadresse"
@@ -2414,11 +2418,7 @@
         "konferanser": "Festivaler, messer, konferanser"
       }
     },
-    "filter": {
-      "by": {
-        "category": "Filter by Category"
-      }
-    },
+    "filter": "Filter",
     "filternavn": {
       "feks": "Filternavn (f.eks. "
     },
@@ -3414,14 +3414,7 @@
     },
     "never": "Aldri",
     "next": "Next",
-    "no": {
-      "_value": "No",
-      "custody": {
-        "grants": {
-          "assigned": "No custody grants assigned yet."
-        }
-      }
-    },
+    "no": "No",
     "nodstenging": "Nødstenging",
     "nodvendige": {
       "samtykker": "Nødvendige samtykker",
@@ -4711,7 +4704,15 @@
       }
     },
     "xlsx": "Excel file",
-    "yes": "Yes"
+    "yes": "Yes",
+    "showMore": "Show more",
+    "loading": "Loading...",
+    "success": "Success",
+    "edit": "Edit",
+    "search": "Search",
+    "sort": "Sort",
+    "download": "Download",
+    "upload": "Upload"
   },
   "core": {
     "action": {
@@ -10110,7 +10111,26 @@
     "users": "Users",
     "usersDesc": "Manage users",
     "workQueue": "Work Queue",
-    "workQueueDesc": "Pending requests"
+    "workQueueDesc": "Pending requests",
+    "backoffice": {
+      "dashboard": "Dashboard",
+      "bookings": "Bookings",
+      "listings": "Listings",
+      "calendar": "Calendar",
+      "users": "Users",
+      "reports": "Reports",
+      "settings": "Settings",
+      "organizations": "Organizations",
+      "messages": "Messages",
+      "audit": "Audit Log"
+    },
+    "minside": {
+      "myBookings": "My Bookings",
+      "myProfile": "My Profile",
+      "myOrganizations": "My Organizations",
+      "favorites": "Favorites",
+      "history": "History"
+    }
   },
   "organizations": {
     "activate": "Activate",
@@ -12715,5 +12735,17 @@
         "OPPLEVELSER_OG_ARRANGEMENT": "Experiences & Events"
       }
     }
+  },
+  "amenities": {
+    "wifi": "WiFi",
+    "parking": "Parking",
+    "kitchen": "Kitchen",
+    "projector": "Projector",
+    "sound_system": "Sound System",
+    "wheelchair_accessible": "Wheelchair Accessible",
+    "air_conditioning": "Air Conditioning",
+    "heating": "Heating",
+    "outdoor_area": "Outdoor Area",
+    "changing_rooms": "Changing Rooms"
   }
 }
