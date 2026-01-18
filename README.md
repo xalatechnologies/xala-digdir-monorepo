@@ -18,7 +18,6 @@ The Digilist Platform is a production-ready monorepo implementing a contract-fir
 - `apps/web` - Public-facing listing discovery and booking interface
 - `apps/minside` - Authenticated user portal for booking management
 - `apps/backoffice` - Administrative interface for resource management
-- `apps/tenant-admin` - Tenant configuration and white-label branding
 - `apps/saas-admin` - Platform administration and subscription management
 - `apps/monitoring` - System health monitoring and metrics dashboard
 - `apps/docs-learning` - Documentation portal and learning resources
@@ -102,10 +101,45 @@ pnpm test
 - Web: http://localhost:5173
 - MinSide: http://localhost:5174
 - Backoffice: http://localhost:5175
-- Tenant Admin: http://localhost:5176
-- SaaS Admin: http://localhost:5177
-- Monitoring: http://localhost:5178
-- Docs & Learning: http://localhost:5179
+- SaaS Admin: http://localhost:5176
+- Monitoring: http://localhost:5177
+- Docs & Learning: http://localhost:5178
+
+## Docker Development Environment
+
+For containerized development with all services:
+
+```bash
+cd infra/docker/compose
+docker-compose -f docker-compose.dev.yml up -d
+```
+
+**12 Containers Started:**
+- PostgreSQL 16 (port 5433)
+- Redis 7 (port 6380)
+- API (port 4000)
+- 7 Frontend apps (ports 5173-5179)
+- Adminer database UI (port 8080)
+- Redis Commander (port 8081)
+
+**Common Commands:**
+
+```bash
+# View logs
+docker-compose -f docker-compose.dev.yml logs -f
+
+# Stop all containers
+docker-compose -f docker-compose.dev.yml down
+
+# Rebuild specific service
+docker-compose -f docker-compose.dev.yml build api
+docker-compose -f docker-compose.dev.yml up -d api
+
+# Run database migrations
+docker-compose -f docker-compose.dev.yml exec api pnpm db:migrate
+```
+
+**Complete Docker documentation:** `infra/docker/AGENTS.md`
 
 ## Design System Configuration
 
@@ -163,10 +197,9 @@ xala-digdir-monorepo/
 │   ├── web/                    # Public listing discovery
 │   ├── minside/                # User portal
 │   ├── backoffice/             # Administrative interface
-│   ├── tenant-admin/           # Tenant configuration
 │   ├── saas-admin/             # Platform administration
 │   ├── monitoring/             # System metrics
-│   └── docs-learning/          # Documentation
+│   └── docs-learning/          # Documentation portal
 ├── packages/
 │   ├── client-sdk/             # Type-safe API client
 │   ├── contracts/              # API contracts and DTOs
