@@ -93,6 +93,7 @@ async function mockSuccessfulOAuthCallback(page: Page) {
       }),
     });
   });
+}
 
 /**
  * Helper: Mock expired session
@@ -110,6 +111,7 @@ async function mockExpiredSession(page: Page) {
       }),
     });
   });
+}
 
 // =============================================================================
 // Test Suite: Happy Path - User Stories
