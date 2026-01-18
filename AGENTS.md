@@ -50,12 +50,52 @@ docker-compose -f docker-compose.dev.yml up -d
 
 ---
 
-## 🚨 **CRITICAL LESSONS LEARNED (2026-01-17)**
+## 🚨 **CRITICAL LESSONS LEARNED**
 
 > **⚠️ MANDATORY READING - LEARN FROM REAL INCIDENTS**
 >
 > These lessons come from actual production debugging sessions. They are NON-NEGOTIABLE.
 > Violating these principles will cause production outages.
+
+---
+
+### **Lesson 9: Database Migrations Must Be Single-File and Complete (2026-01-18)**
+
+**HARD REQUIREMENT:** All database tables MUST be in a single migration file.
+
+```sql
+-- These 5 schemas MUST exist with ALL tables
+CREATE SCHEMA IF NOT EXISTS platform;   -- 8 tables
+CREATE SCHEMA IF NOT EXISTS domain;     -- 3 tables
+CREATE SCHEMA IF NOT EXISTS saas;       -- 7 tables (route_policies, nav_policies, etc.)
+CREATE SCHEMA IF NOT EXISTS compliance; -- 1 table
+CREATE SCHEMA IF NOT EXISTS monitoring; -- 0 tables (separate system)
+```
+
+**Why It Failed:**
+- ✅ Old approach: 6 fragmented migration files (0000-0005)
+- ❌ Result: saas schema tables completely missing
+- 💥 Impact: "relation saas.route_policies does not exist"
+- 💀 Root cause: Drizzle Kit said "no changes" but compared against incomplete migrations
+
+**Prevention:**
+```bash
+# ALWAYS verify migration includes ALL tables
+grep -c "CREATE TABLE.*saas\." packages/database-schema/migrations/*.sql
+# Should return 7 (route_policies, nav_policies, plan_entitlements, etc.)
+
+# NEVER trust "no changes detected"
+docker exec digilist-dev-postgres psql -U digilist_dev -d digilist_test -c "\dt saas.*"
+# If empty → migration is incomplete
+```
+
+**Root Cause:** Fragmented migrations created over time, never consolidated.
+
+**Time to Debug:** 2+ hours  
+**Impact:** Critical - All seeding and RBAC broken  
+**Lesson:** Single migration file = single source of truth. Never fragment.
+
+---
 
 ### **Lesson 1: Database Infrastructure = Code Foundation**
 

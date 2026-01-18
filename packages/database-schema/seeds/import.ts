@@ -86,6 +86,7 @@ async function importSeeds() {
         console.log('   Create plans first, then run this seed again.');
       } else {
       const planMap = new Map(plans.map((p: any) => [p.name, p.id]));
+      let totalImported = 0;
 
       for (const [planName, entitlements] of Object.entries(byPlan)) {
         const planId = planMap.get(planName);
