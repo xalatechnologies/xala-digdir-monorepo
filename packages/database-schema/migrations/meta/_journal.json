@@ -5,15 +5,36 @@
     {
       "idx": 0,
       "version": "7",
-      "when": 1768727738734,
-      "tag": "0000_slimy_mauler",
+      "when": 1737198000000,
+      "tag": "0000_schemas",
       "breakpoints": true
     },
     {
       "idx": 1,
       "version": "7",
-      "when": 1768730707793,
-      "tag": "0001_broken_nova",
+      "when": 1737198001000,
+      "tag": "0001_platform",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1737198002000,
+      "tag": "0002_domain",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1737198003000,
+      "tag": "0003_compliance",
+      "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1737198004000,
+      "tag": "0004_monitoring",
       "breakpoints": true
     }
   ]

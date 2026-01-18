@@ -62,6 +62,27 @@ export async function authCookieMiddleware(
     }
   }
 
+  // Dev mode auto-injection: generate real JWT token for demo user
+  // This is NOT a bypass - token goes through normal validation
+  if (!token && process.env.AUTO_DEV_AUTH === 'true' && process.env.NODE_ENV !== 'production') {
+    try {
+      const { DevTokenService } = await import('../core/auth/dev-token.service');
+      const devTokenService = new DevTokenService(jwtService);
+      
+      if (devTokenService.isAutoAuthEnabled()) {
+        token = devTokenService.generateDevToken();
+        authSource = 'dev-auto';
+        
+        request.log.debug(
+          { devUser: devTokenService.getDevUser().userId },
+          'Dev mode: auto-injected JWT token for demo user'
+        );
+      }
+    } catch (error) {
+      request.log.warn({ error }, 'Failed to initialize DevTokenService');
+    }
+  }
+
   // If no token found, continue without authentication
   if (!token) {
     return;
