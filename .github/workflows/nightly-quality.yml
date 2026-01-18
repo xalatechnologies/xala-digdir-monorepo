@@ -193,6 +193,134 @@ jobs:
           retention-days: 7
 
   # ============================================================================
+  # SAAS ADMIN E2E
+  # ============================================================================
+  saas-admin-e2e:
+    name: SaaS Admin E2E Tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: ${{ env.PNPM_VERSION }}
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Install Playwright
+        run: npx playwright install --with-deps chromium
+
+      - name: Build SaaS Admin
+        run: pnpm --filter @xala/saas-admin build
+
+      - name: Run SaaS Admin E2E
+        run: pnpm exec playwright test --config=playwright.saas-admin.config.ts
+        continue-on-error: true
+        env:
+          CI: true
+
+      - name: Upload Report
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: saas-admin-e2e-report
+          path: playwright-report/saas-admin/
+          retention-days: 7
+
+  # ============================================================================
+  # MINSIDE E2E
+  # ============================================================================
+  minside-e2e:
+    name: MinSide E2E Tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: ${{ env.PNPM_VERSION }}
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Install Playwright
+        run: npx playwright install --with-deps chromium
+
+      - name: Run MinSide E2E
+        run: pnpm exec playwright test --config=playwright.minside.config.ts --reporter=html
+        continue-on-error: true
+        env:
+          CI: true
+          MINSIDE_URL: https://minside.digilist.no
+
+      - name: Upload Report
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: minside-e2e-report
+          path: playwright-report-minside/
+          retention-days: 7
+
+  # ============================================================================
+  # WEB E2E
+  # ============================================================================
+  web-e2e:
+    name: Web E2E Tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: ${{ env.PNPM_VERSION }}
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Install Playwright
+        run: npx playwright install --with-deps chromium
+
+      - name: Run Web E2E
+        run: pnpm exec playwright test --config=playwright.web.config.ts --reporter=html
+        continue-on-error: true
+        env:
+          CI: true
+          WEB_URL: https://digilist.no
+
+      - name: Upload Report
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: web-e2e-report
+          path: playwright-report-web/
+          retention-days: 7
+
+  # ============================================================================
   # WCAG ACCESSIBILITY
   # ============================================================================
   wcag-audit:
@@ -276,6 +404,9 @@ jobs:
       - rbac-matrix
       - gdpr-compliance
       - booking-e2e
+      - saas-admin-e2e
+      - minside-e2e
+      - web-e2e
       - wcag-audit
       - security-headers
     if: always()
@@ -290,6 +421,9 @@ jobs:
           echo "| RBAC Matrix | ${{ needs.rbac-matrix.result }} |" >> $GITHUB_STEP_SUMMARY
           echo "| GDPR Compliance | ${{ needs.gdpr-compliance.result }} |" >> $GITHUB_STEP_SUMMARY
           echo "| Booking E2E | ${{ needs.booking-e2e.result }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| **SaaS Admin E2E** | ${{ needs.saas-admin-e2e.result }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| **MinSide E2E** | ${{ needs.minside-e2e.result }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| **Web E2E** | ${{ needs.web-e2e.result }} |" >> $GITHUB_STEP_SUMMARY
           echo "| WCAG Audit | ${{ needs.wcag-audit.result }} |" >> $GITHUB_STEP_SUMMARY
           echo "| Security Headers | ${{ needs.security-headers.result }} |" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY

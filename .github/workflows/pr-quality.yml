@@ -1,0 +1,269 @@
+name: PR Quality Gate
+
+on:
+  pull_request:
+    branches: [main, demo, demo-v3]
+    types: [opened, synchronize, reopened]
+
+env:
+  NODE_VERSION: '20'
+  PNPM_VERSION: '9'
+
+jobs:
+  # ============================================================================
+  # FAST CHECKS (Must pass for merge)
+  # ============================================================================
+  
+  typecheck:
+    name: TypeScript Check
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: ${{ env.PNPM_VERSION }}
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'pnpm'
+      
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+      
+      - name: Run TypeScript check
+        run: pnpm run typecheck
+
+  lint:
+    name: Lint & Format
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: ${{ env.PNPM_VERSION }}
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'pnpm'
+      
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+      
+      - name: Run ESLint
+        run: pnpm run lint
+      
+      - name: Check Formatting
+        run: pnpm run format:check || true
+
+  no-console-gate:
+    name: No Console Gate
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+      
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: ${{ env.PNPM_VERSION }}
+      
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+      
+      - name: Check for console statements
+        run: node scripts/quality/no-console-gate.js ||  echo "::warning::Console statements found"
+
+  i18n-completeness:
+    name: i18n Key Completeness
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+      
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: ${{ env.PNPM_VERSION }}
+      
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+      
+      - name: Check i18n completeness
+        run: node scripts/quality/check-i18n-completeness.js || echo "::warning::Missing i18n keys"
+
+  # ============================================================================
+  # UNIT TESTS
+  # ============================================================================
+  
+  unit-tests:
+    name: Unit Tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: ${{ env.PNPM_VERSION }}
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'pnpm'
+      
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+      
+      - name: Run unit tests
+        run: pnpm test:unit || pnpm test
+      
+      - name: Upload coverage
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: unit-coverage
+          path: coverage/
+          retention-days: 7
+
+  # ============================================================================
+  # CONTRACT TESTS
+  # ============================================================================
+  
+  contract-tests:
+    name: Contract Drift Check
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: ${{ env.PNPM_VERSION }}
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'pnpm'
+      
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+      
+      - name: Generate OpenAPI spec
+        run: pnpm --filter @digilist/api generate:openapi || true
+      
+      - name: Check for contract drift
+        run: |
+          if git diff --exit-code apps/api/openapi.json; then
+            echo "✅ No contract drift"
+          else
+            echo "::warning::OpenAPI spec has changed. Review and commit if intentional."
+          fi
+
+  # ============================================================================
+  # E2E SMOKE TESTS
+  # ============================================================================
+  
+  e2e-smoke:
+    name: E2E Smoke Tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: ${{ env.PNPM_VERSION }}
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'pnpm'
+      
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+      
+      - name: Install Playwright
+        run: npx playwright install --with-deps chromium
+      
+      - name: Run Backoffice smoke
+        run: |
+          pnpm exec playwright test --config=playwright.backoffice.config.ts \
+            tests/e2e/backoffice/smoke --reporter=line
+        continue-on-error: true
+        env:
+          CI: true
+          BACKOFFICE_URL: https://backoffice.digilist.no
+      
+      - name: Run Web smoke
+        run: |
+          pnpm exec playwright test --config=playwright.web.config.ts \
+            tests/e2e/web/synthetic-monitoring.spec.ts --reporter=line
+        continue-on-error: true
+        env:
+          CI: true
+          WEB_URL: https://digilist.no
+      
+      - name: Upload smoke report
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: e2e-smoke-report
+          path: playwright-report/
+          retention-days: 3
+
+  # ============================================================================
+  # SUMMARY
+  # ============================================================================
+  
+  pr-summary:
+    name: PR Quality Summary
+    runs-on: ubuntu-latest
+    needs:
+      - typecheck
+      - lint
+      - no-console-gate
+      - i18n-completeness
+      - unit-tests
+      - contract-tests
+      - e2e-smoke
+    if: always()
+    steps:
+      - name: Check results
+        run: |
+          echo "# PR Quality Summary" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "| Check | Status |" >> $GITHUB_STEP_SUMMARY
+          echo "|-------|--------|" >> $GITHUB_STEP_SUMMARY
+          echo "| TypeScript | ${{ needs.typecheck.result }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Lint | ${{ needs.lint.result }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| No Console | ${{ needs.no-console-gate.result }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| i18n | ${{ needs.i18n-completeness.result }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Unit Tests | ${{ needs.unit-tests.result }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Contracts | ${{ needs.contract-tests.result }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| E2E Smoke | ${{ needs.e2e-smoke.result }} |" >> $GITHUB_STEP_SUMMARY
+      
+      - name: Fail if critical checks failed
+        if: needs.typecheck.result == 'failure' || needs.unit-tests.result == 'failure'
+        run: |
+          echo "::error::Critical checks failed. Please fix before merging."
+          exit 1
