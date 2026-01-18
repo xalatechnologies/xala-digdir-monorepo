@@ -70,8 +70,9 @@ services:
 
   api:
     build:
-      context: ..
-      dockerfile: apps/api/Dockerfile
+      context: ../../..
+      dockerfile: infra/docker/dockerfiles/Dockerfile.api
+      target: production
     container_name: digilist-prod-api
     restart: always
     environment:
@@ -153,8 +154,8 @@ services:
   # Web App (Public Website)
   web:
     build:
-      context: ..
-      dockerfile: docker/Dockerfile.frontend
+      context: ../../..
+      dockerfile: infra/docker/dockerfiles/Dockerfile.frontend
       target: production
       args:
         APP_NAME: web
@@ -178,8 +179,8 @@ services:
   # MinSide App (User Portal)
   minside:
     build:
-      context: ..
-      dockerfile: docker/Dockerfile.frontend
+      context: ../../..
+      dockerfile: infra/docker/dockerfiles/Dockerfile.frontend
       target: production
       args:
         APP_NAME: minside
@@ -203,8 +204,8 @@ services:
   # Backoffice App (Admin Portal)
   backoffice:
     build:
-      context: ..
-      dockerfile: docker/Dockerfile.frontend
+      context: ../../..
+      dockerfile: infra/docker/dockerfiles/Dockerfile.frontend
       target: production
       args:
         APP_NAME: backoffice
@@ -228,8 +229,8 @@ services:
   # Tenant Admin App
   tenant-admin:
     build:
-      context: ..
-      dockerfile: docker/Dockerfile.frontend
+      context: ../../..
+      dockerfile: infra/docker/dockerfiles/Dockerfile.frontend
       target: production
       args:
         APP_NAME: tenant-admin
@@ -253,8 +254,8 @@ services:
   # SaaS Admin App
   saas-admin:
     build:
-      context: ..
-      dockerfile: docker/Dockerfile.frontend
+      context: ../../..
+      dockerfile: infra/docker/dockerfiles/Dockerfile.frontend
       target: production
       args:
         APP_NAME: saas-admin
@@ -278,8 +279,8 @@ services:
   # Monitoring App
   monitoring:
     build:
-      context: ..
-      dockerfile: docker/Dockerfile.frontend
+      context: ../../..
+      dockerfile: infra/docker/dockerfiles/Dockerfile.frontend
       target: production
       args:
         APP_NAME: monitoring
@@ -303,8 +304,8 @@ services:
   # Docs & Learning App
   docs-learning:
     build:
-      context: ..
-      dockerfile: docker/Dockerfile.frontend
+      context: ../../..
+      dockerfile: infra/docker/dockerfiles/Dockerfile.frontend
       target: production
       args:
         APP_NAME: docs-learning
