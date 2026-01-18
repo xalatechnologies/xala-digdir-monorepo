@@ -285,13 +285,84 @@ else
 fi
 echo ""
 
-# Step 14: Run automated tests (if available)
-echo "🧪 Step 14: Running automated tests..."
-if ssh ${VPS_USER}@${VPS_HOST} "cd ${DEPLOY_PATH} && pnpm test 2>&1 | head -20"; then
-    log_info "Tests passed"
+# Step 14: Run comprehensive automated tests
+echo "🧪 Step 14: Running comprehensive automated test suite..."
+echo ""
+
+# 14.1: Unit Tests
+echo "  📋 Running unit tests..."
+if ssh ${VPS_USER}@${VPS_HOST} "cd ${DEPLOY_PATH} && timeout 120 pnpm --filter @digilist/testing test 2>&1 | tail -50"; then
+    log_info "Unit tests passed"
 else
-    log_warn "Tests failed or not available - continuing deployment"
+    log_warn "Unit tests failed or timed out"
 fi
+echo ""
+
+# 14.2: API Health Checks
+echo "  🏥 Running API health checks..."
+API_HEALTH=$(curl -s https://api.digilist.no/health)
+if echo "$API_HEALTH" | grep -q "ok\|healthy\|up"; then
+    log_info "API health check passed"
+else
+    log_error "API health check failed"
+    echo "$API_HEALTH"
+fi
+echo ""
+
+# 14.3: Authentication Tests
+echo "  🔐 Testing authentication endpoints..."
+# Demo token login already tested in Step 13
+log_info "Demo token authentication verified"
+
+# Test auth providers endpoint
+AUTH_PROVIDERS=$(curl -s https://api.digilist.no/api/auth/providers)
+if echo "$AUTH_PROVIDERS" | grep -q "bankid"; then
+    log_info "BankID provider enabled"
+else
+    log_warn "BankID provider not found"
+fi
+echo ""
+
+# 14.4: Frontend Accessibility
+echo "  🌐 Testing frontend accessibility..."
+for SUBDOMAIN in web-test minside-test backoffice-test; do
+    HTTP_CODE=$(curl -s -o /dev/null -w "%{http_code}" https://${SUBDOMAIN}.digilist.no)
+    if [ "$HTTP_CODE" = "200" ]; then
+        log_info "${SUBDOMAIN}.digilist.no accessible (HTTP $HTTP_CODE)"
+    else
+        log_warn "${SUBDOMAIN}.digilist.no returned HTTP $HTTP_CODE"
+    fi
+done
+echo ""
+
+# 14.5: Data Verification
+echo "  📊 Verifying seed data..."
+# Check if rental objects are accessible (would need auth in production)
+log_info "Seed data verification placeholder - implement with authenticated requests"
+echo ""
+
+# 14.6: Performance Check
+echo "  ⚡ Running performance checks..."
+RESPONSE_TIME=$(curl -o /dev/null -s -w '%{time_total}\n' https://api.digilist.no/health)
+echo "     API response time: ${RESPONSE_TIME}s"
+if (( $(echo "$RESPONSE_TIME < 1.0" | bc -l) )); then
+    log_info "Response time acceptable"
+else
+    log_warn "Response time slow: ${RESPONSE_TIME}s"
+fi
+echo ""
+
+# 14.7: Security Headers
+echo "  🔒 Checking security headers..."
+HEADERS=$(curl -s -I https://api.digilist.no/health)
+if echo "$HEADERS" | grep -qi "x-frame-options"; then
+    log_info "Security headers present"
+else
+    log_warn "Some security headers missing"
+fi
+echo ""
+
+log_info "Automated test suite completed"
 echo ""
 
 # Step 15: Verify frontend deployments

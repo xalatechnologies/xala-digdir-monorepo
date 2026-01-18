@@ -1,0 +1,385 @@
+name: Post-Deployment Automated Tests
+
+on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Environment to test'
+        required: true
+        type: choice
+        options:
+          - test
+          - staging
+          - production
+  workflow_call:
+    inputs:
+      environment:
+        description: 'Environment to test'
+        required: true
+        type: string
+
+env:
+  NODE_VERSION: '20'
+  PNPM_VERSION: '8'
+
+jobs:
+  # ============================================================================
+  # 1. UNIT TESTS
+  # ============================================================================
+  unit-tests:
+    name: Unit Tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: ${{ env.PNPM_VERSION }}
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Run unit tests
+        run: pnpm --filter @digilist/testing test
+        env:
+          CI: true
+
+      - name: Upload test results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: unit-test-results
+          path: packages/testing/coverage/
+
+  # ============================================================================
+  # 2. API HEALTH CHECKS
+  # ============================================================================
+  api-health:
+    name: API Health Checks
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    
+    steps:
+      - name: Check API health endpoint
+        run: |
+          HEALTH_URL="https://api.digilist.no/health"
+          if [ "${{ inputs.environment }}" = "staging" ]; then
+            HEALTH_URL="https://api-staging.digilist.no/health"
+          elif [ "${{ inputs.environment }}" = "production" ]; then
+            HEALTH_URL="https://api.digilist.no/health"
+          fi
+          
+          echo "Checking health at: $HEALTH_URL"
+          RESPONSE=$(curl -s -w "\n%{http_code}" "$HEALTH_URL")
+          HTTP_CODE=$(echo "$RESPONSE" | tail -n1)
+          BODY=$(echo "$RESPONSE" | head -n-1)
+          
+          echo "HTTP Status: $HTTP_CODE"
+          echo "Response: $BODY"
+          
+          if [ "$HTTP_CODE" != "200" ]; then
+            echo "❌ Health check failed with status $HTTP_CODE"
+            exit 1
+          fi
+          
+          echo "✅ API health check passed"
+
+      - name: Check database connectivity
+        run: |
+          API_URL="https://api.digilist.no"
+          if [ "${{ inputs.environment }}" = "staging" ]; then
+            API_URL="https://api-staging.digilist.no"
+          fi
+          
+          # Test a simple API endpoint that requires DB
+          RESPONSE=$(curl -s -w "\n%{http_code}" "$API_URL/api/auth/providers")
+          HTTP_CODE=$(echo "$RESPONSE" | tail -n1)
+          
+          if [ "$HTTP_CODE" != "200" ]; then
+            echo "❌ Database connectivity check failed"
+            exit 1
+          fi
+          
+          echo "✅ Database connectivity verified"
+
+  # ============================================================================
+  # 3. AUTHENTICATION TESTS
+  # ============================================================================
+  auth-tests:
+    name: Authentication Tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    needs: [api-health]
+    
+    steps:
+      - name: Test demo token login
+        run: |
+          API_URL="https://api.digilist.no"
+          if [ "${{ inputs.environment }}" = "staging" ]; then
+            API_URL="https://api-staging.digilist.no"
+          fi
+          
+          echo "Testing demo token authentication..."
+          RESPONSE=$(curl -s -X POST "$API_URL/api/auth/demo-token" \
+            -H "Content-Type: application/json" \
+            -d '{"token":"demo-admin-token"}')
+          
+          echo "Response: $RESPONSE"
+          
+          if echo "$RESPONSE" | grep -q "expiresAt"; then
+            echo "✅ Demo token login successful"
+          else
+            echo "❌ Demo token login failed"
+            exit 1
+          fi
+
+      - name: Verify auth providers
+        run: |
+          API_URL="https://api.digilist.no"
+          if [ "${{ inputs.environment }}" = "staging" ]; then
+            API_URL="https://api-staging.digilist.no"
+          fi
+          
+          RESPONSE=$(curl -s "$API_URL/api/auth/providers")
+          
+          # Check for BankID provider
+          if echo "$RESPONSE" | grep -q "bankid"; then
+            echo "✅ BankID provider found"
+          else
+            echo "❌ BankID provider not found"
+            exit 1
+          fi
+          
+          # Check for demo-token provider
+          if echo "$RESPONSE" | grep -q "demo-token"; then
+            echo "✅ Demo token provider found"
+          else
+            echo "❌ Demo token provider not found"
+            exit 1
+          fi
+
+  # ============================================================================
+  # 4. FRONTEND ACCESSIBILITY TESTS
+  # ============================================================================
+  frontend-tests:
+    name: Frontend Accessibility
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    needs: [api-health]
+    
+    strategy:
+      matrix:
+        frontend:
+          - { name: 'web', url: 'https://web-test.digilist.no' }
+          - { name: 'minside', url: 'https://minside-test.digilist.no' }
+          - { name: 'backoffice', url: 'https://backoffice-test.digilist.no' }
+    
+    steps:
+      - name: Check ${{ matrix.frontend.name }} accessibility
+        run: |
+          URL="${{ matrix.frontend.url }}"
+          if [ "${{ inputs.environment }}" = "staging" ]; then
+            URL=$(echo "$URL" | sed 's/-test\./-staging./')
+          elif [ "${{ inputs.environment }}" = "production" ]; then
+            URL=$(echo "$URL" | sed 's/-test\./\./')
+          fi
+          
+          echo "Testing: $URL"
+          HTTP_CODE=$(curl -s -o /dev/null -w "%{http_code}" "$URL")
+          
+          if [ "$HTTP_CODE" = "200" ]; then
+            echo "✅ ${{ matrix.frontend.name }} is accessible (HTTP $HTTP_CODE)"
+          else
+            echo "❌ ${{ matrix.frontend.name }} returned HTTP $HTTP_CODE"
+            exit 1
+          fi
+
+  # ============================================================================
+  # 5. E2E TESTS (PLAYWRIGHT)
+  # ============================================================================
+  e2e-tests:
+    name: E2E Tests (Playwright)
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    needs: [api-health, auth-tests, frontend-tests]
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: ${{ env.PNPM_VERSION }}
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Install Playwright browsers
+        run: pnpm --filter @digilist/testing-e2e exec playwright install --with-deps chromium
+
+      - name: Run Playwright tests
+        run: pnpm --filter @digilist/testing-e2e test:e2e
+        env:
+          CI: true
+          BASE_URL: https://web-test.digilist.no
+          API_URL: https://api.digilist.no
+
+      - name: Upload Playwright report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report
+          path: packages/testing-e2e/playwright-report/
+          retention-days: 30
+
+  # ============================================================================
+  # 6. DATA VERIFICATION
+  # ============================================================================
+  data-verification:
+    name: Data Verification
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    needs: [api-health]
+    
+    steps:
+      - name: Verify seed data
+        run: |
+          API_URL="https://api.digilist.no"
+          if [ "${{ inputs.environment }}" = "staging" ]; then
+            API_URL="https://api-staging.digilist.no"
+          fi
+          
+          echo "Verifying rental objects..."
+          # This would need proper authentication
+          # For now, just verify the API is responding
+          
+          echo "✅ Data verification placeholder - implement with authenticated requests"
+
+  # ============================================================================
+  # 7. PERFORMANCE TESTS
+  # ============================================================================
+  performance-tests:
+    name: Performance Tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    needs: [api-health]
+    
+    steps:
+      - name: API response time check
+        run: |
+          API_URL="https://api.digilist.no"
+          if [ "${{ inputs.environment }}" = "staging" ]; then
+            API_URL="https://api-staging.digilist.no"
+          fi
+          
+          echo "Testing API response times..."
+          
+          # Test health endpoint
+          TIME=$(curl -o /dev/null -s -w '%{time_total}\n' "$API_URL/health")
+          echo "Health endpoint: ${TIME}s"
+          
+          # Check if under 1 second
+          if (( $(echo "$TIME < 1.0" | bc -l) )); then
+            echo "✅ Response time acceptable"
+          else
+            echo "⚠️ Response time slow: ${TIME}s"
+          fi
+
+  # ============================================================================
+  # 8. SECURITY CHECKS
+  # ============================================================================
+  security-checks:
+    name: Security Checks
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    needs: [api-health]
+    
+    steps:
+      - name: Check security headers
+        run: |
+          API_URL="https://api.digilist.no"
+          if [ "${{ inputs.environment }}" = "staging" ]; then
+            API_URL="https://api-staging.digilist.no"
+          fi
+          
+          echo "Checking security headers..."
+          HEADERS=$(curl -s -I "$API_URL/health")
+          
+          # Check for security headers
+          if echo "$HEADERS" | grep -qi "x-frame-options"; then
+            echo "✅ X-Frame-Options present"
+          else
+            echo "⚠️ X-Frame-Options missing"
+          fi
+          
+          if echo "$HEADERS" | grep -qi "x-content-type-options"; then
+            echo "✅ X-Content-Type-Options present"
+          else
+            echo "⚠️ X-Content-Type-Options missing"
+          fi
+
+  # ============================================================================
+  # 9. TEST SUMMARY
+  # ============================================================================
+  test-summary:
+    name: Test Summary
+    runs-on: ubuntu-latest
+    needs: [unit-tests, api-health, auth-tests, frontend-tests, e2e-tests, data-verification, performance-tests, security-checks]
+    if: always()
+    
+    steps:
+      - name: Generate test summary
+        run: |
+          echo "# 🧪 Post-Deployment Test Results" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Environment:** ${{ inputs.environment }}" >> $GITHUB_STEP_SUMMARY
+          echo "**Timestamp:** $(date -u +"%Y-%m-%d %H:%M:%S UTC")" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "## Test Results" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "| Test Suite | Status |" >> $GITHUB_STEP_SUMMARY
+          echo "|------------|--------|" >> $GITHUB_STEP_SUMMARY
+          echo "| Unit Tests | ${{ needs.unit-tests.result }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| API Health | ${{ needs.api-health.result }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Authentication | ${{ needs.auth-tests.result }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Frontend Tests | ${{ needs.frontend-tests.result }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| E2E Tests | ${{ needs.e2e-tests.result }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Data Verification | ${{ needs.data-verification.result }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Performance | ${{ needs.performance-tests.result }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Security | ${{ needs.security-checks.result }} |" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          
+          # Check if any tests failed
+          if [ "${{ needs.unit-tests.result }}" != "success" ] || \
+             [ "${{ needs.api-health.result }}" != "success" ] || \
+             [ "${{ needs.auth-tests.result }}" != "success" ] || \
+             [ "${{ needs.frontend-tests.result }}" != "success" ] || \
+             [ "${{ needs.e2e-tests.result }}" != "success" ]; then
+            echo "❌ **Some tests failed!**" >> $GITHUB_STEP_SUMMARY
+            exit 1
+          else
+            echo "✅ **All tests passed!**" >> $GITHUB_STEP_SUMMARY
+          fi
+
+      - name: Notify on failure
+        if: failure()
+        run: |
+          echo "⚠️ Post-deployment tests failed!"
+          echo "Check the workflow logs for details."
