@@ -1,0 +1,13 @@
+{
+  "title": "Users",
+  "subtitle": "User administration",
+  "manageRoles": "Manage users and roles",
+  "add": "Add user",
+  "role": "Role",
+  "email": "Email",
+  "admin": "Administrator",
+  "caseWorker": "Case worker",
+  "user": "User",
+  "noUsers": "No users found.",
+  "loadingUsers": "Loading users..."
+}

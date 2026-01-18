@@ -42,13 +42,13 @@ export function PaymentCallbackPage(): React.ReactElement {
           <ContentSection>
             <Stack gap="24px" align="center" style={{ textAlign: 'center', maxWidth: '600px', margin: '0 auto' }}>
               <Heading size="lg" level={1}>
-                Ugyldig betalingslenke
+                {t('payment.invalidLink')}
               </Heading>
               <Paragraph size="md">
-                Betalingslenken er ugyldig eller mangler ordre-ID. Vennligst gå tilbake og prøv igjen.
+                {t('payment.missingOrderId')}
               </Paragraph>
               <Button type="button" onClick={() => navigate('/')}>
-                Gå til forsiden
+                {t('common.goToHome')}
               </Button>
             </Stack>
           </ContentSection>
@@ -70,10 +70,10 @@ export function PaymentCallbackPage(): React.ReactElement {
             <Stack gap="24px" align="center" style={{ textAlign: 'center', maxWidth: '600px', margin: '0 auto' }}>
               <Spinner size="lg" title={t('payment.checkingStatus')} />
               <Heading size="md" level={1}>
-                Sjekker betalingsstatus
+                {t('payment.checkingStatus')}
               </Heading>
               <Paragraph size="md">
-                Vennligst vent mens vi bekrefter betalingen din...
+                {t('payment.pleaseWait')}
               </Paragraph>
             </Stack>
           </ContentSection>
@@ -114,20 +114,20 @@ export function PaymentCallbackPage(): React.ReactElement {
                   ✕
                 </div>
                 <Heading size="lg" level={1}>
-                  Betaling feilet
+                  {t('payment.failed')}
                 </Heading>
                 <Paragraph size="md">
-                  Vi kunne ikke fullføre betalingen din. Dette kan skyldes at betalingen ble avbrutt eller at det oppstod en feil.
+                  {t('payment.couldNotComplete')}
                 </Paragraph>
                 <Paragraph size="sm" style={{ color: 'var(--ds-color-neutral-text-subtle)' }}>
-                  Ordre-ID: {orderId}
+                  {t('payment.orderId')}: {orderId}
                 </Paragraph>
                 <Stack direction="horizontal" gap="12px" justify="center">
                   <Button type="button" variant="secondary" onClick={() => navigate('/')}>
-                    Gå til forsiden
+                    {t('common.goToHome')}
                   </Button>
                   <Button type="button" onClick={() => window.location.reload()}>
-                    Prøv igjen
+                    {t('common.tryAgain')}
                   </Button>
                 </Stack>
               </Stack>
@@ -182,19 +182,19 @@ export function PaymentCallbackPage(): React.ReactElement {
                   ✓
                 </div>
                 <Heading size="lg" level={1}>
-                  Betaling vellykket!
+                  {t('payment.success')}
                 </Heading>
                 <Paragraph size="md">
-                  Din betaling på <strong>{payment.amount} {payment.currency || 'NOK'}</strong> er godkjent og behandlet.
+                  {t('payment.amountApproved', { amount: payment.amount, currency: payment.currency || 'NOK' })}
                 </Paragraph>
                 <Paragraph size="sm" style={{ color: 'var(--ds-color-neutral-text-subtle)' }}>
-                  Ordre-ID: {payment.orderId}
+                  {t('payment.orderId')}: {payment.orderId}
                 </Paragraph>
                 <Paragraph size="sm">
-                  Du vil motta en bekreftelse på e-post om kort tid.
+                  {t('payment.confirmationEmail')}
                 </Paragraph>
                 <Button type="button" onClick={() => navigate('/')}>
-                  Gå til forsiden
+                  {t('common.goToHome')}
                 </Button>
               </Stack>
             </Card>
@@ -223,18 +223,18 @@ export function PaymentCallbackPage(): React.ReactElement {
               }}
             >
               <Stack gap="24px" align="center" style={{ textAlign: 'center' }}>
-                <Spinner size="lg" title={t('payment.processingPayment')} />
+                <Spinner size="lg" title={t('payment.processing')} />
                 <Heading size="lg" level={1}>
-                  Betaling behandles
+                  {t('payment.processing')}
                 </Heading>
                 <Paragraph size="md">
-                  Betalingen din er mottatt og behandles. Dette kan ta noen øyeblikk.
+                  {t('payment.receivedProcessing')}
                 </Paragraph>
                 <Paragraph size="sm" style={{ color: 'var(--ds-color-neutral-text-subtle)' }}>
-                  Ordre-ID: {orderId}
+                  {t('payment.orderId')}: {orderId}
                 </Paragraph>
                 <Button type="button" variant="secondary" onClick={() => window.location.reload()}>
-                  Oppdater status
+                  {t('common.refreshStatus')}
                 </Button>
               </Stack>
             </Card>
@@ -275,20 +275,20 @@ export function PaymentCallbackPage(): React.ReactElement {
                 ✕
               </div>
               <Heading size="lg" level={1}>
-                Betaling avbrutt
+                {t('payment.cancelled')}
               </Heading>
               <Paragraph size="md">
-                Betalingen ble avbrutt eller fullført ikke. Ingen beløp er trukket fra kontoen din.
+                {t('payment.cancelledDescription')}
               </Paragraph>
               <Paragraph size="sm" style={{ color: 'var(--ds-color-neutral-text-subtle)' }}>
-                Ordre-ID: {orderId}
+                {t('payment.orderId')}: {orderId}
               </Paragraph>
               <Stack direction="horizontal" gap="12px" justify="center">
                 <Button type="button" variant="secondary" onClick={() => navigate('/')}>
-                  Gå til forsiden
+                  {t('common.goToHome')}
                 </Button>
                 <Button type="button" onClick={() => navigate(-1)}>
-                  Tilbake
+                  {t('common.back')}
                 </Button>
               </Stack>
             </Stack>

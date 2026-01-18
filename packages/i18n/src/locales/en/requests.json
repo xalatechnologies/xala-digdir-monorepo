@@ -1,0 +1,18 @@
+{
+  "title": "Requests",
+  "subtitle": "Process incoming booking requests.",
+  "new": "New request",
+  "pending": "Pending",
+  "requiresAction": "Requires action",
+  "needsInfo": "Needs info",
+  "waitingForResponse": "Waiting for response",
+  "noRequests": "No requests to display.",
+  "applicant": "Applicant",
+  "confirmReject": "Are you sure you want to reject this request?",
+  "approve": "Approve",
+  "reject": "Reject",
+  "sendMessage": "Send message",
+  "requestMoreInfo": "Request more info",
+  "createdAt": "Created",
+  "loading": "Loading requests..."
+}

@@ -1,0 +1,22 @@
+{
+  "welcomeBack": "Welcome back, {{name}}",
+  "fullAccess": "You have full access to all features in the system.",
+  "loggedIn": "You are logged in.",
+  "processPending": "Process {{count}} pending",
+  "pendingBookings": "Pending bookings",
+  "requiresAction": "Requires your attention",
+  "approved": "Approved",
+  "rejected": "Rejected",
+  "total": "Total",
+  "thisMonth": "This month",
+  "allBookings": "All bookings",
+  "recentActivity": "Recent activity",
+  "quickActions": "Quick actions",
+  "processPendingBtn": "Process pending",
+  "viewAllBookings": "View all bookings",
+  "manageUsers": "Manage users",
+  "systemStatus": "All systems operational",
+  "lastUpdated": "Last updated",
+  "loadingStats": "Loading statistics...",
+  "taskOverview": "Her er en oversikt over dagens oppgaver."
+}

@@ -1,0 +1,22 @@
+{
+  "welcomeBack": "Velkommen tilbake, {{name}}",
+  "fullAccess": "Du har full tilgang til alle funksjoner i systemet.",
+  "taskOverview": "Her er en oversikt over dagens oppgaver.",
+  "loggedIn": "Du er logget inn.",
+  "processPending": "Behandle {{count}} ventende",
+  "pendingBookings": "Ventende bookinger",
+  "requiresAction": "Krever din behandling",
+  "approved": "Godkjente",
+  "rejected": "Avslått",
+  "total": "Totalt",
+  "thisMonth": "Denne måneden",
+  "allBookings": "Alle bookinger",
+  "recentActivity": "Siste aktivitet",
+  "quickActions": "Hurtighandlinger",
+  "processPendingBtn": "Behandle ventende",
+  "viewAllBookings": "Se alle bookinger",
+  "manageUsers": "Administrer brukere",
+  "systemStatus": "Alle systemer operative",
+  "lastUpdated": "Sist oppdatert",
+  "loadingStats": "Laster statistikk..."
+}

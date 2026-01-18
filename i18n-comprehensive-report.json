@@ -1,42 +1,18 @@
 {
-  "timestamp": "2026-01-18T12:26:23.261Z",
+  "timestamp": "2026-01-18T12:36:31.165Z",
   "summary": {
     "totalApps": 3,
-    "totalFiles": 361,
-    "scannedFiles": 337,
+    "totalFiles": 359,
+    "scannedFiles": 335,
     "skippedFiles": 24,
-    "hardcodedStrings": 141,
+    "hardcodedStrings": 139,
     "missingT": 1,
-    "totalIssues": 142
+    "totalIssues": 140
   },
   "apps": {
     "backoffice": {
-      "filesScanned": 195,
+      "filesScanned": 193,
       "issues": [
-        {
-          "app": "backoffice",
-          "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/.auth-backup-20260116/AuthProvider.tsx",
-          "line": 189,
-          "type": "validation_error",
-          "string": "[BACKOFFICE AUTH] Logout after access denied failed:",
-          "context": "console.error('[BACKOFFICE AUTH] Logout after access denied failed:', error);",
-          "severity": "high",
-          "language": "Unknown",
-          "suggestedKey": "validation.backoffice_auth_logout_after",
-          "fix": "{t('validation.backoffice_auth_logout_after')}"
-        },
-        {
-          "app": "backoffice",
-          "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/.auth-backup-20260116/AuthProvider.tsx",
-          "line": 305,
-          "type": "validation_error",
-          "string": "[BACKOFFICE AUTH] Logout failed:",
-          "context": "console.error('[BACKOFFICE AUTH] Logout failed:', error);",
-          "severity": "high",
-          "language": "Unknown",
-          "suggestedKey": "validation.backoffice_auth_logout_failed",
-          "fix": "{t('validation.backoffice_auth_logout_failed')}"
-        },
         {
           "app": "backoffice",
           "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/apps/backoffice/src/components/SavedFilters.tsx",
