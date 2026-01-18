@@ -10,16 +10,11 @@ import { mockApiServer, isApiAvailable } from './mocks/api-server.mock';
 let useMockServer = false;
 
 beforeAll(async () => {
-  const apiAvailable = await isApiAvailable();
-  
-  if (apiAvailable) {
-    console.log('✅ Real API server detected - using Docker API at http://localhost:3000');
-    useMockServer = false;
-  } else {
-    console.log('🚀 No API server detected - starting mock API server');
-    mockApiServer.listen({ onUnhandledRequest: 'bypass' });
-    useMockServer = true;
-  }
+  // Environment setup for tests - use Docker services
+  process.env.NODE_ENV = 'test';
+  process.env.DATABASE_URL = process.env.DATABASE_URL || 'postgresql://digilist_dev:dev_password_2026@localhost:5433/digilist_test';
+  process.env.API_URL = process.env.API_URL || 'http://localhost:4000'; // Docker API
+  useMockServer = false;
 });
 
 // Reset handlers after each test

@@ -18,6 +18,9 @@ export default defineConfig({
     trace: 'on-first-retry',
     screenshot: 'only-on-failure',
     video: 'on-first-retry',
+    extraHTTPHeaders: {
+      'X-API-URL': process.env.API_URL || 'http://localhost:4000', // Docker API
+    },
   },
 
   projects: [
