@@ -1,18 +1,18 @@
 /**
- * Test Setup and Configuration
- * Provides mock authentication and test utilities
+ * Test Setup and Configuration for MinSide
+ * Provides mock authentication, i18n, and test utilities
  */
 import { vi } from 'vitest';
 import '@testing-library/jest-dom';
 
 // Mock authentication for tests
 export const mockAuthUser = {
-  id: 'test-user-monitoring-001',
-  email: 'monitoring@digilist.no',
-  name: 'Monitoring Admin',
-  role: 'SAAS_ADMIN',
-  tenantId: 'monitoring-tenant-001',
-  permissions: ['monitoring:read', 'monitoring:write', 'monitoring:admin'],
+  id: 'test-user-minside-001',
+  email: 'test@digilist.no',
+  name: 'Test User',
+  role: 'USER',
+  tenantId: 'test-tenant-001',
+  permissions: ['bookings:read', 'bookings:write'],
 };
 
 // Mock @xala/auth module
@@ -100,7 +100,6 @@ vi.mock('@xala/ds', async () => {
   const React = await import('react');
   return {
     ...actual,
-    // Ensure all components are defined
     Button: actual?.Button || (({ children, ...props }: any) => React.createElement('button', props, children)),
     Card: actual?.Card || (({ children, ...props }: any) => React.createElement('div', props, children)),
     Input: actual?.Input || ((props: any) => React.createElement('input', props)),
