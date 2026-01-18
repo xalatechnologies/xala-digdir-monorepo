@@ -1,13 +1,11 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
-
-/* Typography is handled by the design system via DesignsystemetProvider */
-/* Do not override font-family here as it conflicts with DS typography tokens */
-
 :root {
+  /* Typography is handled by the design system via DesignsystemetProvider */
+  /* We use the semantic tokens provided by @xala/ds-themes */
+  font-family: var(--ds-font-family);
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+  -moz-osx-osx-font-smoothing: grayscale;
 }
 
 html, body, #root {

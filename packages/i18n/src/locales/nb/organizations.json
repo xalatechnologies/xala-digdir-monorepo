@@ -92,5 +92,11 @@
   "activity.none": "Ingen aktivitet",
   "activity.noneDescription": "Ingen hendelser er registrert for denne organisasjonen.",
   "activity.recent": "Siste aktivitet",
-  "activity.by": "Av"
+  "activity.by": "Av",
+  "actorType.municipality": "Kommune",
+  "actorType.organization": "Organisasjon",
+  "actorType.business": "Bedrift",
+  "actorType.sports_club": "Idrettslag",
+  "actorType.youth_organization": "Ungdomsorganisasjon",
+  "actorType.school": "Skole"
 }

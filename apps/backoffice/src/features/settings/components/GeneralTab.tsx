@@ -18,10 +18,8 @@ import { useGeneralSettings } from '../hooks/useGeneralSettings';
 import { useT } from '@xala/i18n';
 
 export function GeneralTab() {
-  // Translation function available for future localization
-  const _t = useT(); // eslint-disable-line @typescript-eslint/no-unused-vars
-  const {
   const t = useT();
+  const {
     generalData,
     updateField,
     saveGeneralSettings,
@@ -41,9 +39,9 @@ export function GeneralTab() {
         </div>
 
         <Stack spacing={4}>
-          <FormField label="Systemnavn" description={t('common.navn_paa_systemet_som')}>
+          <FormField label={t('settings.general.systemName')} description={t('common.navn_paa_systemet_som')}>
             <Textfield
-              aria-label="Systemnavn"
+              aria-label={t('settings.general.systemName')}
               value={generalData.name}
               onChange={(e) => updateField('name', e.target.value)}
               placeholder={t('common.digilist_booking')}
@@ -61,18 +59,18 @@ export function GeneralTab() {
             </Select>
           </FormField>
 
-          <FormField label="Tidssone">
+          <FormField label={t('settings.general.timezone')}>
             <Select
               value={generalData.timezone}
               onChange={(e) => updateField('timezone', e.target.value as 'Europe/Oslo' | 'Europe/London' | 'America/New_York')}
             >
-              <option value="Europe/Oslo">Europa/Oslo (CET)</option>
-              <option value="Europe/London">Europa/London (GMT)</option>
-              <option value="America/New_York">Amerika/New York (EST)</option>
+              <option value="Europe/Oslo">{t('settings.general.timezone.oslo')}</option>
+              <option value="Europe/London">{t('settings.general.timezone.london')}</option>
+              <option value="America/New_York">{t('settings.general.timezone.newYork')}</option>
             </Select>
           </FormField>
 
-          <FormField label="Valuta">
+          <FormField label={t('settings.general.currency')}>
             <Select
               value={generalData.currency}
               onChange={(e) => updateField('currency', e.target.value as 'NOK' | 'EUR' | 'USD')}
@@ -84,7 +82,7 @@ export function GeneralTab() {
           </FormField>
 
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 'var(--ds-spacing-3)' }}>
-            <FormField label="Datoformat">
+            <FormField label={t('settings.general.dateFormat')}>
               <Select
                 value={generalData.dateFormat}
                 onChange={(e) => updateField('dateFormat', e.target.value as 'dd.MM.yyyy' | 'yyyy-MM-dd' | 'MM/dd/yyyy')}
@@ -95,7 +93,7 @@ export function GeneralTab() {
               </Select>
             </FormField>
 
-            <FormField label="Tidsformat">
+            <FormField label={t('settings.general.timeFormat')}>
               <Select
                 value={generalData.timeFormat}
                 onChange={(e) => updateField('timeFormat', e.target.value as '24h' | '12h')}
@@ -110,7 +108,7 @@ export function GeneralTab() {
         <div style={{ paddingTop: 'var(--ds-spacing-3)', borderTop: '1px solid var(--ds-color-neutral-border-subtle)' }}>
           <Button onClick={saveGeneralSettings} disabled={isSaving} type="button" aria-label={t('common.lagre_endringer')}>
             <SaveIcon />
-            {isSaving ? t('common.lagrer') : 'Lagre endringer'}
+            {isSaving ? t('common.lagrer') : t('common.lagre_endringer')}
           </Button>
         </div>
       </Stack>

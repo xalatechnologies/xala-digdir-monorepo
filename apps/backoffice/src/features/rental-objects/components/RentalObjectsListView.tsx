@@ -28,26 +28,27 @@ import type { RentalObjectStatus } from '@digilist/client-sdk';
 import { RentalObjectsGrid } from './list/RentalObjectsGrid';
 import { RentalObjectsTable } from './list/RentalObjectsTable';
 import { BulkCustodyModal } from './BulkCustodyModal';
-import { useRentalObjectFilters, STATUS_OPTIONS, SORT_OPTIONS } from '../hooks/useRentalObjectFilters';
+import { useRentalObjectFilters, STATUS_OPTIONS, getSortOptions } from '../hooks/useRentalObjectFilters';
 import { useRentalObjectPermissions } from '../hooks/useRentalObjectPermissions';
 import { useT } from '@xala/i18n';
 
-// Capacity filter options for rental objects
-const CAPACITY_OPTIONS = [
-  { id: 'all', label: t('common.alle_storrelser'), min: 0, max: 999999 },
-  { id: '1-10', label: t('common.110_personer'), min: 1, max: 10 },
-  { id: '11-25', label: t('common.1125_personer'), min: 11, max: 25 },
-  { id: '26-50', label: t('common.2650_personer'), min: 26, max: 50 },
-  { id: '51-100', label: t('common.51100_personer'), min: 51, max: 100 },
-  { id: '100+', label: t('common.over_100_personer'), min: 101, max: 999999 },
-];
-
 export function RentalObjectsListView() {
-  // Translation function available for future localization
-  const _t = useT(); // eslint-disable-line @typescript-eslint/no-unused-vars
   const navigate = useNavigate();
   const { permissions } = useRentalObjectPermissions();
   const t = useT();
+  
+  // Get options using factory functions with translation
+  const SORT_OPTIONS = getSortOptions(t);
+  
+  // Capacity filter options for rental objects
+  const CAPACITY_OPTIONS = [
+    { id: 'all', label: t('common.alle_storrelser'), min: 0, max: 999999 },
+    { id: '1-10', label: t('common.110_personer'), min: 1, max: 10 },
+    { id: '11-25', label: t('common.1125_personer'), min: 11, max: 25 },
+    { id: '26-50', label: t('common.2650_personer'), min: 26, max: 50 },
+    { id: '51-100', label: t('common.51100_personer'), min: 51, max: 100 },
+    { id: '100+', label: t('common.over_100_personer'), min: 101, max: 999999 },
+  ];
 
   const {
     filters,

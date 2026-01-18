@@ -18,10 +18,8 @@ import { useBookingSettings } from '../hooks/useBookingSettings';
 import { useT } from '@xala/i18n';
 
 export function BookingTab() {
-  // Translation function available for future localization
-  const _t = useT(); // eslint-disable-line @typescript-eslint/no-unused-vars
-  const {
   const t = useT();
+  const {
     bookingData,
     updateField,
     saveBookingSettings,
@@ -74,11 +72,11 @@ export function BookingTab() {
 
           {shouldShowCancellationDeadline && (
             <FormField
-              label="Kanselleringsfrist"
+              label={t('settings.booking.cancellationDeadline')}
               description={t('common.antall_timer_for_bookingstart')}
             >
               <Textfield
-                aria-label="Kanselleringsfrist"
+                aria-label={t('settings.booking.cancellationDeadline')}
                 value={bookingData.cancellationDeadlineHours.toString()}
                 onChange={(e) => updateField('cancellationDeadlineHours', parseInt(e.target.value) || 0)}
                 type="number"
@@ -134,7 +132,7 @@ export function BookingTab() {
         <div style={{ paddingTop: 'var(--ds-spacing-3)', borderTop: '1px solid var(--ds-color-neutral-border-subtle)' }}>
           <Button onClick={saveBookingSettings} disabled={isSaving} type="button" aria-label={t('common.lagre_endringer')}>
             <SaveIcon />
-            {isSaving ? t('common.lagrer') : 'Lagre endringer'}
+            {isSaving ? t('common.lagrer') : t('common.lagre_endringer')}
           </Button>
         </div>
       </Stack>

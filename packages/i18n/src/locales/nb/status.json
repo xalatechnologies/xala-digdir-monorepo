@@ -49,5 +49,8 @@
   "headertekst": "Header-tekst",
   "footertekst": "Footer-tekst",
   "paakrevd": "Påkrevd",
-  "ingen.lisensnokkel": "Ingen lisensnøkkel"
+  "ingen.lisensnokkel": "Ingen lisensnøkkel",
+  "aktiv": "Aktiv",
+  "inaktiv": "Inaktiv",
+  "utlopt": "Utløpt"
 }

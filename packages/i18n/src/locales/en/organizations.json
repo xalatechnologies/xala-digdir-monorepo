@@ -92,5 +92,11 @@
   "activity.none": "No activity",
   "activity.noneDescription": "No events have been registered for this organization.",
   "activity.recent": "Recent activity",
-  "activity.by": "By"
+  "activity.by": "By",
+  "actorType.municipality": "Municipality",
+  "actorType.organization": "Organization",
+  "actorType.business": "Business",
+  "actorType.sports_club": "Sports club",
+  "actorType.youth_organization": "Youth organization",
+  "actorType.school": "School"
 }

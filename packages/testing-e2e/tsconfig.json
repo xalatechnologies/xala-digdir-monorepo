@@ -13,6 +13,7 @@
     "baseUrl": ".",
     "paths": {
       "@digilist/testing": ["./src"],
+      "@digilist/api/*": ["./src/*"],
       "@digilist/database-schema": ["../database-schema/dist"],
       "@digilist/client-sdk": ["../client-sdk/src"],
       "@digilist/contracts": ["../contracts/src"],

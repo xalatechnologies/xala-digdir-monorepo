@@ -66,7 +66,7 @@ test.describe('Sidebar Crawl - Admin Role', () => {
       const consoleErrors = evidence.getConsoleErrors();
       expect(
         consoleErrors.length,
-        `Console errors: ${consoleErrors.map((e) => e.text).join('\n')}`
+        `Console errors: ${consoleErrors.map((e) => e.message).join('\n')}`
       ).toBe(0);
 
       // 4. No 5xx API errors
@@ -124,7 +124,7 @@ test.describe('Sidebar Crawl - Saksbehandler Role', () => {
       
       // Allow redirect to login if session expired
       if (currentUrl.includes('/login')) {
-        test(true, 'Session expired, skipping');
+        console.warn('Session expired, skipping');
         return;
       }
 

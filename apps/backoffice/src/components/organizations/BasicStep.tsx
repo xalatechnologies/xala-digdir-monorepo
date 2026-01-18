@@ -25,10 +25,8 @@ export interface BasicStepProps {
 }
 
 export function BasicStep({ data, onChange, errors = [] }: BasicStepProps) {
-  // Translation function available for future localization
-  const _t = useT(); // eslint-disable-line @typescript-eslint/no-unused-vars
-  const handleChange = (field: keyof BasicData, value: string) => {
   const t = useT();
+  const handleChange = (field: keyof BasicData, value: string) => {
     onChange({ ...data, [field]: value });
   };
 
@@ -82,23 +80,23 @@ export function BasicStep({ data, onChange, errors = [] }: BasicStepProps) {
         </FormField>
 
         {/* Actor Type (required) */}
-        <FormField label="Organisasjonstype" htmlFor="actor-type">
+        <FormField label={t('common.organisasjonstype')} htmlFor="actor-type">
           <Select
             id="actor-type"
             value={data.actorType || 'municipality'}
             onChange={(e) => handleChange('actorType', e.target.value)}
           >
-            <option value="municipality">Kommune</option>
-            <option value="organization">Organisasjon</option>
-            <option value="business">Bedrift</option>
-            <option value="sports_club">Idrettslag</option>
-            <option value="youth_organization">Ungdomsorganisasjon</option>
-            <option value="school">Skole</option>
+            <option value="municipality">{t('organizations.actorType.municipality')}</option>
+            <option value="organization">{t('organizations.actorType.organization')}</option>
+            <option value="business">{t('organizations.actorType.business')}</option>
+            <option value="sports_club">{t('organizations.actorType.sports_club')}</option>
+            <option value="youth_organization">{t('organizations.actorType.youth_organization')}</option>
+            <option value="school">{t('organizations.actorType.school')}</option>
           </Select>
         </FormField>
 
         {/* Organization Number (optional) */}
-        <FormField label="Organisasjonsnummer" htmlFor="org-number">
+        <FormField label={t('common.organisasjonsnummer')} htmlFor="org-number">
           <Textfield
             id="org-number"
             value={data.organizationNumber || ''}
@@ -124,7 +122,7 @@ export function BasicStep({ data, onChange, errors = [] }: BasicStepProps) {
               />
             </FormField>
 
-            <FormField label="Telefon" htmlFor="phone">
+            <FormField label={t('common.telefon')} htmlFor="phone">
               <Textfield
                 id="phone"
                 type="tel"
@@ -143,7 +141,7 @@ export function BasicStep({ data, onChange, errors = [] }: BasicStepProps) {
           </Heading>
 
           <Stack gap="3">
-            <FormField label="Gateadresse" htmlFor="address">
+            <FormField label={t('common.gateadresse')} htmlFor="address">
               <Textfield
                 id="address"
                 value={data.address || ''}
@@ -153,7 +151,7 @@ export function BasicStep({ data, onChange, errors = [] }: BasicStepProps) {
             </FormField>
 
             <div style={{ display: 'flex', gap: 'var(--ds-spacing-3)' }}>
-              <FormField label="Postnummer" htmlFor="postal-code" style={{ flex: '0 0 120px' }}>
+              <FormField label={t('common.postnummer')} htmlFor="postal-code" style={{ flex: '0 0 120px' }}>
                 <Textfield
                   id="postal-code"
                   value={data.postalCode || ''}
@@ -163,7 +161,7 @@ export function BasicStep({ data, onChange, errors = [] }: BasicStepProps) {
                 />
               </FormField>
 
-              <FormField label="Poststed" htmlFor="city" style={{ flex: '1' }}>
+              <FormField label={t('common.poststed')} htmlFor="city" style={{ flex: '1' }}>
                 <Textfield
                   id="city"
                   value={data.city || ''}

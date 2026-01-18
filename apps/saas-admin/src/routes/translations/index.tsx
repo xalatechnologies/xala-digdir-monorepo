@@ -251,25 +251,33 @@ export function TranslationsPage(): React.ReactElement {
       </div>
       
       {/* Export Dialog */}
-      <Dialog.Root open={showExportDialog} onOpenChange={setShowExportDialog}>
-        <Dialog.Content>
-          <Dialog.Header>{t('saasAdmin.translations.exportTitle')}</Dialog.Header>
-          <Dialog.Description>
+      <Dialog
+        open={showExportDialog}
+        onClose={() => setShowExportDialog(false)}
+        title={t('saasAdmin.translations.exportTitle')}
+      >
+        <div style={{ padding: 'var(--ds-spacing-4)' }}>
+          <Paragraph>
             {t('saasAdmin.translations.exportDescription', {
               namespace: selectedNamespace,
               language: selectedLanguage,
             })}
-          </Dialog.Description>
-          <Dialog.Footer>
+          </Paragraph>
+          <div style={{ 
+            marginTop: 'var(--ds-spacing-6)', 
+            display: 'flex', 
+            justifyContent: 'flex-end', 
+            gap: 'var(--ds-spacing-3)' 
+          }}>
             <Button variant="secondary" onClick={() => setShowExportDialog(false)}>
               {t('common.cancel')}
             </Button>
             <Button onClick={handleExport}>
               {t('common.export')}
             </Button>
-          </Dialog.Footer>
-        </Dialog.Content>
-      </Dialog.Root>
+          </div>
+        </div>
+      </Dialog>
     </div>
   );
 }
