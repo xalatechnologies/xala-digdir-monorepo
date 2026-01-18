@@ -165,4 +165,3 @@ test.describe('Backoffice Smoke Tests', () => {
     });
   });
 });
-}

@@ -177,4 +177,3 @@ test.describe('Users CRUD', () => {
     });
   });
 });
-}

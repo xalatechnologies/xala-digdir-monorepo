@@ -113,4 +113,3 @@ test.describe('Saksbehandler - Approval Workflow', () => {
     });
   });
 });
-}

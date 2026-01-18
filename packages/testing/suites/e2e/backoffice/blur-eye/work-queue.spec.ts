@@ -187,4 +187,3 @@ test.describe('Work Queue (Arbeidskø) E2E', () => {
     });
   });
 });
-}

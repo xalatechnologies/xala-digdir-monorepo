@@ -89,4 +89,3 @@ test.describe('Header Search', () => {
     await expect(page).toHaveURL(/\/search.*q=roller/);
   });
 });
-}

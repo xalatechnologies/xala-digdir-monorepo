@@ -176,4 +176,3 @@ test.describe('Organizations CRUD', () => {
     });
   });
 });
-}

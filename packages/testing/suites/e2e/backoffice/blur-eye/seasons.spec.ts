@@ -161,4 +161,3 @@ test.describe('Seasons (Sesonger) E2E', () => {
     });
   });
 });
-}

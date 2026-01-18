@@ -198,4 +198,3 @@ test.describe('Date/Time Formatting', () => {
     console.log(`Norwegian date format detected: ${hasNorwegianDates}`);
   });
 });
-}

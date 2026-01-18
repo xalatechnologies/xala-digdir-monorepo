@@ -255,4 +255,3 @@ test.describe('Web - Pack 1: Public Discovery', () => {
     });
   });
 });
-}

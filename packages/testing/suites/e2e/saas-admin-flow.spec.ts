@@ -61,7 +61,6 @@ async function mockSaasAdminAuth(page: Page) {
     localStorage.setItem('auth_token', JSON.stringify(mockToken));
     localStorage.setItem('isAuthenticated', 'true');
   });
-}
 
 /**
  * Helper: Wait for page load and network idle
@@ -69,7 +68,6 @@ async function mockSaasAdminAuth(page: Page) {
 async function waitForPageReady(page: Page) {
   await page.waitForLoadState('networkidle');
   await page.waitForTimeout(500); // Small buffer for React hydration
-}
 
 // ============================================================================
 // Test Suite: SaaS Admin Login
@@ -463,4 +461,3 @@ test.describe('SaaS Admin - Complete Flow', () => {
     await expect(page.getByRole('button', { name: /Status:.*Aktiv/i })).toBeVisible();
   });
 });
-}

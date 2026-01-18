@@ -36,18 +36,15 @@ async function mockSaasAdminAuth(page: Page) {
     localStorage.setItem('auth_token', JSON.stringify(mockToken));
     localStorage.setItem('isAuthenticated', 'true');
   });
-}
 
 async function waitForPageReady(page: Page) {
   await page.waitForLoadState('networkidle');
   await page.waitForTimeout(500);
-}
 
 async function setLanguage(page: Page, lang: 'nb' | 'en') {
   await page.evaluate((language) => {
     localStorage.setItem('i18n-language', language);
   }, lang);
-}
 
 // ============================================================================
 // Test Suite: Default Language (Norwegian)
@@ -380,4 +377,3 @@ test.describe('SaaS Admin - RTL Support', () => {
     expect(htmlDir === 'ltr' || htmlDir === null).toBe(true);
   });
 });
-}

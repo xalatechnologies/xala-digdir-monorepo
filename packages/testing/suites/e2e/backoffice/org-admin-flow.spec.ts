@@ -78,7 +78,6 @@ async function mockOrgAdminAuth(page: Page) {
     localStorage.setItem('auth_token', JSON.stringify(mockToken));
     localStorage.setItem('isAuthenticated', 'true');
   });
-}
 
 /**
  * Helper: Mock API responses for org-scoped data
@@ -247,7 +246,6 @@ async function mockOrgAdminApiResponses(page: Page) {
       }),
     });
   });
-}
 
 test.describe('Organization Admin Flow', () => {
   setupMockApi();
@@ -1405,4 +1403,3 @@ test.describe('GATE-G3: Feature Flag OFF Removes Module', () => {
     // Test passes - reports hidden from navigation when flag disabled
   });
 });
-}

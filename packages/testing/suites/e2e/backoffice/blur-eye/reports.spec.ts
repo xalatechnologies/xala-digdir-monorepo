@@ -216,4 +216,3 @@ test.describe('Reports (Rapporter) E2E', () => {
     });
   });
 });
-}

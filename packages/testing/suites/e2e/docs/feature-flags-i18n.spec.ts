@@ -93,4 +93,3 @@ test.describe('Docs i18n', () => {
     expect(currentLang).toBe(initialLang);
   });
 });
-}

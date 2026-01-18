@@ -134,4 +134,3 @@ test.describe('Monitoring Workflow Journey', () => {
     expect(Array.isArray(body.data)).toBe(true);
   });
 });
-}

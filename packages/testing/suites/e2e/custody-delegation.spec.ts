@@ -31,7 +31,6 @@ async function mockTenantAdminAuth(page: Page) {
     }));
     localStorage.setItem('isAuthenticated', 'true');
   });
-}
 
 /**
  * Mock Auth for Org Admin (Backoffice Organization Management)
@@ -46,7 +45,6 @@ async function mockOrgAdminAuth(page: Page) {
     }));
     localStorage.setItem('isAuthenticated', 'true');
   });
-}
 
 test.describe('Rental Object Custody & Delegation Flow (Backoffice Only)', () => {
   setupMockApi();
@@ -157,4 +155,3 @@ test.describe('Rental Object Custody & Delegation Flow (Backoffice Only)', () =>
     await expect(page.getByText('Delegate to Member')).not.toBeVisible();
   });
 });
-}

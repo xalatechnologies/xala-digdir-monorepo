@@ -328,4 +328,3 @@ test.describe('Messages', () => {
     });
   });
 });
-}

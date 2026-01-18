@@ -30,4 +30,3 @@ test('check Minside login page', async ({ page }) => {
   const rootContent = await page.locator('#root').innerHTML();
   console.log(`Root has ${rootContent.length} characters`);
 });
-}

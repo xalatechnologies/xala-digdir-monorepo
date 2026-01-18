@@ -133,4 +133,3 @@ test.describe('Demo Login (Mocked API)', () => {
     expect(hasError).toBeTruthy();
   });
 });
-}

@@ -64,4 +64,3 @@ test.describe('Review Moderation', () => {
     await expect(page.getByText(/anmeldelse avslått/i)).toBeVisible();
   });
 });
-}

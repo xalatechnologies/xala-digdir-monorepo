@@ -295,4 +295,3 @@ test.describe('MinSide - Private User Flow', () => {
     });
   });
 });
-}

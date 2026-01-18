@@ -20,7 +20,6 @@ export interface ModuleConfig {
     requireFilters: number;
     allowEmptyState: boolean;
   };
-}
 
 export const config = {
   // Base URLs
@@ -502,14 +501,11 @@ export type TestConfig = typeof config;
 // Helper to get all admin modules
 export function getAdminModules(): ModuleConfig[] {
   return Object.values(config.modules);
-}
 
 // Helper to get modules by type
 export function getModulesByType(type: ModuleType): ModuleConfig[] {
   return Object.values(config.modules).filter(m => m.type === type);
-}
 
 // Helper to get feature-flagged modules
 export function getFeatureFlaggedModules(): ModuleConfig[] {
   return Object.values(config.modules).filter(m => m.featureFlag);
-}

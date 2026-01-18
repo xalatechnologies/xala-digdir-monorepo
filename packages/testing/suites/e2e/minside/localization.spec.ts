@@ -271,4 +271,3 @@ test.describe('MinSide - Localization', () => {
     });
   });
 });
-}

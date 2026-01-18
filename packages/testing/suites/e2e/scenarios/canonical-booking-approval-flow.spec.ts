@@ -376,4 +376,3 @@ test.describe('Canonical Booking Approval Flow', () => {
     }
   });
 });
-}

@@ -64,4 +64,3 @@ test.describe('Message Templates', () => {
     await expect(page.locator('.preview-content')).not.toContainText('{{userName}}');
   });
 });
-}

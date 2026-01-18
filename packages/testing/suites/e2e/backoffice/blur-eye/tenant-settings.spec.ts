@@ -246,4 +246,3 @@ test.describe('Tenant Settings E2E', () => {
     }
   });
 });
-}

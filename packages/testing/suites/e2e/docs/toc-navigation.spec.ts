@@ -94,4 +94,3 @@ test.describe('Docs Navigation', () => {
     await expect(breadcrumbs).toContainText(/Booking/);
   });
 });
-}

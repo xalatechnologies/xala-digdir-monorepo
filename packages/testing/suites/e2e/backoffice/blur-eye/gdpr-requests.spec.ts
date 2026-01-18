@@ -107,4 +107,3 @@ test.describe('GDPR Requests (Personvernforespørsler) E2E', () => {
     });
   });
 });
-}

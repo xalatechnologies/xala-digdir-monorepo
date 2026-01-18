@@ -422,4 +422,3 @@ test.describe('RFC7807 Error Response Verification', () => {
     }
   });
 });
-}

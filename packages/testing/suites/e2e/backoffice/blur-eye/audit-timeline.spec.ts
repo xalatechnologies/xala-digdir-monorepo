@@ -155,4 +155,3 @@ test.describe('Audit Timeline E2E', () => {
     });
   });
 });
-}

@@ -117,4 +117,3 @@ test.describe('Pricing Rules (Prisregler) E2E', () => {
     });
   });
 });
-}

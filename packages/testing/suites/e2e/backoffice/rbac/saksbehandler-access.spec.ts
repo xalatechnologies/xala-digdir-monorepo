@@ -175,4 +175,3 @@ test.describe('Saksbehandler RBAC Access', () => {
     });
   });
 });
-}

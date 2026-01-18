@@ -27,7 +27,6 @@ async function mockSession(page: any, userData?: any) {
       }),
     });
   });
-}
 
 test.describe('Web Login Flow - Security Tests', () => {
   setupMockApi();
@@ -585,4 +584,3 @@ test.describe('Web Login Flow - Security Tests', () => {
 });
 
 console.log('✅ Web Login Security Tests Loaded');
-}

@@ -17,7 +17,6 @@ interface FeatureFlag {
   sidebarItem?: string;
   buttonSelector?: string;
   route?: string;
-}
 
 const TRACKED_FLAGS: FeatureFlag[] = [
   {
@@ -331,4 +330,3 @@ test.describe('C. Feature Flags Integration', () => {
     });
   });
 });
-}

@@ -43,7 +43,6 @@ async function mockTenantAdminAuth(page: Page) {
     localStorage.setItem('auth_token', JSON.stringify(mockToken));
     localStorage.setItem('isAuthenticated', 'true');
   });
-}
 
 /**
  * Helper: Wait for page load and network idle
@@ -51,7 +50,6 @@ async function mockTenantAdminAuth(page: Page) {
 async function waitForPageReady(page: Page) {
   await page.waitForLoadState('networkidle');
   await page.waitForTimeout(500);
-}
 
 // ============================================================================
 // Test Suite: Users Page - Empty States
@@ -239,4 +237,3 @@ test.describe('Tenant Admin - i18n Translations', () => {
     await expect(emptyState).toBeVisible();
   });
 });
-}

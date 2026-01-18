@@ -217,4 +217,3 @@ test.describe('Dashboard (Oversikt) E2E', () => {
     });
   });
 });
-}

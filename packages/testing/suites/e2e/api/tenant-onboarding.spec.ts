@@ -99,4 +99,3 @@ test.describe('Tenant Onboarding Journey', () => {
     expect(response.status()).toBe(200);
   });
 });
-}

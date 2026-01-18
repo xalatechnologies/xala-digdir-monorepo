@@ -69,4 +69,3 @@ test.describe('Web Login Flow - Manual Verification', () => {
 
 console.log('✅ Manual Verification Tests Loaded');
 console.log('Run with: npx playwright test tests/e2e/web-login-manual-test.spec.ts --headed');
-}

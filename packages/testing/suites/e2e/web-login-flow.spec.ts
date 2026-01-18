@@ -21,7 +21,6 @@ async function waitForAppReady(page: Page) {
   await page.waitForSelector('header', { timeout: 10000 });
   // Give React a moment to finish initial render
   await page.waitForTimeout(500);
-}
 
 /**
  * Helper: Check if user is logged in by looking for user menu
@@ -35,7 +34,6 @@ async function isLoggedIn(page: Page): Promise<boolean> {
   } catch {
     return false;
   }
-}
 
 /**
  * Helper: Check if login button is visible
@@ -48,7 +46,6 @@ async function isLoginButtonVisible(page: Page): Promise<boolean> {
   } catch {
     return false;
   }
-}
 
 /**
  * Helper: Mock successful ID-porten OAuth callback
@@ -93,7 +90,6 @@ async function mockSuccessfulOAuthCallback(page: Page) {
       }),
     });
   });
-}
 
 /**
  * Helper: Mock expired session
@@ -111,7 +107,6 @@ async function mockExpiredSession(page: Page) {
       }),
     });
   });
-}
 
 // =============================================================================
 // Test Suite: Happy Path - User Stories
@@ -700,4 +695,3 @@ test.describe('Web Login Flow - Flow Context Preservation', () => {
 });
 
 console.log('✅ Web Login Flow E2E Tests Loaded');
-}

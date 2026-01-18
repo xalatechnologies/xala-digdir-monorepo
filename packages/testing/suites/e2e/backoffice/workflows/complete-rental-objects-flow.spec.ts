@@ -526,4 +526,3 @@ test.describe('Complete Rental Objects Workflow', () => {
     });
   });
 });
-}

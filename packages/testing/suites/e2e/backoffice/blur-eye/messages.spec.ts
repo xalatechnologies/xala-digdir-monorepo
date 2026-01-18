@@ -144,4 +144,3 @@ test.describe('Messages (Meldinger) E2E', () => {
     });
   });
 });
-}

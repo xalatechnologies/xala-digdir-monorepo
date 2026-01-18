@@ -121,4 +121,3 @@ test.describe('Help (Hjelp) E2E', () => {
     });
   });
 });
-}

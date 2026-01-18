@@ -124,4 +124,3 @@ test.describe('Blocks (Blokkeringer) E2E', () => {
     });
   });
 });
-}

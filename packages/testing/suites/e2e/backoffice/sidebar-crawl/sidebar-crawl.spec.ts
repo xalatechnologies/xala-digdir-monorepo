@@ -27,7 +27,6 @@ interface PageSnapshot {
   apiErrors: number;
   pageErrors: number;
   timestamp: string;
-}
 
 test.describe('Sidebar Crawl - Admin Role', () => {
   setupMockApi();
@@ -199,4 +198,3 @@ test.describe('Sidebar Dynamic Enumeration', () => {
     expect(count).toBeGreaterThan(5);
   });
 });
-}

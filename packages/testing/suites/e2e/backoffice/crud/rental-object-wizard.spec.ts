@@ -476,4 +476,3 @@ test.describe('Rental Object Wizard', () => {
     });
   });
 });
-}

@@ -212,4 +212,3 @@ test.describe('JWT Authentication Flow', () => {
     console.log('✅ Step 6 PASSED: Token refresh issues new valid JWT');
   });
 });
-}

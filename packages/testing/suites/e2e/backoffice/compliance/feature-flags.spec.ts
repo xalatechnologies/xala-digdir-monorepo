@@ -17,7 +17,6 @@ import { FEATURE_FLAGS, getItemsForFlag, type FeatureFlagId } from '../config/ex
 interface FeatureFlagState {
   id: string;
   enabled: boolean;
-}
 
 test.describe('Feature Flags - Read State', () => {
   setupMockApi();
@@ -303,4 +302,3 @@ test.describe('Feature Flags - Persistence', () => {
     await context.close();
   });
 });
-}

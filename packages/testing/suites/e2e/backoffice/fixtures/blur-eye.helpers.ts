@@ -24,7 +24,6 @@ export interface BlurEyeResult {
     passed: boolean;
     details?: string;
   }[];
-}
 
 export interface PageElements {
   title: Locator | null;
@@ -37,7 +36,6 @@ export interface PageElements {
   emptyState: Locator | null;
   rowActions: Locator | null;
   pagination: Locator | null;
-}
 
 /**
  * Discover all page elements for blur-eye validation
@@ -108,7 +106,6 @@ export async function discoverPageElements(page: Page): Promise<PageElements> {
     rowActions: rowActionsVisible ? rowActionsLocator : null,
     pagination: paginationVisible ? paginationLocator : null,
   };
-}
 
 /**
  * Assert blur-eye structure for a list view page
@@ -204,7 +201,6 @@ export async function assertBlurEyeListView(
   const allPassed = checks.every(c => c.passed);
   
   return { passed: allPassed, checks };
-}
 
 /**
  * Assert blur-eye structure for a wizard/form view
@@ -257,7 +253,6 @@ export async function assertBlurEyeWizardView(page: Page): Promise<BlurEyeResult
   const allPassed = checks.filter(c => !c.name.includes('optional')).every(c => c.passed);
   
   return { passed: allPassed, checks };
-}
 
 /**
  * Assert blur-eye structure for a settings/form page
@@ -294,7 +289,6 @@ export async function assertBlurEyeSettingsView(page: Page): Promise<BlurEyeResu
   const allPassed = checks.every(c => c.passed);
   
   return { passed: allPassed, checks };
-}
 
 /**
  * Assert no forbidden terminology on page
@@ -314,7 +308,6 @@ export async function assertNoForbiddenTerminology(page: Page): Promise<{ passed
     passed: foundTerms.length === 0,
     terms: foundTerms,
   };
-}
 
 /**
  * Assert no missing i18n keys on page
@@ -341,7 +334,6 @@ export async function assertNoMissingI18nKeys(page: Page): Promise<{ passed: boo
     passed: foundKeys.length === 0,
     keys: [...new Set(foundKeys)],
   };
-}
 
 /**
  * Assert page is ready (not stuck loading)
@@ -368,7 +360,6 @@ export async function assertPageReady(page: Page, timeoutMs: number = 10000): Pr
   const isLoading = await loadingSpinner.isVisible().catch(() => false);
   
   return !isLoading;
-}
 
 /**
  * Get current feature flags from the page context
@@ -393,7 +384,6 @@ export async function getFeatureFlagsSnapshot(page: Page): Promise<Record<string
   } catch {
     return {};
   }
-}
 
 /**
  * Get current user capabilities from the page context
@@ -415,7 +405,6 @@ export async function getCapabilitiesSnapshot(page: Page): Promise<string[]> {
   } catch {
     return [];
   }
-}
 
 /**
  * Log blur-eye check results in a formatted way
@@ -431,4 +420,3 @@ export function logBlurEyeResults(results: BlurEyeResult, pageName: string): voi
   
   console.log('─'.repeat(50));
   console.log(`Overall: ${results.passed ? '✅ PASSED' : '❌ FAILED'}\n`);
-}

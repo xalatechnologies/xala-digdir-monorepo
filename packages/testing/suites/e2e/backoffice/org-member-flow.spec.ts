@@ -63,7 +63,6 @@ async function mockOrgMemberAuth(page: Page) {
     localStorage.setItem('auth_token', JSON.stringify(mockToken));
     localStorage.setItem('isAuthenticated', 'true');
   });
-}
 
 /**
  * Helper: Mock API responses for org_member scoped data
@@ -195,7 +194,6 @@ async function mockOrgMemberApiResponses(page: Page) {
       }),
     });
   });
-}
 
 // ============================================================================
 // Test Suite: Organization Member Sidebar
@@ -430,4 +428,3 @@ test.describe('Organization Member - Task-Oriented Dashboard', () => {
     ).toBeVisible();
   });
 });
-}

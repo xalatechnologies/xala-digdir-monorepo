@@ -255,4 +255,3 @@ test.describe('MinSide - Auth Boundaries', () => {
     });
   });
 });
-}

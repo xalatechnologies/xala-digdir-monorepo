@@ -323,4 +323,3 @@ test.describe('Rental Objects CRUD', () => {
     });
   });
 });
-}

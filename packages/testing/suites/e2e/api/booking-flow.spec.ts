@@ -119,4 +119,3 @@ test.describe('Booking Flow Journey', () => {
     expect(body.booking.status).toBe('completed');
   });
 });
-}

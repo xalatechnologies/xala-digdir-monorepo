@@ -133,4 +133,3 @@ test.describe('Synthetic Monitoring - Web', () => {
     expect(hasHeading).toBe(true);
   });
 });
-}

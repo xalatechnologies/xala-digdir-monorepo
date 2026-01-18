@@ -190,4 +190,3 @@ test.describe('Security - Console/DOM Leaks', () => {
     expect(pageHtml).not.toMatch(jwtPattern);
   });
 });
-}

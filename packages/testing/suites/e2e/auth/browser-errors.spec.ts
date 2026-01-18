@@ -45,4 +45,3 @@ test('check for browser errors preventing React mount', async ({ page }) => {
     console.log('\n✅ React app mounted successfully');
   }
 });
-}

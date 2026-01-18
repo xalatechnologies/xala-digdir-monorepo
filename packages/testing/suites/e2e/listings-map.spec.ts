@@ -244,4 +244,3 @@ test.describe('Listings Page - Map View (Dynamic Import)', () => {
     expect(loadTime).toBeLessThan(3000);
   });
 });
-}

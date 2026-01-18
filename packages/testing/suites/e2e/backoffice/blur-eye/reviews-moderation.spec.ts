@@ -99,4 +99,3 @@ test.describe('Reviews Moderation (Anmeldelser) E2E', () => {
     });
   });
 });
-}

@@ -226,4 +226,3 @@ test.describe('Zero Breaking Changes', () => {
     expect(response.status()).not.toBe(500);
   });
 });
-}

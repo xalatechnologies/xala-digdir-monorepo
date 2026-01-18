@@ -59,4 +59,3 @@ test('Inspect login page structure', async ({ page }) => {
   const hasDemoDialog = html.includes('DemoLoginDialog') || html.includes('demo-login') || html.includes('demo-innlogging');
   console.log(`  - Contains demo login references: ${hasDemoDialog}`);
 });
-}

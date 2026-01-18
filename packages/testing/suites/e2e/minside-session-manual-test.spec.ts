@@ -89,4 +89,3 @@ test.describe('Minside Session - Manual Verification', () => {
 
 console.log('✅ Minside Session Manual Tests Loaded');
 console.log('Run with: npx playwright test tests/e2e/minside-session-manual-test.spec.ts --headed --project=chromium');
-}

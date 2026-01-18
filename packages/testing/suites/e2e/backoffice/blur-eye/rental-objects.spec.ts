@@ -598,4 +598,3 @@ test.describe('B. Rental Objects E2E', () => {
     });
   });
 });
-}

@@ -202,4 +202,3 @@ test.describe('Web - Pack 2: Single-Slot Booking', () => {
     });
   });
 });
-}

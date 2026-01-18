@@ -89,4 +89,3 @@ test.describe('Settings (Innstillinger) E2E', () => {
     });
   });
 });
-}

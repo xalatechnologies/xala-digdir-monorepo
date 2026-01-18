@@ -133,4 +133,3 @@ test.describe('Economy Invoices (Fakturaer) E2E', () => {
     });
   });
 });
-}

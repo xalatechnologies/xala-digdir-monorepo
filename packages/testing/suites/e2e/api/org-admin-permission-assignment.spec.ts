@@ -318,4 +318,3 @@ test.describe('Invalid Permission Values (Negative Test)', () => {
     expect(response.status()).toBe(400);
   });
 });
-}

@@ -275,4 +275,3 @@ test.describe('Web - Pack 6: Accessibility & Localization', () => {
     });
   });
 });
-}

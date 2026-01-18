@@ -118,4 +118,3 @@ test('Login diagnostic - capture full flow', async ({ page }) => {
   await page.screenshot({ path: 'tests/screenshots/login-diagnostic-final.png', fullPage: true });
   console.log('\n📸 Screenshot saved to: tests/screenshots/login-diagnostic-final.png');
 });
-}

@@ -24,4 +24,3 @@ test.describe('Demo Login', () => {
     await expect(page).toHaveURL(/\/(dashboard|home|minside)/);
   });
 });
-}

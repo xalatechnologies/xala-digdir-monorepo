@@ -379,4 +379,3 @@ test.describe('HCASE - Skien Kommune Demo Scenarios', () => {
     await expect(page.locator('[data-time="10:00"][disabled]')).toBeVisible();
   });
 });
-}

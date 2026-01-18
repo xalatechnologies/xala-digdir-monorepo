@@ -130,4 +130,3 @@ test.describe('GATE-G2: No CRUD Modals', () => {
     });
   });
 });
-}

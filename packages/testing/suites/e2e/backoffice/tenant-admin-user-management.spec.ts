@@ -351,4 +351,3 @@ test.describe('Tenant Admin User Management', () => {
     await expect(page.locator('[data-testid="success-toast"]')).toContainText(/2 invitations sent/i);
   });
 });
-}

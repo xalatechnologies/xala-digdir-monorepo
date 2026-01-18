@@ -36,7 +36,6 @@ async function loginAsRole(page: any, role: string) {
       },
     ]);
   }
-}
 
 // =============================================================================
 // Citizen Booking Journey
@@ -276,4 +275,3 @@ test.describe('Admin Booking Management', () => {
     }
   });
 });
-}

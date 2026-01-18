@@ -34,7 +34,6 @@ async function runAxeTest(page: any, pageName: string) {
   }
 
   return results;
-}
 
 // =============================================================================
 // Web (Public) Accessibility Tests
@@ -354,4 +353,3 @@ test.describe('Color Contrast', () => {
     expect(criticalContrast.length).toBe(0);
   });
 });
-}

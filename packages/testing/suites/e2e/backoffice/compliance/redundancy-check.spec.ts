@@ -16,7 +16,6 @@ interface SidebarItem {
   label: string;
   href: string;
   section?: string;
-}
 
 interface RedundancyReport {
   timestamp: string;
@@ -25,7 +24,6 @@ interface RedundancyReport {
   duplicatePageTitles: { title: string; routes: string[] }[];
   suggestions: string[];
   overall: 'pass' | 'warn' | 'fail';
-}
 
 test.describe('Redundancy & Menu Hygiene', () => {
   setupMockApi();
@@ -285,4 +283,3 @@ ${items.map(i => `| ${i.label} | ${i.href} |`).join('\n')}
     console.log(`└─ Status: ${report.overall.toUpperCase()}`);
   });
 });
-}

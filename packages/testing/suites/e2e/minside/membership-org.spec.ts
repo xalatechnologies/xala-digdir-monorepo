@@ -73,4 +73,3 @@ test.describe('Membership Organizations', () => {
     await expect(page.getByTestId('current-org-name')).toBeVisible();
   });
 });
-}

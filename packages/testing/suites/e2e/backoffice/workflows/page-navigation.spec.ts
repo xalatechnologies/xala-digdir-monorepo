@@ -340,4 +340,3 @@ test.describe('Page Navigation & Filters', () => {
     });
   });
 });
-}
