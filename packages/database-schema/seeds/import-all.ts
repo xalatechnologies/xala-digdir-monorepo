@@ -58,9 +58,9 @@ async function importSeeds(): Promise<void> {
     console.log('   └─ Organizations...');
     for (const o of rentalData.organizations || []) {
       await sql`
-        INSERT INTO platform.organizations (id, tenant_id, name, org_number, status)
-        VALUES (${o.id}, ${o.tenant_id}, ${o.name}, ${o.org_number || null}, 'ACTIVE')
-        ON CONFLICT (id) DO UPDATE SET name = EXCLUDED.name
+        INSERT INTO platform.organizations (id, tenant_id, name, slug, status, type)
+        VALUES (${o.id}, ${o.tenant_id}, ${o.name}, ${o.slug}, ${o.status || 'active'}, 'other')
+        ON CONFLICT (id) DO UPDATE SET name = EXCLUDED.name, slug = EXCLUDED.slug
       `;
       organizations++;
     }
@@ -134,14 +134,16 @@ async function importSeeds(): Promise<void> {
     for (const r of rentalData.rental_objects || []) {
       await sql`
         INSERT INTO domain.rental_objects (
-          id, tenant_id, organization_id, title, description,
-          type_code, status, capacity, booking_mode
+          id, tenant_id, organization_id, name, slug, description,
+          category_key, status, capacity, requires_approval,
+          images, pricing, metadata
         )
         VALUES (
-          ${r.id}, ${r.tenant_id}, ${r.organization_id}, ${r.name}, ${r.description},
-          'SPACE', 'PUBLISHED', ${r.capacity || null}, 'SINGLE_SLOT'
+          ${r.id}, ${r.tenant_id}, ${r.organization_id}, ${r.name}, ${r.slug}, ${r.description},
+          ${r.category_key || 'LOKALER_OG_BANER'}, 'published', ${r.capacity || null}, ${r.requires_approval || false},
+          ${JSON.stringify(r.images || [])}::jsonb, ${JSON.stringify(r.pricing || {})}::jsonb, ${JSON.stringify(r.metadata || {})}::jsonb
         )
-        ON CONFLICT (id) DO UPDATE SET title = EXCLUDED.title, status = 'PUBLISHED'
+        ON CONFLICT (id) DO UPDATE SET name = EXCLUDED.name, status = 'published'
       `;
       rentalObjects++;
     }
@@ -152,13 +154,13 @@ async function importSeeds(): Promise<void> {
     for (const b of bookingsData.bookings || []) {
       await sql`
         INSERT INTO domain.bookings (
-          id, tenant_id, rental_object_id, booked_by_user_id,
-          start_at, end_at, status, booking_mode
+          id, tenant_id, rental_object_id, user_id,
+          start_time, end_time, status
         )
         VALUES (
           ${b.id}, ${b.tenant_id}, ${b.rental_object_id}, ${b.user_id},
-          ${b.start_time}::timestamptz, ${b.end_time}::timestamptz,
-          'APPROVED', 'SINGLE_SLOT'
+          ${b.start_time}, ${b.end_time},
+          'approved'
         )
         ON CONFLICT (id) DO UPDATE SET status = EXCLUDED.status
       `;
