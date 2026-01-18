@@ -33,7 +33,7 @@ export default defineConfig({
     {
       name: 'anonymous-chromium',
       use: { ...devices['Desktop Chrome'] },
-      testMatch: /discovery|calendar|accessibility/,
+      testMatch: /discovery|calendar|accessibility|synthetic-monitoring/,
     },
     
     // Setup for authenticated tests
