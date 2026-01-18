@@ -1,29 +1,23 @@
 /**
  * Lazy Loading for i18n Locale Bundles
  *
- * This module provides lazy loading capabilities for translation bundles.
- * Instead of loading all locales upfront, it loads only the active locale
- * on demand, reducing initial bundle size.
- *
- * Usage:
- *   import { loadLocale, getLoadedLocales } from '@xala/i18n';
- *
- *   // Load a locale dynamically
- *   const translations = await loadLocale('nb');
- *
- * For React:
- *   import { LazyI18nProvider } from '@xala/i18n';
- *
- *   <LazyI18nProvider locale="nb" fallbackLocale="nb">
- *     <App />
- *   </LazyI18nProvider>
+ * ARCHITECTURE: Database is the ONLY source of truth for translations.
+ * 
+ * Flow:
+ * 1. App requests translations via loadLocale(lang)
+ * 2. Loader fetches from API: GET /api/i18n/{lang}
+ * 3. API queries platform.translations table
+ * 4. Translations are cached locally for performance
+ * 
+ * Note: Static JSON files in locales/ are used ONLY for initial DB seeding.
+ *       They are NOT used at runtime.
  */
 
 import type { SupportedLocale, TranslationsRegistry } from './types';
 
 /**
  * Core translations that are bundled immediately for fast initial render.
- * These are the most commonly used keys that should never cause a flash.
+ * These provide immediate feedback while loading from API.
  */
 export const CORE_TRANSLATIONS: Record<SupportedLocale, Record<string, string>> = {
   nb: {
@@ -78,7 +72,44 @@ const loadingPromises: Map<SupportedLocale, Promise<TranslationsRegistry[Support
   new Map();
 
 /**
- * Load a locale bundle dynamically
+ * API base URL for fetching translations
+ */
+const getApiBaseUrl = (): string => {
+  // Check for environment variable or use default
+  if (typeof window !== 'undefined' && (window as any).__VITE_API_URL__) {
+    return (window as any).__VITE_API_URL__;
+  }
+  return import.meta.env?.VITE_API_URL || '/api';
+};
+
+/**
+ * Fetch translations from API (database source of truth)
+ */
+async function fetchTranslationsFromApi(
+  locale: SupportedLocale
+): Promise<Record<string, string> | null> {
+  try {
+    const baseUrl = getApiBaseUrl();
+    const response = await fetch(`${baseUrl}/i18n/${locale}`, {
+      headers: {
+        Accept: 'application/json',
+      },
+    });
+
+    if (!response.ok) {
+      console.warn(`Failed to fetch translations for ${locale}: ${response.status}`);
+      return null;
+    }
+
+    return response.json();
+  } catch (error) {
+    console.warn(`Failed to fetch translations for ${locale}:`, error);
+    return null;
+  }
+}
+
+/**
+ * Load a locale bundle from the database via API
  *
  * @param locale The locale to load
  * @returns Promise resolving to the translations object
@@ -102,26 +133,22 @@ export async function loadLocale(
   // Create loading promise
   const loadPromise = (async () => {
     try {
-      let translations: TranslationsRegistry[SupportedLocale];
+      // Fetch from API (database is source of truth)
+      const apiTranslations = await fetchTranslationsFromApi(locale);
 
-      // Dynamic import based on locale
-      if (locale === 'nb') {
-        const module = await import('./locales/nb');
-        translations = module.nb;
-      } else if (locale === 'en') {
-        const module = await import('./locales/en');
-        translations = module.en;
-      } else {
-        // Fallback to Norwegian
-        const module = await import('./locales/nb');
-        translations = module.nb;
+      if (apiTranslations) {
+        // Cache and return API translations
+        loadedLocales.set(locale, apiTranslations);
+        loadingPromises.delete(locale);
+        return apiTranslations;
       }
 
-      // Cache the loaded translations
-      loadedLocales.set(locale, translations);
+      // If API fails, use core translations as emergency fallback
+      console.warn(`Using core translations fallback for ${locale}`);
+      const fallback = CORE_TRANSLATIONS[locale] || CORE_TRANSLATIONS.nb;
+      loadedLocales.set(locale, fallback);
       loadingPromises.delete(locale);
-
-      return translations;
+      return fallback;
     } catch (error) {
       loadingPromises.delete(locale);
       console.error(`Failed to load locale: ${locale}`, error);
@@ -172,9 +199,20 @@ export function getCachedTranslations(
 }
 
 /**
- * Clear the locale cache (useful for testing)
+ * Clear the locale cache (useful for testing or after DB updates)
  */
 export function clearLocaleCache(): void {
   loadedLocales.clear();
   loadingPromises.clear();
+}
+
+/**
+ * Force refresh translations from API
+ */
+export async function refreshLocale(
+  locale: SupportedLocale
+): Promise<TranslationsRegistry[SupportedLocale]> {
+  loadedLocales.delete(locale);
+  loadingPromises.delete(locale);
+  return loadLocale(locale);
 }

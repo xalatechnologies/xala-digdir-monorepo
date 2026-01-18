@@ -38,6 +38,32 @@ const MOCK_ACTIVITY_LOG = [
   { id: '5', action: 'Seed data importert', actor: 'operator@example.com', timestamp: '2026-01-17T18:45:00Z' },
 ];
 
+// Scanner results - will be fetched from API
+const MOCK_SCANNER_RESULTS = {
+  i18n: {
+    lastRun: '2026-01-18T13:30:00Z',
+    totalKeys: 9312,
+    missingKeys: 0,
+    hardcodedStrings: 127,
+    status: 'warning' as const,
+  },
+  designSystem: {
+    lastRun: '2026-01-18T12:00:00Z',
+    totalComponents: 156,
+    violations: 3,
+    tokenCompliance: 98.1,
+    status: 'success' as const,
+  },
+  compliance: {
+    lastRun: '2026-01-18T11:00:00Z',
+    wcagErrors: 0,
+    wcagWarnings: 12,
+    gdprCompliance: 100,
+    status: 'success' as const,
+  },
+};
+
+
 export function MonitoringPage() {
   const t = useT();
   const [refreshing, setRefreshing] = useState(false);
@@ -102,7 +128,7 @@ export function MonitoringPage() {
           </Paragraph>
         </div>
         <Badge color={refreshing ? 'warning' : 'success'}>
-          {refreshing ? 't('common.oppdaterer')' : 'Live'}
+          {refreshing ? t('common.oppdaterer') : 'Live'}
         </Badge>
       </div>
 
@@ -256,6 +282,137 @@ export function MonitoringPage() {
           </div>
         </Card>
       </div>
+
+      {/* Compliance Scanners */}
+      <Card style={{ marginTop: 'var(--ds-spacing-6)', padding: 'var(--ds-spacing-6)' }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 'var(--ds-spacing-4)' }}>
+          <Heading level={2} data-size="sm">
+            {t('saasAdmin.monitoring.scanners.title', { defaultValue: 'Kodekvalitet og samsvar' })}
+          </Heading>
+        </div>
+
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 'var(--ds-spacing-4)' }}>
+          {/* i18n Scanner */}
+          <div style={{ padding: 'var(--ds-spacing-4)', border: '1px solid var(--ds-color-neutral-border-subtle)', borderRadius: 'var(--ds-border-radius-md)' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 'var(--ds-spacing-3)' }}>
+              <Paragraph data-size="sm" style={{ margin: 0, fontWeight: 'var(--ds-font-weight-medium)' }}>i18n Scanner</Paragraph>
+              <Badge color={MOCK_SCANNER_RESULTS.i18n.status === 'success' ? 'success' : 'warning'}>
+                {MOCK_SCANNER_RESULTS.i18n.status === 'success' ? <CheckCircleIcon /> : <AlertTriangleIcon />}
+                {MOCK_SCANNER_RESULTS.i18n.status}
+              </Badge>
+            </div>
+            <div style={{ fontSize: 'var(--ds-font-size-xs)', color: 'var(--ds-color-neutral-text-subtle)', marginBottom: 'var(--ds-spacing-3)' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 'var(--ds-spacing-1)' }}>
+                <span>Total keys</span>
+                <span style={{ color: 'var(--ds-color-neutral-text-default)' }}>{MOCK_SCANNER_RESULTS.i18n.totalKeys.toLocaleString()}</span>
+              </div>
+              <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 'var(--ds-spacing-1)' }}>
+                <span>Missing keys</span>
+                <span style={{ color: 'var(--ds-color-success-text-default)' }}>{MOCK_SCANNER_RESULTS.i18n.missingKeys}</span>
+              </div>
+              <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                <span>Hardcoded strings</span>
+                <span style={{ color: 'var(--ds-color-warning-text-default)' }}>{MOCK_SCANNER_RESULTS.i18n.hardcodedStrings}</span>
+              </div>
+            </div>
+            <button
+              style={{
+                width: '100%',
+                padding: 'var(--ds-spacing-2)',
+                backgroundColor: 'var(--ds-color-accent-base-default)',
+                color: 'white',
+                border: 'none',
+                borderRadius: 'var(--ds-border-radius-md)',
+                cursor: 'pointer',
+                fontSize: 'var(--ds-font-size-sm)',
+              }}
+              onClick={() => alert('Running i18n scanner...')}
+            >
+              {t('saasAdmin.monitoring.scanners.runScan', { defaultValue: 'Kjør skanning' })}
+            </button>
+          </div>
+
+          {/* Design System Scanner */}
+          <div style={{ padding: 'var(--ds-spacing-4)', border: '1px solid var(--ds-color-neutral-border-subtle)', borderRadius: 'var(--ds-border-radius-md)' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 'var(--ds-spacing-3)' }}>
+              <Paragraph data-size="sm" style={{ margin: 0, fontWeight: 'var(--ds-font-weight-medium)' }}>Design System</Paragraph>
+              <Badge color={MOCK_SCANNER_RESULTS.designSystem.status === 'success' ? 'success' : 'warning'}>
+                {MOCK_SCANNER_RESULTS.designSystem.status === 'success' ? <CheckCircleIcon /> : <AlertTriangleIcon />}
+                {MOCK_SCANNER_RESULTS.designSystem.status}
+              </Badge>
+            </div>
+            <div style={{ fontSize: 'var(--ds-font-size-xs)', color: 'var(--ds-color-neutral-text-subtle)', marginBottom: 'var(--ds-spacing-3)' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 'var(--ds-spacing-1)' }}>
+                <span>Components</span>
+                <span style={{ color: 'var(--ds-color-neutral-text-default)' }}>{MOCK_SCANNER_RESULTS.designSystem.totalComponents}</span>
+              </div>
+              <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 'var(--ds-spacing-1)' }}>
+                <span>Violations</span>
+                <span style={{ color: MOCK_SCANNER_RESULTS.designSystem.violations > 0 ? 'var(--ds-color-danger-text-default)' : 'var(--ds-color-success-text-default)' }}>{MOCK_SCANNER_RESULTS.designSystem.violations}</span>
+              </div>
+              <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                <span>Token compliance</span>
+                <span style={{ color: 'var(--ds-color-success-text-default)' }}>{MOCK_SCANNER_RESULTS.designSystem.tokenCompliance}%</span>
+              </div>
+            </div>
+            <button
+              style={{
+                width: '100%',
+                padding: 'var(--ds-spacing-2)',
+                backgroundColor: 'var(--ds-color-accent-base-default)',
+                color: 'white',
+                border: 'none',
+                borderRadius: 'var(--ds-border-radius-md)',
+                cursor: 'pointer',
+                fontSize: 'var(--ds-font-size-sm)',
+              }}
+              onClick={() => alert('Running Design System scanner...')}
+            >
+              {t('saasAdmin.monitoring.scanners.runScan', { defaultValue: 'Kjør skanning' })}
+            </button>
+          </div>
+
+          {/* Compliance Scanner */}
+          <div style={{ padding: 'var(--ds-spacing-4)', border: '1px solid var(--ds-color-neutral-border-subtle)', borderRadius: 'var(--ds-border-radius-md)' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 'var(--ds-spacing-3)' }}>
+              <Paragraph data-size="sm" style={{ margin: 0, fontWeight: 'var(--ds-font-weight-medium)' }}>WCAG / Compliance</Paragraph>
+              <Badge color={MOCK_SCANNER_RESULTS.compliance.status === 'success' ? 'success' : 'warning'}>
+                {MOCK_SCANNER_RESULTS.compliance.status === 'success' ? <CheckCircleIcon /> : <AlertTriangleIcon />}
+                {MOCK_SCANNER_RESULTS.compliance.status}
+              </Badge>
+            </div>
+            <div style={{ fontSize: 'var(--ds-font-size-xs)', color: 'var(--ds-color-neutral-text-subtle)', marginBottom: 'var(--ds-spacing-3)' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 'var(--ds-spacing-1)' }}>
+                <span>WCAG Errors</span>
+                <span style={{ color: MOCK_SCANNER_RESULTS.compliance.wcagErrors > 0 ? 'var(--ds-color-danger-text-default)' : 'var(--ds-color-success-text-default)' }}>{MOCK_SCANNER_RESULTS.compliance.wcagErrors}</span>
+              </div>
+              <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 'var(--ds-spacing-1)' }}>
+                <span>WCAG Warnings</span>
+                <span style={{ color: 'var(--ds-color-warning-text-default)' }}>{MOCK_SCANNER_RESULTS.compliance.wcagWarnings}</span>
+              </div>
+              <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                <span>GDPR Compliance</span>
+                <span style={{ color: 'var(--ds-color-success-text-default)' }}>{MOCK_SCANNER_RESULTS.compliance.gdprCompliance}%</span>
+              </div>
+            </div>
+            <button
+              style={{
+                width: '100%',
+                padding: 'var(--ds-spacing-2)',
+                backgroundColor: 'var(--ds-color-accent-base-default)',
+                color: 'white',
+                border: 'none',
+                borderRadius: 'var(--ds-border-radius-md)',
+                cursor: 'pointer',
+                fontSize: 'var(--ds-font-size-sm)',
+              }}
+              onClick={() => alert('Running Compliance scanner...')}
+            >
+              {t('saasAdmin.monitoring.scanners.runScan', { defaultValue: 'Kjør skanning' })}
+            </button>
+          </div>
+        </div>
+      </Card>
 
       {/* Tenants by Usage */}
       <Card style={{ marginTop: 'var(--ds-spacing-6)', padding: 'var(--ds-spacing-6)' }}>
