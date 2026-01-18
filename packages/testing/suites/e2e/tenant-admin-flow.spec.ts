@@ -61,6 +61,7 @@ async function mockTenantAdminAuth(page: Page) {
     localStorage.setItem('auth_token', JSON.stringify(mockToken));
     localStorage.setItem('isAuthenticated', 'true');
   });
+}
 
 /**
  * Helper: Mock authentication for TENANT_BILLING_ADMIN role
@@ -90,6 +91,7 @@ async function mockTenantBillingAdminAuth(page: Page) {
     localStorage.setItem('auth_token', JSON.stringify(mockToken));
     localStorage.setItem('isAuthenticated', 'true');
   });
+}
 
 /**
  * Helper: Mock authentication for TENANT_TECH_ADMIN role
@@ -123,6 +125,7 @@ async function mockTenantTechAdminAuth(page: Page) {
     localStorage.setItem('auth_token', JSON.stringify(mockToken));
     localStorage.setItem('isAuthenticated', 'true');
   });
+}
 
 /**
  * Helper: Wait for page load and network idle
@@ -130,6 +133,7 @@ async function mockTenantTechAdminAuth(page: Page) {
 async function waitForPageReady(page: Page) {
   await page.waitForLoadState('networkidle');
   await page.waitForTimeout(500); // Small buffer for React hydration
+}
 
 // ============================================================================
 // Test Suite: Tenant Admin Login
