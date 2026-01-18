@@ -597,7 +597,6 @@ test.describe('Web Login Flow - User Dropdown UI/UX', () => {
 
     // Dropdown should close (wait a bit for animation)
     await page.waitForTimeout(500);
-}
   });
 
   test('UI-004: Login button has correct aria labels', async ({ page }) => {

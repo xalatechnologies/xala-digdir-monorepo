@@ -5,3 +5,4 @@
 
 export * from './rental-objects';
 export * from './bookings';
+export * from './seasonal-leases';

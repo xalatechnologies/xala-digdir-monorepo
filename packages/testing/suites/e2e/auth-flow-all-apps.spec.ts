@@ -68,6 +68,7 @@ async function verifyCookies(page: Page): Promise<void> {
   expect(csrfCookie, 'CSRF token cookie should exist').toBeDefined();
 
   // In production, cookies should be secure
+}
 
 // Helper: Login with demo token
 async function loginWithDemoToken(page: Page, app: typeof APPS[0]): Promise<void> {
@@ -93,6 +94,7 @@ async function loginWithDemoToken(page: Page, app: typeof APPS[0]): Promise<void
   await page.waitForURL((url) => !url.pathname.includes('/login'), {
     timeout: 10000,
   });
+}
 
 // Helper: Check cache headers on session endpoint
 async function verifySessionEndpointHeaders(page: Page, apiUrl: string): Promise<void> {
@@ -107,6 +109,7 @@ async function verifySessionEndpointHeaders(page: Page, apiUrl: string): Promise
   expect(headers['cache-control']).toContain('no-cache');
   expect(headers['pragma']).toBe('no-cache');
   expect(headers['expires']).toBe('0');
+}
 
 // Run tests for each app
 for (const app of APPS) {
@@ -256,6 +259,7 @@ for (const app of APPS) {
       await expect(emailText).toBeVisible();
     });
   });
+}
 
 // Cross-app session tests
 test.describe('Cross-App Session Behavior', () => {
