@@ -92,11 +92,6 @@ services:
       
     ports:
       - "4000:4000"
-    volumes:
-      - ../../../apps/api:/a../../../apps/api
-      - ../../../packages:/app/packages
-      - /app/node_modules
-      - /a../../../apps/api/node_modules
     depends_on:
       postgres:
         condition: service_healthy
@@ -129,10 +124,6 @@ services:
       VITE_WS_URL: ws://localhost:4000/ws/events
     ports:
       - "5173:5173"
-    volumes:
-      - ../../../../../apps/web:/a../../../apps/web
-      - ../../../packages:/app/packages
-      - /app/node_modules
     networks:
       - digilist-dev
     command: pnpm --filter @xala/web dev
@@ -155,10 +146,6 @@ services:
       VITE_WS_URL: ws://localhost:4000/ws/events
     ports:
       - "5174:5174"
-    volumes:
-      - ../../../apps/minside:/a../../../apps/minside
-      - ../../../packages:/app/packages
-      - /app/node_modules
     networks:
       - digilist-dev
     command: pnpm --filter @xala/minside dev
@@ -181,10 +168,6 @@ services:
       VITE_WS_URL: ws://localhost:4000/ws/events
     ports:
       - "5175:5175"
-    volumes:
-      - ../../../apps/backoffice:/a../../../apps/backoffice
-      - ../../../packages:/app/packages
-      - /app/node_modules
     networks:
       - digilist-dev
     command: pnpm --filter @xala/backoffice dev
@@ -207,10 +190,6 @@ services:
       VITE_WS_URL: ws://localhost:4000/ws/events
     ports:
       - "5177:5177"
-    volumes:
-      - ../../../apps/saas-admin:/a../../../apps/saas-admin
-      - ../../../packages:/app/packages
-      - /app/node_modules
     networks:
       - digilist-dev
     command: pnpm --filter @xala/saas-admin dev
@@ -233,10 +212,6 @@ services:
       VITE_WS_URL: ws://localhost:4000/ws/events
     ports:
       - "5178:5178"
-    volumes:
-      - ../../../apps/monitoring:/a../../../apps/monitoring
-      - ../../../packages:/app/packages
-      - /app/node_modules
     networks:
       - digilist-dev
     command: pnpm --filter @xala/monitoring dev
@@ -259,10 +234,6 @@ services:
       VITE_WS_URL: ws://localhost:4000/ws/events
     ports:
       - "5179:5179"
-    volumes:
-      - ../../../apps/docs-learning:/a../../../apps/docs-learning
-      - ../../../packages:/app/packages
-      - /app/node_modules
     networks:
       - digilist-dev
     command: pnpm --filter @xala/docs-learning dev

@@ -58,11 +58,20 @@ ARG APP_PORT=5173
 
 WORKDIR /app
 
-# Copy dependencies
-COPY --from=deps /app/node_modules ./node_modules
+# Copy package files for dependency installation
+COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
+COPY turbo.json ./
 
-# Copy source code
-COPY . .
+# Copy all package.json files to establish workspace structure
+COPY apps/*/package.json ./apps/
+COPY packages/*/package.json ./packages/
+
+# Install ALL dependencies
+RUN pnpm install --frozen-lockfile
+
+# Copy all source code
+COPY apps ./apps
+COPY packages ./packages
 
 # Expose port
 EXPOSE ${APP_PORT}
