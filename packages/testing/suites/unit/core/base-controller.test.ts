@@ -17,7 +17,7 @@ import {
   type UserContext,
   type PaginationMeta,
   type ProblemDetails,
-} from '../../../apps/api/src/core/base.controller';
+} from '@testing/stubs/api-importscore/base.controller';
 import type { FastifyRequest, FastifyReply } from 'fastify';
 
 /**

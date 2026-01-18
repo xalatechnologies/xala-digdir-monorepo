@@ -14,8 +14,8 @@
 
 import { describe, it, expect, beforeEach } from 'vitest';
 import { setupMockApi } from '../../mocks/api-server.mock';
-import { toDomain, toCardProjection, toDetailsProjection, toPersistence, type DbRentalObject } from '../../apps/api/src/acl/rental-objects/rental-object.mapper';
-import type { RentalObject } from '../../apps/api/src/domain/rental-objects';
+import { toDomain, toCardProjection, toDetailsProjection, toPersistence, type DbRentalObject } from '@testing/stubs/api-importsacl/rental-objects/rental-object.mapper';
+import type { RentalObject } from '@testing/stubs/api-importsdomain/rental-objects';
 
 // =============================================================================
 // TEST FIXTURES & UTILITIES

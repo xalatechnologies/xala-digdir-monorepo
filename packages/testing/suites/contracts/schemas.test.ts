@@ -10,24 +10,24 @@ import {
   MetadataSchema,
   PaginationSchema,
   SortOrderSchema,
-} from '../schemas/common.schema';
+} from '@testing/stubs/api-importscommon.schema';
 import {
   RentalObjectStatusSchema,
   RentalObjectCategorySchema,
   BookingTimeModeSchema,
   CreateRentalObjectSchema,
-} from '../schemas/rental-object.schema';
+} from '@testing/stubs/api-importsrental-object.schema';
 import {
   BookingStatusSchema,
   CreateBookingSchema,
-} from '../schemas/booking.schema';
+} from '@testing/stubs/api-importsbooking.schema';
 import {
   CreateOrganizationSchema,
-} from '../schemas/organization.schema';
+} from '@testing/stubs/api-importsorganization.schema';
 import {
   ActionCodeSchema,
   CapabilitySchema,
-} from '../schemas/capabilities.schema';
+} from '@testing/stubs/api-importscapabilities.schema';
 
 describe('Common Schemas', () => {
   describe('UUIDSchema', () => {
