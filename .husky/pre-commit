@@ -1,20 +1,14 @@
 #!/bin/sh
 
 # i18n Pre-commit Hook
-# Validates translation key parity AND scans for hardcoded strings before allowing commits
+# Scans for hardcoded strings before allowing commits
+# NOTE: nb.ts/en.ts parity check REMOVED - database is now SSOT for translations
 
 echo "🌐 Running i18n pre-commit checks..."
 
-# Check if translation files were modified
-if git diff --cached --name-only | grep -q "packages/i18n/src/locales/"; then
-  echo "📝 Translation files modified - checking key parity..."
-  pnpm i18n:check
-  if [ $? -ne 0 ]; then
-    echo "❌ i18n check failed. Please fix the translation issues before committing."
-    exit 1
-  fi
-  echo "✅ Translation keys are in sync!"
-fi
+# Skip legacy TS parity check - database is now source of truth
+# The modular JSON files in packages/i18n/src/locales/nb/*.json are for seeding only
+
 
 # ZERO-TOLERANCE: Scan staged frontend files for hardcoded strings
 # Exclude translation locale files (they contain translation definitions by design)

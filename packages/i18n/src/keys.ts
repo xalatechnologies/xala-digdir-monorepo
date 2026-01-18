@@ -22,19 +22,19 @@ export type TranslationKeyPath = keyof typeof nb;
 /**
  * Array of all valid translation keys for runtime validation.
  */
-export const ALL_TRANSLATION_KEYS: readonly TranslationKeyPath[] = Object.keys(nb) as TranslationKeyPath[];
+export const ALL_TRANSLATION_KEYS: readonly string[] = Object.keys(nb);
 
 /**
  * Set of all valid translation keys for O(1) lookup.
  */
-export const TRANSLATION_KEY_SET: ReadonlySet<string> = new Set(ALL_TRANSLATION_KEYS);
+export const TRANSLATION_KEY_SET: ReadonlySet<string> = new Set(ALL_TRANSLATION_KEYS as string[]);
 
 /**
  * Check if a string is a valid translation key.
  * @param key - The key to validate
  * @returns true if the key exists in the translation registry
  */
-export function isValidKey(key: string): key is TranslationKeyPath {
+export function isValidKey(key: string): boolean {
   return TRANSLATION_KEY_SET.has(key);
 }
 
@@ -46,9 +46,9 @@ export function isValidKey(key: string): key is TranslationKeyPath {
  * @example
  * getKeysForNamespace('common') // ['common.save', 'common.cancel', ...]
  */
-export function getKeysForNamespace(namespace: string): TranslationKeyPath[] {
+export function getKeysForNamespace(namespace: string): string[] {
   const prefix = `${namespace}.`;
-  return ALL_TRANSLATION_KEYS.filter((key) => key.startsWith(prefix));
+  return ALL_TRANSLATION_KEYS.filter((key) => String(key).startsWith(prefix));
 }
 
 /**
@@ -61,9 +61,10 @@ export function getKeysForNamespace(namespace: string): TranslationKeyPath[] {
 export function getAllNamespaces(): string[] {
   const namespaces = new Set<string>();
   for (const key of ALL_TRANSLATION_KEYS) {
-    const dotIndex = key.indexOf('.');
+    const keyStr = String(key);
+    const dotIndex = keyStr.indexOf('.');
     if (dotIndex > 0) {
-      namespaces.add(key.substring(0, dotIndex));
+      namespaces.add(keyStr.substring(0, dotIndex));
     }
   }
   return Array.from(namespaces).sort();

@@ -79,7 +79,7 @@ const getApiBaseUrl = (): string => {
   if (typeof window !== 'undefined' && (window as any).__VITE_API_URL__) {
     return (window as any).__VITE_API_URL__;
   }
-  return import.meta.env?.VITE_API_URL || '/api';
+  return (import.meta.env as unknown as Record<string, string | undefined>)?.VITE_API_URL || '/api';
 };
 
 /**
