@@ -27,6 +27,7 @@ async function mockSession(page: any) {
       }),
     });
   });
+}
 
 test.describe('Web Login Flow - Performance Tests', () => {
   setupMockApi();

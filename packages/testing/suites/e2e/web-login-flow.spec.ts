@@ -21,6 +21,7 @@ async function waitForAppReady(page: Page) {
   await page.waitForSelector('header', { timeout: 10000 });
   // Give React a moment to finish initial render
   await page.waitForTimeout(500);
+}
 
 /**
  * Helper: Check if user is logged in by looking for user menu
@@ -34,6 +35,7 @@ async function isLoggedIn(page: Page): Promise<boolean> {
   } catch {
     return false;
   }
+}
 
 /**
  * Helper: Check if login button is visible
@@ -46,6 +48,7 @@ async function isLoginButtonVisible(page: Page): Promise<boolean> {
   } catch {
     return false;
   }
+}
 
 /**
  * Helper: Mock successful ID-porten OAuth callback
@@ -592,6 +595,7 @@ test.describe('Web Login Flow - User Dropdown UI/UX', () => {
 
     // Dropdown should close (wait a bit for animation)
     await page.waitForTimeout(500);
+}
   });
 
   test('UI-004: Login button has correct aria labels', async ({ page }) => {
