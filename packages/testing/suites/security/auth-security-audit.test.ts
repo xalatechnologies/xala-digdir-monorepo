@@ -5,9 +5,9 @@
 
 import { describe, it, expect, beforeAll, afterAll, beforeEach } from 'vitest';
 import { setupMockApi } from '../../mocks/api-server.mock';
-import { JwtService } from '@testing/stubs/api-importscore/auth/jwt.service';
-import { SessionService } from '@testing/stubs/api-importsmodules/auth/session.service';
-import { COOKIE_CONFIG, validateCookieConfig } from '@testing/stubs/api-importsconfig/cookies';
+import { JwtService } from '@testing/stubs/api-imports';
+import { SessionService } from '@testing/stubs/api-imports';
+import { COOKIE_CONFIG, validateCookieConfig } from '@testing/stubs/api-imports';
 
 const SKIP_INTEGRATION = process.env.SKIP_INTEGRATION_TESTS === 'true' || process.env.CI !== 'true';
 const describeOrSkip = SKIP_INTEGRATION ? describe.skip : describe;

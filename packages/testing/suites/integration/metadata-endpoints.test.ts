@@ -16,7 +16,7 @@
 
 import { describe, it, expect, beforeEach } from 'vitest';
 import { setupMockApi } from '../../mocks/api-server.mock';
-import { MetadataController } from '@testing/stubs/api-importsmodules/metadata/metadata.controller';
+import { MetadataController } from '@testing/stubs/api-imports';
 import type { FastifyRequest, FastifyReply } from 'fastify';
 
 // Mock Fastify reply with captured state

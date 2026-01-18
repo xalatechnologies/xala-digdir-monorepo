@@ -1,7 +1,7 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest';
-import { CustodyEvaluator } from '@testing/stubs/api-importsmodules/custody/custody.evaluator';
-import { CustodyScope } from '@testing/stubs/api-importsmodules/custody/types';
-import { Roles } from '@testing/stubs/api-importsmodules/auth/rbac';
+import { CustodyEvaluator } from '@testing/stubs/api-imports';
+import { CustodyScope } from '@testing/stubs/api-imports';
+import { Roles } from '@testing/stubs/api-imports';
 
 describe('CustodyEvaluator', () => {
   let evaluator: CustodyEvaluator;

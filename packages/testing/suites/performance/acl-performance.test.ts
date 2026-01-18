@@ -21,8 +21,8 @@ import {
   toDetailsProjection,
   toPersistence,
   type DbRentalObject,
-} from '@testing/stubs/api-importsacl/rental-objects/rental-object.mapper';
-import type { RentalObject } from '@testing/stubs/api-importsdomain/rental-objects';
+} from '@testing/stubs/api-imports';
+import type { RentalObject } from '@testing/stubs/api-imports';
 
 // =============================================================================
 // PERFORMANCE UTILITIES

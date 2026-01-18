@@ -13,8 +13,8 @@
 
 import { describe, it, expect, beforeAll, afterAll, beforeEach } from 'vitest';
 import { setupMockApi } from '../../mocks/api-server.mock';
-import { toDomain, toCardProjection, toDetailsProjection, type DbRentalObject } from '@testing/stubs/api-importsacl/rental-objects/rental-object.mapper';
-import type { RentalObject } from '@testing/stubs/api-importsdomain/rental-objects';
+import { toDomain, toCardProjection, toDetailsProjection, type DbRentalObject } from '@testing/stubs/api-imports';
+import type { RentalObject } from '@testing/stubs/api-imports';
 
 // =============================================================================
 // TEST SETUP & FIXTURES

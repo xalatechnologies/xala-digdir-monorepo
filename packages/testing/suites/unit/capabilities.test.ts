@@ -10,7 +10,7 @@ import {
   WEB_CAPABILITIES,
   MINSIDE_CAPABILITIES,
   BACKOFFICE_CAPABILITIES,
-} from '@testing/stubs/api-importsmodules/capabilities/capabilities.controller';
+} from '@testing/stubs/api-imports';
 
 describe('Capabilities Module', () => {
   describe('Web Capabilities', () => {

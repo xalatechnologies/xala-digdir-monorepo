@@ -1,9 +1,9 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { setupMockApi } from '../../mocks/api-server.mock';
-import { CustodyService } from '@testing/stubs/api-importsmodules/custody/custody.service';
-import { CustodyEvaluator } from '@testing/stubs/api-importsmodules/custody/custody.evaluator';
-import { CustodyScope, UserContext } from '@testing/stubs/api-importsmodules/custody/types';
-import { Roles } from '@testing/stubs/api-importsmodules/auth/rbac';
+import { CustodyService } from '@testing/stubs/api-imports';
+import { CustodyEvaluator } from '@testing/stubs/api-imports';
+import { CustodyScope, UserContext } from '@testing/stubs/api-imports';
+import { Roles } from '@testing/stubs/api-imports';
 
 describe('Custody Flow Integration', () => {
   setupMockApi();
