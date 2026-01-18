@@ -14,7 +14,7 @@ import {
   unique,
 } from 'drizzle-orm/pg-core';
 import { relations } from 'drizzle-orm';
-import { tenants, users, organizations, rentalObjects } from './base-tables';
+import { tenants, users, organizations, rentalObjects } from './index';
 
 const domainSchema = pgSchema('domain');
 
