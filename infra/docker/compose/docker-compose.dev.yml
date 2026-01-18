@@ -60,7 +60,7 @@ services:
     container_name: digilist-dev-api
     restart: unless-stopped
     env_file:
-      - .env.docker.dev
+      - ../../env/.env.docker.dev
     environment:
       NODE_ENV: development
       DATABASE_URL: postgresql://digilist_dev:dev_password_2026@postgres:5432/digilist_dev
@@ -123,7 +123,7 @@ services:
     container_name: digilist-dev-web
     restart: unless-stopped
     env_file:
-      - .env.docker.dev
+      - ../../env/.env.docker.dev
     environment:
       VITE_API_URL: http://localhost:4000
       VITE_WS_URL: ws://localhost:4000/ws/events
@@ -149,7 +149,7 @@ services:
     container_name: digilist-dev-minside
     restart: unless-stopped
     env_file:
-      - .env.docker.dev
+      - ../../env/.env.docker.dev
     environment:
       VITE_API_URL: http://localhost:4000
       VITE_WS_URL: ws://localhost:4000/ws/events
@@ -175,7 +175,7 @@ services:
     container_name: digilist-dev-backoffice
     restart: unless-stopped
     env_file:
-      - .env.docker.dev
+      - ../../env/.env.docker.dev
     environment:
       VITE_API_URL: http://localhost:4000
       VITE_WS_URL: ws://localhost:4000/ws/events
@@ -201,7 +201,7 @@ services:
     container_name: digilist-dev-tenant-admin
     restart: unless-stopped
     env_file:
-      - .env.docker.dev
+      - ../../env/.env.docker.dev
     environment:
       VITE_API_URL: http://localhost:4000
       VITE_WS_URL: ws://localhost:4000/ws/events
@@ -227,7 +227,7 @@ services:
     container_name: digilist-dev-saas-admin
     restart: unless-stopped
     env_file:
-      - .env.docker.dev
+      - ../../env/.env.docker.dev
     environment:
       VITE_API_URL: http://localhost:4000
       VITE_WS_URL: ws://localhost:4000/ws/events
@@ -253,7 +253,7 @@ services:
     container_name: digilist-dev-monitoring
     restart: unless-stopped
     env_file:
-      - .env.docker.dev
+      - ../../env/.env.docker.dev
     environment:
       VITE_API_URL: http://localhost:4000
       VITE_WS_URL: ws://localhost:4000/ws/events
@@ -279,7 +279,7 @@ services:
     container_name: digilist-dev-docs-learning
     restart: unless-stopped
     env_file:
-      - .env.docker.dev
+      - ../../env/.env.docker.dev
     environment:
       VITE_API_URL: http://localhost:4000
       VITE_WS_URL: ws://localhost:4000/ws/events
