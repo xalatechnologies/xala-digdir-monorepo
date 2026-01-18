@@ -42,7 +42,7 @@ async function importSeeds() {
       readFileSync(join(__dirname, 'plan-entitlements.json'), 'utf-8')
     );
 
-    // Import plans first (required for plan entitlements)
+    // Import plans FIRST (required for plan entitlements)
     console.log(`💼 Importing ${plansData.length} plans...`);
     for (const plan of plansData) {
       await db.insert(plans).values(plan).onConflictDoNothing();
@@ -63,23 +63,16 @@ async function importSeeds() {
     }
     console.log('✅ Navigation policies imported\n');
 
-    // Import plan entitlements (requires plan IDs from database)
-    console.log(`📦 Checking for plan entitlements...`);
+    // Import plan entitlements (plans now exist from above)
+    console.log(`📦 Importing ${planEntitlementsData.length} plan entitlements...`);
     
-    // Check if plans table exists
-    const tableCheck = await queryClient`
-      SELECT EXISTS (
-        SELECT FROM information_schema.tables 
-        WHERE table_schema = 'saas' 
-        AND table_name = 'plans'
-      )
-    `;
+    // Get plan IDs from database using drizzle instead of raw sql
+    const existingPlans = await db.select().from(plans);
     
-    if (!tableCheck[0].exists) {
-      console.log('⚠️  saas.plans table does not exist. Skipping plan entitlements.');
-      console.log('   This is expected if you haven\'t created the plans table yet.');
+    if (existingPlans.length === 0) {
+      console.log('⚠️  No plans found in database. Skipping plan entitlements.');
     } else {
-      console.log(`📦 Importing ${planEntitlementsData.length} plan entitlements...`);
+      const planMap = new Map(existingPlans.map((p: any) => [p.name, p.id]));
       
       // Group by plan name
       const byPlan = planEntitlementsData.reduce((acc: any, item: any) => {
@@ -87,15 +80,7 @@ async function importSeeds() {
         acc[item.planName].push(item);
         return acc;
       }, {});
-
-      // Get plan IDs from database
-      const plans = await queryClient`SELECT id, name FROM saas.plans WHERE name IN ('Free', 'Pro', 'Enterprise')`;
-
-      if (plans.length === 0) {
-        console.log('⚠️  No plans found in database. Skipping plan entitlements.');
-        console.log('   Create plans first, then run this seed again.');
-      } else {
-      const planMap = new Map(plans.map((p: any) => [p.name, p.id]));
+      
       let totalImported = 0;
 
       for (const [planName, entitlements] of Object.entries(byPlan)) {
@@ -117,7 +102,6 @@ async function importSeeds() {
         console.log(`   ✓ ${planName}: ${(entitlements as any[]).length} entitlements`);
       }
       console.log(`✅ Imported ${totalImported} plan entitlements`);
-      }
     }
 
     console.log('\n✅ Seed import completed successfully!');

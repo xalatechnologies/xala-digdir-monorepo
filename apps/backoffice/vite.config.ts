@@ -23,9 +23,6 @@ export default defineConfig({
       },
     }),
   ],
-  server: {
-    port: 5175,
-  },
   resolve: {
     alias: {
       '@digilist/client-sdk': path.resolve(__dirname, '../../packages/client-sdk/src'),
