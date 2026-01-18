@@ -42,14 +42,6 @@ import { motion, AnimatePresence } from 'framer-motion';
 // API tokens from environment
 const MAPBOX_TOKEN = import.meta.env.VITE_MAPBOX_TOKEN;
 
-// Direct category label key map for i18n lookup
-const CATEGORY_LABEL_KEYS: Record<string, string> = {
-  'LOKALER_OG_BANER': 'sdk.rentalObject.category.LOKALER_OG_BANER',
-  'UTSTYR_OG_INVENTAR': 'sdk.rentalObject.category.UTSTYR_OG_INVENTAR',
-  'KJORETOY_OG_TRANSPORT': 'sdk.rentalObject.category.KJORETOY_OG_TRANSPORT',
-  'OPPLEVELSER_OG_ARRANGEMENT': 'sdk.rentalObject.category.OPPLEVELSER_OG_ARRANGEMENT',
-};
-
 // Category options using V3 4-category model
 const CATEGORY_OPTIONS = [
   { id: 'ALL', key: 'ALL', labelKey: 'listings.category.all' },
@@ -704,7 +696,7 @@ export function RentalObjectsPage(): React.ReactElement {
                         <RentalObjectCard
                           id={listing.id}
                           name={listing.name}
-                          type={CATEGORY_LABEL_KEYS[listing.category] ? t(CATEGORY_LABEL_KEYS[listing.category]) : listing.category}
+                          type={t(listing.categoryLabel)}
                           listingType={listing.category as 'SPACE' | 'RESOURCE' | 'SERVICE' | 'VEHICLE' | 'EVENT' | 'OTHER'}
                           location={listing.locationFormatted}
                           description={listing.descriptionExcerpt}
@@ -747,7 +739,7 @@ export function RentalObjectsPage(): React.ReactElement {
                         <RentalObjectListItem
                           id={listing.id}
                           name={listing.name}
-                          type={CATEGORY_LABEL_KEYS[listing.category] ? t(CATEGORY_LABEL_KEYS[listing.category]) : listing.category}
+                          type={t(listing.categoryLabel)}
                           listingType={listing.category as 'SPACE' | 'RESOURCE' | 'SERVICE' | 'VEHICLE' | 'EVENT' | 'OTHER'}
                           location={listing.locationFormatted}
                           description={listing.descriptionExcerpt}

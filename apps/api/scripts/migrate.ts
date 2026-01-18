@@ -8,7 +8,6 @@
  *
  * Usage:
  *   pnpm db:migrate              # Run migrations
- *   pnpm db:migrate --seed-only  # Only seed feature flags
  *   pnpm db:migrate --validate   # Validate setup (no database required)
  */
 import { existsSync, readdirSync, readFileSync } from 'fs';
@@ -17,66 +16,20 @@ import { drizzle } from 'drizzle-orm/postgres-js';
 import { migrate } from 'drizzle-orm/postgres-js/migrator';
 import postgres from 'postgres';
 import * as schema from '../src/database/schema/index';
-import { seedFeatureFlags, FEATURE_FLAGS } from '../src/database/seeds/feature-flags.seed';
-
-const DRIZZLE_MIGRATIONS_FOLDER = './drizzle';
-const SQL_MIGRATIONS_FOLDER = './src/database/migrations';
-
-async function runSqlMigration(sql: postgres.Sql, filePath: string): Promise<void> {
-  const content = readFileSync(filePath, 'utf-8');
-  console.log(`  📄 Running: ${filePath}`);
-  await sql.unsafe(content);
-}
-
-async function runSqlMigrations(sql: postgres.Sql): Promise<number> {
-  const migrationsPath = resolve(SQL_MIGRATIONS_FOLDER);
-
-  if (!existsSync(migrationsPath)) {
-    console.log('  ℹ️  No SQL migrations folder found');
-    return 0;
-  }
-
-  const files = readdirSync(migrationsPath)
-    .filter(f => f.endsWith('.sql'))
-    .sort(); // Ensure alphabetical order (timestamp-prefixed)
-
-  if (files.length === 0) {
-    console.log('  ℹ️  No SQL migration files found');
-    return 0;
-  }
-
-  for (const file of files) {
-    await runSqlMigration(sql, join(migrationsPath, file));
-  }
-
-  return files.length;
-}
-
-async function runDrizzleMigrations(databaseUrl: string): Promise<boolean> {
-  if (!existsSync(DRIZZLE_MIGRATIONS_FOLDER)) {
-    console.log('  ℹ️  No Drizzle migrations folder found');
-    console.log('  💡 Run "pnpm db:generate" to create Drizzle migrations');
-    return false;
-  }
 import { logger } from '../src/core/logger';
 
-async function runMigration() {
-  const databaseUrl = process.env.DATABASE_URL;
+const DRIZZLE_MIGRATIONS_FOLDER = './drizzle';
 
-  if (!databaseUrl) {
-    logger.error('❌ DATABASE_URL environment variable is required');
-    process.exit(1);
+async function runDrizzleMigrations(databaseUrl: string): Promise<void> {
+  if (!existsSync(DRIZZLE_MIGRATIONS_FOLDER)) {
+    throw new Error(`Drizzle migrations folder not found: ${DRIZZLE_MIGRATIONS_FOLDER}`);
   }
-
-  logger.info('🔄 Starting database migration...\n');
 
   const sql = postgres(databaseUrl, { max: 1 });
   const db = drizzle(sql, { schema });
 
   try {
     await migrate(db, { migrationsFolder: DRIZZLE_MIGRATIONS_FOLDER });
-    console.log('  ✅ Drizzle migrations completed');
-    return true;
   } finally {
     await sql.end();
   }
@@ -94,74 +47,32 @@ async function runValidation(): Promise<void> {
 
   let errors = 0;
 
-  // Check SQL migrations
-  console.log('📄 Checking SQL migrations...');
-  const migrationsPath = resolve(SQL_MIGRATIONS_FOLDER);
-
-  if (!existsSync(migrationsPath)) {
-    console.log('  ⚠️  No SQL migrations folder found');
-  } else {
-    const files = readdirSync(migrationsPath)
-      .filter(f => f.endsWith('.sql'))
-      .sort();
-
-    if (files.length === 0) {
-      console.log('  ⚠️  No SQL migration files found');
-    } else {
-      for (const file of files) {
-        const filePath = join(migrationsPath, file);
-        try {
-          const content = readFileSync(filePath, 'utf-8');
-          // Basic SQL validation - check it's not empty and has some SQL-like content
-          if (content.trim().length === 0) {
-            console.log(`  ❌ ${file}: Empty file`);
-            errors++;
-          } else if (!content.includes('CREATE') && !content.includes('ALTER') && !content.includes('INSERT')) {
-            console.log(`  ⚠️  ${file}: May not contain valid DDL statements`);
-          } else {
-            console.log(`  ✅ ${file}: Valid (${content.split('\n').length} lines)`);
-          }
-        } catch (err) {
-          console.log(`  ❌ ${file}: Cannot read file`);
-          errors++;
-        }
-      }
-    }
-  }
-
   // Check Drizzle migrations
   console.log('');
   console.log('📦 Checking Drizzle migrations...');
   if (!existsSync(DRIZZLE_MIGRATIONS_FOLDER)) {
-    console.log('  ℹ️  No Drizzle migrations folder (using SQL migrations instead)');
+    console.log('  ❌ Drizzle migrations folder missing');
+    errors++;
   } else {
-    console.log('  ✅ Drizzle migrations folder exists');
-  }
+    const folderPath = resolve(DRIZZLE_MIGRATIONS_FOLDER);
+    const files = readdirSync(folderPath)
+      .filter(f => f.endsWith('.sql'))
+      .sort();
 
-  // Check feature flags seed
-  console.log('');
-  console.log('🚩 Checking feature flags seed...');
-  try {
-    const categories = [...new Set(FEATURE_FLAGS.map(f => f.category))];
-    const modules = FEATURE_FLAGS.filter(f => f.category === 'module').length;
-    const integrations = FEATURE_FLAGS.filter(f => f.category === 'integration').length;
-    const policies = FEATURE_FLAGS.filter(f => f.category === 'policy').length;
-
-    console.log(`  ✅ ${FEATURE_FLAGS.length} feature flags defined`);
-    console.log(`     - Modules: ${modules}`);
-    console.log(`     - Integrations: ${integrations}`);
-    console.log(`     - Policies: ${policies}`);
-
-    // Validate each flag has required fields
-    for (const flag of FEATURE_FLAGS) {
-      if (!flag.key || !flag.name || !flag.category) {
-        console.log(`  ❌ Invalid flag: ${flag.key || 'unnamed'}`);
+    console.log(`  ✅ Drizzle migrations folder exists (${files.length} .sql file(s))`);
+    for (const file of files) {
+      const filePath = join(folderPath, file);
+      try {
+        const content = readFileSync(filePath, 'utf-8');
+        if (content.trim().length === 0) {
+          console.log(`  ❌ ${file}: Empty file`);
+          errors++;
+        }
+      } catch {
+        console.log(`  ❌ ${file}: Cannot read file`);
         errors++;
       }
     }
-  } catch (err) {
-    console.log(`  ❌ Feature flags seed error: ${err}`);
-    errors++;
   }
 
   // Check schema exports
@@ -197,7 +108,6 @@ async function runValidation(): Promise<void> {
 
 async function runMigration() {
   const databaseUrl = process.env.DATABASE_URL;
-  const seedOnly = process.argv.includes('--seed-only');
   const validateOnly = process.argv.includes('--validate');
 
   // Validate mode - no database required
@@ -220,55 +130,21 @@ async function runMigration() {
   console.log('');
   console.log('='.repeat(60));
   console.log(' Database Migration');
-  console.log('='.repeat(60));
-  console.log('');
-
-  const sql = postgres(databaseUrl, { max: 1 });
+  logger.info('🔄 Starting database migration...\n');
 
   try {
-    if (!seedOnly) {
-      // Step 1: Try Drizzle migrations first
-      console.log('📦 Step 1: Drizzle Migrations');
-      const drizzleRan = await runDrizzleMigrations(databaseUrl);
-
-      // Step 2: Run SQL migrations (idempotent, safe to run multiple times)
-      console.log('');
-      console.log('📄 Step 2: SQL Migrations');
-      const sqlCount = await runSqlMigrations(sql);
-
-      if (sqlCount > 0) {
-        console.log(`  ✅ ${sqlCount} SQL migration(s) completed`);
-      }
-
-      if (!drizzleRan && sqlCount === 0) {
-        console.log('');
-        console.log('💡 Tip: Use "pnpm db:push" to sync schema directly (dev mode)');
-      }
-    }
-
-    // Step 3: Seed feature flags
-    console.log('');
-    console.log('🚩 Step 3: Feature Flags Seed');
-    const seedResult = await seedFeatureFlags(databaseUrl);
-    console.log(`  ✅ Feature flags: ${seedResult.inserted} inserted, ${seedResult.updated} updated`);
+    console.log('📦 Step 1: Drizzle Migrations');
+    await runDrizzleMigrations(databaseUrl);
+    console.log('  ✅ Drizzle migrations completed');
 
     console.log('');
     console.log('='.repeat(60));
     console.log(' Migration completed successfully!');
     console.log('='.repeat(60));
     console.log('');
-
-  } catch (error) {
-    console.error('');
-    console.error('❌ Migration failed:', error);
-    // Run migrations from drizzle folder
-    await migrate(db, { migrationsFolder: './drizzle' });
-    logger.info('✅ Migrations completed successfully');
   } catch (error) {
     logger.error({ error }, '❌ Migration failed');
     process.exit(1);
-  } finally {
-    await sql.end();
   }
 }
 

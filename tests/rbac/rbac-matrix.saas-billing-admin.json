@@ -1,0 +1,191 @@
+{
+  "$schema": "./rbac-matrix.schema.json",
+  "role": "SAAS_BILLING_ADMIN",
+  "displayName": "SaaS Billing Administrator",
+  "description": "Read-only access to platform billing with plan assignment capability",
+  "level": 80,
+  "inherits": [],
+  "scope": "platform",
+  "capabilities": [
+    {
+      "id": "SBA-ME-VIEW",
+      "action": "read",
+      "resource": "saas:me",
+      "scope": "platform",
+      "expected": "ALLOW",
+      "endpoint": "GET /api/saas/me",
+      "sdkMethod": "useSaasMe",
+      "uiRoute": "/"
+    },
+    {
+      "id": "SBA-TENANT-LIST",
+      "action": "read",
+      "resource": "tenants",
+      "scope": "platform",
+      "expected": "ALLOW",
+      "endpoint": "GET /api/saas/tenants",
+      "sdkMethod": "useSaasTenants",
+      "uiRoute": "/tenants"
+    },
+    {
+      "id": "SBA-TENANT-READ",
+      "action": "read",
+      "resource": "tenant",
+      "scope": "platform",
+      "expected": "ALLOW",
+      "endpoint": "GET /api/saas/tenants/:id",
+      "sdkMethod": "useSaasTenant",
+      "uiRoute": "/tenants/:id"
+    },
+    {
+      "id": "SBA-TENANT-CREATE",
+      "action": "create",
+      "resource": "tenant",
+      "scope": "platform",
+      "expected": "DENY",
+      "endpoint": "POST /api/saas/tenants",
+      "sdkMethod": "useCreateSaasTenant",
+      "uiRoute": "/tenants/new"
+    },
+    {
+      "id": "SBA-TENANT-UPDATE",
+      "action": "update",
+      "resource": "tenant",
+      "scope": "platform",
+      "expected": "DENY",
+      "endpoint": "PATCH /api/saas/tenants/:id",
+      "sdkMethod": "useUpdateSaasTenant",
+      "uiRoute": "/tenants/:id/edit"
+    },
+    {
+      "id": "SBA-TENANT-SUSPEND",
+      "action": "suspend",
+      "resource": "tenant",
+      "scope": "platform",
+      "expected": "DENY",
+      "endpoint": "POST /api/saas/tenants/:id/suspend",
+      "sdkMethod": "useSuspendSaasTenant",
+      "uiRoute": "/tenants/:id"
+    },
+    {
+      "id": "SBA-LICENSE-ROTATE",
+      "action": "rotate",
+      "resource": "licenseKey",
+      "scope": "platform",
+      "expected": "DENY",
+      "endpoint": "POST /api/saas/tenants/:id/rotate-license",
+      "sdkMethod": "useRotateSaasLicenseKey",
+      "uiRoute": "/tenants/:id"
+    },
+    {
+      "id": "SBA-FLAGS-UPDATE",
+      "action": "update",
+      "resource": "tenantFlags",
+      "scope": "platform",
+      "expected": "DENY",
+      "endpoint": "PUT /api/saas/tenants/:id/flags",
+      "sdkMethod": "useUpdateSaasTenantFlags",
+      "uiRoute": "/tenants/:id"
+    },
+    {
+      "id": "SBA-BILLING-VIEW",
+      "action": "read",
+      "resource": "billing",
+      "scope": "platform",
+      "expected": "ALLOW",
+      "endpoint": "GET /api/saas/billing",
+      "sdkMethod": "useSaasBillingOverview",
+      "uiRoute": "/billing"
+    },
+    {
+      "id": "SBA-TENANT-BILLING",
+      "action": "read",
+      "resource": "tenantBilling",
+      "scope": "platform",
+      "expected": "ALLOW",
+      "endpoint": "GET /api/saas/tenants/:id/billing",
+      "sdkMethod": "useSaasTenantBilling",
+      "uiRoute": "/tenants/:id"
+    },
+    {
+      "id": "SBA-PLANS-LIST",
+      "action": "read",
+      "resource": "plans",
+      "scope": "platform",
+      "expected": "ALLOW",
+      "endpoint": "GET /api/saas/plans",
+      "sdkMethod": "useSaasPlans",
+      "uiRoute": "/plans"
+    },
+    {
+      "id": "SBA-PLANS-CREATE",
+      "action": "create",
+      "resource": "plan",
+      "scope": "platform",
+      "expected": "DENY",
+      "endpoint": "POST /api/saas/plans",
+      "sdkMethod": "useCreateSaasPlan",
+      "uiRoute": "/plans/new"
+    },
+    {
+      "id": "SBA-PLAN-ASSIGN",
+      "action": "assign",
+      "resource": "tenantPlan",
+      "scope": "platform",
+      "expected": "ALLOW",
+      "endpoint": "PUT /api/saas/tenants/:id/plan",
+      "sdkMethod": "useAssignSaasPlan",
+      "uiRoute": "/tenants/:id"
+    },
+    {
+      "id": "SBA-SECRETS-VIEW",
+      "action": "read",
+      "resource": "secrets",
+      "scope": "platform",
+      "expected": "DENY",
+      "endpoint": "GET /api/saas/tenants/:id/secrets",
+      "sdkMethod": "useSaasTenantSecrets",
+      "uiRoute": "/tenants/:id"
+    },
+    {
+      "id": "SBA-SEEDS-EXECUTE",
+      "action": "execute",
+      "resource": "seeds",
+      "scope": "platform",
+      "expected": "DENY",
+      "endpoint": "POST /api/admin/seed-import",
+      "sdkMethod": "useExecuteSeed",
+      "uiRoute": "/seed-data"
+    },
+    {
+      "id": "SBA-AUDIT-VIEW",
+      "action": "read",
+      "resource": "audit",
+      "scope": "platform",
+      "expected": "ALLOW",
+      "endpoint": "GET /api/saas/audit",
+      "sdkMethod": "useSaasAudit",
+      "uiRoute": "/audit"
+    }
+  ],
+  "boundaryTests": [
+    {
+      "id": "SBA-BOUNDARY-TENANT-CREATE",
+      "description": "Billing admin cannot create tenants",
+      "expected": "403"
+    },
+    {
+      "id": "SBA-BOUNDARY-LICENSE-ROTATE",
+      "description": "Billing admin cannot rotate license keys",
+      "expected": "403"
+    },
+    {
+      "id": "SBA-BOUNDARY-FLAGS-UPDATE",
+      "description": "Billing admin cannot update feature flags",
+      "expected": "403"
+    }
+  ],
+  "auditRequirements": [
+    "plan.assign"
+  ]
+}

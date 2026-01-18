@@ -147,160 +147,6 @@
   },
   "suites": [
     {
-      "title": "fixtures/auth.setup.ts",
-      "file": "fixtures/auth.setup.ts",
-      "column": 0,
-      "line": 0,
-      "specs": [
-        {
-          "title": "authenticate as admin",
-          "ok": false,
-          "tags": [],
-          "tests": [
-            {
-              "timeout": 60000,
-              "annotations": [],
-              "expectedStatus": "passed",
-              "projectId": "admin-setup",
-              "projectName": "admin-setup",
-              "results": [
-                {
-                  "workerIndex": 0,
-                  "parallelIndex": 0,
-                  "status": "failed",
-                  "duration": 41506,
-                  "error": {
-                    "message": "TimeoutError: page.waitForURL: Timeout 30000ms exceeded.\n=========================== logs ===========================\nwaiting for navigation until \"load\"\n============================================================",
-                    "stack": "TimeoutError: page.waitForURL: Timeout 30000ms exceeded.\n=========================== logs ===========================\nwaiting for navigation until \"load\"\n============================================================\n    at /Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/tests/e2e/backoffice/fixtures/auth.setup.ts:47:14",
-                    "location": {
-                      "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/tests/e2e/backoffice/fixtures/auth.setup.ts",
-                      "column": 14,
-                      "line": 47
-                    },
-                    "snippet": "  45 |\n  46 |   // Wait for redirect away from login\n> 47 |   await page.waitForURL((url) => !url.pathname.includes('/login'), {\n     |              ^\n  48 |     timeout: 30000,\n  49 |   });\n  50 |"
-                  },
-                  "errors": [
-                    {
-                      "location": {
-                        "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/tests/e2e/backoffice/fixtures/auth.setup.ts",
-                        "column": 14,
-                        "line": 47
-                      },
-                      "message": "TimeoutError: page.waitForURL: Timeout 30000ms exceeded.\n=========================== logs ===========================\nwaiting for navigation until \"load\"\n============================================================\n\n  45 |\n  46 |   // Wait for redirect away from login\n> 47 |   await page.waitForURL((url) => !url.pathname.includes('/login'), {\n     |              ^\n  48 |     timeout: 30000,\n  49 |   });\n  50 |\n    at /Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/tests/e2e/backoffice/fixtures/auth.setup.ts:47:14"
-                    }
-                  ],
-                  "stdout": [],
-                  "stderr": [],
-                  "retry": 0,
-                  "startTime": "2026-01-17T23:21:26.225Z",
-                  "annotations": [],
-                  "attachments": [
-                    {
-                      "name": "screenshot",
-                      "contentType": "image/png",
-                      "path": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/test-results/fixtures-auth.setup.ts-authenticate-as-admin-admin-setup/test-failed-1.png"
-                    },
-                    {
-                      "name": "error-context",
-                      "contentType": "text/markdown",
-                      "path": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/test-results/fixtures-auth.setup.ts-authenticate-as-admin-admin-setup/error-context.md"
-                    }
-                  ],
-                  "errorLocation": {
-                    "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/tests/e2e/backoffice/fixtures/auth.setup.ts",
-                    "column": 14,
-                    "line": 47
-                  }
-                }
-              ],
-              "status": "unexpected"
-            }
-          ],
-          "id": "6db7255f214771fc958b-d28c47a3900fe5ab81de",
-          "file": "fixtures/auth.setup.ts",
-          "line": 12,
-          "column": 6
-        }
-      ]
-    },
-    {
-      "title": "fixtures/saksbehandler.setup.ts",
-      "file": "fixtures/saksbehandler.setup.ts",
-      "column": 0,
-      "line": 0,
-      "specs": [
-        {
-          "title": "authenticate as saksbehandler",
-          "ok": false,
-          "tags": [],
-          "tests": [
-            {
-              "timeout": 60000,
-              "annotations": [],
-              "expectedStatus": "passed",
-              "projectId": "saksbehandler-setup",
-              "projectName": "saksbehandler-setup",
-              "results": [
-                {
-                  "workerIndex": 1,
-                  "parallelIndex": 1,
-                  "status": "failed",
-                  "duration": 44141,
-                  "error": {
-                    "message": "TimeoutError: page.waitForURL: Timeout 30000ms exceeded.\n=========================== logs ===========================\nwaiting for navigation until \"load\"\n============================================================",
-                    "stack": "TimeoutError: page.waitForURL: Timeout 30000ms exceeded.\n=========================== logs ===========================\nwaiting for navigation until \"load\"\n============================================================\n    at /Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/tests/e2e/backoffice/fixtures/saksbehandler.setup.ts:40:14",
-                    "location": {
-                      "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/tests/e2e/backoffice/fixtures/saksbehandler.setup.ts",
-                      "column": 14,
-                      "line": 40
-                    },
-                    "snippet": "  38 |\n  39 |   // Wait for successful login\n> 40 |   await page.waitForURL((url) => !url.pathname.includes('/login'), {\n     |              ^\n  41 |     timeout: 30000,\n  42 |   });\n  43 |"
-                  },
-                  "errors": [
-                    {
-                      "location": {
-                        "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/tests/e2e/backoffice/fixtures/saksbehandler.setup.ts",
-                        "column": 14,
-                        "line": 40
-                      },
-                      "message": "TimeoutError: page.waitForURL: Timeout 30000ms exceeded.\n=========================== logs ===========================\nwaiting for navigation until \"load\"\n============================================================\n\n  38 |\n  39 |   // Wait for successful login\n> 40 |   await page.waitForURL((url) => !url.pathname.includes('/login'), {\n     |              ^\n  41 |     timeout: 30000,\n  42 |   });\n  43 |\n    at /Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/tests/e2e/backoffice/fixtures/saksbehandler.setup.ts:40:14"
-                    }
-                  ],
-                  "stdout": [],
-                  "stderr": [],
-                  "retry": 0,
-                  "startTime": "2026-01-17T23:21:26.226Z",
-                  "annotations": [],
-                  "attachments": [
-                    {
-                      "name": "screenshot",
-                      "contentType": "image/png",
-                      "path": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/test-results/fixtures-saksbehandler.set-a6799-thenticate-as-saksbehandler-saksbehandler-setup/test-failed-1.png"
-                    },
-                    {
-                      "name": "error-context",
-                      "contentType": "text/markdown",
-                      "path": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/test-results/fixtures-saksbehandler.set-a6799-thenticate-as-saksbehandler-saksbehandler-setup/error-context.md"
-                    }
-                  ],
-                  "errorLocation": {
-                    "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/tests/e2e/backoffice/fixtures/saksbehandler.setup.ts",
-                    "column": 14,
-                    "line": 40
-                  }
-                }
-              ],
-              "status": "unexpected"
-            }
-          ],
-          "id": "2ad8dce58a9725798a12-8b4619c0ec84c554bb58",
-          "file": "fixtures/saksbehandler.setup.ts",
-          "line": 9,
-          "column": 6
-        }
-      ]
-    },
-    {
       "title": "smoke/smoke.spec.ts",
       "file": "smoke/smoke.spec.ts",
       "column": 0,
@@ -333,15 +179,15 @@
                       "projectName": "smoke",
                       "results": [
                         {
-                          "workerIndex": 2,
-                          "parallelIndex": 2,
+                          "workerIndex": 0,
+                          "parallelIndex": 0,
                           "status": "passed",
-                          "duration": 8845,
+                          "duration": 12419,
                           "errors": [],
                           "stdout": [],
                           "stderr": [],
                           "retry": 0,
-                          "startTime": "2026-01-17T23:21:26.242Z",
+                          "startTime": "2026-01-18T01:09:21.181Z",
                           "annotations": [],
                           "attachments": []
                         }
@@ -367,15 +213,15 @@
                       "projectName": "smoke",
                       "results": [
                         {
-                          "workerIndex": 3,
-                          "parallelIndex": 3,
+                          "workerIndex": 1,
+                          "parallelIndex": 1,
                           "status": "passed",
-                          "duration": 6012,
+                          "duration": 4163,
                           "errors": [],
                           "stdout": [],
                           "stderr": [],
                           "retry": 0,
-                          "startTime": "2026-01-17T23:21:26.238Z",
+                          "startTime": "2026-01-18T01:09:21.180Z",
                           "annotations": [],
                           "attachments": []
                         }
@@ -409,15 +255,15 @@
                       "projectName": "smoke",
                       "results": [
                         {
-                          "workerIndex": 4,
-                          "parallelIndex": 4,
+                          "workerIndex": 2,
+                          "parallelIndex": 2,
                           "status": "passed",
-                          "duration": 9216,
+                          "duration": 7084,
                           "errors": [],
                           "stdout": [],
                           "stderr": [],
                           "retry": 0,
-                          "startTime": "2026-01-17T23:21:26.238Z",
+                          "startTime": "2026-01-18T01:09:21.178Z",
                           "annotations": [],
                           "attachments": []
                         }
@@ -432,66 +278,53 @@
                 },
                 {
                   "title": "should display sidebar navigation",
-                  "ok": false,
+                  "ok": true,
                   "tags": [],
                   "tests": [
                     {
                       "timeout": 60000,
-                      "annotations": [],
-                      "expectedStatus": "passed",
+                      "annotations": [
+                        {
+                          "type": "skip",
+                          "location": {
+                            "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/tests/e2e/backoffice/smoke/smoke.spec.ts",
+                            "line": 50,
+                            "column": 14
+                          }
+                        }
+                      ],
+                      "expectedStatus": "skipped",
                       "projectId": "smoke",
                       "projectName": "smoke",
                       "results": [
                         {
-                          "workerIndex": 5,
-                          "parallelIndex": 5,
-                          "status": "failed",
-                          "duration": 36210,
-                          "error": {
-                            "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: locator('nav[data-testid=\"sidebar-nav\"]')\nExpected: visible\nTimeout: 30000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 30000ms\u001b[22m\n\u001b[2m  - waiting for locator('nav[data-testid=\"sidebar-nav\"]')\u001b[22m\n",
-                            "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: locator('nav[data-testid=\"sidebar-nav\"]')\nExpected: visible\nTimeout: 30000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 30000ms\u001b[22m\n\u001b[2m  - waiting for locator('nav[data-testid=\"sidebar-nav\"]')\u001b[22m\n\n    at /Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/tests/e2e/backoffice/smoke/smoke.spec.ts:48:29",
-                            "location": {
-                              "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/tests/e2e/backoffice/smoke/smoke.spec.ts",
-                              "column": 29,
-                              "line": 48
-                            },
-                            "snippet": "  46 |       // Wait specifically for sidebar-nav (confirmed data-testid exists)\n  47 |       const sidebar = page.locator('nav[data-testid=\"sidebar-nav\"]');\n> 48 |       await expect(sidebar).toBeVisible({ timeout: 30000 });\n     |                             ^\n  49 |       \n  50 |       // Admin should see multiple nav items\n  51 |       const navItems = sidebar.locator('a.sidebar-nav-item');"
-                          },
-                          "errors": [
+                          "workerIndex": 3,
+                          "parallelIndex": 3,
+                          "status": "skipped",
+                          "duration": 12308,
+                          "errors": [],
+                          "stdout": [
                             {
-                              "location": {
-                                "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/tests/e2e/backoffice/smoke/smoke.spec.ts",
-                                "column": 29,
-                                "line": 48
-                              },
-                              "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: locator('nav[data-testid=\"sidebar-nav\"]')\nExpected: visible\nTimeout: 30000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 30000ms\u001b[22m\n\u001b[2m  - waiting for locator('nav[data-testid=\"sidebar-nav\"]')\u001b[22m\n\n\n  46 |       // Wait specifically for sidebar-nav (confirmed data-testid exists)\n  47 |       const sidebar = page.locator('nav[data-testid=\"sidebar-nav\"]');\n> 48 |       await expect(sidebar).toBeVisible({ timeout: 30000 });\n     |                             ^\n  49 |       \n  50 |       // Admin should see multiple nav items\n  51 |       const navItems = sidebar.locator('a.sidebar-nav-item');\n    at /Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/tests/e2e/backoffice/smoke/smoke.spec.ts:48:29"
+                              "text": "Redirected to login - skipping sidebar test\n"
                             }
                           ],
-                          "stdout": [],
                           "stderr": [],
                           "retry": 0,
-                          "startTime": "2026-01-17T23:21:26.248Z",
-                          "annotations": [],
-                          "attachments": [
+                          "startTime": "2026-01-18T01:09:21.180Z",
+                          "annotations": [
                             {
-                              "name": "screenshot",
-                              "contentType": "image/png",
-                              "path": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/test-results/smoke-smoke-Backoffice-Smo-3d7f9--display-sidebar-navigation-smoke/test-failed-1.png"
-                            },
-                            {
-                              "name": "error-context",
-                              "contentType": "text/markdown",
-                              "path": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/test-results/smoke-smoke-Backoffice-Smo-3d7f9--display-sidebar-navigation-smoke/error-context.md"
+                              "type": "skip",
+                              "location": {
+                                "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/tests/e2e/backoffice/smoke/smoke.spec.ts",
+                                "line": 50,
+                                "column": 14
+                              }
                             }
                           ],
-                          "errorLocation": {
-                            "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/tests/e2e/backoffice/smoke/smoke.spec.ts",
-                            "column": 29,
-                            "line": 48
-                          }
+                          "attachments": []
                         }
                       ],
-                      "status": "unexpected"
+                      "status": "skipped"
                     }
                   ],
                   "id": "f2f9e57ccde56fbee371-da325ff0bc151ecb3402",
@@ -512,15 +345,15 @@
                       "projectName": "smoke",
                       "results": [
                         {
-                          "workerIndex": 6,
-                          "parallelIndex": 6,
+                          "workerIndex": 4,
+                          "parallelIndex": 4,
                           "status": "passed",
-                          "duration": 13964,
+                          "duration": 6661,
                           "errors": [],
                           "stdout": [],
                           "stderr": [],
                           "retry": 0,
-                          "startTime": "2026-01-17T23:21:26.235Z",
+                          "startTime": "2026-01-18T01:09:21.180Z",
                           "annotations": [],
                           "attachments": []
                         }
@@ -530,7 +363,7 @@
                   ],
                   "id": "f2f9e57ccde56fbee371-3a99fd57c7acf52910b0",
                   "file": "smoke/smoke.spec.ts",
-                  "line": 59,
+                  "line": 67,
                   "column": 9
                 },
                 {
@@ -546,15 +379,15 @@
                       "projectName": "smoke",
                       "results": [
                         {
-                          "workerIndex": 3,
-                          "parallelIndex": 3,
+                          "workerIndex": 5,
+                          "parallelIndex": 5,
                           "status": "passed",
-                          "duration": 8698,
+                          "duration": 8293,
                           "errors": [],
                           "stdout": [],
                           "stderr": [],
                           "retry": 0,
-                          "startTime": "2026-01-17T23:21:32.818Z",
+                          "startTime": "2026-01-18T01:09:21.179Z",
                           "annotations": [],
                           "attachments": []
                         }
@@ -564,7 +397,7 @@
                   ],
                   "id": "f2f9e57ccde56fbee371-2aed1417f83f4bd52835",
                   "file": "smoke/smoke.spec.ts",
-                  "line": 68,
+                  "line": 76,
                   "column": 9
                 }
               ]
@@ -572,12 +405,12 @@
             {
               "title": "Saksbehandler Role",
               "file": "smoke/smoke.spec.ts",
-              "line": 78,
+              "line": 86,
               "column": 8,
               "specs": [
                 {
                   "title": "should load dashboard",
-                  "ok": true,
+                  "ok": false,
                   "tags": [],
                   "tests": [
                     {
@@ -588,25 +421,33 @@
                       "projectName": "smoke",
                       "results": [
                         {
-                          "workerIndex": 2,
-                          "parallelIndex": 2,
-                          "status": "passed",
-                          "duration": 14338,
-                          "errors": [],
+                          "workerIndex": 6,
+                          "parallelIndex": 6,
+                          "status": "failed",
+                          "duration": 3,
+                          "error": {
+                            "message": "Error: Error reading storage state from tests/e2e/backoffice/.auth/saksbehandler.json:\nENOENT: no such file or directory, open 'tests/e2e/backoffice/.auth/saksbehandler.json'",
+                            "stack": "Error: Error reading storage state from tests/e2e/backoffice/.auth/saksbehandler.json:\nENOENT: no such file or directory, open 'tests/e2e/backoffice/.auth/saksbehandler.json'"
+                          },
+                          "errors": [
+                            {
+                              "message": "Error: Error reading storage state from tests/e2e/backoffice/.auth/saksbehandler.json:\nENOENT: no such file or directory, open 'tests/e2e/backoffice/.auth/saksbehandler.json'"
+                            }
+                          ],
                           "stdout": [],
                           "stderr": [],
                           "retry": 0,
-                          "startTime": "2026-01-17T23:21:35.672Z",
+                          "startTime": "2026-01-18T01:09:21.181Z",
                           "annotations": [],
                           "attachments": []
                         }
                       ],
-                      "status": "expected"
+                      "status": "unexpected"
                     }
                   ],
                   "id": "f2f9e57ccde56fbee371-423ec6e47ba53b810580",
                   "file": "smoke/smoke.spec.ts",
-                  "line": 81,
+                  "line": 89,
                   "column": 9
                 },
                 {
@@ -622,52 +463,25 @@
                       "projectName": "smoke",
                       "results": [
                         {
-                          "workerIndex": 4,
-                          "parallelIndex": 4,
+                          "workerIndex": 7,
+                          "parallelIndex": 6,
                           "status": "failed",
-                          "duration": 32510,
+                          "duration": 3,
                           "error": {
-                            "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: locator('nav[data-testid=\"sidebar-nav\"]')\nExpected: visible\nTimeout: 30000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 30000ms\u001b[22m\n\u001b[2m  - waiting for locator('nav[data-testid=\"sidebar-nav\"]')\u001b[22m\n",
-                            "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: locator('nav[data-testid=\"sidebar-nav\"]')\nExpected: visible\nTimeout: 30000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 30000ms\u001b[22m\n\u001b[2m  - waiting for locator('nav[data-testid=\"sidebar-nav\"]')\u001b[22m\n\n    at /Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/tests/e2e/backoffice/smoke/smoke.spec.ts:98:29",
-                            "location": {
-                              "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/tests/e2e/backoffice/smoke/smoke.spec.ts",
-                              "column": 29,
-                              "line": 98
-                            },
-                            "snippet": "   96 |       // Wait specifically for sidebar-nav\n   97 |       const sidebar = page.locator('nav[data-testid=\"sidebar-nav\"]');\n>  98 |       await expect(sidebar).toBeVisible({ timeout: 30000 });\n      |                             ^\n   99 |       \n  100 |       // Staff should see nav items\n  101 |       const navItems = sidebar.locator('a.sidebar-nav-item');"
+                            "message": "Error: Error reading storage state from tests/e2e/backoffice/.auth/saksbehandler.json:\nENOENT: no such file or directory, open 'tests/e2e/backoffice/.auth/saksbehandler.json'",
+                            "stack": "Error: Error reading storage state from tests/e2e/backoffice/.auth/saksbehandler.json:\nENOENT: no such file or directory, open 'tests/e2e/backoffice/.auth/saksbehandler.json'"
                           },
                           "errors": [
                             {
-                              "location": {
-                                "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/tests/e2e/backoffice/smoke/smoke.spec.ts",
-                                "column": 29,
-                                "line": 98
-                              },
-                              "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: locator('nav[data-testid=\"sidebar-nav\"]')\nExpected: visible\nTimeout: 30000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 30000ms\u001b[22m\n\u001b[2m  - waiting for locator('nav[data-testid=\"sidebar-nav\"]')\u001b[22m\n\n\n   96 |       // Wait specifically for sidebar-nav\n   97 |       const sidebar = page.locator('nav[data-testid=\"sidebar-nav\"]');\n>  98 |       await expect(sidebar).toBeVisible({ timeout: 30000 });\n      |                             ^\n   99 |       \n  100 |       // Staff should see nav items\n  101 |       const navItems = sidebar.locator('a.sidebar-nav-item');\n    at /Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/tests/e2e/backoffice/smoke/smoke.spec.ts:98:29"
+                              "message": "Error: Error reading storage state from tests/e2e/backoffice/.auth/saksbehandler.json:\nENOENT: no such file or directory, open 'tests/e2e/backoffice/.auth/saksbehandler.json'"
                             }
                           ],
                           "stdout": [],
                           "stderr": [],
                           "retry": 0,
-                          "startTime": "2026-01-17T23:21:36.079Z",
+                          "startTime": "2026-01-18T01:09:22.157Z",
                           "annotations": [],
-                          "attachments": [
-                            {
-                              "name": "screenshot",
-                              "contentType": "image/png",
-                              "path": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/test-results/smoke-smoke-Backoffice-Smo-a4a53-Role-should-display-sidebar-smoke/test-failed-1.png"
-                            },
-                            {
-                              "name": "error-context",
-                              "contentType": "text/markdown",
-                              "path": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/test-results/smoke-smoke-Backoffice-Smo-a4a53-Role-should-display-sidebar-smoke/error-context.md"
-                            }
-                          ],
-                          "errorLocation": {
-                            "file": "/Volumes/Laravel/Xala-SAAS/tools/xala-digdir-monorepo/tests/e2e/backoffice/smoke/smoke.spec.ts",
-                            "column": 29,
-                            "line": 98
-                          }
+                          "attachments": []
                         }
                       ],
                       "status": "unexpected"
@@ -675,12 +489,12 @@
                   ],
                   "id": "f2f9e57ccde56fbee371-6946861ea8a713414be7",
                   "file": "smoke/smoke.spec.ts",
-                  "line": 93,
+                  "line": 101,
                   "column": 9
                 },
                 {
                   "title": "should access work queue",
-                  "ok": true,
+                  "ok": false,
                   "tags": [],
                   "tests": [
                     {
@@ -691,25 +505,33 @@
                       "projectName": "smoke",
                       "results": [
                         {
-                          "workerIndex": 6,
+                          "workerIndex": 8,
                           "parallelIndex": 6,
-                          "status": "passed",
-                          "duration": 3842,
-                          "errors": [],
+                          "status": "failed",
+                          "duration": 2,
+                          "error": {
+                            "message": "Error: Error reading storage state from tests/e2e/backoffice/.auth/saksbehandler.json:\nENOENT: no such file or directory, open 'tests/e2e/backoffice/.auth/saksbehandler.json'",
+                            "stack": "Error: Error reading storage state from tests/e2e/backoffice/.auth/saksbehandler.json:\nENOENT: no such file or directory, open 'tests/e2e/backoffice/.auth/saksbehandler.json'"
+                          },
+                          "errors": [
+                            {
+                              "message": "Error: Error reading storage state from tests/e2e/backoffice/.auth/saksbehandler.json:\nENOENT: no such file or directory, open 'tests/e2e/backoffice/.auth/saksbehandler.json'"
+                            }
+                          ],
                           "stdout": [],
                           "stderr": [],
                           "retry": 0,
-                          "startTime": "2026-01-17T23:21:40.772Z",
+                          "startTime": "2026-01-18T01:09:22.586Z",
                           "annotations": [],
                           "attachments": []
                         }
                       ],
-                      "status": "expected"
+                      "status": "unexpected"
                     }
                   ],
                   "id": "f2f9e57ccde56fbee371-fd3515dda32a5b9eddd3",
                   "file": "smoke/smoke.spec.ts",
-                  "line": 109,
+                  "line": 125,
                   "column": 9
                 }
               ]
@@ -717,7 +539,7 @@
             {
               "title": "Critical Page Checks",
               "file": "smoke/smoke.spec.ts",
-              "line": 119,
+              "line": 135,
               "column": 8,
               "specs": [
                 {
@@ -733,15 +555,15 @@
                       "projectName": "smoke",
                       "results": [
                         {
-                          "workerIndex": 3,
-                          "parallelIndex": 3,
+                          "workerIndex": 9,
+                          "parallelIndex": 6,
                           "status": "passed",
-                          "duration": 5433,
+                          "duration": 10645,
                           "errors": [],
                           "stdout": [],
                           "stderr": [],
                           "retry": 0,
-                          "startTime": "2026-01-17T23:21:41.522Z",
+                          "startTime": "2026-01-18T01:09:23.080Z",
                           "annotations": [],
                           "attachments": []
                         }
@@ -751,7 +573,7 @@
                   ],
                   "id": "f2f9e57ccde56fbee371-8043f63f7cd8c30df6e0",
                   "file": "smoke/smoke.spec.ts",
-                  "line": 122,
+                  "line": 138,
                   "column": 9
                 },
                 {
@@ -767,15 +589,15 @@
                       "projectName": "smoke",
                       "results": [
                         {
-                          "workerIndex": 6,
-                          "parallelIndex": 6,
+                          "workerIndex": 1,
+                          "parallelIndex": 1,
                           "status": "passed",
-                          "duration": 3955,
+                          "duration": 9664,
                           "errors": [],
                           "stdout": [],
                           "stderr": [],
                           "retry": 0,
-                          "startTime": "2026-01-17T23:21:44.621Z",
+                          "startTime": "2026-01-18T01:09:25.978Z",
                           "annotations": [],
                           "attachments": []
                         }
@@ -785,7 +607,7 @@
                   ],
                   "id": "f2f9e57ccde56fbee371-f8724e6a16f4c5d8b444",
                   "file": "smoke/smoke.spec.ts",
-                  "line": 133,
+                  "line": 149,
                   "column": 9
                 }
               ]
@@ -797,11 +619,11 @@
   ],
   "errors": [],
   "stats": {
-    "startTime": "2026-01-17T23:21:25.677Z",
-    "duration": 45335.043,
-    "expected": 9,
-    "skipped": 0,
-    "unexpected": 4,
+    "startTime": "2026-01-18T01:09:20.752Z",
+    "duration": 14921.318,
+    "expected": 7,
+    "skipped": 1,
+    "unexpected": 3,
     "flaky": 0
   }
 }

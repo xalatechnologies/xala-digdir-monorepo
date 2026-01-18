@@ -125,10 +125,15 @@ export interface RentalObjectDetailsProjectionDTO extends RentalObjectCardProjec
 // =============================================================================
 
 const CATEGORY_LABEL_KEYS: Record<string, string> = {
+  // V3 4-category model
   LOKALER_OG_BANER: 'sdk.rentalObject.category.LOKALER_OG_BANER',
   UTSTYR_OG_INVENTAR: 'sdk.rentalObject.category.UTSTYR_OG_INVENTAR',
   KJORETOY_OG_TRANSPORT: 'sdk.rentalObject.category.KJORETOY_OG_TRANSPORT',
   OPPLEVELSER_OG_ARRANGEMENT: 'sdk.rentalObject.category.OPPLEVELSER_OG_ARRANGEMENT',
+  // Additional category keys from seed data
+  ARRANGEMENT: 'sdk.rentalObject.category.ARRANGEMENT',
+  MØTEROM: 'sdk.rentalObject.category.MØTEROM',
+  UTSTYR: 'sdk.rentalObject.category.UTSTYR',
 };
 
 const TIME_MODE_LABEL_KEYS: Record<string, string> = {
@@ -197,6 +202,15 @@ interface DbRentalObject {
 // HELPER FUNCTIONS
 // =============================================================================
 
+// API base URL for converting relative image paths to absolute URLs
+const API_BASE_URL = process.env.API_BASE_URL || process.env.PUBLIC_API_URL || 'https://api.digilist.no';
+
+function toAbsoluteUrl(url: string): string {
+  if (!url) return '';
+  if (url.startsWith('http://') || url.startsWith('https://')) return url;
+  return `${API_BASE_URL}${url.startsWith('/') ? '' : '/'}${url}`;
+}
+
 function getCategoryLabelKey(category: string): string {
   return CATEGORY_LABEL_KEYS[category] ?? `sdk.rentalObject.category.${category}`;
 }
@@ -258,7 +272,7 @@ function getCoordinates(obj: DbRentalObject): { lat: number | null; lng: number 
 function getPrimaryImage(obj: DbRentalObject): { url: string; thumbnail: string; alt: string } {
   const rawImages = obj.images || [];
   const images = Array.isArray(rawImages) ? rawImages : [];
-  
+
   if (images.length === 0) {
     return {
       url: '',
@@ -268,22 +282,22 @@ function getPrimaryImage(obj: DbRentalObject): { url: string; thumbnail: string;
   }
 
   const first = images[0];
-  
+
   // Handle object format: {url: string, alt: string}
   if (typeof first === 'object' && first !== null && 'url' in first) {
     const imgObj = first as { url: string; alt?: string };
     return {
-      url: imgObj.url || '',
-      thumbnail: imgObj.url || '',
+      url: toAbsoluteUrl(imgObj.url || ''),
+      thumbnail: toAbsoluteUrl(imgObj.url || ''),
       alt: imgObj.alt || obj.name,
     };
   }
-  
+
   // Handle string format (plain URL)
   const primaryUrl = typeof first === 'string' ? first : '';
   return {
-    url: primaryUrl,
-    thumbnail: primaryUrl,
+    url: toAbsoluteUrl(primaryUrl),
+    thumbnail: toAbsoluteUrl(primaryUrl),
     alt: primaryUrl ? `${obj.name}` : 'sdk.placeholder.noImage',
   };
 }
@@ -421,13 +435,13 @@ export function toDetailsProjection(
 
   // Handle both string array and object array formats for images
   const rawImages = obj.images || [];
-  const images: RentalObjectImageDTO[] = Array.isArray(rawImages) 
+  const images: RentalObjectImageDTO[] = Array.isArray(rawImages)
     ? rawImages.map((img, index) => {
         if (typeof img === 'string') {
           return {
             id: `img-${index}`,
-            url: img,
-            thumbnailUrl: img,
+            url: toAbsoluteUrl(img),
+            thumbnailUrl: toAbsoluteUrl(img),
             alt: `${obj.name} ${index + 1}`,
             isPrimary: index === 0,
             order: index,
@@ -436,8 +450,8 @@ export function toDetailsProjection(
           const imgObj = img as { url: string; alt?: string; thumbnail?: string };
           return {
             id: `img-${index}`,
-            url: imgObj.url || '',
-            thumbnailUrl: imgObj.thumbnail || imgObj.url || '',
+            url: toAbsoluteUrl(imgObj.url || ''),
+            thumbnailUrl: toAbsoluteUrl(imgObj.thumbnail || imgObj.url || ''),
             alt: imgObj.alt || `${obj.name} ${index + 1}`,
             isPrimary: index === 0,
             order: index,

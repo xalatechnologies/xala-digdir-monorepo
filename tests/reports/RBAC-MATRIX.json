@@ -1,8 +1,8 @@
 {
-  "timestamp": "2026-01-17T21:52:02.580Z",
+  "timestamp": "2026-01-18T01:17:06.255Z",
   "totalRules": 62,
-  "testedRules": 6,
-  "coverage": "10%",
+  "testedRules": 2,
+  "coverage": "3%",
   "matrix": [
     {
       "role": "public",

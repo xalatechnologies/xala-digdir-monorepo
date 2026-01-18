@@ -1,0 +1,193 @@
+{
+  "url": "https://backoffice.digilist.no/login",
+  "role": null,
+  "featureFlags": {},
+  "capabilities": [],
+  "consoleErrors": [
+    {
+      "type": "console",
+      "message": "WebSocket connection to 'wss://api.digilist.no/ws/events/f47ac10b-58cc-4372-a567-0e02b2c3d479' failed: Error during WebSocket handshake: Unexpected response code: 500",
+      "timestamp": "2026-01-18T01:39:55.571Z",
+      "url": "https://backoffice.digilist.no/"
+    },
+    {
+      "type": "console",
+      "message": "Failed to load resource: the server responded with a status of 500 ()",
+      "timestamp": "2026-01-18T01:39:55.798Z",
+      "url": "https://backoffice.digilist.no/"
+    },
+    {
+      "type": "console",
+      "message": "Failed to load resource: the server responded with a status of 500 ()",
+      "timestamp": "2026-01-18T01:39:55.876Z",
+      "url": "https://backoffice.digilist.no/login"
+    },
+    {
+      "type": "console",
+      "message": "Failed to load resource: the server responded with a status of 500 ()",
+      "timestamp": "2026-01-18T01:39:57.576Z",
+      "url": "https://backoffice.digilist.no/bookings"
+    },
+    {
+      "type": "console",
+      "message": "Failed to load resource: the server responded with a status of 500 ()",
+      "timestamp": "2026-01-18T01:39:57.677Z",
+      "url": "https://backoffice.digilist.no/login"
+    },
+    {
+      "type": "console",
+      "message": "WebSocket connection to 'wss://api.digilist.no/ws/events/f47ac10b-58cc-4372-a567-0e02b2c3d479' failed: Error during WebSocket handshake: Unexpected response code: 500",
+      "timestamp": "2026-01-18T01:39:57.741Z",
+      "url": "https://backoffice.digilist.no/login"
+    },
+    {
+      "type": "console",
+      "message": "WebSocket connection to 'wss://api.digilist.no/ws/events/f47ac10b-58cc-4372-a567-0e02b2c3d479' failed: Error during WebSocket handshake: Unexpected response code: 500",
+      "timestamp": "2026-01-18T01:40:00.137Z",
+      "url": "https://backoffice.digilist.no/calendar"
+    },
+    {
+      "type": "console",
+      "message": "Failed to load resource: the server responded with a status of 500 ()",
+      "timestamp": "2026-01-18T01:40:00.288Z",
+      "url": "https://backoffice.digilist.no/calendar"
+    },
+    {
+      "type": "console",
+      "message": "Failed to load resource: the server responded with a status of 500 ()",
+      "timestamp": "2026-01-18T01:40:00.408Z",
+      "url": "https://backoffice.digilist.no/login"
+    },
+    {
+      "type": "console",
+      "message": "WebSocket connection to 'wss://api.digilist.no/ws/events/f47ac10b-58cc-4372-a567-0e02b2c3d479' failed: Error during WebSocket handshake: Unexpected response code: 500",
+      "timestamp": "2026-01-18T01:40:01.960Z",
+      "url": "https://backoffice.digilist.no/organizations"
+    },
+    {
+      "type": "console",
+      "message": "Failed to load resource: the server responded with a status of 500 ()",
+      "timestamp": "2026-01-18T01:40:02.169Z",
+      "url": "https://backoffice.digilist.no/organizations"
+    },
+    {
+      "type": "console",
+      "message": "Failed to load resource: the server responded with a status of 500 ()",
+      "timestamp": "2026-01-18T01:40:02.175Z",
+      "url": "https://backoffice.digilist.no/login"
+    }
+  ],
+  "failedRequests": [
+    {
+      "url": "https://api.digilist.no/api/auth/session",
+      "method": "GET",
+      "status": 500,
+      "timestamp": "2026-01-18T01:39:55.798Z"
+    },
+    {
+      "url": "https://api.digilist.no/api/auth/session",
+      "method": "GET",
+      "status": 500,
+      "timestamp": "2026-01-18T01:39:55.876Z"
+    },
+    {
+      "url": "https://api.digilist.no/api/auth/session",
+      "method": "GET",
+      "status": 500,
+      "timestamp": "2026-01-18T01:39:57.576Z"
+    },
+    {
+      "url": "https://api.digilist.no/api/auth/session",
+      "method": "GET",
+      "status": 500,
+      "timestamp": "2026-01-18T01:39:57.677Z"
+    },
+    {
+      "url": "https://api.digilist.no/api/auth/session",
+      "method": "GET",
+      "status": 500,
+      "timestamp": "2026-01-18T01:40:00.288Z"
+    },
+    {
+      "url": "https://api.digilist.no/api/auth/session",
+      "method": "GET",
+      "status": 500,
+      "timestamp": "2026-01-18T01:40:00.408Z"
+    },
+    {
+      "url": "https://api.digilist.no/api/auth/session",
+      "method": "GET",
+      "status": 500,
+      "timestamp": "2026-01-18T01:40:02.168Z"
+    },
+    {
+      "url": "https://api.digilist.no/api/auth/session",
+      "method": "GET",
+      "status": 500,
+      "timestamp": "2026-01-18T01:40:02.175Z"
+    }
+  ],
+  "lastRequests": [
+    {
+      "url": "https://backoffice.digilist.no/assets/vendor-mapbox-vV3jbIp0.css",
+      "method": "GET",
+      "status": 200,
+      "timestamp": "2026-01-18T01:40:01.517Z"
+    },
+    {
+      "url": "https://backoffice.digilist.no/assets/vendor-ds-CSSb_G_8.css",
+      "method": "GET",
+      "status": 200,
+      "timestamp": "2026-01-18T01:40:01.517Z"
+    },
+    {
+      "url": "https://backoffice.digilist.no/assets/index-BFGPME4z.css",
+      "method": "GET",
+      "status": 200,
+      "timestamp": "2026-01-18T01:40:01.519Z"
+    },
+    {
+      "url": "https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap",
+      "method": "GET",
+      "status": 200,
+      "timestamp": "2026-01-18T01:40:01.519Z"
+    },
+    {
+      "url": "https://fonts.gstatic.com/s/inter/v20/UcC73FwrK3iLTeHuS_nVMrMxCp50SjIa1ZL7.woff2",
+      "method": "GET",
+      "status": 200,
+      "timestamp": "2026-01-18T01:40:01.519Z"
+    },
+    {
+      "url": "https://backoffice.digilist.no/themes/digilist.css",
+      "method": "GET",
+      "status": 200,
+      "timestamp": "2026-01-18T01:40:01.525Z"
+    },
+    {
+      "url": "https://backoffice.digilist.no/themes/digilist-extensions.css",
+      "method": "GET",
+      "status": 200,
+      "timestamp": "2026-01-18T01:40:01.526Z"
+    },
+    {
+      "url": "https://api.digilist.no/api/auth/session",
+      "method": "GET",
+      "status": 500,
+      "timestamp": "2026-01-18T01:40:02.168Z"
+    },
+    {
+      "url": "https://backoffice.digilist.no/logo.svg",
+      "method": "GET",
+      "status": 200,
+      "timestamp": "2026-01-18T01:40:02.170Z"
+    },
+    {
+      "url": "https://api.digilist.no/api/auth/session",
+      "method": "GET",
+      "status": 500,
+      "timestamp": "2026-01-18T01:40:02.175Z"
+    }
+  ],
+  "timestamp": "2026-01-18T01:40:03.126Z"
+}

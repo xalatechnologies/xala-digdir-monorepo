@@ -1,0 +1,78 @@
+# Page snapshot
+
+```yaml
+- generic [ref=e4]:
+  - generic [ref=e5]:
+    - generic [ref=e6]:
+      - link "DIGILIST DIGILIST ENKEL BOOKING" [ref=e8] [cursor=pointer]:
+        - /url: /
+        - img "DIGILIST" [ref=e9]
+        - generic [ref=e10]:
+          - generic [ref=e11]: DIGILIST
+          - generic [ref=e12]: ENKEL BOOKING
+      - generic [ref=e13]:
+        - heading "Logg inn" [level=1] [ref=e14]
+        - paragraph [ref=e15]: Velg innloggingsmetode i henhold til kommunens retningslinjer.
+        - generic [ref=e16]:
+          - button "ID-porten ID-porten Personlig innlogging med BankID" [ref=e17] [cursor=pointer]:
+            - img "ID-porten" [ref=e19]
+            - generic [ref=e24]:
+              - generic [ref=e25]: ID-porten
+              - generic [ref=e26]: Personlig innlogging med BankID
+          - button "Vipps Vipps Midlertidig deaktivert" [disabled] [ref=e27]:
+            - img "Vipps" [ref=e29]
+            - generic [ref=e32]:
+              - generic [ref=e33]: Vipps
+              - generic [ref=e34]: Midlertidig deaktivert
+          - button "Microsoft Microsoft Single Sign-On (SSO) kommer snart" [disabled] [ref=e35]:
+            - img "Microsoft" [ref=e37]
+            - generic [ref=e43]:
+              - generic [ref=e44]: Microsoft
+              - generic [ref=e45]: Single Sign-On (SSO) kommer snart
+          - button "Demo Innlogging Logg inn med demo token for testing (3 tokens tilgjengelig)" [ref=e46] [cursor=pointer]:
+            - img [ref=e48]
+            - generic [ref=e50]:
+              - generic [ref=e51]: Demo Innlogging
+              - generic [ref=e52]: Logg inn med demo token for testing (3 tokens tilgjengelig)
+    - generic [ref=e53]:
+      - generic [ref=e54]:
+        - link "Personvern" [ref=e55] [cursor=pointer]:
+          - /url: https://digilist.no/personvern
+        - generic [ref=e56]: ·
+        - link "Vilkår for bruk" [ref=e57] [cursor=pointer]:
+          - /url: https://digilist.no/cookies
+        - generic [ref=e58]: ·
+        - link "Kontakt support" [ref=e59] [cursor=pointer]:
+          - /url: https://digilist.no/#book-demo
+      - paragraph [ref=e60]: © 2026 Digilist. Alle rettigheter reservert.
+  - generic [ref=e62]:
+    - generic [ref=e63]:
+      - paragraph [ref=e64]: Min side
+      - heading "En helhetlig bookingløsning" [level=2] [ref=e65]
+      - paragraph [ref=e66]: Skybasert plattform for booking av kommunale anlegg og ressurser med moderne design, betaling og rapportering.
+    - generic [ref=e67]:
+      - generic [ref=e68]:
+        - img [ref=e70]
+        - generic [ref=e75]:
+          - paragraph [ref=e76]: Komplett plattform
+          - paragraph [ref=e77]: Booking, betaling, kalender og rapportering i én løsning
+      - generic [ref=e78]:
+        - img [ref=e80]
+        - generic [ref=e86]:
+          - paragraph [ref=e87]: Automatisering
+          - paragraph [ref=e88]: Regelbasert godkjenning reduserer manuelt arbeid
+      - generic [ref=e89]:
+        - img [ref=e91]
+        - generic [ref=e94]:
+          - paragraph [ref=e95]: GDPR-klar & Sikker
+          - paragraph [ref=e96]: Full etterlevelse av personvernregler og norske standarder
+    - generic [ref=e97]:
+      - paragraph [ref=e98]: Integrasjoner & Sertifiseringer
+      - generic [ref=e99]:
+        - generic [ref=e100]: BankID
+        - generic [ref=e101]: Vipps
+        - generic [ref=e102]: Visma
+        - generic [ref=e103]: RCO
+        - generic [ref=e104]: ISO 27001
+        - generic [ref=e105]: ISO 27701
+```
