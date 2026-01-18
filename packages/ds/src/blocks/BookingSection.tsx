@@ -430,17 +430,7 @@ export function BookingSection({
               </>
             )}
 
-            {/* Tips */}
-            <div className="selection-tips">
-              <Heading level={4} data-size="2xs" style={{ margin: 0, marginBottom: 'var(--ds-spacing-2)' }}>
-                Tips
-              </Heading>
-              <ul>
-                <li>Klikk på ledige tidspunkter for å velge</li>
-                <li>Du kan velge flere tidspunkter samtidig</li>
-                <li>Klikk igjen for å fjerne valget</li>
-              </ul>
-            </div>
+            {/* Tips section removed for cleaner UI */}
           </div>
         </div>
       </div>

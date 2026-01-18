@@ -291,7 +291,7 @@ export function BookingAvailabilityConflictDialog({
             }}
           >
             <Paragraph data-size="xs" style={{ margin: 0, color: 'var(--ds-color-neutral-text-subtle)' }}>
-              Velg datoene et ledige for booking.
+              {t('booking.selectAvailableDates')}
             </Paragraph>
           </div>
 

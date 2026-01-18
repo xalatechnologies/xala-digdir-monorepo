@@ -100,7 +100,7 @@ export function BookingPricingStep({
       {/* Price Group Selection */}
       <div>
         <Heading level={4} data-size="sm" style={{ margin: 0, marginBottom: 'var(--ds-spacing-2)' }}>
-          Prisgruppe
+          {t('booking.priceGroup')}
         </Heading>
         <Paragraph data-size="sm" style={{ margin: 0, marginBottom: 'var(--ds-spacing-3)', color: 'var(--ds-color-neutral-text-subtle)' }}>
           Utleier tilbyr egne priser til enkelte kundegrupper. Valg av prisgruppe medfører en godkjenningsprosess.
@@ -124,7 +124,7 @@ export function BookingPricingStep({
                 type="button"
                 onClick={() => handlePriceGroupClick(group.id)}
                 aria-pressed={selected}
-                aria-label={`${group.label} - ${group.pricePerHour} kr/time`}
+                aria-label={`${group.label} - ${group.pricePerHour} ${t('booking.perHour')}`}
                 style={{
                   minWidth: '140px',
                   flex: '1 1 auto',
@@ -191,7 +191,7 @@ export function BookingPricingStep({
                       fontWeight: 'var(--ds-font-weight-medium)',
                     }}
                   >
-                    {group.pricePerHour} kr/time
+                    {group.pricePerHour} {t('booking.perHour')}
                   </span>
                   {allowMultiplePriceGroups && selected && (
                     <div
@@ -337,9 +337,9 @@ export function BookingPricingStep({
             Les viktige vilkår
           </Paragraph>
           <ul style={{ margin: 0, paddingLeft: 'var(--ds-spacing-4)', fontSize: 'var(--ds-font-size-sm)', lineHeight: 'var(--ds-line-height-lg)', color: 'var(--ds-color-neutral-text-subtle)' }}>
-            <li>{t('avbestillingsregler.og.refusjonsvilkår')}</li>
-            <li>{t('ansvar.for.skader.og.utstyr')}</li>
-            <li>{t('ordensregler.for.lokalet')}</li>
+            <li>{t('terms.cancellationAndRefund')}</li>
+            <li>{t('terms.damageResponsibility')}</li>
+            <li>{t('terms.houseRules')}</li>
           </ul>
           <div style={{ marginTop: 'var(--ds-spacing-3)', display: 'flex', gap: 'var(--ds-spacing-3)' }}>
             <a
@@ -350,7 +350,7 @@ export function BookingPricingStep({
                 textDecoration: 'underline',
               }}
             >
-              t('common.les_fullstendige_vilkaar')
+              {t('common.readFullTerms')}
             </a>
             <a
               href="#"
@@ -360,7 +360,7 @@ export function BookingPricingStep({
                 textDecoration: 'underline',
               }}
             >
-              t('common.personvernerklaering')
+              {t('common.privacyPolicy')}
             </a>
           </div>
         </div>

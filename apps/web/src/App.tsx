@@ -12,7 +12,7 @@ import {
 } from '@xala/ds';
 import { DesignsystemetProvider } from '@xala/ds';
 import { DEFAULT_THEME, type ThemeId } from '@xala/ds-themes';
-import { LazyI18nProvider, useT } from '@xala/i18n';
+import { I18nProvider, useT } from '@xala/i18n';
 import { useNotificationUnreadCount } from '@digilist/client-sdk';
 import { RentalObjectsPage } from './pages/RentalObjectsPage';
 import { RentalObjectDetailPage } from './pages/RentalObjectDetailPage';
@@ -254,7 +254,7 @@ function AppContent() {
 
 export function App() {
   return (
-    <LazyI18nProvider>
+    <I18nProvider initialLocale="nb">
       <BrowserRouter
         future={{
           v7_startTransition: true,
@@ -267,7 +267,7 @@ export function App() {
           <AppContent />
         </AuthProvider>
       </BrowserRouter>
-    </LazyI18nProvider>
+    </I18nProvider>
   );
 }
 

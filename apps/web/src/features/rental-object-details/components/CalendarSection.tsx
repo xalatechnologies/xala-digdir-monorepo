@@ -265,21 +265,31 @@ export function CalendarSection({
     return undefined;
   }, [configError, matrixError, t]);
 
-  // Get legend from matrix or use default
+  // Get legend from matrix or use default - always use Norwegian labels
   const legend = React.useMemo(() => {
+    // Map status to Norwegian labels
+    const statusLabels: Record<string, string> = {
+      AVAILABLE: 'Ledig',
+      RESERVED: 'Reservert',
+      BOOKED: 'Booket',
+      BLOCKED: 'Blokkert',
+      BLACKOUT: 'Utilgjengelig',
+      CLOSED: 'Stengt',
+    };
+
     if (!matrixResponse?.data?.legend) {
       return [
-        { status: 'AVAILABLE' as const, label: t('status.available') },
-        { status: 'RESERVED' as const, label: t('status.reserved') },
-        { status: 'BOOKED' as const, label: t('state.booked') },
-        { status: 'BLOCKED' as const, label: t('status.blocked') },
-        { status: 'BLACKOUT' as const, label: t('status.unavailable') },
-        { status: 'CLOSED' as const, label: t('status.closed') },
+        { status: 'AVAILABLE' as const, label: statusLabels.AVAILABLE },
+        { status: 'RESERVED' as const, label: statusLabels.RESERVED },
+        { status: 'BOOKED' as const, label: statusLabels.BOOKED },
+        { status: 'BLOCKED' as const, label: statusLabels.BLOCKED },
+        { status: 'BLACKOUT' as const, label: statusLabels.BLACKOUT },
+        { status: 'CLOSED' as const, label: statusLabels.CLOSED },
       ];
     }
     return matrixResponse.data.legend.map((item) => ({
       status: item.status as CalendarCell['status'],
-      label: item.labelKey.includes('.') ? item.labelKey.split('.').pop()! : item.labelKey,
+      label: statusLabels[item.status] || item.status,
     }));
   }, [matrixResponse]);
 
@@ -318,9 +328,9 @@ export function CalendarSection({
         startHour={config?.openingHours?.weekly?.['1']?.open ? parseInt(config.openingHours.weekly['1'].open.split(':')[0]!, 10) : 8}
         endHour={config?.openingHours?.weekly?.['1']?.close ? parseInt(config.openingHours.weekly['1'].close.split(':')[0]!, 10) : 17}
         slotSizeMinutes={config?.slotSizeMinutes ?? 60}
-        showTips={true}
-        title={t('calendar.selectTime')}
-        subtitle={calendarMode === 'TIME_SLOTS' ? t('calendar.selectAvailable.slots') : calendarMode === 'ALL_DAY' ? t('calendar.selectAvailable.days') : t('calendar.selectAvailable.period')}
+        showTips={false}
+        title=""
+        subtitle=""
         isLoading={isLoading}
         errorMessage={errorMessage}
         warningMessage={warningMessage}

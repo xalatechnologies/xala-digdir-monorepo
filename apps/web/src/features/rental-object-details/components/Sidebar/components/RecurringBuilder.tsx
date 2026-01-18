@@ -339,7 +339,7 @@ export function RecurringBuilder({
             fontWeight: 'var(--ds-font-weight-medium)',
           }}
         >
-          Avslutt gjentakelse
+          {t('booking.recurring.endRecurrence')}
         </Paragraph>
 
         <fieldset style={{ border: 'none', padding: 0, margin: 0 }}>

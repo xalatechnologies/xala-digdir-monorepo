@@ -1745,46 +1745,48 @@ export function RentalObjectAvailabilityCalendar({
 
   return (
     <div className={cn('listing-availability-calendar', className)}>
-      {/* Header */}
-      <div
-        style={{
-          display: 'flex',
-          justifyContent: 'space-between',
-          alignItems: 'flex-start',
-          marginBottom: 'var(--ds-spacing-4)',
-        }}
-      >
-        <div>
-          <div
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: 'var(--ds-spacing-2)',
-              marginBottom: 'var(--ds-spacing-1)',
-            }}
-          >
-            <CalendarIcon size={20} />
-            <Heading
-              level={3}
-              data-size="sm"
-              style={{ margin: 0 }}
-            >
-              {title}
-            </Heading>
-          </div>
-          {subtitle && (
-            <Paragraph
-              data-size="sm"
+      {/* Header - only show if title is provided */}
+      {title && (
+        <div
+          style={{
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'flex-start',
+            marginBottom: 'var(--ds-spacing-4)',
+          }}
+        >
+          <div>
+            <div
               style={{
-                margin: 0,
-                color: 'var(--ds-color-neutral-text-subtle)',
+                display: 'flex',
+                alignItems: 'center',
+                gap: 'var(--ds-spacing-2)',
+                marginBottom: 'var(--ds-spacing-1)',
               }}
             >
-              {subtitle}
-            </Paragraph>
-          )}
+              <CalendarIcon size={20} />
+              <Heading
+                level={3}
+                data-size="sm"
+                style={{ margin: 0 }}
+              >
+                {title}
+              </Heading>
+            </div>
+            {subtitle && (
+              <Paragraph
+                data-size="sm"
+                style={{
+                  margin: 0,
+                  color: 'var(--ds-color-neutral-text-subtle)',
+                }}
+              >
+                {subtitle}
+              </Paragraph>
+            )}
+          </div>
         </div>
-      </div>
+      )}
 
       {/* Warning banner for selection invalidation */}
       {warningMessage && (
@@ -1887,66 +1889,7 @@ export function RentalObjectAvailabilityCalendar({
               )}
             </div>
 
-            <div
-              style={{
-                padding: 'var(--ds-spacing-4)',
-                backgroundColor: 'var(--ds-color-info-surface-default)',
-                border: '1px solid var(--ds-color-info-border-default)',
-                borderRadius: 'var(--ds-border-radius-lg)',
-              }}
-            >
-              <div
-                style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: 'var(--ds-spacing-2)',
-                  marginBottom: 'var(--ds-spacing-2)',
-                  color: 'var(--ds-color-info-text-default)',
-                }}
-              >
-                <InfoIcon size={16} />
-                <Paragraph
-                  data-size="sm"
-                  style={{
-                    margin: 0,
-                    fontWeight: 'var(--ds-font-weight-medium)',
-                  }}
-                >
-                  Tips
-                </Paragraph>
-              </div>
-              <ul
-                style={{
-                  margin: 0,
-                  paddingLeft: 'var(--ds-spacing-4)',
-                  color: 'var(--ds-color-info-text-default)',
-                  fontSize: 'var(--ds-font-size-sm)',
-                }}
-              >
-                {mode === 'MULTI_DAY' ? (
-                  <>
-                    <li>Velg først en startdato, deretter en sluttdato</li>
-                    <li>Alle dager i perioden må være ledige</li>
-                    <li>Bytt mellom måneder med pilene</li>
-                    {!readOnly && <li>Valgt periode vises med blå markering</li>}
-                  </>
-                ) : mode === 'ALL_DAY' ? (
-                  <>
-                    <li>Klikk på ledige (grønne) dager for å velge</li>
-                    <li>Hver dag representerer en heldagsbooking</li>
-                    <li>Bytt mellom måneder med pilene</li>
-                    {!readOnly && <li>Valgte datoer vises med blå ramme</li>}
-                  </>
-                ) : (
-                  <>
-                    <li>Klikk på ledige (grønne) tidspunkter for å velge</li>
-                    <li>Du kan velge flere tidspunkter samtidig</li>
-                    <li>Bytt mellom uker med pilene</li>
-                    {!readOnly && <li>Valgte tidspunkter vises med blå ramme</li>}
-                  </>
-                )}
-              </ul>
-            </div>
+            {/* Tips section removed - users find it intuitive enough without explicit instructions */}
           </div>
         )}
       </div>

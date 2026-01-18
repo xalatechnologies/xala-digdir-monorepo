@@ -164,48 +164,35 @@ export function BookingCartSidebar({
         overflow: 'hidden',
       }}
     >
-      {/* Cart Header */}
+      {/* Cart Header - Compact */}
       <div
         style={{
           display: 'flex',
-          flexDirection: 'column',
-          gap: 'var(--ds-spacing-1)',
-          padding: 'var(--ds-spacing-3) 0',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          padding: 'var(--ds-spacing-2) 0',
           borderBottom: '1px solid var(--ds-color-neutral-border-subtle)',
-          boxSizing: 'border-box',
         }}
       >
-        <div
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-            gap: 'var(--ds-spacing-2)',
-            minHeight: '32px',
-          }}
-        >
-          <ShoppingCartIcon size={20} />
-          <Heading level={3} data-size="sm" style={{ margin: 0, flex: 1, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
-            {t('bookingCart.page.title')}
-          </Heading>
-          {slotCount > 0 && (
-            <span
-              style={{
-                backgroundColor: 'var(--ds-color-accent-base-default)',
-                color: 'var(--ds-color-accent-contrast-default)',
-                borderRadius: 'var(--ds-border-radius-full)',
-                padding: 'var(--ds-spacing-1) var(--ds-spacing-2)',
-                fontSize: 'var(--ds-font-size-sm)',
-                fontWeight: 'var(--ds-font-weight-semibold)',
-              }}
-            >
-              {slotCount}
-            </span>
-          )}
-        </div>
-        {lastUpdated && (
-          <Paragraph data-size="sm" style={{ margin: 0, color: 'var(--ds-color-neutral-text-subtle)', fontStyle: 'italic' }}>
-            {t('bookingCart.updated')} {formatLastUpdated(lastUpdated)}
+        <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--ds-spacing-2)' }}>
+          <ShoppingCartIcon size={18} />
+          <Paragraph data-size="sm" style={{ margin: 0, fontWeight: 'var(--ds-font-weight-medium)' }}>
+            {slotCount > 0 ? t('bookingCart.page.title') : t('bookingCart.empty.title')}
           </Paragraph>
+        </div>
+        {slotCount > 0 && (
+          <span
+            style={{
+              backgroundColor: 'var(--ds-color-accent-base-default)',
+              color: 'white',
+              borderRadius: 'var(--ds-border-radius-full)',
+              padding: '2px 8px',
+              fontSize: 'var(--ds-font-size-xs)',
+              fontWeight: 'var(--ds-font-weight-semibold)',
+            }}
+          >
+            {slotCount}
+          </span>
         )}
       </div>
 
@@ -324,116 +311,112 @@ export function BookingCartSidebar({
         )}
       </div>
 
-      {/* Pricing Section - Only show when slots are selected */}
-      {slotCount > 0 && priceGroups.length > 0 && (
+      {/* Price Breakdown Section - Only show when slots are selected and price group chosen */}
+      {slotCount > 0 && selectedPriceGroup && (
         <div
           style={{
             borderTop: '1px solid var(--ds-color-neutral-border-subtle)',
             paddingTop: 'var(--ds-spacing-4)',
           }}
         >
-          {/* Price Group Selection */}
+          {/* Price Breakdown Header */}
           <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--ds-spacing-2)', marginBottom: 'var(--ds-spacing-3)' }}>
             <TagIcon size={18} />
             <Heading level={4} data-size="xs" style={{ margin: 0 }}>
-              {t('bookingCart.priceGroup')}
+              {t('bookingCart.priceBreakdown')}
             </Heading>
           </div>
           
-          <div style={{ display: 'flex', flexWrap: 'wrap', gap: 'var(--ds-spacing-2)', marginBottom: 'var(--ds-spacing-4)' }}>
-            {priceGroups.map(group => {
-              const isSelected = selectedPriceGroup === group.id;
-              return (
-                <button
-                  key={group.id}
-                  type="button"
-                  onClick={() => onPriceGroupChange?.(isSelected ? '' : group.id)}
-                  style={{
-                    flex: '1 1 auto',
-                    minWidth: '80px',
-                    padding: 'var(--ds-spacing-2) var(--ds-spacing-3)',
+          {/* Price Lines */}
+          {(() => {
+            const selectedGroup = priceGroups.find(g => g.id === selectedPriceGroup);
+            const totalHours = Array.from(selectedSlots).reduce((sum, slotKey) => {
+              const details = slotDetails[slotKey] ?? { duration: 60 };
+              return sum + (details.duration / 60);
+            }, 0);
+            const basePrice = selectedGroup ? selectedGroup.pricePerHour * totalHours : 0;
+            const servicesTotal = additionalServices
+              .filter(s => selectedServices.has(s.id))
+              .reduce((sum, s) => sum + s.price, 0);
+            const subtotal = basePrice + servicesTotal;
+            const mvaRate = 0.25;
+            const mvaAmount = subtotal * mvaRate;
+            const total = subtotal + mvaAmount;
+
+            return (
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--ds-spacing-2)' }}>
+                {/* Base price */}
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                  <Paragraph data-size="sm" style={{ margin: 0, color: 'var(--ds-color-neutral-text-subtle)' }}>
+                    {selectedGroup?.label} ({totalHours}t × {selectedGroup?.pricePerHour} kr)
+                  </Paragraph>
+                  <Paragraph data-size="sm" style={{ margin: 0, fontVariantNumeric: 'tabular-nums' }}>
+                    {basePrice.toLocaleString('nb-NO')} kr
+                  </Paragraph>
+                </div>
+
+                {/* Additional services - only show if any selected */}
+                {selectedServices.size > 0 && additionalServices.filter(s => selectedServices.has(s.id)).map(service => (
+                  <div key={service.id} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <Paragraph data-size="sm" style={{ margin: 0, color: 'var(--ds-color-neutral-text-subtle)' }}>
+                      {service.label}
+                    </Paragraph>
+                    <Paragraph data-size="sm" style={{ margin: 0, fontVariantNumeric: 'tabular-nums' }}>
+                      +{service.price.toLocaleString('nb-NO')} kr
+                    </Paragraph>
+                  </div>
+                ))}
+
+                {/* Divider */}
+                <div style={{ height: '1px', backgroundColor: 'var(--ds-color-neutral-border-subtle)', margin: 'var(--ds-spacing-2) 0' }} />
+
+                {/* Subtotal */}
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                  <Paragraph data-size="sm" style={{ margin: 0, color: 'var(--ds-color-neutral-text-subtle)' }}>
+                    {t('bookingCart.subtotal')}
+                  </Paragraph>
+                  <Paragraph data-size="sm" style={{ margin: 0, fontVariantNumeric: 'tabular-nums' }}>
+                    {subtotal.toLocaleString('nb-NO')} kr
+                  </Paragraph>
+                </div>
+
+                {/* MVA */}
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                  <Paragraph data-size="sm" style={{ margin: 0, color: 'var(--ds-color-neutral-text-subtle)' }}>
+                    {t('bookingCart.mva')} (25%)
+                  </Paragraph>
+                  <Paragraph data-size="sm" style={{ margin: 0, fontVariantNumeric: 'tabular-nums' }}>
+                    {mvaAmount.toLocaleString('nb-NO')} kr
+                  </Paragraph>
+                </div>
+
+                {/* Total */}
+                <div 
+                  style={{ 
+                    display: 'flex', 
+                    justifyContent: 'space-between', 
+                    alignItems: 'center',
+                    backgroundColor: 'var(--ds-color-accent-surface-default)',
+                    padding: 'var(--ds-spacing-3)',
                     borderRadius: 'var(--ds-border-radius-md)',
-                    border: isSelected
-                      ? '2px solid var(--ds-color-accent-base-default)'
-                      : '1px solid var(--ds-color-neutral-border-default)',
-                    backgroundColor: isSelected
-                      ? 'var(--ds-color-accent-surface-default)'
-                      : 'var(--ds-color-neutral-background-default)',
-                    color: isSelected
-                      ? 'var(--ds-color-accent-text-default)'
-                      : 'var(--ds-color-neutral-text-default)',
-                    cursor: 'pointer',
-                    transition: 'all 150ms ease',
-                    textAlign: 'center',
+                    marginTop: 'var(--ds-spacing-2)',
                   }}
                 >
-                  <Paragraph data-size="sm" style={{ margin: 0, fontWeight: isSelected ? 'var(--ds-font-weight-semibold)' : 'var(--ds-font-weight-regular)' }}>
-                    {group.label}
+                  <Paragraph data-size="md" style={{ margin: 0, fontWeight: 'var(--ds-font-weight-semibold)' }}>
+                    {t('bookingCart.total')}
                   </Paragraph>
-                  <Paragraph data-size="xs" style={{ margin: 0, marginTop: 'var(--ds-spacing-1)', opacity: 0.8 }}>
-                    {group.pricePerHour} kr/t
+                  <Paragraph data-size="lg" style={{ margin: 0, fontWeight: 'var(--ds-font-weight-bold)', fontVariantNumeric: 'tabular-nums', color: 'var(--ds-color-accent-text-default)' }}>
+                    {total.toLocaleString('nb-NO')} kr
                   </Paragraph>
-                </button>
-              );
-            })}
-          </div>
+                </div>
 
-          {/* Additional Services */}
-          {additionalServices.length > 0 && (
-            <>
-              <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--ds-spacing-2)', marginBottom: 'var(--ds-spacing-3)' }}>
-                <PlusIcon size={16} />
-                <Heading level={4} data-size="xs" style={{ margin: 0 }}>
-                  {t('bookingCart.additionalServices')}
-                </Heading>
+                {/* MVA notice */}
+                <Paragraph data-size="xs" style={{ margin: 0, color: 'var(--ds-color-neutral-text-subtle)', textAlign: 'center', marginTop: 'var(--ds-spacing-1)' }}>
+                  {t('bookingCart.priceIncludesMva')}
+                </Paragraph>
               </div>
-              
-              <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--ds-spacing-2)' }}>
-                {additionalServices.map(service => {
-                  const isChecked = selectedServices.has(service.id);
-                  return (
-                    <label
-                      key={service.id}
-                      style={{
-                        display: 'flex',
-                        alignItems: 'center',
-                        gap: 'var(--ds-spacing-3)',
-                        padding: 'var(--ds-spacing-3)',
-                        backgroundColor: isChecked
-                          ? 'var(--ds-color-accent-surface-default)'
-                          : 'var(--ds-color-neutral-background-default)',
-                        borderRadius: 'var(--ds-border-radius-md)',
-                        border: isChecked
-                          ? '2px solid var(--ds-color-accent-base-default)'
-                          : '1px solid var(--ds-color-neutral-border-subtle)',
-                        cursor: 'pointer',
-                        transition: 'all 150ms ease',
-                      }}
-                    >
-                      <input
-                        type="checkbox"
-                        checked={isChecked}
-                        onChange={(e) => onServiceToggle?.(service.id, e.target.checked)}
-                        style={{
-                          width: '18px',
-                          height: '18px',
-                          accentColor: 'var(--ds-color-accent-base-default)',
-                        }}
-                      />
-                      <div style={{ flex: 1 }}>
-                        <Paragraph data-size="sm" style={{ margin: 0, fontWeight: 'var(--ds-font-weight-medium)' }}>
-                          {service.label}
-                        </Paragraph>
-                      </div>
-                      <Paragraph data-size="sm" style={{ margin: 0, fontWeight: 'var(--ds-font-weight-semibold)' }}>
-                        +{service.price} kr
-                      </Paragraph>
-                    </label>
-                  );
-                })}
-              </div>
-            </>
-          )}
+            );
+          })()}
         </div>
       )}
     </div>

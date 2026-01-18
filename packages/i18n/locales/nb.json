@@ -148,7 +148,9 @@
     "welcome": "Velkommen",
     "selectLoginMethod": "Velg innloggingsmetode",
     "termsAndConditions": "Vilkår og betingelser",
-    "privacyPolicy": "Personvernerklæring"
+    "privacyPolicy": "Personvernerklæring",
+    "loginTitle": "Logg inn",
+    "loginSubtitle": "Velg innloggingsmetode"
   },
   "backoffice": {
     "ariaLabel": {
@@ -524,30 +526,30 @@
         "for": "1 time før"
       }
     },
+    "24": {
+      "timer": {
+        "for": "24 timer før"
+      }
+    },
     "110": {
       "personer": "1-10 personer"
     },
     "1125": {
       "personer": "11-25 personer"
     },
-    "12timers": {
-      "100": {
-        "pm": "12-timers (1:00 PM)"
-      }
-    },
-    "24": {
-      "timer": {
-        "for": "24 timer før"
-      }
-    },
-    "24timers": {
-      "1300": "24-timers (13:00)"
-    },
     "2650": {
       "personer": "26-50 personer"
     },
     "51100": {
       "personer": "51-100 personer"
+    },
+    "12timers": {
+      "100": {
+        "pm": "12-timers (1:00 PM)"
+      }
+    },
+    "24timers": {
+      "1300": "24-timers (13:00)"
     },
     "aapen": {
       "for": {
@@ -796,12 +798,12 @@
       }
     },
     "arrangement": {
-      "_value": "Arrangement",
       "20": {
         "jan": {
           "hele": "Arrangement 20. jan hele dagen"
         }
-      }
+      },
+      "_value": "Arrangement"
     },
     "assign": {
       "custody": "Assign Custody"
@@ -6300,18 +6302,18 @@
     }
   },
   "misc": {
-    "": {
-      "start": {
-        "now": "= start && now"
+    "9": {
+      "siffer": {
+        "_value": "9 siffer",
+        "valgfritt": "9 siffer (valgfritt)"
       }
     },
     "11": {
       "siffer": "11 siffer"
     },
-    "9": {
-      "siffer": {
-        "_value": "9 siffer",
-        "valgfritt": "9 siffer (valgfritt)"
+    "": {
+      "start": {
+        "now": "= start && now"
       }
     },
     "access": {
@@ -7621,15 +7623,11 @@
       }
     },
     "feks": {
-      "": "F.eks. ",
-      "10": "F.eks. 10",
-      "100": "F.eks. 100",
-      "120": "F.eks. 120",
       "2": "f.eks. 2",
-      "20": "f.eks. 20",
-      "2022": "F.eks. 2022",
-      "35": "F.eks. 3.5",
       "5": "F.eks. 5",
+      "10": "F.eks. 10",
+      "20": "f.eks. 20",
+      "35": "F.eks. 3.5",
       "60": {
         "minutter": {
           "2": {
@@ -7637,6 +7635,10 @@
           }
         }
       },
+      "100": "F.eks. 100",
+      "120": "F.eks. 120",
+      "2022": "F.eks. 2022",
+      "": "F.eks. ",
       "6m": {
         "x": {
           "4m": "F.eks. 6m x 4m"
@@ -7776,10 +7778,10 @@
     },
     "fotballbane": {
       "1": {
-        "_value": "Fotballbane 1",
         "4": {
           "timer": "Fotballbane 1 - 4 timer"
-        }
+        },
+        "_value": "Fotballbane 1"
       }
     },
     "frequency": {
@@ -7853,14 +7855,14 @@
     "gratis": {
       "avbestilling": {
         "inntil": {
-          "24": {
-            "timer": {
-              "før": "Gratis avbestilling inntil 24 timer før"
-            }
-          },
           "5": {
             "dager": {
               "før": "Gratis avbestilling inntil 5 dager før"
+            }
+          },
+          "24": {
+            "timer": {
+              "før": "Gratis avbestilling inntil 24 timer før"
             }
           }
         }
@@ -8030,10 +8032,10 @@
     },
     "idrettshall": {
       "a": {
-        "_value": "Idrettshall A",
         "2": {
           "timer": "Idrettshall A - 2 timer"
-        }
+        },
+        "_value": "Idrettshall A"
       },
       "b": "Idrettshall B"
     },

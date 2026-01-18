@@ -1,19 +1,19 @@
 /**
  * Lazy Loading for i18n Locale Bundles
  *
- * ARCHITECTURE: Database is the ONLY source of truth for translations.
+ * ARCHITECTURE: Static JSON files are the ONLY source of truth for translations.
  * 
  * Flow:
  * 1. App requests translations via loadLocale(lang)
- * 2. Loader fetches from API: GET /api/i18n/{lang}
- * 3. API queries platform.translations table
- * 4. Translations are cached locally for performance
+ * 2. Loader imports static JSON files bundled with the app
+ * 3. Translations are cached locally for performance
  * 
- * Note: Static JSON files in locales/ are used ONLY for initial DB seeding.
- *       They are NOT used at runtime.
+ * Note: NO API or database fetching. All translations bundled with the app.
  */
 
 import type { SupportedLocale, TranslationsRegistry } from './types';
+import { nb } from './locales/nb';
+import { en } from './locales/en';
 
 /**
  * Core translations that are bundled immediately for fast initial render.
@@ -61,6 +61,14 @@ export const CORE_TRANSLATIONS: Record<SupportedLocale, Record<string, string>> 
 };
 
 /**
+ * Static translations registry - bundled with the app
+ */
+const STATIC_TRANSLATIONS: TranslationsRegistry = {
+  nb,
+  en,
+};
+
+/**
  * Cache of loaded locales
  */
 const loadedLocales: Map<SupportedLocale, TranslationsRegistry[SupportedLocale]> = new Map();
@@ -72,57 +80,7 @@ const loadingPromises: Map<SupportedLocale, Promise<TranslationsRegistry[Support
   new Map();
 
 /**
- * API base URL for fetching translations
- */
-const getApiBaseUrl = (): string => {
-  // Check for environment variable or use default
-  let url = '';
-  if (typeof window !== 'undefined' && (window as any).__VITE_API_URL__) {
-    url = (window as any).__VITE_API_URL__;
-  } else {
-    url = (import.meta.env as unknown as Record<string, string | undefined>)?.VITE_API_URL || '/api';
-  }
-
-  // If using default /api, return as is
-  if (url === '/api') return url;
-
-  // For absolute URLs, ensure /api suffix if not already present
-  // But be careful not to double append if VITE_API_URL already contains it
-  if (!url.endsWith('/api')) {
-    return `${url}/api`;
-  }
-  
-  return url;
-};
-
-/**
- * Fetch translations from API (database source of truth)
- */
-async function fetchTranslationsFromApi(
-  locale: SupportedLocale
-): Promise<Record<string, string> | null> {
-  try {
-    const baseUrl = getApiBaseUrl();
-    const response = await fetch(`${baseUrl}/i18n/${locale}`, {
-      headers: {
-        Accept: 'application/json',
-      },
-    });
-
-    if (!response.ok) {
-      console.warn(`Failed to fetch translations for ${locale}: ${response.status}`);
-      return null;
-    }
-
-    return response.json();
-  } catch (error) {
-    console.warn(`Failed to fetch translations for ${locale}:`, error);
-    return null;
-  }
-}
-
-/**
- * Load a locale bundle from the database via API
+ * Load a locale bundle from static JSON files (bundled with app)
  *
  * @param locale The locale to load
  * @returns Promise resolving to the translations object
@@ -146,19 +104,19 @@ export async function loadLocale(
   // Create loading promise
   const loadPromise = (async () => {
     try {
-      // Fetch from API (database is source of truth)
-      const apiTranslations = await fetchTranslationsFromApi(locale);
+      // Load from static bundled translations
+      const translations = STATIC_TRANSLATIONS[locale];
 
-      if (apiTranslations) {
-        // Cache and return API translations
-        loadedLocales.set(locale, apiTranslations);
+      if (translations) {
+        // Cache and return static translations
+        loadedLocales.set(locale, translations);
         loadingPromises.delete(locale);
-        return apiTranslations;
+        return translations;
       }
 
-      // If API fails, use core translations as emergency fallback
-      console.warn(`Using core translations fallback for ${locale}`);
-      const fallback = CORE_TRANSLATIONS[locale] || CORE_TRANSLATIONS.nb;
+      // Fallback to Norwegian if locale not found
+      console.warn(`Locale ${locale} not found, using Norwegian fallback`);
+      const fallback = STATIC_TRANSLATIONS.nb;
       loadedLocales.set(locale, fallback);
       loadingPromises.delete(locale);
       return fallback;
@@ -166,8 +124,8 @@ export async function loadLocale(
       loadingPromises.delete(locale);
       console.error(`Failed to load locale: ${locale}`, error);
 
-      // Return core translations as fallback
-      return CORE_TRANSLATIONS[locale] || CORE_TRANSLATIONS.nb;
+      // Return Norwegian as fallback
+      return STATIC_TRANSLATIONS.nb;
     }
   })();
 
@@ -220,7 +178,7 @@ export function clearLocaleCache(): void {
 }
 
 /**
- * Force refresh translations from API
+ * Force refresh translations from static files
  */
 export async function refreshLocale(
   locale: SupportedLocale

@@ -6,6 +6,7 @@
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import type { AppAuthConfig } from '@xala/auth/config';
+import { useT } from '@xala/i18n';
 import { LoginLayout, LoginOption } from '../blocks/LoginComponents';
 import { DemoLoginDialog } from '../composed/DemoLoginDialog';
 import { IdPortenIcon, MicrosoftIcon, VippsIcon, BankIdIcon } from '../primitives/icons';
@@ -49,6 +50,31 @@ export interface LoginPageProps {
     label: string;
   }>;
   
+  /** Localization props for login page text */
+  loginTitle?: string;
+  loginSubtitle?: string;
+  demoDialogTitle?: string;
+  demoDialogDescription?: string;
+  demoDialogLabels?: {
+    name: string;
+    email: string;
+    token: string;
+  };
+  demoDialogPlaceholders?: {
+    name: string;
+    email: string;
+    token: string;
+  };
+  demoDialogCancelText?: string;
+  demoDialogSubmitText?: string;
+  demoDialogLoadingText?: string;
+  demoDialogValidation?: {
+    nameRequired: string;
+    emailRequired: string;
+    tokenRequired: string;
+    invalidEmail: string;
+  };
+  
   /** Callback when user clicks a login provider */
   onProviderClick: (providerId: string) => void;
   
@@ -85,6 +111,16 @@ export function LoginPage({
   brandConfig,
   panelConfig,
   footerLinks,
+  loginTitle,
+  loginSubtitle,
+  demoDialogTitle,
+  demoDialogDescription,
+  demoDialogLabels,
+  demoDialogPlaceholders,
+  demoDialogCancelText,
+  demoDialogSubmitText,
+  demoDialogLoadingText,
+  demoDialogValidation,
   onProviderClick,
   isAuthenticated = false,
   isLoading = false,
@@ -94,6 +130,7 @@ export function LoginPage({
   onDemoLoginSubmit,
 }: LoginPageProps) {
   const navigate = useNavigate();
+  const t = useT();
   
   // Use config values as defaults
   const branding = brandConfig || config.branding || {
@@ -135,8 +172,8 @@ export function LoginPage({
         brandName={branding.name}
         brandTagline={branding.tagline}
         logoHref={branding.logoHref}
-        title="Logg inn"
-        subtitle="Velg innloggingsmetode for å fortsette."
+        title={loginTitle || t('auth.loginTitle')}
+        subtitle={loginSubtitle || t('auth.loginSubtitle')}
         panelTitle={panel.title}
         panelSubtitle={panel.subtitle}
         panelDescription={panel.description}
@@ -168,26 +205,26 @@ export function LoginPage({
           open={demoLoginOpen}
           onClose={onDemoLoginClose}
           onSubmit={onDemoLoginSubmit}
-          title="Demo Innlogging"
-          description="Logg inn med demo-token for testing"
-          cancelText="Avbryt"
-          submitText="Logg inn"
-          loadingText="Logger inn..."
-          validationMessages={{
-            nameRequired: 'Navn er påkrevd',
-            emailRequired: 'E-post er påkrevd',
-            tokenRequired: 'Token er påkrevd',
-            invalidEmail: 'Ugyldig e-postadresse',
+          title={demoDialogTitle || t('auth.demoLogin.title')}
+          description={demoDialogDescription || t('auth.demoLogin.description')}
+          cancelText={demoDialogCancelText || t('common.cancel')}
+          submitText={demoDialogSubmitText || t('auth.demoLogin.submit')}
+          loadingText={demoDialogLoadingText || t('auth.demoLogin.loading')}
+          validationMessages={demoDialogValidation || {
+            nameRequired: t('validation.nameRequired'),
+            emailRequired: t('validation.emailRequired'),
+            tokenRequired: t('validation.tokenRequired'),
+            invalidEmail: t('validation.invalidEmail'),
           }}
-          labels={{
-            name: 'Navn',
-            email: 'E-post',
-            token: 'Demo Token',
+          labels={demoDialogLabels || {
+            name: t('form.name'),
+            email: t('form.email'),
+            token: t('auth.demoLogin.tokenLabel'),
           }}
-          placeholders={{
-            name: 'Ola Nordmann',
-            email: 'ola@example.com',
-            token: 'demo-token-123',
+          placeholders={demoDialogPlaceholders || {
+            name: t('form.namePlaceholder'),
+            email: t('form.emailPlaceholder'),
+            token: t('auth.demoLogin.tokenPlaceholder'),
           }}
         />
       )}

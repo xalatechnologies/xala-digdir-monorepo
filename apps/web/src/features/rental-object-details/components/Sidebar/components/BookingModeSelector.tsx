@@ -169,11 +169,12 @@ export function BookingModeSelector({
       className={className}
       style={{
         display: 'flex',
-        gap: 'var(--ds-spacing-2)',
-        padding: 'var(--ds-spacing-3) var(--ds-spacing-4)',
-        borderBottom: '1px solid var(--ds-color-neutral-border-subtle)',
-        backgroundColor: 'var(--ds-color-neutral-surface-subtle)',
-        overflowX: 'auto',
+        gap: 'var(--ds-spacing-1)',
+        padding: 'var(--ds-spacing-2) var(--ds-spacing-3)',
+        backgroundColor: 'var(--ds-color-neutral-background-default)',
+        borderRadius: 'var(--ds-border-radius-lg)',
+        margin: 'var(--ds-spacing-3)',
+        marginBottom: 0,
       }}
     >
       {displayModes.map((mode) => {
@@ -188,83 +189,52 @@ export function BookingModeSelector({
             disabled={disabled}
             style={{
               display: 'flex',
-              flexDirection: 'column',
               alignItems: 'center',
-              gap: 'var(--ds-spacing-1)',
-              padding: 'var(--ds-spacing-3)',
-              borderRadius: 'var(--ds-border-radius-lg)',
-              border: isSelected
-                ? '2px solid var(--ds-color-accent-base-default)'
-                : '2px solid transparent',
+              justifyContent: 'center',
+              gap: 'var(--ds-spacing-2)',
+              padding: 'var(--ds-spacing-2) var(--ds-spacing-3)',
+              borderRadius: 'var(--ds-border-radius-md)',
+              border: 'none',
               backgroundColor: isSelected
-                ? 'var(--ds-color-accent-surface-default)'
-                : 'var(--ds-color-neutral-background-default)',
+                ? 'var(--ds-color-accent-base-default)'
+                : 'transparent',
               color: isSelected
-                ? 'var(--ds-color-accent-text-default)'
+                ? 'white'
                 : 'var(--ds-color-neutral-text-default)',
               cursor: disabled ? 'not-allowed' : 'pointer',
               opacity: disabled ? 0.6 : 1,
-              transition: 'all 0.2s cubic-bezier(0.4, 0, 0.2, 1)',
+              transition: 'all 0.15s ease',
               whiteSpace: 'nowrap',
-              minWidth: '90px',
               flex: 1,
-              boxShadow: isSelected 
-                ? '0 2px 8px rgba(0,0,0,0.1)' 
-                : 'none',
+              fontSize: 'var(--ds-font-size-sm)',
+              fontWeight: isSelected
+                ? 'var(--ds-font-weight-semibold)'
+                : 'var(--ds-font-weight-medium)',
             }}
             title={config.description}
             onMouseEnter={(e) => {
               if (!isSelected && !disabled) {
                 e.currentTarget.style.backgroundColor = 'var(--ds-color-neutral-surface-hover)';
-                e.currentTarget.style.transform = 'translateY(-1px)';
               }
             }}
             onMouseLeave={(e) => {
               if (!isSelected && !disabled) {
-                e.currentTarget.style.backgroundColor = 'var(--ds-color-neutral-background-default)';
-                e.currentTarget.style.transform = 'translateY(0)';
+                e.currentTarget.style.backgroundColor = 'transparent';
               }
             }}
           >
-            {/* Icon with background circle */}
-            <div
-              style={{
-                width: '36px',
-                height: '36px',
-                borderRadius: 'var(--ds-border-radius-full)',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                backgroundColor: isSelected
-                  ? 'var(--ds-color-accent-base-default)'
-                  : 'var(--ds-color-neutral-surface-default)',
-                color: isSelected
-                  ? 'var(--ds-color-accent-contrast-default)'
-                  : 'var(--ds-color-neutral-text-subtle)',
-                transition: 'all 0.2s ease',
-              }}
-            >
+            {/* Icon */}
+            <span style={{ display: 'flex', alignItems: 'center' }}>
               {config.icon}
-            </div>
+            </span>
             
             {/* Label */}
-            <Paragraph
-              data-size="xs"
-              style={{
-                margin: 0,
-                fontWeight: isSelected
-                  ? 'var(--ds-font-weight-semibold)'
-                  : 'var(--ds-font-weight-regular)',
-                textAlign: 'center',
-              }}
-            >
-              {config.label}
-            </Paragraph>
+            <span>{config.label}</span>
 
             {/* Show constraint hint for recurring */}
             {mode === 'RECURRING' && recurringConstraints?.maxOccurrences && (
-              <Badge data-color="info" data-size="sm" style={{ marginTop: 'var(--ds-spacing-1)' }}>
-                {t('bookingMode.max')} {recurringConstraints.maxOccurrences}
+              <Badge data-color="info" data-size="sm">
+                {recurringConstraints.maxOccurrences}
               </Badge>
             )}
           </button>

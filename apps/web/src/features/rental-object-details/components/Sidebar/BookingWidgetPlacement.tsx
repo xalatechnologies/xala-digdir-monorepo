@@ -47,58 +47,6 @@ function ChevronRightIcon({ size = 20 }: { size?: number }): React.ReactElement 
   );
 }
 
-// =============================================================================
-// Calendar Legend Component
-// =============================================================================
-
-interface LegendItemProps {
-  color: string;
-  label: string;
-}
-
-function LegendItem({ color, label }: LegendItemProps): React.ReactElement {
-  return (
-    <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--ds-spacing-2)' }}>
-      <div
-        style={{
-          width: '12px',
-          height: '12px',
-          borderRadius: '2px',
-          backgroundColor: color,
-        }}
-      />
-      <span style={{ fontSize: 'var(--ds-font-size-xs)', color: 'var(--ds-color-neutral-text-subtle)' }}>
-        {label}
-      </span>
-    </div>
-  );
-}
-
-interface CalendarLegendProps {
-  t: (key: string) => string;
-}
-
-function CalendarLegend({ t }: CalendarLegendProps): React.ReactElement {
-  return (
-    <div
-      style={{
-        display: 'flex',
-        flexWrap: 'wrap',
-        gap: 'var(--ds-spacing-4)',
-        padding: 'var(--ds-spacing-3)',
-        backgroundColor: 'var(--ds-color-neutral-surface-subtle)',
-        borderRadius: 'var(--ds-border-radius-md)',
-        marginBottom: 'var(--ds-spacing-4)',
-      }}
-    >
-      <LegendItem color="var(--ds-color-success-surface-default)" label={t('bookingWidget.legend.available')} />
-      <LegendItem color="var(--ds-color-accent-surface-default)" label={t('bookingWidget.legend.selected')} />
-      <LegendItem color="var(--ds-color-danger-surface-default)" label={t('bookingWidget.legend.booked')} />
-      <LegendItem color="var(--ds-color-neutral-surface-default)" label={t('bookingWidget.legend.blocked')} />
-    </div>
-  );
-}
-
 function CheckCircleIcon({ size = 18 }: { size?: number }): React.ReactElement {
   return (
     <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -555,28 +503,28 @@ export function BookingWidgetPlacement({
 
   const handleDialogConfirm = (data: BookingFormData): void => {
     if (bookingMode === 'SINGLE_SLOT' && selectedSlotForDialog) {
-      const dayIndex = Math.floor(
-        (selectedSlotForDialog.date.getTime() - weekStart.getTime()) / (1000 * 60 * 60 * 24)
-      );
-      const slotKey = `${dayIndex}-${selectedSlotForDialog.startTime}`;
+    const dayIndex = Math.floor(
+      (selectedSlotForDialog.date.getTime() - weekStart.getTime()) / (1000 * 60 * 60 * 24)
+    );
+    const slotKey = `${dayIndex}-${selectedSlotForDialog.startTime}`;
 
-      // Calculate duration from startTime and endTime
-      const [startH, startM] = data.startTime.split(':').map(Number);
-      const [endH, endM] = data.endTime.split(':').map(Number);
-      const duration = ((endH ?? 0) * 60 + (endM ?? 0)) - ((startH ?? 0) * 60 + (startM ?? 0));
+    // Calculate duration from startTime and endTime
+    const [startH, startM] = data.startTime.split(':').map(Number);
+    const [endH, endM] = data.endTime.split(':').map(Number);
+    const duration = ((endH ?? 0) * 60 + (endM ?? 0)) - ((startH ?? 0) * 60 + (startM ?? 0));
 
-      setSelectedSlots(prev => new Set(prev).add(slotKey));
-      setSlotDetails(prev => ({
-        ...prev,
-        [slotKey]: {
-          duration: duration > 0 ? duration : 60,
-          purpose: data.purpose,
-          attendees: data.attendees,
-          activityType: data.activityType,
-        },
-      }));
-      setDialogOpen(false);
-      setSelectedSlotForDialog(undefined);
+    setSelectedSlots(prev => new Set(prev).add(slotKey));
+    setSlotDetails(prev => ({
+      ...prev,
+      [slotKey]: {
+        duration: duration > 0 ? duration : 60,
+        purpose: data.purpose,
+        attendees: data.attendees,
+        activityType: data.activityType,
+      },
+    }));
+    setDialogOpen(false);
+    setSelectedSlotForDialog(undefined);
     } else if (bookingMode === 'RANGE' && rangeSelection) {
       // For RANGE mode, the selection is already stored in rangeSelection
       // Store form data for later use in booking submission
@@ -673,6 +621,69 @@ export function BookingWidgetPlacement({
   // Set to false when proper OAuth is implemented
   const DEMO_MODE_ENABLED = true;
 
+  // State to track demo auth (forces re-render when demo login happens)
+  const [demoAuthComplete, setDemoAuthComplete] = React.useState(false);
+  const [showDemoDialog, setShowDemoDialog] = React.useState(false);
+  
+  // Check if demo user exists in localStorage
+  React.useEffect(() => {
+    const savedUser = localStorage.getItem('web_user');
+    if (savedUser && savedUser.includes('demo-user')) {
+      setDemoAuthComplete(true);
+    }
+  }, []);
+
+  // Demo login form state
+  const [demoFormData, setDemoFormData] = React.useState({
+    name: '',
+    email: '',
+    token: 'demo-token-2026',
+  });
+  const [demoFormError, setDemoFormError] = React.useState('');
+
+  // Demo login with form data
+  const handleDemoLoginSubmit = async (e: React.FormEvent): Promise<void> => {
+    e.preventDefault();
+    setDemoFormError('');
+    
+    // Validate form
+    if (!demoFormData.name.trim()) {
+      setDemoFormError(t('auth.demoLogin.errorName'));
+      return;
+    }
+    if (!demoFormData.email.trim() || !demoFormData.email.includes('@')) {
+      setDemoFormError(t('auth.demoLogin.errorEmail'));
+      return;
+    }
+    if (!demoFormData.token.trim()) {
+      setDemoFormError(t('auth.demoLogin.errorToken'));
+      return;
+    }
+    
+    // Validate demo token
+    const validTokens = ['demo-token-2026', 'test-token', 'admin-demo'];
+    if (!validTokens.includes(demoFormData.token)) {
+      setDemoFormError(t('auth.demoLogin.errorInvalidToken'));
+      return;
+    }
+    
+    setIsLoggingIn(true);
+    setShowDemoDialog(false);
+    saveBookingState();
+    
+    const demoUser = {
+      id: `demo-user-${Date.now()}`,
+      name: demoFormData.name,
+      email: demoFormData.email,
+    };
+    
+    localStorage.setItem('web_user', JSON.stringify(demoUser));
+    await new Promise(resolve => setTimeout(resolve, 500));
+    setDemoAuthComplete(true);
+    setIsLoggingIn(false);
+    window.location.reload();
+  };
+
   const handleLoginVipps = async (): Promise<void> => {
     setIsLoggingIn(true);
     // Save booking state before login redirect
@@ -681,14 +692,18 @@ export function BookingWidgetPlacement({
       if (DEMO_MODE_ENABLED) {
         // Demo mode: Simulate login with mock user
         // This allows testing the booking flow without real OAuth
-        localStorage.setItem('web_user', JSON.stringify({
+        const demoUser = {
           id: 'demo-user-vipps',
           name: 'Demo Bruker',
           email: 'demo@example.no',
-        }));
+        };
+        localStorage.setItem('web_user', JSON.stringify(demoUser));
         // Small delay to simulate authentication
-        await new Promise(resolve => setTimeout(resolve, 500));
-        // Reload to pick up the new user (state will be restored from sessionStorage)
+        await new Promise(resolve => setTimeout(resolve, 800));
+        // Trigger state update to force re-render with new auth state
+        setDemoAuthComplete(true);
+        setIsLoggingIn(false);
+        // Reload to pick up the new user properly in useAuth hook
         window.location.reload();
       } else {
         // Production mode: Use real auth login with returnTo URL
@@ -709,14 +724,18 @@ export function BookingWidgetPlacement({
       if (DEMO_MODE_ENABLED) {
         // Demo mode: Simulate login with mock user (organization)
         // This allows testing the booking flow without real OAuth
-        localStorage.setItem('web_user', JSON.stringify({
+        const demoUser = {
           id: 'demo-user-bankid',
           name: 'Demo Ansatt',
           email: 'ansatt@kommune.no',
-        }));
+        };
+        localStorage.setItem('web_user', JSON.stringify(demoUser));
         // Small delay to simulate authentication
-        await new Promise(resolve => setTimeout(resolve, 500));
-        // Reload to pick up the new user (state will be restored from sessionStorage)
+        await new Promise(resolve => setTimeout(resolve, 800));
+        // Trigger state update to force re-render with new auth state
+        setDemoAuthComplete(true);
+        setIsLoggingIn(false);
+        // Reload to pick up the new user properly in useAuth hook
         window.location.reload();
       } else {
         // Production mode: Use real auth login for organization (ID-porten) with returnTo URL
@@ -949,7 +968,7 @@ export function BookingWidgetPlacement({
         {/* LEFT COLUMN: Step Content */}
         <div
           style={{
-            flex: isMobile || currentStep === 2 ? 1 : '0 0 55%',
+            flex: isMobile || currentStep === 2 ? 1 : '0 0 68%',
             display: 'flex',
             flexDirection: 'column',
             overflow: 'auto',
@@ -969,8 +988,6 @@ export function BookingWidgetPlacement({
               {/* SINGLE_SLOT Mode: Use CalendarSection component */}
               {bookingMode === 'SINGLE_SLOT' && rentalObjectId && (
                 <div style={{ flex: 1, overflow: 'auto', padding: 'var(--ds-spacing-4)' }}>
-                  {/* Calendar Legend */}
-                  <CalendarLegend t={t} />
                   
                   <CalendarSection
                     rentalObjectId={rentalObjectId}
@@ -995,14 +1012,14 @@ export function BookingWidgetPlacement({
                       <Paragraph data-size="sm" style={{ margin: 0, fontWeight: 'var(--ds-font-weight-medium)' }}>
                         {t('bookingWidget.info.selectedCount', { count: selectedSlots.size })}
                       </Paragraph>
-                    </div>
-                  )}
                 </div>
+                  )}
+                  </div>
               )}
 
               {/* RANGE Mode: Use CalendarSection with MULTI_DAY mode */}
               {bookingMode === 'RANGE' && rentalObjectId && (
-                <div style={{ flex: 1, overflow: 'auto', padding: 'var(--ds-spacing-4)' }}>
+              <div style={{ flex: 1, overflow: 'auto', padding: 'var(--ds-spacing-4)' }}>
                   <div style={{ marginBottom: 'var(--ds-spacing-4)' }}>
                     <Heading level={3} data-size="sm" style={{ margin: 0, marginBottom: 'var(--ds-spacing-2)' }}>
                       {t('bookingWidget.range.selectPeriod')}
@@ -1012,8 +1029,6 @@ export function BookingWidgetPlacement({
                     </Paragraph>
                   </div>
                   
-                  {/* Calendar Legend */}
-                  <CalendarLegend t={t} />
                   
                   <CalendarSection
                     rentalObjectId={rentalObjectId}
@@ -1029,14 +1044,14 @@ export function BookingWidgetPlacement({
                       marginTop: 'var(--ds-spacing-4)', 
                       padding: 'var(--ds-spacing-3)', 
                       backgroundColor: 'var(--ds-color-accent-surface-default)',
-                      borderRadius: 'var(--ds-border-radius-md)',
+                    borderRadius: 'var(--ds-border-radius-md)',
                       border: '1px solid var(--ds-color-accent-border-default)',
                     }}>
                       <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--ds-spacing-2)', marginBottom: 'var(--ds-spacing-2)' }}>
                         <CheckCircleIcon size={18} />
                         <Paragraph data-size="sm" style={{ margin: 0, fontWeight: 'var(--ds-font-weight-medium)' }}>
                           {t('bookingWidget.range.selectedPeriod')}
-                        </Paragraph>
+                      </Paragraph>
                       </div>
                       <Paragraph data-size="sm" style={{ margin: 0 }}>
                         {new Date(rangeSelection.startDate).toLocaleDateString('nb-NO', { weekday: 'short', day: 'numeric', month: 'short', year: 'numeric' })} 
@@ -1062,11 +1077,9 @@ export function BookingWidgetPlacement({
                     </Heading>
                     <Paragraph data-size="sm" style={{ margin: 0, color: 'var(--ds-color-neutral-text-subtle)' }}>
                       {t('bookingWidget.allDay.selectDaysDesc')}
-                    </Paragraph>
-                  </div>
+                          </Paragraph>
+                        </div>
                   
-                  {/* Calendar Legend */}
-                  <CalendarLegend t={t} />
                   
                   <CalendarSection
                     rentalObjectId={rentalObjectId}
@@ -1082,7 +1095,7 @@ export function BookingWidgetPlacement({
                       marginTop: 'var(--ds-spacing-4)', 
                       padding: 'var(--ds-spacing-3)', 
                       backgroundColor: 'var(--ds-color-accent-surface-default)',
-                      borderRadius: 'var(--ds-border-radius-md)',
+                        borderRadius: 'var(--ds-border-radius-md)',
                       border: '1px solid var(--ds-color-accent-border-default)',
                     }}>
                       <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--ds-spacing-2)', marginBottom: 'var(--ds-spacing-3)' }}>
@@ -1090,12 +1103,12 @@ export function BookingWidgetPlacement({
                         <Paragraph data-size="sm" style={{ margin: 0, fontWeight: 'var(--ds-font-weight-medium)' }}>
                           {t('bookingWidget.allDay.selectedDays', { count: allDaySelection.length })}
                         </Paragraph>
-                      </div>
+                  </div>
                       <div style={{ display: 'flex', flexWrap: 'wrap', gap: 'var(--ds-spacing-2)' }}>
                         {allDaySelection.map((date) => (
                           <span
                             key={date}
-                            style={{
+                      style={{
                               padding: 'var(--ds-spacing-1) var(--ds-spacing-2)',
                               backgroundColor: 'var(--ds-color-neutral-background-default)',
                               borderRadius: 'var(--ds-border-radius-sm)',
@@ -1108,9 +1121,9 @@ export function BookingWidgetPlacement({
                           </span>
                         ))}
                       </div>
-                    </div>
-                  )}
-                </div>
+                  </div>
+                )}
+              </div>
               )}
 
               {/* RECURRING Mode: Pattern Builder + Preview */}
@@ -1125,9 +1138,6 @@ export function BookingWidgetPlacement({
                       <Paragraph data-size="sm" style={{ margin: 0, marginBottom: 'var(--ds-spacing-4)', color: 'var(--ds-color-neutral-text-subtle)' }}>
                         {t('bookingWidget.recurring.selectFirstTimeDesc')}
                       </Paragraph>
-                      
-                      {/* Calendar Legend */}
-                      <CalendarLegend t={t} />
                       {/* Calendar for selecting base slot */}
                       <div
                         style={{
@@ -1408,7 +1418,219 @@ export function BookingWidgetPlacement({
               bookingMode={bookingConfig?.mode || 'SLOTS'}
               visibility={visibility}
               onVisibilityChange={setVisibility}
+              onDemoLogin={() => setShowDemoDialog(true)}
             />
+          )}
+
+          {/* Demo Login Dialog */}
+          {showDemoDialog && (
+            <div
+              style={{
+                position: 'fixed',
+                top: 0,
+                left: 0,
+                right: 0,
+                bottom: 0,
+                backgroundColor: 'rgba(0, 0, 0, 0.6)',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                zIndex: 1000,
+              }}
+              onClick={() => setShowDemoDialog(false)}
+            >
+              <div
+                style={{
+                  backgroundColor: 'var(--ds-color-neutral-background-default)',
+                  borderRadius: 'var(--ds-border-radius-xl)',
+                  padding: 'var(--ds-spacing-6)',
+                  maxWidth: '420px',
+                  width: '90%',
+                  boxShadow: '0 20px 50px rgba(0,0,0,0.3)',
+                }}
+                onClick={(e) => e.stopPropagation()}
+              >
+                {/* Header */}
+                <div style={{ textAlign: 'center', marginBottom: 'var(--ds-spacing-5)' }}>
+                  <div
+                    style={{
+                      width: '56px',
+                      height: '56px',
+                      borderRadius: 'var(--ds-border-radius-full)',
+                      backgroundColor: 'var(--ds-color-warning-surface-default)',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      margin: '0 auto var(--ds-spacing-3)',
+                      fontSize: '24px',
+                    }}
+                  >
+                    🧪
+                  </div>
+                  <Heading level={3} data-size="md" style={{ margin: 0 }}>
+                    {t('auth.demoLogin.title')}
+                  </Heading>
+                  <Paragraph data-size="sm" style={{ margin: 'var(--ds-spacing-2) 0 0 0', color: 'var(--ds-color-neutral-text-subtle)' }}>
+                    {t('auth.demoLogin.formDescription')}
+                  </Paragraph>
+                </div>
+
+                {/* Demo Login Form */}
+                <form onSubmit={handleDemoLoginSubmit} style={{ display: 'flex', flexDirection: 'column', gap: 'var(--ds-spacing-4)' }}>
+                  {/* Error message */}
+                  {demoFormError && (
+                    <div
+                      style={{
+                        padding: 'var(--ds-spacing-3)',
+                        backgroundColor: 'var(--ds-color-danger-surface-default)',
+                        borderRadius: 'var(--ds-border-radius-md)',
+                        color: 'var(--ds-color-danger-text-default)',
+                        fontSize: 'var(--ds-font-size-sm)',
+                      }}
+                    >
+                      {demoFormError}
+                    </div>
+                  )}
+
+                  {/* Name field */}
+                  <div>
+                    <label
+                      htmlFor="demo-name"
+                      style={{
+                        display: 'block',
+                        marginBottom: 'var(--ds-spacing-1)',
+                        fontSize: 'var(--ds-font-size-sm)',
+                        fontWeight: 'var(--ds-font-weight-medium)',
+                        color: 'var(--ds-color-neutral-text-default)',
+                      }}
+                    >
+                      {t('auth.demoLogin.nameLabel')}
+                    </label>
+                    <input
+                      id="demo-name"
+                      type="text"
+                      value={demoFormData.name}
+                      onChange={(e) => setDemoFormData(prev => ({ ...prev, name: e.target.value }))}
+                      placeholder={t('auth.demoLogin.namePlaceholder')}
+                      style={{
+                        width: '100%',
+                        padding: 'var(--ds-spacing-3)',
+                        fontSize: 'var(--ds-font-size-md)',
+                        border: '1px solid var(--ds-color-neutral-border-default)',
+                        borderRadius: 'var(--ds-border-radius-md)',
+                        backgroundColor: 'var(--ds-color-neutral-background-default)',
+                        color: 'var(--ds-color-neutral-text-default)',
+                        boxSizing: 'border-box',
+                      }}
+                    />
+                  </div>
+
+                  {/* Email field */}
+                  <div>
+                    <label
+                      htmlFor="demo-email"
+                      style={{
+                        display: 'block',
+                        marginBottom: 'var(--ds-spacing-1)',
+                        fontSize: 'var(--ds-font-size-sm)',
+                        fontWeight: 'var(--ds-font-weight-medium)',
+                        color: 'var(--ds-color-neutral-text-default)',
+                      }}
+                    >
+                      {t('auth.demoLogin.emailLabel')}
+                    </label>
+                    <input
+                      id="demo-email"
+                      type="email"
+                      value={demoFormData.email}
+                      onChange={(e) => setDemoFormData(prev => ({ ...prev, email: e.target.value }))}
+                      placeholder={t('auth.demoLogin.emailPlaceholder')}
+                      style={{
+                        width: '100%',
+                        padding: 'var(--ds-spacing-3)',
+                        fontSize: 'var(--ds-font-size-md)',
+                        border: '1px solid var(--ds-color-neutral-border-default)',
+                        borderRadius: 'var(--ds-border-radius-md)',
+                        backgroundColor: 'var(--ds-color-neutral-background-default)',
+                        color: 'var(--ds-color-neutral-text-default)',
+                        boxSizing: 'border-box',
+                      }}
+                    />
+                  </div>
+
+                  {/* Token field */}
+                  <div>
+                    <label
+                      htmlFor="demo-token"
+                      style={{
+                        display: 'block',
+                        marginBottom: 'var(--ds-spacing-1)',
+                        fontSize: 'var(--ds-font-size-sm)',
+                        fontWeight: 'var(--ds-font-weight-medium)',
+                        color: 'var(--ds-color-neutral-text-default)',
+                      }}
+                    >
+                      {t('auth.demoLogin.tokenLabel')}
+                    </label>
+                    <input
+                      id="demo-token"
+                      type="text"
+                      value={demoFormData.token}
+                      onChange={(e) => setDemoFormData(prev => ({ ...prev, token: e.target.value }))}
+                      placeholder={t('auth.demoLogin.tokenPlaceholder')}
+                      style={{
+                        width: '100%',
+                        padding: 'var(--ds-spacing-3)',
+                        fontSize: 'var(--ds-font-size-md)',
+                        border: '1px solid var(--ds-color-neutral-border-default)',
+                        borderRadius: 'var(--ds-border-radius-md)',
+                        backgroundColor: 'var(--ds-color-neutral-background-default)',
+                        color: 'var(--ds-color-neutral-text-default)',
+                        fontFamily: 'monospace',
+                        boxSizing: 'border-box',
+                      }}
+                    />
+                    <Paragraph data-size="xs" style={{ margin: 'var(--ds-spacing-1) 0 0 0', color: 'var(--ds-color-neutral-text-subtle)' }}>
+                      {t('auth.demoLogin.tokenHint')}
+                    </Paragraph>
+                  </div>
+
+                  {/* Submit button */}
+                  <Button
+                    type="submit"
+                    variant="primary"
+                    data-size="lg"
+                    disabled={isLoggingIn}
+                    style={{
+                      width: '100%',
+                      marginTop: 'var(--ds-spacing-2)',
+                    }}
+                  >
+                    {isLoggingIn ? t('auth.loggingIn') : t('auth.demoLogin.submitButton')}
+                  </Button>
+
+                  {/* Cancel button */}
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setShowDemoDialog(false);
+                      setDemoFormError('');
+                    }}
+                    style={{
+                      width: '100%',
+                      padding: 'var(--ds-spacing-2)',
+                      backgroundColor: 'transparent',
+                      border: 'none',
+                      color: 'var(--ds-color-neutral-text-subtle)',
+                      cursor: 'pointer',
+                      fontSize: 'var(--ds-font-size-sm)',
+                    }}
+                  >
+                    {t('common.cancel')}
+                  </button>
+                </form>
+              </div>
+            </div>
           )}
 
           {/* Step 3: Success */}
@@ -1442,11 +1664,11 @@ export function BookingWidgetPlacement({
         {!isMobile && currentStep < 3 && currentStep !== 2 && (
           <div
             style={{
-              flex: '0 0 45%',
+              flex: '0 0 32%',
               minWidth: 0,
-              maxWidth: '45%',
+              maxWidth: '32%',
               borderLeft: '1px solid var(--ds-color-neutral-border-subtle)',
-              padding: 'var(--ds-spacing-4)',
+              padding: 'var(--ds-spacing-3)',
               backgroundColor: 'var(--ds-color-neutral-background-subtle)',
               overflow: 'hidden',
               display: 'flex',
@@ -1517,7 +1739,21 @@ export function BookingWidgetPlacement({
               (currentStep === 2 && (!isAuthenticated || !isAccountTypeConfirmed)) ||
               isSubmitting
             }
-            style={{ flex: 1 }}
+            style={{
+              flex: 1,
+              // Ensure proper contrast when disabled
+              ...((!isBookable ||
+                (currentStep === 0 && (
+                  (bookingMode === 'SINGLE_SLOT' && selectedSlots.size === 0) ||
+                  (bookingMode === 'RANGE' && !rangeSelection) ||
+                  (bookingMode === 'ALL_DAY' && allDaySelection.length === 0) ||
+                  (bookingMode === 'RECURRING' && selectedRecurringIndices.size === 0)
+                ))) && {
+                backgroundColor: 'var(--ds-color-neutral-surface-default)',
+                color: 'var(--ds-color-neutral-text-subtle)',
+                borderColor: 'var(--ds-color-neutral-border-default)',
+              }),
+            }}
           >
             {isSubmitting
               ? t('bookingWidget.submitting')
@@ -1525,7 +1761,7 @@ export function BookingWidgetPlacement({
                 ? (() => {
                     if (bookingMode === 'SINGLE_SLOT' && selectedSlots.size > 0) {
                       return selectedSlots.size > 1
-                        ? t('bookingWidget.continueWithSlotsPlural', { count: selectedSlots.size })
+                    ? t('bookingWidget.continueWithSlotsPlural', { count: selectedSlots.size })
                         : t('bookingWidget.continueWithSlots', { count: selectedSlots.size });
                     }
                     if (bookingMode === 'RANGE' && rangeSelection) {

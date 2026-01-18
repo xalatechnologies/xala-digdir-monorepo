@@ -730,18 +730,7 @@ export function UnifiedBookingEngine({
                   </>
                 )}
 
-                {/* Tips Section */}
-                <div className="tips-section">
-                  <Heading level={4} data-size="2xs" style={{ margin: 0, marginBottom: 'var(--ds-spacing-2)', display: 'flex', alignItems: 'center', gap: 'var(--ds-spacing-2)' }}>
-                    <InfoIcon size={14} />
-                    Tips
-                  </Heading>
-                  <ul className="tips-list">
-                    <li>Klikk på ledige tidspunkter for å velge</li>
-                    <li>Du kan velge flere tidspunkter</li>
-                    <li>Minimum {config.rules.minLeadTimeHours}t forvarsel</li>
-                  </ul>
-                </div>
+                {/* Tips section removed for cleaner UI */}
               </div>
             </div>
           )}

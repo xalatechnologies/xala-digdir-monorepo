@@ -251,9 +251,10 @@ export async function createFastifyApp(
   // Register static file serving for storage
   // In development: serve from database-schema/seeds/storage
   // In production: serve from apps/api/storage (or use CDN/S3)
+  // Note: __dirname is apps/api/dist/adapters, so we need 4 levels up to reach monorepo root
   const storageDir = process.env.NODE_ENV === 'production'
     ? path.join(process.cwd(), 'storage')
-    : path.join(__dirname, '../../../packages/database-schema/seeds/storage');
+    : path.join(__dirname, '../../../../packages/database-schema/seeds/storage');
   
   await app.register(fastifyStatic, {
     root: storageDir,

@@ -126,6 +126,8 @@ export interface BookingConfirmationStepProps {
   visibility?: BookingVisibility;
   /** Handler for visibility change */
   onVisibilityChange?: (visibility: BookingVisibility) => void;
+  /** Handler for demo login */
+  onDemoLogin?: () => void;
 }
 
 export function BookingConfirmationStep({
@@ -153,6 +155,7 @@ export function BookingConfirmationStep({
   bookingMode,
   visibility,
   onVisibilityChange,
+  onDemoLogin,
 }: BookingConfirmationStepProps): React.ReactElement {
   const t = useT();
   const monthNames = ['januar', 'februar', 'mars', 'april', 'mai', 'juni', 'juli', 'august', 'september', 'oktober', 'november', 'desember'];
@@ -298,12 +301,12 @@ export function BookingConfirmationStep({
           >
             <UserCheckIcon size={28} />
           </div>
-          <Heading level={3} data-size="md" style={{ margin: 0, marginBottom: 'var(--ds-spacing-2)', color: 'var(--ds-color-neutral-text-default)' }}>
-            {t('logg.inn.for.aa.fullfoere')}
-          </Heading>
+        <Heading level={3} data-size="md" style={{ margin: 0, marginBottom: 'var(--ds-spacing-2)', color: 'var(--ds-color-neutral-text-default)' }}>
+          {t('logg.inn.for.aa.fullfoere')}
+        </Heading>
           <Paragraph data-size="sm" style={{ margin: 0, color: 'var(--ds-color-neutral-text-subtle)' }}>
-            {t('for.aa.sende.bookingforespoersel')}
-          </Paragraph>
+          {t('for.aa.sende.bookingforespoersel')}
+        </Paragraph>
         </div>
 
         {/* Login Buttons with enhanced styling */}
@@ -333,7 +336,7 @@ export function BookingConfirmationStep({
               transition: 'all 0.2s ease',
             }}
           >
-            {isLoggingIn ? t('common.logger_inn') : t('logg.inn.med.vipps')}
+            {isLoggingIn ? t('auth.loggingIn') : t('auth.loginWithVipps')}
           </Button>
 
           {/* Divider */}
@@ -361,7 +364,38 @@ export function BookingConfirmationStep({
               width: '100%',
             }}
           >
-            {isLoggingIn ? t('common.logger_inn') : t('logg.inn.med.bank.id')}
+            {isLoggingIn ? t('auth.loggingIn') : t('auth.loginWithBankID')}
+          </Button>
+
+          {/* Demo Login Divider */}
+          <div style={{ 
+            display: 'flex', 
+            alignItems: 'center', 
+            gap: 'var(--ds-spacing-3)', 
+            margin: 'var(--ds-spacing-3) 0 var(--ds-spacing-1) 0' 
+          }}>
+            <div style={{ flex: 1, height: '1px', backgroundColor: 'var(--ds-color-neutral-border-subtle)' }} />
+            <Paragraph data-size="xs" style={{ margin: 0, color: 'var(--ds-color-neutral-text-subtle)' }}>
+              {t('auth.demoMode')}
+            </Paragraph>
+            <div style={{ flex: 1, height: '1px', backgroundColor: 'var(--ds-color-neutral-border-subtle)' }} />
+          </div>
+
+          {/* Demo Login Button */}
+          <Button
+            type="button"
+            variant="tertiary"
+            data-size="md"
+            onClick={onDemoLogin}
+            disabled={isLoggingIn}
+            style={{
+              width: '100%',
+              backgroundColor: 'var(--ds-color-warning-surface-default)',
+              color: 'var(--ds-color-warning-text-default)',
+              border: '1px dashed var(--ds-color-warning-border-default)',
+            }}
+          >
+            🧪 {t('auth.demoLoginButton')}
           </Button>
         </div>
 
@@ -378,28 +412,28 @@ export function BookingConfirmationStep({
           }}
         >
           <div style={{ display: 'flex', alignItems: 'flex-start', gap: 'var(--ds-spacing-3)' }}>
-            <div
-              style={{
+          <div
+            style={{
                 width: '32px',
                 height: '32px',
                 borderRadius: 'var(--ds-border-radius-md)',
                 backgroundColor: 'var(--ds-color-success-surface-default)',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                flexShrink: 0,
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              flexShrink: 0,
                 color: 'var(--ds-color-success-base-default)',
-              }}
-            >
+            }}
+          >
               <ShieldIcon size={18} />
-            </div>
+          </div>
             <div>
               <Paragraph data-size="sm" style={{ margin: 0, fontWeight: 'var(--ds-font-weight-medium)' }}>
                 {t('bookingWidget.security.title')}
               </Paragraph>
               <Paragraph data-size="xs" style={{ margin: 0, marginTop: 'var(--ds-spacing-1)', color: 'var(--ds-color-neutral-text-subtle)' }}>
-                {t('informasjon.behandles.sikkert')}
-              </Paragraph>
+            {t('informasjon.behandles.sikkert')}
+          </Paragraph>
             </div>
           </div>
         </div>

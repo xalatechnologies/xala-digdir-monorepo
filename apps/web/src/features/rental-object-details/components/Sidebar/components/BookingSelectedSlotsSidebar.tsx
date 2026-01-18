@@ -74,7 +74,7 @@ export function BookingSelectedSlotsSidebar({
       >
         <CalendarIcon size={20} />
         <Heading level={4} data-size="xs" style={{ margin: 0 }}>
-          Valgte tidspunkter
+          {t('booking.selectedSlots')}
         </Heading>
       </div>
 
@@ -185,7 +185,7 @@ export function BookingSelectedSlotsSidebar({
                   {onAdjustTime && (
                     <div>
                       <Paragraph data-size="xs" style={{ margin: 0, marginBottom: 'var(--ds-spacing-2)', color: 'var(--ds-color-neutral-text-subtle)', fontWeight: 'var(--ds-font-weight-medium)' }}>
-                        Juster tid
+                        {t('booking.adjustTime')}
                       </Paragraph>
                       <div style={{ display: 'flex', gap: 'var(--ds-spacing-2)' }}>
                         <button
@@ -224,7 +224,7 @@ export function BookingSelectedSlotsSidebar({
                   {onChangeDuration && (
                     <div>
                       <Paragraph data-size="xs" style={{ margin: 0, marginBottom: 'var(--ds-spacing-2)', color: 'var(--ds-color-neutral-text-subtle)', fontWeight: 'var(--ds-font-weight-medium)' }}>
-                        Varighet
+                        {t('booking.duration')}
                       </Paragraph>
                       <div style={{ display: 'flex', gap: 'var(--ds-spacing-2)', flexWrap: 'wrap' }}>
                         {[60, 90, 120, 180, 240].map(dur => (
@@ -290,7 +290,7 @@ export function BookingSelectedSlotsSidebar({
             <CalendarIcon size={32} />
           </div>
           <Paragraph data-size="sm" style={{ margin: 0 }}>
-            Ingen tidspunkter valgt
+            {t('booking.noSlotsSelected')}
           </Paragraph>
         </div>
       )}
@@ -307,7 +307,7 @@ export function BookingSelectedSlotsSidebar({
           }}
         >
           <Paragraph data-size="xs" style={{ margin: 0, color: 'var(--ds-color-neutral-text-subtle)', marginBottom: 'var(--ds-spacing-1)' }}>
-            Totalpris
+            {t('booking.totalPrice')}
           </Paragraph>
           <Heading level={3} data-size="md" style={{ margin: 0, color: 'var(--ds-color-accent-text-default)' }}>
             {totalPrice} kr

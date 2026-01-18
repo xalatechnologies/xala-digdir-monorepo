@@ -491,11 +491,12 @@ export function BookingDialog({
           </div>
 
           {/* Duration selector - Compact */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--ds-spacing-2)', marginTop: 'var(--ds-spacing-3)' }}>
-            <Paragraph data-size="xs" style={{ margin: 0, color: 'var(--ds-color-neutral-text-subtle)' }}>
-              Varighet:
+          {/* Duration Selector */}
+          <div style={{ marginTop: 'var(--ds-spacing-4)' }}>
+            <Paragraph data-size="sm" style={{ margin: '0 0 var(--ds-spacing-2) 0', color: 'var(--ds-color-neutral-text-subtle)', fontWeight: 'var(--ds-font-weight-medium)' }}>
+              {t('booking.duration')}
             </Paragraph>
-            <div style={{ display: 'flex', gap: 'var(--ds-spacing-1)', flex: 1 }}>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 'var(--ds-spacing-2)' }}>
               {['30m', '1t', '2t', '3t'].map((duration, i) => {
                 const durationMinutes = [30, 60, 120, 180][i] ?? 60;
                 const [startH, startM] = (formData.startTime || '08:00').split(':').map(Number);
@@ -511,16 +512,34 @@ export function BookingDialog({
                     type="button"
                     onClick={() => updateField('endTime', endTime)}
                     style={{
-                      flex: 1,
-                      padding: 'var(--ds-spacing-1) var(--ds-spacing-2)',
-                      borderRadius: 'var(--ds-border-radius-sm)',
-                      border: isSelectedDur ? '2px solid var(--ds-color-accent-base-default)' : '1px solid var(--ds-color-neutral-border-subtle)',
-                      backgroundColor: isSelectedDur ? 'var(--ds-color-accent-surface-default)' : 'transparent',
-                      color: isSelectedDur ? 'var(--ds-color-accent-base-default)' : 'var(--ds-color-neutral-text-default)',
-                      fontSize: 'var(--ds-font-size-xs)',
-                      fontWeight: isSelectedDur ? 'var(--ds-font-weight-semibold)' : 'var(--ds-font-weight-medium)',
+                      padding: 'var(--ds-spacing-3) var(--ds-spacing-2)',
+                      borderRadius: 'var(--ds-border-radius-md)',
+                      border: isSelectedDur 
+                        ? '2px solid var(--ds-color-accent-base-default)' 
+                        : '1px solid var(--ds-color-neutral-border-default)',
+                      backgroundColor: isSelectedDur 
+                        ? 'var(--ds-color-accent-surface-default)' 
+                        : 'var(--ds-color-neutral-surface-default)',
+                      color: isSelectedDur 
+                        ? 'var(--ds-color-accent-text-default)' 
+                        : 'var(--ds-color-neutral-text-default)',
+                      fontSize: 'var(--ds-font-size-md)',
+                      fontWeight: 'var(--ds-font-weight-semibold)',
                       cursor: 'pointer',
-                      transition: 'all 150ms ease',
+                      transition: 'all 200ms ease',
+                      textAlign: 'center',
+                    }}
+                    onMouseEnter={(e) => {
+                      if (!isSelectedDur) {
+                        e.currentTarget.style.backgroundColor = 'var(--ds-color-neutral-surface-hover)';
+                        e.currentTarget.style.borderColor = 'var(--ds-color-accent-border-default)';
+                      }
+                    }}
+                    onMouseLeave={(e) => {
+                      if (!isSelectedDur) {
+                        e.currentTarget.style.backgroundColor = 'var(--ds-color-neutral-surface-default)';
+                        e.currentTarget.style.borderColor = 'var(--ds-color-neutral-border-default)';
+                      }
                     }}
                   >
                     {duration}
@@ -680,7 +699,7 @@ export function BookingDialog({
                   <line x1="12" y1="16" x2="12.01" y2="16" />
                 </svg>
                 <Paragraph data-size="sm" style={{ margin: 0, color: 'var(--ds-color-warning-text-default)' }}>
-                  Fyll ut alle påkrevde felt for å bekrefte bookingen
+                  {t('booking.fillRequiredFields')}
                 </Paragraph>
               </div>
             )}
@@ -696,7 +715,7 @@ export function BookingDialog({
                   cursor: isFormValid ? 'pointer' : 'not-allowed',
                 }}
               >
-                t('actions.bekreft_booking')
+                {t('booking.confirmBooking')}
               </Button>
             </div>
           </div>

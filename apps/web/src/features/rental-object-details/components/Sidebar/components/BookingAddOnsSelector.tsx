@@ -143,7 +143,7 @@ export function BookingAddOnsSelector({
 
   // Group add-ons by category
   const groupedAddOns = addOns.reduce((acc, addOn) => {
-    const category = addOn.category || 'Tilleggstjenester';
+    const category = addOn.category || t('booking.additionalServices');
     if (!acc[category]) {
       acc[category] = [];
     }
@@ -232,7 +232,7 @@ export function BookingAddOnsSelector({
             color: 'var(--ds-color-neutral-text-default)',
           }}
         >
-          Tilleggstjenester
+          {t('booking.additionalServices')}
         </Paragraph>
         {selectedAddOns.length > 0 && (
           <Badge data-color="accent" data-size="sm">

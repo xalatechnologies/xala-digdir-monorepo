@@ -126,7 +126,7 @@ export function PriceBreakdown({
         }}
       >
         <Paragraph data-size="sm" style={{ margin: 0, color: 'var(--ds-color-neutral-text-subtle)' }}>
-          Velg tidspunkt for å se pris
+          {t('booking.selectTimeToSeePrice')}
         </Paragraph>
       </div>
     );
@@ -218,7 +218,7 @@ export function PriceBreakdown({
                     letterSpacing: '0.5px',
                   }}
                 >
-                  Tilleggstjenester
+                  {t('booking.additionalServices')}
                 </Paragraph>
               </div>
               {addonItems.map((item) => (

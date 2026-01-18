@@ -6,6 +6,7 @@
  */
 import * as React from 'react';
 import { Button, Heading, Paragraph } from '@digdir/designsystemet-react';
+import { useT } from '@xala/i18n';
 import { cn } from '../utils';
 
 // =============================================================================
@@ -627,7 +628,7 @@ export function LoginLayout({
               <Paragraph
                 data-size="xs"
                 style={{
-                  color: 'var(--ds-color-neutral-text-inverse)',
+                  color: 'rgba(255, 255, 255, 0.9)',
                   marginBottom: 'var(--ds-spacing-3)',
                   textTransform: 'uppercase',
                   letterSpacing: 'var(--ds-letter-spacing-9)',

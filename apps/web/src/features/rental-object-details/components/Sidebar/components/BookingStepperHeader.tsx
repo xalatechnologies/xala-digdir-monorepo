@@ -105,87 +105,68 @@ export function BookingStepperHeader({
   return (
     <div
       style={{
-        background: 'linear-gradient(135deg, var(--ds-color-accent-base-default) 0%, var(--ds-color-accent-base-hover) 100%)',
-        padding: 'var(--ds-spacing-5)',
+        backgroundColor: 'var(--ds-color-neutral-background-default)',
+        borderBottom: '1px solid var(--ds-color-neutral-border-subtle)',
+        padding: 'var(--ds-spacing-4)',
         display: 'flex',
         flexDirection: 'column',
-        gap: 'var(--ds-spacing-4)',
-        position: 'relative',
-        overflow: 'hidden',
+        gap: 'var(--ds-spacing-3)',
       }}
     >
-      {/* Decorative background pattern */}
-      <div
-        style={{
-          position: 'absolute',
-          top: 0,
-          right: 0,
-          width: '200px',
-          height: '200px',
-          background: 'radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%)',
-          borderRadius: '50%',
-          transform: 'translate(30%, -30%)',
-          pointerEvents: 'none',
-        }}
-      />
-      
-      {/* Header content */}
-      <div style={{ position: 'relative', zIndex: 1 }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--ds-spacing-2)', marginBottom: 'var(--ds-spacing-2)' }}>
-          <SparkleIcon size={16} />
-          <Heading
-            level={2}
-            data-size="md"
+      {/* Header content - compact */}
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--ds-spacing-2)' }}>
+          <div
             style={{
-              margin: 0,
-              color: 'var(--ds-color-accent-contrast-default)',
+              width: '32px',
+              height: '32px',
+              borderRadius: 'var(--ds-border-radius-md)',
+              backgroundColor: 'var(--ds-color-accent-surface-default)',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              color: 'var(--ds-color-accent-base-default)',
             }}
           >
-            {listingTitle || t('bookingWidget.title')}
-          </Heading>
+            <CalendarIcon size={18} />
+          </div>
+          <div>
+            <Heading
+              level={2}
+              data-size="sm"
+              style={{
+                margin: 0,
+                color: 'var(--ds-color-neutral-text-default)',
+              }}
+            >
+              {listingTitle || t('bookingWidget.title')}
+            </Heading>
+          </div>
         </div>
         <Paragraph
-          data-size="sm"
-          style={{ margin: 0, color: 'var(--ds-color-accent-contrast-default)', opacity: 0.9 }}
+          data-size="xs"
+          style={{ 
+            margin: 0, 
+            color: 'var(--ds-color-neutral-text-subtle)',
+            backgroundColor: 'var(--ds-color-neutral-surface-default)',
+            padding: 'var(--ds-spacing-1) var(--ds-spacing-2)',
+            borderRadius: 'var(--ds-border-radius-sm)',
+          }}
         >
           {t('bookingWidget.stepProgress', { current: currentStep + 1, total: steps.length })}
         </Paragraph>
       </div>
 
-      {/* Progress bar */}
-      <div
-        style={{
-          position: 'relative',
-          height: '4px',
-          backgroundColor: 'rgba(255,255,255,0.2)',
-          borderRadius: 'var(--ds-border-radius-full)',
-          overflow: 'hidden',
-        }}
-      >
-        <div
-          style={{
-            position: 'absolute',
-            top: 0,
-            left: 0,
-            height: '100%',
-            width: `${progressPercent}%`,
-            backgroundColor: 'var(--ds-color-accent-contrast-default)',
-            borderRadius: 'var(--ds-border-radius-full)',
-            transition: 'width 300ms ease-out',
-          }}
-        />
-      </div>
-
-      {/* Step Indicator */}
+      {/* Step Indicator - horizontal pills */}
       <div
         className={isMobile ? 'booking-stepper-mobile' : ''}
         style={{
           display: 'flex',
-          alignItems: 'flex-start',
-          gap: 'var(--ds-spacing-2)',
-          flexWrap: isMobile ? 'wrap' : 'nowrap',
-          position: 'relative',
-          zIndex: 1,
+          alignItems: 'center',
+          gap: 'var(--ds-spacing-1)',
+          backgroundColor: 'var(--ds-color-neutral-surface-default)',
+          borderRadius: 'var(--ds-border-radius-md)',
+          padding: 'var(--ds-spacing-1)',
         }}
       >
         {steps.map((step, index) => {
@@ -194,92 +175,77 @@ export function BookingStepperHeader({
           const isPending = index > currentStep;
           
           return (
-            <React.Fragment key={step.id}>
+            <div
+              key={step.id}
+              style={{
+                flex: 1,
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: 'var(--ds-spacing-2)',
+                padding: 'var(--ds-spacing-2) var(--ds-spacing-3)',
+                borderRadius: 'var(--ds-border-radius-sm)',
+                backgroundColor: isCurrent 
+                  ? 'var(--ds-color-accent-surface-default)'
+                  : isCompleted
+                    ? 'var(--ds-color-success-surface-default)'
+                    : 'transparent',
+                transition: 'all 200ms ease',
+              }}
+            >
+              {/* Step icon/number */}
               <div
                 style={{
+                  width: '24px',
+                  height: '24px',
+                  borderRadius: 'var(--ds-border-radius-full)',
+                  backgroundColor: isCompleted 
+                    ? 'var(--ds-color-success-base-default)'
+                    : isCurrent 
+                      ? 'var(--ds-color-accent-base-default)'
+                      : 'var(--ds-color-neutral-border-default)',
+                  color: isCompleted || isCurrent
+                    ? 'white'
+                    : 'var(--ds-color-neutral-text-subtle)',
                   display: 'flex',
-                  flexDirection: 'column',
                   alignItems: 'center',
-                  gap: 'var(--ds-spacing-1)',
-                  minWidth: isMobile ? 'auto' : '80px',
-                  flex: isMobile ? '0 0 auto' : 1,
+                  justifyContent: 'center',
+                  fontSize: 'var(--ds-font-size-xs)',
+                  fontWeight: 'var(--ds-font-weight-medium)',
+                  flexShrink: 0,
                 }}
               >
-                {/* Step circle */}
-                <div
-                  className="booking-step-circle"
-                  style={{
-                    width: isCurrent ? '44px' : '36px',
-                    height: isCurrent ? '44px' : '36px',
-                    borderRadius: 'var(--ds-border-radius-full)',
-                    backgroundColor: isCompleted 
-                      ? 'var(--ds-color-success-base-default)'
-                      : isCurrent 
-                        ? 'var(--ds-color-accent-contrast-default)'
-                        : 'rgba(255,255,255,0.15)',
-                    color: isCompleted || isCurrent
-                      ? (isCompleted ? 'white' : 'var(--ds-color-accent-base-default)')
-                      : 'rgba(255,255,255,0.6)',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    fontWeight: 'var(--ds-font-weight-bold)',
-                    fontSize: 'var(--ds-font-size-sm)',
-                    flexShrink: 0,
-                    transition: 'all 250ms cubic-bezier(0.4, 0, 0.2, 1)',
-                    boxShadow: isCurrent 
-                      ? '0 4px 12px rgba(0,0,0,0.15)' 
-                      : isCompleted 
-                        ? '0 2px 8px rgba(0,0,0,0.1)'
-                        : 'none',
-                    border: isCurrent 
-                      ? '3px solid rgba(255,255,255,0.3)' 
-                      : 'none',
-                  }}
-                >
-                  {isCompleted ? (
-                    <CheckIcon size={18} />
-                  ) : (
-                    (() => {
-                      const IconComponent = step.icon ? STEP_ICONS[step.icon] : null;
-                      return IconComponent ? <IconComponent size={18} /> : index + 1;
-                    })()
-                  )}
-                </div>
-                
-                {/* Step label */}
+                {isCompleted ? (
+                  <CheckIcon size={14} />
+                ) : (
+                  (() => {
+                    const IconComponent = step.icon ? STEP_ICONS[step.icon] : null;
+                    return IconComponent ? <IconComponent size={14} /> : index + 1;
+                  })()
+                )}
+              </div>
+              
+              {/* Step label - only show on current and completed on desktop */}
+              {!isMobile && (
                 <Paragraph
-                  className="booking-step-label"
                   data-size="xs"
                   style={{
                     margin: 0,
-                    color: 'var(--ds-color-accent-contrast-default)',
-                    fontWeight: isCurrent ? 'var(--ds-font-weight-semibold)' : 'var(--ds-font-weight-regular)',
-                    opacity: isPending ? 0.5 : 1,
-                    textAlign: 'center',
-                    lineHeight: 1.2,
-                    transition: 'opacity 200ms ease',
+                    color: isCurrent 
+                      ? 'var(--ds-color-accent-text-default)'
+                      : isCompleted
+                        ? 'var(--ds-color-success-text-default)'
+                        : 'var(--ds-color-neutral-text-subtle)',
+                    fontWeight: isCurrent ? 'var(--ds-font-weight-medium)' : 'var(--ds-font-weight-regular)',
+                    whiteSpace: 'nowrap',
+                    overflow: 'hidden',
+                    textOverflow: 'ellipsis',
                   }}
                 >
                   {step.label}
                 </Paragraph>
-              </div>
-              
-              {/* Connector line */}
-              {index < steps.length - 1 && !isMobile && (
-                <div
-                  style={{
-                    flex: 1,
-                    height: '2px',
-                    backgroundColor: isCompleted 
-                      ? 'var(--ds-color-success-base-default)'
-                      : 'rgba(255,255,255,0.2)',
-                    marginTop: isCurrent ? '22px' : '18px',
-                    transition: 'background-color 300ms ease',
-                  }}
-                />
               )}
-            </React.Fragment>
+            </div>
           );
         })}
       </div>
