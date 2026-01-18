@@ -182,8 +182,7 @@ set -e
 cd ${DEPLOY_PATH}/packages/database-schema
 export DATABASE_URL='${DB_URL}'
 echo "Running migrations with DATABASE_URL: \${DATABASE_URL}"
-pnpm db:generate 2>/dev/null || echo "No schema changes to generate"
-pnpm db:migrate
+pnpm db:push
 ENDSSH
 log_info "Database migrations complete"
 echo ""
