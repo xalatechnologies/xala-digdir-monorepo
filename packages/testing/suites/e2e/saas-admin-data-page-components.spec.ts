@@ -44,6 +44,7 @@ async function mockSaasAdminAuth(page: Page) {
     localStorage.setItem('auth_token', JSON.stringify(mockToken));
     localStorage.setItem('isAuthenticated', 'true');
   });
+}
 
 /**
  * Helper: Wait for page load and network idle
@@ -51,6 +52,7 @@ async function mockSaasAdminAuth(page: Page) {
 async function waitForPageReady(page: Page) {
   await page.waitForLoadState('networkidle');
   await page.waitForTimeout(500);
+}
 
 // ============================================================================
 // Test Suite: Status Tab Filtering and Counts

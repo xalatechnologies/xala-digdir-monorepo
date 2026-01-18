@@ -6,8 +6,8 @@
 import { z } from 'zod';
 import {
   UIHintsSchema,
-  FeatureFlagsSchema,
-} from '../schemas/capabilities.schema';
+  FeatureFlagsSchema
+} from "../schemas/capabilities.schema";
 
 // =============================================================================
 // Capabilities Projection
