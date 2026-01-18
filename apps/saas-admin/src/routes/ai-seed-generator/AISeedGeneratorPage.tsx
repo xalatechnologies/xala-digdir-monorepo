@@ -26,18 +26,18 @@ import { useT } from '@xala/i18n';
 
 // Entity types available for AI generation
 const ENTITY_TYPES = [
-  { value: 'rental_objects', label: 'Leieobjekter', description: t('common.lokaler_utstyr_anlegg'), count: '5-50' },
-  { value: 'users', label: 'Brukere', description: t('common.sluttbrukere_og_admins'), count: '10-100' },
-  { value: 'organizations', label: 'Organisasjoner', description: t('common.idrettslag_foreninger'), count: '5-30' },
-  { value: 'bookings', label: 'Bookinger', description: t('common.reservasjoner_og_kalenderdata'), count: '20-200' },
-  { value: 'reviews', label: 'Anmeldelser', description: t('common.ratings_og_tilbakemeldinger'), count: '10-100' },
+  { value: 'rental_objects', label: 'Leieobjekter', description: 'Lokaler, utstyr, anlegg', count: '5-50' },
+  { value: 'users', label: 'Brukere', description: 'Sluttbrukere og admins', count: '10-100' },
+  { value: 'organizations', label: 'Organisasjoner', description: 'Idrettslag, foreninger', count: '5-30' },
+  { value: 'bookings', label: 'Bookinger', description: 'Reservasjoner og kalenderdata', count: '20-200' },
+  { value: 'reviews', label: 'Anmeldelser', description: 'Ratings og tilbakemeldinger', count: '10-100' },
 ] as const;
 
 // Preset configurations
 const PRESETS = [
-  { name: t('common.demo_kommune'), entities: { rental_objects: 15, users: 25, organizations: 8, bookings: 50 } },
-  { name: t('common.lite_testmiljo'), entities: { rental_objects: 5, users: 10, organizations: 3, bookings: 15 } },
-  { name: t('common.stort_produksjonsmiljo'), entities: { rental_objects: 40, users: 100, organizations: 25, bookings: 200 } },
+  { name: 'Demo kommune', entities: { rental_objects: 15, users: 25, organizations: 8, bookings: 50 } },
+  { name: 'Lite testmiljø', entities: { rental_objects: 5, users: 10, organizations: 3, bookings: 15 } },
+  { name: 'Stort produksjonsmiljø', entities: { rental_objects: 40, users: 100, organizations: 25, bookings: 200 } },
 ];
 
 interface GenerationConfig {
@@ -113,12 +113,15 @@ export function AISeedGeneratorPage() {
       const duration = Date.now() - startTime;
 
       if (response.ok) {
-        setGenerationLog((prev) => [...prev, `Generering fullført på ${(duration / 1000).toFixed(1)}s`t('common.setresult_success_true_message') `Genererte ${data.count ?? config.count} ${ENTITY_TYPES.find((e) => e.value === config.entityType)?.label ?? config.entityType}`,
+        setGenerationLog((prev) => [...prev, `Generering fullført på ${(duration / 1000).toFixed(1)}s`]);
+        setResult({
+          success: true,
+          message: `Genererte ${data.count ?? config.count} ${ENTITY_TYPES.find((e) => e.value === config.entityType)?.label ?? config.entityType}`,
           entitiesCreated: data.count ?? config.count,
           duration,
         });
       } else {
-        setGenerationLog((prev) => [...prev, `t('common.feil_datamessage_ukjent_feil')`]);
+        setGenerationLog((prev) => [...prev, `Feil: ${data.message ?? 'Ukjent feil'}`]);
         setResult({
           success: false,
           message: data.message ?? 'Generering feilet',
@@ -126,7 +129,7 @@ export function AISeedGeneratorPage() {
       }
     } catch (error) {
       const message = error instanceof Error ? error.message : 'Ukjent feil';
-      setGenerationLog((prev) => [...prev, `t('common.feil_message')`]);
+      setGenerationLog((prev) => [...prev, `Feil: ${message}`]);
       setResult({ success: false, message });
     } finally {
       setIsGenerating(false);

@@ -4,22 +4,26 @@
  */
 
 import { beforeAll, afterAll, vi } from 'vitest';
+import { mockApiServer, isApiAvailable } from './mocks/api-server.mock';
 
-// Mock @xala/i18n to return keys as-is (passthrough mode)
+// Helper to get translation value - returns key for predictable testing
+// Tests that mock i18n locally will override this
+function getTranslation(key: string, params?: Record<string, unknown>): string {
+  if (params) {
+    let result = key;
+    Object.entries(params).forEach(([k, v]) => {
+      result = result.replace(new RegExp(`\\{${k}\\}`, 'g'), String(v));
+    });
+    return result;
+  }
+  return key;
+}
+
+// Global mock for @xala/i18n - returns keys for tests that don't provide their own mock
 vi.mock('@xala/i18n', () => ({
-  useT: () => (key: string, params?: Record<string, unknown>) => {
-    if (params) {
-      // Replace placeholders with params
-      let result = key;
-      Object.entries(params).forEach(([k, v]) => {
-        result = result.replace(`{${k}}`, String(v));
-      });
-      return result;
-    }
-    return key;
-  },
+  useT: () => getTranslation,
   useI18n: () => ({
-    t: (key: string) => key,
+    t: getTranslation,
     locale: 'nb',
     setLocale: vi.fn(),
   }),
@@ -29,7 +33,6 @@ vi.mock('@xala/i18n', () => ({
   I18nProvider: ({ children }: { children: React.ReactNode }) => children,
   LocaleProvider: ({ children }: { children: React.ReactNode }) => children,
 }));
-import { mockApiServer, isApiAvailable } from './mocks/api-server.mock';
 
 // Check if real API is available and start mock server if needed
 let useMockServer = false;
