@@ -24,10 +24,10 @@ if [ -n "$STAGED_FILES" ]; then
   # Run comprehensive scanner on staged files only
   for FILE in $STAGED_FILES; do
     if [ -f "$FILE" ]; then
-      node scripts/scan-i18n-comprehensive.js "$FILE" 2>&1 | grep -q "Total Issues: 0"
+      node infra/scripts/legacy/scan-i18n-comprehensive.js "$FILE" 2>&1 | grep -q "Total Issues: 0"
       if [ $? -ne 0 ]; then
         echo "❌ Found hardcoded strings in: $FILE"
-        echo "   Run: node scripts/scan-i18n-comprehensive.js $FILE"
+        echo "   Run: node infra/scripts/legacy/scan-i18n-comprehensive.js $FILE"
         echo "   Fix all issues before committing (ZERO-TOLERANCE POLICY)"
         rm "$TEMP_FILE"
         exit 1
