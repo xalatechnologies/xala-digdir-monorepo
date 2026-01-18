@@ -30,10 +30,6 @@ export default defineConfig({
     },
   ],
 
-  webServer: process.env.CI ? undefined : {
-    command: 'pnpm --filter web dev',
-    url: 'http://localhost:5173',
-    reuseExistingServer: true,
-    timeout: 120000,
-  },
+  // WebServer is handled by Docker (docker-compose.dev.yml)
+  // Don't start a local server - tests run against Docker services
 });
