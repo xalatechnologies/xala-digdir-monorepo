@@ -21,6 +21,35 @@ The Xala Digilist Platform is a **production-ready, enterprise-grade multi-tenan
 
 ---
 
+## 🏗️ **INFRASTRUCTURE**
+
+All infrastructure configuration is in the `infra/` directory:
+
+- **Docker** - `infra/docker/` - Development, staging, and production containers
+- **PM2** - `infra/pm2/` - Process manager configurations
+- **Secrets** - `infra/secrets/` - Encrypted secrets with age encryption
+- **Environment** - `infra/env/` - Environment variable templates
+- **Scripts** - `infra/scripts/` - Deployment and utility scripts
+- **Documentation** - `infra/docs/` - Infrastructure guides
+
+**Quick Commands:**
+```bash
+# Setup secrets
+./infra/scripts/encrypt-secrets.sh staging api
+
+# Deploy
+./infra/scripts/deploy-staging.sh
+./infra/scripts/deploy-production.sh
+
+# Docker development
+cd infra/docker/compose
+docker-compose -f docker-compose.dev.yml up -d
+```
+
+**See:** [infra/AGENTS.md](infra/AGENTS.md) for complete infrastructure commands
+
+---
+
 ## 🚨 **CRITICAL LESSONS LEARNED (2026-01-17)**
 
 > **⚠️ MANDATORY READING - LEARN FROM REAL INCIDENTS**
