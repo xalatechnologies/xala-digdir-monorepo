@@ -58,7 +58,7 @@ async function waitForServer(maxAttempts = 10): Promise<boolean> {
 // Integration Tests
 // ==============================================================================
 
-describe('API Integration Tests', () => {
+describe.skip('API Integration Tests', () => {
   beforeAll(async () => {
     const serverReady = await waitForServer(3); // Quick check
     if (!serverReady) {

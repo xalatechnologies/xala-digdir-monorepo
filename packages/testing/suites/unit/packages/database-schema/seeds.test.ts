@@ -8,7 +8,8 @@ import { readFileSync } from 'fs';
 import { join } from 'path';
 
 describe('Seed Data Validation', () => {
-  const seedsDir = join(process.cwd(), 'seeds');
+  // Seeds are in database-schema package, not testing package
+  const seedsDir = join(__dirname, '../../../../../database-schema/seeds');
 
   describe('Route Policies', () => {
     it('should have valid JSON structure', () => {
