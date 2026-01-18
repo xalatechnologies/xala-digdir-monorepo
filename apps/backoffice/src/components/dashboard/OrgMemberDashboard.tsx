@@ -3,8 +3,8 @@
  * Task-oriented dashboard for org_member role with scoped widgets
  * Per master-prompt.md: Pending Tasks, Calendar Preview, Messages, Finance Alerts
  */
-import {
 import { useT } from '@xala/i18n';
+import {
   Card,
   Heading,
   Paragraph,
