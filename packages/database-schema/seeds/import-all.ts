@@ -45,10 +45,11 @@ async function importSeeds(): Promise<void> {
     // Tenants FIRST (required for users foreign key)
     console.log('   └─ Tenants...');
     for (const t of rentalData.tenants || []) {
+      const slug = t.slug || t.name.toLowerCase().replace(/[^a-z0-9]/g, '-');
       await sql`
         INSERT INTO platform.tenants (id, slug, name, status)
-        VALUES (${t.id}, ${t.slug}, ${t.name}, 'ACTIVE')
-        ON CONFLICT (id) DO UPDATE SET name = EXCLUDED.name
+        VALUES (${t.id}, ${slug}, ${t.name}, 'ACTIVE')
+        ON CONFLICT (id) DO UPDATE SET name = EXCLUDED.name, slug = EXCLUDED.slug
       `;
       tenants++;
     }
@@ -57,14 +58,15 @@ async function importSeeds(): Promise<void> {
     // Organizations
     console.log('   └─ Organizations...');
     for (const o of rentalData.organizations || []) {
+      const slug = o.slug || (o.name ? o.name.toLowerCase().replace(/[^a-z0-9]/g, '-') : `org-${o.id.substring(0, 8)}`);
       await sql`
         INSERT INTO platform.organizations (id, tenant_id, name, slug, status, type)
-        VALUES (${o.id}, ${o.tenant_id}, ${o.name}, ${o.slug}, ${o.status || 'active'}, 'other')
+        VALUES (${o.id}, ${o.tenant_id}, ${o.name}, ${slug}, ${o.status || 'active'}, 'other')
         ON CONFLICT (id) DO UPDATE SET name = EXCLUDED.name, slug = EXCLUDED.slug
       `;
       organizations++;
     }
-    console.log(`      ✅ ${rentalData.organizations?.length || 0} organizations`);
+    console.log(`      ✅ ${organizations} organizations`);
 
     // Demo Users (after tenants and organizations)
     console.log('   └─ Demo Users...');
@@ -100,13 +102,13 @@ async function importSeeds(): Promise<void> {
     console.log('   └─ Users...');
     for (const u of rentalData.users || []) {
       await sql`
-        INSERT INTO platform.users (id, tenant_id, email, display_name, status)
-        VALUES (${u.id}, ${u.tenant_id}, ${u.email}, ${u.name}, 'ACTIVE')
+        INSERT INTO platform.users (id, tenant_id, email, name, status)
+        VALUES (${u.id}, ${u.tenant_id}, ${u.email}, ${u.name}, 'active')
         ON CONFLICT (id) DO UPDATE SET email = EXCLUDED.email
       `;
       users++;
     }
-    console.log(`      ✅ ${users} users`);
+    console.log(`      ✅ ${users} total users (including demo)`);
 
     // Translations
     console.log('   └─ Translations...');
