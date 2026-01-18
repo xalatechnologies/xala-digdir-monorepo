@@ -126,7 +126,7 @@ export function PrivacyPage() {
   if (isLoadingConsents) {
     return (
       <div style={{ display: 'flex', justifyContent: 'center', padding: 'var(--ds-spacing-8)' }}>
-        <Spinner data-size="lg" aria-label="Laster personverninnstillinger..." />
+        <Spinner data-size="lg" aria-label={t('minside.ariaLabel.lasterPersonverninnstillinger')} />
       </div>
     );
   }
@@ -250,7 +250,7 @@ export function PrivacyPage() {
                 </Paragraph>
               </div>
               <Switch
-                aria-label="Analyse"
+                aria-label={t('minside.ariaLabel.analyse')}
                 checked={consentSettings.analytics}
                 onChange={(e) => handleUpdateConsent('analytics', e.target.checked)}
               />

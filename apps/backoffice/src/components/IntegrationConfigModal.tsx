@@ -93,11 +93,11 @@ export function IntegrationConfigModal({
   const getStatusBadge = () => {
     switch (status) {
       case 'active':
-        return <Badge color="success">Aktiv</Badge>;
+        return <Badge color="success">{t('backoffice.status.active')}</Badge>;
       case 'error':
         return <Badge color="danger">{t("error.generic")}</Badge>;
       default:
-        return <Badge color="neutral">Inaktiv</Badge>;
+        return <Badge color="neutral">{t('backoffice.status.inactive')}</Badge>;
     }
   };
 
@@ -155,8 +155,8 @@ export function IntegrationConfigModal({
                 value={formData.status || status}
                 onChange={(e) => onFieldChange('status', e.target.value)}
               >
-                <option value="active">Aktiv</option>
-                <option value="inactive">Inaktiv</option>
+                <option value="active">{t('backoffice.status.active')}</option>
+                <option value="inactive">{t('backoffice.status.inactive')}</option>
                 <option value="error">{t("error.generic")}</option>
               </Select>
             </FormField>

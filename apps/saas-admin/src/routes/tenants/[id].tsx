@@ -196,7 +196,7 @@ export function TenantDetailPage() {
   if (isLoading) {
     return (
       <div className={styles.loadingContainer}>
-        <Spinner size="lg" aria-label="Laster..." />
+        <Spinner size="lg" aria-label={t('saasAdmin.ariaLabel.laster')} />
       </div>
     );
   }
@@ -284,21 +284,21 @@ export function TenantDetailPage() {
       {/* Usage Statistics Grid */}
       <div className={styles.statsGrid}>
         <StatCard
-          title="Brukere"
+          title={t('saasAdmin.title.users')}
           value={`${tenant.usage.usersCount} / ${tenant.seatLimits.maxUsers}`}
           description={`${Math.round((tenant.usage.usersCount / tenant.seatLimits.maxUsers) * 100)}% brukt`}
           color="var(--ds-color-info-text-default)"
           icon={<UsersIcon />}
         />
         <StatCard
-          title="Organisasjoner"
+          title={t('saasAdmin.title.organisasjoner')}
           value={`${tenant.usage.organizationsCount} / ${tenant.seatLimits.maxOrganizations}`}
           description="Aktive organisasjoner"
           color="var(--ds-color-info-text-default)"
           icon={<UsersIcon />}
         />
         <StatCard
-          title="Leieobjekter"
+          title={t('saasAdmin.title.leieobjekter')}
           value={`${tenant.usage.listingsCount} / ${tenant.seatLimits.maxListings}`}
           description={`${Math.round((tenant.usage.listingsCount / tenant.seatLimits.maxListings) * 100)}% brukt`}
           color="var(--ds-color-warning-text-default)"
@@ -312,7 +312,7 @@ export function TenantDetailPage() {
           icon={<CalendarIcon />}
         />
         <StatCard
-          title="Lagring"
+          title={t('saasAdmin.title.lagring')}
           value={`${tenant.usage.storageMb} / ${tenant.seatLimits.maxStorageMb} MB`}
           description={`${Math.round((tenant.usage.storageMb / tenant.seatLimits.maxStorageMb) * 100)}% brukt`}
           color="var(--ds-color-neutral-text-default)"
@@ -393,9 +393,7 @@ export function TenantDetailPage() {
                   </div>
                 </div>
                 <div>
-                  <div className={styles.infoLabel}>
-                    Status
-                  </div>
+                  <div className={styles.infoLabel}>{t('saasAdmin.text.status')}</div>
                   <Badge color={statusColors[tenant.status]}>{statusLabels[tenant.status]}</Badge>
                 </div>
                 <div>
@@ -549,23 +547,23 @@ export function TenantDetailPage() {
               <div className={styles.billingContent}>
                 <div className={styles.billingGrid}>
                   <div className={styles.billingField}>
-                    <div className={styles.billingLabel}>Status</div>
+                    <div className={styles.billingLabel}>{t('saasAdmin.text.status')}</div>
                     <Badge color={billing.status === 'paid' ? 'success' : billing.status === 'overdue' ? 'danger' : 'warning'}>
                       {billing.status}
                     </Badge>
                   </div>
                   <div className={styles.billingField}>
-                    <div className={styles.billingLabel}>Nåværende plan</div>
+                    <div className={styles.billingLabel}>{t('saasAdmin.text.navaerendePlan')}</div>
                     <div className={styles.billingValue}>{billing.currentPlan ?? 'Ingen'}</div>
                   </div>
                   <div className={styles.billingField}>
-                    <div className={styles.billingLabel}>Betalt</div>
+                    <div className={styles.billingLabel}>{t('saasAdmin.text.betalt')}</div>
                     <div className={styles.billingValue}>
                       {billing.amountPaid.toLocaleString('nb-NO')} {billing.currency}
                     </div>
                   </div>
                   <div className={styles.billingField}>
-                    <div className={styles.billingLabel}>Skyldig</div>
+                    <div className={styles.billingLabel}>{t('saasAdmin.text.skyldig')}</div>
                     <div className={billing.amountDue > 0 ? styles.billingValueDanger : styles.billingValue}>
                       {billing.amountDue.toLocaleString('nb-NO')} {billing.currency}
                     </div>
@@ -586,10 +584,10 @@ export function TenantDetailPage() {
                     <Table>
                       <Table.Head>
                         <Table.Row>
-                          <Table.HeaderCell>Nummer</Table.HeaderCell>
+                          <Table.HeaderCell>{t('saasAdmin.text.nummer')}</Table.HeaderCell>
                           <Table.HeaderCell>{t('common.belop')}</Table.HeaderCell>
-                          <Table.HeaderCell>Status</Table.HeaderCell>
-                          <Table.HeaderCell>Forfallsdato</Table.HeaderCell>
+                          <Table.HeaderCell>{t('saasAdmin.text.status')}</Table.HeaderCell>
+                          <Table.HeaderCell>{t('saasAdmin.text.forfallsdato')}</Table.HeaderCell>
                         </Table.Row>
                       </Table.Head>
                       <Table.Body>
@@ -652,10 +650,10 @@ export function TenantDetailPage() {
               <Table>
                 <Table.Head>
                   <Table.Row>
-                    <Table.HeaderCell>Provider</Table.HeaderCell>
+                    <Table.HeaderCell>{t('saasAdmin.text.provider')}</Table.HeaderCell>
                     <Table.HeaderCell>{t('common.nokkel')}</Table.HeaderCell>
-                    <Table.HeaderCell>Status</Table.HeaderCell>
-                    <Table.HeaderCell>Fingerprint</Table.HeaderCell>
+                    <Table.HeaderCell>{t('saasAdmin.text.status')}</Table.HeaderCell>
+                    <Table.HeaderCell>{t('saasAdmin.text.fingerprint')}</Table.HeaderCell>
                     <Table.HeaderCell>{t('common.sist_rotert')}</Table.HeaderCell>
                   </Table.Row>
                 </Table.Head>

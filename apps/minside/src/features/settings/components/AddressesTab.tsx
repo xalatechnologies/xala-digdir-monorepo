@@ -129,7 +129,7 @@ export function AddressesTab() {
                     ...prev,
                     residenceAddress: { ...prev.residenceAddress, city: e.target.value }
                   }))}
-                  placeholder="Oslo"
+                  placeholder={t('settings.placeholder.oslo')}
                 />
               </FormField>
 
@@ -154,10 +154,10 @@ export function AddressesTab() {
                   residenceAddress: { ...prev.residenceAddress, country: e.target.value }
                 }))}
               >
-                <option value="Norge">Norge</option>
-                <option value="Sverige">Sverige</option>
-                <option value="Danmark">Danmark</option>
-                <option value="Finland">Finland</option>
+                <option value="Norge">{t('settings.text.norge')}</option>
+                <option value="Sverige">{t('settings.text.sverige')}</option>
+                <option value="Danmark">{t('settings.text.danmark')}</option>
+                <option value="Finland">{t('settings.text.finland')}</option>
               </Select>
             </FormField>
           </Stack>
@@ -206,7 +206,7 @@ export function AddressesTab() {
                     ...prev,
                     invoiceAddress: { ...prev.invoiceAddress, city: e.target.value }
                   }))}
-                  placeholder="Oslo"
+                  placeholder={t('settings.placeholder.oslo')}
                 />
               </FormField>
 
@@ -231,10 +231,10 @@ export function AddressesTab() {
                   invoiceAddress: { ...prev.invoiceAddress, country: e.target.value }
                 }))}
               >
-                <option value="Norge">Norge</option>
-                <option value="Sverige">Sverige</option>
-                <option value="Danmark">Danmark</option>
-                <option value="Finland">Finland</option>
+                <option value="Norge">{t('settings.text.norge')}</option>
+                <option value="Sverige">{t('settings.text.sverige')}</option>
+                <option value="Danmark">{t('settings.text.danmark')}</option>
+                <option value="Finland">{t('settings.text.finland')}</option>
               </Select>
             </FormField>
           </Stack>

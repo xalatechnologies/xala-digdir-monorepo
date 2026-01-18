@@ -486,8 +486,8 @@ export function CreateBlockModal({
                           fontSize: 'var(--ds-font-size-sm)',
                         }}
                       >
-                        <option value="daily">Daglig</option>
-                        <option value="weekly">Ukentlig</option>
+                        <option value="daily">{t('backoffice.text.daglig')}</option>
+                        <option value="weekly">{t('backoffice.text.ukentlig')}</option>
                         <option value="monthly">{t('common.maanedlig')}</option>
                       </select>
                     </div>
@@ -608,7 +608,7 @@ export function CreateBlockModal({
           {/* Conflict warning */}
           {isCheckingConflicts && (
             <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--ds-spacing-2)' }}>
-              <Spinner data-data-size="sm" aria-label="Sjekker konflikter..." />
+              <Spinner data-data-size="sm" aria-label={t('backoffice.ariaLabel.sjekkerKonflikter')} />
               <Paragraph data-size="sm" style={{ margin: 0, color: 'var(--ds-color-neutral-text-subtle)' }}>
                 Sjekker for konflikter...
               </Paragraph>

@@ -146,7 +146,7 @@ export function LocationStep({ wizard }: LocationStepProps) {
                 updateLocation('latitude', e.target.value ? parseFloat(e.target.value) : undefined)
               }
               step="0.000001"
-              placeholder="59.9139"
+              placeholder={t('backoffice.placeholder.599139')}
             />
             <Textfield
               label={t('form.location.longitude')}
@@ -156,7 +156,7 @@ export function LocationStep({ wizard }: LocationStepProps) {
                 updateLocation('longitude', e.target.value ? parseFloat(e.target.value) : undefined)
               }
               step="0.000001"
-              placeholder="10.7522"
+              placeholder={t('backoffice.placeholder.107522')}
             />
           </div>
         </div>

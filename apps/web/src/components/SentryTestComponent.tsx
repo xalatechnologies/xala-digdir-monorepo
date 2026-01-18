@@ -82,7 +82,7 @@ export function SentryTestComponent() {
   return (
     <Card style={{ padding: '2rem', margin: '2rem', maxWidth: '800px' }}>
       <h2 style={{ marginBottom: '1rem' }}>{t('.sentry.error.tracking.test.panel.web.app')}</h2>
-      <p style={{ marginBottom: '1.5rem', color: '#666' }}>
+      <p style={{ marginBottom: '1.5rem', color: 'var(--ds-color-neutral-text-subtle)' }}>
         ⚠️ <strong>{t('for.testing.only')}</strong> Remove this component before production.
       </p>
 
@@ -122,8 +122,8 @@ export function SentryTestComponent() {
 
         <div style={{
           padding: '1rem',
-          backgroundColor: '#f5f5f5',
-          borderRadius: '4px',
+          backgroundColor: 'var(--ds-color-neutral-background-subtle)',
+          borderRadius: 'var(--ds-border-radius-sm)',
           fontSize: '0.875rem'
         }}>
           <h4 style={{ marginBottom: '0.5rem' }}>{t('testing.instructions')}</h4>
@@ -135,7 +135,7 @@ export function SentryTestComponent() {
             <li>{t('check.your.sentry.dashboard.for.the.error.report')}</li>
             <li>{t('verify.context.tenant.user.and.breadcrumbs.appear.')}</li>
           </ol>
-          <p style={{ marginTop: '0.5rem', color: '#666' }}>
+          <p style={{ marginTop: '0.5rem', color: 'var(--ds-color-neutral-text-subtle)' }}>
             <strong>{t('note')}</strong> Sync errors will show the ErrorBoundary screen.
             Async errors are caught and reported but won't trigger ErrorBoundary.
           </p>

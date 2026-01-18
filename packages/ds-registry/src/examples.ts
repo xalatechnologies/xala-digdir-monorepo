@@ -44,7 +44,7 @@ export function Example() {
 
 export function Example() {
   return (
-    <div style={{ display: 'flex', gap: '8px' }}>
+    <div style={{ display: 'flex', gap: 'var(--ds-spacing-2)' }}>
       <Button variant="primary">Primary</Button>
       <Button variant="secondary">Secondary</Button>
       <Button variant="danger">Delete</Button>
@@ -355,7 +355,7 @@ export function Example() {
 
 export function Example() {
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+    <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--ds-spacing-2)' }}>
       <Alert variant="info">
         Information: Your session will expire in 5 minutes
       </Alert>
@@ -525,7 +525,7 @@ export function Example() {
 
 export function Example() {
   return (
-    <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
+    <div style={{ display: 'flex', gap: 'var(--ds-spacing-2)', alignItems: 'center' }}>
       <Avatar size="xs" src="/avatar1.jpg" alt="User 1" />
       <Avatar size="sm" src="/avatar2.jpg" alt="User 2" />
       <Avatar size="md">
@@ -550,7 +550,7 @@ export function Example() {
 
 export function Example() {
   return (
-    <div style={{ display: 'flex', gap: '8px' }}>
+    <div style={{ display: 'flex', gap: 'var(--ds-spacing-2)' }}>
       <Badge variant="neutral">Default</Badge>
       <Badge variant="success">Active</Badge>
       <Badge variant="warning">Pending</Badge>
@@ -849,7 +849,7 @@ export function Example() {
 
   return (
     <div>
-      <div style={{ marginBottom: '16px' }}>
+      <div style={{ marginBottom: 'var(--ds-spacing-4)' }}>
         <Search
           value={searchQuery}
           onChange={setSearchQuery}

@@ -78,8 +78,8 @@ export function BulkCustodyModal({ selectedIds, onClose, onSuccess }: BulkCustod
               }}
               style={{ width: '100%', padding: 'var(--ds-spacing-2)', borderRadius: 'var(--ds-border-radius-md)', border: '1px solid var(--ds-color-neutral-border-default)' }}
             >
-              <option value="ORG">Organisasjon</option>
-              <option value="USER">Bruker</option>
+              <option value="ORG">{t('backoffice.text.organization')}</option>
+              <option value="USER">{t('backoffice.text.user')}</option>
             </select>
           </div>
 

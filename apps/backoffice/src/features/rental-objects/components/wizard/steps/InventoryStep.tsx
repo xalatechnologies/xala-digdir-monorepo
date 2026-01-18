@@ -118,7 +118,7 @@ export function InventoryStep({ wizard }: InventoryStepProps) {
                     style={{
                       fontSize: 'var(--ds-font-size-sm)',
                       color: 'var(--ds-color-neutral-text-subtle)',
-                      lineHeight: '1.5',
+                      lineHeight: 'var(--ds-line-height-md)',
                     }}
                   >
                     {t(`form.inventory.policyDescription.${policy.toLowerCase()}`)}

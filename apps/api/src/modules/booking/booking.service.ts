@@ -836,7 +836,7 @@ async complete(id: string, version?: number): Promise<Booking> {
     const frequency = selection.frequency!;
     const weekdays = selection.weekdays || [startDate.getDay() === 0 ? 7 : startDate.getDay()]; // ISO weekday
 
-    let currentDate = new Date(startDate);
+    const currentDate = new Date(startDate);
     let index = 0;
     const maxOccurrences = endCondition.type === 'AFTER_OCCURRENCES'
       ? endCondition.occurrences!

@@ -173,10 +173,10 @@ export function SeasonVenueManagement({ seasonId, canEdit }: SeasonVenueManageme
         <Table>
           <Table.Head>
             <Table.Row>
-              <Table.HeaderCell>Navn</Table.HeaderCell>
-              <Table.HeaderCell>Type</Table.HeaderCell>
-              <Table.HeaderCell>Kapasitet</Table.HeaderCell>
-              <Table.HeaderCell>Adresse</Table.HeaderCell>
+              <Table.HeaderCell>{t('seasons.label.name')}</Table.HeaderCell>
+              <Table.HeaderCell>{t('seasons.text.type')}</Table.HeaderCell>
+              <Table.HeaderCell>{t('seasons.text.kapasitet')}</Table.HeaderCell>
+              <Table.HeaderCell>{t('seasons.text.address')}</Table.HeaderCell>
               {canEdit && <Table.HeaderCell style={{ width: '80px' }}>Handlinger</Table.HeaderCell>}
             </Table.Row>
           </Table.Head>

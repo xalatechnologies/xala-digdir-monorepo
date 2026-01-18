@@ -222,11 +222,11 @@ export function SeasonAllocationManagement({
                 <Table.Head>
                   <Table.Row>
                     <Table.HeaderCell>Organisasjon</Table.HeaderCell>
-                    <Table.HeaderCell>Ukedag</Table.HeaderCell>
-                    <Table.HeaderCell>Tid</Table.HeaderCell>
-                    <Table.HeaderCell>Bookinger</Table.HeaderCell>
+                    <Table.HeaderCell>{t('seasons.text.ukedag')}</Table.HeaderCell>
+                    <Table.HeaderCell>{t('seasons.text.time')}</Table.HeaderCell>
+                    <Table.HeaderCell>{t('seasons.text.bookings')}</Table.HeaderCell>
                     <Table.HeaderCell>Status</Table.HeaderCell>
-                    <Table.HeaderCell style={{ width: '120px' }}>Handling</Table.HeaderCell>
+                    <Table.HeaderCell style={{ width: '120px' }}>{t('seasons.text.handling')}</Table.HeaderCell>
                   </Table.Row>
                 </Table.Head>
                 <Table.Body>

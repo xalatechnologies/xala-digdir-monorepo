@@ -100,15 +100,15 @@ export function AllocationPlannerPage() {
         gap: 'var(--ds-spacing-4)',
       }}>
         <Card style={{ padding: 'var(--ds-spacing-4)' }}>
-          <Paragraph data-size="sm" style={{ color: 'var(--ds-color-neutral-text-subtle)', margin: 0 }}>Totalt tidsluker</Paragraph>
+          <Paragraph data-size="sm" style={{ color: 'var(--ds-color-neutral-text-subtle)', margin: 0 }}>{t('backoffice.text.totaltTidsluker')}</Paragraph>
           <Heading level={2} data-size="xl" style={{ margin: 0 }}>{totalSlots}</Heading>
         </Card>
         <Card style={{ padding: 'var(--ds-spacing-4)' }}>
-          <Paragraph data-size="sm" style={{ color: 'var(--ds-color-neutral-text-subtle)', margin: 0 }}>Tildelt</Paragraph>
+          <Paragraph data-size="sm" style={{ color: 'var(--ds-color-neutral-text-subtle)', margin: 0 }}>{t('backoffice.text.tildelt')}</Paragraph>
           <Heading level={2} data-size="xl" style={{ margin: 0 }}>{allocatedSlots}</Heading>
         </Card>
         <Card style={{ padding: 'var(--ds-spacing-4)' }}>
-          <Paragraph data-size="sm" style={{ color: 'var(--ds-color-neutral-text-subtle)', margin: 0 }}>Utnyttelse</Paragraph>
+          <Paragraph data-size="sm" style={{ color: 'var(--ds-color-neutral-text-subtle)', margin: 0 }}>{t('backoffice.text.utnyttelse')}</Paragraph>
           <Heading level={2} data-size="xl" style={{ margin: 0, color: utilizationPercent > 70 ? 'var(--ds-color-success-text-default)' : undefined }}>
             {utilizationPercent}%
           </Heading>
@@ -124,12 +124,12 @@ export function AllocationPlannerPage() {
           <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--ds-spacing-2)' }}>
             {/* eslint-disable-next-line digdir/no-hardcoded-colors */}
             <div style={{ width: '16px', height: '16px', borderRadius: 'var(--ds-spacing-1)', backgroundColor: '#2563eb' }} />
-            <Paragraph data-size="sm" style={{ margin: 0 }}>Skien IL</Paragraph>
+            <Paragraph data-size="sm" style={{ margin: 0 }}>{t('backoffice.text.skienIl')}</Paragraph>
           </div>
           <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--ds-spacing-2)' }}>
             {/* eslint-disable-next-line digdir/no-hardcoded-colors */}
             <div style={{ width: '16px', height: '16px', borderRadius: 'var(--ds-spacing-1)', backgroundColor: '#16a34a' }} />
-            <Paragraph data-size="sm" style={{ margin: 0 }}>Telemark FK</Paragraph>
+            <Paragraph data-size="sm" style={{ margin: 0 }}>{t('backoffice.text.telemarkFk')}</Paragraph>
           </div>
         </div>
       </Card>

@@ -474,7 +474,7 @@ export function CalendarPage() {
         {/* Time column */}
         <div style={{ width: '80px', flexShrink: 0, borderRight: '1px solid var(--ds-color-neutral-border-subtle)' }}>
           <div style={{ height: '48px', borderBottom: '1px solid var(--ds-color-neutral-border-subtle)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-            <span style={{ fontSize: 'var(--ds-font-size-xs)', color: 'var(--ds-color-neutral-text-subtle)' }}>Tid</span>
+            <span style={{ fontSize: 'var(--ds-font-size-xs)', color: 'var(--ds-color-neutral-text-subtle)' }}>{t('backoffice.text.time')}</span>
           </div>
           {hours.map((hour) => (
             <div
@@ -767,7 +767,7 @@ export function CalendarPage() {
             </div>
             <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--ds-spacing-2)' }}>
               <div style={{ width: '12px', height: '12px', borderRadius: 'var(--ds-border-radius-sm)', backgroundColor: 'var(--ds-color-neutral-surface-hover)', border: '1px solid var(--ds-color-neutral-border-default)' }} />
-              <span style={{ fontSize: 'var(--ds-font-size-xs)' }}>Sperret</span>
+              <span style={{ fontSize: 'var(--ds-font-size-xs)' }}>{t('backoffice.text.sperret')}</span>
             </div>
           </div>
         </div>

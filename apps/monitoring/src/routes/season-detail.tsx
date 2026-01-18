@@ -190,7 +190,7 @@ export function SeasonDetailPage() {
     <Container style={{ padding: 'var(--ds-spacing-8)' }}>
       {/* Breadcrumb */}
       <nav
-        aria-label="Breadcrumb"
+        aria-label={t('monitoring.ariaLabel.breadcrumb')}
         style={{
           display: 'flex',
           alignItems: 'center',

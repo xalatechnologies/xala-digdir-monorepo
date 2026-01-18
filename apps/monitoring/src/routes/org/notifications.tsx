@@ -437,7 +437,7 @@ export function OrganizationNotificationsPage(): React.ReactElement {
               type="email"
               value={localSettings.primaryEmail}
               onChange={(e) => handleContactChange('primaryEmail', e.target.value)}
-              placeholder="post@organisasjon.no"
+              placeholder={t('monitoring.placeholder.postorganisasjonno')}
               style={{ width: '100%' }}
             />
           </div>
@@ -454,7 +454,7 @@ export function OrganizationNotificationsPage(): React.ReactElement {
               type="tel"
               value={localSettings.primaryPhone}
               onChange={(e) => handleContactChange('primaryPhone', e.target.value)}
-              placeholder="+47 123 45 678"
+              placeholder={t('monitoring.placeholder.4712345678')}
               style={{ width: '100%' }}
             />
           </div>

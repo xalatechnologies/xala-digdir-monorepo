@@ -22,6 +22,7 @@ import {
 } from '@digilist/client-sdk';
 import { MemberManagement } from '../../components/organizations/MemberManagement';
 
+import { useT } from '@xala/i18n';
 const actorTypeLabels: Record<ActorType, string> = {
   private: 'Privatperson',
   business: 'Bedrift',
@@ -41,6 +42,8 @@ const actorTypeColors: Record<ActorType, 'neutral' | 'info' | 'success' | 'warni
 };
 
 export function OrganizationMembersPage() {
+  const t = useT();
+
   const { id } = useParams<{ id: string }>();
 
   // Queries
@@ -55,7 +58,7 @@ export function OrganizationMembersPage() {
   if (isLoading) {
     return (
       <div style={{ display: 'flex', justifyContent: 'center', padding: 'var(--ds-spacing-8)' }}>
-        <Spinner data-size="lg" aria-label="Laster medlemmer..." />
+        <Spinner data-size="lg" aria-label={t('organizations.ariaLabel.lasterMedlemmer')} />
       </div>
     );
   }
@@ -70,7 +73,7 @@ export function OrganizationMembersPage() {
             marginBottom: 'var(--ds-spacing-3)',
           }}
         />
-        <Heading level={3} data-size="sm">Organisasjon ikke funnet</Heading>
+        <Heading level={3} data-size="sm">{t('organizations.text.organisasjonIkkeFunnet')}</Heading>
         <Paragraph
           data-size="sm"
           style={{ color: 'var(--ds-color-neutral-text-subtle)', marginTop: 'var(--ds-spacing-2)' }}

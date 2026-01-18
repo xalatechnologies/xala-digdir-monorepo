@@ -146,9 +146,7 @@ export function SeasonApplicationManagement({ seasonId, canProcess }: SeasonAppl
           </div>
         </Card>
         <Card style={{ padding: 'var(--ds-spacing-3)' }}>
-          <div style={{ fontSize: 'var(--ds-font-size-sm)', color: 'var(--ds-color-neutral-text-subtle)' }}>
-            Godkjent
-          </div>
+          <div style={{ fontSize: 'var(--ds-font-size-sm)', color: 'var(--ds-color-neutral-text-subtle)' }}>{t('seasons.text.godkjent')}</div>
           <div style={{ fontSize: 'var(--ds-font-size-2xl)', fontWeight: 'var(--ds-font-weight-semibold)', color: 'var(--ds-color-success-text-default)' }}>
             {applications.filter(a => a.status === 'approved').length}
           </div>
@@ -173,9 +171,9 @@ export function SeasonApplicationManagement({ seasonId, canProcess }: SeasonAppl
             </Button>
           </Dropdown.Trigger>
           <Dropdown.Content>
-            <Dropdown.Item onClick={() => setFilterStatus('all')}>Alle</Dropdown.Item>
-            <Dropdown.Item onClick={() => setFilterStatus('pending')}>Venter</Dropdown.Item>
-            <Dropdown.Item onClick={() => setFilterStatus('approved')}>Godkjent</Dropdown.Item>
+            <Dropdown.Item onClick={() => setFilterStatus('all')}>{t('seasons.text.alle')}</Dropdown.Item>
+            <Dropdown.Item onClick={() => setFilterStatus('pending')}>{t('seasons.text.pending')}</Dropdown.Item>
+            <Dropdown.Item onClick={() => setFilterStatus('approved')}>{t('seasons.text.godkjent')}</Dropdown.Item>
             <Dropdown.Item onClick={() => setFilterStatus('rejected')}>{t('common.avslaatt')}</Dropdown.Item>
           </Dropdown.Content>
         </Dropdown>
@@ -218,10 +216,10 @@ export function SeasonApplicationManagement({ seasonId, canProcess }: SeasonAppl
               <Table.HeaderCell>Organisasjon</Table.HeaderCell>
               <Table.HeaderCell>Lokale</Table.HeaderCell>
               <Table.HeaderCell>Ukedag</Table.HeaderCell>
-              <Table.HeaderCell>Tid</Table.HeaderCell>
+              <Table.HeaderCell>{t('seasons.text.time')}</Table.HeaderCell>
               <Table.HeaderCell>Status</Table.HeaderCell>
-              <Table.HeaderCell>Innsendt</Table.HeaderCell>
-              {canProcess && <Table.HeaderCell style={{ width: '100px' }}>Handlinger</Table.HeaderCell>}
+              <Table.HeaderCell>{t('seasons.text.innsendt')}</Table.HeaderCell>
+              {canProcess && <Table.HeaderCell style={{ width: '100px' }}>{t('seasons.text.handlinger')}</Table.HeaderCell>}
             </Table.Row>
           </Table.Head>
           <Table.Body>

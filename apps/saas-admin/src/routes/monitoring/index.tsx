@@ -200,7 +200,7 @@ export function MonitoringPage() {
           icon={<DatabaseIcon />}
         />
         <StatCard
-          title="MRR"
+          title={t('monitoring.title.mrr')}
           value={billing?.monthlyRecurring ? `${billing.monthlyRecurring.toLocaleString('nb-NO')} NOK` : '—'}
           description={t('common.maanedlig_inntekt')}
           color="var(--ds-color-accent-text-default)"
@@ -219,18 +219,18 @@ export function MonitoringPage() {
             {/* API Status */}
             <div style={{ padding: 'var(--ds-spacing-4)', border: '1px solid var(--ds-color-neutral-border-subtle)', borderRadius: 'var(--ds-border-radius-md)' }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 'var(--ds-spacing-2)' }}>
-                <Paragraph size="sm" style={{ margin: 0, fontWeight: 'var(--ds-font-weight-medium)' }}>API</Paragraph>
+                <Paragraph size="sm" style={{ margin: 0, fontWeight: 'var(--ds-font-weight-medium)' }}>{t('monitoring.text.api')}</Paragraph>
                 <Badge color={getStatusColor(MOCK_SYSTEM_STATUS.api.status)}>
                   {MOCK_SYSTEM_STATUS.api.status === 'healthy' ? <CheckCircleIcon /> : <AlertTriangleIcon />}
                   {MOCK_SYSTEM_STATUS.api.status}
                 </Badge>
               </div>
               <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                <span style={{ color: 'var(--ds-color-neutral-text-subtle)', fontSize: 'var(--ds-font-size-xs)' }}>Latency</span>
+                <span style={{ color: 'var(--ds-color-neutral-text-subtle)', fontSize: 'var(--ds-font-size-xs)' }}>{t('monitoring.text.latency')}</span>
                 <span style={{ fontSize: 'var(--ds-font-size-xs)' }}>{MOCK_SYSTEM_STATUS.api.latency}ms</span>
               </div>
               <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                <span style={{ color: 'var(--ds-color-neutral-text-subtle)', fontSize: 'var(--ds-font-size-xs)' }}>Uptime</span>
+                <span style={{ color: 'var(--ds-color-neutral-text-subtle)', fontSize: 'var(--ds-font-size-xs)' }}>{t('monitoring.text.uptime')}</span>
                 <span style={{ fontSize: 'var(--ds-font-size-xs)' }}>{MOCK_SYSTEM_STATUS.api.uptime}%</span>
               </div>
             </div>
@@ -238,14 +238,14 @@ export function MonitoringPage() {
             {/* Database Status */}
             <div style={{ padding: 'var(--ds-spacing-4)', border: '1px solid var(--ds-color-neutral-border-subtle)', borderRadius: 'var(--ds-border-radius-md)' }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 'var(--ds-spacing-2)' }}>
-                <Paragraph size="sm" style={{ margin: 0, fontWeight: 'var(--ds-font-weight-medium)' }}>Database</Paragraph>
+                <Paragraph size="sm" style={{ margin: 0, fontWeight: 'var(--ds-font-weight-medium)' }}>{t('monitoring.text.database')}</Paragraph>
                 <Badge color={getStatusColor(MOCK_SYSTEM_STATUS.database.status)}>
                   {MOCK_SYSTEM_STATUS.database.status === 'healthy' ? <CheckCircleIcon /> : <AlertTriangleIcon />}
                   {MOCK_SYSTEM_STATUS.database.status}
                 </Badge>
               </div>
               <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                <span style={{ color: 'var(--ds-color-neutral-text-subtle)', fontSize: 'var(--ds-font-size-xs)' }}>Connections</span>
+                <span style={{ color: 'var(--ds-color-neutral-text-subtle)', fontSize: 'var(--ds-font-size-xs)' }}>{t('monitoring.text.connections')}</span>
                 <span style={{ fontSize: 'var(--ds-font-size-xs)' }}>{MOCK_SYSTEM_STATUS.database.connections}/{MOCK_SYSTEM_STATUS.database.maxConnections}</span>
               </div>
             </div>
@@ -253,7 +253,7 @@ export function MonitoringPage() {
             {/* Storage Status */}
             <div style={{ padding: 'var(--ds-spacing-4)', border: '1px solid var(--ds-color-neutral-border-subtle)', borderRadius: 'var(--ds-border-radius-md)' }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 'var(--ds-spacing-2)' }}>
-                <Paragraph size="sm" style={{ margin: 0, fontWeight: 'var(--ds-font-weight-medium)' }}>Storage</Paragraph>
+                <Paragraph size="sm" style={{ margin: 0, fontWeight: 'var(--ds-font-weight-medium)' }}>{t('monitoring.text.storage')}</Paragraph>
                 <Badge color={getStatusColor(MOCK_SYSTEM_STATUS.storage.status)}>
                   {MOCK_SYSTEM_STATUS.storage.status === 'healthy' ? <CheckCircleIcon /> : <AlertTriangleIcon />}
                   {MOCK_SYSTEM_STATUS.storage.status}
@@ -261,7 +261,7 @@ export function MonitoringPage() {
               </div>
               <div style={{ marginTop: 'var(--ds-spacing-2)' }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 'var(--ds-spacing-1)' }}>
-                  <span style={{ color: 'var(--ds-color-neutral-text-subtle)', fontSize: 'var(--ds-font-size-xs)' }}>Used</span>
+                  <span style={{ color: 'var(--ds-color-neutral-text-subtle)', fontSize: 'var(--ds-font-size-xs)' }}>{t('monitoring.text.used')}</span>
                   <span style={{ fontSize: 'var(--ds-font-size-xs)' }}>{MOCK_SYSTEM_STATUS.storage.usedGb} / {MOCK_SYSTEM_STATUS.storage.totalGb} GB</span>
                 </div>
                 <div style={{ height: 8, backgroundColor: 'var(--ds-color-neutral-surface-subtle)', borderRadius: 4 }}>
@@ -280,14 +280,14 @@ export function MonitoringPage() {
             {/* Redis Status */}
             <div style={{ padding: 'var(--ds-spacing-4)', border: '1px solid var(--ds-color-neutral-border-subtle)', borderRadius: 'var(--ds-border-radius-md)' }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 'var(--ds-spacing-2)' }}>
-                <Paragraph size="sm" style={{ margin: 0, fontWeight: 'var(--ds-font-weight-medium)' }}>Redis</Paragraph>
+                <Paragraph size="sm" style={{ margin: 0, fontWeight: 'var(--ds-font-weight-medium)' }}>{t('monitoring.text.redis')}</Paragraph>
                 <Badge color={getStatusColor(MOCK_SYSTEM_STATUS.redis.status)}>
                   {MOCK_SYSTEM_STATUS.redis.status === 'healthy' ? <CheckCircleIcon /> : <AlertTriangleIcon />}
                   {MOCK_SYSTEM_STATUS.redis.status}
                 </Badge>
               </div>
               <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                <span style={{ color: 'var(--ds-color-neutral-text-subtle)', fontSize: 'var(--ds-font-size-xs)' }}>Memory</span>
+                <span style={{ color: 'var(--ds-color-neutral-text-subtle)', fontSize: 'var(--ds-font-size-xs)' }}>{t('monitoring.text.memory')}</span>
                 <span style={{ fontSize: 'var(--ds-font-size-xs)' }}>{MOCK_SYSTEM_STATUS.redis.memoryMb} / {MOCK_SYSTEM_STATUS.redis.maxMemoryMb} MB</span>
               </div>
             </div>
@@ -347,15 +347,15 @@ export function MonitoringPage() {
             </div>
             <div style={{ fontSize: 'var(--ds-font-size-xs)', color: 'var(--ds-color-neutral-text-subtle)', marginBottom: 'var(--ds-spacing-3)' }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 'var(--ds-spacing-1)' }}>
-                <span>Total keys</span>
+                <span>{t('monitoring.text.totalKeys')}</span>
                 <span style={{ color: 'var(--ds-color-neutral-text-default)' }}>{MOCK_SCANNER_RESULTS.i18n.totalKeys.toLocaleString()}</span>
               </div>
               <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 'var(--ds-spacing-1)' }}>
-                <span>Missing keys</span>
+                <span>{t('monitoring.text.missingKeys')}</span>
                 <span style={{ color: 'var(--ds-color-success-text-default)' }}>{MOCK_SCANNER_RESULTS.i18n.missingKeys}</span>
               </div>
               <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                <span>Hardcoded strings</span>
+                <span>{t('monitoring.text.hardcodedStrings')}</span>
                 <span style={{ color: 'var(--ds-color-warning-text-default)' }}>{MOCK_SCANNER_RESULTS.i18n.hardcodedStrings}</span>
               </div>
             </div>
@@ -371,7 +371,7 @@ export function MonitoringPage() {
                 fontSize: 'var(--ds-font-size-sm)',
               }}
               onClick={() => handleRunScanner('i18n')}
-              disabled={runningScanner !== null}
+              disabled={runningScanner !== null} type="button"
             >
               {t('saasAdmin.monitoring.scanners.runScan', { defaultValue: 'Kjør skanning' })}
             </button>
@@ -380,7 +380,7 @@ export function MonitoringPage() {
           {/* Design System Scanner */}
           <div style={{ padding: 'var(--ds-spacing-4)', border: '1px solid var(--ds-color-neutral-border-subtle)', borderRadius: 'var(--ds-border-radius-md)' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 'var(--ds-spacing-3)' }}>
-              <Paragraph size="sm" style={{ margin: 0, fontWeight: 'var(--ds-font-weight-medium)' }}>Design System</Paragraph>
+              <Paragraph size="sm" style={{ margin: 0, fontWeight: 'var(--ds-font-weight-medium)' }}>{t('monitoring.text.designSystem')}</Paragraph>
               <Badge color={MOCK_SCANNER_RESULTS.designSystem.status === 'success' ? 'success' : 'warning'}>
                 {MOCK_SCANNER_RESULTS.designSystem.status === 'success' ? <CheckCircleIcon /> : <AlertTriangleIcon />}
                 {MOCK_SCANNER_RESULTS.designSystem.status}
@@ -388,15 +388,15 @@ export function MonitoringPage() {
             </div>
             <div style={{ fontSize: 'var(--ds-font-size-xs)', color: 'var(--ds-color-neutral-text-subtle)', marginBottom: 'var(--ds-spacing-3)' }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 'var(--ds-spacing-1)' }}>
-                <span>Components</span>
+                <span>{t('monitoring.text.components')}</span>
                 <span style={{ color: 'var(--ds-color-neutral-text-default)' }}>{MOCK_SCANNER_RESULTS.designSystem.totalComponents}</span>
               </div>
               <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 'var(--ds-spacing-1)' }}>
-                <span>Violations</span>
+                <span>{t('monitoring.text.violations')}</span>
                 <span style={{ color: MOCK_SCANNER_RESULTS.designSystem.violations > 0 ? 'var(--ds-color-danger-text-default)' : 'var(--ds-color-success-text-default)' }}>{MOCK_SCANNER_RESULTS.designSystem.violations}</span>
               </div>
               <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                <span>Token compliance</span>
+                <span>{t('monitoring.text.tokenCompliance')}</span>
                 <span style={{ color: 'var(--ds-color-success-text-default)' }}>{MOCK_SCANNER_RESULTS.designSystem.tokenCompliance}%</span>
               </div>
             </div>
@@ -412,7 +412,7 @@ export function MonitoringPage() {
                 fontSize: 'var(--ds-font-size-sm)',
               }}
               onClick={() => handleRunScanner('designSystem')}
-              disabled={runningScanner !== null}
+              disabled={runningScanner !== null} type="button"
             >
               {t('saasAdmin.monitoring.scanners.runScan', { defaultValue: 'Kjør skanning' })}
             </button>
@@ -429,15 +429,15 @@ export function MonitoringPage() {
             </div>
             <div style={{ fontSize: 'var(--ds-font-size-xs)', color: 'var(--ds-color-neutral-text-subtle)', marginBottom: 'var(--ds-spacing-3)' }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 'var(--ds-spacing-1)' }}>
-                <span>WCAG Errors</span>
+                <span>{t('monitoring.text.wcagErrors')}</span>
                 <span style={{ color: MOCK_SCANNER_RESULTS.compliance.wcagErrors > 0 ? 'var(--ds-color-danger-text-default)' : 'var(--ds-color-success-text-default)' }}>{MOCK_SCANNER_RESULTS.compliance.wcagErrors}</span>
               </div>
               <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 'var(--ds-spacing-1)' }}>
-                <span>WCAG Warnings</span>
+                <span>{t('monitoring.text.wcagWarnings')}</span>
                 <span style={{ color: 'var(--ds-color-warning-text-default)' }}>{MOCK_SCANNER_RESULTS.compliance.wcagWarnings}</span>
               </div>
               <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                <span>GDPR Compliance</span>
+                <span>{t('monitoring.text.gdprCompliance')}</span>
                 <span style={{ color: 'var(--ds-color-success-text-default)' }}>{MOCK_SCANNER_RESULTS.compliance.gdprCompliance}%</span>
               </div>
             </div>
@@ -453,7 +453,7 @@ export function MonitoringPage() {
                 fontSize: 'var(--ds-font-size-sm)',
               }}
               onClick={() => handleRunScanner('compliance')}
-              disabled={runningScanner !== null}
+              disabled={runningScanner !== null} type="button"
             >
               {t('saasAdmin.monitoring.scanners.runScan', { defaultValue: 'Kjør skanning' })}
             </button>
@@ -470,11 +470,11 @@ export function MonitoringPage() {
         <Table>
           <Table.Head>
             <Table.Row>
-              <Table.HeaderCell>Tenant</Table.HeaderCell>
-              <Table.HeaderCell>Status</Table.HeaderCell>
-              <Table.HeaderCell>Brukere</Table.HeaderCell>
-              <Table.HeaderCell>Organisasjoner</Table.HeaderCell>
-              <Table.HeaderCell>Leieobjekter</Table.HeaderCell>
+              <Table.HeaderCell>{t('monitoring.text.tenant')}</Table.HeaderCell>
+              <Table.HeaderCell>{t('monitoring.text.status')}</Table.HeaderCell>
+              <Table.HeaderCell>{t('monitoring.text.users')}</Table.HeaderCell>
+              <Table.HeaderCell>{t('monitoring.text.organisasjoner')}</Table.HeaderCell>
+              <Table.HeaderCell>{t('monitoring.text.leieobjekter')}</Table.HeaderCell>
               <Table.HeaderCell>{t('common.lagring_mb')}</Table.HeaderCell>
             </Table.Row>
           </Table.Head>

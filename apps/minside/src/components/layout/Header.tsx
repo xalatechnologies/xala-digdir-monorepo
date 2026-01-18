@@ -350,8 +350,8 @@ export function Header({ title: _title }: HeaderProps) {
                 <HeaderIconButton
                   icon={<SettingsIcon size={22} />}
                   size="md"
-                  aria-label="Innstillinger"
-                  title="Innstillinger"
+                  aria-label={t('minside.ariaLabel.settings')}
+                  title={t('minside.title.settings')}
                   onClick={() => navigate('/settings')}
                 />
                 <div

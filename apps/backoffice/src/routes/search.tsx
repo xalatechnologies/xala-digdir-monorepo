@@ -276,10 +276,10 @@ export function SearchPage() {
                   }}
                 >
                   <option value="">{t('common.alle_statuser')}</option>
-                  <option value="pending">Ventende</option>
+                  <option value="pending">{t('backoffice.text.ventende')}</option>
                   <option value="confirmed">{t("status.confirmed")}</option>
                   <option value="completed">{t("status.completed")}</option>
-                  <option value="cancelled">Kansellert</option>
+                  <option value="cancelled">{t('backoffice.text.kansellert')}</option>
                 </select>
               </Stack>
             </DrawerItem>

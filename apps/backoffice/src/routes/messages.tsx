@@ -528,7 +528,7 @@ export function MessagesPage() {
               }}>
                 {isLoadingMessages ? (
                   <div style={{ display: 'flex', justifyContent: 'center', padding: 'var(--ds-spacing-8)' }}>
-                    <Spinner aria-label="Laster meldinger..." data-data-size="md" />
+                    <Spinner aria-label={t('backoffice.ariaLabel.lasterMeldinger')} data-data-size="md" />
                   </div>
                 ) : messages.length === 0 ? (
                   <div style={{ 

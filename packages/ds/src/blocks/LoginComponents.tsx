@@ -59,24 +59,28 @@ export function LoginOption({
     >
       <div style={{ flexShrink: 0 }}>{icon}</div>
       <div>
-        <div
+        <Paragraph
+          data-size="md"
           style={{
-            fontSize: 'var(--ds-font-size-md)',
             fontWeight: 'var(--ds-font-weight-medium)',
             color: 'var(--ds-color-neutral-text-default)',
+            margin: 0,
+            lineHeight: 'var(--ds-line-height-sm)',
           }}
         >
           {title}
-        </div>
-        <div
+        </Paragraph>
+        <Paragraph
+          data-size="sm"
           style={{
-            fontSize: 'var(--ds-font-size-sm)',
             color: 'var(--ds-color-neutral-text-subtle)',
-            marginTop: 'var(--ds-spacing-0)',
+            margin: 0,
+            marginTop: 'var(--ds-spacing-1)',
+            lineHeight: 'var(--ds-line-height-md)',
           }}
         >
           {description}
-        </div>
+        </Paragraph>
       </div>
     </Button>
   );
@@ -106,14 +110,12 @@ export function FeatureItem({
   variant = 'light',
   className,
 }: FeatureItemProps): React.ReactElement {
+  // For 'light' variant (on colored background), use white text for WCAG compliance
   const textColor = variant === 'light'
-    ? 'var(--digilist-login-overlay-text, var(--ds-color-neutral-text-on-inverted))'
+    ? 'var(--ds-color-neutral-text-inverse)'
     : 'var(--ds-color-neutral-text-default)';
-  const subtleColor = variant === 'light'
-    ? 'var(--digilist-login-overlay-text-muted, rgba(255, 255, 255, 0.85))'
-    : 'var(--ds-color-neutral-text-subtle)';
   const iconBg = variant === 'light'
-    ? 'var(--ds-color-neutral-surface-hover)'
+    ? 'rgba(255, 255, 255, 0.2)'
     : 'var(--ds-color-neutral-surface-hover)';
 
   return (
@@ -147,6 +149,7 @@ export function FeatureItem({
             fontWeight: 'var(--ds-font-weight-medium)',
             color: textColor,
             margin: 0,
+            lineHeight: 'var(--ds-line-height-sm)',
           }}
         >
           {title}
@@ -154,9 +157,10 @@ export function FeatureItem({
         <Paragraph
           data-size="xs"
           style={{
-            color: subtleColor,
+            color: textColor,
             margin: 0,
             marginTop: 'var(--ds-spacing-1)',
+            lineHeight: 'var(--ds-line-height-md)',
           }}
         >
           {description}
@@ -185,10 +189,10 @@ export function IntegrationBadge({
   className,
 }: IntegrationBadgeProps): React.ReactElement {
   const bgColor = variant === 'light'
-    ? 'var(--ds-color-neutral-surface-hover)'
+    ? 'rgba(255, 255, 255, 0.95)'
     : 'var(--ds-color-neutral-surface-hover)';
   const textColor = variant === 'light'
-    ? 'var(--digilist-login-overlay-text, var(--ds-color-neutral-text-on-inverted))'
+    ? 'var(--ds-color-neutral-text-default)'
     : 'var(--ds-color-neutral-text-default)';
 
   return (
@@ -200,6 +204,7 @@ export function IntegrationBadge({
         borderRadius: 'var(--ds-border-radius-full)',
         fontSize: 'var(--ds-font-size-xs)',
         fontWeight: 'var(--ds-font-weight-medium)',
+        lineHeight: 'var(--ds-line-height-sm)',
         color: textColor,
       }}
     >
@@ -237,12 +242,20 @@ export function LoginFooterLink({
       className={cn('login-footer-link', className)}
       style={{
         fontSize: 'var(--ds-font-size-sm)',
-        color: 'var(--ds-color-neutral-text-subtle)',
+        color: 'var(--ds-color-neutral-text-default)',
         textDecoration: 'none',
-        transition: 'color 0.2s ease',
+        transition: 'color 0.2s ease, text-decoration 0.2s ease',
+        fontWeight: 'var(--ds-font-weight-medium)',
+        position: 'relative',
       }}
-      onMouseEnter={(e) => (e.currentTarget.style.color = 'var(--ds-color-accent-text-default)')}
-      onMouseLeave={(e) => (e.currentTarget.style.color = 'var(--ds-color-neutral-text-subtle)')}
+      onMouseEnter={(e) => {
+        e.currentTarget.style.color = 'var(--ds-color-accent-text-default)';
+        e.currentTarget.style.textDecoration = 'underline';
+      }}
+      onMouseLeave={(e) => {
+        e.currentTarget.style.color = 'var(--ds-color-neutral-text-default)';
+        e.currentTarget.style.textDecoration = 'none';
+      }}
     >
       {children}
     </a>
@@ -311,13 +324,34 @@ export function LoginLayout({
   className,
 }: LoginLayoutProps): React.ReactElement {
   return (
-    <div
-      className={cn('login-layout', className)}
-      style={{
-        display: 'flex',
-        minHeight: '100vh',
-      }}
-    >
+    <>
+      <style>{`
+        .login-layout {
+          display: flex;
+          flex-direction: row;
+          min-height: 100vh;
+        }
+        .login-form-panel,
+        .login-info-panel {
+          width: 50%;
+        }
+        @media (max-width: 1024px) {
+          .login-info-panel {
+            display: none !important;
+          }
+          .login-form-panel {
+            width: 100% !important;
+          }
+        }
+      `}</style>
+      <div
+        className={cn('login-layout', className)}
+        style={{
+          display: 'flex',
+          minHeight: '100vh',
+          flexDirection: 'row',
+        }}
+      >
       {/* Left side - Login form */}
       <div
         style={{
@@ -326,6 +360,7 @@ export function LoginLayout({
           flexDirection: 'column',
           backgroundColor: 'var(--ds-color-neutral-background-default)',
         }}
+        className="login-form-panel"
       >
         {/* Main content */}
         <div
@@ -334,7 +369,7 @@ export function LoginLayout({
             display: 'flex',
             flexDirection: 'column',
             justifyContent: 'center',
-            padding: 'var(--ds-spacing-12)',
+            padding: 'clamp(var(--ds-spacing-6), 5vw, var(--ds-spacing-12))',
             maxWidth: '480px',
             margin: '0 auto',
             width: '100%',
@@ -351,6 +386,7 @@ export function LoginLayout({
                   gap: 'var(--ds-spacing-4)',
                   textDecoration: 'none',
                   cursor: 'pointer',
+                  flexWrap: 'wrap',
                 }}
               >
                 {logo || (
@@ -358,29 +394,33 @@ export function LoginLayout({
                     src="/logo.svg"
                     alt={brandName}
                     style={{
-                      height: '80px',
+                      height: 'clamp(80px, 12vw, 120px)',
                       width: 'auto',
                     }}
                   />
                 )}
-                <div>
+                <div style={{ minWidth: '0', flex: '1 1 auto' }}>
                   <div
                     style={{
-                      fontSize: 'var(--ds-font-size-2xl)',
+                      fontSize: 'clamp(var(--ds-font-size-2xl), 5vw, var(--ds-font-size-3xl))',
                       fontWeight: 'var(--ds-font-weight-bold)',
                       color: 'var(--ds-color-accent-base-default)',
-                      lineHeight: 1.1,
-                      letterSpacing: '0.05em',
+                      lineHeight: 'var(--ds-line-height-sm)',
+                      letterSpacing: 'var(--ds-letter-spacing-9)',
+                      wordBreak: 'break-word',
+                      textTransform: 'uppercase',
                     }}
                   >
                     {brandName}
                   </div>
                   <div
                     style={{
-                      fontSize: 'var(--ds-font-size-sm)',
+                      fontSize: 'clamp(var(--ds-font-size-sm), 2.5vw, var(--ds-font-size-lg))',
                       color: 'var(--ds-color-neutral-text-default)',
-                      letterSpacing: '0.1em',
-                      marginTop: 'var(--ds-spacing-1)',
+                      letterSpacing: 'var(--ds-letter-spacing-9)',
+                      marginTop: 'var(--ds-spacing-2)',
+                      fontWeight: 'var(--ds-font-weight-medium)',
+                      textTransform: 'uppercase',
                     }}
                   >
                     {brandTagline}
@@ -388,35 +428,39 @@ export function LoginLayout({
                 </div>
               </a>
             ) : (
-              <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--ds-spacing-4)' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--ds-spacing-4)', flexWrap: 'wrap' }}>
                 {logo || (
                   <img
                     src="/logo.svg"
                     alt={brandName}
                     style={{
-                      height: '80px',
+                      height: 'clamp(80px, 12vw, 120px)',
                       width: 'auto',
                     }}
                   />
                 )}
-                <div>
+                <div style={{ minWidth: '0', flex: '1 1 auto' }}>
                   <div
                     style={{
-                      fontSize: 'var(--ds-font-size-2xl)',
+                      fontSize: 'clamp(var(--ds-font-size-2xl), 5vw, var(--ds-font-size-3xl))',
                       fontWeight: 'var(--ds-font-weight-bold)',
                       color: 'var(--ds-color-accent-base-default)',
-                      lineHeight: 1.1,
-                      letterSpacing: '0.05em',
+                      lineHeight: 'var(--ds-line-height-sm)',
+                      letterSpacing: 'var(--ds-letter-spacing-9)',
+                      wordBreak: 'break-word',
+                      textTransform: 'uppercase',
                     }}
                   >
                     {brandName}
                   </div>
                   <div
                     style={{
-                      fontSize: 'var(--ds-font-size-sm)',
+                      fontSize: 'clamp(var(--ds-font-size-sm), 2.5vw, var(--ds-font-size-lg))',
                       color: 'var(--ds-color-neutral-text-default)',
-                      letterSpacing: '0.1em',
-                      marginTop: 'var(--ds-spacing-1)',
+                      letterSpacing: 'var(--ds-letter-spacing-9)',
+                      marginTop: 'var(--ds-spacing-2)',
+                      fontWeight: 'var(--ds-font-weight-medium)',
+                      textTransform: 'uppercase',
                     }}
                   >
                     {brandTagline}
@@ -425,7 +469,7 @@ export function LoginLayout({
               </div>
             )}
           </div>
-
+          
           {/* Login section */}
           <div>
             <Heading level={1} data-size="xl" style={{ marginBottom: 'var(--ds-spacing-2)' }}>
@@ -449,8 +493,9 @@ export function LoginLayout({
         {(footerLinks.length > 0 || copyright) && (
           <div
             style={{
-              padding: 'var(--ds-spacing-6) var(--ds-spacing-12)',
+              padding: 'var(--ds-spacing-8) clamp(var(--ds-spacing-6), 5vw, var(--ds-spacing-12))',
               borderTop: '1px solid var(--ds-color-neutral-border-subtle)',
+              backgroundColor: 'var(--ds-color-neutral-background-subtle)',
             }}
           >
             {footerLinks.length > 0 && (
@@ -458,14 +503,23 @@ export function LoginLayout({
                 style={{
                   display: 'flex',
                   alignItems: 'center',
-                  gap: 'var(--ds-spacing-6)',
-                  marginBottom: 'var(--ds-spacing-3)',
+                  justifyContent: 'center',
+                  gap: 'var(--ds-spacing-2)',
+                  flexWrap: 'wrap',
+                  marginBottom: 'var(--ds-spacing-4)',
                 }}
               >
                 {footerLinks.map((link, index) => (
                   <React.Fragment key={link.href}>
                     {index > 0 && (
-                      <span style={{ color: 'var(--ds-color-neutral-border-default)' }}>·</span>
+                      <span 
+                        style={{ 
+                          color: 'var(--ds-color-neutral-text-subtle)',
+                          padding: '0 var(--ds-spacing-2)',
+                        }}
+                      >
+                        •
+                      </span>
                     )}
                     <LoginFooterLink href={link.href}>{link.label}</LoginFooterLink>
                   </React.Fragment>
@@ -473,7 +527,15 @@ export function LoginLayout({
               </div>
             )}
             {copyright && (
-              <Paragraph data-size="xs" style={{ color: 'var(--ds-color-neutral-text-default)', margin: 0 }}>
+              <Paragraph 
+                data-size="xs" 
+                style={{ 
+                  color: 'var(--ds-color-neutral-text-subtle)', 
+                  margin: 0,
+                  textAlign: 'center',
+                  fontWeight: 'var(--ds-font-weight-regular)',
+                }}
+              >
                 {copyright}
               </Paragraph>
             )}
@@ -488,32 +550,37 @@ export function LoginLayout({
           display: 'flex',
           flexDirection: 'column',
           justifyContent: 'center',
-          padding: 'var(--ds-spacing-12)',
+          padding: 'clamp(var(--ds-spacing-6), 5vw, var(--ds-spacing-8))',
           background: 'linear-gradient(135deg, var(--ds-color-accent-base-default) 0%, var(--ds-color-accent-base-hover) 100%)',
         }}
+        className="login-info-panel"
       >
         <div style={{ maxWidth: '480px', margin: '0 auto', width: '100%' }}>
           {/* Header */}
           <div style={{ marginBottom: 'var(--ds-spacing-10)' }}>
-            <Paragraph
-              data-size="xs"
-              style={{
-                color: 'var(--digilist-login-overlay-text-muted, rgba(255, 255, 255, 0.85))',
-                textTransform: 'uppercase',
-                letterSpacing: 'var(--ds-letter-spacing-wider, 0.1em)',
-                fontWeight: 'var(--ds-font-weight-medium)',
-                marginBottom: 'var(--ds-spacing-3)',
-              }}
-            >
-              {panelTitle}
-            </Paragraph>
+            {panelTitle && (
+              <Paragraph
+                data-size="xs"
+                style={{
+                  color: 'var(--ds-color-neutral-text-inverse)',
+                  textTransform: 'uppercase',
+                  letterSpacing: 'var(--ds-letter-spacing-9)',
+                  fontWeight: 'var(--ds-font-weight-medium)',
+                  marginBottom: 'var(--ds-spacing-3)',
+                  wordBreak: 'break-word',
+                  lineHeight: 'var(--ds-line-height-sm)',
+                }}
+              >
+                {panelTitle}
+              </Paragraph>
+            )}
             <Heading
               level={2}
               data-size="2xl"
               style={{
-                color: 'var(--digilist-login-overlay-text, var(--ds-color-neutral-text-on-inverted))',
+                color: 'var(--ds-color-neutral-text-inverse)',
                 marginBottom: 'var(--ds-spacing-4)',
-                lineHeight: 'var(--ds-line-height-condensed)',
+                wordBreak: 'break-word',
               }}
             >
               {panelSubtitle}
@@ -522,8 +589,9 @@ export function LoginLayout({
               <Paragraph
                 data-size="md"
                 style={{
-                  color: 'var(--digilist-login-overlay-text-muted, rgba(255, 255, 255, 0.85))',
-                  lineHeight: 1.6,
+                  color: 'var(--ds-color-neutral-text-inverse)',
+                  wordBreak: 'break-word',
+                  lineHeight: 'var(--ds-line-height-md)',
                 }}
               >
                 {panelDescription}
@@ -559,10 +627,11 @@ export function LoginLayout({
               <Paragraph
                 data-size="xs"
                 style={{
-                  color: 'var(--digilist-login-overlay-text-muted, rgba(255, 255, 255, 0.85))',
+                  color: 'var(--ds-color-neutral-text-inverse)',
                   marginBottom: 'var(--ds-spacing-3)',
                   textTransform: 'uppercase',
-                  letterSpacing: 'var(--ds-letter-spacing-wide, 0.05em)',
+                  letterSpacing: 'var(--ds-letter-spacing-9)',
+                  lineHeight: 'var(--ds-line-height-sm)',
                 }}
               >
                 Integrasjoner & Sertifiseringer
@@ -582,7 +651,8 @@ export function LoginLayout({
           )}
         </div>
       </div>
-    </div>
+      </div>
+    </>
   );
 }
 

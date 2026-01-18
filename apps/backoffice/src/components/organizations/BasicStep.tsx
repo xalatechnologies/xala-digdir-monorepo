@@ -118,7 +118,7 @@ export function BasicStep({ data, onChange, errors = [] }: BasicStepProps) {
                 type="email"
                 value={data.email || ''}
                 onChange={(e) => handleChange('email', e.target.value)}
-                placeholder="post@example.no"
+                placeholder={t('organizations.placeholder.postexampleno')}
               />
             </FormField>
 
@@ -128,7 +128,7 @@ export function BasicStep({ data, onChange, errors = [] }: BasicStepProps) {
                 type="tel"
                 value={data.phone || ''}
                 onChange={(e) => handleChange('phone', e.target.value)}
-                placeholder="+47 123 45 678"
+                placeholder={t('organizations.placeholder.4712345678')}
               />
             </FormField>
           </Stack>
@@ -146,7 +146,7 @@ export function BasicStep({ data, onChange, errors = [] }: BasicStepProps) {
                 id="address"
                 value={data.address || ''}
                 onChange={(e) => handleChange('address', e.target.value)}
-                placeholder="Gateadresse"
+                placeholder={t('organizations.placeholder.gateadresse')}
               />
             </FormField>
 
@@ -166,7 +166,7 @@ export function BasicStep({ data, onChange, errors = [] }: BasicStepProps) {
                   id="city"
                   value={data.city || ''}
                   onChange={(e) => handleChange('city', e.target.value)}
-                  placeholder="Oslo"
+                  placeholder={t('organizations.placeholder.oslo')}
                 />
               </FormField>
             </div>

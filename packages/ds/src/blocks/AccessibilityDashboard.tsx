@@ -197,7 +197,7 @@ export function AccessibilityDashboard({
                 fontSize: 'var(--ds-font-size-5xl)',
                 fontWeight: 'var(--ds-font-weight-bold)' as unknown as number,
                 color: 'var(--ds-color-neutral-text-default)',
-                lineHeight: 1,
+                lineHeight: 'var(--ds-line-height-sm)',
               }}
             >
               {report.complianceScore}
@@ -439,7 +439,7 @@ function MetricCard({ title, value, subtitle, icon, status, details }: MetricCar
             fontSize: 'var(--ds-font-size-3xl)',
             fontWeight: 'var(--ds-font-weight-bold)' as unknown as number,
             color: 'var(--ds-color-neutral-text-default)',
-            lineHeight: 1.2,
+            lineHeight: 'var(--ds-line-height-sm)',
           }}
         >
           {value}

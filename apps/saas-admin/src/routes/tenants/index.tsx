@@ -242,7 +242,7 @@ export function TenantsListPage() {
             <Table.Head>
               <Table.Row>
                 <Table.HeaderCell>{t('label.name')}</Table.HeaderCell>
-                <Table.HeaderCell>Slug</Table.HeaderCell>
+                <Table.HeaderCell>{t('saasAdmin.text.slug')}</Table.HeaderCell>
                 <Table.HeaderCell>{t('saasAdmin.tenants.domain')}</Table.HeaderCell>
                 <Table.HeaderCell>{t('saasAdmin.tenants.plan')}</Table.HeaderCell>
                 <Table.HeaderCell>{t('label.status')}</Table.HeaderCell>

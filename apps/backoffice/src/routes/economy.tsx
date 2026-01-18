@@ -32,10 +32,10 @@ export function EconomyPage() {
       {/* Tabs */}
       <Tabs value={activeTab} onChange={setActiveTab}>
         <Tabs.List>
-          <Tabs.Tab value="invoice-basis">Fakturagrunnlag</Tabs.Tab>
-          <Tabs.Tab value="sales-documents">Salgsbilag</Tabs.Tab>
-          <Tabs.Tab value="credit-notes">Kreditnota</Tabs.Tab>
-          <Tabs.Tab value="export">Eksport</Tabs.Tab>
+          <Tabs.Tab value="invoice-basis">{t('backoffice.text.fakturagrunnlag')}</Tabs.Tab>
+          <Tabs.Tab value="sales-documents">{t('backoffice.text.salgsbilag')}</Tabs.Tab>
+          <Tabs.Tab value="credit-notes">{t('backoffice.text.kreditnota')}</Tabs.Tab>
+          <Tabs.Tab value="export">{t('backoffice.text.eksport')}</Tabs.Tab>
         </Tabs.List>
 
         {/* Invoice Basis Tab */}

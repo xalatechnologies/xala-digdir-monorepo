@@ -134,21 +134,21 @@ export function DecisionFormsPage() {
         gap: 'var(--ds-spacing-4)',
       }}>
         <Card style={{ padding: 'var(--ds-spacing-4)' }}>
-          <Paragraph data-size="sm" style={{ color: 'var(--ds-color-neutral-text-subtle)', margin: 0 }}>Ventende</Paragraph>
+          <Paragraph data-size="sm" style={{ color: 'var(--ds-color-neutral-text-subtle)', margin: 0 }}>{t('backoffice.text.ventende')}</Paragraph>
           <Heading level={2} data-size="xl" style={{ margin: 0, color: 'var(--ds-color-warning-text-default)' }}>
             {mockDecisions.filter(d => d.status === 'pending').length}
           </Heading>
         </Card>
         <Card style={{ padding: 'var(--ds-spacing-4)' }}>
-          <Paragraph data-size="sm" style={{ color: 'var(--ds-color-neutral-text-subtle)', margin: 0 }}>Godkjent i dag</Paragraph>
+          <Paragraph data-size="sm" style={{ color: 'var(--ds-color-neutral-text-subtle)', margin: 0 }}>{t('backoffice.text.godkjentIDag')}</Paragraph>
           <Heading level={2} data-size="xl" style={{ margin: 0, color: 'var(--ds-color-success-text-default)' }}>3</Heading>
         </Card>
         <Card style={{ padding: 'var(--ds-spacing-4)' }}>
-          <Paragraph data-size="sm" style={{ color: 'var(--ds-color-neutral-text-subtle)', margin: 0 }}>Avslått i dag</Paragraph>
+          <Paragraph data-size="sm" style={{ color: 'var(--ds-color-neutral-text-subtle)', margin: 0 }}>{t('backoffice.text.avslattIDag')}</Paragraph>
           <Heading level={2} data-size="xl" style={{ margin: 0, color: 'var(--ds-color-danger-text-default)' }}>1</Heading>
         </Card>
         <Card style={{ padding: 'var(--ds-spacing-4)' }}>
-          <Paragraph data-size="sm" style={{ color: 'var(--ds-color-neutral-text-subtle)', margin: 0 }}>Totalt denne uke</Paragraph>
+          <Paragraph data-size="sm" style={{ color: 'var(--ds-color-neutral-text-subtle)', margin: 0 }}>{t('backoffice.text.totaltDenneUke')}</Paragraph>
           <Heading level={2} data-size="xl" style={{ margin: 0 }}>12</Heading>
         </Card>
       </div>
@@ -161,7 +161,7 @@ export function DecisionFormsPage() {
         {/* Pending Queue */}
         <Card style={{ padding: 0, overflow: 'hidden' }}>
           <div style={{ padding: 'var(--ds-spacing-4)', borderBottom: '1px solid var(--ds-color-neutral-border-subtle)' }}>
-            <Heading level={2} data-size="sm" style={{ margin: 0 }}>Saker til behandling</Heading>
+            <Heading level={2} data-size="sm" style={{ margin: 0 }}>{t('backoffice.text.sakerTilBehandling')}</Heading>
           </div>
           {isLoading ? (
             <div style={{ display: 'flex', justifyContent: 'center', padding: 'var(--ds-spacing-8)' }}>
@@ -210,13 +210,13 @@ export function DecisionFormsPage() {
               </div>
               
               <div>
-                <label style={{ display: 'block', marginBottom: 'var(--ds-spacing-2)', fontWeight: 'var(--ds-font-weight-medium)' }}>Vedtak</label>
+                <label style={{ display: 'block', marginBottom: 'var(--ds-spacing-2)', fontWeight: 'var(--ds-font-weight-medium)' }}>{t('backoffice.text.vedtak')}</label>
                 <Select
                   value={outcome}
                   onChange={(e) => setOutcome(e.target.value as DecisionType)}
                   style={{ width: '100%' }}
                 >
-                  <option value="approved">Godkjent</option>
+                  <option value="approved">{t('backoffice.text.godkjent')}</option>
                   <option value="rejected">{t('common.avslaatt')}</option>
                   <option value="returned">{t('common.returnert_for_utfyllende_info')}</option>
                 </Select>

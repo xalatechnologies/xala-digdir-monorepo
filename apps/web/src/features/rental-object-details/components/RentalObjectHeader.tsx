@@ -93,7 +93,7 @@ export function RentalObjectHeader({
           data-size="lg"
           style={{
             margin: 0,
-            lineHeight: 1.2,
+            lineHeight: 'var(--ds-line-height-sm)',
             flex: 1,
             minWidth: '280px',
           }}

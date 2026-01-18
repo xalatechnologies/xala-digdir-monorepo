@@ -119,10 +119,10 @@ export function TranslationsPage(): React.ReactElement {
             </Paragraph>
           </div>
           <div style={{ display: 'flex', gap: 'var(--ds-spacing-2)' }}>
-            <Button variant="secondary" onClick={() => setShowExportDialog(true)}>
+            <Button variant="secondary" onClick={() => setShowExportDialog(true)} type="button">
               {t('common.export')}
             </Button>
-            <Button>
+            <Button type="button">
               {t('saasAdmin.translations.importJson')}
             </Button>
           </div>
@@ -215,7 +215,7 @@ export function TranslationsPage(): React.ReactElement {
                       fontSize: 'var(--ds-font-size-sm)',
                       backgroundColor: 'var(--ds-color-neutral-background-subtle)',
                       padding: '2px 6px',
-                      borderRadius: '4px',
+                      borderRadius: 'var(--ds-border-radius-sm)',
                     }}>
                       {translation.key}
                     </code>
@@ -233,7 +233,7 @@ export function TranslationsPage(): React.ReactElement {
                     </Tag>
                   </Table.Cell>
                   <Table.Cell>
-                    <Button variant="tertiary" size="sm">
+                    <Button variant="tertiary" size="sm" type="button">
                       {t('action.edit')}
                     </Button>
                   </Table.Cell>
@@ -269,10 +269,10 @@ export function TranslationsPage(): React.ReactElement {
             justifyContent: 'flex-end', 
             gap: 'var(--ds-spacing-3)' 
           }}>
-            <Button variant="secondary" onClick={() => setShowExportDialog(false)}>
+            <Button variant="secondary" onClick={() => setShowExportDialog(false)} type="button">
               {t('action.cancel')}
             </Button>
-            <Button onClick={handleExport}>
+            <Button onClick={handleExport} type="button">
               {t('common.export')}
             </Button>
           </div>

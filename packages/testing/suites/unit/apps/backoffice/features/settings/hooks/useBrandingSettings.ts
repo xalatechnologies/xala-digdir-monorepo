@@ -163,7 +163,7 @@ export function useBrandingSettings(options: UseBrandingSettingsOptions = {}) {
       backgroundColor: color,
       width: '32px',
       height: '32px',
-      borderRadius: '4px',
+      borderRadius: 'var(--ds-border-radius-sm)',
       border: '1px solid var(--ds-color-neutral-border-default)',
     };
   }, []);

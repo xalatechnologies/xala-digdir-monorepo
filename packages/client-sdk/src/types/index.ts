@@ -223,3 +223,11 @@ export type {
   ShareLink,
   CreateShareLinkDTO,
 } from './additional';
+
+// Navigation types (admin menu)
+export type {
+  AdminMenuItem,
+  CurrentUser,
+  NavigationResponse,
+  NavigationApiResponse,
+} from './navigation';

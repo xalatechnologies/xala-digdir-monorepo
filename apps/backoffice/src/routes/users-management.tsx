@@ -8,7 +8,7 @@
  * - Invite users
  */
 
-/* eslint-disable digdir/prefer-ds-components, digdir/no-hardcoded-typography -- Form with native HTML elements */
+/* eslint-disable digdir/prefer-ds-components -- Form with native HTML elements */
 
 import { useState, useEffect } from 'react';
 import {
@@ -150,14 +150,12 @@ export function UsersManagementPage() {
                 type="email"
                 value={inviteEmail}
                 onChange={(e) => setInviteEmail(e.target.value)}
-                placeholder="bruker@kommune.no"
+                placeholder={t('backoffice.placeholder.brukerkommuneno')}
                 style={{ width: '100%' }}
               />
             </div>
             <div>
-              <label style={{ display: 'block', marginBottom: 'var(--ds-spacing-2)', fontSize: 'var(--ds-font-size-sm)', fontWeight: 'var(--ds-font-weight-medium)' }}>
-                Rolle
-              </label>
+              <label style={{ display: 'block', marginBottom: 'var(--ds-spacing-2)', fontSize: 'var(--ds-font-size-sm)', fontWeight: 'var(--ds-font-weight-medium)' }}>{t('backoffice.text.role')}</label>
               <Select
                 value={inviteRole}
                 onChange={(e) => setInviteRole(e.target.value)}
@@ -188,17 +186,17 @@ export function UsersManagementPage() {
         gap: 'var(--ds-spacing-4)',
       }}>
         <Card style={{ padding: 'var(--ds-spacing-4)' }}>
-          <Paragraph data-size="sm" style={{ color: 'var(--ds-color-neutral-text-subtle)', margin: 0 }}>Totalt</Paragraph>
+          <Paragraph data-size="sm" style={{ color: 'var(--ds-color-neutral-text-subtle)', margin: 0 }}>{t('backoffice.text.totalt')}</Paragraph>
           <Heading level={2} data-size="xl" style={{ margin: 0 }}>{mockUsers.length}</Heading>
         </Card>
         <Card style={{ padding: 'var(--ds-spacing-4)' }}>
-          <Paragraph data-size="sm" style={{ color: 'var(--ds-color-neutral-text-subtle)', margin: 0 }}>Aktive</Paragraph>
+          <Paragraph data-size="sm" style={{ color: 'var(--ds-color-neutral-text-subtle)', margin: 0 }}>{t('backoffice.status.aktive')}</Paragraph>
           <Heading level={2} data-size="xl" style={{ margin: 0, color: 'var(--ds-color-success-text-default)' }}>
             {mockUsers.filter(u => u.status === 'active').length}
           </Heading>
         </Card>
         <Card style={{ padding: 'var(--ds-spacing-4)' }}>
-          <Paragraph data-size="sm" style={{ color: 'var(--ds-color-neutral-text-subtle)', margin: 0 }}>Administratorer</Paragraph>
+          <Paragraph data-size="sm" style={{ color: 'var(--ds-color-neutral-text-subtle)', margin: 0 }}>{t('backoffice.text.administratorer')}</Paragraph>
           <Heading level={2} data-size="xl" style={{ margin: 0 }}>
             {mockUsers.filter(u => u.role === 'admin').length}
           </Heading>
@@ -216,7 +214,7 @@ export function UsersManagementPage() {
             <Table.Head>
               <Table.Row>
                 <Table.HeaderCell>Bruker</Table.HeaderCell>
-                <Table.HeaderCell>Rolle</Table.HeaderCell>
+                <Table.HeaderCell>{t('backoffice.text.role')}</Table.HeaderCell>
                 <Table.HeaderCell>Status</Table.HeaderCell>
                 <Table.HeaderCell>{t('common.sist_innlogget')}</Table.HeaderCell>
                 <Table.HeaderCell style={{ width: '160px' }}>Handlinger</Table.HeaderCell>

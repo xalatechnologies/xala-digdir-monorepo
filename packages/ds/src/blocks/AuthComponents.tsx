@@ -205,7 +205,7 @@ export function NotFoundScreen({
           margin: 0,
           fontSize: '6rem',
           fontWeight: 'var(--ds-font-weight-bold)',
-          lineHeight: 1,
+          lineHeight: 'var(--ds-line-height-sm)',
         }}
       >
         404

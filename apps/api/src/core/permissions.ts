@@ -48,6 +48,27 @@ export const PERMISSIONS = {
   PRICING_GROUPS_MANAGE: 'pricing_groups:manage',
   
   // ========================================================================
+  // ADMIN NAVIGATION (Backoffice Menu Items)
+  // ========================================================================
+  ADMIN_DASHBOARD_VIEW: 'admin:dashboard:view',
+  ADMIN_ADMINISTRASJON_VIEW: 'admin:administrasjon:view',
+  ADMIN_UTLEIEOBJEKTER_VIEW: 'admin:utleieobjekter:view',
+  ADMIN_PRISGRUPPER_VIEW: 'admin:prisgrupper:view',
+  ADMIN_BOOKINGER_VIEW: 'admin:bookinger:view',
+  ADMIN_KALENDER_VIEW: 'admin:kalender:view',
+  ADMIN_SESONGLEIE_VIEW: 'admin:sesongleie:view',
+  ADMIN_BRUKERE_VIEW: 'admin:brukere:view',
+  ADMIN_MELDINGER_VIEW: 'admin:meldinger:view',
+  ADMIN_MELDINGSMALER_VIEW: 'admin:meldingsmaler:view',
+  ADMIN_SYSTEM_VIEW: 'admin:system:view',
+  ADMIN_OKONOMI_VIEW: 'admin:okonomi:view',
+  ADMIN_RAPPORTER_VIEW: 'admin:rapporter:view',
+  ADMIN_AUDITLOG_VIEW: 'admin:auditlog:view',
+  ADMIN_ANMELDELSER_VIEW: 'admin:anmeldelser:view',
+  ADMIN_INNSTILLINGER_VIEW: 'admin:innstillinger:view',
+  ADMIN_HJELP_VIEW: 'admin:hjelp:view',
+  
+  // ========================================================================
   // BOOKINGS
   // ========================================================================
   BOOKINGS_READ: 'bookings:read',
@@ -303,6 +324,25 @@ export const ROLE_PERMISSIONS = {
     
     // Moderation
     PERMISSIONS.MODERATION_FLAGS_REVIEW,
+    
+    // Admin Navigation (Backoffice Menu)
+    PERMISSIONS.ADMIN_DASHBOARD_VIEW,
+    PERMISSIONS.ADMIN_ADMINISTRASJON_VIEW,
+    PERMISSIONS.ADMIN_UTLEIEOBJEKTER_VIEW,
+    PERMISSIONS.ADMIN_PRISGRUPPER_VIEW,
+    PERMISSIONS.ADMIN_BOOKINGER_VIEW,
+    PERMISSIONS.ADMIN_KALENDER_VIEW,
+    PERMISSIONS.ADMIN_SESONGLEIE_VIEW,
+    PERMISSIONS.ADMIN_BRUKERE_VIEW,
+    PERMISSIONS.ADMIN_MELDINGER_VIEW,
+    PERMISSIONS.ADMIN_MELDINGSMALER_VIEW,
+    PERMISSIONS.ADMIN_SYSTEM_VIEW,
+    PERMISSIONS.ADMIN_OKONOMI_VIEW,
+    PERMISSIONS.ADMIN_RAPPORTER_VIEW,
+    PERMISSIONS.ADMIN_AUDITLOG_VIEW,
+    PERMISSIONS.ADMIN_ANMELDELSER_VIEW,
+    PERMISSIONS.ADMIN_INNSTILLINGER_VIEW,
+    PERMISSIONS.ADMIN_HJELP_VIEW,
     
     // Feature Flags
     PERMISSIONS.FEATURE_FLAGS_READ,

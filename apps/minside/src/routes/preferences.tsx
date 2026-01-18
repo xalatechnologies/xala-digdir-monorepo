@@ -185,14 +185,14 @@ export function UserPreferencesPage() {
         </Heading>
         <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr', gap: 'var(--ds-spacing-4)' }}>
           <div>
-            <label style={{ display: 'block', marginBottom: 'var(--ds-spacing-2)', fontWeight: 500 }}>Tema</label>
+            <label style={{ display: 'block', marginBottom: 'var(--ds-spacing-2)', fontWeight: 500 }}>{t('minside.text.tema')}</label>
             <Select
               value={prefs.theme}
               onChange={(e) => updatePref('theme', e.target.value)}
               style={{ width: '100%' }}
             >
               <option value="system">{t('common.folg_system')}</option>
-              <option value="light">Lyst</option>
+              <option value="light">{t('minside.text.lyst')}</option>
               <option value="dark">{t('common.morkt')}</option>
             </Select>
           </div>
@@ -203,8 +203,8 @@ export function UserPreferencesPage() {
               onChange={(e) => updatePref('language', e.target.value)}
               style={{ width: '100%' }}
             >
-              <option value="no">Norsk</option>
-              <option value="en">English</option>
+              <option value="no">{t('minside.text.norsk')}</option>
+              <option value="en">{t('minside.text.english')}</option>
             </Select>
           </div>
         </div>

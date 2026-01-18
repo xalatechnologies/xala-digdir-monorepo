@@ -28,7 +28,7 @@ export function CloneSelectionStep({ onSelect }: CloneSelectionStepProps) {
               {t('rentalObjects.clone.description')}
             </Paragraph>
           </div>
-          <Button variant="tertiary" onClick={() => setShowCloneSelector(false)}>
+          <Button variant="tertiary" onClick={() => setShowCloneSelector(false)} type="button">
             {t('action.cancel')}
           </Button>
         </div>

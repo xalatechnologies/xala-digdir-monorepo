@@ -236,7 +236,7 @@ export function Sidebar() {
             className={styles.logoImage}
           />
           <div>
-            <div className={styles.brandName}>DIGILIST</div>
+            <div className={styles.brandName}>{t('saasAdmin.text.digilist')}</div>
             <div className={styles.brandTagline}>
               {t('saasAdmin.brand.tagline')}
             </div>

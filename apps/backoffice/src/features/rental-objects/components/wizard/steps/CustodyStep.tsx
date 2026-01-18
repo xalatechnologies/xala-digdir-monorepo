@@ -100,11 +100,11 @@ export function CustodyStep({ wizard }: CustodyStepProps) {
             <table style={{ width: '100%', borderCollapse: 'collapse' }}>
               <thead>
                 <tr style={{ textAlign: 'left', borderBottom: '1px solid var(--ds-color-neutral-border-subtle)', backgroundColor: 'var(--ds-color-neutral-surface-subtle)' }}>
-                  <th style={{ padding: 'var(--ds-spacing-3) var(--ds-spacing-4)' }}>Grantee</th>
-                  <th style={{ padding: 'var(--ds-spacing-3) var(--ds-spacing-4)' }}>Type</th>
-                  <th style={{ padding: 'var(--ds-spacing-3) var(--ds-spacing-4)' }}>Scopes</th>
-                  <th style={{ padding: 'var(--ds-spacing-3) var(--ds-spacing-4)' }}>Status</th>
-                  <th style={{ padding: 'var(--ds-spacing-3) var(--ds-spacing-4)', textAlign: 'right' }}>Actions</th>
+                  <th style={{ padding: 'var(--ds-spacing-3) var(--ds-spacing-4)' }}>{t('backoffice.text.grantee')}</th>
+                  <th style={{ padding: 'var(--ds-spacing-3) var(--ds-spacing-4)' }}>{t('backoffice.text.type')}</th>
+                  <th style={{ padding: 'var(--ds-spacing-3) var(--ds-spacing-4)' }}>{t('backoffice.text.scopes')}</th>
+                  <th style={{ padding: 'var(--ds-spacing-3) var(--ds-spacing-4)' }}>{t('backoffice.text.status')}</th>
+                  <th style={{ padding: 'var(--ds-spacing-3) var(--ds-spacing-4)', textAlign: 'right' }}>{t('backoffice.text.actions')}</th>
                 </tr>
               </thead>
               <tbody>
@@ -202,7 +202,7 @@ export function CustodyStep({ wizard }: CustodyStepProps) {
               </div>
 
               <div>
-                <label style={{ display: 'block', marginBottom: 'var(--ds-spacing-1)', fontSize: 'var(--ds-font-size-sm)' }}>Scopes</label>
+                <label style={{ display: 'block', marginBottom: 'var(--ds-spacing-1)', fontSize: 'var(--ds-font-size-sm)' }}>{t('backoffice.text.scopes')}</label>
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 'var(--ds-spacing-2)' }}>
                   {['RO_VIEW', 'RO_EDIT', 'RO_BOOKING_MANAGE', 'RO_MAINTENANCE', 'RO_MEDIA', 'RO_PRICING', 'RO_REPORTING', 'RO_DELEGATE'].map(scope => (
                     <label key={scope} style={{ display: 'flex', alignItems: 'center', gap: 'var(--ds-spacing-2)', fontSize: 'var(--ds-font-size-sm)' }}>
@@ -236,7 +236,7 @@ export function CustodyStep({ wizard }: CustodyStepProps) {
               )}
 
               <div style={{ display: 'flex', gap: 'var(--ds-spacing-2)', justifyContent: 'flex-end', marginTop: 'var(--ds-spacing-4)' }}>
-                <Button type="button" variant="secondary" onClick={() => setIsModalOpen(false)}>Cancel</Button>
+                <Button type="button" variant="secondary" onClick={() => setIsModalOpen(false)}>{t('backoffice.text.cancel')}</Button>
                 <Button
                   type="button"
                   variant="primary"

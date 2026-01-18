@@ -159,7 +159,7 @@ export function BookingVisibilitySelector({
           gap: 'var(--ds-spacing-2)',
         }}
       >
-        <legend className="sr-only">Velg kalendersynlighet</legend>
+        <legend className="sr-only">{t('common.text.velgKalendersynlighet')}</legend>
 
         {visibilityOptions.map((option) => {
           const isSelected = value === option.value;

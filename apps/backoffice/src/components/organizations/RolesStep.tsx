@@ -310,7 +310,7 @@ export function RolesStep({ actorType = 'municipality', selectedRoles = ['admin'
           <ul style={{ margin: 0, paddingLeft: 'var(--ds-spacing-4)', color: 'var(--ds-color-info-text-default)' }}>
             <li><Paragraph data-size="xs" style={{ margin: 0 }}>Administrator-rollen er påkrevd og gir full tilgang til organisasjonen</Paragraph></li>
             <li><Paragraph data-size="xs" style={{ margin: 0 }}>Standard-rollen tildeles automatisk til nye medlemmer</Paragraph></li>
-            <li><Paragraph data-size="xs" style={{ margin: 0 }}>Du kan tilpasse roller og tillatelser senere i innstillingene</Paragraph></li>
+            <li><Paragraph data-size="xs" style={{ margin: 0 }}>{t('organizations.text.duKanTilpasseRollerOgTillatelserSenereIInnstillingene')}</Paragraph></li>
           </ul>
         </div>
       </div>

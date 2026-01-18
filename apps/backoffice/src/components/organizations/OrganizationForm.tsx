@@ -144,7 +144,7 @@ export function OrganizationForm({ organization, onSubmit, onCancel }: Organizat
                 value={formData.name}
                 onChange={(e) => handleChange('name')(e.target.value)}
                 placeholder={t('common.feks_oslo_idrettslag')}
-                aria-label="Navn"
+                aria-label={t('organizations.ariaLabel.name')}
               />
             </FormField>
 
@@ -174,7 +174,7 @@ export function OrganizationForm({ organization, onSubmit, onCancel }: Organizat
                 value={formData.organizationNumber || ''}
                 onChange={(e) => handleChange('organizationNumber')(e.target.value)}
                 placeholder="123456789"
-                aria-label="Organisasjonsnummer"
+                aria-label={t('organizations.ariaLabel.organisasjonsnummer')}
                 maxLength={9}
               />
             </FormField>
@@ -182,7 +182,7 @@ export function OrganizationForm({ organization, onSubmit, onCancel }: Organizat
         </FormSection>
 
         {/* Contact Information */}
-        <FormSection title="Kontaktinformasjon">
+        <FormSection title={t('organizations.title.kontaktinformasjon')}>
           <Stack spacing={4}>
             <FormField
               label={t('label.email')}
@@ -193,7 +193,7 @@ export function OrganizationForm({ organization, onSubmit, onCancel }: Organizat
                 type="email"
                 value={formData.email || ''}
                 onChange={(e) => handleChange('email')(e.target.value)}
-                placeholder="kontakt@organisasjon.no"
+                placeholder={t('organizations.placeholder.kontaktorganisasjonno')}
                 aria-label={t('label.email')}
               />
             </FormField>
@@ -207,14 +207,14 @@ export function OrganizationForm({ organization, onSubmit, onCancel }: Organizat
                 value={formData.phone || ''}
                 onChange={(e) => handleChange('phone')(e.target.value)}
                 placeholder="+47 12 34 56 78"
-                aria-label="Telefon"
+                aria-label={t('organizations.ariaLabel.phone')}
               />
             </FormField>
           </Stack>
         </FormSection>
 
         {/* Address */}
-        <FormSection title="Adresse">
+        <FormSection title={t('organizations.title.address')}>
           <Stack spacing={4}>
             <FormField
               label="Gateadresse"
@@ -223,8 +223,8 @@ export function OrganizationForm({ organization, onSubmit, onCancel }: Organizat
               <Textfield
                 value={formData.address || ''}
                 onChange={(e) => handleChange('address')(e.target.value)}
-                placeholder="Gateadresse"
-                aria-label="Gateadresse"
+                placeholder={t('organizations.placeholder.gateadresse')}
+                aria-label={t('organizations.ariaLabel.gateadresse')}
               />
             </FormField>
 
@@ -237,7 +237,7 @@ export function OrganizationForm({ organization, onSubmit, onCancel }: Organizat
                   value={formData.postalCode || ''}
                   onChange={(e) => handleChange('postalCode')(e.target.value)}
                   placeholder="0001"
-                  aria-label="Postnummer"
+                  aria-label={t('organizations.ariaLabel.postnummer')}
                   maxLength={4}
                 />
               </FormField>
@@ -246,8 +246,8 @@ export function OrganizationForm({ organization, onSubmit, onCancel }: Organizat
                 <Textfield
                   value={formData.city || ''}
                   onChange={(e) => handleChange('city')(e.target.value)}
-                  placeholder="Oslo"
-                  aria-label="Poststed"
+                  placeholder={t('organizations.placeholder.oslo')}
+                  aria-label={t('organizations.ariaLabel.poststed')}
                 />
               </FormField>
             </div>

@@ -350,12 +350,12 @@ export function RequestsPage() {
           <Table>
             <Table.Head>
               <Table.Row>
-                <Table.HeaderCell style={{ width: '80px' }}>Prioritet</Table.HeaderCell>
+                <Table.HeaderCell style={{ width: '80px' }}>{t('backoffice.text.prioritet')}</Table.HeaderCell>
                 <Table.HeaderCell>{t('common.soker')}</Table.HeaderCell>
-                <Table.HeaderCell>Lokale</Table.HeaderCell>
-                <Table.HeaderCell>Tidsrom</Table.HeaderCell>
-                <Table.HeaderCell>Opprettet</Table.HeaderCell>
-                <Table.HeaderCell>Tildelt</Table.HeaderCell>
+                <Table.HeaderCell>{t('backoffice.text.lokale')}</Table.HeaderCell>
+                <Table.HeaderCell>{t('backoffice.text.tidsrom')}</Table.HeaderCell>
+                <Table.HeaderCell>{t('backoffice.text.opprettet')}</Table.HeaderCell>
+                <Table.HeaderCell>{t('backoffice.text.tildelt')}</Table.HeaderCell>
                 <Table.HeaderCell style={{ width: '160px' }}>Handlinger</Table.HeaderCell>
               </Table.Row>
             </Table.Head>
@@ -421,7 +421,7 @@ export function RequestsPage() {
                         variant="primary"
                        
                         onClick={() => handleApprove(request.id)}
-                        title="Godkjenn" type="button"
+                        title={t('backoffice.title.approve')} type="button"
                       >
                         <CheckCircleIcon />
                       </Button>
@@ -435,7 +435,7 @@ export function RequestsPage() {
                       </Button>
                       <Dropdown>
                         <Dropdown.Trigger asChild>
-                          <Button variant="tertiary" data-size="sm" aria-label="Flere valg" type="button">
+                          <Button variant="tertiary" data-size="sm" aria-label={t('backoffice.ariaLabel.flereValg')} type="button">
                             <MoreVerticalIcon />
                           </Button>
                         </Dropdown.Trigger>

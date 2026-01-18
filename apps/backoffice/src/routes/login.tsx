@@ -18,12 +18,8 @@ import { idportenService } from '@digilist/client-sdk';
 import { useT } from '@xala/i18n';
 
 export interface FlowContextNavigationState {
-  flowContext: {
-    returnTo: string;
-    tenantId?: string;
-    correlationId?: string;
-    [key: string]: any;
-  };
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  flowContext: any;
   isFlowRestoration: boolean;
 }
 
@@ -70,10 +66,12 @@ export function LoginPage(): React.ReactElement {
       if (result.hasContext && result.flowContext) {
         flowRestorationProcessed.current = true;
         const navigationState: FlowContextNavigationState = {
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
           flowContext: result.flowContext as any,
           isFlowRestoration: true,
         };
-        navigate((result.flowContext as any).returnTo, {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        navigate((result.flowContext as any).returnPath, {
           replace: true,
           state: navigationState,
         });
@@ -129,8 +127,8 @@ export function LoginPage(): React.ReactElement {
   };
 
   const panelConfig = {
-    title: t('auth.backoffice'),
-    subtitle: t('auth.adminPortal'),
+    title: '',
+    subtitle: 'BACKOFFICE',
     description: t('auth.backofficeDesc'),
     features: [
       {
@@ -161,7 +159,16 @@ export function LoginPage(): React.ReactElement {
   return (
     <>
       {authError && (
-        <div style={{ margin: '1rem', padding: '1rem', background: '#fee', border: '1px solid #fcc', borderRadius: '4px' }}>
+        <div
+          style={{
+            margin: 'var(--ds-spacing-6)',
+            padding: 'var(--ds-spacing-4)',
+            backgroundColor: 'var(--ds-color-danger-background-subtle)',
+            border: '1px solid var(--ds-color-danger-border-default)',
+            borderRadius: 'var(--ds-border-radius-sm)',
+            color: 'var(--ds-color-danger-text-default)',
+          }}
+        >
           {t('auth.loginFailed')}: {authError}
         </div>
       )}

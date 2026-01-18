@@ -26,6 +26,19 @@ echo "  DATABASE_URL: postgresql://localhost:5433/digilist_dev"
 echo "  REDIS_URL: redis://localhost:6380"
 echo ""
 
+# Force kill any processes on required ports
+echo "🧹 Cleaning up ports..."
+PORTS=(4000 6001 6002 6003 6004 6005 6006)
+for PORT in "${PORTS[@]}"; do
+  PID=$(lsof -ti:$PORT 2>/dev/null || true)
+  if [ ! -z "$PID" ]; then
+    echo "  Killing process on port $PORT (PID: $PID)"
+    kill -9 $PID 2>/dev/null || true
+  fi
+done
+echo "✅ Ports cleaned"
+echo ""
+
 # Start Docker services (PostgreSQL & Redis)
 echo "📦 Starting Docker services..."
 cd infra/docker/compose

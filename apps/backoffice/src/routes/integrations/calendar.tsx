@@ -63,9 +63,9 @@ function formatTimestamp(timestamp: string): string {
 function getStatusBadge(status: CalendarSend['status']): React.ReactElement {
   switch (status) {
     case 'sent':
-      return <Badge color="success">Sendt</Badge>;
+      return <Badge color="success">{t('integrations.text.sendt')}</Badge>;
     case 'failed':
-      return <Badge color="danger">Feilet</Badge>;
+      return <Badge color="danger">{t('integrations.text.failed')}</Badge>;
     case 'pending':
     default:
       return <Badge color="warning">{t("status.pending")}</Badge>;
@@ -150,7 +150,7 @@ export function CalendarIntegrationPage(): React.ReactElement {
                 <CalendarIcon style={{ width: 24, height: 24 }} />
                 <Heading level={1} data-size="lg">Microsoft Outlook - Kalender</Heading>
                 {isConnected ? (
-                  <Badge color="success">Tilkoblet</Badge>
+                  <Badge color="success">{t('integrations.text.tilkoblet')}</Badge>
                 ) : (
                   <Badge color="neutral">{t('common.ikke_tilkoblet')}</Badge>
                 )}
@@ -220,7 +220,7 @@ export function CalendarIntegrationPage(): React.ReactElement {
             <Stack spacing={4}>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                 <div>
-                  <Heading level={3} data-size="sm">Ressurskalender</Heading>
+                  <Heading level={3} data-size="sm">{t('integrations.text.ressurskalender')}</Heading>
                   <Paragraph data-size="sm" style={{ color: 'var(--ds-color-neutral-text-subtle)', margin: 0 }}>
                     Bruk kommunens ressurskalender (kun lesing)
                   </Paragraph>
@@ -253,7 +253,7 @@ export function CalendarIntegrationPage(): React.ReactElement {
         <Card>
           <Stack spacing={4}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-              <Heading level={3} data-size="sm">Siste utsendelser</Heading>
+              <Heading level={3} data-size="sm">{t('integrations.text.sisteUtsendelser')}</Heading>
               <div style={{ display: 'flex', gap: 'var(--ds-spacing-3)' }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--ds-spacing-1)' }}>
                   <CheckCircleIcon style={{ color: 'var(--ds-color-success-icon-default)', width: 16, height: 16 }} />
@@ -269,11 +269,11 @@ export function CalendarIntegrationPage(): React.ReactElement {
             <Table>
               <thead>
                 <tr>
-                  <th>Type</th>
-                  <th>Mottaker</th>
-                  <th>Booking</th>
-                  <th>Status</th>
-                  <th>Tidspunkt</th>
+                  <th>{t('integrations.text.type')}</th>
+                  <th>{t('integrations.text.mottaker')}</th>
+                  <th>{t('integrations.text.booking')}</th>
+                  <th>{t('integrations.text.status')}</th>
+                  <th>{t('integrations.text.tidspunkt')}</th>
                 </tr>
               </thead>
               <tbody>

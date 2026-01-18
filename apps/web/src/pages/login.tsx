@@ -2,7 +2,7 @@
  * Login Page - Web App
  * Uses centralized LoginPage component with webAuthConfig
  */
-import { useEffect, useCallback, useRef, useState } from 'react';
+import { useEffect, useCallback, useRef } from 'react';
 import { useNavigate, useLocation, useSearchParams } from 'react-router-dom';
 import { LoginPage } from '@xala/ds';
 import { webAuthConfig } from '@xala/auth';
@@ -10,15 +10,10 @@ import {
   PlatformIcon,
   AutomationIcon,
   ShieldCheckIcon,
-  IdPortenIcon,
-  VippsIcon,
-  MicrosoftIcon,
-  KeyIcon,
 } from '@xala/ds';
 import { useAuth } from '../hooks/useAuth';
 import { useDemoLogin } from '../hooks/useDemoLogin';
 import { idportenService } from '@digilist/client-sdk';
-import type { FlowContext } from '@digilist/client-sdk';
 import { useT } from '@xala/i18n';
 
 /**
@@ -29,7 +24,7 @@ export interface FlowContextNavigationState {
     returnTo: string;
     tenantId?: string;
     correlationId?: string;
-    [key: string]: any;
+    [key: string]: unknown;
   };
   isFlowRestoration: boolean;
 }
@@ -83,9 +78,11 @@ export function Login(): React.ReactElement {
       if (result.hasContext && result.flowContext) {
         flowRestorationProcessed.current = true;
         const navigationState: FlowContextNavigationState = {
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
           flowContext: result.flowContext as any,
           isFlowRestoration: true,
         };
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         navigate((result.flowContext as any).returnTo, {
           replace: true,
           state: navigationState,

@@ -163,9 +163,9 @@ export function BrandingEditorPage() {
             <RefreshCwIcon />
             Tilbakestill
           </Button>
-          <Button onClick={handleSave} disabled={isSaving || !hasChanges}>
+          <Button onClick={handleSave} disabled={isSaving || !hasChanges} type="button">
             {isSaving ? (
-              <Spinner size="sm" aria-label="Lagrer..." />
+              <Spinner size="sm" aria-label={t('saasAdmin.ariaLabel.lagrer')} />
             ) : (
               <>
                 <SaveIcon />
@@ -268,7 +268,7 @@ export function BrandingEditorPage() {
                 <Textfield
                   value={branding.logoUrl}
                   onChange={(e) => handleColorChange('logoUrl', e.target.value)}
-                  placeholder="https://example.com/logo.svg"
+                  placeholder={t('saasAdmin.placeholder.httpsexamplecomlogosvg')}
                 />
                 <Paragraph size="xs" style={{ marginTop: 'var(--ds-spacing-1)', color: 'var(--ds-color-neutral-text-subtle)' }}>
                   Anbefalt: SVG eller PNG med gjennomsiktig bakgrunn
@@ -282,7 +282,7 @@ export function BrandingEditorPage() {
                 <Textfield
                   value={branding.faviconUrl}
                   onChange={(e) => handleColorChange('faviconUrl', e.target.value)}
-                  placeholder="https://example.com/favicon.ico"
+                  placeholder={t('saasAdmin.placeholder.httpsexamplecomfaviconico')}
                 />
               </div>
             </div>
@@ -385,7 +385,7 @@ export function BrandingEditorPage() {
                       color: 'white',
                       border: 'none',
                       padding: '8px 16px',
-                      borderRadius: '4px',
+                      borderRadius: 'var(--ds-border-radius-sm)',
                       cursor: 'pointer',
                     }}
                   >
@@ -398,7 +398,7 @@ export function BrandingEditorPage() {
                       color: 'white',
                       border: 'none',
                       padding: '8px 16px',
-                      borderRadius: '4px',
+                      borderRadius: 'var(--ds-border-radius-sm)',
                       cursor: 'pointer',
                     }}
                   >
@@ -411,7 +411,7 @@ export function BrandingEditorPage() {
                       color: branding.accentColor,
                       border: `1px solid ${branding.accentColor}`,
                       padding: '8px 16px',
-                      borderRadius: '4px',
+                      borderRadius: 'var(--ds-border-radius-sm)',
                       cursor: 'pointer',
                     }}
                   >

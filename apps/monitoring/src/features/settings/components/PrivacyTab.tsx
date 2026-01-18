@@ -193,7 +193,7 @@ export function PrivacyTab() {
               <Switch
                 checked={consentSettings.analytics}
                 onChange={(e) => handleUpdateConsents('analytics', e.target.checked)}
-                aria-label="Analyse"
+                aria-label={t('settings.ariaLabel.analyse')}
               />
             </div>
 

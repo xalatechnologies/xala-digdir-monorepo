@@ -116,16 +116,16 @@ export function AdminReportsPage() {
           alignItems: isMobile ? 'stretch' : 'flex-end',
         }}>
           <div style={{ flex: 1 }}>
-            <label style={{ display: 'block', marginBottom: 'var(--ds-spacing-2)', fontSize: 'var(--ds-font-size-sm)', fontWeight: 'var(--ds-font-weight-medium)' }}>Rapporttype</label>
+            <label style={{ display: 'block', marginBottom: 'var(--ds-spacing-2)', fontSize: 'var(--ds-font-size-sm)', fontWeight: 'var(--ds-font-weight-medium)' }}>{t('backoffice.text.rapporttype')}</label>
             <Select
               value={reportType}
               onChange={(e) => setReportType(e.target.value as typeof reportType)}
               style={{ width: '100%' }}
             >
               <option value="overview">{t("ui.overview")}</option>
-              <option value="bookings">Bookinger</option>
-              <option value="revenue">Inntekter</option>
-              <option value="listings">Lokaler</option>
+              <option value="bookings">{t('backoffice.text.bookings')}</option>
+              <option value="revenue">{t('backoffice.text.inntekter')}</option>
+              <option value="listings">{t('backoffice.text.lokaler')}</option>
             </Select>
           </div>
           <div style={{ flex: 1 }}>
@@ -149,25 +149,25 @@ export function AdminReportsPage() {
         gap: 'var(--ds-spacing-4)',
       }}>
         <Card style={{ padding: 'var(--ds-spacing-4)' }}>
-          <Paragraph data-size="sm" style={{ color: 'var(--ds-color-neutral-text-subtle)', margin: 0 }}>Totalt bookinger</Paragraph>
+          <Paragraph data-size="sm" style={{ color: 'var(--ds-color-neutral-text-subtle)', margin: 0 }}>{t('backoffice.text.totaltBookinger')}</Paragraph>
           <Heading level={2} data-size="xl" style={{ margin: 0 }}>{mockReports.bookings.total.toLocaleString()}</Heading>
           <Paragraph data-size="xs" style={{ margin: 0, marginTop: 'var(--ds-spacing-1)', color: 'var(--ds-color-success-text-default)' }}>
             +{mockReports.bookings.growth}% fra forrige periode
           </Paragraph>
         </Card>
         <Card style={{ padding: 'var(--ds-spacing-4)' }}>
-          <Paragraph data-size="sm" style={{ color: 'var(--ds-color-neutral-text-subtle)', margin: 0 }}>Ventende</Paragraph>
+          <Paragraph data-size="sm" style={{ color: 'var(--ds-color-neutral-text-subtle)', margin: 0 }}>{t('backoffice.text.ventende')}</Paragraph>
           <Heading level={2} data-size="xl" style={{ margin: 0, color: 'var(--ds-color-warning-text-default)' }}>{mockReports.bookings.pending}</Heading>
         </Card>
         <Card style={{ padding: 'var(--ds-spacing-4)' }}>
-          <Paragraph data-size="sm" style={{ color: 'var(--ds-color-neutral-text-subtle)', margin: 0 }}>Total omsetning</Paragraph>
+          <Paragraph data-size="sm" style={{ color: 'var(--ds-color-neutral-text-subtle)', margin: 0 }}>{t('backoffice.text.totalOmsetning')}</Paragraph>
           <Heading level={2} data-size="xl" style={{ margin: 0 }}>{formatCurrency(mockReports.revenue.total)}</Heading>
           <Paragraph data-size="xs" style={{ margin: 0, marginTop: 'var(--ds-spacing-1)', color: 'var(--ds-color-success-text-default)' }}>
             +{mockReports.revenue.growth}%
           </Paragraph>
         </Card>
         <Card style={{ padding: 'var(--ds-spacing-4)' }}>
-          <Paragraph data-size="sm" style={{ color: 'var(--ds-color-neutral-text-subtle)', margin: 0 }}>Snitt per booking</Paragraph>
+          <Paragraph data-size="sm" style={{ color: 'var(--ds-color-neutral-text-subtle)', margin: 0 }}>{t('backoffice.text.snittPerBooking')}</Paragraph>
           <Heading level={2} data-size="xl" style={{ margin: 0 }}>{formatCurrency(mockReports.revenue.avgBookingValue)}</Heading>
         </Card>
       </div>
@@ -175,7 +175,7 @@ export function AdminReportsPage() {
       {/* Top Listings Table */}
       <Card style={{ padding: 0, overflow: 'hidden' }}>
         <div style={{ padding: 'var(--ds-spacing-4)', borderBottom: '1px solid var(--ds-color-neutral-border-subtle)' }}>
-          <Heading level={2} data-size="sm" style={{ margin: 0 }}>Topp lokaler</Heading>
+          <Heading level={2} data-size="sm" style={{ margin: 0 }}>{t('backoffice.text.toppLokaler')}</Heading>
         </div>
         {isLoading ? (
           <div style={{ display: 'flex', justifyContent: 'center', padding: 'var(--ds-spacing-8)' }}>
@@ -185,10 +185,10 @@ export function AdminReportsPage() {
           <Table>
             <Table.Head>
               <Table.Row>
-                <Table.HeaderCell>Lokale</Table.HeaderCell>
-                <Table.HeaderCell>Bookinger</Table.HeaderCell>
-                <Table.HeaderCell>Omsetning</Table.HeaderCell>
-                <Table.HeaderCell>Utnyttelse</Table.HeaderCell>
+                <Table.HeaderCell>{t('backoffice.text.lokale')}</Table.HeaderCell>
+                <Table.HeaderCell>{t('backoffice.text.bookings')}</Table.HeaderCell>
+                <Table.HeaderCell>{t('backoffice.text.omsetning')}</Table.HeaderCell>
+                <Table.HeaderCell>{t('backoffice.text.utnyttelse')}</Table.HeaderCell>
               </Table.Row>
             </Table.Head>
             <Table.Body>

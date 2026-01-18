@@ -343,7 +343,7 @@ export function RecurringBuilder({
         </Paragraph>
 
         <fieldset style={{ border: 'none', padding: 0, margin: 0 }}>
-          <legend className="sr-only">Velg avslutningstype</legend>
+          <legend className="sr-only">{t('common.text.velgAvslutningstype')}</legend>
 
           {/* After N occurrences */}
           <label

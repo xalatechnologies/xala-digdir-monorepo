@@ -110,7 +110,7 @@ export function ConflictViewer({ seasonId }: ConflictViewerProps) {
   if (isLoading) {
     return (
       <div style={{ display: 'flex', justifyContent: 'center', padding: 'var(--ds-spacing-8)' }}>
-        <Spinner data-size="lg" aria-label="Laster konflikter..." />
+        <Spinner data-size="lg" aria-label={t('seasons.ariaLabel.lasterKonflikter')} />
       </div>
     );
   }
@@ -185,10 +185,10 @@ export function ConflictViewer({ seasonId }: ConflictViewerProps) {
                   <Table.Row>
                     <Table.HeaderCell>{t('common.soknad_1')}</Table.HeaderCell>
                     <Table.HeaderCell>{t('common.soknad_2')}</Table.HeaderCell>
-                    <Table.HeaderCell>Ukedag</Table.HeaderCell>
-                    <Table.HeaderCell>Tidspunkt</Table.HeaderCell>
-                    <Table.HeaderCell>Type</Table.HeaderCell>
-                    <Table.HeaderCell>Alvorlighet</Table.HeaderCell>
+                    <Table.HeaderCell>{t('seasons.text.ukedag')}</Table.HeaderCell>
+                    <Table.HeaderCell>{t('seasons.text.tidspunkt')}</Table.HeaderCell>
+                    <Table.HeaderCell>{t('seasons.text.type')}</Table.HeaderCell>
+                    <Table.HeaderCell>{t('seasons.text.alvorlighet')}</Table.HeaderCell>
                   </Table.Row>
                 </Table.Head>
                 <Table.Body>

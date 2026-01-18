@@ -255,7 +255,7 @@ export function SettingsPage() {
   if (isLoadingUser) {
     return (
       <div style={{ display: 'flex', justifyContent: 'center', padding: 'var(--ds-spacing-8)' }}>
-        <Spinner data-size="lg" aria-label="Laster..." />
+        <Spinner data-size="lg" aria-label={t('monitoring.ariaLabel.laster')} />
       </div>
     );
   }
@@ -331,7 +331,7 @@ export function SettingsPage() {
               />
             )}
 
-            {/* eslint-disable-next-line digdir/prefer-ds-components -- Using div wrapper for ref on Tabs.List */}
+            { }
             <div
               ref={tabsListRef}
               style={{

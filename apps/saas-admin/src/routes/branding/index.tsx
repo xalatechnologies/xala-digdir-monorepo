@@ -117,11 +117,11 @@ export function BrandingListPage() {
         <Table>
           <Table.Head>
             <Table.Row>
-              <Table.HeaderCell>Tenant</Table.HeaderCell>
-              <Table.HeaderCell>Slug</Table.HeaderCell>
-              <Table.HeaderCell>Branding</Table.HeaderCell>
+              <Table.HeaderCell>{t('saasAdmin.text.tenant')}</Table.HeaderCell>
+              <Table.HeaderCell>{t('saasAdmin.text.slug')}</Table.HeaderCell>
+              <Table.HeaderCell>{t('saasAdmin.text.branding')}</Table.HeaderCell>
               <Table.HeaderCell>{t('common.primaerfarge')}</Table.HeaderCell>
-              <Table.HeaderCell>Handlinger</Table.HeaderCell>
+              <Table.HeaderCell>{t('saasAdmin.text.handlinger')}</Table.HeaderCell>
             </Table.Row>
           </Table.Head>
           <Table.Body>
@@ -137,9 +137,9 @@ export function BrandingListPage() {
                   </Table.Cell>
                   <Table.Cell>
                     {branding.hasCustomBranding ? (
-                      <Badge color="success">Egendefinert</Badge>
+                      <Badge color="success">{t('saasAdmin.text.egendefinert')}</Badge>
                     ) : (
-                      <Badge color="neutral">Standard</Badge>
+                      <Badge color="neutral">{t('saasAdmin.text.standard')}</Badge>
                     )}
                   </Table.Cell>
                   <Table.Cell>

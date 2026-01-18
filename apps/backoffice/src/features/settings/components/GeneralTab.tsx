@@ -55,7 +55,7 @@ export function GeneralTab() {
             >
               <option value="nb">{t('common.norsk_bokmaal')}</option>
               <option value="nn">{t('common.norsk_nynorsk')}</option>
-              <option value="en">English</option>
+              <option value="en">{t('settings.text.english')}</option>
             </Select>
           </FormField>
 

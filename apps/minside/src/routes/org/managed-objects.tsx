@@ -34,7 +34,7 @@ export function ManagedRentalObjectsPage() {
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--ds-spacing-6)' }}>
       <div>
-        <Heading level={1} data-size="md">Administrer utleieobjekter</Heading>
+        <Heading level={1} data-size="md">{t('minside.text.administrerUtleieobjekter')}</Heading>
         <Paragraph>{t('common.objekter_din_organisasjon_har')}</Paragraph>
       </div>
 

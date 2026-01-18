@@ -183,7 +183,7 @@ export function PermissionAssignmentPage() {
   if (isLoading) {
     return (
       <div style={{ display: 'flex', justifyContent: 'center', padding: 'var(--ds-spacing-8)' }}>
-        <Spinner data-size="lg" aria-label="Laster rettigheter..." />
+        <Spinner data-size="lg" aria-label={t('organizations.ariaLabel.lasterRettigheter')} />
       </div>
     );
   }
@@ -521,7 +521,7 @@ export function PermissionAssignmentPage() {
               <Table>
                 <Table.Head>
                   <Table.Row>
-                    <Table.HeaderCell style={{ minWidth: '200px' }}>Medlem</Table.HeaderCell>
+                    <Table.HeaderCell style={{ minWidth: '200px' }}>{t('organizations.text.medlem')}</Table.HeaderCell>
                     {memberPermissions.map((permission) => (
                       <Table.HeaderCell
                         key={permission}

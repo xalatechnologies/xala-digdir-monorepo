@@ -129,23 +129,23 @@ export function PricingRulesPage() {
         gap: 'var(--ds-spacing-4)',
       }}>
         <Card style={{ padding: 'var(--ds-spacing-4)' }}>
-          <Paragraph data-size="sm" style={{ color: 'var(--ds-color-neutral-text-subtle)', margin: 0 }}>Totalt</Paragraph>
+          <Paragraph data-size="sm" style={{ color: 'var(--ds-color-neutral-text-subtle)', margin: 0 }}>{t('backoffice.text.totalt')}</Paragraph>
           <Heading level={2} data-size="xl" style={{ margin: 0 }}>{mockRules.length}</Heading>
         </Card>
         <Card style={{ padding: 'var(--ds-spacing-4)' }}>
-          <Paragraph data-size="sm" style={{ color: 'var(--ds-color-neutral-text-subtle)', margin: 0 }}>Aktive</Paragraph>
+          <Paragraph data-size="sm" style={{ color: 'var(--ds-color-neutral-text-subtle)', margin: 0 }}>{t('backoffice.status.aktive')}</Paragraph>
           <Heading level={2} data-size="xl" style={{ margin: 0, color: 'var(--ds-color-success-text-default)' }}>
             {mockRules.filter(r => r.status === 'active').length}
           </Heading>
         </Card>
         <Card style={{ padding: 'var(--ds-spacing-4)' }}>
-          <Paragraph data-size="sm" style={{ color: 'var(--ds-color-neutral-text-subtle)', margin: 0 }}>Timepriser</Paragraph>
+          <Paragraph data-size="sm" style={{ color: 'var(--ds-color-neutral-text-subtle)', margin: 0 }}>{t('backoffice.text.timepriser')}</Paragraph>
           <Heading level={2} data-size="xl" style={{ margin: 0 }}>
             {mockRules.filter(r => r.type === 'hourly').length}
           </Heading>
         </Card>
         <Card style={{ padding: 'var(--ds-spacing-4)' }}>
-          <Paragraph data-size="sm" style={{ color: 'var(--ds-color-neutral-text-subtle)', margin: 0 }}>Rabatter</Paragraph>
+          <Paragraph data-size="sm" style={{ color: 'var(--ds-color-neutral-text-subtle)', margin: 0 }}>{t('backoffice.text.rabatter')}</Paragraph>
           <Heading level={2} data-size="xl" style={{ margin: 0 }}>
             {mockRules.filter(r => r.type === 'discount').length}
           </Heading>
@@ -162,12 +162,12 @@ export function PricingRulesPage() {
           <Table>
             <Table.Head>
               <Table.Row>
-                <Table.HeaderCell>Navn</Table.HeaderCell>
+                <Table.HeaderCell>{t('backoffice.label.name')}</Table.HeaderCell>
                 <Table.HeaderCell>Type</Table.HeaderCell>
                 <Table.HeaderCell>{t('common.belop')}</Table.HeaderCell>
-                <Table.HeaderCell>Betingelser</Table.HeaderCell>
+                <Table.HeaderCell>{t('backoffice.text.betingelser')}</Table.HeaderCell>
                 <Table.HeaderCell>Status</Table.HeaderCell>
-                <Table.HeaderCell style={{ width: '140px' }}>Handlinger</Table.HeaderCell>
+                <Table.HeaderCell style={{ width: '140px' }}>{t('backoffice.text.handlinger')}</Table.HeaderCell>
               </Table.Row>
             </Table.Head>
             <Table.Body>

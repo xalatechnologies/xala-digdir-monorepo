@@ -303,9 +303,9 @@ export function PlanCreatePage() {
               value={formData.currency}
               onChange={(e) => setFormData((prev) => ({ ...prev, currency: e.target.value }))}
             >
-              <option value="NOK">NOK</option>
-              <option value="EUR">EUR</option>
-              <option value="USD">USD</option>
+              <option value="NOK">{t('saasAdmin.text.nok')}</option>
+              <option value="EUR">{t('saasAdmin.text.eur')}</option>
+              <option value="USD">{t('saasAdmin.text.usd')}</option>
             </Select>
 
             <Select

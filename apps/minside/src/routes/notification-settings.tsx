@@ -293,7 +293,7 @@ export function NotificationSettingsPage() {
             <Switch
               checked={preferences.bookingConfirmationEnabled}
               onChange={(e) => handlePreferenceChange('bookingConfirmationEnabled', e.target.checked)}
-              aria-label="Bookingbekreftelser"
+              aria-label={t('minside.ariaLabel.bookingbekreftelser')}
             />
           </div>
 
@@ -383,7 +383,7 @@ export function NotificationSettingsPage() {
             <Switch
               checked={preferences.bookingCancellationEnabled}
               onChange={(e) => handlePreferenceChange('bookingCancellationEnabled', e.target.checked)}
-              aria-label="Kanselleringer"
+              aria-label={t('minside.ariaLabel.kanselleringer')}
             />
           </div>
 
@@ -404,7 +404,7 @@ export function NotificationSettingsPage() {
             <Switch
               checked={preferences.bookingModificationEnabled}
               onChange={(e) => handlePreferenceChange('bookingModificationEnabled', e.target.checked)}
-              aria-label="Endringer"
+              aria-label={t('minside.ariaLabel.endringer')}
             />
           </div>
         </div>

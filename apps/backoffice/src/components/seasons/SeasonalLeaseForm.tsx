@@ -249,7 +249,7 @@ export function SeasonalLeaseForm({ lease, onSubmit, onCancel }: SeasonalLeaseFo
         </FormSection>
 
         {/* Period */}
-        <FormSection title="Leieperiode">
+        <FormSection title={t('seasons.title.leieperiode')}>
           <Stack spacing={4}>
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 'var(--ds-spacing-3)' }}>
               <FormField
@@ -261,7 +261,7 @@ export function SeasonalLeaseForm({ lease, onSubmit, onCancel }: SeasonalLeaseFo
                   type="date"
                   value={formData.startDate}
                   onChange={(e) => handleChange('startDate')(e.target.value)}
-                  aria-label="Startdato"
+                  aria-label={t('seasons.ariaLabel.startdato')}
                 />
               </FormField>
 
@@ -274,7 +274,7 @@ export function SeasonalLeaseForm({ lease, onSubmit, onCancel }: SeasonalLeaseFo
                   type="date"
                   value={formData.endDate}
                   onChange={(e) => handleChange('endDate')(e.target.value)}
-                  aria-label="Sluttdato"
+                  aria-label={t('seasons.ariaLabel.sluttdato')}
                 />
               </FormField>
             </div>
@@ -282,7 +282,7 @@ export function SeasonalLeaseForm({ lease, onSubmit, onCancel }: SeasonalLeaseFo
         </FormSection>
 
         {/* Weekdays */}
-        <FormSection title="Ukedager">
+        <FormSection title={t('seasons.title.ukedager')}>
           <div style={{ marginBottom: 'var(--ds-spacing-3)', display: 'flex', gap: 'var(--ds-spacing-2)', flexWrap: 'wrap' }}>
             <Button type="button" variant="secondary" data-size="sm" onClick={handleSelectAllWeekdays}>
               Hverdager
@@ -314,7 +314,7 @@ export function SeasonalLeaseForm({ lease, onSubmit, onCancel }: SeasonalLeaseFo
         </FormSection>
 
         {/* Time */}
-        <FormSection title="Tidspunkt">
+        <FormSection title={t('seasons.title.tidspunkt')}>
           <Stack spacing={4}>
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 'var(--ds-spacing-3)' }}>
               <FormField
@@ -326,7 +326,7 @@ export function SeasonalLeaseForm({ lease, onSubmit, onCancel }: SeasonalLeaseFo
                   type="time"
                   value={formData.startTime}
                   onChange={(e) => handleChange('startTime')(e.target.value)}
-                  aria-label="Starttid"
+                  aria-label={t('seasons.ariaLabel.starttid')}
                 />
               </FormField>
 
@@ -339,7 +339,7 @@ export function SeasonalLeaseForm({ lease, onSubmit, onCancel }: SeasonalLeaseFo
                   type="time"
                   value={formData.endTime}
                   onChange={(e) => handleChange('endTime')(e.target.value)}
-                  aria-label="Sluttid"
+                  aria-label={t('seasons.ariaLabel.sluttid')}
                 />
               </FormField>
             </div>
@@ -347,7 +347,7 @@ export function SeasonalLeaseForm({ lease, onSubmit, onCancel }: SeasonalLeaseFo
         </FormSection>
 
         {/* Pricing */}
-        <FormSection title="Prissetting">
+        <FormSection title={t('seasons.title.prissetting')}>
           <Stack spacing={4}>
             <FormField
               label={t('common.total_pris')}
@@ -374,7 +374,7 @@ export function SeasonalLeaseForm({ lease, onSubmit, onCancel }: SeasonalLeaseFo
                 value={formData.notes || ''}
                 onChange={(e) => handleChange('notes')(e.target.value)}
                 placeholder={t('common.feks_spesielle_avtaler_eller')}
-                aria-label="Notater"
+                aria-label={t('seasons.ariaLabel.notater')}
                 multiline
                 rows={3}
               />

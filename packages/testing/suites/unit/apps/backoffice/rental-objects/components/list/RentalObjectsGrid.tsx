@@ -220,7 +220,7 @@ function RentalObjectCard({ item, isSelected: _isSelected, onSelect: _onSelect, 
             style={{
               margin: 0,
               color: 'var(--ds-color-neutral-text-subtle)',
-              lineHeight: '1.5',
+              lineHeight: 'var(--ds-line-height-md)',
             }}
           >
             {descriptionExcerpt}

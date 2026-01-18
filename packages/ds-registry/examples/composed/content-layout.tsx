@@ -127,19 +127,19 @@ export function CompletePageLayout() {
       }}>
         <Card>
           <Heading size="sm">Active Users</Heading>
-          <Paragraph style={{ fontSize: '2rem', fontWeight: 'bold', marginTop: '8px' }}>
+          <Paragraph style={{ fontSize: '2rem', fontWeight: 'bold', marginTop: 'var(--ds-spacing-2)' }}>
             1,234
           </Paragraph>
         </Card>
         <Card>
           <Heading size="sm">Total Bookings</Heading>
-          <Paragraph style={{ fontSize: '2rem', fontWeight: 'bold', marginTop: '8px' }}>
+          <Paragraph style={{ fontSize: '2rem', fontWeight: 'bold', marginTop: 'var(--ds-spacing-2)' }}>
             567
           </Paragraph>
         </Card>
         <Card>
           <Heading size="sm">Revenue</Heading>
-          <Paragraph style={{ fontSize: '2rem', fontWeight: 'bold', marginTop: '8px' }}>
+          <Paragraph style={{ fontSize: '2rem', fontWeight: 'bold', marginTop: 'var(--ds-spacing-2)' }}>
             €89,012
           </Paragraph>
         </Card>
@@ -147,7 +147,7 @@ export function CompletePageLayout() {
 
       <Card>
         <Heading size="md">Recent Activity</Heading>
-        <Paragraph style={{ marginTop: '8px' }}>
+        <Paragraph style={{ marginTop: 'var(--ds-spacing-2)' }}>
           Activity feed would go here...
         </Paragraph>
       </Card>
@@ -184,7 +184,7 @@ export function ResponsiveGridLayout() {
     <ContentLayout
       grid={{
         columns: 'repeat(auto-fit, minmax(min(100%, 320px), 1fr))',
-        gap: '16px'
+        gap: 'var(--ds-spacing-4)'
       }}
     >
       {Array.from({ length: 6 }, (_, i) => (

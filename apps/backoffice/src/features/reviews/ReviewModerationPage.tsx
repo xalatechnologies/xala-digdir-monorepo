@@ -158,7 +158,7 @@ export function ReviewModerationPage() {
       <div style={{ display: 'flex', gap: 'var(--ds-spacing-3)', flexWrap: 'wrap', alignItems: 'center' }}>
         <div style={{ flex: '1 1 300px', minWidth: '200px' }}>
           <HeaderSearch
-            placeholder="Søk etter anmeldelse, objekt..."
+            placeholder={t('backoffice.placeholder.sokEtterAnmeldelseObjekt')}
             value={searchQuery}
             onChange={(e: React.ChangeEvent<HTMLInputElement>) => setSearchQuery(e.target.value)}
             onClear={() => setSearchQuery('')}
@@ -184,7 +184,7 @@ export function ReviewModerationPage() {
               padding: 'var(--ds-spacing-10)',
             }}
           >
-            <Spinner aria-label="Laster anmeldelser" />
+            <Spinner aria-label={t('backoffice.ariaLabel.lasterAnmeldelser')} />
           </div>
         ) : (
           <ReviewModerationTable

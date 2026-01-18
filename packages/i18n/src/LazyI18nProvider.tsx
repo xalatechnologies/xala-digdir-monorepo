@@ -153,16 +153,42 @@ export function LazyI18nProvider({
     [shouldPersistLocale]
   );
 
-  // Translation function
+  // Norwegian fallback translations (loaded separately for fallback)
+  const [nbFallback, setNbFallback] = useState<Record<string, string>>(() => {
+    return getCachedTranslations('nb') || CORE_TRANSLATIONS.nb;
+  });
+
+  // Load Norwegian fallback if current locale is not Norwegian
+  useEffect(() => {
+    if (locale !== 'nb' && !isLocaleLoaded('nb')) {
+      loadLocale('nb').then(setNbFallback).catch(() => {
+        setNbFallback(CORE_TRANSLATIONS.nb);
+      });
+    } else if (locale === 'nb') {
+      setNbFallback(translations);
+    }
+  }, [locale, translations]);
+
+  // Translation function with Norwegian fallback
   const t: TranslationFunction = useCallback(
     (key: string, params?: TranslationParams) => {
       // Try current locale
       let value = translations[key];
 
+      // Fallback to Norwegian translations (canonical locale)
+      if (!value && locale !== 'nb') {
+        value = nbFallback[key];
+      }
+
       // Fallback to core translations
       if (!value) {
         const core = CORE_TRANSLATIONS[locale] || CORE_TRANSLATIONS.nb;
         value = core[key];
+      }
+
+      // Final fallback to Norwegian core
+      if (!value) {
+        value = CORE_TRANSLATIONS.nb[key];
       }
 
       // Return key if not found
@@ -185,7 +211,7 @@ export function LazyI18nProvider({
 
       return value;
     },
-    [translations, locale]
+    [translations, locale, nbFallback]
   );
 
   // Context value

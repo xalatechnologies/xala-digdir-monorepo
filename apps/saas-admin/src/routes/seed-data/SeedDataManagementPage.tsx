@@ -169,7 +169,7 @@ export function SeedDataManagementPage() {
               cursor: 'pointer'
             }}
           >
-            <div style={{ fontSize: '48px', marginBottom: 'var(--ds-spacing-4)' }}>📁</div>
+            <div style={{ fontSize: 'var(--ds-font-size-10)', marginBottom: 'var(--ds-spacing-4)' }}>📁</div>
             <Heading level={3} size="sm" style={{ marginBottom: 'var(--ds-spacing-2)' }}>
               Drag & Drop JSON File
             </Heading>
@@ -184,7 +184,7 @@ export function SeedDataManagementPage() {
               id="file-upload"
             />
             <label htmlFor="file-upload">
-              <Button as="span">
+              <Button as="span" type="button">
                 t('actions.choose_file')
               </Button>
             </label>
@@ -336,10 +336,10 @@ export function SeedDataManagementPage() {
 
           {/* Actions */}
           <div style={{ display: 'flex', gap: 'var(--ds-spacing-3)', justifyContent: 'flex-end' }}>
-            <Button variant="secondary" onClick={handleReset}>
+            <Button variant="secondary" onClick={handleReset} type="button">
               Cancel
             </Button>
-            <Button onClick={handleImport}>
+            <Button onClick={handleImport} type="button">
               Import {stats.total_objects} Objects
             </Button>
           </div>
@@ -427,10 +427,10 @@ export function SeedDataManagementPage() {
 
           {/* Actions */}
           <div style={{ display: 'flex', gap: 'var(--ds-spacing-3)', justifyContent: 'center' }}>
-            <Button onClick={handleReset}>
+            <Button onClick={handleReset} type="button">
               t('actions.import_more_data')
             </Button>
-            <Button variant="secondary" onClick={() => window.location.reload()}>
+            <Button variant="secondary" onClick={() => window.location.reload()} type="button">
               Refresh Page
             </Button>
           </div>

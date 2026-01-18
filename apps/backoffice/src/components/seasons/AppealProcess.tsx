@@ -296,7 +296,7 @@ export function AppealProcess({ seasonId, canProcess }: AppealProcessProps) {
               cursor: 'pointer',
             }}
           >
-            <option value="all">Alle</option>
+            <option value="all">{t('seasons.text.alle')}</option>
             <option value="no_appeal">{t('common.ingen_klage')}</option>
             <option value="appeal_pending">{t('common.klage_venter')}</option>
             <option value="appeal_approved">{t('common.klage_godkjent')}</option>
@@ -324,12 +324,12 @@ export function AppealProcess({ seasonId, canProcess }: AppealProcessProps) {
             <Table.Row>
               <Table.HeaderCell>Organisasjon</Table.HeaderCell>
               <Table.HeaderCell>Lokale</Table.HeaderCell>
-              <Table.HeaderCell>Ukedag</Table.HeaderCell>
-              <Table.HeaderCell>Tid</Table.HeaderCell>
-              <Table.HeaderCell>Avslagsgrunn</Table.HeaderCell>
-              <Table.HeaderCell>Klagestatus</Table.HeaderCell>
-              <Table.HeaderCell>Dato</Table.HeaderCell>
-              <Table.HeaderCell style={{ width: '100px' }}>Handlinger</Table.HeaderCell>
+              <Table.HeaderCell>{t('seasons.text.ukedag')}</Table.HeaderCell>
+              <Table.HeaderCell>{t('seasons.text.time')}</Table.HeaderCell>
+              <Table.HeaderCell>{t('seasons.text.avslagsgrunn')}</Table.HeaderCell>
+              <Table.HeaderCell>{t('seasons.text.klagestatus')}</Table.HeaderCell>
+              <Table.HeaderCell>{t('seasons.text.date')}</Table.HeaderCell>
+              <Table.HeaderCell style={{ width: '100px' }}>{t('seasons.text.handlinger')}</Table.HeaderCell>
             </Table.Row>
           </Table.Head>
           <Table.Body>

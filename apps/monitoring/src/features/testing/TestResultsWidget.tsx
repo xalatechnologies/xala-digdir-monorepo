@@ -8,6 +8,7 @@
 import { useState, useEffect } from 'react';
 import { Card, Heading, Paragraph, Table, Badge, Spinner } from '@digdir/designsystemet-react';
 
+import { useT } from '@xala/i18n';
 interface TestSummary {
   passed: number;
   failed: number;
@@ -46,6 +47,8 @@ const mockCategories: TestCategory[] = [
 ];
 
 export function TestResultsWidget() {
+  const t = useT();
+
   const [summary, setSummary] = useState<TestSummary | null>(null);
   const [categories, setCategories] = useState<TestCategory[]>([]);
   const [loading, setLoading] = useState(true);
@@ -77,9 +80,9 @@ export function TestResultsWidget() {
   if (loading) {
     return (
       <Card>
-        <Heading level={2} size="sm">Test Results</Heading>
+        <Heading level={2} size="sm">{t('monitoring.text.testResults')}</Heading>
         <div style={{ display: 'flex', justifyContent: 'center', padding: '2rem' }}>
-          <Spinner aria-label="Loading test results" />
+          <Spinner aria-label={t('monitoring.ariaLabel.loadingTestResults')} />
         </div>
       </Card>
     );
@@ -88,14 +91,14 @@ export function TestResultsWidget() {
   if (!summary) {
     return (
       <Card>
-        <Heading level={2} size="sm">Test Results</Heading>
-        <Paragraph>No test results available</Paragraph>
+        <Heading level={2} size="sm">{t('monitoring.text.testResults')}</Heading>
+        <Paragraph>{t('monitoring.text.noTestResultsAvailable')}</Paragraph>
       </Card>
     );
   }
 
   const getStatusBadge = (failed: number) => {
-    if (failed === 0) return <Badge color="success">All Passing</Badge>;
+    if (failed === 0) return <Badge color="success">{t('monitoring.text.allPassing')}</Badge>;
     if (failed < 10) return <Badge color="warning">{failed} Failing</Badge>;
     return <Badge color="danger">{failed} Failing</Badge>;
   };
@@ -103,7 +106,7 @@ export function TestResultsWidget() {
   return (
     <Card>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
-        <Heading level={2} size="sm">Test Results</Heading>
+        <Heading level={2} size="sm">{t('monitoring.text.testResults')}</Heading>
         {getStatusBadge(summary.failed)}
       </div>
       
@@ -113,25 +116,25 @@ export function TestResultsWidget() {
           <Paragraph size="lg" style={{ fontWeight: 'bold', color: 'var(--ds-color-success-base)' }}>
             {summary.passed}
           </Paragraph>
-          <Paragraph size="sm">Passed</Paragraph>
+          <Paragraph size="sm">{t('monitoring.text.passed')}</Paragraph>
         </div>
         <div style={{ textAlign: 'center' }}>
           <Paragraph size="lg" style={{ fontWeight: 'bold', color: 'var(--ds-color-danger-base)' }}>
             {summary.failed}
           </Paragraph>
-          <Paragraph size="sm">Failed</Paragraph>
+          <Paragraph size="sm">{t('monitoring.text.failed')}</Paragraph>
         </div>
         <div style={{ textAlign: 'center' }}>
           <Paragraph size="lg" style={{ fontWeight: 'bold', color: 'var(--ds-color-neutral-text-subtle)' }}>
             {summary.skipped}
           </Paragraph>
-          <Paragraph size="sm">Skipped</Paragraph>
+          <Paragraph size="sm">{t('monitoring.text.skipped')}</Paragraph>
         </div>
         <div style={{ textAlign: 'center' }}>
           <Paragraph size="lg" style={{ fontWeight: 'bold' }}>
             {summary.passRate.toFixed(1)}%
           </Paragraph>
-          <Paragraph size="sm">Pass Rate</Paragraph>
+          <Paragraph size="sm">{t('monitoring.text.passRate')}</Paragraph>
         </div>
       </div>
 
@@ -139,11 +142,11 @@ export function TestResultsWidget() {
       <Table>
         <Table.Head>
           <Table.Row>
-            <Table.HeaderCell>Category</Table.HeaderCell>
-            <Table.HeaderCell>Passed</Table.HeaderCell>
-            <Table.HeaderCell>Failed</Table.HeaderCell>
-            <Table.HeaderCell>Skipped</Table.HeaderCell>
-            <Table.HeaderCell>Status</Table.HeaderCell>
+            <Table.HeaderCell>{t('monitoring.text.category')}</Table.HeaderCell>
+            <Table.HeaderCell>{t('monitoring.text.passed')}</Table.HeaderCell>
+            <Table.HeaderCell>{t('monitoring.text.failed')}</Table.HeaderCell>
+            <Table.HeaderCell>{t('monitoring.text.skipped')}</Table.HeaderCell>
+            <Table.HeaderCell>{t('monitoring.text.status')}</Table.HeaderCell>
           </Table.Row>
         </Table.Head>
         <Table.Body>

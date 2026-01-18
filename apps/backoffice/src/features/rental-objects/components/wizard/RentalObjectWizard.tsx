@@ -229,7 +229,7 @@ function WizardStepper({ steps, currentStep, onStepClick, errors }: WizardSteppe
                 }}
               >
                 {/* Clone icon to enforce size if needed, or rely on CSS inheritance */}
-                <div style={{ fontSize: '18px', display: 'flex' }}>
+                <div style={{ fontSize: 'var(--ds-font-size-5)', display: 'flex' }}>
                    {hasErrors ? '!' : isCompleted ? '✓' : Icon}
                 </div>
               </div>

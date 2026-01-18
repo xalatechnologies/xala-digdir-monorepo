@@ -216,15 +216,15 @@ export function ProfileTab() {
               <Textfield aria-label={t('common.epostadresse')}
                 value={profileData.email}
                 onChange={(e) => setProfileData(prev => ({ ...prev, email: e.target.value }))}
-                placeholder="ola.nordmann@example.com"
+                placeholder={t('settings.placeholder.olanordmannexamplecom')}
               />
             </FormField>
 
             <FormField label="Telefonnummer">
-              <Textfield aria-label="Telefonnummer"
+              <Textfield aria-label={t('settings.ariaLabel.telefonnummer')}
                 value={profileData.phone}
                 onChange={(e) => setProfileData(prev => ({ ...prev, phone: e.target.value }))}
-                placeholder="+47 123 45 678"
+                placeholder={t('settings.placeholder.4712345678')}
               />
             </FormField>
 

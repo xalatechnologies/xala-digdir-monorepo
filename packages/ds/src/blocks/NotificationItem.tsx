@@ -343,7 +343,7 @@ export function NotificationItem({
         {/* Title */}
         <div
           style={{
-            fontSize: '14px',
+            fontSize: 'var(--ds-font-size-4)',
             fontWeight: isUnread ? 600 : 500,
             color: 'var(--ds-color-neutral-text-default)',
             marginBottom: 'var(--ds-spacing-1)',

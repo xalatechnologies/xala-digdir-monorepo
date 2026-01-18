@@ -164,7 +164,7 @@ export function EditBookingForm({ booking, onSubmit, onCancel }: EditBookingForm
         </Alert>
 
         {/* Booking Details */}
-        <FormSection title="Bookingdetaljer">
+        <FormSection title={t('bookings.title.bookingdetaljer')}>
           <Stack spacing={4}>
             <FormField
               label="Lokale"
@@ -196,7 +196,7 @@ export function EditBookingForm({ booking, onSubmit, onCancel }: EditBookingForm
                   type="datetime-local"
                   value={formData.startTime}
                   onChange={(e) => handleChange('startTime')(e.target.value)}
-                  aria-label="Starttid"
+                  aria-label={t('bookings.ariaLabel.starttid')}
                 />
               </FormField>
 
@@ -209,7 +209,7 @@ export function EditBookingForm({ booking, onSubmit, onCancel }: EditBookingForm
                   type="datetime-local"
                   value={formData.endTime}
                   onChange={(e) => handleChange('endTime')(e.target.value)}
-                  aria-label="Sluttid"
+                  aria-label={t('bookings.ariaLabel.sluttid')}
                 />
               </FormField>
             </div>
@@ -224,7 +224,7 @@ export function EditBookingForm({ booking, onSubmit, onCancel }: EditBookingForm
         </FormSection>
 
         {/* Pricing */}
-        <FormSection title="Prissetting">
+        <FormSection title={t('bookings.title.prissetting')}>
           <FormField
             label={t('common.total_pris')}
             required
@@ -244,7 +244,7 @@ export function EditBookingForm({ booking, onSubmit, onCancel }: EditBookingForm
         </FormSection>
 
         {/* Notes */}
-        <FormSection title="Notater">
+        <FormSection title={t('bookings.title.notater')}>
           <FormField
             label={t('common.interne_notater')}
             description={t('common.notater_synlige_for_saksbehandler')}

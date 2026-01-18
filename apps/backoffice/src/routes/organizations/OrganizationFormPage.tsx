@@ -107,7 +107,7 @@ export function OrganizationFormPage() {
   if (isEditing && !organization) {
     return (
       <div style={{ textAlign: 'center', padding: 'var(--ds-spacing-8)' }}>
-        <Heading level={3} data-size="sm">Organisasjon ikke funnet</Heading>
+        <Heading level={3} data-size="sm">{t('organizations.text.organisasjonIkkeFunnet')}</Heading>
         <Paragraph data-size="sm" style={{ color: 'var(--ds-color-neutral-text-subtle)', marginTop: 'var(--ds-spacing-2)' }}>
           Organisasjonen eksisterer ikke eller er slettet.
         </Paragraph>

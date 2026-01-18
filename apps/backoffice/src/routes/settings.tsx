@@ -1258,7 +1258,7 @@ export function SettingsPage() {
                       ...prev,
                       branding: { ...prev.branding, logo: e.target.value }
                     }))}
-                    placeholder="https://example.com/logo.png"
+                    placeholder={t('backoffice.placeholder.httpsexamplecomlogopng')}
                   />
                 </FormField>
 
@@ -1297,7 +1297,7 @@ export function SettingsPage() {
                       ...prev,
                       branding: { ...prev.branding, favicon: e.target.value }
                     }))}
-                    placeholder="https://example.com/favicon.ico"
+                    placeholder={t('backoffice.placeholder.httpsexamplecomfaviconico')}
                   />
                 </FormField>
               </Stack>

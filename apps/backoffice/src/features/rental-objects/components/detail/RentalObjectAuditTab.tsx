@@ -28,7 +28,7 @@ export function RentalObjectAuditTab({ rentalObjectId }: { rentalObjectId: strin
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--ds-spacing-6)' }}>
       <div>
-        <Heading level={3} data-size="sm">Endringshistorikk</Heading>
+        <Heading level={3} data-size="sm">{t('backoffice.text.endringshistorikk')}</Heading>
         <Paragraph data-size="sm" style={{ color: 'var(--ds-color-neutral-text-subtle)' }}>
           Logg over alle endringer gjort på dette utleieobjektet.
         </Paragraph>
@@ -38,10 +38,10 @@ export function RentalObjectAuditTab({ rentalObjectId }: { rentalObjectId: strin
         <table style={{ width: '100%', borderCollapse: 'collapse' }}>
           <thead>
             <tr style={{ textAlign: 'left', borderBottom: '1px solid var(--ds-color-neutral-border-subtle)', backgroundColor: 'var(--ds-color-neutral-surface-subtle)' }}>
-              <th style={{ padding: 'var(--ds-spacing-3) var(--ds-spacing-4)' }}>Tidspunkt</th>
-              <th style={{ padding: 'var(--ds-spacing-3) var(--ds-spacing-4)' }}>Bruker</th>
-              <th style={{ padding: 'var(--ds-spacing-3) var(--ds-spacing-4)' }}>Handling</th>
-              <th style={{ padding: 'var(--ds-spacing-3) var(--ds-spacing-4)' }}>Detaljer</th>
+              <th style={{ padding: 'var(--ds-spacing-3) var(--ds-spacing-4)' }}>{t('backoffice.text.tidspunkt')}</th>
+              <th style={{ padding: 'var(--ds-spacing-3) var(--ds-spacing-4)' }}>{t('backoffice.text.user')}</th>
+              <th style={{ padding: 'var(--ds-spacing-3) var(--ds-spacing-4)' }}>{t('backoffice.text.handling')}</th>
+              <th style={{ padding: 'var(--ds-spacing-3) var(--ds-spacing-4)' }}>{t('backoffice.text.details')}</th>
             </tr>
           </thead>
           <tbody>

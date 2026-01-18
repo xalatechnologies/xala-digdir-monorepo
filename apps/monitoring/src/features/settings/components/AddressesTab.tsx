@@ -111,7 +111,7 @@ export function AddressesTab() {
 
           <Stack spacing={4}>
             <FormField label="Gateadresse" required>
-              <Textfield aria-label="Gateadresse"
+              <Textfield aria-label={t('settings.ariaLabel.gateadresse')}
                 value={addressData.residenceAddress.street}
                 onChange={(e) => setAddressData(prev => ({
                   ...prev,
@@ -123,7 +123,7 @@ export function AddressesTab() {
 
             <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr', gap: 'var(--ds-spacing-3)' }}>
               <FormField label="Poststed" required>
-                <Textfield aria-label="Poststed"
+                <Textfield aria-label={t('settings.ariaLabel.poststed')}
                   value={addressData.residenceAddress.city}
                   onChange={(e) => setAddressData(prev => ({
                     ...prev,
@@ -188,7 +188,7 @@ export function AddressesTab() {
 
           <Stack spacing={4}>
             <FormField label="Gateadresse" required>
-              <Textfield aria-label="Gateadresse"
+              <Textfield aria-label={t('settings.ariaLabel.gateadresse')}
                 value={addressData.invoiceAddress.street}
                 onChange={(e) => setAddressData(prev => ({
                   ...prev,
@@ -200,7 +200,7 @@ export function AddressesTab() {
 
             <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr', gap: 'var(--ds-spacing-3)' }}>
               <FormField label="Poststed" required>
-                <Textfield aria-label="Poststed"
+                <Textfield aria-label={t('settings.ariaLabel.poststed')}
                   value={addressData.invoiceAddress.city}
                   onChange={(e) => setAddressData(prev => ({
                     ...prev,

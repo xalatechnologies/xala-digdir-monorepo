@@ -255,19 +255,19 @@ export function BookingSelectedSlotsSidebar({
                     <div style={{ paddingTop: 'var(--ds-spacing-3)', borderTop: '1px solid var(--ds-color-neutral-border-subtle)' }}>
                       {details.purpose && (
                         <div style={{ marginBottom: 'var(--ds-spacing-2)' }}>
-                          <Paragraph data-size="xs" style={{ margin: 0, color: 'var(--ds-color-neutral-text-subtle)' }}>Formål</Paragraph>
+                          <Paragraph data-size="xs" style={{ margin: 0, color: 'var(--ds-color-neutral-text-subtle)' }}>{t('common.text.formal')}</Paragraph>
                           <Paragraph data-size="sm" style={{ margin: 0 }}>{details.purpose}</Paragraph>
                         </div>
                       )}
                       {details.attendees && (
                         <div style={{ marginBottom: 'var(--ds-spacing-2)' }}>
-                          <Paragraph data-size="xs" style={{ margin: 0, color: 'var(--ds-color-neutral-text-subtle)' }}>Deltakere</Paragraph>
+                          <Paragraph data-size="xs" style={{ margin: 0, color: 'var(--ds-color-neutral-text-subtle)' }}>{t('common.text.deltakere')}</Paragraph>
                           <Paragraph data-size="sm" style={{ margin: 0 }}>{details.attendees}</Paragraph>
                         </div>
                       )}
                       {details.activityType && (
                         <div>
-                          <Paragraph data-size="xs" style={{ margin: 0, color: 'var(--ds-color-neutral-text-subtle)' }}>Aktivitet</Paragraph>
+                          <Paragraph data-size="xs" style={{ margin: 0, color: 'var(--ds-color-neutral-text-subtle)' }}>{t('common.status.aktivitet')}</Paragraph>
                           <Paragraph data-size="sm" style={{ margin: 0 }}>{details.activityType}</Paragraph>
                         </div>
                       )}

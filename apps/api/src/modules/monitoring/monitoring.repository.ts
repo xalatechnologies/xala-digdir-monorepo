@@ -95,7 +95,7 @@ export class AlertRepository {
    * Find active alerts
    */
   async findActive(tenantId?: string) {
-    let query = this.db.select().from(alerts);
+    const query = this.db.select().from(alerts);
     // Simplified - in production would filter by status
     const data = await query.limit(100);
     return { data };
@@ -158,7 +158,7 @@ export class IncidentRepository {
    * Find open incidents
    */
   async findOpen(tenantId?: string) {
-    let query = this.db.select().from(incidents);
+    const query = this.db.select().from(incidents);
     const data = await query.limit(100);
     return { data };
   }

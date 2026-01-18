@@ -33,7 +33,7 @@ export function NativeSelect({
           htmlFor={id}
           style={{
             fontSize: 'var(--ds-font-size-sm)',
-            fontWeight: '500',
+            fontWeight: 'var(--ds-font-weight-medium)',
             color: error ? 'var(--ds-color-danger-text)' : 'var(--ds-color-neutral-text-default)',
           }}
         >
@@ -61,7 +61,7 @@ export function NativeSelect({
           width: '100%',
           padding: 'var(--ds-spacing-3)',
           fontSize: 'var(--ds-font-size-md)',
-          lineHeight: '1.5',
+          lineHeight: 'var(--ds-line-height-md)',
           color: 'var(--ds-color-neutral-text-default)',
           backgroundColor: 'var(--ds-color-neutral-surface-default)',
           border: `1px solid ${error ? 'var(--ds-color-danger-border)' : 'var(--ds-color-neutral-border-default)'}`,

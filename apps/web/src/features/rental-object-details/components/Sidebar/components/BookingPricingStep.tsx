@@ -181,7 +181,7 @@ export function BookingPricingStep({
                     width: '100%',
                   }}
                 >
-                  <span style={{ fontSize: 'var(--ds-font-size-sm)', lineHeight: 1.2 }}>
+                  <span style={{ fontSize: 'var(--ds-font-size-sm)', lineHeight: 'var(--ds-line-height-sm)' }}>
                     {group.label}
                   </span>
                   <span

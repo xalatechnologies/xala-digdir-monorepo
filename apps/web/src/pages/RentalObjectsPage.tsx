@@ -23,8 +23,6 @@ import {
   Text,
   HeaderSearch,
   Card,
-  CloseIcon,
-  XIcon, // Fallback if CloseIcon is not the one
 } from '@xala/ds';
 import type { SearchResultItem, SearchResultGroup, ViewMode } from '@xala/ds';
 import {
@@ -72,22 +70,22 @@ const RentalObjectSkeleton = () => (
       backgroundColor: 'var(--ds-color-neutral-background-subtle)',
       position: 'relative'
     }}>
-      <div className="skeleton-shimmer" style={{
+      <div style={{
         position: 'absolute', top: 0, left: 0, width: '100%', height: '100%',
-        background: 'linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent)',
+        background: 'linear-gradient(90deg, transparent, var(--ds-color-neutral-background-subtle), transparent)',
         animation: 'shimmer 1.5s infinite'
       }} />
     </div>
     <div style={{ padding: 'var(--ds-spacing-4)' }}>
-      <div style={{ height: '24px', width: '70%', backgroundColor: 'var(--ds-color-neutral-background-subtle)', borderRadius: '4px', marginBottom: '8px' }} />
-      <div style={{ height: '16px', width: '50%', backgroundColor: 'var(--ds-color-neutral-background-subtle)', borderRadius: '4px', marginBottom: '16px' }} />
-      <div style={{ display: 'flex', gap: '8px', marginBottom: '16px' }}>
-        <div style={{ height: '24px', width: '60px', borderRadius: '12px', backgroundColor: 'var(--ds-color-neutral-background-subtle)' }} />
-        <div style={{ height: '24px', width: '80px', borderRadius: '12px', backgroundColor: 'var(--ds-color-neutral-background-subtle)' }} />
+      <div style={{ height: '24px', width: '70%', backgroundColor: 'var(--ds-color-neutral-background-subtle)', borderRadius: 'var(--ds-border-radius-sm)', marginBottom: 'var(--ds-spacing-2)' }} />
+      <div style={{ height: '16px', width: '50%', backgroundColor: 'var(--ds-color-neutral-background-subtle)', borderRadius: 'var(--ds-border-radius-sm)', marginBottom: 'var(--ds-spacing-4)' }} />
+      <div style={{ display: 'flex', gap: 'var(--ds-spacing-2)', marginBottom: 'var(--ds-spacing-4)' }}>
+        <div style={{ height: '24px', width: '60px', borderRadius: 'var(--ds-border-radius-lg)', backgroundColor: 'var(--ds-color-neutral-background-subtle)' }} />
+        <div style={{ height: '24px', width: '80px', borderRadius: 'var(--ds-border-radius-lg)', backgroundColor: 'var(--ds-color-neutral-background-subtle)' }} />
       </div>
-      <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '8px' }}>
-         <div style={{ height: '20px', width: '40px', backgroundColor: 'var(--ds-color-neutral-background-subtle)', borderRadius: '4px' }} />
-         <div style={{ height: '20px', width: '60px', backgroundColor: 'var(--ds-color-neutral-background-subtle)', borderRadius: '4px' }} />
+      <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: 'var(--ds-spacing-2)' }}>
+         <div style={{ height: '20px', width: '40px', backgroundColor: 'var(--ds-color-neutral-background-subtle)', borderRadius: 'var(--ds-border-radius-sm)' }} />
+         <div style={{ height: '20px', width: '60px', backgroundColor: 'var(--ds-color-neutral-background-subtle)', borderRadius: 'var(--ds-border-radius-sm)' }} />
       </div>
     </div>
     <style>{`
@@ -122,11 +120,11 @@ const FilterChip = ({ label, onRemove }: { label: string; onRemove: () => void }
       alignItems: 'center',
       gap: 'var(--ds-spacing-2)',
       padding: 'var(--ds-spacing-2) var(--ds-spacing-4)',
-      borderRadius: '999px',
+      borderRadius: 'var(--ds-border-radius-full)',
       backgroundColor: 'var(--ds-color-neutral-background-subtle)',
       border: '1px solid var(--ds-color-neutral-border-default)',
       fontSize: 'var(--ds-font-size-sm)',
-      lineHeight: '1.5',
+      lineHeight: 'var(--ds-line-height-md)',
       color: 'var(--ds-color-neutral-text-default)',
       cursor: 'pointer',
       boxShadow: 'var(--ds-shadow-sm)',
@@ -560,9 +558,9 @@ export function RentalObjectsPage(): React.ReactElement {
                         borderRadius: '50%',
                         backgroundColor: 'var(--ds-color-accent-base-default)',
                         color: 'var(--ds-color-neutral-text-inverted)',
-                        fontSize: '11px',
+                        fontSize: 'var(--ds-font-size-2)',
                         fontWeight: 'bold',
-                        marginLeft: '8px'
+                        marginLeft: 'var(--ds-spacing-2)'
                       }}>
                         {activeFilterCount}
                       </div>
@@ -571,7 +569,7 @@ export function RentalObjectsPage(): React.ReactElement {
                   <span
                     style={{
                       fontSize: 'var(--ds-font-size-md)',
-                      fontWeight: '600',
+                      fontWeight: 'var(--ds-font-weight-semibold)',
                       color: 'var(--ds-color-neutral-text-default)',
                       whiteSpace: 'nowrap'
                     }}
@@ -647,7 +645,7 @@ export function RentalObjectsPage(): React.ReactElement {
                             fontSize: 'var(--ds-font-size-sm)', 
                             padding: 'var(--ds-spacing-2) var(--ds-spacing-3)',
                             whiteSpace: 'nowrap' 
-                          }}
+                          }} type="button"
                         >
                           Fjern alle
                         </Button>

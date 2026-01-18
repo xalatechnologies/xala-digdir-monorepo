@@ -218,7 +218,7 @@ export function ProfileTab() {
                 type="email"
                 value={profileData.email}
                 onChange={(e) => setProfileData(prev => ({ ...prev, email: e.target.value }))}
-                placeholder="ola.nordmann@example.com"
+                placeholder={t('settings.placeholder.olanordmannexamplecom')}
                 aria-label={t('common.epostadresse')}
               />
             </FormField>
@@ -228,8 +228,8 @@ export function ProfileTab() {
                 type="tel"
                 value={profileData.phone}
                 onChange={(e) => setProfileData(prev => ({ ...prev, phone: e.target.value }))}
-                placeholder="+47 123 45 678"
-                aria-label="Telefonnummer"
+                placeholder={t('settings.placeholder.4712345678')}
+                aria-label={t('settings.ariaLabel.telefonnummer')}
               />
             </FormField>
 

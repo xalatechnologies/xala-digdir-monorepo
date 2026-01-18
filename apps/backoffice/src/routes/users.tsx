@@ -138,13 +138,13 @@ export function UsersPage() {
             <Dropdown>
               <Dropdown.List>
                 <Dropdown.Item>
-                  <Dropdown.Button onClick={() => setRoleFilter('all')}>Alle</Dropdown.Button>
+                  <Dropdown.Button onClick={() => setRoleFilter('all')}>{t('backoffice.text.alle')}</Dropdown.Button>
                 </Dropdown.Item>
                 <Dropdown.Item>
-                  <Dropdown.Button onClick={() => setRoleFilter('admin')}>Administrator</Dropdown.Button>
+                  <Dropdown.Button onClick={() => setRoleFilter('admin')}>{t('backoffice.text.administrator')}</Dropdown.Button>
                 </Dropdown.Item>
                 <Dropdown.Item>
-                  <Dropdown.Button onClick={() => setRoleFilter('saksbehandler')}>Saksbehandler</Dropdown.Button>
+                  <Dropdown.Button onClick={() => setRoleFilter('saksbehandler')}>{t('backoffice.text.saksbehandler')}</Dropdown.Button>
                 </Dropdown.Item>
               </Dropdown.List>
             </Dropdown>
@@ -158,7 +158,7 @@ export function UsersPage() {
             <Dropdown>
               <Dropdown.List>
                 <Dropdown.Item>
-                  <Dropdown.Button onClick={() => setStatusFilter('all')}>Alle</Dropdown.Button>
+                  <Dropdown.Button onClick={() => setStatusFilter('all')}>{t('backoffice.text.alle')}</Dropdown.Button>
                 </Dropdown.Item>
                 <Dropdown.Item>
                   <Dropdown.Button onClick={() => setStatusFilter('active')}>Aktiv</Dropdown.Button>
@@ -167,7 +167,7 @@ export function UsersPage() {
                   <Dropdown.Button onClick={() => setStatusFilter('inactive')}>Inaktiv</Dropdown.Button>
                 </Dropdown.Item>
                 <Dropdown.Item>
-                  <Dropdown.Button onClick={() => setStatusFilter('suspended')}>Suspendert</Dropdown.Button>
+                  <Dropdown.Button onClick={() => setStatusFilter('suspended')}>{t('backoffice.text.suspendert')}</Dropdown.Button>
                 </Dropdown.Item>
               </Dropdown.List>
             </Dropdown>
@@ -197,10 +197,10 @@ export function UsersPage() {
           <Table>
             <Table.Head>
               <Table.Row>
-                <Table.HeaderCell>Navn</Table.HeaderCell>
+                <Table.HeaderCell>{t('backoffice.label.name')}</Table.HeaderCell>
                 <Table.HeaderCell>E-post</Table.HeaderCell>
-                <Table.HeaderCell>Telefon</Table.HeaderCell>
-                <Table.HeaderCell>Rolle</Table.HeaderCell>
+                <Table.HeaderCell>{t('backoffice.text.phone')}</Table.HeaderCell>
+                <Table.HeaderCell>{t('backoffice.text.role')}</Table.HeaderCell>
                 <Table.HeaderCell>Status</Table.HeaderCell>
                 <Table.HeaderCell>{t('common.sist_innlogget')}</Table.HeaderCell>
                 <Table.HeaderCell style={{ width: '80px' }}>Handlinger</Table.HeaderCell>
@@ -241,12 +241,12 @@ export function UsersPage() {
                         {new Date(user.lastLoginAt).toLocaleDateString('nb-NO')}
                       </span>
                     ) : (
-                      <span style={{ color: 'var(--ds-color-neutral-text-subtle)' }}>Aldri</span>
+                      <span style={{ color: 'var(--ds-color-neutral-text-subtle)' }}>{t('backoffice.text.aldri')}</span>
                     )}
                   </Table.Cell>
                   <Table.Cell onClick={(e) => e.stopPropagation()}>
                     <Dropdown.TriggerContext>
-                      <Dropdown.Trigger variant="tertiary" data-size="sm" aria-label="Handlinger">
+                      <Dropdown.Trigger variant="tertiary" data-size="sm" aria-label={t('backoffice.ariaLabel.handlinger')}>
                         <MoreVerticalIcon />
                       </Dropdown.Trigger>
                       <Dropdown>

@@ -190,7 +190,7 @@ function ReviewRowActions({ review, onActionComplete }: ReviewRowActionsProps) {
   return (
     <>
       <Dropdown.TriggerContext>
-        <Dropdown.Trigger aria-label="Handlinger" disabled={isLoading}>
+        <Dropdown.Trigger aria-label={t('backoffice.ariaLabel.handlinger')} disabled={isLoading}>
           <MoreVerticalIcon />
         </Dropdown.Trigger>
         <Dropdown placement="bottom-end">
@@ -374,12 +374,12 @@ export function ReviewModerationTable({
                 onChange={(e: React.ChangeEvent<HTMLInputElement>) => onSelectAll(e.target.checked)}
               />
             </Table.HeaderCell>
-            <Table.HeaderCell>Vurdering</Table.HeaderCell>
-            <Table.HeaderCell>Anmeldelse</Table.HeaderCell>
-            <Table.HeaderCell>Objekt</Table.HeaderCell>
+            <Table.HeaderCell>{t('backoffice.text.vurdering')}</Table.HeaderCell>
+            <Table.HeaderCell>{t('backoffice.text.anmeldelse')}</Table.HeaderCell>
+            <Table.HeaderCell>{t('backoffice.text.objekt')}</Table.HeaderCell>
             <Table.HeaderCell>Bruker</Table.HeaderCell>
             <Table.HeaderCell>Status</Table.HeaderCell>
-            <Table.HeaderCell>Opprettet</Table.HeaderCell>
+            <Table.HeaderCell>{t('backoffice.text.opprettet')}</Table.HeaderCell>
             <Table.HeaderCell style={{ width: '60px' }} />
           </Table.Row>
         </Table.Head>

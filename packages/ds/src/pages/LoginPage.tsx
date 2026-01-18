@@ -8,6 +8,15 @@ import { useNavigate } from 'react-router-dom';
 import type { AppAuthConfig } from '@xala/auth/config';
 import { LoginLayout, LoginOption } from '../blocks/LoginComponents';
 import { DemoLoginDialog } from '../composed/DemoLoginDialog';
+import { IdPortenIcon, MicrosoftIcon, VippsIcon, BankIdIcon } from '../primitives/icons';
+
+// Icon mapping for auth providers
+const PROVIDER_ICONS: Record<string, React.ComponentType<{ size?: number }>> = {
+  idporten: IdPortenIcon,
+  vipps: VippsIcon,
+  microsoft: MicrosoftIcon,
+  demo: BankIdIcon,
+};
 
 export interface LoginPageProps {
   /** App-specific authentication configuration */
@@ -139,16 +148,19 @@ export function LoginPage({
         integrations={panel.integrations}
         footerLinks={links}
       >
-        {enabledProviders.map(provider => (
-          <LoginOption
-            key={provider.id}
-            icon={provider.icon ? <provider.icon /> : <></>}
-            title={provider.name}
-            description={provider.description}
-            onClick={() => handleProviderClick(provider.id)}
-            disabled={!provider.enabled}
-          />
-        ))}
+        {enabledProviders.map(provider => {
+          const IconComponent = provider.icon || PROVIDER_ICONS[provider.id];
+          return (
+            <LoginOption
+              key={provider.id}
+              icon={IconComponent ? <IconComponent size={40} /> : <></>}
+              title={provider.name}
+              description={provider.description}
+              onClick={() => handleProviderClick(provider.id)}
+              disabled={!provider.enabled}
+            />
+          );
+        })}
       </LoginLayout>
       
       {onDemoLoginClose && onDemoLoginSubmit && (

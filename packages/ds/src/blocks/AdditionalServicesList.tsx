@@ -262,7 +262,7 @@ export function AdditionalServicesList({
                       color: isSelected
                         ? 'var(--ds-color-accent-base-default)'
                         : 'var(--ds-color-neutral-text-default)',
-                      lineHeight: 1.2,
+                      lineHeight: 'var(--ds-line-height-sm)',
                     }}
                   >
                     +{service.price}

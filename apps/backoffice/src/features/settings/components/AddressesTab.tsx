@@ -113,7 +113,7 @@ export function AddressesTab() {
 
           <Stack spacing={4}>
             <FormField label="Gateadresse" required>
-              <Textfield aria-label="Gateadresse"
+              <Textfield aria-label={t('settings.ariaLabel.gateadresse')}
                 value={addressData.residenceAddress.street}
                 onChange={(e) => setAddressData(prev => ({
                   ...prev,
@@ -125,13 +125,13 @@ export function AddressesTab() {
 
             <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr', gap: 'var(--ds-spacing-3)' }}>
               <FormField label="Poststed" required>
-                <Textfield aria-label="Poststed"
+                <Textfield aria-label={t('settings.ariaLabel.poststed')}
                   value={addressData.residenceAddress.city}
                   onChange={(e) => setAddressData(prev => ({
                     ...prev,
                     residenceAddress: { ...prev.residenceAddress, city: e.target.value }
                   }))}
-                  placeholder="Oslo"
+                  placeholder={t('settings.placeholder.oslo')}
                 />
               </FormField>
 
@@ -156,10 +156,10 @@ export function AddressesTab() {
                   residenceAddress: { ...prev.residenceAddress, country: e.target.value }
                 }))}
               >
-                <option value="Norge">Norge</option>
-                <option value="Sverige">Sverige</option>
-                <option value="Danmark">Danmark</option>
-                <option value="Finland">Finland</option>
+                <option value="Norge">{t('settings.text.norge')}</option>
+                <option value="Sverige">{t('settings.text.sverige')}</option>
+                <option value="Danmark">{t('settings.text.danmark')}</option>
+                <option value="Finland">{t('settings.text.finland')}</option>
               </Select>
             </FormField>
           </Stack>
@@ -190,7 +190,7 @@ export function AddressesTab() {
 
           <Stack spacing={4}>
             <FormField label="Gateadresse" required>
-              <Textfield aria-label="Gateadresse"
+              <Textfield aria-label={t('settings.ariaLabel.gateadresse')}
                 value={addressData.invoiceAddress.street}
                 onChange={(e) => setAddressData(prev => ({
                   ...prev,
@@ -202,13 +202,13 @@ export function AddressesTab() {
 
             <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr', gap: 'var(--ds-spacing-3)' }}>
               <FormField label="Poststed" required>
-                <Textfield aria-label="Poststed"
+                <Textfield aria-label={t('settings.ariaLabel.poststed')}
                   value={addressData.invoiceAddress.city}
                   onChange={(e) => setAddressData(prev => ({
                     ...prev,
                     invoiceAddress: { ...prev.invoiceAddress, city: e.target.value }
                   }))}
-                  placeholder="Oslo"
+                  placeholder={t('settings.placeholder.oslo')}
                 />
               </FormField>
 
@@ -233,10 +233,10 @@ export function AddressesTab() {
                   invoiceAddress: { ...prev.invoiceAddress, country: e.target.value }
                 }))}
               >
-                <option value="Norge">Norge</option>
-                <option value="Sverige">Sverige</option>
-                <option value="Danmark">Danmark</option>
-                <option value="Finland">Finland</option>
+                <option value="Norge">{t('settings.text.norge')}</option>
+                <option value="Sverige">{t('settings.text.sverige')}</option>
+                <option value="Danmark">{t('settings.text.danmark')}</option>
+                <option value="Finland">{t('settings.text.finland')}</option>
               </Select>
             </FormField>
           </Stack>

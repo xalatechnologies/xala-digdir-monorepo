@@ -125,7 +125,7 @@ export function CalendarPage() {
       <Card style={{ flex: 1, padding: 0, overflow: 'hidden', display: 'flex', flexDirection: 'column' }}>
         {isLoading ? (
           <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-            <Spinner aria-label="Loading" data-size="md" />
+            <Spinner aria-label={t('monitoring.ariaLabel.loading')} data-size="md" />
           </div>
         ) : (
           <div style={{ display: 'flex', flex: 1, overflow: 'hidden' }}>

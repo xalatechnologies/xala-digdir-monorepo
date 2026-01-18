@@ -94,7 +94,7 @@ export function CompleteAppShell() {
       alignItems: 'center'
     }}>
       <Heading size="md">Xala Platform</Heading>
-      <div style={{ display: 'flex', gap: '16px' }}>
+      <div style={{ display: 'flex', gap: 'var(--ds-spacing-4)' }}>
         <Button variant="tertiary" size="sm">Dashboard</Button>
         <Button variant="tertiary" size="sm">Listings</Button>
         <Button variant="tertiary" size="sm">Bookings</Button>
@@ -123,7 +123,7 @@ export function CompleteAppShell() {
         <div style={{ marginTop: '24px' }}>
           <Card>
             <Heading size="md">Main Content Area</Heading>
-            <Paragraph style={{ marginTop: '8px' }}>
+            <Paragraph style={{ marginTop: 'var(--ds-spacing-2)' }}>
               This is where your application content goes. The header and footer
               are fixed, while this content area scrolls.
             </Paragraph>
@@ -244,7 +244,7 @@ export function DashboardAppShell() {
       alignItems: 'center'
     }}>
       <Heading size="md">Xala Dashboard</Heading>
-      <div style={{ display: 'flex', gap: '8px' }}>
+      <div style={{ display: 'flex', gap: 'var(--ds-spacing-2)' }}>
         <Button variant="secondary" size="sm">Settings</Button>
         <Button variant="primary" size="sm">New Booking</Button>
       </div>
@@ -261,7 +261,7 @@ export function DashboardAppShell() {
       alignItems: 'center'
     }}>
       <Paragraph size="sm">© 2024 Xala Platform</Paragraph>
-      <div style={{ display: 'flex', gap: '16px' }}>
+      <div style={{ display: 'flex', gap: 'var(--ds-spacing-4)' }}>
         <Button variant="tertiary" size="sm">Help</Button>
         <Button variant="tertiary" size="sm">Privacy</Button>
         <Button variant="tertiary" size="sm">Terms</Button>
@@ -281,7 +281,7 @@ export function DashboardAppShell() {
       >
         <Card>
           <Heading size="sm">Total Bookings</Heading>
-          <Paragraph style={{ fontSize: '2rem', fontWeight: 'bold', marginTop: '8px' }}>
+          <Paragraph style={{ fontSize: '2rem', fontWeight: 'bold', marginTop: 'var(--ds-spacing-2)' }}>
             1,234
           </Paragraph>
           <Paragraph size="sm" style={{ marginTop: '4px', color: 'var(--ds-color-success-text-default)' }}>
@@ -291,7 +291,7 @@ export function DashboardAppShell() {
 
         <Card>
           <Heading size="sm">Active Listings</Heading>
-          <Paragraph style={{ fontSize: '2rem', fontWeight: 'bold', marginTop: '8px' }}>
+          <Paragraph style={{ fontSize: '2rem', fontWeight: 'bold', marginTop: 'var(--ds-spacing-2)' }}>
             89
           </Paragraph>
           <Paragraph size="sm" style={{ marginTop: '4px', color: 'var(--ds-color-success-text-default)' }}>
@@ -301,7 +301,7 @@ export function DashboardAppShell() {
 
         <Card>
           <Heading size="sm">Revenue</Heading>
-          <Paragraph style={{ fontSize: '2rem', fontWeight: 'bold', marginTop: '8px' }}>
+          <Paragraph style={{ fontSize: '2rem', fontWeight: 'bold', marginTop: 'var(--ds-spacing-2)' }}>
             €45,678
           </Paragraph>
           <Paragraph size="sm" style={{ marginTop: '4px', color: 'var(--ds-color-warning-text-default)' }}>

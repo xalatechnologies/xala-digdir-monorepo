@@ -82,8 +82,8 @@ const StarRating = ({ rating }: { rating: number }): React.ReactElement => {
       ))}
       <span
         style={{
-          marginLeft: '8px',
-          fontSize: '14px',
+          marginLeft: 'var(--ds-spacing-2)',
+          fontSize: 'var(--ds-font-size-4)',
           fontWeight: 600,
           color: 'var(--ds-color-neutral-text-default)',
         }}
@@ -160,7 +160,7 @@ export function ReviewCard({
             justifyContent: 'space-between',
             alignItems: 'flex-start',
             flexWrap: 'wrap',
-            gap: '8px',
+            gap: 'var(--ds-spacing-2)',
           }}
         >
           <div style={{ flex: 1 }}>
@@ -168,7 +168,7 @@ export function ReviewCard({
               level={isCompact ? 4 : 3}
               size={isCompact ? 'xs' : 'sm'}
               style={{
-                marginBottom: '4px',
+                marginBottom: 'var(--ds-spacing-1)',
                 color: 'var(--ds-color-neutral-text-default)',
               }}
             >
@@ -202,7 +202,7 @@ export function ReviewCard({
             size={isCompact ? 'sm' : 'md'}
             style={{
               color: 'var(--ds-color-neutral-text-default)',
-              lineHeight: 1.6,
+              lineHeight: 'var(--ds-line-height-lg)',
               margin: 0,
               whiteSpace: 'pre-wrap',
             }}
@@ -244,7 +244,7 @@ export function ReviewCard({
                 style={{
                   marginLeft: 'auto',
                   padding: '6px 12px',
-                  fontSize: '14px',
+                  fontSize: 'var(--ds-font-size-4)',
                   fontWeight: 500,
                   color: 'var(--ds-color-accent-text-default)',
                   backgroundColor: 'transparent',
@@ -259,7 +259,7 @@ export function ReviewCard({
                 }}
                 onMouseLeave={(e) => {
                   e.currentTarget.style.backgroundColor = 'transparent';
-                }}
+                }} type="button"
               >
                 Nyttig
               </button>
@@ -271,7 +271,7 @@ export function ReviewCard({
         {review.metadata?.moderatorNotes && showStatus && (
           <div
             style={{
-              padding: '12px',
+              padding: 'var(--ds-spacing-3)',
               backgroundColor: 'var(--ds-color-info-surface-subtle)',
               borderRadius: 'var(--ds-border-radius-sm)',
               borderLeft: '3px solid var(--ds-color-info-border-default)',
@@ -281,7 +281,7 @@ export function ReviewCard({
               size="sm"
               style={{
                 fontWeight: 600,
-                marginBottom: '4px',
+                marginBottom: 'var(--ds-spacing-1)',
                 color: 'var(--ds-color-info-text-default)',
               }}
             >

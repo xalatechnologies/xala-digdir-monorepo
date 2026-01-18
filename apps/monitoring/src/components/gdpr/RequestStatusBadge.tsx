@@ -100,7 +100,7 @@ function StatusTag({
         padding: sizeStyle.padding,
         fontSize: sizeStyle.fontSize,
         fontWeight: 'var(--ds-font-weight-medium)',
-        lineHeight: 1,
+        lineHeight: 'var(--ds-line-height-sm)',
         whiteSpace: 'nowrap',
       }}
     >

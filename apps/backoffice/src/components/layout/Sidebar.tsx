@@ -20,7 +20,7 @@ import { useAuth } from '@xala/auth';
 import { useBackofficeRole, type EffectiveBackofficeRole } from '../../hooks/useBackofficeRole';
 import { useCapabilityContext } from '../../providers/CapabilityProvider';
 import type { Capability } from '../../lib/capabilities';
-import { usePendingGdprRequests } from '@digilist/client-sdk/hooks';
+import { usePendingGdprRequests, useAdminNavigation } from '@digilist/client-sdk/hooks';
 import { useT } from '@xala/i18n';
 
 interface NavItem {
@@ -169,6 +169,41 @@ function SidebarNavItem({ item }: { item: NavItem }) {
 }
 
 /**
+ * Map API AdminMenuItem to NavItem format
+ * Converts icon names to React components and adds required properties
+ */
+function mapApiMenuItemToNavItem(apiItem: any): NavItem {
+  // Icon name to React component mapping
+  const iconMap: Record<string, React.ReactNode> = {
+    shield: <ShieldIcon />,
+    home: <HomeIcon />,
+    settings: <SettingsIcon />,
+    building: <BuildingIcon />,
+    currency: <ChartIcon />,
+    'calendar-check': <CalendarIcon />,
+    calendar: <CalendarIcon />,
+    repeat: <RepeatIcon />,
+    users: <UsersIcon />,
+    message: <MessageIcon />,
+    'document-text': <BookOpenIcon />,
+    cog: <SettingsIcon />,
+    chart: <ChartIcon />,
+    'document-chart': <ChartIcon />,
+    clock: <ClockIcon />,
+    star: <CheckCircleIcon />,
+    'question-circle': <BookOpenIcon />,
+  };
+
+  return {
+    name: apiItem.label,
+    description: apiItem.label, // Use label as description for now
+    href: apiItem.href,
+    icon: iconMap[apiItem.icon] || <HomeIcon />,
+    // No capability check - API already filtered menu based on permissions
+  };
+}
+
+/**
  * Helper function to check if a nav item should be visible based on capability checks.
  * Supports both single capability and multiple capabilities (OR logic).
  */
@@ -207,7 +242,50 @@ export function Sidebar() {
   const { data: pendingGdprData } = usePendingGdprRequests({ limit: 1 });
   const pendingGdprCount = pendingGdprData?.meta?.total ?? pendingGdprData?.data?.length ?? 0;
 
-  const navSections: NavSection[] = [
+  // Try to fetch server-driven navigation (fallback to hardcoded menu on error)
+  const { data: apiNavigation } = useAdminNavigation({
+    retry: false,
+    staleTime: 5 * 60 * 1000,
+  });
+
+  // Map API menu to NavSection format if available
+  let navSections: NavSection[];
+  
+  if (apiNavigation?.menu && apiNavigation.menu.length > 0) {
+    // Group menu items by their group field
+    const grouped = new Map<string | undefined, any[]>();
+    
+    apiNavigation.menu.forEach((item: any) => {
+      const group = item.group;
+      if (!grouped.has(group)) {
+        grouped.set(group, []);
+      }
+      grouped.get(group)!.push(item);
+    });
+    
+    // Build sections from grouped items
+    navSections = [];
+    
+    // Dashboard first (items without group)
+    const ungroupedItems = grouped.get(undefined) || [];
+    if (ungroupedItems.length > 0) {
+      navSections.push({
+        items: ungroupedItems.map(mapApiMenuItemToNavItem),
+      });
+    }
+    
+    // Then add grouped sections
+    grouped.forEach((items, groupName) => {
+      if (groupName !== undefined) {
+        navSections.push({
+          title: groupName,
+          items: items.map(mapApiMenuItemToNavItem),
+        });
+      }
+    });
+  } else {
+    // Fallback to hardcoded menu
+    navSections = [
     // [Overview] - Dashboard (always visible to authenticated users)
     {
       items: [
@@ -372,6 +450,7 @@ export function Sidebar() {
       ],
     },
   ];
+  }
 
   // Filter items based on capability checks
   // Priority: capability > capabilities > roles (legacy)
@@ -388,7 +467,7 @@ export function Sidebar() {
   return (
     <aside
       style={{
-        width: '360px',
+        width: '320px',
         backgroundColor: 'var(--ds-color-neutral-surface-default)',
         borderRight: '1px solid var(--ds-color-neutral-border-subtle)',
         display: 'flex',
@@ -396,14 +475,17 @@ export function Sidebar() {
         height: '100%',
       }}
     >
-      {/* Logo Section */}
-      <div
+      {/* Logo Section - Clickable to navigate to Dashboard */}
+      <NavLink
+        to="/"
         style={{
           height: '72px',
           padding: '0 var(--ds-spacing-6)',
           borderBottom: '1px solid var(--ds-color-neutral-border-subtle)',
           display: 'flex',
           alignItems: 'center',
+          textDecoration: 'none',
+          cursor: 'pointer',
         }}
       >
         <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--ds-spacing-3)' }}>
@@ -440,7 +522,7 @@ export function Sidebar() {
             </div>
           </div>
         </div>
-      </div>
+      </NavLink>
 
       {/* Navigation */}
       <nav data-testid="sidebar-nav" style={{ flex: 1, padding: 'var(--ds-spacing-4) var(--ds-spacing-3)', overflowY: 'auto' }}>

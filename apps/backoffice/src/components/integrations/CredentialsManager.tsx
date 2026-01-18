@@ -106,7 +106,7 @@ export function CredentialsManager({
   if (error) {
     return (
       <Alert data-color="danger">
-        <Heading level={4} data-size="xs">Feil ved lasting av legitimasjoner</Heading>
+        <Heading level={4} data-size="xs">{t('integrations.text.feilVedLastingAvLegitimasjoner')}</Heading>
         <Paragraph>{t('common.kunne_ikke_hente_legitimasjoner')}</Paragraph>
       </Alert>
     );
@@ -116,7 +116,7 @@ export function CredentialsManager({
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <Heading level={3} data-size="sm">Legitimasjoner</Heading>
+          <Heading level={3} data-size="sm">{t('integrations.text.legitimasjoner')}</Heading>
           <Paragraph data-size="sm" className="text-gray-600">
             Administrer API-nøkler og hemmeligheter for {integrationName}
           </Paragraph>
@@ -146,7 +146,7 @@ export function CredentialsManager({
       {(!credentials || credentials.length === 0) ? (
         <Card className="p-8 text-center">
           <Key className="w-12 h-12 mx-auto mb-4 text-gray-400" />
-          <Heading level={4} data-size="xs">Ingen legitimasjoner</Heading>
+          <Heading level={4} data-size="xs">{t('integrations.text.ingenLegitimasjoner')}</Heading>
           <Paragraph data-size="sm" className="text-gray-600 mt-2">
             Legg til API-nøkler og hemmeligheter for å konfigurere integrasjonen.
           </Paragraph>
@@ -266,10 +266,10 @@ function CredentialCard({
               {CREDENTIAL_TYPE_LABELS[credential.credentialType] || credential.credentialType}
             </Tag>
             {!credential.isActive && (
-              <Tag data-size="sm" data-color="warning">Inaktiv</Tag>
+              <Tag data-size="sm" data-color="warning">{t('integrations.status.inactive')}</Tag>
             )}
             {credential.isExpired && (
-              <Tag data-size="sm" data-color="danger">Utløpt</Tag>
+              <Tag data-size="sm" data-color="danger">{t('integrations.text.utlopt')}</Tag>
             )}
           </div>
 
@@ -336,7 +336,7 @@ function CredentialCard({
               data-size="sm"
               type="button"
               onClick={() => onCopy(revealedValue, credential.id)}
-              title="Kopier"
+              title={t('integrations.title.kopier')}
             >
               {isCopied ? (
                 <CheckCircle className="w-4 h-4 text-green-500" />
@@ -350,7 +350,7 @@ function CredentialCard({
             data-size="sm"
             type="button"
             onClick={onRotate}
-            title="Roter"
+            title={t('integrations.title.roter')}
           >
             <RefreshCw className="w-4 h-4" />
           </Button>

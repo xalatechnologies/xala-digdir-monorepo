@@ -137,8 +137,8 @@ export function MemberManagement({ organizationId, members }: MemberManagementPr
                   onChange={(e) => setSelectedRole(e.target.value as 'admin' | 'member')}
                   disabled={isSubmitting}
                 >
-                  <option value="member">Medlem</option>
-                  <option value="admin">Administrator</option>
+                  <option value="member">{t('organizations.text.medlem')}</option>
+                  <option value="admin">{t('organizations.text.administrator')}</option>
                 </Select>
               </FormField>
 
@@ -191,11 +191,11 @@ export function MemberManagement({ organizationId, members }: MemberManagementPr
         <Table>
           <Table.Head>
             <Table.Row>
-              <Table.HeaderCell>Navn</Table.HeaderCell>
+              <Table.HeaderCell>{t('organizations.label.name')}</Table.HeaderCell>
               <Table.HeaderCell>E-post</Table.HeaderCell>
-              <Table.HeaderCell>Rolle</Table.HeaderCell>
+              <Table.HeaderCell>{t('organizations.text.role')}</Table.HeaderCell>
               <Table.HeaderCell>{t('common.medlem_siden')}</Table.HeaderCell>
-              <Table.HeaderCell style={{ width: '80px' }}>Handlinger</Table.HeaderCell>
+              <Table.HeaderCell style={{ width: '80px' }}>{t('organizations.text.handlinger')}</Table.HeaderCell>
             </Table.Row>
           </Table.Head>
           <Table.Body>
@@ -225,7 +225,7 @@ export function MemberManagement({ organizationId, members }: MemberManagementPr
                 <Table.Cell>
                   <Dropdown.TriggerContext>
                     <Dropdown.Trigger asChild>
-                      <Button variant="tertiary" data-size="sm" aria-label="Handlinger" type="button">
+                      <Button variant="tertiary" data-size="sm" aria-label={t('organizations.ariaLabel.handlinger')} type="button">
                         <MoreVerticalIcon />
                       </Button>
                     </Dropdown.Trigger>

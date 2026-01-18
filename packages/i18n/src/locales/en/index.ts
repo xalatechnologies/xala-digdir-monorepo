@@ -2,8 +2,24 @@
  * EN Translations Index
  * Auto-generated - do not edit manually
  */
-import core from './core.json';
+import coreNested from './core.json';
 import common from './common.json';
+
+// Flatten nested JSON objects to dot-notation keys
+function flatten(obj: Record<string, unknown>, prefix = ''): Record<string, string> {
+  const result: Record<string, string> = {};
+  for (const [key, value] of Object.entries(obj)) {
+    const newKey = prefix ? `${prefix}.${key}` : key;
+    if (typeof value === 'object' && value !== null && !Array.isArray(value)) {
+      Object.assign(result, flatten(value as Record<string, unknown>, newKey));
+    } else {
+      result[newKey] = String(value);
+    }
+  }
+  return result;
+}
+
+const core = flatten(coreNested);
 import nav from './nav.json';
 import auth from './auth.json';
 import dashboard from './dashboard.json';

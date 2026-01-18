@@ -145,7 +145,7 @@ export function OrganizationMembersPage() {
                 type="email"
                 value={inviteEmail}
                 onChange={(e) => setInviteEmail(e.target.value)}
-                placeholder="bruker@example.no"
+                placeholder={t('minside.placeholder.brukerexampleno')}
                 style={{ width: '100%' }}
               />
             </div>

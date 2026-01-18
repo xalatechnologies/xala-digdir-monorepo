@@ -160,7 +160,7 @@ export const PermissionManagement: React.FC = () => {
     <div className="permission-management">
       {/* Header */}
       <div className="permission-header">
-        <h1>Tillatelsesstyring</h1>
+        <h1>{t('backoffice.text.tillatelsesstyring')}</h1>
         <p>{t('common.detaljert_tilgangskontroll_for_utleieobjekter')}</p>
         <button onClick={() => setShowForm(true)} className="btn-primary" type="button">
           + Gi tillatelse
@@ -198,12 +198,12 @@ export const PermissionManagement: React.FC = () => {
           <table className="permissions-table">
             <thead>
               <tr>
-                <th>Utleieobjekt</th>
+                <th>{t('backoffice.text.utleieobjekt')}</th>
                 <th>{t('common.gitt_til')}</th>
-                <th>Tillatelser</th>
+                <th>{t('backoffice.text.tillatelser')}</th>
                 <th>{t('common.gyldig_periode')}</th>
                 <th>Status</th>
-                <th>Handlinger</th>
+                <th>{t('backoffice.text.handlinger')}</th>
               </tr>
             </thead>
             <tbody>
@@ -220,7 +220,7 @@ export const PermissionManagement: React.FC = () => {
                       </div>
                     ) : (
                       <div>
-                        <span className="tag tag-org">Organisasjon</span>
+                        <span className="tag tag-org">{t('backoffice.text.organization')}</span>
                         {permission.organizationName}
                       </div>
                     )}
@@ -239,14 +239,14 @@ export const PermissionManagement: React.FC = () => {
                         )}
                       </div>
                     ) : (
-                      <span className="text-muted">Ubegrenset</span>
+                      <span className="text-muted">{t('backoffice.text.ubegrenset')}</span>
                     )}
                   </td>
                   <td>
                     {isActive(permission) ? (
-                      <span className="status-badge status-active">Aktiv</span>
+                      <span className="status-badge status-active">{t('backoffice.status.active')}</span>
                     ) : (
-                      <span className="status-badge status-inactive">Inaktiv</span>
+                      <span className="status-badge status-inactive">{t('backoffice.status.inactive')}</span>
                     )}
                   </td>
                   <td>
@@ -302,7 +302,7 @@ export const PermissionManagement: React.FC = () => {
             >
               {/* Form fields */}
               <div className="form-group">
-                <label>Utleieobjekt</label>
+                <label>{t('backoffice.text.utleieobjekt')}</label>
                 <input type="text" name="rentalObjectId" required className="form-input" />
               </div>
 
@@ -310,7 +310,7 @@ export const PermissionManagement: React.FC = () => {
                 <label>{t('common.gi_til')}</label>
                 <select name="grantTo" className="form-select">
                   <option value="USER">Bruker</option>
-                  <option value="ORGANIZATION">Organisasjon</option>
+                  <option value="ORGANIZATION">{t('backoffice.text.organization')}</option>
                 </select>
               </div>
 
@@ -320,7 +320,7 @@ export const PermissionManagement: React.FC = () => {
               </div>
 
               <div className="form-section">
-                <h3>Tillatelser</h3>
+                <h3>{t('backoffice.text.tillatelser')}</h3>
                 <div className="checkbox-grid">
                   <label>
                     <input type="checkbox" name="canView" defaultChecked />
@@ -361,11 +361,11 @@ export const PermissionManagement: React.FC = () => {
                 <h3>{t('common.gyldig_periode_valgfritt')}</h3>
                 <div className="form-row">
                   <div className="form-group">
-                    <label>Fra</label>
+                    <label>{t('backoffice.text.fra')}</label>
                     <input type="date" name="validFrom" className="form-input" />
                   </div>
                   <div className="form-group">
-                    <label>Til</label>
+                    <label>{t('backoffice.text.til')}</label>
                     <input type="date" name="validUntil" className="form-input" />
                   </div>
                 </div>

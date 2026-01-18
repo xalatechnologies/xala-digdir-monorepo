@@ -93,7 +93,7 @@ export function DetailedListingCard() {
           background: 'var(--ds-color-accent-base-default)',
           color: 'white',
           border: 'none',
-          borderRadius: '4px',
+          borderRadius: 'var(--ds-border-radius-sm)',
           cursor: 'pointer'
         }}
       >

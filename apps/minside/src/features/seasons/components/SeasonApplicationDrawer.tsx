@@ -307,7 +307,7 @@ export function SeasonApplicationDrawer({
                 <option value="listing-1">{t('common.idrettshall_1')}</option>
                 <option value="listing-2">{t('common.idrettshall_2')}</option>
                 <option value="listing-3">{t('common.moterom_a')}</option>
-                <option value="listing-4">Kinosalen</option>
+                <option value="listing-4">{t('seasons.text.kinosalen')}</option>
               </Select>
               <Paragraph data-size="xs" style={{ margin: 0, marginTop: 'var(--ds-spacing-1)', color: 'var(--ds-color-neutral-text-subtle)' }}>
                 {t('seasons.drawer.selectVenueHelp')}

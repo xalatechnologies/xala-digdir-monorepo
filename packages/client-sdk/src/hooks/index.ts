@@ -63,6 +63,9 @@ export {
   useAnnotatedNavItems,
 } from './use-navigation';
 
+// Admin Navigation hooks (server-generated menu)
+export { useAdminNavigation } from './use-admin-navigation';
+
 // Domain Navigation hooks (manifest-driven)
 export {
   type DomainNavItem,

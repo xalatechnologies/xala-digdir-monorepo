@@ -231,10 +231,10 @@ export function NotificationDeliveryDashboard() {
             <Table>
               <Table.Head>
                 <Table.Row>
-                  <Table.HeaderCell style={{ width: '100px' }}>Type</Table.HeaderCell>
-                  <Table.HeaderCell>Mottaker</Table.HeaderCell>
-                  <Table.HeaderCell>Emne</Table.HeaderCell>
-                  <Table.HeaderCell style={{ width: '120px' }}>Status</Table.HeaderCell>
+                  <Table.HeaderCell style={{ width: '100px' }}>{t('backoffice.text.type')}</Table.HeaderCell>
+                  <Table.HeaderCell>{t('backoffice.text.mottaker')}</Table.HeaderCell>
+                  <Table.HeaderCell>{t('backoffice.text.emne')}</Table.HeaderCell>
+                  <Table.HeaderCell style={{ width: '120px' }}>{t('backoffice.text.status')}</Table.HeaderCell>
                   <Table.HeaderCell style={{ width: '100px' }}>{t('common.forsok')}</Table.HeaderCell>
                   <Table.HeaderCell style={{ width: '180px' }}>{t('common.siste_forsok')}</Table.HeaderCell>
                 </Table.Row>

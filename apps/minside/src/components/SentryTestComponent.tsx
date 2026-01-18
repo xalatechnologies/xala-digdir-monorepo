@@ -15,7 +15,10 @@ import { useState } from 'react';
 import { Button, Card } from '@xala/ds';
 import { setTenantContext, setUserContext, addBreadcrumb, captureException } from '../lib/sentry';
 
+import { useT } from '@xala/i18n';
 export function SentryTestComponent() {
+  const t = useT();
+
   const [counter, setCounter] = useState(0);
 
   const handleSyncError = () => {
@@ -87,7 +90,7 @@ export function SentryTestComponent() {
 
       <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--ds-spacing-4)' }}>
         <div>
-          <h3 style={{ marginBottom: 'var(--ds-spacing-2)' }}>Context Setup</h3>
+          <h3 style={{ marginBottom: 'var(--ds-spacing-2)' }}>{t('minside.text.contextSetup')}</h3>
           <div style={{ display: 'flex', gap: 'var(--ds-spacing-2)', flexWrap: 'wrap' }}>
             <Button onClick={handleSetTenantContext} variant="secondary" type="button">
               Set Tenant Context
@@ -102,7 +105,7 @@ export function SentryTestComponent() {
         </div>
 
         <div>
-          <h3 style={{ marginBottom: 'var(--ds-spacing-2)' }}>Error Tests</h3>
+          <h3 style={{ marginBottom: 'var(--ds-spacing-2)' }}>{t('minside.text.errorTests')}</h3>
           <div style={{ display: 'flex', gap: 'var(--ds-spacing-2)', flexWrap: 'wrap' }}>
             <Button onClick={handleSyncError} variant="primary" type="button">
               Throw Sync Error
@@ -129,10 +132,10 @@ export function SentryTestComponent() {
           {/* eslint-disable-next-line digdir/prefer-ds-components -- Simple ordered list for testing instructions */}
           <ol style={{ marginLeft: 'var(--ds-spacing-6)', lineHeight: 'var(--ds-font-line-height-body)' }}>
             <li>First, set tenant and user context (optional but recommended)</li>
-            <li>Add some breadcrumbs to test breadcrumb tracking</li>
-            <li>Click any error button to trigger a test error</li>
-            <li>Check the browser console for error logs</li>
-            <li>Check your Sentry dashboard for the error report</li>
+            <li>{t('minside.text.addSomeBreadcrumbsToTestBreadcrumbTracking')}</li>
+            <li>{t('minside.text.clickAnyErrorButtonToTriggerATestError')}</li>
+            <li>{t('minside.text.checkTheBrowserConsoleForErrorLogs')}</li>
+            <li>{t('minside.text.checkYourSentryDashboardForTheErrorReport')}</li>
             <li>Verify context (tenant, user) and breadcrumbs appear in Sentry</li>
           </ol>
           <p style={{ marginTop: 'var(--ds-spacing-2)', color: 'var(--ds-color-neutral-text-subtle)' }}>

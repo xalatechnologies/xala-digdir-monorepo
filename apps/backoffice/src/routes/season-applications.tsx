@@ -162,7 +162,7 @@ export function SeasonApplicationsReviewPage() {
         gap: 'var(--ds-spacing-4)',
       }}>
         <Card style={{ padding: 'var(--ds-spacing-4)' }}>
-          <Paragraph data-size="sm" style={{ color: 'var(--ds-color-neutral-text-subtle)', margin: 0 }}>Totalt</Paragraph>
+          <Paragraph data-size="sm" style={{ color: 'var(--ds-color-neutral-text-subtle)', margin: 0 }}>{t('backoffice.text.totalt')}</Paragraph>
           <Heading level={2} data-size="xl" style={{ margin: 0 }}>{stats.total}</Heading>
         </Card>
         <Card style={{ padding: 'var(--ds-spacing-4)' }}>
@@ -172,11 +172,11 @@ export function SeasonApplicationsReviewPage() {
           </Heading>
         </Card>
         <Card style={{ padding: 'var(--ds-spacing-4)' }}>
-          <Paragraph data-size="sm" style={{ color: 'var(--ds-color-neutral-text-subtle)', margin: 0 }}>Under behandling</Paragraph>
+          <Paragraph data-size="sm" style={{ color: 'var(--ds-color-neutral-text-subtle)', margin: 0 }}>{t('backoffice.text.underBehandling')}</Paragraph>
           <Heading level={2} data-size="xl" style={{ margin: 0 }}>{stats.underReview}</Heading>
         </Card>
         <Card style={{ padding: 'var(--ds-spacing-4)' }}>
-          <Paragraph data-size="sm" style={{ color: 'var(--ds-color-neutral-text-subtle)', margin: 0 }}>Godkjent</Paragraph>
+          <Paragraph data-size="sm" style={{ color: 'var(--ds-color-neutral-text-subtle)', margin: 0 }}>{t('backoffice.text.godkjent')}</Paragraph>
           <Heading level={2} data-size="xl" style={{ margin: 0, color: 'var(--ds-color-success-text-default)' }}>{stats.approved}</Heading>
         </Card>
       </div>
@@ -214,11 +214,11 @@ export function SeasonApplicationsReviewPage() {
             <Table.Head>
               <Table.Row>
                 <Table.HeaderCell>Organisasjon</Table.HeaderCell>
-                <Table.HeaderCell>Sesong</Table.HeaderCell>
-                <Table.HeaderCell>Timer</Table.HeaderCell>
-                <Table.HeaderCell>Prioritet</Table.HeaderCell>
+                <Table.HeaderCell>{t('backoffice.text.season')}</Table.HeaderCell>
+                <Table.HeaderCell>{t('backoffice.text.timer')}</Table.HeaderCell>
+                <Table.HeaderCell>{t('backoffice.text.prioritet')}</Table.HeaderCell>
                 <Table.HeaderCell>Status</Table.HeaderCell>
-                <Table.HeaderCell>Mottatt</Table.HeaderCell>
+                <Table.HeaderCell>{t('backoffice.text.mottatt')}</Table.HeaderCell>
                 <Table.HeaderCell style={{ width: '180px' }}>Handlinger</Table.HeaderCell>
               </Table.Row>
             </Table.Head>

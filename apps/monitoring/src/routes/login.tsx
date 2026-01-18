@@ -21,7 +21,7 @@ export interface FlowContextNavigationState {
     returnTo: string;
     tenantId?: string;
     correlationId?: string;
-    [key: string]: any;
+    [key: string]: unknown;
   };
   isFlowRestoration: boolean;
 }
@@ -52,9 +52,11 @@ export function LoginPage(): React.ReactElement {
       if (result.hasContext && result.flowContext) {
         flowRestorationProcessed.current = true;
         const navigationState: FlowContextNavigationState = {
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
           flowContext: result.flowContext as any,
           isFlowRestoration: true,
         };
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         navigate((result.flowContext as any).returnTo, {
           replace: true,
           state: navigationState,

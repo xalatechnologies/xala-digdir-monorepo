@@ -366,7 +366,7 @@ export class ConfigurationRepository {
   }
 
   async findAllConfigurations(tenantId?: string | null, publicOnly = false): Promise<SystemConfiguration[]> {
-    let conditions = [];
+    const conditions = [];
     
     if (tenantId) {
       // Get both tenant-specific and global configs
@@ -408,7 +408,7 @@ export class ConfigurationRepository {
   }
 
   async deleteConfiguration(key: string, tenantId?: string | null): Promise<boolean> {
-    let conditions = [eq(systemConfigurations.key, key)];
+    const conditions = [eq(systemConfigurations.key, key)];
 
     if (tenantId) {
       conditions.push(eq(systemConfigurations.tenantId, tenantId));

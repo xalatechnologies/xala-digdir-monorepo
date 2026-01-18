@@ -130,7 +130,7 @@ export function NotificationBell({ count = 0, onClick, maxCount = 99 }: Notifica
             borderRadius: 'var(--ds-border-radius-full)',
             backgroundColor: 'var(--ds-color-danger-base-default)',
             color: 'white',
-            fontSize: '11px',
+            fontSize: 'var(--ds-font-size-2)',
             fontWeight: 600,
             display: 'flex',
             alignItems: 'center',
@@ -269,7 +269,7 @@ export function ConversationListItem({
             borderRadius: 'var(--ds-border-radius-full)',
             backgroundColor: 'var(--ds-color-accent-base-default)',
             color: 'white',
-            fontSize: '11px',
+            fontSize: 'var(--ds-font-size-2)',
             fontWeight: 600,
             display: 'flex',
             alignItems: 'center',
@@ -478,7 +478,7 @@ export function MessageBubble({ message, isFromCurrentUser, showReadReceipt }: M
         >
           <span
             style={{
-              fontSize: '10px',
+              fontSize: 'var(--ds-font-size-1)',
               opacity: 0.7,
             }}
           >

@@ -285,7 +285,7 @@ export function BookingCartSidebar({
                     </div>
                     {selectedActivity && (
                       <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--ds-spacing-1)', marginTop: 'var(--ds-spacing-1)' }}>
-                        <span style={{ fontSize: '14px' }}>{selectedActivity.icon}</span>
+                        <span style={{ fontSize: 'var(--ds-font-size-4)' }}>{selectedActivity.icon}</span>
                         <Paragraph data-size="sm" style={{ margin: 0, color: 'var(--ds-color-neutral-text-subtle)' }}>
                           {selectedActivity.label}
                         </Paragraph>
@@ -380,7 +380,7 @@ export function BookingCartSidebar({
                                 transition: 'all 150ms ease',
                               }}
                             >
-                              <span style={{ fontSize: '24px', marginBottom: 'var(--ds-spacing-1)' }}>{activity.icon}</span>
+                              <span style={{ fontSize: 'var(--ds-font-size-6)', marginBottom: 'var(--ds-spacing-1)' }}>{activity.icon}</span>
                               <Paragraph data-size="sm" style={{ margin: 0, fontWeight: 'var(--ds-font-weight-medium)', textAlign: 'center' }}>
                                 {activity.label}
                               </Paragraph>

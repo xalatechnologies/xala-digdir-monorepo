@@ -82,7 +82,7 @@ export function RentalObjectCustodyTab({ rentalObjectId }: { rentalObjectId: str
     <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--ds-spacing-6)' }}>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
         <div>
-          <Heading level={3} data-size="sm" style={{ margin: 0 }}>Ansvar og delegasjon</Heading>
+          <Heading level={3} data-size="sm" style={{ margin: 0 }}>{t('backoffice.text.ansvarOgDelegasjon')}</Heading>
           <Paragraph data-size="sm" style={{ color: 'var(--ds-color-neutral-text-subtle)', margin: 0 }}>
             Administrer hvem som har ansvar for dette objektet.
           </Paragraph>
@@ -103,12 +103,12 @@ export function RentalObjectCustodyTab({ rentalObjectId }: { rentalObjectId: str
         <table style={{ width: '100%', borderCollapse: 'collapse' }}>
           <thead>
             <tr style={{ textAlign: 'left', borderBottom: '1px solid var(--ds-color-neutral-border-subtle)', backgroundColor: 'var(--ds-color-neutral-surface-subtle)' }}>
-              <th style={{ padding: 'var(--ds-spacing-3) var(--ds-spacing-4)' }}>Mottaker</th>
-              <th style={{ padding: 'var(--ds-spacing-3) var(--ds-spacing-4)' }}>Type</th>
+              <th style={{ padding: 'var(--ds-spacing-3) var(--ds-spacing-4)' }}>{t('backoffice.text.mottaker')}</th>
+              <th style={{ padding: 'var(--ds-spacing-3) var(--ds-spacing-4)' }}>{t('backoffice.text.type')}</th>
               <th style={{ padding: 'var(--ds-spacing-3) var(--ds-spacing-4)' }}>{t('common.omfang_scopes')}</th>
-              <th style={{ padding: 'var(--ds-spacing-3) var(--ds-spacing-4)' }}>Periode</th>
-              <th style={{ padding: 'var(--ds-spacing-3) var(--ds-spacing-4)' }}>Status</th>
-              <th style={{ padding: 'var(--ds-spacing-3) var(--ds-spacing-4)', textAlign: 'right' }}>Handlinger</th>
+              <th style={{ padding: 'var(--ds-spacing-3) var(--ds-spacing-4)' }}>{t('backoffice.text.periode')}</th>
+              <th style={{ padding: 'var(--ds-spacing-3) var(--ds-spacing-4)' }}>{t('backoffice.text.status')}</th>
+              <th style={{ padding: 'var(--ds-spacing-3) var(--ds-spacing-4)', textAlign: 'right' }}>{t('backoffice.text.handlinger')}</th>
             </tr>
           </thead>
           <tbody>
@@ -166,12 +166,12 @@ export function RentalObjectCustodyTab({ rentalObjectId }: { rentalObjectId: str
                           ↳ {(usersData as any)?.data?.find((u: any) => u.id === sub.memberUserId)?.fullName || sub.memberUserId}
                         </td>
                         <td style={{ padding: 'var(--ds-spacing-2) var(--ds-spacing-4)' }}>
-                          <Badge variant="neutral" data-size="xs">Medlem</Badge>
+                          <Badge variant="neutral" data-size="xs">{t('backoffice.text.medlem')}</Badge>
                         </td>
                         <td style={{ padding: 'var(--ds-spacing-2) var(--ds-spacing-4)' }}>
                           <div style={{ display: 'flex', gap: 'var(--ds-spacing-1)', flexWrap: 'wrap' }}>
                             {(sub.scopes as string[]).map(s => (
-                              <Badge key={s} variant="neutral" data-size="xs" style={{ fontSize: '10px' }}>{s}</Badge>
+                              <Badge key={s} variant="neutral" data-size="xs" style={{ fontSize: 'var(--ds-font-size-1)' }}>{s}</Badge>
                             ))}
                           </div>
                         </td>
@@ -223,8 +223,8 @@ export function RentalObjectCustodyTab({ rentalObjectId }: { rentalObjectId: str
                   onChange={(e) => setNewGrant({...newGrant, granteeType: e.target.value as 'USER' | 'ORG', granteeId: ''})}
                   style={{ width: '100%', padding: 'var(--ds-spacing-2)', borderRadius: 'var(--ds-border-radius-md)', border: '1px solid var(--ds-color-neutral-border-default)' }}
                 >
-                  <option value="ORG">Organisasjon</option>
-                  <option value="USER">Bruker</option>
+                  <option value="ORG">{t('backoffice.text.organization')}</option>
+                  <option value="USER">{t('backoffice.text.user')}</option>
                 </select>
               </div>
 
@@ -286,7 +286,7 @@ export function RentalObjectCustodyTab({ rentalObjectId }: { rentalObjectId: str
               </div>
 
               <div>
-                <label style={{ display: 'block', marginBottom: 'var(--ds-spacing-1)', fontSize: 'var(--ds-font-size-sm)' }}>Begrunnelse</label>
+                <label style={{ display: 'block', marginBottom: 'var(--ds-spacing-1)', fontSize: 'var(--ds-font-size-sm)' }}>{t('backoffice.text.begrunnelse')}</label>
                 <textarea 
                   value={newGrant.reason || ''} 
                   onChange={(e) => setNewGrant({...newGrant, reason: e.target.value})}

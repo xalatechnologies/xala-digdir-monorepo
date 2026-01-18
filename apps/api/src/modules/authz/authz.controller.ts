@@ -191,6 +191,58 @@ export class MeController {
       },
     };
   }
+
+  /**
+   * GET /api/me/navigation - Get current user's navigation menu
+   * Returns server-generated menu structure based on role and permissions
+   */
+  @Get('/navigation')
+  async getNavigation(request: AuthzRequest, reply: FastifyReply) {
+    const db = container.resolve<any>('Database');
+    const userId = (request as any).userId || request.headers['x-user-id'];
+
+    if (!userId) {
+      reply.code(401);
+      return { error: { code: 'UNAUTHORIZED', message: 'Not authenticated' } };
+    }
+
+    const userResult = await db.select().from(users).where(eq(users.id, userId as string)).limit(1);
+
+    if (!userResult.length) {
+      reply.code(401);
+      return { error: { code: 'UNAUTHORIZED', message: 'User not found' } };
+    }
+
+    const user = userResult[0];
+    const role = user.role || 'user';
+
+    // Import menu generator
+    const { generateAdminMenu } = await import('../../core/admin-menu');
+    const menu = generateAdminMenu(role);
+
+    // Get user's permissions
+    const rolePermissions = PERMISSION_MATRIX[role] || PERMISSION_MATRIX.user;
+    const permissions: string[] = [];
+    for (const [resource, actions] of Object.entries(rolePermissions)) {
+      for (const action of actions) {
+        permissions.push(`${resource}:${action}`);
+      }
+    }
+
+    return {
+      data: {
+        currentUser: {
+          id: user.id,
+          role: user.role,
+          tenantId: user.tenantId || null,
+          organizationId: user.organizationId || null,
+        },
+        permissions,
+        menu,
+        featureFlags: {}, // Placeholder for future feature flags
+      },
+    };
+  }
 }
 
 // Export for use in middleware

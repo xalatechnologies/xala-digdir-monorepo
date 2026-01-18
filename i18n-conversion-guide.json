@@ -1,0 +1,6827 @@
+{
+  "metadata": {
+    "generatedAt": "2026-01-18T21:45:37.636Z",
+    "totalStrings": 570,
+    "uniqueKeys": 385,
+    "newKeys": 385
+  },
+  "conversions": [
+    {
+      "key": "backoffice.text.status",
+      "norwegianText": "Status",
+      "englishText": "Status",
+      "usageCount": 9,
+      "files": [
+        "apps/backoffice/src/features/notification-reports/NotificationDeliveryDashboard.tsx",
+        "apps/backoffice/src/features/rental-objects/components/detail/RentalObjectCustodyTab.tsx",
+        "apps/backoffice/src/features/rental-objects/components/wizard/steps/CustodyStep.tsx",
+        "apps/backoffice/src/features/reviews/components/ReviewModerationTable.tsx",
+        "apps/backoffice/src/pages/PermissionManagement/PermissionManagement.tsx",
+        "apps/backoffice/src/routes/pricing-rules.tsx",
+        "apps/backoffice/src/routes/season-applications.tsx",
+        "apps/backoffice/src/routes/users-management.tsx",
+        "apps/backoffice/src/routes/users.tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/backoffice/src/features/notification-reports/NotificationDeliveryDashboard.tsx",
+          "line": 237,
+          "type": "jsx-text"
+        },
+        {
+          "file": "apps/backoffice/src/features/rental-objects/components/detail/RentalObjectCustodyTab.tsx",
+          "line": 110,
+          "type": "jsx-text"
+        },
+        {
+          "file": "apps/backoffice/src/features/rental-objects/components/wizard/steps/CustodyStep.tsx",
+          "line": 106,
+          "type": "jsx-text"
+        }
+      ]
+    },
+    {
+      "key": "backoffice.text.user",
+      "norwegianText": "Bruker",
+      "englishText": "User",
+      "usageCount": 8,
+      "files": [
+        "apps/backoffice/src/features/rental-objects/components/BulkCustodyModal.tsx",
+        "apps/backoffice/src/features/rental-objects/components/detail/RentalObjectAuditTab.tsx",
+        "apps/backoffice/src/features/rental-objects/components/detail/RentalObjectCustodyTab.tsx",
+        "apps/backoffice/src/features/reviews/components/ReviewModerationTable.tsx",
+        "apps/backoffice/src/pages/PermissionManagement/PermissionManagement.tsx",
+        "apps/backoffice/src/routes/tenant/audit-log.tsx",
+        "apps/backoffice/src/routes/users-management.tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/backoffice/src/features/rental-objects/components/BulkCustodyModal.tsx",
+          "line": 82,
+          "type": "jsx-text"
+        },
+        {
+          "file": "apps/backoffice/src/features/rental-objects/components/detail/RentalObjectAuditTab.tsx",
+          "line": 42,
+          "type": "jsx-text"
+        },
+        {
+          "file": "apps/backoffice/src/features/rental-objects/components/detail/RentalObjectCustodyTab.tsx",
+          "line": 227,
+          "type": "jsx-text"
+        }
+      ]
+    },
+    {
+      "key": "settings.status.active",
+      "norwegianText": "Aktiv",
+      "englishText": "Active",
+      "usageCount": 8,
+      "files": [
+        "apps/backoffice/src/features/settings/components/IntegrationsTab.tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/backoffice/src/features/settings/components/IntegrationsTab.tsx",
+          "line": 51,
+          "type": "jsx-text"
+        },
+        {
+          "file": "apps/backoffice/src/features/settings/components/IntegrationsTab.tsx",
+          "line": 69,
+          "type": "jsx-text"
+        },
+        {
+          "file": "apps/backoffice/src/features/settings/components/IntegrationsTab.tsx",
+          "line": 98,
+          "type": "jsx-text"
+        }
+      ]
+    },
+    {
+      "key": "settings.status.inactive",
+      "norwegianText": "Inaktiv",
+      "englishText": "Inactive",
+      "usageCount": 8,
+      "files": [
+        "apps/backoffice/src/features/settings/components/IntegrationsTab.tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/backoffice/src/features/settings/components/IntegrationsTab.tsx",
+          "line": 53,
+          "type": "jsx-text"
+        },
+        {
+          "file": "apps/backoffice/src/features/settings/components/IntegrationsTab.tsx",
+          "line": 71,
+          "type": "jsx-text"
+        },
+        {
+          "file": "apps/backoffice/src/features/settings/components/IntegrationsTab.tsx",
+          "line": 100,
+          "type": "jsx-text"
+        }
+      ]
+    },
+    {
+      "key": "backoffice.text.handlinger",
+      "norwegianText": "Handlinger",
+      "englishText": "Handlinger",
+      "usageCount": 7,
+      "files": [
+        "apps/backoffice/src/features/rental-objects/components/detail/RentalObjectCustodyTab.tsx",
+        "apps/backoffice/src/pages/PermissionManagement/PermissionManagement.tsx",
+        "apps/backoffice/src/routes/pricing-rules.tsx",
+        "apps/backoffice/src/routes/requests.tsx",
+        "apps/backoffice/src/routes/season-applications.tsx",
+        "apps/backoffice/src/routes/users-management.tsx",
+        "apps/backoffice/src/routes/users.tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/backoffice/src/features/rental-objects/components/detail/RentalObjectCustodyTab.tsx",
+          "line": 111,
+          "type": "jsx-text"
+        },
+        {
+          "file": "apps/backoffice/src/pages/PermissionManagement/PermissionManagement.tsx",
+          "line": 206,
+          "type": "jsx-text"
+        },
+        {
+          "file": "apps/backoffice/src/routes/pricing-rules.tsx",
+          "line": 170,
+          "type": "jsx-text"
+        }
+      ]
+    },
+    {
+      "key": "seasons.text.organization",
+      "norwegianText": "Organisasjon",
+      "englishText": "Organization",
+      "usageCount": 6,
+      "files": [
+        "apps/backoffice/src/components/seasons/AllocationProposal.tsx",
+        "apps/backoffice/src/components/seasons/AppealProcess.tsx",
+        "apps/backoffice/src/components/seasons/SeasonAllocationManagement.tsx",
+        "apps/backoffice/src/components/seasons/SeasonApplicationManagement.tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/backoffice/src/components/seasons/AllocationProposal.tsx",
+          "line": 366,
+          "type": "jsx-text"
+        },
+        {
+          "file": "apps/backoffice/src/components/seasons/AllocationProposal.tsx",
+          "line": 412,
+          "type": "jsx-text"
+        },
+        {
+          "file": "apps/backoffice/src/components/seasons/AllocationProposal.tsx",
+          "line": 470,
+          "type": "jsx-text"
+        }
+      ]
+    },
+    {
+      "key": "seasons.text.status",
+      "norwegianText": "Status",
+      "englishText": "Status",
+      "usageCount": 6,
+      "files": [
+        "apps/backoffice/src/components/seasons/AllocationProposal.tsx",
+        "apps/backoffice/src/components/seasons/PriorityRulesConfig.tsx",
+        "apps/backoffice/src/components/seasons/SeasonAllocationManagement.tsx",
+        "apps/backoffice/src/components/seasons/SeasonApplicationManagement.tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/backoffice/src/components/seasons/AllocationProposal.tsx",
+          "line": 371,
+          "type": "jsx-text"
+        },
+        {
+          "file": "apps/backoffice/src/components/seasons/AllocationProposal.tsx",
+          "line": 418,
+          "type": "jsx-text"
+        },
+        {
+          "file": "apps/backoffice/src/components/seasons/AllocationProposal.tsx",
+          "line": 475,
+          "type": "jsx-text"
+        }
+      ]
+    },
+    {
+      "key": "backoffice.text.type",
+      "norwegianText": "Type",
+      "englishText": "Type",
+      "usageCount": 6,
+      "files": [
+        "apps/backoffice/src/features/notification-reports/NotificationDeliveryDashboard.tsx",
+        "apps/backoffice/src/features/rental-objects/components/detail/RentalObjectCustodyTab.tsx",
+        "apps/backoffice/src/features/rental-objects/components/wizard/steps/CustodyStep.tsx",
+        "apps/backoffice/src/routes/pricing-rules.tsx",
+        "apps/backoffice/src/routes/tenant/audit-log.tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/backoffice/src/features/notification-reports/NotificationDeliveryDashboard.tsx",
+          "line": 234,
+          "type": "jsx-text"
+        },
+        {
+          "file": "apps/backoffice/src/features/rental-objects/components/detail/RentalObjectCustodyTab.tsx",
+          "line": 107,
+          "type": "jsx-text"
+        },
+        {
+          "file": "apps/backoffice/src/features/rental-objects/components/wizard/steps/CustodyStep.tsx",
+          "line": 104,
+          "type": "jsx-text"
+        }
+      ]
+    },
+    {
+      "key": "settings.placeholder.oslo",
+      "norwegianText": "Oslo",
+      "englishText": "Oslo",
+      "usageCount": 6,
+      "files": [
+        "apps/backoffice/src/features/settings/components/AddressesTab.tsx",
+        "apps/minside/src/features/settings/components/AddressesTab.tsx",
+        "apps/monitoring/src/features/settings/components/AddressesTab.tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/backoffice/src/features/settings/components/AddressesTab.tsx",
+          "line": 134,
+          "type": "placeholder"
+        },
+        {
+          "file": "apps/backoffice/src/features/settings/components/AddressesTab.tsx",
+          "line": 211,
+          "type": "placeholder"
+        },
+        {
+          "file": "apps/minside/src/features/settings/components/AddressesTab.tsx",
+          "line": 132,
+          "type": "placeholder"
+        }
+      ]
+    },
+    {
+      "key": "settings.text.norge",
+      "norwegianText": "Norge",
+      "englishText": "Norge",
+      "usageCount": 6,
+      "files": [
+        "apps/backoffice/src/features/settings/components/AddressesTab.tsx",
+        "apps/minside/src/features/settings/components/AddressesTab.tsx",
+        "apps/monitoring/src/features/settings/components/AddressesTab.tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/backoffice/src/features/settings/components/AddressesTab.tsx",
+          "line": 159,
+          "type": "jsx-text"
+        },
+        {
+          "file": "apps/backoffice/src/features/settings/components/AddressesTab.tsx",
+          "line": 236,
+          "type": "jsx-text"
+        },
+        {
+          "file": "apps/minside/src/features/settings/components/AddressesTab.tsx",
+          "line": 157,
+          "type": "jsx-text"
+        }
+      ]
+    },
+    {
+      "key": "settings.text.sverige",
+      "norwegianText": "Sverige",
+      "englishText": "Sverige",
+      "usageCount": 6,
+      "files": [
+        "apps/backoffice/src/features/settings/components/AddressesTab.tsx",
+        "apps/minside/src/features/settings/components/AddressesTab.tsx",
+        "apps/monitoring/src/features/settings/components/AddressesTab.tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/backoffice/src/features/settings/components/AddressesTab.tsx",
+          "line": 160,
+          "type": "jsx-text"
+        },
+        {
+          "file": "apps/backoffice/src/features/settings/components/AddressesTab.tsx",
+          "line": 237,
+          "type": "jsx-text"
+        },
+        {
+          "file": "apps/minside/src/features/settings/components/AddressesTab.tsx",
+          "line": 158,
+          "type": "jsx-text"
+        }
+      ]
+    },
+    {
+      "key": "settings.text.danmark",
+      "norwegianText": "Danmark",
+      "englishText": "Danmark",
+      "usageCount": 6,
+      "files": [
+        "apps/backoffice/src/features/settings/components/AddressesTab.tsx",
+        "apps/minside/src/features/settings/components/AddressesTab.tsx",
+        "apps/monitoring/src/features/settings/components/AddressesTab.tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/backoffice/src/features/settings/components/AddressesTab.tsx",
+          "line": 161,
+          "type": "jsx-text"
+        },
+        {
+          "file": "apps/backoffice/src/features/settings/components/AddressesTab.tsx",
+          "line": 238,
+          "type": "jsx-text"
+        },
+        {
+          "file": "apps/minside/src/features/settings/components/AddressesTab.tsx",
+          "line": 159,
+          "type": "jsx-text"
+        }
+      ]
+    },
+    {
+      "key": "settings.text.finland",
+      "norwegianText": "Finland",
+      "englishText": "Finland",
+      "usageCount": 6,
+      "files": [
+        "apps/backoffice/src/features/settings/components/AddressesTab.tsx",
+        "apps/minside/src/features/settings/components/AddressesTab.tsx",
+        "apps/monitoring/src/features/settings/components/AddressesTab.tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/backoffice/src/features/settings/components/AddressesTab.tsx",
+          "line": 162,
+          "type": "jsx-text"
+        },
+        {
+          "file": "apps/backoffice/src/features/settings/components/AddressesTab.tsx",
+          "line": 239,
+          "type": "jsx-text"
+        },
+        {
+          "file": "apps/minside/src/features/settings/components/AddressesTab.tsx",
+          "line": 160,
+          "type": "jsx-text"
+        }
+      ]
+    },
+    {
+      "key": "seasons.text.lokale",
+      "norwegianText": "Lokale",
+      "englishText": "Lokale",
+      "usageCount": 5,
+      "files": [
+        "apps/backoffice/src/components/seasons/AllocationProposal.tsx",
+        "apps/backoffice/src/components/seasons/AppealProcess.tsx",
+        "apps/backoffice/src/components/seasons/SeasonApplicationManagement.tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/backoffice/src/components/seasons/AllocationProposal.tsx",
+          "line": 367,
+          "type": "jsx-text"
+        },
+        {
+          "file": "apps/backoffice/src/components/seasons/AllocationProposal.tsx",
+          "line": 413,
+          "type": "jsx-text"
+        },
+        {
+          "file": "apps/backoffice/src/components/seasons/AllocationProposal.tsx",
+          "line": 471,
+          "type": "jsx-text"
+        }
+      ]
+    },
+    {
+      "key": "backoffice.text.organization",
+      "norwegianText": "Organisasjon",
+      "englishText": "Organization",
+      "usageCount": 5,
+      "files": [
+        "apps/backoffice/src/features/rental-objects/components/BulkCustodyModal.tsx",
+        "apps/backoffice/src/features/rental-objects/components/detail/RentalObjectCustodyTab.tsx",
+        "apps/backoffice/src/pages/PermissionManagement/PermissionManagement.tsx",
+        "apps/backoffice/src/routes/season-applications.tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/backoffice/src/features/rental-objects/components/BulkCustodyModal.tsx",
+          "line": 81,
+          "type": "jsx-text"
+        },
+        {
+          "file": "apps/backoffice/src/features/rental-objects/components/detail/RentalObjectCustodyTab.tsx",
+          "line": 226,
+          "type": "jsx-text"
+        },
+        {
+          "file": "apps/backoffice/src/pages/PermissionManagement/PermissionManagement.tsx",
+          "line": 223,
+          "type": "jsx-text"
+        }
+      ]
+    },
+    {
+      "key": "backoffice.status.active",
+      "norwegianText": "Aktiv",
+      "englishText": "Active",
+      "usageCount": 4,
+      "files": [
+        "apps/backoffice/src/components/IntegrationConfigModal.tsx",
+        "apps/backoffice/src/pages/PermissionManagement/PermissionManagement.tsx",
+        "apps/backoffice/src/routes/users.tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/backoffice/src/components/IntegrationConfigModal.tsx",
+          "line": 96,
+          "type": "jsx-text"
+        },
+        {
+          "file": "apps/backoffice/src/components/IntegrationConfigModal.tsx",
+          "line": 158,
+          "type": "jsx-text"
+        },
+        {
+          "file": "apps/backoffice/src/pages/PermissionManagement/PermissionManagement.tsx",
+          "line": 247,
+          "type": "jsx-text"
+        }
+      ]
+    },
+    {
+      "key": "backoffice.status.inactive",
+      "norwegianText": "Inaktiv",
+      "englishText": "Inactive",
+      "usageCount": 4,
+      "files": [
+        "apps/backoffice/src/components/IntegrationConfigModal.tsx",
+        "apps/backoffice/src/pages/PermissionManagement/PermissionManagement.tsx",
+        "apps/backoffice/src/routes/users.tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/backoffice/src/components/IntegrationConfigModal.tsx",
+          "line": 100,
+          "type": "jsx-text"
+        },
+        {
+          "file": "apps/backoffice/src/components/IntegrationConfigModal.tsx",
+          "line": 159,
+          "type": "jsx-text"
+        },
+        {
+          "file": "apps/backoffice/src/pages/PermissionManagement/PermissionManagement.tsx",
+          "line": 249,
+          "type": "jsx-text"
+        }
+      ]
+    },
+    {
+      "key": "seasons.text.prioritet",
+      "norwegianText": "Prioritet",
+      "englishText": "Prioritet",
+      "usageCount": 4,
+      "files": [
+        "apps/backoffice/src/components/seasons/AllocationProposal.tsx",
+        "apps/backoffice/src/components/seasons/PriorityRulesConfig.tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/backoffice/src/components/seasons/AllocationProposal.tsx",
+          "line": 370,
+          "type": "jsx-text"
+        },
+        {
+          "file": "apps/backoffice/src/components/seasons/AllocationProposal.tsx",
+          "line": 417,
+          "type": "jsx-text"
+        },
+        {
+          "file": "apps/backoffice/src/components/seasons/AllocationProposal.tsx",
+          "line": 474,
+          "type": "jsx-text"
+        }
+      ]
+    },
+    {
+      "key": "seasons.text.ukedag",
+      "norwegianText": "Ukedag",
+      "englishText": "Ukedag",
+      "usageCount": 4,
+      "files": [
+        "apps/backoffice/src/components/seasons/AppealProcess.tsx",
+        "apps/backoffice/src/components/seasons/ConflictViewer.tsx",
+        "apps/backoffice/src/components/seasons/SeasonAllocationManagement.tsx",
+        "apps/backoffice/src/components/seasons/SeasonApplicationManagement.tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/backoffice/src/components/seasons/AppealProcess.tsx",
+          "line": 327,
+          "type": "jsx-text"
+        },
+        {
+          "file": "apps/backoffice/src/components/seasons/ConflictViewer.tsx",
+          "line": 188,
+          "type": "jsx-text"
+        },
+        {
+          "file": "apps/backoffice/src/components/seasons/SeasonAllocationManagement.tsx",
+          "line": 225,
+          "type": "jsx-text"
+        }
+      ]
+    },
+    {
+      "key": "seasons.text.handlinger",
+      "norwegianText": "Handlinger",
+      "englishText": "Handlinger",
+      "usageCount": 4,
+      "files": [
+        "apps/backoffice/src/components/seasons/AppealProcess.tsx",
+        "apps/backoffice/src/components/seasons/PriorityRulesConfig.tsx",
+        "apps/backoffice/src/components/seasons/SeasonApplicationManagement.tsx",
+        "apps/backoffice/src/components/seasons/SeasonVenueManagement.tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/backoffice/src/components/seasons/AppealProcess.tsx",
+          "line": 332,
+          "type": "jsx-text"
+        },
+        {
+          "file": "apps/backoffice/src/components/seasons/PriorityRulesConfig.tsx",
+          "line": 342,
+          "type": "jsx-text"
+        },
+        {
+          "file": "apps/backoffice/src/components/seasons/SeasonApplicationManagement.tsx",
+          "line": 224,
+          "type": "jsx-text"
+        }
+      ]
+    },
+    {
+      "key": "settings.ariaLabel.gateadresse",
+      "norwegianText": "Gateadresse",
+      "englishText": "Gateadresse",
+      "usageCount": 4,
+      "files": [
+        "apps/backoffice/src/features/settings/components/AddressesTab.tsx",
+        "apps/monitoring/src/features/settings/components/AddressesTab.tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/backoffice/src/features/settings/components/AddressesTab.tsx",
+          "line": 116,
+          "type": "aria-label"
+        },
+        {
+          "file": "apps/backoffice/src/features/settings/components/AddressesTab.tsx",
+          "line": 193,
+          "type": "aria-label"
+        },
+        {
+          "file": "apps/monitoring/src/features/settings/components/AddressesTab.tsx",
+          "line": 114,
+          "type": "aria-label"
+        }
+      ]
+    },
+    {
+      "key": "settings.ariaLabel.poststed",
+      "norwegianText": "Poststed",
+      "englishText": "Poststed",
+      "usageCount": 4,
+      "files": [
+        "apps/backoffice/src/features/settings/components/AddressesTab.tsx",
+        "apps/monitoring/src/features/settings/components/AddressesTab.tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/backoffice/src/features/settings/components/AddressesTab.tsx",
+          "line": 128,
+          "type": "aria-label"
+        },
+        {
+          "file": "apps/backoffice/src/features/settings/components/AddressesTab.tsx",
+          "line": 205,
+          "type": "aria-label"
+        },
+        {
+          "file": "apps/monitoring/src/features/settings/components/AddressesTab.tsx",
+          "line": 126,
+          "type": "aria-label"
+        }
+      ]
+    },
+    {
+      "key": "backoffice.text.ventende",
+      "norwegianText": "Ventende",
+      "englishText": "Ventende",
+      "usageCount": 4,
+      "files": [
+        "apps/backoffice/src/routes/admin-reports.tsx",
+        "apps/backoffice/src/routes/decision-forms.tsx",
+        "apps/backoffice/src/routes/search.tsx",
+        "apps/backoffice/src/routes/season-applications.tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/backoffice/src/routes/admin-reports.tsx",
+          "line": 159,
+          "type": "jsx-text"
+        },
+        {
+          "file": "apps/backoffice/src/routes/decision-forms.tsx",
+          "line": 137,
+          "type": "jsx-text"
+        },
+        {
+          "file": "apps/backoffice/src/routes/search.tsx",
+          "line": 279,
+          "type": "jsx-text"
+        }
+      ]
+    },
+    {
+      "key": "seasons.text.dag",
+      "norwegianText": "Dag",
+      "englishText": "Dag",
+      "usageCount": 3,
+      "files": [
+        "apps/backoffice/src/components/seasons/AllocationProposal.tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/backoffice/src/components/seasons/AllocationProposal.tsx",
+          "line": 368,
+          "type": "jsx-text"
+        },
+        {
+          "file": "apps/backoffice/src/components/seasons/AllocationProposal.tsx",
+          "line": 414,
+          "type": "jsx-text"
+        },
+        {
+          "file": "apps/backoffice/src/components/seasons/AllocationProposal.tsx",
+          "line": 472,
+          "type": "jsx-text"
+        }
+      ]
+    },
+    {
+      "key": "seasons.text.tidspunkt",
+      "norwegianText": "Tidspunkt",
+      "englishText": "Tidspunkt",
+      "usageCount": 3,
+      "files": [
+        "apps/backoffice/src/components/seasons/AllocationProposal.tsx",
+        "apps/backoffice/src/components/seasons/ConflictViewer.tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/backoffice/src/components/seasons/AllocationProposal.tsx",
+          "line": 369,
+          "type": "jsx-text"
+        },
+        {
+          "file": "apps/backoffice/src/components/seasons/AllocationProposal.tsx",
+          "line": 473,
+          "type": "jsx-text"
+        },
+        {
+          "file": "apps/backoffice/src/components/seasons/ConflictViewer.tsx",
+          "line": 189,
+          "type": "jsx-text"
+        }
+      ]
+    },
+    {
+      "key": "seasons.text.begrunnelse",
+      "norwegianText": "Begrunnelse",
+      "englishText": "Begrunnelse",
+      "usageCount": 3,
+      "files": [
+        "apps/backoffice/src/components/seasons/AllocationProposal.tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/backoffice/src/components/seasons/AllocationProposal.tsx",
+          "line": 372,
+          "type": "jsx-text"
+        },
+        {
+          "file": "apps/backoffice/src/components/seasons/AllocationProposal.tsx",
+          "line": 419,
+          "type": "jsx-text"
+        },
+        {
+          "file": "apps/backoffice/src/components/seasons/AllocationProposal.tsx",
+          "line": 476,
+          "type": "jsx-text"
+        }
+      ]
+    },
+    {
+      "key": "seasons.text.time",
+      "norwegianText": "Tid",
+      "englishText": "Time",
+      "usageCount": 3,
+      "files": [
+        "apps/backoffice/src/components/seasons/AppealProcess.tsx",
+        "apps/backoffice/src/components/seasons/SeasonAllocationManagement.tsx",
+        "apps/backoffice/src/components/seasons/SeasonApplicationManagement.tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/backoffice/src/components/seasons/AppealProcess.tsx",
+          "line": 328,
+          "type": "jsx-text"
+        },
+        {
+          "file": "apps/backoffice/src/components/seasons/SeasonAllocationManagement.tsx",
+          "line": 226,
+          "type": "jsx-text"
+        },
+        {
+          "file": "apps/backoffice/src/components/seasons/SeasonApplicationManagement.tsx",
+          "line": 221,
+          "type": "jsx-text"
+        }
+      ]
+    },
+    {
+      "key": "seasons.text.type",
+      "norwegianText": "Type",
+      "englishText": "Type",
+      "usageCount": 3,
+      "files": [
+        "apps/backoffice/src/components/seasons/ConflictViewer.tsx",
+        "apps/backoffice/src/components/seasons/PriorityRulesConfig.tsx",
+        "apps/backoffice/src/components/seasons/SeasonVenueManagement.tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/backoffice/src/components/seasons/ConflictViewer.tsx",
+          "line": 190,
+          "type": "jsx-text"
+        },
+        {
+          "file": "apps/backoffice/src/components/seasons/PriorityRulesConfig.tsx",
+          "line": 337,
+          "type": "jsx-text"
+        },
+        {
+          "file": "apps/backoffice/src/components/seasons/SeasonVenueManagement.tsx",
+          "line": 177,
+          "type": "jsx-text"
+        }
+      ]
+    },
+    {
+      "key": "settings.text.english",
+      "norwegianText": "English",
+      "englishText": "English",
+      "usageCount": 3,
+      "files": [
+        "apps/backoffice/src/features/settings/components/GeneralTab.tsx",
+        "apps/minside/src/features/settings/components/PreferencesTab.tsx",
+        "apps/monitoring/src/features/settings/components/PreferencesTab.tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/backoffice/src/features/settings/components/GeneralTab.tsx",
+          "line": 58,
+          "type": "jsx-text"
+        },
+        {
+          "file": "apps/minside/src/features/settings/components/PreferencesTab.tsx",
+          "line": 42,
+          "type": "jsx-text"
+        },
+        {
+          "file": "apps/monitoring/src/features/settings/components/PreferencesTab.tsx",
+          "line": 42,
+          "type": "jsx-text"
+        }
+      ]
+    },
+    {
+      "key": "settings.placeholder.olanordmannexamplecom",
+      "norwegianText": "ola.nordmann@example.com",
+      "englishText": "ola.nordmann@example.com",
+      "usageCount": 3,
+      "files": [
+        "apps/backoffice/src/features/settings/components/ProfileTab.tsx",
+        "apps/minside/src/features/settings/components/ProfileTab.tsx",
+        "apps/monitoring/src/features/settings/components/ProfileTab.tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/backoffice/src/features/settings/components/ProfileTab.tsx",
+          "line": 219,
+          "type": "placeholder"
+        },
+        {
+          "file": "apps/minside/src/features/settings/components/ProfileTab.tsx",
+          "line": 221,
+          "type": "placeholder"
+        },
+        {
+          "file": "apps/monitoring/src/features/settings/components/ProfileTab.tsx",
+          "line": 221,
+          "type": "placeholder"
+        }
+      ]
+    },
+    {
+      "key": "settings.placeholder.4712345678",
+      "norwegianText": "+47 123 45 678",
+      "englishText": "+47 123 45 678",
+      "usageCount": 3,
+      "files": [
+        "apps/backoffice/src/features/settings/components/ProfileTab.tsx",
+        "apps/minside/src/features/settings/components/ProfileTab.tsx",
+        "apps/monitoring/src/features/settings/components/ProfileTab.tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/backoffice/src/features/settings/components/ProfileTab.tsx",
+          "line": 227,
+          "type": "placeholder"
+        },
+        {
+          "file": "apps/minside/src/features/settings/components/ProfileTab.tsx",
+          "line": 231,
+          "type": "placeholder"
+        },
+        {
+          "file": "apps/monitoring/src/features/settings/components/ProfileTab.tsx",
+          "line": 231,
+          "type": "placeholder"
+        }
+      ]
+    },
+    {
+      "key": "backoffice.text.godkjent",
+      "norwegianText": "Godkjent",
+      "englishText": "Godkjent",
+      "usageCount": 3,
+      "files": [
+        "apps/backoffice/src/routes/audit-timeline.tsx",
+        "apps/backoffice/src/routes/decision-forms.tsx",
+        "apps/backoffice/src/routes/season-applications.tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/backoffice/src/routes/audit-timeline.tsx",
+          "line": 155,
+          "type": "jsx-text"
+        },
+        {
+          "file": "apps/backoffice/src/routes/decision-forms.tsx",
+          "line": 219,
+          "type": "jsx-text"
+        },
+        {
+          "file": "apps/backoffice/src/routes/season-applications.tsx",
+          "line": 179,
+          "type": "jsx-text"
+        }
+      ]
+    },
+    {
+      "key": "backoffice.text.totalt",
+      "norwegianText": "Totalt",
+      "englishText": "Totalt",
+      "usageCount": 3,
+      "files": [
+        "apps/backoffice/src/routes/pricing-rules.tsx",
+        "apps/backoffice/src/routes/season-applications.tsx",
+        "apps/backoffice/src/routes/users-management.tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/backoffice/src/routes/pricing-rules.tsx",
+          "line": 132,
+          "type": "jsx-text"
+        },
+        {
+          "file": "apps/backoffice/src/routes/season-applications.tsx",
+          "line": 165,
+          "type": "jsx-text"
+        },
+        {
+          "file": "apps/backoffice/src/routes/users-management.tsx",
+          "line": 191,
+          "type": "jsx-text"
+        }
+      ]
+    },
+    {
+      "key": "backoffice.text.alle",
+      "norwegianText": "Alle",
+      "englishText": "Alle",
+      "usageCount": 3,
+      "files": [
+        "apps/backoffice/src/routes/tenant/audit-log.tsx",
+        "apps/backoffice/src/routes/users.tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/backoffice/src/routes/tenant/audit-log.tsx",
+          "line": 195,
+          "type": "jsx-text"
+        },
+        {
+          "file": "apps/backoffice/src/routes/users.tsx",
+          "line": 141,
+          "type": "jsx-text"
+        },
+        {
+          "file": "apps/backoffice/src/routes/users.tsx",
+          "line": 161,
+          "type": "jsx-text"
+        }
+      ]
+    },
+    {
+      "key": "monitoring.text.testResults",
+      "norwegianText": "Test Results",
+      "englishText": "Test Results",
+      "usageCount": 3,
+      "files": [
+        "apps/monitoring/src/features/testing/TestResultsWidget.tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/monitoring/src/features/testing/TestResultsWidget.tsx",
+          "line": 80,
+          "type": "jsx-text"
+        },
+        {
+          "file": "apps/monitoring/src/features/testing/TestResultsWidget.tsx",
+          "line": 91,
+          "type": "jsx-text"
+        },
+        {
+          "file": "apps/monitoring/src/features/testing/TestResultsWidget.tsx",
+          "line": 106,
+          "type": "jsx-text"
+        }
+      ]
+    },
+    {
+      "key": "saasAdmin.text.slug",
+      "norwegianText": "Slug",
+      "englishText": "Slug",
+      "usageCount": 3,
+      "files": [
+        "apps/saas-admin/src/routes/branding/index.tsx",
+        "apps/saas-admin/src/routes/plans/[id].tsx",
+        "apps/saas-admin/src/routes/tenants/index.tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/saas-admin/src/routes/branding/index.tsx",
+          "line": 121,
+          "type": "jsx-text"
+        },
+        {
+          "file": "apps/saas-admin/src/routes/plans/[id].tsx",
+          "line": 307,
+          "type": "jsx-text"
+        },
+        {
+          "file": "apps/saas-admin/src/routes/tenants/index.tsx",
+          "line": 245,
+          "type": "jsx-text"
+        }
+      ]
+    },
+    {
+      "key": "saasAdmin.text.status",
+      "norwegianText": "Status",
+      "englishText": "Status",
+      "usageCount": 3,
+      "files": [
+        "apps/saas-admin/src/routes/tenants/[id].tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/saas-admin/src/routes/tenants/[id].tsx",
+          "line": 552,
+          "type": "jsx-text"
+        },
+        {
+          "file": "apps/saas-admin/src/routes/tenants/[id].tsx",
+          "line": 591,
+          "type": "jsx-text"
+        },
+        {
+          "file": "apps/saas-admin/src/routes/tenants/[id].tsx",
+          "line": 657,
+          "type": "jsx-text"
+        }
+      ]
+    },
+    {
+      "key": "organizations.placeholder.4712345678",
+      "norwegianText": "+47 123 45 678",
+      "englishText": "+47 123 45 678",
+      "usageCount": 2,
+      "files": [
+        "apps/backoffice/src/components/organizations/BasicStep.tsx",
+        "apps/backoffice/src/components/organizations/OrganizationForm.tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/backoffice/src/components/organizations/BasicStep.tsx",
+          "line": 131,
+          "type": "placeholder"
+        },
+        {
+          "file": "apps/backoffice/src/components/organizations/OrganizationForm.tsx",
+          "line": 209,
+          "type": "placeholder"
+        }
+      ]
+    },
+    {
+      "key": "organizations.placeholder.gateadresse",
+      "norwegianText": "Gateadresse",
+      "englishText": "Gateadresse",
+      "usageCount": 2,
+      "files": [
+        "apps/backoffice/src/components/organizations/BasicStep.tsx",
+        "apps/backoffice/src/components/organizations/OrganizationForm.tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/backoffice/src/components/organizations/BasicStep.tsx",
+          "line": 149,
+          "type": "placeholder"
+        },
+        {
+          "file": "apps/backoffice/src/components/organizations/OrganizationForm.tsx",
+          "line": 226,
+          "type": "placeholder"
+        }
+      ]
+    },
+    {
+      "key": "organizations.placeholder.oslo",
+      "norwegianText": "Oslo",
+      "englishText": "Oslo",
+      "usageCount": 2,
+      "files": [
+        "apps/backoffice/src/components/organizations/BasicStep.tsx",
+        "apps/backoffice/src/components/organizations/OrganizationForm.tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/backoffice/src/components/organizations/BasicStep.tsx",
+          "line": 169,
+          "type": "placeholder"
+        },
+        {
+          "file": "apps/backoffice/src/components/organizations/OrganizationForm.tsx",
+          "line": 249,
+          "type": "placeholder"
+        }
+      ]
+    },
+    {
+      "key": "organizations.text.medlem",
+      "norwegianText": "Medlem",
+      "englishText": "Medlem",
+      "usageCount": 2,
+      "files": [
+        "apps/backoffice/src/components/organizations/MemberManagement.tsx",
+        "apps/backoffice/src/routes/organizations/PermissionAssignmentPage.tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/backoffice/src/components/organizations/MemberManagement.tsx",
+          "line": 140,
+          "type": "jsx-text"
+        },
+        {
+          "file": "apps/backoffice/src/routes/organizations/PermissionAssignmentPage.tsx",
+          "line": 524,
+          "type": "jsx-text"
+        }
+      ]
+    },
+    {
+      "key": "seasons.text.alle",
+      "norwegianText": "Alle",
+      "englishText": "Alle",
+      "usageCount": 2,
+      "files": [
+        "apps/backoffice/src/components/seasons/AppealProcess.tsx",
+        "apps/backoffice/src/components/seasons/SeasonApplicationManagement.tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/backoffice/src/components/seasons/AppealProcess.tsx",
+          "line": 299,
+          "type": "jsx-text"
+        },
+        {
+          "file": "apps/backoffice/src/components/seasons/SeasonApplicationManagement.tsx",
+          "line": 176,
+          "type": "jsx-text"
+        }
+      ]
+    },
+    {
+      "key": "backoffice.text.mottaker",
+      "norwegianText": "Mottaker",
+      "englishText": "Mottaker",
+      "usageCount": 2,
+      "files": [
+        "apps/backoffice/src/features/notification-reports/NotificationDeliveryDashboard.tsx",
+        "apps/backoffice/src/features/rental-objects/components/detail/RentalObjectCustodyTab.tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/backoffice/src/features/notification-reports/NotificationDeliveryDashboard.tsx",
+          "line": 235,
+          "type": "jsx-text"
+        },
+        {
+          "file": "apps/backoffice/src/features/rental-objects/components/detail/RentalObjectCustodyTab.tsx",
+          "line": 106,
+          "type": "jsx-text"
+        }
+      ]
+    },
+    {
+      "key": "backoffice.text.tidspunkt",
+      "norwegianText": "Tidspunkt",
+      "englishText": "Tidspunkt",
+      "usageCount": 2,
+      "files": [
+        "apps/backoffice/src/features/rental-objects/components/detail/RentalObjectAuditTab.tsx",
+        "apps/backoffice/src/routes/tenant/audit-log.tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/backoffice/src/features/rental-objects/components/detail/RentalObjectAuditTab.tsx",
+          "line": 41,
+          "type": "jsx-text"
+        },
+        {
+          "file": "apps/backoffice/src/routes/tenant/audit-log.tsx",
+          "line": 225,
+          "type": "jsx-text"
+        }
+      ]
+    },
+    {
+      "key": "backoffice.text.handling",
+      "norwegianText": "Handling",
+      "englishText": "Handling",
+      "usageCount": 2,
+      "files": [
+        "apps/backoffice/src/features/rental-objects/components/detail/RentalObjectAuditTab.tsx",
+        "apps/backoffice/src/routes/tenant/audit-log.tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/backoffice/src/features/rental-objects/components/detail/RentalObjectAuditTab.tsx",
+          "line": 43,
+          "type": "jsx-text"
+        },
+        {
+          "file": "apps/backoffice/src/routes/tenant/audit-log.tsx",
+          "line": 227,
+          "type": "jsx-text"
+        }
+      ]
+    },
+    {
+      "key": "backoffice.text.scopes",
+      "norwegianText": "Scopes",
+      "englishText": "Scopes",
+      "usageCount": 2,
+      "files": [
+        "apps/backoffice/src/features/rental-objects/components/wizard/steps/CustodyStep.tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/backoffice/src/features/rental-objects/components/wizard/steps/CustodyStep.tsx",
+          "line": 105,
+          "type": "jsx-text"
+        },
+        {
+          "file": "apps/backoffice/src/features/rental-objects/components/wizard/steps/CustodyStep.tsx",
+          "line": 205,
+          "type": "jsx-text"
+        }
+      ]
+    },
+    {
+      "key": "backoffice.ariaLabel.handlinger",
+      "norwegianText": "Handlinger",
+      "englishText": "Handlinger",
+      "usageCount": 2,
+      "files": [
+        "apps/backoffice/src/features/reviews/components/ReviewModerationTable.tsx",
+        "apps/backoffice/src/routes/users.tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/backoffice/src/features/reviews/components/ReviewModerationTable.tsx",
+          "line": 193,
+          "type": "aria-label"
+        },
+        {
+          "file": "apps/backoffice/src/routes/users.tsx",
+          "line": 249,
+          "type": "aria-label"
+        }
+      ]
+    },
+    {
+      "key": "backoffice.text.opprettet",
+      "norwegianText": "Opprettet",
+      "englishText": "Opprettet",
+      "usageCount": 2,
+      "files": [
+        "apps/backoffice/src/features/reviews/components/ReviewModerationTable.tsx",
+        "apps/backoffice/src/routes/requests.tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/backoffice/src/features/reviews/components/ReviewModerationTable.tsx",
+          "line": 382,
+          "type": "jsx-text"
+        },
+        {
+          "file": "apps/backoffice/src/routes/requests.tsx",
+          "line": 357,
+          "type": "jsx-text"
+        }
+      ]
+    },
+    {
+      "key": "settings.ariaLabel.telefonnummer",
+      "norwegianText": "Telefonnummer",
+      "englishText": "Telefonnummer",
+      "usageCount": 2,
+      "files": [
+        "apps/backoffice/src/features/settings/components/ProfileTab.tsx",
+        "apps/monitoring/src/features/settings/components/ProfileTab.tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/backoffice/src/features/settings/components/ProfileTab.tsx",
+          "line": 224,
+          "type": "aria-label"
+        },
+        {
+          "file": "apps/monitoring/src/features/settings/components/ProfileTab.tsx",
+          "line": 232,
+          "type": "aria-label"
+        }
+      ]
+    },
+    {
+      "key": "backoffice.text.utleieobjekt",
+      "norwegianText": "Utleieobjekt",
+      "englishText": "Utleieobjekt",
+      "usageCount": 2,
+      "files": [
+        "apps/backoffice/src/pages/PermissionManagement/PermissionManagement.tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/backoffice/src/pages/PermissionManagement/PermissionManagement.tsx",
+          "line": 201,
+          "type": "jsx-text"
+        },
+        {
+          "file": "apps/backoffice/src/pages/PermissionManagement/PermissionManagement.tsx",
+          "line": 305,
+          "type": "jsx-text"
+        }
+      ]
+    },
+    {
+      "key": "backoffice.text.tillatelser",
+      "norwegianText": "Tillatelser",
+      "englishText": "Tillatelser",
+      "usageCount": 2,
+      "files": [
+        "apps/backoffice/src/pages/PermissionManagement/PermissionManagement.tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/backoffice/src/pages/PermissionManagement/PermissionManagement.tsx",
+          "line": 203,
+          "type": "jsx-text"
+        },
+        {
+          "file": "apps/backoffice/src/pages/PermissionManagement/PermissionManagement.tsx",
+          "line": 323,
+          "type": "jsx-text"
+        }
+      ]
+    },
+    {
+      "key": "backoffice.text.bookings",
+      "norwegianText": "Bookinger",
+      "englishText": "Bookings",
+      "usageCount": 2,
+      "files": [
+        "apps/backoffice/src/routes/admin-reports.tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/backoffice/src/routes/admin-reports.tsx",
+          "line": 126,
+          "type": "jsx-text"
+        },
+        {
+          "file": "apps/backoffice/src/routes/admin-reports.tsx",
+          "line": 189,
+          "type": "jsx-text"
+        }
+      ]
+    },
+    {
+      "key": "backoffice.text.lokale",
+      "norwegianText": "Lokale",
+      "englishText": "Lokale",
+      "usageCount": 2,
+      "files": [
+        "apps/backoffice/src/routes/admin-reports.tsx",
+        "apps/backoffice/src/routes/requests.tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/backoffice/src/routes/admin-reports.tsx",
+          "line": 188,
+          "type": "jsx-text"
+        },
+        {
+          "file": "apps/backoffice/src/routes/requests.tsx",
+          "line": 355,
+          "type": "jsx-text"
+        }
+      ]
+    },
+    {
+      "key": "backoffice.text.utnyttelse",
+      "norwegianText": "Utnyttelse",
+      "englishText": "Utnyttelse",
+      "usageCount": 2,
+      "files": [
+        "apps/backoffice/src/routes/admin-reports.tsx",
+        "apps/backoffice/src/routes/allocation-planner.tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/backoffice/src/routes/admin-reports.tsx",
+          "line": 191,
+          "type": "jsx-text"
+        },
+        {
+          "file": "apps/backoffice/src/routes/allocation-planner.tsx",
+          "line": 111,
+          "type": "jsx-text"
+        }
+      ]
+    },
+    {
+      "key": "backoffice.text.tildelt",
+      "norwegianText": "Tildelt",
+      "englishText": "Tildelt",
+      "usageCount": 2,
+      "files": [
+        "apps/backoffice/src/routes/allocation-planner.tsx",
+        "apps/backoffice/src/routes/requests.tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/backoffice/src/routes/allocation-planner.tsx",
+          "line": 107,
+          "type": "jsx-text"
+        },
+        {
+          "file": "apps/backoffice/src/routes/requests.tsx",
+          "line": 358,
+          "type": "jsx-text"
+        }
+      ]
+    },
+    {
+      "key": "backoffice.text.vedtak",
+      "norwegianText": "Vedtak",
+      "englishText": "Vedtak",
+      "usageCount": 2,
+      "files": [
+        "apps/backoffice/src/routes/audit-timeline.tsx",
+        "apps/backoffice/src/routes/decision-forms.tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/backoffice/src/routes/audit-timeline.tsx",
+          "line": 148,
+          "type": "jsx-text"
+        },
+        {
+          "file": "apps/backoffice/src/routes/decision-forms.tsx",
+          "line": 213,
+          "type": "jsx-text"
+        }
+      ]
+    },
+    {
+      "key": "organizations.text.organisasjonIkkeFunnet",
+      "norwegianText": "Organisasjon ikke funnet",
+      "englishText": "Organisasjon ikke funnet",
+      "usageCount": 2,
+      "files": [
+        "apps/backoffice/src/routes/organizations/OrganizationFormPage.tsx",
+        "apps/backoffice/src/routes/organizations/OrganizationMembersPage.tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/backoffice/src/routes/organizations/OrganizationFormPage.tsx",
+          "line": 110,
+          "type": "jsx-text"
+        },
+        {
+          "file": "apps/backoffice/src/routes/organizations/OrganizationMembersPage.tsx",
+          "line": 73,
+          "type": "jsx-text"
+        }
+      ]
+    },
+    {
+      "key": "backoffice.status.aktive",
+      "norwegianText": "Aktive",
+      "englishText": "Aktive",
+      "usageCount": 2,
+      "files": [
+        "apps/backoffice/src/routes/pricing-rules.tsx",
+        "apps/backoffice/src/routes/users-management.tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/backoffice/src/routes/pricing-rules.tsx",
+          "line": 136,
+          "type": "jsx-text"
+        },
+        {
+          "file": "apps/backoffice/src/routes/users-management.tsx",
+          "line": 195,
+          "type": "jsx-text"
+        }
+      ]
+    },
+    {
+      "key": "backoffice.label.name",
+      "norwegianText": "Navn",
+      "englishText": "Name",
+      "usageCount": 2,
+      "files": [
+        "apps/backoffice/src/routes/pricing-rules.tsx",
+        "apps/backoffice/src/routes/users.tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/backoffice/src/routes/pricing-rules.tsx",
+          "line": 165,
+          "type": "jsx-text"
+        },
+        {
+          "file": "apps/backoffice/src/routes/users.tsx",
+          "line": 200,
+          "type": "jsx-text"
+        }
+      ]
+    },
+    {
+      "key": "backoffice.text.prioritet",
+      "norwegianText": "Prioritet",
+      "englishText": "Prioritet",
+      "usageCount": 2,
+      "files": [
+        "apps/backoffice/src/routes/requests.tsx",
+        "apps/backoffice/src/routes/season-applications.tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/backoffice/src/routes/requests.tsx",
+          "line": 353,
+          "type": "jsx-text"
+        },
+        {
+          "file": "apps/backoffice/src/routes/season-applications.tsx",
+          "line": 219,
+          "type": "jsx-text"
+        }
+      ]
+    },
+    {
+      "key": "backoffice.text.alvorlighet",
+      "norwegianText": "Alvorlighet",
+      "englishText": "Alvorlighet",
+      "usageCount": 2,
+      "files": [
+        "apps/backoffice/src/routes/tenant/audit-log.tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/backoffice/src/routes/tenant/audit-log.tsx",
+          "line": 193,
+          "type": "jsx-text"
+        },
+        {
+          "file": "apps/backoffice/src/routes/tenant/audit-log.tsx",
+          "line": 230,
+          "type": "jsx-text"
+        }
+      ]
+    },
+    {
+      "key": "backoffice.text.role",
+      "norwegianText": "Rolle",
+      "englishText": "Role",
+      "usageCount": 2,
+      "files": [
+        "apps/backoffice/src/routes/users-management.tsx",
+        "apps/backoffice/src/routes/users.tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/backoffice/src/routes/users-management.tsx",
+          "line": 219,
+          "type": "jsx-text"
+        },
+        {
+          "file": "apps/backoffice/src/routes/users.tsx",
+          "line": 203,
+          "type": "jsx-text"
+        }
+      ]
+    },
+    {
+      "key": "gdpr.text.allProfilinformasjonBlirFjernet",
+      "norwegianText": "All profilinformasjon blir fjernet",
+      "englishText": "All profilinformasjon blir fjernet",
+      "usageCount": 2,
+      "files": [
+        "apps/minside/src/components/gdpr/DeleteAccountCard.tsx",
+        "apps/monitoring/src/components/gdpr/DeleteAccountCard.tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/minside/src/components/gdpr/DeleteAccountCard.tsx",
+          "line": 119,
+          "type": "jsx-text"
+        },
+        {
+          "file": "apps/monitoring/src/components/gdpr/DeleteAccountCard.tsx",
+          "line": 119,
+          "type": "jsx-text"
+        }
+      ]
+    },
+    {
+      "key": "gdpr.text.alleBookingerBlirKansellert",
+      "norwegianText": "Alle bookinger blir kansellert",
+      "englishText": "Alle bookinger blir kansellert",
+      "usageCount": 2,
+      "files": [
+        "apps/minside/src/components/gdpr/DeleteAccountCard.tsx",
+        "apps/monitoring/src/components/gdpr/DeleteAccountCard.tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/minside/src/components/gdpr/DeleteAccountCard.tsx",
+          "line": 120,
+          "type": "jsx-text"
+        },
+        {
+          "file": "apps/monitoring/src/components/gdpr/DeleteAccountCard.tsx",
+          "line": 120,
+          "type": "jsx-text"
+        }
+      ]
+    },
+    {
+      "key": "gdpr.text.meldingerOgHistorikkBlirSlettet",
+      "norwegianText": "Meldinger og historikk blir slettet",
+      "englishText": "Meldinger og historikk blir slettet",
+      "usageCount": 2,
+      "files": [
+        "apps/minside/src/components/gdpr/DeleteAccountCard.tsx",
+        "apps/monitoring/src/components/gdpr/DeleteAccountCard.tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/minside/src/components/gdpr/DeleteAccountCard.tsx",
+          "line": 121,
+          "type": "jsx-text"
+        },
+        {
+          "file": "apps/monitoring/src/components/gdpr/DeleteAccountCard.tsx",
+          "line": 121,
+          "type": "jsx-text"
+        }
+      ]
+    },
+    {
+      "key": "gdpr.text.duMisterTilgangTilTjenesten",
+      "norwegianText": "Du mister tilgang til tjenesten",
+      "englishText": "Du mister tilgang til tjenesten",
+      "usageCount": 2,
+      "files": [
+        "apps/minside/src/components/gdpr/DeleteAccountCard.tsx",
+        "apps/monitoring/src/components/gdpr/DeleteAccountCard.tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/minside/src/components/gdpr/DeleteAccountCard.tsx",
+          "line": 122,
+          "type": "jsx-text"
+        },
+        {
+          "file": "apps/monitoring/src/components/gdpr/DeleteAccountCard.tsx",
+          "line": 122,
+          "type": "jsx-text"
+        }
+      ]
+    },
+    {
+      "key": "seasons.text.kinosalen",
+      "norwegianText": "Kinosalen",
+      "englishText": "Kinosalen",
+      "usageCount": 2,
+      "files": [
+        "apps/minside/src/features/seasons/components/SeasonApplicationDrawer.tsx",
+        "apps/monitoring/src/features/seasons/components/SeasonApplicationDrawer.tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/minside/src/features/seasons/components/SeasonApplicationDrawer.tsx",
+          "line": 310,
+          "type": "jsx-text"
+        },
+        {
+          "file": "apps/monitoring/src/features/seasons/components/SeasonApplicationDrawer.tsx",
+          "line": 310,
+          "type": "jsx-text"
+        }
+      ]
+    },
+    {
+      "key": "monitoring.text.passed",
+      "norwegianText": "Passed",
+      "englishText": "Passed",
+      "usageCount": 2,
+      "files": [
+        "apps/monitoring/src/features/testing/TestResultsWidget.tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/monitoring/src/features/testing/TestResultsWidget.tsx",
+          "line": 116,
+          "type": "jsx-text"
+        },
+        {
+          "file": "apps/monitoring/src/features/testing/TestResultsWidget.tsx",
+          "line": 143,
+          "type": "jsx-text"
+        }
+      ]
+    },
+    {
+      "key": "monitoring.text.failed",
+      "norwegianText": "Failed",
+      "englishText": "Failed",
+      "usageCount": 2,
+      "files": [
+        "apps/monitoring/src/features/testing/TestResultsWidget.tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/monitoring/src/features/testing/TestResultsWidget.tsx",
+          "line": 122,
+          "type": "jsx-text"
+        },
+        {
+          "file": "apps/monitoring/src/features/testing/TestResultsWidget.tsx",
+          "line": 144,
+          "type": "jsx-text"
+        }
+      ]
+    },
+    {
+      "key": "monitoring.text.skipped",
+      "norwegianText": "Skipped",
+      "englishText": "Skipped",
+      "usageCount": 2,
+      "files": [
+        "apps/monitoring/src/features/testing/TestResultsWidget.tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/monitoring/src/features/testing/TestResultsWidget.tsx",
+          "line": 128,
+          "type": "jsx-text"
+        },
+        {
+          "file": "apps/monitoring/src/features/testing/TestResultsWidget.tsx",
+          "line": 145,
+          "type": "jsx-text"
+        }
+      ]
+    },
+    {
+      "key": "monitoring.text.status",
+      "norwegianText": "Status",
+      "englishText": "Status",
+      "usageCount": 2,
+      "files": [
+        "apps/monitoring/src/features/testing/TestResultsWidget.tsx",
+        "apps/saas-admin/src/routes/monitoring/index.tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/monitoring/src/features/testing/TestResultsWidget.tsx",
+          "line": 146,
+          "type": "jsx-text"
+        },
+        {
+          "file": "apps/saas-admin/src/routes/monitoring/index.tsx",
+          "line": 474,
+          "type": "jsx-text"
+        }
+      ]
+    },
+    {
+      "key": "saasAdmin.ariaLabel.lagrer",
+      "norwegianText": "Lagrer...",
+      "englishText": "Lagrer...",
+      "usageCount": 2,
+      "files": [
+        "apps/saas-admin/src/components/CategoryEntitlementsTab.tsx",
+        "apps/saas-admin/src/routes/branding/[tenantId].tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/saas-admin/src/components/CategoryEntitlementsTab.tsx",
+          "line": 201,
+          "type": "aria-label"
+        },
+        {
+          "file": "apps/saas-admin/src/routes/branding/[tenantId].tsx",
+          "line": 168,
+          "type": "aria-label"
+        }
+      ]
+    },
+    {
+      "key": "saasAdmin.ariaLabel.laster",
+      "norwegianText": "Laster...",
+      "englishText": "Laster...",
+      "usageCount": 2,
+      "files": [
+        "apps/saas-admin/src/components/ProtectedRoute.tsx",
+        "apps/saas-admin/src/routes/tenants/[id].tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/saas-admin/src/components/ProtectedRoute.tsx",
+          "line": 52,
+          "type": "aria-label"
+        },
+        {
+          "file": "apps/saas-admin/src/routes/tenants/[id].tsx",
+          "line": 199,
+          "type": "aria-label"
+        }
+      ]
+    },
+    {
+      "key": "bookings.title.bookingdetaljer",
+      "norwegianText": "Bookingdetaljer",
+      "englishText": "Bookingdetaljer",
+      "usageCount": 1,
+      "files": [
+        "apps/backoffice/src/components/bookings/EditBookingForm.tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/backoffice/src/components/bookings/EditBookingForm.tsx",
+          "line": 167,
+          "type": "title"
+        }
+      ]
+    },
+    {
+      "key": "bookings.ariaLabel.starttid",
+      "norwegianText": "Starttid",
+      "englishText": "Starttid",
+      "usageCount": 1,
+      "files": [
+        "apps/backoffice/src/components/bookings/EditBookingForm.tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/backoffice/src/components/bookings/EditBookingForm.tsx",
+          "line": 199,
+          "type": "aria-label"
+        }
+      ]
+    },
+    {
+      "key": "bookings.ariaLabel.sluttid",
+      "norwegianText": "Sluttid",
+      "englishText": "Sluttid",
+      "usageCount": 1,
+      "files": [
+        "apps/backoffice/src/components/bookings/EditBookingForm.tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/backoffice/src/components/bookings/EditBookingForm.tsx",
+          "line": 212,
+          "type": "aria-label"
+        }
+      ]
+    },
+    {
+      "key": "bookings.title.prissetting",
+      "norwegianText": "Prissetting",
+      "englishText": "Prissetting",
+      "usageCount": 1,
+      "files": [
+        "apps/backoffice/src/components/bookings/EditBookingForm.tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/backoffice/src/components/bookings/EditBookingForm.tsx",
+          "line": 227,
+          "type": "title"
+        }
+      ]
+    },
+    {
+      "key": "bookings.title.notater",
+      "norwegianText": "Notater",
+      "englishText": "Notater",
+      "usageCount": 1,
+      "files": [
+        "apps/backoffice/src/components/bookings/EditBookingForm.tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/backoffice/src/components/bookings/EditBookingForm.tsx",
+          "line": 247,
+          "type": "title"
+        }
+      ]
+    },
+    {
+      "key": "gdpr.text.user",
+      "norwegianText": "Bruker",
+      "englishText": "User",
+      "usageCount": 1,
+      "files": [
+        "apps/backoffice/src/components/gdpr/GdprRequestQueue.tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/backoffice/src/components/gdpr/GdprRequestQueue.tsx",
+          "line": 336,
+          "type": "jsx-text"
+        }
+      ]
+    },
+    {
+      "key": "gdpr.text.type",
+      "norwegianText": "Type",
+      "englishText": "Type",
+      "usageCount": 1,
+      "files": [
+        "apps/backoffice/src/components/gdpr/GdprRequestQueue.tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/backoffice/src/components/gdpr/GdprRequestQueue.tsx",
+          "line": 337,
+          "type": "jsx-text"
+        }
+      ]
+    },
+    {
+      "key": "gdpr.text.status",
+      "norwegianText": "Status",
+      "englishText": "Status",
+      "usageCount": 1,
+      "files": [
+        "apps/backoffice/src/components/gdpr/GdprRequestQueue.tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/backoffice/src/components/gdpr/GdprRequestQueue.tsx",
+          "line": 338,
+          "type": "jsx-text"
+        }
+      ]
+    },
+    {
+      "key": "gdpr.text.forespurt",
+      "norwegianText": "Forespurt",
+      "englishText": "Forespurt",
+      "usageCount": 1,
+      "files": [
+        "apps/backoffice/src/components/gdpr/GdprRequestQueue.tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/backoffice/src/components/gdpr/GdprRequestQueue.tsx",
+          "line": 339,
+          "type": "jsx-text"
+        }
+      ]
+    },
+    {
+      "key": "gdpr.ariaLabel.handlinger",
+      "norwegianText": "Handlinger",
+      "englishText": "Handlinger",
+      "usageCount": 1,
+      "files": [
+        "apps/backoffice/src/components/gdpr/GdprRequestQueue.tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/backoffice/src/components/gdpr/GdprRequestQueue.tsx",
+          "line": 432,
+          "type": "aria-label"
+        }
+      ]
+    },
+    {
+      "key": "integrations.text.feilVedLastingAvLegitimasjoner",
+      "norwegianText": "Feil ved lasting av legitimasjoner",
+      "englishText": "Feil ved lasting av legitimasjoner",
+      "usageCount": 1,
+      "files": [
+        "apps/backoffice/src/components/integrations/CredentialsManager.tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/backoffice/src/components/integrations/CredentialsManager.tsx",
+          "line": 109,
+          "type": "jsx-text"
+        }
+      ]
+    },
+    {
+      "key": "integrations.text.legitimasjoner",
+      "norwegianText": "Legitimasjoner",
+      "englishText": "Legitimasjoner",
+      "usageCount": 1,
+      "files": [
+        "apps/backoffice/src/components/integrations/CredentialsManager.tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/backoffice/src/components/integrations/CredentialsManager.tsx",
+          "line": 119,
+          "type": "jsx-text"
+        }
+      ]
+    },
+    {
+      "key": "integrations.text.ingenLegitimasjoner",
+      "norwegianText": "Ingen legitimasjoner",
+      "englishText": "Ingen legitimasjoner",
+      "usageCount": 1,
+      "files": [
+        "apps/backoffice/src/components/integrations/CredentialsManager.tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/backoffice/src/components/integrations/CredentialsManager.tsx",
+          "line": 149,
+          "type": "jsx-text"
+        }
+      ]
+    },
+    {
+      "key": "integrations.status.inactive",
+      "norwegianText": "Inaktiv",
+      "englishText": "Inactive",
+      "usageCount": 1,
+      "files": [
+        "apps/backoffice/src/components/integrations/CredentialsManager.tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/backoffice/src/components/integrations/CredentialsManager.tsx",
+          "line": 269,
+          "type": "jsx-text"
+        }
+      ]
+    },
+    {
+      "key": "integrations.text.utlopt",
+      "norwegianText": "Utløpt",
+      "englishText": "Utlopt",
+      "usageCount": 1,
+      "files": [
+        "apps/backoffice/src/components/integrations/CredentialsManager.tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/backoffice/src/components/integrations/CredentialsManager.tsx",
+          "line": 272,
+          "type": "jsx-text"
+        }
+      ]
+    },
+    {
+      "key": "integrations.title.kopier",
+      "norwegianText": "Kopier",
+      "englishText": "Kopier",
+      "usageCount": 1,
+      "files": [
+        "apps/backoffice/src/components/integrations/CredentialsManager.tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/backoffice/src/components/integrations/CredentialsManager.tsx",
+          "line": 339,
+          "type": "title"
+        }
+      ]
+    },
+    {
+      "key": "integrations.title.roter",
+      "norwegianText": "Roter",
+      "englishText": "Roter",
+      "usageCount": 1,
+      "files": [
+        "apps/backoffice/src/components/integrations/CredentialsManager.tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/backoffice/src/components/integrations/CredentialsManager.tsx",
+          "line": 353,
+          "type": "title"
+        }
+      ]
+    },
+    {
+      "key": "backoffice.title.notifications",
+      "norwegianText": "Varsler",
+      "englishText": "Notifications",
+      "usageCount": 1,
+      "files": [
+        "apps/backoffice/src/components/layout/Header.tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/backoffice/src/components/layout/Header.tsx",
+          "line": 255,
+          "type": "title"
+        }
+      ]
+    },
+    {
+      "key": "organizations.placeholder.postexampleno",
+      "norwegianText": "post@example.no",
+      "englishText": "post@example.no",
+      "usageCount": 1,
+      "files": [
+        "apps/backoffice/src/components/organizations/BasicStep.tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/backoffice/src/components/organizations/BasicStep.tsx",
+          "line": 121,
+          "type": "placeholder"
+        }
+      ]
+    },
+    {
+      "key": "organizations.placeholder.0062ba",
+      "norwegianText": "#0062BA",
+      "englishText": "#0062BA",
+      "usageCount": 1,
+      "files": [
+        "apps/backoffice/src/components/organizations/BrandingStep.tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/backoffice/src/components/organizations/BrandingStep.tsx",
+          "line": 332,
+          "type": "placeholder"
+        }
+      ]
+    },
+    {
+      "key": "organizations.placeholder.004c93",
+      "norwegianText": "#004C93",
+      "englishText": "#004C93",
+      "usageCount": 1,
+      "files": [
+        "apps/backoffice/src/components/organizations/BrandingStep.tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/backoffice/src/components/organizations/BrandingStep.tsx",
+          "line": 366,
+          "type": "placeholder"
+        }
+      ]
+    },
+    {
+      "key": "organizations.text.logoBorVaereISvgEllerPngFormatMedGjennomsiktigBakgrunn",
+      "norwegianText": "Logo bør være i SVG eller PNG format med gjennomsiktig bakgrunn",
+      "englishText": "Logo bor vaere i SVG eller PNG format med gjennomsiktig bakgrunn",
+      "usageCount": 1,
+      "files": [
+        "apps/backoffice/src/components/organizations/BrandingStep.tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/backoffice/src/components/organizations/BrandingStep.tsx",
+          "line": 503,
+          "type": "jsx-text"
+        }
+      ]
+    },
+    {
+      "key": "organizations.text.velgFargerSomFolgerWcagRetningslinjerForTilgjengelighet",
+      "norwegianText": "Velg farger som følger WCAG retningslinjer for tilgjengelighet",
+      "englishText": "Velg farger som folger WCAG retningslinjer for tilgjengelighet",
+      "usageCount": 1,
+      "files": [
+        "apps/backoffice/src/components/organizations/BrandingStep.tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/backoffice/src/components/organizations/BrandingStep.tsx",
+          "line": 504,
+          "type": "jsx-text"
+        }
+      ]
+    },
+    {
+      "key": "organizations.text.administrator",
+      "norwegianText": "Administrator",
+      "englishText": "Administrator",
+      "usageCount": 1,
+      "files": [
+        "apps/backoffice/src/components/organizations/MemberManagement.tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/backoffice/src/components/organizations/MemberManagement.tsx",
+          "line": 141,
+          "type": "jsx-text"
+        }
+      ]
+    },
+    {
+      "key": "organizations.label.name",
+      "norwegianText": "Navn",
+      "englishText": "Name",
+      "usageCount": 1,
+      "files": [
+        "apps/backoffice/src/components/organizations/MemberManagement.tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/backoffice/src/components/organizations/MemberManagement.tsx",
+          "line": 194,
+          "type": "jsx-text"
+        }
+      ]
+    },
+    {
+      "key": "organizations.text.role",
+      "norwegianText": "Rolle",
+      "englishText": "Role",
+      "usageCount": 1,
+      "files": [
+        "apps/backoffice/src/components/organizations/MemberManagement.tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/backoffice/src/components/organizations/MemberManagement.tsx",
+          "line": 196,
+          "type": "jsx-text"
+        }
+      ]
+    },
+    {
+      "key": "organizations.text.handlinger",
+      "norwegianText": "Handlinger",
+      "englishText": "Handlinger",
+      "usageCount": 1,
+      "files": [
+        "apps/backoffice/src/components/organizations/MemberManagement.tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/backoffice/src/components/organizations/MemberManagement.tsx",
+          "line": 198,
+          "type": "jsx-text"
+        }
+      ]
+    },
+    {
+      "key": "organizations.ariaLabel.handlinger",
+      "norwegianText": "Handlinger",
+      "englishText": "Handlinger",
+      "usageCount": 1,
+      "files": [
+        "apps/backoffice/src/components/organizations/MemberManagement.tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/backoffice/src/components/organizations/MemberManagement.tsx",
+          "line": 228,
+          "type": "aria-label"
+        }
+      ]
+    },
+    {
+      "key": "organizations.ariaLabel.name",
+      "norwegianText": "Navn",
+      "englishText": "Name",
+      "usageCount": 1,
+      "files": [
+        "apps/backoffice/src/components/organizations/OrganizationForm.tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/backoffice/src/components/organizations/OrganizationForm.tsx",
+          "line": 147,
+          "type": "aria-label"
+        }
+      ]
+    },
+    {
+      "key": "organizations.ariaLabel.organisasjonsnummer",
+      "norwegianText": "Organisasjonsnummer",
+      "englishText": "Organisasjonsnummer",
+      "usageCount": 1,
+      "files": [
+        "apps/backoffice/src/components/organizations/OrganizationForm.tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/backoffice/src/components/organizations/OrganizationForm.tsx",
+          "line": 177,
+          "type": "aria-label"
+        }
+      ]
+    },
+    {
+      "key": "organizations.title.kontaktinformasjon",
+      "norwegianText": "Kontaktinformasjon",
+      "englishText": "Kontaktinformasjon",
+      "usageCount": 1,
+      "files": [
+        "apps/backoffice/src/components/organizations/OrganizationForm.tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/backoffice/src/components/organizations/OrganizationForm.tsx",
+          "line": 185,
+          "type": "title"
+        }
+      ]
+    },
+    {
+      "key": "organizations.placeholder.kontaktorganisasjonno",
+      "norwegianText": "kontakt@organisasjon.no",
+      "englishText": "kontakt@organisasjon.no",
+      "usageCount": 1,
+      "files": [
+        "apps/backoffice/src/components/organizations/OrganizationForm.tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/backoffice/src/components/organizations/OrganizationForm.tsx",
+          "line": 196,
+          "type": "placeholder"
+        }
+      ]
+    },
+    {
+      "key": "organizations.ariaLabel.phone",
+      "norwegianText": "Telefon",
+      "englishText": "Phone",
+      "usageCount": 1,
+      "files": [
+        "apps/backoffice/src/components/organizations/OrganizationForm.tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/backoffice/src/components/organizations/OrganizationForm.tsx",
+          "line": 210,
+          "type": "aria-label"
+        }
+      ]
+    },
+    {
+      "key": "organizations.title.address",
+      "norwegianText": "Adresse",
+      "englishText": "Address",
+      "usageCount": 1,
+      "files": [
+        "apps/backoffice/src/components/organizations/OrganizationForm.tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/backoffice/src/components/organizations/OrganizationForm.tsx",
+          "line": 217,
+          "type": "title"
+        }
+      ]
+    },
+    {
+      "key": "organizations.ariaLabel.gateadresse",
+      "norwegianText": "Gateadresse",
+      "englishText": "Gateadresse",
+      "usageCount": 1,
+      "files": [
+        "apps/backoffice/src/components/organizations/OrganizationForm.tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/backoffice/src/components/organizations/OrganizationForm.tsx",
+          "line": 227,
+          "type": "aria-label"
+        }
+      ]
+    },
+    {
+      "key": "organizations.ariaLabel.postnummer",
+      "norwegianText": "Postnummer",
+      "englishText": "Postnummer",
+      "usageCount": 1,
+      "files": [
+        "apps/backoffice/src/components/organizations/OrganizationForm.tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/backoffice/src/components/organizations/OrganizationForm.tsx",
+          "line": 240,
+          "type": "aria-label"
+        }
+      ]
+    },
+    {
+      "key": "organizations.ariaLabel.poststed",
+      "norwegianText": "Poststed",
+      "englishText": "Poststed",
+      "usageCount": 1,
+      "files": [
+        "apps/backoffice/src/components/organizations/OrganizationForm.tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/backoffice/src/components/organizations/OrganizationForm.tsx",
+          "line": 250,
+          "type": "aria-label"
+        }
+      ]
+    },
+    {
+      "key": "organizations.text.duKanTilpasseRollerOgTillatelserSenereIInnstillingene",
+      "norwegianText": "Du kan tilpasse roller og tillatelser senere i innstillingene",
+      "englishText": "Du kan tilpasse roller og tillatelser senere i innstillingene",
+      "usageCount": 1,
+      "files": [
+        "apps/backoffice/src/components/organizations/RolesStep.tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/backoffice/src/components/organizations/RolesStep.tsx",
+          "line": 313,
+          "type": "jsx-text"
+        }
+      ]
+    },
+    {
+      "key": "seasons.text.approve",
+      "norwegianText": "Godkjenn",
+      "englishText": "Approve",
+      "usageCount": 1,
+      "files": [
+        "apps/backoffice/src/components/seasons/AllocationProposal.tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/backoffice/src/components/seasons/AllocationProposal.tsx",
+          "line": 180,
+          "type": "jsx-text"
+        }
+      ]
+    },
+    {
+      "key": "seasons.text.juster",
+      "norwegianText": "Juster",
+      "englishText": "Juster",
+      "usageCount": 1,
+      "files": [
+        "apps/backoffice/src/components/seasons/AllocationProposal.tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/backoffice/src/components/seasons/AllocationProposal.tsx",
+          "line": 184,
+          "type": "jsx-text"
+        }
+      ]
+    },
+    {
+      "key": "seasons.ariaLabel.generererForslag",
+      "norwegianText": "Genererer forslag...",
+      "englishText": "Genererer forslag...",
+      "usageCount": 1,
+      "files": [
+        "apps/backoffice/src/components/seasons/AllocationProposal.tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/backoffice/src/components/seasons/AllocationProposal.tsx",
+          "line": 203,
+          "type": "aria-label"
+        }
+      ]
+    },
+    {
+      "key": "seasons.text.avslagsgrunn",
+      "norwegianText": "Avslagsgrunn",
+      "englishText": "Avslagsgrunn",
+      "usageCount": 1,
+      "files": [
+        "apps/backoffice/src/components/seasons/AppealProcess.tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/backoffice/src/components/seasons/AppealProcess.tsx",
+          "line": 329,
+          "type": "jsx-text"
+        }
+      ]
+    },
+    {
+      "key": "seasons.text.klagestatus",
+      "norwegianText": "Klagestatus",
+      "englishText": "Klagestatus",
+      "usageCount": 1,
+      "files": [
+        "apps/backoffice/src/components/seasons/AppealProcess.tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/backoffice/src/components/seasons/AppealProcess.tsx",
+          "line": 330,
+          "type": "jsx-text"
+        }
+      ]
+    },
+    {
+      "key": "seasons.text.date",
+      "norwegianText": "Dato",
+      "englishText": "Date",
+      "usageCount": 1,
+      "files": [
+        "apps/backoffice/src/components/seasons/AppealProcess.tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/backoffice/src/components/seasons/AppealProcess.tsx",
+          "line": 331,
+          "type": "jsx-text"
+        }
+      ]
+    },
+    {
+      "key": "seasons.ariaLabel.lasterKonflikter",
+      "norwegianText": "Laster konflikter...",
+      "englishText": "Laster konflikter...",
+      "usageCount": 1,
+      "files": [
+        "apps/backoffice/src/components/seasons/ConflictViewer.tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/backoffice/src/components/seasons/ConflictViewer.tsx",
+          "line": 113,
+          "type": "aria-label"
+        }
+      ]
+    },
+    {
+      "key": "seasons.text.alvorlighet",
+      "norwegianText": "Alvorlighet",
+      "englishText": "Alvorlighet",
+      "usageCount": 1,
+      "files": [
+        "apps/backoffice/src/components/seasons/ConflictViewer.tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/backoffice/src/components/seasons/ConflictViewer.tsx",
+          "line": 191,
+          "type": "jsx-text"
+        }
+      ]
+    },
+    {
+      "key": "seasons.ariaLabel.lasterPrioriteringsregler",
+      "norwegianText": "Laster prioriteringsregler...",
+      "englishText": "Laster prioriteringsregler...",
+      "usageCount": 1,
+      "files": [
+        "apps/backoffice/src/components/seasons/PriorityRulesConfig.tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/backoffice/src/components/seasons/PriorityRulesConfig.tsx",
+          "line": 253,
+          "type": "aria-label"
+        }
+      ]
+    },
+    {
+      "key": "seasons.text.regel",
+      "norwegianText": "Regel",
+      "englishText": "Regel",
+      "usageCount": 1,
+      "files": [
+        "apps/backoffice/src/components/seasons/PriorityRulesConfig.tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/backoffice/src/components/seasons/PriorityRulesConfig.tsx",
+          "line": 336,
+          "type": "jsx-text"
+        }
+      ]
+    },
+    {
+      "key": "seasons.text.betingelser",
+      "norwegianText": "Betingelser",
+      "englishText": "Betingelser",
+      "usageCount": 1,
+      "files": [
+        "apps/backoffice/src/components/seasons/PriorityRulesConfig.tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/backoffice/src/components/seasons/PriorityRulesConfig.tsx",
+          "line": 339,
+          "type": "jsx-text"
+        }
+      ]
+    },
+    {
+      "key": "seasons.text.ungdomsprioritet",
+      "norwegianText": "Ungdomsprioritet",
+      "englishText": "Ungdomsprioritet",
+      "usageCount": 1,
+      "files": [
+        "apps/backoffice/src/components/seasons/PriorityRulesConfig.tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/backoffice/src/components/seasons/PriorityRulesConfig.tsx",
+          "line": 517,
+          "type": "jsx-text"
+        }
+      ]
+    },
+    {
+      "key": "seasons.text.seniorprioritet",
+      "norwegianText": "Seniorprioritet",
+      "englishText": "Seniorprioritet",
+      "usageCount": 1,
+      "files": [
+        "apps/backoffice/src/components/seasons/PriorityRulesConfig.tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/backoffice/src/components/seasons/PriorityRulesConfig.tsx",
+          "line": 518,
+          "type": "jsx-text"
+        }
+      ]
+    },
+    {
+      "key": "seasons.text.ungdom",
+      "norwegianText": "Ungdom",
+      "englishText": "Ungdom",
+      "usageCount": 1,
+      "files": [
+        "apps/backoffice/src/components/seasons/PriorityRulesConfig.tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/backoffice/src/components/seasons/PriorityRulesConfig.tsx",
+          "line": 553,
+          "type": "jsx-text"
+        }
+      ]
+    },
+    {
+      "key": "seasons.text.senior",
+      "norwegianText": "Senior",
+      "englishText": "Senior",
+      "usageCount": 1,
+      "files": [
+        "apps/backoffice/src/components/seasons/PriorityRulesConfig.tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/backoffice/src/components/seasons/PriorityRulesConfig.tsx",
+          "line": 554,
+          "type": "jsx-text"
+        }
+      ]
+    },
+    {
+      "key": "seasons.text.voksen",
+      "norwegianText": "Voksen",
+      "englishText": "Voksen",
+      "usageCount": 1,
+      "files": [
+        "apps/backoffice/src/components/seasons/PriorityRulesConfig.tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/backoffice/src/components/seasons/PriorityRulesConfig.tsx",
+          "line": 555,
+          "type": "jsx-text"
+        }
+      ]
+    },
+    {
+      "key": "seasons.text.lokal",
+      "norwegianText": "Lokal",
+      "englishText": "Lokal",
+      "usageCount": 1,
+      "files": [
+        "apps/backoffice/src/components/seasons/PriorityRulesConfig.tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/backoffice/src/components/seasons/PriorityRulesConfig.tsx",
+          "line": 579,
+          "type": "jsx-text"
+        }
+      ]
+    },
+    {
+      "key": "seasons.text.regional",
+      "norwegianText": "Regional",
+      "englishText": "Regional",
+      "usageCount": 1,
+      "files": [
+        "apps/backoffice/src/components/seasons/PriorityRulesConfig.tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/backoffice/src/components/seasons/PriorityRulesConfig.tsx",
+          "line": 580,
+          "type": "jsx-text"
+        }
+      ]
+    },
+    {
+      "key": "seasons.text.nasjonal",
+      "norwegianText": "Nasjonal",
+      "englishText": "Nasjonal",
+      "usageCount": 1,
+      "files": [
+        "apps/backoffice/src/components/seasons/PriorityRulesConfig.tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/backoffice/src/components/seasons/PriorityRulesConfig.tsx",
+          "line": 581,
+          "type": "jsx-text"
+        }
+      ]
+    },
+    {
+      "key": "seasons.text.bookings",
+      "norwegianText": "Bookinger",
+      "englishText": "Bookings",
+      "usageCount": 1,
+      "files": [
+        "apps/backoffice/src/components/seasons/SeasonAllocationManagement.tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/backoffice/src/components/seasons/SeasonAllocationManagement.tsx",
+          "line": 227,
+          "type": "jsx-text"
+        }
+      ]
+    },
+    {
+      "key": "seasons.text.handling",
+      "norwegianText": "Handling",
+      "englishText": "Handling",
+      "usageCount": 1,
+      "files": [
+        "apps/backoffice/src/components/seasons/SeasonAllocationManagement.tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/backoffice/src/components/seasons/SeasonAllocationManagement.tsx",
+          "line": 229,
+          "type": "jsx-text"
+        }
+      ]
+    },
+    {
+      "key": "seasons.text.pending",
+      "norwegianText": "Venter",
+      "englishText": "Pending",
+      "usageCount": 1,
+      "files": [
+        "apps/backoffice/src/components/seasons/SeasonApplicationManagement.tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/backoffice/src/components/seasons/SeasonApplicationManagement.tsx",
+          "line": 177,
+          "type": "jsx-text"
+        }
+      ]
+    },
+    {
+      "key": "seasons.text.godkjent",
+      "norwegianText": "Godkjent",
+      "englishText": "Godkjent",
+      "usageCount": 1,
+      "files": [
+        "apps/backoffice/src/components/seasons/SeasonApplicationManagement.tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/backoffice/src/components/seasons/SeasonApplicationManagement.tsx",
+          "line": 178,
+          "type": "jsx-text"
+        }
+      ]
+    },
+    {
+      "key": "seasons.text.innsendt",
+      "norwegianText": "Innsendt",
+      "englishText": "Innsendt",
+      "usageCount": 1,
+      "files": [
+        "apps/backoffice/src/components/seasons/SeasonApplicationManagement.tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/backoffice/src/components/seasons/SeasonApplicationManagement.tsx",
+          "line": 223,
+          "type": "jsx-text"
+        }
+      ]
+    },
+    {
+      "key": "seasons.label.name",
+      "norwegianText": "Navn",
+      "englishText": "Name",
+      "usageCount": 1,
+      "files": [
+        "apps/backoffice/src/components/seasons/SeasonVenueManagement.tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/backoffice/src/components/seasons/SeasonVenueManagement.tsx",
+          "line": 176,
+          "type": "jsx-text"
+        }
+      ]
+    },
+    {
+      "key": "seasons.text.kapasitet",
+      "norwegianText": "Kapasitet",
+      "englishText": "Kapasitet",
+      "usageCount": 1,
+      "files": [
+        "apps/backoffice/src/components/seasons/SeasonVenueManagement.tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/backoffice/src/components/seasons/SeasonVenueManagement.tsx",
+          "line": 178,
+          "type": "jsx-text"
+        }
+      ]
+    },
+    {
+      "key": "seasons.text.address",
+      "norwegianText": "Adresse",
+      "englishText": "Address",
+      "usageCount": 1,
+      "files": [
+        "apps/backoffice/src/components/seasons/SeasonVenueManagement.tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/backoffice/src/components/seasons/SeasonVenueManagement.tsx",
+          "line": 179,
+          "type": "jsx-text"
+        }
+      ]
+    },
+    {
+      "key": "seasons.title.leieperiode",
+      "norwegianText": "Leieperiode",
+      "englishText": "Leieperiode",
+      "usageCount": 1,
+      "files": [
+        "apps/backoffice/src/components/seasons/SeasonalLeaseForm.tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/backoffice/src/components/seasons/SeasonalLeaseForm.tsx",
+          "line": 252,
+          "type": "title"
+        }
+      ]
+    },
+    {
+      "key": "seasons.ariaLabel.startdato",
+      "norwegianText": "Startdato",
+      "englishText": "Startdato",
+      "usageCount": 1,
+      "files": [
+        "apps/backoffice/src/components/seasons/SeasonalLeaseForm.tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/backoffice/src/components/seasons/SeasonalLeaseForm.tsx",
+          "line": 264,
+          "type": "aria-label"
+        }
+      ]
+    },
+    {
+      "key": "seasons.ariaLabel.sluttdato",
+      "norwegianText": "Sluttdato",
+      "englishText": "Sluttdato",
+      "usageCount": 1,
+      "files": [
+        "apps/backoffice/src/components/seasons/SeasonalLeaseForm.tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/backoffice/src/components/seasons/SeasonalLeaseForm.tsx",
+          "line": 277,
+          "type": "aria-label"
+        }
+      ]
+    },
+    {
+      "key": "seasons.title.ukedager",
+      "norwegianText": "Ukedager",
+      "englishText": "Ukedager",
+      "usageCount": 1,
+      "files": [
+        "apps/backoffice/src/components/seasons/SeasonalLeaseForm.tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/backoffice/src/components/seasons/SeasonalLeaseForm.tsx",
+          "line": 285,
+          "type": "title"
+        }
+      ]
+    },
+    {
+      "key": "seasons.title.tidspunkt",
+      "norwegianText": "Tidspunkt",
+      "englishText": "Tidspunkt",
+      "usageCount": 1,
+      "files": [
+        "apps/backoffice/src/components/seasons/SeasonalLeaseForm.tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/backoffice/src/components/seasons/SeasonalLeaseForm.tsx",
+          "line": 317,
+          "type": "title"
+        }
+      ]
+    },
+    {
+      "key": "seasons.ariaLabel.starttid",
+      "norwegianText": "Starttid",
+      "englishText": "Starttid",
+      "usageCount": 1,
+      "files": [
+        "apps/backoffice/src/components/seasons/SeasonalLeaseForm.tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/backoffice/src/components/seasons/SeasonalLeaseForm.tsx",
+          "line": 329,
+          "type": "aria-label"
+        }
+      ]
+    },
+    {
+      "key": "seasons.ariaLabel.sluttid",
+      "norwegianText": "Sluttid",
+      "englishText": "Sluttid",
+      "usageCount": 1,
+      "files": [
+        "apps/backoffice/src/components/seasons/SeasonalLeaseForm.tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/backoffice/src/components/seasons/SeasonalLeaseForm.tsx",
+          "line": 342,
+          "type": "aria-label"
+        }
+      ]
+    },
+    {
+      "key": "seasons.title.prissetting",
+      "norwegianText": "Prissetting",
+      "englishText": "Prissetting",
+      "usageCount": 1,
+      "files": [
+        "apps/backoffice/src/components/seasons/SeasonalLeaseForm.tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/backoffice/src/components/seasons/SeasonalLeaseForm.tsx",
+          "line": 350,
+          "type": "title"
+        }
+      ]
+    },
+    {
+      "key": "seasons.ariaLabel.notater",
+      "norwegianText": "Notater",
+      "englishText": "Notater",
+      "usageCount": 1,
+      "files": [
+        "apps/backoffice/src/components/seasons/SeasonalLeaseForm.tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/backoffice/src/components/seasons/SeasonalLeaseForm.tsx",
+          "line": 377,
+          "type": "aria-label"
+        }
+      ]
+    },
+    {
+      "key": "users.title.brukerinformasjon",
+      "norwegianText": "Brukerinformasjon",
+      "englishText": "Brukerinformasjon",
+      "usageCount": 1,
+      "files": [
+        "apps/backoffice/src/components/users/UserForm.tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/backoffice/src/components/users/UserForm.tsx",
+          "line": 124,
+          "type": "title"
+        }
+      ]
+    },
+    {
+      "key": "users.placeholder.olanordmannkommuneno",
+      "norwegianText": "ola.nordmann@kommune.no",
+      "englishText": "ola.nordmann@kommune.no",
+      "usageCount": 1,
+      "files": [
+        "apps/backoffice/src/components/users/UserForm.tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/backoffice/src/components/users/UserForm.tsx",
+          "line": 150,
+          "type": "placeholder"
+        }
+      ]
+    },
+    {
+      "key": "users.placeholder.4712345678",
+      "norwegianText": "+47 12 34 56 78",
+      "englishText": "+47 12 34 56 78",
+      "usageCount": 1,
+      "files": [
+        "apps/backoffice/src/components/users/UserForm.tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/backoffice/src/components/users/UserForm.tsx",
+          "line": 164,
+          "type": "placeholder"
+        }
+      ]
+    },
+    {
+      "key": "backoffice.text.daglig",
+      "norwegianText": "Daglig",
+      "englishText": "Daglig",
+      "usageCount": 1,
+      "files": [
+        "apps/backoffice/src/features/calendar/components/CreateBlockModal.tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/backoffice/src/features/calendar/components/CreateBlockModal.tsx",
+          "line": 489,
+          "type": "jsx-text"
+        }
+      ]
+    },
+    {
+      "key": "backoffice.text.ukentlig",
+      "norwegianText": "Ukentlig",
+      "englishText": "Ukentlig",
+      "usageCount": 1,
+      "files": [
+        "apps/backoffice/src/features/calendar/components/CreateBlockModal.tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/backoffice/src/features/calendar/components/CreateBlockModal.tsx",
+          "line": 490,
+          "type": "jsx-text"
+        }
+      ]
+    },
+    {
+      "key": "backoffice.ariaLabel.sjekkerKonflikter",
+      "norwegianText": "Sjekker konflikter...",
+      "englishText": "Sjekker konflikter...",
+      "usageCount": 1,
+      "files": [
+        "apps/backoffice/src/features/calendar/components/CreateBlockModal.tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/backoffice/src/features/calendar/components/CreateBlockModal.tsx",
+          "line": 611,
+          "type": "aria-label"
+        }
+      ]
+    },
+    {
+      "key": "backoffice.ariaLabel.avslar",
+      "norwegianText": "Avslår...",
+      "englishText": "Avslar...",
+      "usageCount": 1,
+      "files": [
+        "apps/backoffice/src/features/calendar/components/EventDrawer.tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/backoffice/src/features/calendar/components/EventDrawer.tsx",
+          "line": 200,
+          "type": "aria-label"
+        }
+      ]
+    },
+    {
+      "key": "backoffice.ariaLabel.godkjenner",
+      "norwegianText": "Godkjenner...",
+      "englishText": "Godkjenner...",
+      "usageCount": 1,
+      "files": [
+        "apps/backoffice/src/features/calendar/components/EventDrawer.tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/backoffice/src/features/calendar/components/EventDrawer.tsx",
+          "line": 208,
+          "type": "aria-label"
+        }
+      ]
+    },
+    {
+      "key": "backoffice.ariaLabel.sletter",
+      "norwegianText": "Sletter...",
+      "englishText": "Sletter...",
+      "usageCount": 1,
+      "files": [
+        "apps/backoffice/src/features/calendar/components/EventDrawer.tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/backoffice/src/features/calendar/components/EventDrawer.tsx",
+          "line": 232,
+          "type": "aria-label"
+        }
+      ]
+    },
+    {
+      "key": "backoffice.text.emne",
+      "norwegianText": "Emne",
+      "englishText": "Emne",
+      "usageCount": 1,
+      "files": [
+        "apps/backoffice/src/features/notification-reports/NotificationDeliveryDashboard.tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/backoffice/src/features/notification-reports/NotificationDeliveryDashboard.tsx",
+          "line": 236,
+          "type": "jsx-text"
+        }
+      ]
+    },
+    {
+      "key": "backoffice.title.status",
+      "norwegianText": "Status",
+      "englishText": "Status",
+      "usageCount": 1,
+      "files": [
+        "apps/backoffice/src/features/rental-objects/components/RentalObjectsListView.tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/backoffice/src/features/rental-objects/components/RentalObjectsListView.tsx",
+          "line": 218,
+          "type": "title"
+        }
+      ]
+    },
+    {
+      "key": "backoffice.title.kapasitet",
+      "norwegianText": "Kapasitet",
+      "englishText": "Kapasitet",
+      "usageCount": 1,
+      "files": [
+        "apps/backoffice/src/features/rental-objects/components/RentalObjectsListView.tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/backoffice/src/features/rental-objects/components/RentalObjectsListView.tsx",
+          "line": 248,
+          "type": "title"
+        }
+      ]
+    },
+    {
+      "key": "backoffice.title.sortering",
+      "norwegianText": "Sortering",
+      "englishText": "Sortering",
+      "usageCount": 1,
+      "files": [
+        "apps/backoffice/src/features/rental-objects/components/RentalObjectsListView.tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/backoffice/src/features/rental-objects/components/RentalObjectsListView.tsx",
+          "line": 278,
+          "type": "title"
+        }
+      ]
+    },
+    {
+      "key": "backoffice.ariaLabel.rutenettvisning",
+      "norwegianText": "Rutenettvisning",
+      "englishText": "Rutenettvisning",
+      "usageCount": 1,
+      "files": [
+        "apps/backoffice/src/features/rental-objects/components/RentalObjectsListView.tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/backoffice/src/features/rental-objects/components/RentalObjectsListView.tsx",
+          "line": 384,
+          "type": "aria-label"
+        }
+      ]
+    },
+    {
+      "key": "backoffice.ariaLabel.listevisning",
+      "norwegianText": "Listevisning",
+      "englishText": "Listevisning",
+      "usageCount": 1,
+      "files": [
+        "apps/backoffice/src/features/rental-objects/components/RentalObjectsListView.tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/backoffice/src/features/rental-objects/components/RentalObjectsListView.tsx",
+          "line": 397,
+          "type": "aria-label"
+        }
+      ]
+    },
+    {
+      "key": "backoffice.text.endringshistorikk",
+      "norwegianText": "Endringshistorikk",
+      "englishText": "Endringshistorikk",
+      "usageCount": 1,
+      "files": [
+        "apps/backoffice/src/features/rental-objects/components/detail/RentalObjectAuditTab.tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/backoffice/src/features/rental-objects/components/detail/RentalObjectAuditTab.tsx",
+          "line": 31,
+          "type": "jsx-text"
+        }
+      ]
+    },
+    {
+      "key": "backoffice.text.details",
+      "norwegianText": "Detaljer",
+      "englishText": "Details",
+      "usageCount": 1,
+      "files": [
+        "apps/backoffice/src/features/rental-objects/components/detail/RentalObjectAuditTab.tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/backoffice/src/features/rental-objects/components/detail/RentalObjectAuditTab.tsx",
+          "line": 44,
+          "type": "jsx-text"
+        }
+      ]
+    },
+    {
+      "key": "backoffice.text.ansvarOgDelegasjon",
+      "norwegianText": "Ansvar og delegasjon",
+      "englishText": "Ansvar og delegasjon",
+      "usageCount": 1,
+      "files": [
+        "apps/backoffice/src/features/rental-objects/components/detail/RentalObjectCustodyTab.tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/backoffice/src/features/rental-objects/components/detail/RentalObjectCustodyTab.tsx",
+          "line": 85,
+          "type": "jsx-text"
+        }
+      ]
+    },
+    {
+      "key": "backoffice.text.periode",
+      "norwegianText": "Periode",
+      "englishText": "Periode",
+      "usageCount": 1,
+      "files": [
+        "apps/backoffice/src/features/rental-objects/components/detail/RentalObjectCustodyTab.tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/backoffice/src/features/rental-objects/components/detail/RentalObjectCustodyTab.tsx",
+          "line": 109,
+          "type": "jsx-text"
+        }
+      ]
+    },
+    {
+      "key": "backoffice.text.medlem",
+      "norwegianText": "Medlem",
+      "englishText": "Medlem",
+      "usageCount": 1,
+      "files": [
+        "apps/backoffice/src/features/rental-objects/components/detail/RentalObjectCustodyTab.tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/backoffice/src/features/rental-objects/components/detail/RentalObjectCustodyTab.tsx",
+          "line": 169,
+          "type": "jsx-text"
+        }
+      ]
+    },
+    {
+      "key": "backoffice.text.begrunnelse",
+      "norwegianText": "Begrunnelse",
+      "englishText": "Begrunnelse",
+      "usageCount": 1,
+      "files": [
+        "apps/backoffice/src/features/rental-objects/components/detail/RentalObjectCustodyTab.tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/backoffice/src/features/rental-objects/components/detail/RentalObjectCustodyTab.tsx",
+          "line": 289,
+          "type": "jsx-text"
+        }
+      ]
+    },
+    {
+      "key": "backoffice.text.grantee",
+      "norwegianText": "Grantee",
+      "englishText": "Grantee",
+      "usageCount": 1,
+      "files": [
+        "apps/backoffice/src/features/rental-objects/components/wizard/steps/CustodyStep.tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/backoffice/src/features/rental-objects/components/wizard/steps/CustodyStep.tsx",
+          "line": 103,
+          "type": "jsx-text"
+        }
+      ]
+    },
+    {
+      "key": "backoffice.text.actions",
+      "norwegianText": "Actions",
+      "englishText": "Actions",
+      "usageCount": 1,
+      "files": [
+        "apps/backoffice/src/features/rental-objects/components/wizard/steps/CustodyStep.tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/backoffice/src/features/rental-objects/components/wizard/steps/CustodyStep.tsx",
+          "line": 107,
+          "type": "jsx-text"
+        }
+      ]
+    },
+    {
+      "key": "backoffice.text.cancel",
+      "norwegianText": "Cancel",
+      "englishText": "Cancel",
+      "usageCount": 1,
+      "files": [
+        "apps/backoffice/src/features/rental-objects/components/wizard/steps/CustodyStep.tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/backoffice/src/features/rental-objects/components/wizard/steps/CustodyStep.tsx",
+          "line": 239,
+          "type": "jsx-text"
+        }
+      ]
+    },
+    {
+      "key": "backoffice.placeholder.599139",
+      "norwegianText": "59.9139",
+      "englishText": "59.9139",
+      "usageCount": 1,
+      "files": [
+        "apps/backoffice/src/features/rental-objects/components/wizard/steps/LocationStep.tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/backoffice/src/features/rental-objects/components/wizard/steps/LocationStep.tsx",
+          "line": 149,
+          "type": "placeholder"
+        }
+      ]
+    },
+    {
+      "key": "backoffice.placeholder.107522",
+      "norwegianText": "10.7522",
+      "englishText": "10.7522",
+      "usageCount": 1,
+      "files": [
+        "apps/backoffice/src/features/rental-objects/components/wizard/steps/LocationStep.tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/backoffice/src/features/rental-objects/components/wizard/steps/LocationStep.tsx",
+          "line": 159,
+          "type": "placeholder"
+        }
+      ]
+    },
+    {
+      "key": "backoffice.placeholder.sokEtterAnmeldelseObjekt",
+      "norwegianText": "Søk etter anmeldelse, objekt...",
+      "englishText": "Sok etter anmeldelse, objekt...",
+      "usageCount": 1,
+      "files": [
+        "apps/backoffice/src/features/reviews/ReviewModerationPage.tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/backoffice/src/features/reviews/ReviewModerationPage.tsx",
+          "line": 161,
+          "type": "placeholder"
+        }
+      ]
+    },
+    {
+      "key": "backoffice.ariaLabel.lasterAnmeldelser",
+      "norwegianText": "Laster anmeldelser",
+      "englishText": "Laster anmeldelser",
+      "usageCount": 1,
+      "files": [
+        "apps/backoffice/src/features/reviews/ReviewModerationPage.tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/backoffice/src/features/reviews/ReviewModerationPage.tsx",
+          "line": 187,
+          "type": "aria-label"
+        }
+      ]
+    },
+    {
+      "key": "backoffice.text.vurdering",
+      "norwegianText": "Vurdering",
+      "englishText": "Vurdering",
+      "usageCount": 1,
+      "files": [
+        "apps/backoffice/src/features/reviews/components/ReviewModerationTable.tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/backoffice/src/features/reviews/components/ReviewModerationTable.tsx",
+          "line": 377,
+          "type": "jsx-text"
+        }
+      ]
+    },
+    {
+      "key": "backoffice.text.anmeldelse",
+      "norwegianText": "Anmeldelse",
+      "englishText": "Anmeldelse",
+      "usageCount": 1,
+      "files": [
+        "apps/backoffice/src/features/reviews/components/ReviewModerationTable.tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/backoffice/src/features/reviews/components/ReviewModerationTable.tsx",
+          "line": 378,
+          "type": "jsx-text"
+        }
+      ]
+    },
+    {
+      "key": "backoffice.text.objekt",
+      "norwegianText": "Objekt",
+      "englishText": "Objekt",
+      "usageCount": 1,
+      "files": [
+        "apps/backoffice/src/features/reviews/components/ReviewModerationTable.tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/backoffice/src/features/reviews/components/ReviewModerationTable.tsx",
+          "line": 379,
+          "type": "jsx-text"
+        }
+      ]
+    },
+    {
+      "key": "settings.placeholder.httpsexamplecomlogopng",
+      "norwegianText": "https://example.com/logo.png",
+      "englishText": "https://example.com/logo.png",
+      "usageCount": 1,
+      "files": [
+        "apps/backoffice/src/features/settings/components/BrandingTab.tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/backoffice/src/features/settings/components/BrandingTab.tsx",
+          "line": 51,
+          "type": "placeholder"
+        }
+      ]
+    },
+    {
+      "key": "settings.placeholder.httpsexamplecomfaviconico",
+      "norwegianText": "https://example.com/favicon.ico",
+      "englishText": "https://example.com/favicon.ico",
+      "usageCount": 1,
+      "files": [
+        "apps/backoffice/src/features/settings/components/BrandingTab.tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/backoffice/src/features/settings/components/BrandingTab.tsx",
+          "line": 85,
+          "type": "placeholder"
+        }
+      ]
+    },
+    {
+      "key": "settings.text.bankid",
+      "norwegianText": "BankID",
+      "englishText": "BankID",
+      "usageCount": 1,
+      "files": [
+        "apps/backoffice/src/features/settings/components/IntegrationsTab.tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/backoffice/src/features/settings/components/IntegrationsTab.tsx",
+          "line": 46,
+          "type": "jsx-text"
+        }
+      ]
+    },
+    {
+      "key": "settings.text.offentligPaloggingslosning",
+      "norwegianText": "Offentlig påloggingsløsning",
+      "englishText": "Offentlig paloggingslosning",
+      "usageCount": 1,
+      "files": [
+        "apps/backoffice/src/features/settings/components/IntegrationsTab.tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/backoffice/src/features/settings/components/IntegrationsTab.tsx",
+          "line": 65,
+          "type": "jsx-text"
+        }
+      ]
+    },
+    {
+      "key": "settings.text.vipps",
+      "norwegianText": "Vipps",
+      "englishText": "Vipps",
+      "usageCount": 1,
+      "files": [
+        "apps/backoffice/src/features/settings/components/IntegrationsTab.tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/backoffice/src/features/settings/components/IntegrationsTab.tsx",
+          "line": 93,
+          "type": "jsx-text"
+        }
+      ]
+    },
+    {
+      "key": "settings.text.mobilbetalingMedVipps",
+      "norwegianText": "Mobilbetaling med Vipps",
+      "englishText": "Mobilbetaling med Vipps",
+      "usageCount": 1,
+      "files": [
+        "apps/backoffice/src/features/settings/components/IntegrationsTab.tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/backoffice/src/features/settings/components/IntegrationsTab.tsx",
+          "line": 94,
+          "type": "jsx-text"
+        }
+      ]
+    },
+    {
+      "key": "settings.text.rco",
+      "norwegianText": "RCO",
+      "englishText": "RCO",
+      "usageCount": 1,
+      "files": [
+        "apps/backoffice/src/features/settings/components/IntegrationsTab.tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/backoffice/src/features/settings/components/IntegrationsTab.tsx",
+          "line": 124,
+          "type": "jsx-text"
+        }
+      ]
+    },
+    {
+      "key": "settings.text.digitalLassystem",
+      "norwegianText": "Digital låssystem",
+      "englishText": "Digital lassystem",
+      "usageCount": 1,
+      "files": [
+        "apps/backoffice/src/features/settings/components/IntegrationsTab.tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/backoffice/src/features/settings/components/IntegrationsTab.tsx",
+          "line": 125,
+          "type": "jsx-text"
+        }
+      ]
+    },
+    {
+      "key": "settings.text.synkroniserMedGoogleCalendar",
+      "norwegianText": "Synkroniser med Google Calendar",
+      "englishText": "Synkroniser med Google Calendar",
+      "usageCount": 1,
+      "files": [
+        "apps/backoffice/src/features/settings/components/IntegrationsTab.tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/backoffice/src/features/settings/components/IntegrationsTab.tsx",
+          "line": 156,
+          "type": "jsx-text"
+        }
+      ]
+    },
+    {
+      "key": "settings.text.outlook",
+      "norwegianText": "Outlook",
+      "englishText": "Outlook",
+      "usageCount": 1,
+      "files": [
+        "apps/backoffice/src/features/settings/components/IntegrationsTab.tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/backoffice/src/features/settings/components/IntegrationsTab.tsx",
+          "line": 173,
+          "type": "jsx-text"
+        }
+      ]
+    },
+    {
+      "key": "settings.text.visma",
+      "norwegianText": "Visma",
+      "englishText": "Visma",
+      "usageCount": 1,
+      "files": [
+        "apps/backoffice/src/features/settings/components/IntegrationsTab.tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/backoffice/src/features/settings/components/IntegrationsTab.tsx",
+          "line": 204,
+          "type": "jsx-text"
+        }
+      ]
+    },
+    {
+      "key": "settings.text.faktureringViaVisma",
+      "norwegianText": "Fakturering via Visma",
+      "englishText": "Fakturering via Visma",
+      "usageCount": 1,
+      "files": [
+        "apps/backoffice/src/features/settings/components/IntegrationsTab.tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/backoffice/src/features/settings/components/IntegrationsTab.tsx",
+          "line": 205,
+          "type": "jsx-text"
+        }
+      ]
+    },
+    {
+      "key": "settings.text.verifiserOrganisasjoner",
+      "norwegianText": "Verifiser organisasjoner",
+      "englishText": "Verifiser organisasjoner",
+      "usageCount": 1,
+      "files": [
+        "apps/backoffice/src/features/settings/components/IntegrationsTab.tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/backoffice/src/features/settings/components/IntegrationsTab.tsx",
+          "line": 236,
+          "type": "jsx-text"
+        }
+      ]
+    },
+    {
+      "key": "backoffice.text.tillatelsesstyring",
+      "norwegianText": "Tillatelsesstyring",
+      "englishText": "Tillatelsesstyring",
+      "usageCount": 1,
+      "files": [
+        "apps/backoffice/src/pages/PermissionManagement/PermissionManagement.tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/backoffice/src/pages/PermissionManagement/PermissionManagement.tsx",
+          "line": 163,
+          "type": "jsx-text"
+        }
+      ]
+    },
+    {
+      "key": "backoffice.text.ubegrenset",
+      "norwegianText": "Ubegrenset",
+      "englishText": "Ubegrenset",
+      "usageCount": 1,
+      "files": [
+        "apps/backoffice/src/pages/PermissionManagement/PermissionManagement.tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/backoffice/src/pages/PermissionManagement/PermissionManagement.tsx",
+          "line": 242,
+          "type": "jsx-text"
+        }
+      ]
+    },
+    {
+      "key": "backoffice.text.fra",
+      "norwegianText": "Fra",
+      "englishText": "Fra",
+      "usageCount": 1,
+      "files": [
+        "apps/backoffice/src/pages/PermissionManagement/PermissionManagement.tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/backoffice/src/pages/PermissionManagement/PermissionManagement.tsx",
+          "line": 364,
+          "type": "jsx-text"
+        }
+      ]
+    },
+    {
+      "key": "backoffice.text.til",
+      "norwegianText": "Til",
+      "englishText": "Til",
+      "usageCount": 1,
+      "files": [
+        "apps/backoffice/src/pages/PermissionManagement/PermissionManagement.tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/backoffice/src/pages/PermissionManagement/PermissionManagement.tsx",
+          "line": 368,
+          "type": "jsx-text"
+        }
+      ]
+    },
+    {
+      "key": "backoffice.text.rapporttype",
+      "norwegianText": "Rapporttype",
+      "englishText": "Rapporttype",
+      "usageCount": 1,
+      "files": [
+        "apps/backoffice/src/routes/admin-reports.tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/backoffice/src/routes/admin-reports.tsx",
+          "line": 119,
+          "type": "jsx-text"
+        }
+      ]
+    },
+    {
+      "key": "backoffice.text.inntekter",
+      "norwegianText": "Inntekter",
+      "englishText": "Inntekter",
+      "usageCount": 1,
+      "files": [
+        "apps/backoffice/src/routes/admin-reports.tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/backoffice/src/routes/admin-reports.tsx",
+          "line": 127,
+          "type": "jsx-text"
+        }
+      ]
+    },
+    {
+      "key": "backoffice.text.lokaler",
+      "norwegianText": "Lokaler",
+      "englishText": "Lokaler",
+      "usageCount": 1,
+      "files": [
+        "apps/backoffice/src/routes/admin-reports.tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/backoffice/src/routes/admin-reports.tsx",
+          "line": 128,
+          "type": "jsx-text"
+        }
+      ]
+    },
+    {
+      "key": "backoffice.text.totaltBookinger",
+      "norwegianText": "Totalt bookinger",
+      "englishText": "Totalt bookinger",
+      "usageCount": 1,
+      "files": [
+        "apps/backoffice/src/routes/admin-reports.tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/backoffice/src/routes/admin-reports.tsx",
+          "line": 152,
+          "type": "jsx-text"
+        }
+      ]
+    },
+    {
+      "key": "backoffice.text.totalOmsetning",
+      "norwegianText": "Total omsetning",
+      "englishText": "Total omsetning",
+      "usageCount": 1,
+      "files": [
+        "apps/backoffice/src/routes/admin-reports.tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/backoffice/src/routes/admin-reports.tsx",
+          "line": 163,
+          "type": "jsx-text"
+        }
+      ]
+    },
+    {
+      "key": "backoffice.text.snittPerBooking",
+      "norwegianText": "Snitt per booking",
+      "englishText": "Snitt per booking",
+      "usageCount": 1,
+      "files": [
+        "apps/backoffice/src/routes/admin-reports.tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/backoffice/src/routes/admin-reports.tsx",
+          "line": 170,
+          "type": "jsx-text"
+        }
+      ]
+    },
+    {
+      "key": "backoffice.text.toppLokaler",
+      "norwegianText": "Topp lokaler",
+      "englishText": "Topp lokaler",
+      "usageCount": 1,
+      "files": [
+        "apps/backoffice/src/routes/admin-reports.tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/backoffice/src/routes/admin-reports.tsx",
+          "line": 178,
+          "type": "jsx-text"
+        }
+      ]
+    },
+    {
+      "key": "backoffice.text.omsetning",
+      "norwegianText": "Omsetning",
+      "englishText": "Omsetning",
+      "usageCount": 1,
+      "files": [
+        "apps/backoffice/src/routes/admin-reports.tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/backoffice/src/routes/admin-reports.tsx",
+          "line": 190,
+          "type": "jsx-text"
+        }
+      ]
+    },
+    {
+      "key": "backoffice.text.totaltTidsluker",
+      "norwegianText": "Totalt tidsluker",
+      "englishText": "Totalt tidsluker",
+      "usageCount": 1,
+      "files": [
+        "apps/backoffice/src/routes/allocation-planner.tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/backoffice/src/routes/allocation-planner.tsx",
+          "line": 103,
+          "type": "jsx-text"
+        }
+      ]
+    },
+    {
+      "key": "backoffice.text.skienIl",
+      "norwegianText": "Skien IL",
+      "englishText": "Skien IL",
+      "usageCount": 1,
+      "files": [
+        "apps/backoffice/src/routes/allocation-planner.tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/backoffice/src/routes/allocation-planner.tsx",
+          "line": 127,
+          "type": "jsx-text"
+        }
+      ]
+    },
+    {
+      "key": "backoffice.text.telemarkFk",
+      "norwegianText": "Telemark FK",
+      "englishText": "Telemark FK",
+      "usageCount": 1,
+      "files": [
+        "apps/backoffice/src/routes/allocation-planner.tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/backoffice/src/routes/allocation-planner.tsx",
+          "line": 132,
+          "type": "jsx-text"
+        }
+      ]
+    },
+    {
+      "key": "backoffice.text.returnert",
+      "norwegianText": "Returnert",
+      "englishText": "Returnert",
+      "usageCount": 1,
+      "files": [
+        "apps/backoffice/src/routes/audit-timeline.tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/backoffice/src/routes/audit-timeline.tsx",
+          "line": 157,
+          "type": "jsx-text"
+        }
+      ]
+    },
+    {
+      "key": "backoffice.text.time",
+      "norwegianText": "Tid",
+      "englishText": "Time",
+      "usageCount": 1,
+      "files": [
+        "apps/backoffice/src/routes/calendar.tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/backoffice/src/routes/calendar.tsx",
+          "line": 477,
+          "type": "jsx-text"
+        }
+      ]
+    },
+    {
+      "key": "backoffice.text.sperret",
+      "norwegianText": "Sperret",
+      "englishText": "Sperret",
+      "usageCount": 1,
+      "files": [
+        "apps/backoffice/src/routes/calendar.tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/backoffice/src/routes/calendar.tsx",
+          "line": 770,
+          "type": "jsx-text"
+        }
+      ]
+    },
+    {
+      "key": "backoffice.text.godkjentIDag",
+      "norwegianText": "Godkjent i dag",
+      "englishText": "Godkjent i dag",
+      "usageCount": 1,
+      "files": [
+        "apps/backoffice/src/routes/decision-forms.tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/backoffice/src/routes/decision-forms.tsx",
+          "line": 143,
+          "type": "jsx-text"
+        }
+      ]
+    },
+    {
+      "key": "backoffice.text.avslattIDag",
+      "norwegianText": "Avslått i dag",
+      "englishText": "Avslatt i dag",
+      "usageCount": 1,
+      "files": [
+        "apps/backoffice/src/routes/decision-forms.tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/backoffice/src/routes/decision-forms.tsx",
+          "line": 147,
+          "type": "jsx-text"
+        }
+      ]
+    },
+    {
+      "key": "backoffice.text.totaltDenneUke",
+      "norwegianText": "Totalt denne uke",
+      "englishText": "Totalt denne uke",
+      "usageCount": 1,
+      "files": [
+        "apps/backoffice/src/routes/decision-forms.tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/backoffice/src/routes/decision-forms.tsx",
+          "line": 151,
+          "type": "jsx-text"
+        }
+      ]
+    },
+    {
+      "key": "backoffice.text.sakerTilBehandling",
+      "norwegianText": "Saker til behandling",
+      "englishText": "Saker til behandling",
+      "usageCount": 1,
+      "files": [
+        "apps/backoffice/src/routes/decision-forms.tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/backoffice/src/routes/decision-forms.tsx",
+          "line": 164,
+          "type": "jsx-text"
+        }
+      ]
+    },
+    {
+      "key": "backoffice.text.fakturagrunnlag",
+      "norwegianText": "Fakturagrunnlag",
+      "englishText": "Fakturagrunnlag",
+      "usageCount": 1,
+      "files": [
+        "apps/backoffice/src/routes/economy.tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/backoffice/src/routes/economy.tsx",
+          "line": 35,
+          "type": "jsx-text"
+        }
+      ]
+    },
+    {
+      "key": "backoffice.text.salgsbilag",
+      "norwegianText": "Salgsbilag",
+      "englishText": "Salgsbilag",
+      "usageCount": 1,
+      "files": [
+        "apps/backoffice/src/routes/economy.tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/backoffice/src/routes/economy.tsx",
+          "line": 36,
+          "type": "jsx-text"
+        }
+      ]
+    },
+    {
+      "key": "backoffice.text.kreditnota",
+      "norwegianText": "Kreditnota",
+      "englishText": "Kreditnota",
+      "usageCount": 1,
+      "files": [
+        "apps/backoffice/src/routes/economy.tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/backoffice/src/routes/economy.tsx",
+          "line": 37,
+          "type": "jsx-text"
+        }
+      ]
+    },
+    {
+      "key": "backoffice.text.eksport",
+      "norwegianText": "Eksport",
+      "englishText": "Eksport",
+      "usageCount": 1,
+      "files": [
+        "apps/backoffice/src/routes/economy.tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/backoffice/src/routes/economy.tsx",
+          "line": 38,
+          "type": "jsx-text"
+        }
+      ]
+    },
+    {
+      "key": "integrations.text.sendt",
+      "norwegianText": "Sendt",
+      "englishText": "Sendt",
+      "usageCount": 1,
+      "files": [
+        "apps/backoffice/src/routes/integrations/calendar.tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/backoffice/src/routes/integrations/calendar.tsx",
+          "line": 66,
+          "type": "jsx-text"
+        }
+      ]
+    },
+    {
+      "key": "integrations.text.failed",
+      "norwegianText": "Feilet",
+      "englishText": "Failed",
+      "usageCount": 1,
+      "files": [
+        "apps/backoffice/src/routes/integrations/calendar.tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/backoffice/src/routes/integrations/calendar.tsx",
+          "line": 68,
+          "type": "jsx-text"
+        }
+      ]
+    },
+    {
+      "key": "integrations.text.tilkoblet",
+      "norwegianText": "Tilkoblet",
+      "englishText": "Tilkoblet",
+      "usageCount": 1,
+      "files": [
+        "apps/backoffice/src/routes/integrations/calendar.tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/backoffice/src/routes/integrations/calendar.tsx",
+          "line": 153,
+          "type": "jsx-text"
+        }
+      ]
+    },
+    {
+      "key": "integrations.text.ressurskalender",
+      "norwegianText": "Ressurskalender",
+      "englishText": "Ressurskalender",
+      "usageCount": 1,
+      "files": [
+        "apps/backoffice/src/routes/integrations/calendar.tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/backoffice/src/routes/integrations/calendar.tsx",
+          "line": 223,
+          "type": "jsx-text"
+        }
+      ]
+    },
+    {
+      "key": "integrations.text.sisteUtsendelser",
+      "norwegianText": "Siste utsendelser",
+      "englishText": "Siste utsendelser",
+      "usageCount": 1,
+      "files": [
+        "apps/backoffice/src/routes/integrations/calendar.tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/backoffice/src/routes/integrations/calendar.tsx",
+          "line": 256,
+          "type": "jsx-text"
+        }
+      ]
+    },
+    {
+      "key": "integrations.text.type",
+      "norwegianText": "Type",
+      "englishText": "Type",
+      "usageCount": 1,
+      "files": [
+        "apps/backoffice/src/routes/integrations/calendar.tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/backoffice/src/routes/integrations/calendar.tsx",
+          "line": 272,
+          "type": "jsx-text"
+        }
+      ]
+    },
+    {
+      "key": "integrations.text.mottaker",
+      "norwegianText": "Mottaker",
+      "englishText": "Mottaker",
+      "usageCount": 1,
+      "files": [
+        "apps/backoffice/src/routes/integrations/calendar.tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/backoffice/src/routes/integrations/calendar.tsx",
+          "line": 273,
+          "type": "jsx-text"
+        }
+      ]
+    },
+    {
+      "key": "integrations.text.booking",
+      "norwegianText": "Booking",
+      "englishText": "Booking",
+      "usageCount": 1,
+      "files": [
+        "apps/backoffice/src/routes/integrations/calendar.tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/backoffice/src/routes/integrations/calendar.tsx",
+          "line": 274,
+          "type": "jsx-text"
+        }
+      ]
+    },
+    {
+      "key": "integrations.text.status",
+      "norwegianText": "Status",
+      "englishText": "Status",
+      "usageCount": 1,
+      "files": [
+        "apps/backoffice/src/routes/integrations/calendar.tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/backoffice/src/routes/integrations/calendar.tsx",
+          "line": 275,
+          "type": "jsx-text"
+        }
+      ]
+    },
+    {
+      "key": "integrations.text.tidspunkt",
+      "norwegianText": "Tidspunkt",
+      "englishText": "Tidspunkt",
+      "usageCount": 1,
+      "files": [
+        "apps/backoffice/src/routes/integrations/calendar.tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/backoffice/src/routes/integrations/calendar.tsx",
+          "line": 276,
+          "type": "jsx-text"
+        }
+      ]
+    },
+    {
+      "key": "backoffice.ariaLabel.lasterMeldinger",
+      "norwegianText": "Laster meldinger...",
+      "englishText": "Laster meldinger...",
+      "usageCount": 1,
+      "files": [
+        "apps/backoffice/src/routes/messages.tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/backoffice/src/routes/messages.tsx",
+          "line": 531,
+          "type": "aria-label"
+        }
+      ]
+    },
+    {
+      "key": "organizations.ariaLabel.lasterMedlemmer",
+      "norwegianText": "Laster medlemmer...",
+      "englishText": "Laster medlemmer...",
+      "usageCount": 1,
+      "files": [
+        "apps/backoffice/src/routes/organizations/OrganizationMembersPage.tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/backoffice/src/routes/organizations/OrganizationMembersPage.tsx",
+          "line": 58,
+          "type": "aria-label"
+        }
+      ]
+    },
+    {
+      "key": "organizations.ariaLabel.lasterRettigheter",
+      "norwegianText": "Laster rettigheter...",
+      "englishText": "Laster rettigheter...",
+      "usageCount": 1,
+      "files": [
+        "apps/backoffice/src/routes/organizations/PermissionAssignmentPage.tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/backoffice/src/routes/organizations/PermissionAssignmentPage.tsx",
+          "line": 186,
+          "type": "aria-label"
+        }
+      ]
+    },
+    {
+      "key": "backoffice.text.timepriser",
+      "norwegianText": "Timepriser",
+      "englishText": "Timepriser",
+      "usageCount": 1,
+      "files": [
+        "apps/backoffice/src/routes/pricing-rules.tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/backoffice/src/routes/pricing-rules.tsx",
+          "line": 142,
+          "type": "jsx-text"
+        }
+      ]
+    },
+    {
+      "key": "backoffice.text.rabatter",
+      "norwegianText": "Rabatter",
+      "englishText": "Rabatter",
+      "usageCount": 1,
+      "files": [
+        "apps/backoffice/src/routes/pricing-rules.tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/backoffice/src/routes/pricing-rules.tsx",
+          "line": 148,
+          "type": "jsx-text"
+        }
+      ]
+    },
+    {
+      "key": "backoffice.text.betingelser",
+      "norwegianText": "Betingelser",
+      "englishText": "Betingelser",
+      "usageCount": 1,
+      "files": [
+        "apps/backoffice/src/routes/pricing-rules.tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/backoffice/src/routes/pricing-rules.tsx",
+          "line": 168,
+          "type": "jsx-text"
+        }
+      ]
+    },
+    {
+      "key": "backoffice.text.kreverHandling",
+      "norwegianText": "Krever handling",
+      "englishText": "Krever handling",
+      "usageCount": 1,
+      "files": [
+        "apps/backoffice/src/routes/reports.tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/backoffice/src/routes/reports.tsx",
+          "line": 381,
+          "type": "jsx-text"
+        }
+      ]
+    },
+    {
+      "key": "backoffice.text.tidsrom",
+      "norwegianText": "Tidsrom",
+      "englishText": "Tidsrom",
+      "usageCount": 1,
+      "files": [
+        "apps/backoffice/src/routes/requests.tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/backoffice/src/routes/requests.tsx",
+          "line": 356,
+          "type": "jsx-text"
+        }
+      ]
+    },
+    {
+      "key": "backoffice.title.approve",
+      "norwegianText": "Godkjenn",
+      "englishText": "Approve",
+      "usageCount": 1,
+      "files": [
+        "apps/backoffice/src/routes/requests.tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/backoffice/src/routes/requests.tsx",
+          "line": 424,
+          "type": "title"
+        }
+      ]
+    },
+    {
+      "key": "backoffice.ariaLabel.flereValg",
+      "norwegianText": "Flere valg",
+      "englishText": "Flere valg",
+      "usageCount": 1,
+      "files": [
+        "apps/backoffice/src/routes/requests.tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/backoffice/src/routes/requests.tsx",
+          "line": 438,
+          "type": "aria-label"
+        }
+      ]
+    },
+    {
+      "key": "backoffice.text.kansellert",
+      "norwegianText": "Kansellert",
+      "englishText": "Kansellert",
+      "usageCount": 1,
+      "files": [
+        "apps/backoffice/src/routes/search.tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/backoffice/src/routes/search.tsx",
+          "line": 282,
+          "type": "jsx-text"
+        }
+      ]
+    },
+    {
+      "key": "backoffice.text.underBehandling",
+      "norwegianText": "Under behandling",
+      "englishText": "Under behandling",
+      "usageCount": 1,
+      "files": [
+        "apps/backoffice/src/routes/season-applications.tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/backoffice/src/routes/season-applications.tsx",
+          "line": 175,
+          "type": "jsx-text"
+        }
+      ]
+    },
+    {
+      "key": "backoffice.text.season",
+      "norwegianText": "Sesong",
+      "englishText": "Season",
+      "usageCount": 1,
+      "files": [
+        "apps/backoffice/src/routes/season-applications.tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/backoffice/src/routes/season-applications.tsx",
+          "line": 217,
+          "type": "jsx-text"
+        }
+      ]
+    },
+    {
+      "key": "backoffice.text.timer",
+      "norwegianText": "Timer",
+      "englishText": "Timer",
+      "usageCount": 1,
+      "files": [
+        "apps/backoffice/src/routes/season-applications.tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/backoffice/src/routes/season-applications.tsx",
+          "line": 218,
+          "type": "jsx-text"
+        }
+      ]
+    },
+    {
+      "key": "backoffice.text.mottatt",
+      "norwegianText": "Mottatt",
+      "englishText": "Mottatt",
+      "usageCount": 1,
+      "files": [
+        "apps/backoffice/src/routes/season-applications.tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/backoffice/src/routes/season-applications.tsx",
+          "line": 221,
+          "type": "jsx-text"
+        }
+      ]
+    },
+    {
+      "key": "backoffice.placeholder.httpsexamplecomlogopng",
+      "norwegianText": "https://example.com/logo.png",
+      "englishText": "https://example.com/logo.png",
+      "usageCount": 1,
+      "files": [
+        "apps/backoffice/src/routes/settings.tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/backoffice/src/routes/settings.tsx",
+          "line": 1261,
+          "type": "placeholder"
+        }
+      ]
+    },
+    {
+      "key": "backoffice.placeholder.httpsexamplecomfaviconico",
+      "norwegianText": "https://example.com/favicon.ico",
+      "englishText": "https://example.com/favicon.ico",
+      "usageCount": 1,
+      "files": [
+        "apps/backoffice/src/routes/settings.tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/backoffice/src/routes/settings.tsx",
+          "line": 1300,
+          "type": "placeholder"
+        }
+      ]
+    },
+    {
+      "key": "backoffice.text.totaltIDag",
+      "norwegianText": "Totalt i dag",
+      "englishText": "Totalt i dag",
+      "usageCount": 1,
+      "files": [
+        "apps/backoffice/src/routes/tenant/audit-log.tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/backoffice/src/routes/tenant/audit-log.tsx",
+          "line": 157,
+          "type": "jsx-text"
+        }
+      ]
+    },
+    {
+      "key": "backoffice.text.advarsler",
+      "norwegianText": "Advarsler",
+      "englishText": "Advarsler",
+      "usageCount": 1,
+      "files": [
+        "apps/backoffice/src/routes/tenant/audit-log.tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/backoffice/src/routes/tenant/audit-log.tsx",
+          "line": 161,
+          "type": "jsx-text"
+        }
+      ]
+    },
+    {
+      "key": "backoffice.text.booking",
+      "norwegianText": "Booking",
+      "englishText": "Booking",
+      "usageCount": 1,
+      "files": [
+        "apps/backoffice/src/routes/tenant/audit-log.tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/backoffice/src/routes/tenant/audit-log.tsx",
+          "line": 187,
+          "type": "jsx-text"
+        }
+      ]
+    },
+    {
+      "key": "backoffice.text.system",
+      "norwegianText": "System",
+      "englishText": "System",
+      "usageCount": 1,
+      "files": [
+        "apps/backoffice/src/routes/tenant/audit-log.tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/backoffice/src/routes/tenant/audit-log.tsx",
+          "line": 188,
+          "type": "jsx-text"
+        }
+      ]
+    },
+    {
+      "key": "backoffice.text.info",
+      "norwegianText": "Info",
+      "englishText": "Info",
+      "usageCount": 1,
+      "files": [
+        "apps/backoffice/src/routes/tenant/audit-log.tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/backoffice/src/routes/tenant/audit-log.tsx",
+          "line": 196,
+          "type": "jsx-text"
+        }
+      ]
+    },
+    {
+      "key": "backoffice.text.aksentfarge",
+      "norwegianText": "Aksentfarge",
+      "englishText": "Aksentfarge",
+      "usageCount": 1,
+      "files": [
+        "apps/backoffice/src/routes/tenant/branding.tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/backoffice/src/routes/tenant/branding.tsx",
+          "line": 166,
+          "type": "jsx-text"
+        }
+      ]
+    },
+    {
+      "key": "backoffice.text.feilVedLastingAvModuler",
+      "norwegianText": "Feil ved lasting av moduler",
+      "englishText": "Feil ved lasting av moduler",
+      "usageCount": 1,
+      "files": [
+        "apps/backoffice/src/routes/tenant/features.tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/backoffice/src/routes/tenant/features.tsx",
+          "line": 103,
+          "type": "jsx-text"
+        }
+      ]
+    },
+    {
+      "key": "backoffice.text.kjerne",
+      "norwegianText": "Kjerne",
+      "englishText": "Kjerne",
+      "usageCount": 1,
+      "files": [
+        "apps/backoffice/src/routes/tenant/features.tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/backoffice/src/routes/tenant/features.tsx",
+          "line": 240,
+          "type": "jsx-text"
+        }
+      ]
+    },
+    {
+      "key": "backoffice.text.manglerAvhengigheter",
+      "norwegianText": "Mangler avhengigheter",
+      "englishText": "Mangler avhengigheter",
+      "usageCount": 1,
+      "files": [
+        "apps/backoffice/src/routes/tenant/features.tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/backoffice/src/routes/tenant/features.tsx",
+          "line": 243,
+          "type": "jsx-text"
+        }
+      ]
+    },
+    {
+      "key": "backoffice.text.alltidAktiv",
+      "norwegianText": "Alltid aktiv",
+      "englishText": "Alltid aktiv",
+      "usageCount": 1,
+      "files": [
+        "apps/backoffice/src/routes/tenant/features.tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/backoffice/src/routes/tenant/features.tsx",
+          "line": 284,
+          "type": "jsx-text"
+        }
+      ]
+    },
+    {
+      "key": "backoffice.text.english",
+      "norwegianText": "English",
+      "englishText": "English",
+      "usageCount": 1,
+      "files": [
+        "apps/backoffice/src/routes/tenant/settings.tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/backoffice/src/routes/tenant/settings.tsx",
+          "line": 134,
+          "type": "jsx-text"
+        }
+      ]
+    },
+    {
+      "key": "backoffice.text.tidssone",
+      "norwegianText": "Tidssone",
+      "englishText": "Tidssone",
+      "usageCount": 1,
+      "files": [
+        "apps/backoffice/src/routes/tenant/settings.tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/backoffice/src/routes/tenant/settings.tsx",
+          "line": 138,
+          "type": "jsx-text"
+        }
+      ]
+    },
+    {
+      "key": "backoffice.text.utc",
+      "norwegianText": "UTC",
+      "englishText": "UTC",
+      "usageCount": 1,
+      "files": [
+        "apps/backoffice/src/routes/tenant/settings.tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/backoffice/src/routes/tenant/settings.tsx",
+          "line": 145,
+          "type": "jsx-text"
+        }
+      ]
+    },
+    {
+      "key": "backoffice.text.valuta",
+      "norwegianText": "Valuta",
+      "englishText": "Valuta",
+      "usageCount": 1,
+      "files": [
+        "apps/backoffice/src/routes/tenant/settings.tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/backoffice/src/routes/tenant/settings.tsx",
+          "line": 149,
+          "type": "jsx-text"
+        }
+      ]
+    },
+    {
+      "key": "backoffice.text.nok",
+      "norwegianText": "NOK",
+      "englishText": "NOK",
+      "usageCount": 1,
+      "files": [
+        "apps/backoffice/src/routes/tenant/settings.tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/backoffice/src/routes/tenant/settings.tsx",
+          "line": 155,
+          "type": "jsx-text"
+        }
+      ]
+    },
+    {
+      "key": "backoffice.text.eur",
+      "norwegianText": "EUR",
+      "englishText": "EUR",
+      "usageCount": 1,
+      "files": [
+        "apps/backoffice/src/routes/tenant/settings.tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/backoffice/src/routes/tenant/settings.tsx",
+          "line": 156,
+          "type": "jsx-text"
+        }
+      ]
+    },
+    {
+      "key": "backoffice.text.sek",
+      "norwegianText": "SEK",
+      "englishText": "SEK",
+      "usageCount": 1,
+      "files": [
+        "apps/backoffice/src/routes/tenant/settings.tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/backoffice/src/routes/tenant/settings.tsx",
+          "line": 157,
+          "type": "jsx-text"
+        }
+      ]
+    },
+    {
+      "key": "users.text.brukerIkkeFunnet",
+      "norwegianText": "Bruker ikke funnet",
+      "englishText": "Bruker ikke funnet",
+      "usageCount": 1,
+      "files": [
+        "apps/backoffice/src/routes/users/UserDetailPage.tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/backoffice/src/routes/users/UserDetailPage.tsx",
+          "line": 110,
+          "type": "jsx-text"
+        }
+      ]
+    },
+    {
+      "key": "users.text.kontaktinformasjon",
+      "norwegianText": "Kontaktinformasjon",
+      "englishText": "Kontaktinformasjon",
+      "usageCount": 1,
+      "files": [
+        "apps/backoffice/src/routes/users/UserDetailPage.tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/backoffice/src/routes/users/UserDetailPage.tsx",
+          "line": 188,
+          "type": "jsx-text"
+        }
+      ]
+    },
+    {
+      "key": "users.text.rolleOgTilgang",
+      "norwegianText": "Rolle og tilgang",
+      "englishText": "Rolle og tilgang",
+      "usageCount": 1,
+      "files": [
+        "apps/backoffice/src/routes/users/UserDetailPage.tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/backoffice/src/routes/users/UserDetailPage.tsx",
+          "line": 241,
+          "type": "jsx-text"
+        }
+      ]
+    },
+    {
+      "key": "users.text.kontoinformasjon",
+      "norwegianText": "Kontoinformasjon",
+      "englishText": "Kontoinformasjon",
+      "usageCount": 1,
+      "files": [
+        "apps/backoffice/src/routes/users/UserDetailPage.tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/backoffice/src/routes/users/UserDetailPage.tsx",
+          "line": 285,
+          "type": "jsx-text"
+        }
+      ]
+    },
+    {
+      "key": "backoffice.placeholder.brukerkommuneno",
+      "norwegianText": "bruker@kommune.no",
+      "englishText": "bruker@kommune.no",
+      "usageCount": 1,
+      "files": [
+        "apps/backoffice/src/routes/users-management.tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/backoffice/src/routes/users-management.tsx",
+          "line": 153,
+          "type": "placeholder"
+        }
+      ]
+    },
+    {
+      "key": "backoffice.text.administratorer",
+      "norwegianText": "Administratorer",
+      "englishText": "Administratorer",
+      "usageCount": 1,
+      "files": [
+        "apps/backoffice/src/routes/users-management.tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/backoffice/src/routes/users-management.tsx",
+          "line": 201,
+          "type": "jsx-text"
+        }
+      ]
+    },
+    {
+      "key": "backoffice.text.administrator",
+      "norwegianText": "Administrator",
+      "englishText": "Administrator",
+      "usageCount": 1,
+      "files": [
+        "apps/backoffice/src/routes/users.tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/backoffice/src/routes/users.tsx",
+          "line": 144,
+          "type": "jsx-text"
+        }
+      ]
+    },
+    {
+      "key": "backoffice.text.saksbehandler",
+      "norwegianText": "Saksbehandler",
+      "englishText": "Saksbehandler",
+      "usageCount": 1,
+      "files": [
+        "apps/backoffice/src/routes/users.tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/backoffice/src/routes/users.tsx",
+          "line": 147,
+          "type": "jsx-text"
+        }
+      ]
+    },
+    {
+      "key": "backoffice.text.suspendert",
+      "norwegianText": "Suspendert",
+      "englishText": "Suspendert",
+      "usageCount": 1,
+      "files": [
+        "apps/backoffice/src/routes/users.tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/backoffice/src/routes/users.tsx",
+          "line": 170,
+          "type": "jsx-text"
+        }
+      ]
+    },
+    {
+      "key": "backoffice.text.phone",
+      "norwegianText": "Telefon",
+      "englishText": "Phone",
+      "usageCount": 1,
+      "files": [
+        "apps/backoffice/src/routes/users.tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/backoffice/src/routes/users.tsx",
+          "line": 202,
+          "type": "jsx-text"
+        }
+      ]
+    },
+    {
+      "key": "backoffice.text.aldri",
+      "norwegianText": "Aldri",
+      "englishText": "Aldri",
+      "usageCount": 1,
+      "files": [
+        "apps/backoffice/src/routes/users.tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/backoffice/src/routes/users.tsx",
+          "line": 244,
+          "type": "jsx-text"
+        }
+      ]
+    },
+    {
+      "key": "common.text.digilist",
+      "norwegianText": "DIGILIST",
+      "englishText": "DIGILIST",
+      "usageCount": 1,
+      "files": [
+        "apps/docs-learning/src/components/layout/DocsSidebar.tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/docs-learning/src/components/layout/DocsSidebar.tsx",
+          "line": 225,
+          "type": "jsx-text"
+        }
+      ]
+    },
+    {
+      "key": "common.text.introduksjon",
+      "norwegianText": "Introduksjon",
+      "englishText": "Introduksjon",
+      "usageCount": 1,
+      "files": [
+        "apps/docs-learning/src/routes/DocsArticlePage.tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/docs-learning/src/routes/DocsArticlePage.tsx",
+          "line": 69,
+          "type": "jsx-text"
+        }
+      ]
+    },
+    {
+      "key": "common.text.ekstraAlternativer",
+      "norwegianText": "Ekstra alternativer",
+      "englishText": "Ekstra alternativer",
+      "usageCount": 1,
+      "files": [
+        "apps/docs-learning/src/routes/DocsArticlePage.tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/docs-learning/src/routes/DocsArticlePage.tsx",
+          "line": 93,
+          "type": "jsx-text"
+        }
+      ]
+    },
+    {
+      "key": "common.text.ofteStilteSporsmal",
+      "norwegianText": "Ofte stilte spørsmål",
+      "englishText": "Ofte stilte sporsmal",
+      "usageCount": 1,
+      "files": [
+        "apps/docs-learning/src/routes/DocsArticlePage.tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/docs-learning/src/routes/DocsArticlePage.tsx",
+          "line": 118,
+          "type": "jsx-text"
+        }
+      ]
+    },
+    {
+      "key": "minside.text.contextSetup",
+      "norwegianText": "Context Setup",
+      "englishText": "Context Setup",
+      "usageCount": 1,
+      "files": [
+        "apps/minside/src/components/SentryTestComponent.tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/minside/src/components/SentryTestComponent.tsx",
+          "line": 90,
+          "type": "jsx-text"
+        }
+      ]
+    },
+    {
+      "key": "minside.text.errorTests",
+      "norwegianText": "Error Tests",
+      "englishText": "Error Tests",
+      "usageCount": 1,
+      "files": [
+        "apps/minside/src/components/SentryTestComponent.tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/minside/src/components/SentryTestComponent.tsx",
+          "line": 105,
+          "type": "jsx-text"
+        }
+      ]
+    },
+    {
+      "key": "minside.text.addSomeBreadcrumbsToTestBreadcrumbTracking",
+      "norwegianText": "Add some breadcrumbs to test breadcrumb tracking",
+      "englishText": "Add some breadcrumbs to test breadcrumb tracking",
+      "usageCount": 1,
+      "files": [
+        "apps/minside/src/components/SentryTestComponent.tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/minside/src/components/SentryTestComponent.tsx",
+          "line": 132,
+          "type": "jsx-text"
+        }
+      ]
+    },
+    {
+      "key": "minside.text.clickAnyErrorButtonToTriggerATestError",
+      "norwegianText": "Click any error button to trigger a test error",
+      "englishText": "Click any error button to trigger a test error",
+      "usageCount": 1,
+      "files": [
+        "apps/minside/src/components/SentryTestComponent.tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/minside/src/components/SentryTestComponent.tsx",
+          "line": 133,
+          "type": "jsx-text"
+        }
+      ]
+    },
+    {
+      "key": "minside.text.checkTheBrowserConsoleForErrorLogs",
+      "norwegianText": "Check the browser console for error logs",
+      "englishText": "Check the browser console for error logs",
+      "usageCount": 1,
+      "files": [
+        "apps/minside/src/components/SentryTestComponent.tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/minside/src/components/SentryTestComponent.tsx",
+          "line": 134,
+          "type": "jsx-text"
+        }
+      ]
+    },
+    {
+      "key": "minside.text.checkYourSentryDashboardForTheErrorReport",
+      "norwegianText": "Check your Sentry dashboard for the error report",
+      "englishText": "Check your Sentry dashboard for the error report",
+      "usageCount": 1,
+      "files": [
+        "apps/minside/src/components/SentryTestComponent.tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/minside/src/components/SentryTestComponent.tsx",
+          "line": 135,
+          "type": "jsx-text"
+        }
+      ]
+    },
+    {
+      "key": "minside.ariaLabel.settings",
+      "norwegianText": "Innstillinger",
+      "englishText": "Settings",
+      "usageCount": 1,
+      "files": [
+        "apps/minside/src/components/layout/Header.tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/minside/src/components/layout/Header.tsx",
+          "line": 353,
+          "type": "aria-label"
+        }
+      ]
+    },
+    {
+      "key": "minside.title.settings",
+      "norwegianText": "Innstillinger",
+      "englishText": "Settings",
+      "usageCount": 1,
+      "files": [
+        "apps/minside/src/components/layout/Header.tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/minside/src/components/layout/Header.tsx",
+          "line": 354,
+          "type": "title"
+        }
+      ]
+    },
+    {
+      "key": "minside.ariaLabel.loading",
+      "norwegianText": "Loading",
+      "englishText": "Loading",
+      "usageCount": 1,
+      "files": [
+        "apps/minside/src/routes/calendar.tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/minside/src/routes/calendar.tsx",
+          "line": 128,
+          "type": "aria-label"
+        }
+      ]
+    },
+    {
+      "key": "minside.ariaLabel.bookingbekreftelser",
+      "norwegianText": "Bookingbekreftelser",
+      "englishText": "Bookingbekreftelser",
+      "usageCount": 1,
+      "files": [
+        "apps/minside/src/routes/notification-settings.tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/minside/src/routes/notification-settings.tsx",
+          "line": 296,
+          "type": "aria-label"
+        }
+      ]
+    },
+    {
+      "key": "minside.ariaLabel.kanselleringer",
+      "norwegianText": "Kanselleringer",
+      "englishText": "Kanselleringer",
+      "usageCount": 1,
+      "files": [
+        "apps/minside/src/routes/notification-settings.tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/minside/src/routes/notification-settings.tsx",
+          "line": 386,
+          "type": "aria-label"
+        }
+      ]
+    },
+    {
+      "key": "minside.ariaLabel.endringer",
+      "norwegianText": "Endringer",
+      "englishText": "Endringer",
+      "usageCount": 1,
+      "files": [
+        "apps/minside/src/routes/notification-settings.tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/minside/src/routes/notification-settings.tsx",
+          "line": 407,
+          "type": "aria-label"
+        }
+      ]
+    },
+    {
+      "key": "minside.text.administrerUtleieobjekter",
+      "norwegianText": "Administrer utleieobjekter",
+      "englishText": "Administrer utleieobjekter",
+      "usageCount": 1,
+      "files": [
+        "apps/minside/src/routes/org/managed-objects.tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/minside/src/routes/org/managed-objects.tsx",
+          "line": 37,
+          "type": "jsx-text"
+        }
+      ]
+    },
+    {
+      "key": "minside.placeholder.brukerexampleno",
+      "norwegianText": "bruker@example.no",
+      "englishText": "bruker@example.no",
+      "usageCount": 1,
+      "files": [
+        "apps/minside/src/routes/org/members.tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/minside/src/routes/org/members.tsx",
+          "line": 148,
+          "type": "placeholder"
+        }
+      ]
+    },
+    {
+      "key": "minside.placeholder.postorganisasjonno",
+      "norwegianText": "post@organisasjon.no",
+      "englishText": "post@organisasjon.no",
+      "usageCount": 1,
+      "files": [
+        "apps/minside/src/routes/org/notifications.tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/minside/src/routes/org/notifications.tsx",
+          "line": 440,
+          "type": "placeholder"
+        }
+      ]
+    },
+    {
+      "key": "minside.placeholder.4712345678",
+      "norwegianText": "+47 123 45 678",
+      "englishText": "+47 123 45 678",
+      "usageCount": 1,
+      "files": [
+        "apps/minside/src/routes/org/notifications.tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/minside/src/routes/org/notifications.tsx",
+          "line": 457,
+          "type": "placeholder"
+        }
+      ]
+    },
+    {
+      "key": "minside.text.tema",
+      "norwegianText": "Tema",
+      "englishText": "Tema",
+      "usageCount": 1,
+      "files": [
+        "apps/minside/src/routes/preferences.tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/minside/src/routes/preferences.tsx",
+          "line": 188,
+          "type": "jsx-text"
+        }
+      ]
+    },
+    {
+      "key": "minside.text.lyst",
+      "norwegianText": "Lyst",
+      "englishText": "Lyst",
+      "usageCount": 1,
+      "files": [
+        "apps/minside/src/routes/preferences.tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/minside/src/routes/preferences.tsx",
+          "line": 195,
+          "type": "jsx-text"
+        }
+      ]
+    },
+    {
+      "key": "minside.text.norsk",
+      "norwegianText": "Norsk",
+      "englishText": "Norsk",
+      "usageCount": 1,
+      "files": [
+        "apps/minside/src/routes/preferences.tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/minside/src/routes/preferences.tsx",
+          "line": 206,
+          "type": "jsx-text"
+        }
+      ]
+    },
+    {
+      "key": "minside.text.english",
+      "norwegianText": "English",
+      "englishText": "English",
+      "usageCount": 1,
+      "files": [
+        "apps/minside/src/routes/preferences.tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/minside/src/routes/preferences.tsx",
+          "line": 207,
+          "type": "jsx-text"
+        }
+      ]
+    },
+    {
+      "key": "minside.ariaLabel.lasterPersonverninnstillinger",
+      "norwegianText": "Laster personverninnstillinger...",
+      "englishText": "Laster personverninnstillinger...",
+      "usageCount": 1,
+      "files": [
+        "apps/minside/src/routes/privacy.tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/minside/src/routes/privacy.tsx",
+          "line": 129,
+          "type": "aria-label"
+        }
+      ]
+    },
+    {
+      "key": "minside.ariaLabel.analyse",
+      "norwegianText": "Analyse",
+      "englishText": "Analyse",
+      "usageCount": 1,
+      "files": [
+        "apps/minside/src/routes/privacy.tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/minside/src/routes/privacy.tsx",
+          "line": 253,
+          "type": "aria-label"
+        }
+      ]
+    },
+    {
+      "key": "minside.ariaLabel.breadcrumb",
+      "norwegianText": "Breadcrumb",
+      "englishText": "Breadcrumb",
+      "usageCount": 1,
+      "files": [
+        "apps/minside/src/routes/season-detail.tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/minside/src/routes/season-detail.tsx",
+          "line": 193,
+          "type": "aria-label"
+        }
+      ]
+    },
+    {
+      "key": "minside.ariaLabel.laster",
+      "norwegianText": "Laster...",
+      "englishText": "Laster...",
+      "usageCount": 1,
+      "files": [
+        "apps/minside/src/routes/settings.tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/minside/src/routes/settings.tsx",
+          "line": 258,
+          "type": "aria-label"
+        }
+      ]
+    },
+    {
+      "key": "monitoring.text.contextSetup",
+      "norwegianText": "Context Setup",
+      "englishText": "Context Setup",
+      "usageCount": 1,
+      "files": [
+        "apps/monitoring/src/components/SentryTestComponent.tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/monitoring/src/components/SentryTestComponent.tsx",
+          "line": 90,
+          "type": "jsx-text"
+        }
+      ]
+    },
+    {
+      "key": "monitoring.text.errorTests",
+      "norwegianText": "Error Tests",
+      "englishText": "Error Tests",
+      "usageCount": 1,
+      "files": [
+        "apps/monitoring/src/components/SentryTestComponent.tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/monitoring/src/components/SentryTestComponent.tsx",
+          "line": 105,
+          "type": "jsx-text"
+        }
+      ]
+    },
+    {
+      "key": "monitoring.text.addSomeBreadcrumbsToTestBreadcrumbTracking",
+      "norwegianText": "Add some breadcrumbs to test breadcrumb tracking",
+      "englishText": "Add some breadcrumbs to test breadcrumb tracking",
+      "usageCount": 1,
+      "files": [
+        "apps/monitoring/src/components/SentryTestComponent.tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/monitoring/src/components/SentryTestComponent.tsx",
+          "line": 132,
+          "type": "jsx-text"
+        }
+      ]
+    },
+    {
+      "key": "monitoring.text.clickAnyErrorButtonToTriggerATestError",
+      "norwegianText": "Click any error button to trigger a test error",
+      "englishText": "Click any error button to trigger a test error",
+      "usageCount": 1,
+      "files": [
+        "apps/monitoring/src/components/SentryTestComponent.tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/monitoring/src/components/SentryTestComponent.tsx",
+          "line": 133,
+          "type": "jsx-text"
+        }
+      ]
+    },
+    {
+      "key": "monitoring.text.checkTheBrowserConsoleForErrorLogs",
+      "norwegianText": "Check the browser console for error logs",
+      "englishText": "Check the browser console for error logs",
+      "usageCount": 1,
+      "files": [
+        "apps/monitoring/src/components/SentryTestComponent.tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/monitoring/src/components/SentryTestComponent.tsx",
+          "line": 134,
+          "type": "jsx-text"
+        }
+      ]
+    },
+    {
+      "key": "monitoring.text.checkYourSentryDashboardForTheErrorReport",
+      "norwegianText": "Check your Sentry dashboard for the error report",
+      "englishText": "Check your Sentry dashboard for the error report",
+      "usageCount": 1,
+      "files": [
+        "apps/monitoring/src/components/SentryTestComponent.tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/monitoring/src/components/SentryTestComponent.tsx",
+          "line": 135,
+          "type": "jsx-text"
+        }
+      ]
+    },
+    {
+      "key": "monitoring.ariaLabel.settings",
+      "norwegianText": "Innstillinger",
+      "englishText": "Settings",
+      "usageCount": 1,
+      "files": [
+        "apps/monitoring/src/components/layout/Header.tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/monitoring/src/components/layout/Header.tsx",
+          "line": 353,
+          "type": "aria-label"
+        }
+      ]
+    },
+    {
+      "key": "monitoring.title.settings",
+      "norwegianText": "Innstillinger",
+      "englishText": "Settings",
+      "usageCount": 1,
+      "files": [
+        "apps/monitoring/src/components/layout/Header.tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/monitoring/src/components/layout/Header.tsx",
+          "line": 354,
+          "type": "title"
+        }
+      ]
+    },
+    {
+      "key": "settings.ariaLabel.analyse",
+      "norwegianText": "Analyse",
+      "englishText": "Analyse",
+      "usageCount": 1,
+      "files": [
+        "apps/monitoring/src/features/settings/components/PrivacyTab.tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/monitoring/src/features/settings/components/PrivacyTab.tsx",
+          "line": 196,
+          "type": "aria-label"
+        }
+      ]
+    },
+    {
+      "key": "monitoring.ariaLabel.loadingTestResults",
+      "norwegianText": "Loading test results",
+      "englishText": "Loading test results",
+      "usageCount": 1,
+      "files": [
+        "apps/monitoring/src/features/testing/TestResultsWidget.tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/monitoring/src/features/testing/TestResultsWidget.tsx",
+          "line": 82,
+          "type": "aria-label"
+        }
+      ]
+    },
+    {
+      "key": "monitoring.text.noTestResultsAvailable",
+      "norwegianText": "No test results available",
+      "englishText": "No test results available",
+      "usageCount": 1,
+      "files": [
+        "apps/monitoring/src/features/testing/TestResultsWidget.tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/monitoring/src/features/testing/TestResultsWidget.tsx",
+          "line": 92,
+          "type": "jsx-text"
+        }
+      ]
+    },
+    {
+      "key": "monitoring.text.allPassing",
+      "norwegianText": "All Passing",
+      "englishText": "All Passing",
+      "usageCount": 1,
+      "files": [
+        "apps/monitoring/src/features/testing/TestResultsWidget.tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/monitoring/src/features/testing/TestResultsWidget.tsx",
+          "line": 98,
+          "type": "jsx-text"
+        }
+      ]
+    },
+    {
+      "key": "monitoring.text.passRate",
+      "norwegianText": "Pass Rate",
+      "englishText": "Pass Rate",
+      "usageCount": 1,
+      "files": [
+        "apps/monitoring/src/features/testing/TestResultsWidget.tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/monitoring/src/features/testing/TestResultsWidget.tsx",
+          "line": 134,
+          "type": "jsx-text"
+        }
+      ]
+    },
+    {
+      "key": "monitoring.text.category",
+      "norwegianText": "Category",
+      "englishText": "Category",
+      "usageCount": 1,
+      "files": [
+        "apps/monitoring/src/features/testing/TestResultsWidget.tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/monitoring/src/features/testing/TestResultsWidget.tsx",
+          "line": 142,
+          "type": "jsx-text"
+        }
+      ]
+    },
+    {
+      "key": "monitoring.ariaLabel.loading",
+      "norwegianText": "Loading",
+      "englishText": "Loading",
+      "usageCount": 1,
+      "files": [
+        "apps/monitoring/src/routes/calendar.tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/monitoring/src/routes/calendar.tsx",
+          "line": 128,
+          "type": "aria-label"
+        }
+      ]
+    },
+    {
+      "key": "monitoring.ariaLabel.bookingbekreftelser",
+      "norwegianText": "Bookingbekreftelser",
+      "englishText": "Bookingbekreftelser",
+      "usageCount": 1,
+      "files": [
+        "apps/monitoring/src/routes/notification-settings.tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/monitoring/src/routes/notification-settings.tsx",
+          "line": 296,
+          "type": "aria-label"
+        }
+      ]
+    },
+    {
+      "key": "monitoring.ariaLabel.kanselleringer",
+      "norwegianText": "Kanselleringer",
+      "englishText": "Kanselleringer",
+      "usageCount": 1,
+      "files": [
+        "apps/monitoring/src/routes/notification-settings.tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/monitoring/src/routes/notification-settings.tsx",
+          "line": 386,
+          "type": "aria-label"
+        }
+      ]
+    },
+    {
+      "key": "monitoring.ariaLabel.endringer",
+      "norwegianText": "Endringer",
+      "englishText": "Endringer",
+      "usageCount": 1,
+      "files": [
+        "apps/monitoring/src/routes/notification-settings.tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/monitoring/src/routes/notification-settings.tsx",
+          "line": 407,
+          "type": "aria-label"
+        }
+      ]
+    },
+    {
+      "key": "monitoring.text.administrerUtleieobjekter",
+      "norwegianText": "Administrer utleieobjekter",
+      "englishText": "Administrer utleieobjekter",
+      "usageCount": 1,
+      "files": [
+        "apps/monitoring/src/routes/org/managed-objects.tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/monitoring/src/routes/org/managed-objects.tsx",
+          "line": 37,
+          "type": "jsx-text"
+        }
+      ]
+    },
+    {
+      "key": "monitoring.placeholder.brukerexampleno",
+      "norwegianText": "bruker@example.no",
+      "englishText": "bruker@example.no",
+      "usageCount": 1,
+      "files": [
+        "apps/monitoring/src/routes/org/members.tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/monitoring/src/routes/org/members.tsx",
+          "line": 148,
+          "type": "placeholder"
+        }
+      ]
+    },
+    {
+      "key": "monitoring.placeholder.postorganisasjonno",
+      "norwegianText": "post@organisasjon.no",
+      "englishText": "post@organisasjon.no",
+      "usageCount": 1,
+      "files": [
+        "apps/monitoring/src/routes/org/notifications.tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/monitoring/src/routes/org/notifications.tsx",
+          "line": 440,
+          "type": "placeholder"
+        }
+      ]
+    },
+    {
+      "key": "monitoring.placeholder.4712345678",
+      "norwegianText": "+47 123 45 678",
+      "englishText": "+47 123 45 678",
+      "usageCount": 1,
+      "files": [
+        "apps/monitoring/src/routes/org/notifications.tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/monitoring/src/routes/org/notifications.tsx",
+          "line": 457,
+          "type": "placeholder"
+        }
+      ]
+    },
+    {
+      "key": "monitoring.text.tema",
+      "norwegianText": "Tema",
+      "englishText": "Tema",
+      "usageCount": 1,
+      "files": [
+        "apps/monitoring/src/routes/preferences.tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/monitoring/src/routes/preferences.tsx",
+          "line": 188,
+          "type": "jsx-text"
+        }
+      ]
+    },
+    {
+      "key": "monitoring.text.lyst",
+      "norwegianText": "Lyst",
+      "englishText": "Lyst",
+      "usageCount": 1,
+      "files": [
+        "apps/monitoring/src/routes/preferences.tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/monitoring/src/routes/preferences.tsx",
+          "line": 195,
+          "type": "jsx-text"
+        }
+      ]
+    },
+    {
+      "key": "monitoring.text.norsk",
+      "norwegianText": "Norsk",
+      "englishText": "Norsk",
+      "usageCount": 1,
+      "files": [
+        "apps/monitoring/src/routes/preferences.tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/monitoring/src/routes/preferences.tsx",
+          "line": 206,
+          "type": "jsx-text"
+        }
+      ]
+    },
+    {
+      "key": "monitoring.text.english",
+      "norwegianText": "English",
+      "englishText": "English",
+      "usageCount": 1,
+      "files": [
+        "apps/monitoring/src/routes/preferences.tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/monitoring/src/routes/preferences.tsx",
+          "line": 207,
+          "type": "jsx-text"
+        }
+      ]
+    },
+    {
+      "key": "monitoring.ariaLabel.lasterPersonverninnstillinger",
+      "norwegianText": "Laster personverninnstillinger...",
+      "englishText": "Laster personverninnstillinger...",
+      "usageCount": 1,
+      "files": [
+        "apps/monitoring/src/routes/privacy.tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/monitoring/src/routes/privacy.tsx",
+          "line": 129,
+          "type": "aria-label"
+        }
+      ]
+    },
+    {
+      "key": "monitoring.ariaLabel.analyse",
+      "norwegianText": "Analyse",
+      "englishText": "Analyse",
+      "usageCount": 1,
+      "files": [
+        "apps/monitoring/src/routes/privacy.tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/monitoring/src/routes/privacy.tsx",
+          "line": 253,
+          "type": "aria-label"
+        }
+      ]
+    },
+    {
+      "key": "monitoring.ariaLabel.breadcrumb",
+      "norwegianText": "Breadcrumb",
+      "englishText": "Breadcrumb",
+      "usageCount": 1,
+      "files": [
+        "apps/monitoring/src/routes/season-detail.tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/monitoring/src/routes/season-detail.tsx",
+          "line": 193,
+          "type": "aria-label"
+        }
+      ]
+    },
+    {
+      "key": "monitoring.ariaLabel.laster",
+      "norwegianText": "Laster...",
+      "englishText": "Laster...",
+      "usageCount": 1,
+      "files": [
+        "apps/monitoring/src/routes/settings.tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/monitoring/src/routes/settings.tsx",
+          "line": 258,
+          "type": "aria-label"
+        }
+      ]
+    },
+    {
+      "key": "saasAdmin.text.digilist",
+      "norwegianText": "DIGILIST",
+      "englishText": "DIGILIST",
+      "usageCount": 1,
+      "files": [
+        "apps/saas-admin/src/components/layout/Sidebar.tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/saas-admin/src/components/layout/Sidebar.tsx",
+          "line": 239,
+          "type": "jsx-text"
+        }
+      ]
+    },
+    {
+      "key": "saasAdmin.ariaLabel.genererer",
+      "norwegianText": "Genererer...",
+      "englishText": "Genererer...",
+      "usageCount": 1,
+      "files": [
+        "apps/saas-admin/src/routes/ai-seed-generator/AISeedGeneratorPage.tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/saas-admin/src/routes/ai-seed-generator/AISeedGeneratorPage.tsx",
+          "line": 250,
+          "type": "aria-label"
+        }
+      ]
+    },
+    {
+      "key": "saasAdmin.placeholder.httpsexamplecomlogosvg",
+      "norwegianText": "https://example.com/logo.svg",
+      "englishText": "https://example.com/logo.svg",
+      "usageCount": 1,
+      "files": [
+        "apps/saas-admin/src/routes/branding/[tenantId].tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/saas-admin/src/routes/branding/[tenantId].tsx",
+          "line": 271,
+          "type": "placeholder"
+        }
+      ]
+    },
+    {
+      "key": "saasAdmin.placeholder.httpsexamplecomfaviconico",
+      "norwegianText": "https://example.com/favicon.ico",
+      "englishText": "https://example.com/favicon.ico",
+      "usageCount": 1,
+      "files": [
+        "apps/saas-admin/src/routes/branding/[tenantId].tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/saas-admin/src/routes/branding/[tenantId].tsx",
+          "line": 285,
+          "type": "placeholder"
+        }
+      ]
+    },
+    {
+      "key": "saasAdmin.text.tenant",
+      "norwegianText": "Tenant",
+      "englishText": "Tenant",
+      "usageCount": 1,
+      "files": [
+        "apps/saas-admin/src/routes/branding/index.tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/saas-admin/src/routes/branding/index.tsx",
+          "line": 120,
+          "type": "jsx-text"
+        }
+      ]
+    },
+    {
+      "key": "saasAdmin.text.branding",
+      "norwegianText": "Branding",
+      "englishText": "Branding",
+      "usageCount": 1,
+      "files": [
+        "apps/saas-admin/src/routes/branding/index.tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/saas-admin/src/routes/branding/index.tsx",
+          "line": 122,
+          "type": "jsx-text"
+        }
+      ]
+    },
+    {
+      "key": "saasAdmin.text.handlinger",
+      "norwegianText": "Handlinger",
+      "englishText": "Handlinger",
+      "usageCount": 1,
+      "files": [
+        "apps/saas-admin/src/routes/branding/index.tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/saas-admin/src/routes/branding/index.tsx",
+          "line": 124,
+          "type": "jsx-text"
+        }
+      ]
+    },
+    {
+      "key": "saasAdmin.text.egendefinert",
+      "norwegianText": "Egendefinert",
+      "englishText": "Egendefinert",
+      "usageCount": 1,
+      "files": [
+        "apps/saas-admin/src/routes/branding/index.tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/saas-admin/src/routes/branding/index.tsx",
+          "line": 140,
+          "type": "jsx-text"
+        }
+      ]
+    },
+    {
+      "key": "saasAdmin.text.standard",
+      "norwegianText": "Standard",
+      "englishText": "Standard",
+      "usageCount": 1,
+      "files": [
+        "apps/saas-admin/src/routes/branding/index.tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/saas-admin/src/routes/branding/index.tsx",
+          "line": 142,
+          "type": "jsx-text"
+        }
+      ]
+    },
+    {
+      "key": "monitoring.title.mrr",
+      "norwegianText": "MRR",
+      "englishText": "MRR",
+      "usageCount": 1,
+      "files": [
+        "apps/saas-admin/src/routes/monitoring/index.tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/saas-admin/src/routes/monitoring/index.tsx",
+          "line": 203,
+          "type": "title"
+        }
+      ]
+    },
+    {
+      "key": "monitoring.text.api",
+      "norwegianText": "API",
+      "englishText": "API",
+      "usageCount": 1,
+      "files": [
+        "apps/saas-admin/src/routes/monitoring/index.tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/saas-admin/src/routes/monitoring/index.tsx",
+          "line": 222,
+          "type": "jsx-text"
+        }
+      ]
+    },
+    {
+      "key": "monitoring.text.latency",
+      "norwegianText": "Latency",
+      "englishText": "Latency",
+      "usageCount": 1,
+      "files": [
+        "apps/saas-admin/src/routes/monitoring/index.tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/saas-admin/src/routes/monitoring/index.tsx",
+          "line": 229,
+          "type": "jsx-text"
+        }
+      ]
+    },
+    {
+      "key": "monitoring.text.uptime",
+      "norwegianText": "Uptime",
+      "englishText": "Uptime",
+      "usageCount": 1,
+      "files": [
+        "apps/saas-admin/src/routes/monitoring/index.tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/saas-admin/src/routes/monitoring/index.tsx",
+          "line": 233,
+          "type": "jsx-text"
+        }
+      ]
+    },
+    {
+      "key": "monitoring.text.database",
+      "norwegianText": "Database",
+      "englishText": "Database",
+      "usageCount": 1,
+      "files": [
+        "apps/saas-admin/src/routes/monitoring/index.tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/saas-admin/src/routes/monitoring/index.tsx",
+          "line": 241,
+          "type": "jsx-text"
+        }
+      ]
+    },
+    {
+      "key": "monitoring.text.connections",
+      "norwegianText": "Connections",
+      "englishText": "Connections",
+      "usageCount": 1,
+      "files": [
+        "apps/saas-admin/src/routes/monitoring/index.tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/saas-admin/src/routes/monitoring/index.tsx",
+          "line": 248,
+          "type": "jsx-text"
+        }
+      ]
+    },
+    {
+      "key": "monitoring.text.storage",
+      "norwegianText": "Storage",
+      "englishText": "Storage",
+      "usageCount": 1,
+      "files": [
+        "apps/saas-admin/src/routes/monitoring/index.tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/saas-admin/src/routes/monitoring/index.tsx",
+          "line": 256,
+          "type": "jsx-text"
+        }
+      ]
+    },
+    {
+      "key": "monitoring.text.used",
+      "norwegianText": "Used",
+      "englishText": "Used",
+      "usageCount": 1,
+      "files": [
+        "apps/saas-admin/src/routes/monitoring/index.tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/saas-admin/src/routes/monitoring/index.tsx",
+          "line": 264,
+          "type": "jsx-text"
+        }
+      ]
+    },
+    {
+      "key": "monitoring.text.redis",
+      "norwegianText": "Redis",
+      "englishText": "Redis",
+      "usageCount": 1,
+      "files": [
+        "apps/saas-admin/src/routes/monitoring/index.tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/saas-admin/src/routes/monitoring/index.tsx",
+          "line": 283,
+          "type": "jsx-text"
+        }
+      ]
+    },
+    {
+      "key": "monitoring.text.memory",
+      "norwegianText": "Memory",
+      "englishText": "Memory",
+      "usageCount": 1,
+      "files": [
+        "apps/saas-admin/src/routes/monitoring/index.tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/saas-admin/src/routes/monitoring/index.tsx",
+          "line": 290,
+          "type": "jsx-text"
+        }
+      ]
+    },
+    {
+      "key": "monitoring.text.totalKeys",
+      "norwegianText": "Total keys",
+      "englishText": "Total keys",
+      "usageCount": 1,
+      "files": [
+        "apps/saas-admin/src/routes/monitoring/index.tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/saas-admin/src/routes/monitoring/index.tsx",
+          "line": 350,
+          "type": "jsx-text"
+        }
+      ]
+    },
+    {
+      "key": "monitoring.text.missingKeys",
+      "norwegianText": "Missing keys",
+      "englishText": "Missing keys",
+      "usageCount": 1,
+      "files": [
+        "apps/saas-admin/src/routes/monitoring/index.tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/saas-admin/src/routes/monitoring/index.tsx",
+          "line": 354,
+          "type": "jsx-text"
+        }
+      ]
+    },
+    {
+      "key": "monitoring.text.hardcodedStrings",
+      "norwegianText": "Hardcoded strings",
+      "englishText": "Hardcoded strings",
+      "usageCount": 1,
+      "files": [
+        "apps/saas-admin/src/routes/monitoring/index.tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/saas-admin/src/routes/monitoring/index.tsx",
+          "line": 358,
+          "type": "jsx-text"
+        }
+      ]
+    },
+    {
+      "key": "monitoring.text.designSystem",
+      "norwegianText": "Design System",
+      "englishText": "Design System",
+      "usageCount": 1,
+      "files": [
+        "apps/saas-admin/src/routes/monitoring/index.tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/saas-admin/src/routes/monitoring/index.tsx",
+          "line": 383,
+          "type": "jsx-text"
+        }
+      ]
+    },
+    {
+      "key": "monitoring.text.components",
+      "norwegianText": "Components",
+      "englishText": "Components",
+      "usageCount": 1,
+      "files": [
+        "apps/saas-admin/src/routes/monitoring/index.tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/saas-admin/src/routes/monitoring/index.tsx",
+          "line": 391,
+          "type": "jsx-text"
+        }
+      ]
+    },
+    {
+      "key": "monitoring.text.violations",
+      "norwegianText": "Violations",
+      "englishText": "Violations",
+      "usageCount": 1,
+      "files": [
+        "apps/saas-admin/src/routes/monitoring/index.tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/saas-admin/src/routes/monitoring/index.tsx",
+          "line": 395,
+          "type": "jsx-text"
+        }
+      ]
+    },
+    {
+      "key": "monitoring.text.tokenCompliance",
+      "norwegianText": "Token compliance",
+      "englishText": "Token compliance",
+      "usageCount": 1,
+      "files": [
+        "apps/saas-admin/src/routes/monitoring/index.tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/saas-admin/src/routes/monitoring/index.tsx",
+          "line": 399,
+          "type": "jsx-text"
+        }
+      ]
+    },
+    {
+      "key": "monitoring.text.wcagErrors",
+      "norwegianText": "WCAG Errors",
+      "englishText": "WCAG Errors",
+      "usageCount": 1,
+      "files": [
+        "apps/saas-admin/src/routes/monitoring/index.tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/saas-admin/src/routes/monitoring/index.tsx",
+          "line": 432,
+          "type": "jsx-text"
+        }
+      ]
+    },
+    {
+      "key": "monitoring.text.wcagWarnings",
+      "norwegianText": "WCAG Warnings",
+      "englishText": "WCAG Warnings",
+      "usageCount": 1,
+      "files": [
+        "apps/saas-admin/src/routes/monitoring/index.tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/saas-admin/src/routes/monitoring/index.tsx",
+          "line": 436,
+          "type": "jsx-text"
+        }
+      ]
+    },
+    {
+      "key": "monitoring.text.gdprCompliance",
+      "norwegianText": "GDPR Compliance",
+      "englishText": "GDPR Compliance",
+      "usageCount": 1,
+      "files": [
+        "apps/saas-admin/src/routes/monitoring/index.tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/saas-admin/src/routes/monitoring/index.tsx",
+          "line": 440,
+          "type": "jsx-text"
+        }
+      ]
+    },
+    {
+      "key": "monitoring.text.tenant",
+      "norwegianText": "Tenant",
+      "englishText": "Tenant",
+      "usageCount": 1,
+      "files": [
+        "apps/saas-admin/src/routes/monitoring/index.tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/saas-admin/src/routes/monitoring/index.tsx",
+          "line": 473,
+          "type": "jsx-text"
+        }
+      ]
+    },
+    {
+      "key": "monitoring.text.users",
+      "norwegianText": "Brukere",
+      "englishText": "Users",
+      "usageCount": 1,
+      "files": [
+        "apps/saas-admin/src/routes/monitoring/index.tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/saas-admin/src/routes/monitoring/index.tsx",
+          "line": 475,
+          "type": "jsx-text"
+        }
+      ]
+    },
+    {
+      "key": "monitoring.text.organisasjoner",
+      "norwegianText": "Organisasjoner",
+      "englishText": "Organisasjoner",
+      "usageCount": 1,
+      "files": [
+        "apps/saas-admin/src/routes/monitoring/index.tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/saas-admin/src/routes/monitoring/index.tsx",
+          "line": 476,
+          "type": "jsx-text"
+        }
+      ]
+    },
+    {
+      "key": "monitoring.text.leieobjekter",
+      "norwegianText": "Leieobjekter",
+      "englishText": "Leieobjekter",
+      "usageCount": 1,
+      "files": [
+        "apps/saas-admin/src/routes/monitoring/index.tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/saas-admin/src/routes/monitoring/index.tsx",
+          "line": 477,
+          "type": "jsx-text"
+        }
+      ]
+    },
+    {
+      "key": "saasAdmin.text.nok",
+      "norwegianText": "NOK",
+      "englishText": "NOK",
+      "usageCount": 1,
+      "files": [
+        "apps/saas-admin/src/routes/plans/new.tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/saas-admin/src/routes/plans/new.tsx",
+          "line": 306,
+          "type": "jsx-text"
+        }
+      ]
+    },
+    {
+      "key": "saasAdmin.text.eur",
+      "norwegianText": "EUR",
+      "englishText": "EUR",
+      "usageCount": 1,
+      "files": [
+        "apps/saas-admin/src/routes/plans/new.tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/saas-admin/src/routes/plans/new.tsx",
+          "line": 307,
+          "type": "jsx-text"
+        }
+      ]
+    },
+    {
+      "key": "saasAdmin.text.usd",
+      "norwegianText": "USD",
+      "englishText": "USD",
+      "usageCount": 1,
+      "files": [
+        "apps/saas-admin/src/routes/plans/new.tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/saas-admin/src/routes/plans/new.tsx",
+          "line": 308,
+          "type": "jsx-text"
+        }
+      ]
+    },
+    {
+      "key": "saasAdmin.title.users",
+      "norwegianText": "Brukere",
+      "englishText": "Users",
+      "usageCount": 1,
+      "files": [
+        "apps/saas-admin/src/routes/tenants/[id].tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/saas-admin/src/routes/tenants/[id].tsx",
+          "line": 287,
+          "type": "title"
+        }
+      ]
+    },
+    {
+      "key": "saasAdmin.title.organisasjoner",
+      "norwegianText": "Organisasjoner",
+      "englishText": "Organisasjoner",
+      "usageCount": 1,
+      "files": [
+        "apps/saas-admin/src/routes/tenants/[id].tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/saas-admin/src/routes/tenants/[id].tsx",
+          "line": 294,
+          "type": "title"
+        }
+      ]
+    },
+    {
+      "key": "saasAdmin.title.leieobjekter",
+      "norwegianText": "Leieobjekter",
+      "englishText": "Leieobjekter",
+      "usageCount": 1,
+      "files": [
+        "apps/saas-admin/src/routes/tenants/[id].tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/saas-admin/src/routes/tenants/[id].tsx",
+          "line": 301,
+          "type": "title"
+        }
+      ]
+    },
+    {
+      "key": "saasAdmin.title.lagring",
+      "norwegianText": "Lagring",
+      "englishText": "Lagring",
+      "usageCount": 1,
+      "files": [
+        "apps/saas-admin/src/routes/tenants/[id].tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/saas-admin/src/routes/tenants/[id].tsx",
+          "line": 315,
+          "type": "title"
+        }
+      ]
+    },
+    {
+      "key": "saasAdmin.text.navaerendePlan",
+      "norwegianText": "Nåværende plan",
+      "englishText": "Navaerende plan",
+      "usageCount": 1,
+      "files": [
+        "apps/saas-admin/src/routes/tenants/[id].tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/saas-admin/src/routes/tenants/[id].tsx",
+          "line": 558,
+          "type": "jsx-text"
+        }
+      ]
+    },
+    {
+      "key": "saasAdmin.text.betalt",
+      "norwegianText": "Betalt",
+      "englishText": "Betalt",
+      "usageCount": 1,
+      "files": [
+        "apps/saas-admin/src/routes/tenants/[id].tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/saas-admin/src/routes/tenants/[id].tsx",
+          "line": 562,
+          "type": "jsx-text"
+        }
+      ]
+    },
+    {
+      "key": "saasAdmin.text.skyldig",
+      "norwegianText": "Skyldig",
+      "englishText": "Skyldig",
+      "usageCount": 1,
+      "files": [
+        "apps/saas-admin/src/routes/tenants/[id].tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/saas-admin/src/routes/tenants/[id].tsx",
+          "line": 568,
+          "type": "jsx-text"
+        }
+      ]
+    },
+    {
+      "key": "saasAdmin.text.nummer",
+      "norwegianText": "Nummer",
+      "englishText": "Nummer",
+      "usageCount": 1,
+      "files": [
+        "apps/saas-admin/src/routes/tenants/[id].tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/saas-admin/src/routes/tenants/[id].tsx",
+          "line": 589,
+          "type": "jsx-text"
+        }
+      ]
+    },
+    {
+      "key": "saasAdmin.text.forfallsdato",
+      "norwegianText": "Forfallsdato",
+      "englishText": "Forfallsdato",
+      "usageCount": 1,
+      "files": [
+        "apps/saas-admin/src/routes/tenants/[id].tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/saas-admin/src/routes/tenants/[id].tsx",
+          "line": 592,
+          "type": "jsx-text"
+        }
+      ]
+    },
+    {
+      "key": "saasAdmin.text.provider",
+      "norwegianText": "Provider",
+      "englishText": "Provider",
+      "usageCount": 1,
+      "files": [
+        "apps/saas-admin/src/routes/tenants/[id].tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/saas-admin/src/routes/tenants/[id].tsx",
+          "line": 655,
+          "type": "jsx-text"
+        }
+      ]
+    },
+    {
+      "key": "saasAdmin.text.fingerprint",
+      "norwegianText": "Fingerprint",
+      "englishText": "Fingerprint",
+      "usageCount": 1,
+      "files": [
+        "apps/saas-admin/src/routes/tenants/[id].tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/saas-admin/src/routes/tenants/[id].tsx",
+          "line": 658,
+          "type": "jsx-text"
+        }
+      ]
+    },
+    {
+      "key": "common.text.visFormalIKalender",
+      "norwegianText": "Vis formål i kalender",
+      "englishText": "Vis formal i kalender",
+      "usageCount": 1,
+      "files": [
+        "apps/web/src/features/rental-object-details/components/BookingDialog.tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/web/src/features/rental-object-details/components/BookingDialog.tsx",
+          "line": 651,
+          "type": "jsx-text"
+        }
+      ]
+    },
+    {
+      "key": "common.text.gjentakendeBooking",
+      "norwegianText": "Gjentakende booking",
+      "englishText": "Gjentakende booking",
+      "usageCount": 1,
+      "files": [
+        "apps/web/src/features/rental-object-details/components/BookingDialog.tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/web/src/features/rental-object-details/components/BookingDialog.tsx",
+          "line": 683,
+          "type": "jsx-text"
+        }
+      ]
+    },
+    {
+      "key": "common.text.velgBookingkontekst",
+      "norwegianText": "Velg bookingkontekst",
+      "englishText": "Velg bookingkontekst",
+      "usageCount": 1,
+      "files": [
+        "apps/web/src/features/rental-object-details/components/Sidebar/components/BookingContextSelector.tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/web/src/features/rental-object-details/components/Sidebar/components/BookingContextSelector.tsx",
+          "line": 175,
+          "type": "jsx-text"
+        }
+      ]
+    },
+    {
+      "key": "common.text.formal",
+      "norwegianText": "Formål",
+      "englishText": "Formal",
+      "usageCount": 1,
+      "files": [
+        "apps/web/src/features/rental-object-details/components/Sidebar/components/BookingSelectedSlotsSidebar.tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/web/src/features/rental-object-details/components/Sidebar/components/BookingSelectedSlotsSidebar.tsx",
+          "line": 258,
+          "type": "jsx-text"
+        }
+      ]
+    },
+    {
+      "key": "common.text.deltakere",
+      "norwegianText": "Deltakere",
+      "englishText": "Deltakere",
+      "usageCount": 1,
+      "files": [
+        "apps/web/src/features/rental-object-details/components/Sidebar/components/BookingSelectedSlotsSidebar.tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/web/src/features/rental-object-details/components/Sidebar/components/BookingSelectedSlotsSidebar.tsx",
+          "line": 264,
+          "type": "jsx-text"
+        }
+      ]
+    },
+    {
+      "key": "common.status.aktivitet",
+      "norwegianText": "Aktivitet",
+      "englishText": "Aktivitet",
+      "usageCount": 1,
+      "files": [
+        "apps/web/src/features/rental-object-details/components/Sidebar/components/BookingSelectedSlotsSidebar.tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/web/src/features/rental-object-details/components/Sidebar/components/BookingSelectedSlotsSidebar.tsx",
+          "line": 270,
+          "type": "jsx-text"
+        }
+      ]
+    },
+    {
+      "key": "common.text.velgKalendersynlighet",
+      "norwegianText": "Velg kalendersynlighet",
+      "englishText": "Velg kalendersynlighet",
+      "usageCount": 1,
+      "files": [
+        "apps/web/src/features/rental-object-details/components/Sidebar/components/BookingVisibilitySelector.tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/web/src/features/rental-object-details/components/Sidebar/components/BookingVisibilitySelector.tsx",
+          "line": 162,
+          "type": "jsx-text"
+        }
+      ]
+    },
+    {
+      "key": "common.text.velgAvslutningstype",
+      "norwegianText": "Velg avslutningstype",
+      "englishText": "Velg avslutningstype",
+      "usageCount": 1,
+      "files": [
+        "apps/web/src/features/rental-object-details/components/Sidebar/components/RecurringBuilder.tsx"
+      ],
+      "examples": [
+        {
+          "file": "apps/web/src/features/rental-object-details/components/Sidebar/components/RecurringBuilder.tsx",
+          "line": 346,
+          "type": "jsx-text"
+        }
+      ]
+    }
+  ]
+}

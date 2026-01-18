@@ -116,10 +116,10 @@ export function DeleteAccountCard() {
                 Sletting av kontoen din vil føre til:
               </Paragraph>
               <ul style={{ margin: 'var(--ds-spacing-2) 0 0 0', paddingLeft: 'var(--ds-spacing-4)', color: 'var(--ds-color-danger-text)' }}>
-                <li><Paragraph data-size="sm" style={{ margin: 0 }}>All profilinformasjon blir fjernet</Paragraph></li>
-                <li><Paragraph data-size="sm" style={{ margin: 0 }}>Alle bookinger blir kansellert</Paragraph></li>
-                <li><Paragraph data-size="sm" style={{ margin: 0 }}>Meldinger og historikk blir slettet</Paragraph></li>
-                <li><Paragraph data-size="sm" style={{ margin: 0 }}>Du mister tilgang til tjenesten</Paragraph></li>
+                <li><Paragraph data-size="sm" style={{ margin: 0 }}>{t('gdpr.text.allProfilinformasjonBlirFjernet')}</Paragraph></li>
+                <li><Paragraph data-size="sm" style={{ margin: 0 }}>{t('gdpr.text.alleBookingerBlirKansellert')}</Paragraph></li>
+                <li><Paragraph data-size="sm" style={{ margin: 0 }}>{t('gdpr.text.meldingerOgHistorikkBlirSlettet')}</Paragraph></li>
+                <li><Paragraph data-size="sm" style={{ margin: 0 }}>{t('gdpr.text.duMisterTilgangTilTjenesten')}</Paragraph></li>
               </ul>
             </div>
 

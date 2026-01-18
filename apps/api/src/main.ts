@@ -3,6 +3,15 @@
  * Enterprise-grade modular API with repository pattern, Zod validation, and GraphQL
  */
 import 'reflect-metadata';
+import { config } from 'dotenv';
+import { resolve, dirname } from 'path';
+import { fileURLToPath } from 'url';
+
+// Load environment variables from monorepo root
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+config({ path: resolve(__dirname, '../../../.env') });
+
 import mercurius from 'mercurius';
 import { drizzle } from 'drizzle-orm/postgres-js';
 import postgres from 'postgres';

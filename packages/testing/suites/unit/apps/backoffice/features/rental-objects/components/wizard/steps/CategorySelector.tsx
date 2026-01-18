@@ -145,7 +145,7 @@ export function CategorySelector({ wizard }: CategorySelectorProps) {
                   style={{
                     margin: 0,
                     color: 'var(--ds-color-neutral-text-subtle)',
-                    lineHeight: '1.5',
+                    lineHeight: 'var(--ds-line-height-md)',
                   }}
                 >
                   {CATEGORY_DESCRIPTIONS[category]}

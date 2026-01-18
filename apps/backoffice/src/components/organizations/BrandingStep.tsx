@@ -329,7 +329,7 @@ export function BrandingStep({ data, onChange, errors = [] }: BrandingStepProps)
                 type="text"
                 value={data.primaryColor || '#0062BA'}
                 onChange={handlePrimaryColorChange}
-                placeholder="#0062BA"
+                placeholder={t('organizations.placeholder.0062ba')}
                 style={{
                   flex: 1,
                   padding: 'var(--ds-spacing-2) var(--ds-spacing-3)',
@@ -363,7 +363,7 @@ export function BrandingStep({ data, onChange, errors = [] }: BrandingStepProps)
                 type="text"
                 value={data.secondaryColor || '#004C93'}
                 onChange={handleSecondaryColorChange}
-                placeholder="#004C93"
+                placeholder={t('organizations.placeholder.004c93')}
                 style={{
                   flex: 1,
                   padding: 'var(--ds-spacing-2) var(--ds-spacing-3)',
@@ -500,8 +500,8 @@ export function BrandingStep({ data, onChange, errors = [] }: BrandingStepProps)
             Tips for visuell identitet
           </Heading>
           <ul style={{ margin: 0, paddingLeft: 'var(--ds-spacing-4)', color: 'var(--ds-color-info-text-default)' }}>
-            <li><Paragraph data-size="xs" style={{ margin: 0 }}>Logo bør være i SVG eller PNG format med gjennomsiktig bakgrunn</Paragraph></li>
-            <li><Paragraph data-size="xs" style={{ margin: 0 }}>Velg farger som følger WCAG retningslinjer for tilgjengelighet</Paragraph></li>
+            <li><Paragraph data-size="xs" style={{ margin: 0 }}>{t('organizations.text.logoBorVaereISvgEllerPngFormatMedGjennomsiktigBakgrunn')}</Paragraph></li>
+            <li><Paragraph data-size="xs" style={{ margin: 0 }}>{t('organizations.text.velgFargerSomFolgerWcagRetningslinjerForTilgjengelighet')}</Paragraph></li>
             <li><Paragraph data-size="xs" style={{ margin: 0 }}>Favicon bør være 32x32 piksler eller større for best kvalitet</Paragraph></li>
           </ul>
         </div>

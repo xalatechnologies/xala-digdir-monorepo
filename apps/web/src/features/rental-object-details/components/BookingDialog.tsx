@@ -297,7 +297,7 @@ export function BookingDialog({
         style={{
           position: 'fixed',
           inset: 0,
-          backgroundColor: 'rgba(15, 23, 42, 0.6)',
+          backgroundColor: 'var(--ds-color-neutral-background-overlay)',
           backdropFilter: isVisible ? 'blur(4px)' : 'blur(0px)',
           zIndex: 1000,
           opacity: isVisible ? 1 : 0,
@@ -648,7 +648,7 @@ export function BookingDialog({
                 >
                   {formData.showPurposeInCalendar && Icons.check}
                 </div>
-                <Paragraph data-size="sm" style={{ margin: 0 }}>Vis formål i kalender</Paragraph>
+                <Paragraph data-size="sm" style={{ margin: 0 }}>{t('common.text.visFormalIKalender')}</Paragraph>
               </label>
             </div>
 
@@ -680,7 +680,7 @@ export function BookingDialog({
               >
                 <span style={{ display: 'flex', alignItems: 'center', gap: 'var(--ds-spacing-3)' }}>
                   <span style={{ color: formData.isRecurring ? 'var(--ds-color-accent-base-default)' : 'var(--ds-color-neutral-text-subtle)', transition: 'color 200ms ease' }}>{Icons.repeat}</span>
-                  <Paragraph data-size="md" style={{ margin: 0, fontWeight: 500 }}>Gjentakende booking</Paragraph>
+                  <Paragraph data-size="md" style={{ margin: 0, fontWeight: 500 }}>{t('common.text.gjentakendeBooking')}</Paragraph>
                 </span>
                 <div
                   style={{

@@ -8,7 +8,7 @@
  * - Integration settings
  */
 
-/* eslint-disable digdir/prefer-ds-components, digdir/no-hardcoded-typography -- Complex settings form */
+/* eslint-disable digdir/prefer-ds-components -- Complex settings form */
 
 import { useState, useEffect } from 'react';
 import {
@@ -131,30 +131,30 @@ export function TenantSettingsPage() {
               >
                 <option value="nb">{t('common.norsk_bokmaal')}</option>
                 <option value="nn">{t('common.norsk_nynorsk')}</option>
-                <option value="en">English</option>
+                <option value="en">{t('backoffice.text.english')}</option>
               </Select>
             </div>
             <div>
-              <label style={{ display: 'block', marginBottom: 'var(--ds-spacing-2)', fontWeight: 'var(--ds-font-weight-medium)' }}>Tidssone</label>
+              <label style={{ display: 'block', marginBottom: 'var(--ds-spacing-2)', fontWeight: 'var(--ds-font-weight-medium)' }}>{t('backoffice.text.tidssone')}</label>
               <Select
                 value={settings.timezone}
                 onChange={(e) => updateSetting('timezone', e.target.value)}
                 style={{ width: '100%' }}
               >
                 <option value="Europe/Oslo">Europe/Oslo (CET)</option>
-                <option value="UTC">UTC</option>
+                <option value="UTC">{t('backoffice.text.utc')}</option>
               </Select>
             </div>
             <div>
-              <label style={{ display: 'block', marginBottom: 'var(--ds-spacing-2)', fontWeight: 'var(--ds-font-weight-medium)' }}>Valuta</label>
+              <label style={{ display: 'block', marginBottom: 'var(--ds-spacing-2)', fontWeight: 'var(--ds-font-weight-medium)' }}>{t('backoffice.text.valuta')}</label>
               <Select
                 value={settings.currency}
                 onChange={(e) => updateSetting('currency', e.target.value)}
                 style={{ width: '100%' }}
               >
-                <option value="NOK">NOK</option>
-                <option value="EUR">EUR</option>
-                <option value="SEK">SEK</option>
+                <option value="NOK">{t('backoffice.text.nok')}</option>
+                <option value="EUR">{t('backoffice.text.eur')}</option>
+                <option value="SEK">{t('backoffice.text.sek')}</option>
               </Select>
             </div>
           </div>

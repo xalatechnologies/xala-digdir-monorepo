@@ -186,7 +186,7 @@ export const BottomNavigation = forwardRef<HTMLElement, BottomNavigationProps>(
                         borderRadius: 'var(--ds-border-radius-full)',
                         backgroundColor: 'var(--ds-color-danger-base-default)',
                         color: 'var(--ds-color-danger-contrast-default)',
-                        fontSize: '10px',
+                        fontSize: 'var(--ds-font-size-1)',
                         fontWeight: 'var(--ds-font-weight-semibold)' as unknown as number,
                         display: 'flex',
                         alignItems: 'center',

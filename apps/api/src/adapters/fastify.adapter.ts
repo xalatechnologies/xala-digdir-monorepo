@@ -190,8 +190,9 @@ export async function createFastifyApp(
     app.addHook('onRequest', async (request: any) => {
       request.adapters = options.adapters;
       // Use Skien Kommune as default tenant for demo, or null for public access
-      request.tenantId = request.headers['x-tenant-id'] || null;
-      request.userId = request.headers['x-user-id'] || null;
+      request.tenantId = request.tenantId || request.headers['x-tenant-id'] || null;
+      // Only set userId from header if not already set by auth middleware
+      request.userId = request.userId || request.headers['x-user-id'] || null;
     });
   }
 

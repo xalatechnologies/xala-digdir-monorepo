@@ -50,7 +50,7 @@ function StarRatingSelector({ value, onChange, disabled = false }: StarRatingSel
       aria-label={t('reviews.selectRating')}
       style={{
         display: 'flex',
-        gap: '8px',
+        gap: 'var(--ds-spacing-2)',
         alignItems: 'center',
       }}
     >
@@ -188,7 +188,7 @@ export function ReviewForm({
             style={{
               display: 'block',
               marginBottom: 'var(--ds-spacing-3)',
-              fontSize: '14px',
+              fontSize: 'var(--ds-font-size-4)',
               fontWeight: 600,
               color: 'var(--ds-color-neutral-text-default)',
             }}
@@ -206,7 +206,7 @@ export function ReviewForm({
               style={{
                 marginTop: 'var(--ds-spacing-2)',
                 padding: 'var(--ds-spacing-2)',
-                fontSize: '14px',
+                fontSize: 'var(--ds-font-size-4)',
                 color: 'var(--ds-color-danger-text-default)',
                 backgroundColor: 'var(--ds-color-danger-surface-subtle)',
                 borderRadius: 'var(--ds-border-radius-sm)',
@@ -224,7 +224,7 @@ export function ReviewForm({
             style={{
               display: 'block',
               marginBottom: 'var(--ds-spacing-2)',
-              fontSize: '14px',
+              fontSize: 'var(--ds-font-size-4)',
               fontWeight: 600,
               color: 'var(--ds-color-neutral-text-default)',
             }}
@@ -242,8 +242,8 @@ export function ReviewForm({
             style={{
               width: '100%',
               padding: 'var(--ds-spacing-3)',
-              fontSize: '14px',
-              lineHeight: 1.6,
+              fontSize: 'var(--ds-font-size-4)',
+              lineHeight: 'var(--ds-line-height-lg)',
               color: 'var(--ds-color-neutral-text-default)',
               backgroundColor: 'var(--ds-color-neutral-surface-default)',
               border: '1px solid var(--ds-color-neutral-border-default)',

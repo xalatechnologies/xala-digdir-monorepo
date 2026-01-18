@@ -177,11 +177,11 @@ export function AllocationProposal({ seasonId, onApplyComplete }: AllocationProp
   const getStatusBadge = (status: 'approve' | 'reject' | 'adjust') => {
     switch (status) {
       case 'approve':
-        return <Badge variant="success">Godkjenn</Badge>;
+        return <Badge variant="success">{t('seasons.text.approve')}</Badge>;
       case 'reject':
         return <Badge variant="danger">{t('common.avslaa')}</Badge>;
       case 'adjust':
-        return <Badge variant="warning">Juster</Badge>;
+        return <Badge variant="warning">{t('seasons.text.juster')}</Badge>;
     }
   };
 
@@ -200,7 +200,7 @@ export function AllocationProposal({ seasonId, onApplyComplete }: AllocationProp
   if (isLoading) {
     return (
       <div style={{ display: 'flex', justifyContent: 'center', padding: 'var(--ds-spacing-8)' }}>
-        <Spinner data-size="lg" aria-label="Genererer forslag..." />
+        <Spinner data-size="lg" aria-label={t('seasons.ariaLabel.generererForslag')} />
       </div>
     );
   }
@@ -363,13 +363,13 @@ export function AllocationProposal({ seasonId, onApplyComplete }: AllocationProp
             <Table>
               <Table.Head>
                 <Table.Row>
-                  <Table.HeaderCell>Organisasjon</Table.HeaderCell>
-                  <Table.HeaderCell>Lokale</Table.HeaderCell>
-                  <Table.HeaderCell>Dag</Table.HeaderCell>
-                  <Table.HeaderCell>Tidspunkt</Table.HeaderCell>
-                  <Table.HeaderCell>Prioritet</Table.HeaderCell>
-                  <Table.HeaderCell>Status</Table.HeaderCell>
-                  <Table.HeaderCell>Begrunnelse</Table.HeaderCell>
+                  <Table.HeaderCell>{t('seasons.text.organization')}</Table.HeaderCell>
+                  <Table.HeaderCell>{t('seasons.text.lokale')}</Table.HeaderCell>
+                  <Table.HeaderCell>{t('seasons.text.dag')}</Table.HeaderCell>
+                  <Table.HeaderCell>{t('seasons.text.tidspunkt')}</Table.HeaderCell>
+                  <Table.HeaderCell>{t('seasons.text.prioritet')}</Table.HeaderCell>
+                  <Table.HeaderCell>{t('seasons.text.status')}</Table.HeaderCell>
+                  <Table.HeaderCell>{t('seasons.text.begrunnelse')}</Table.HeaderCell>
                 </Table.Row>
               </Table.Head>
               <Table.Body>
@@ -409,14 +409,14 @@ export function AllocationProposal({ seasonId, onApplyComplete }: AllocationProp
             <Table>
               <Table.Head>
                 <Table.Row>
-                  <Table.HeaderCell>Organisasjon</Table.HeaderCell>
-                  <Table.HeaderCell>Lokale</Table.HeaderCell>
-                  <Table.HeaderCell>Dag</Table.HeaderCell>
+                  <Table.HeaderCell>{t('seasons.text.organization')}</Table.HeaderCell>
+                  <Table.HeaderCell>{t('seasons.text.lokale')}</Table.HeaderCell>
+                  <Table.HeaderCell>{t('seasons.text.dag')}</Table.HeaderCell>
                   <Table.HeaderCell>{t('common.opprinnelig_tidspunkt')}</Table.HeaderCell>
                   <Table.HeaderCell>{t('common.foreslaatt_tidspunkt')}</Table.HeaderCell>
-                  <Table.HeaderCell>Prioritet</Table.HeaderCell>
-                  <Table.HeaderCell>Status</Table.HeaderCell>
-                  <Table.HeaderCell>Begrunnelse</Table.HeaderCell>
+                  <Table.HeaderCell>{t('seasons.text.prioritet')}</Table.HeaderCell>
+                  <Table.HeaderCell>{t('seasons.text.status')}</Table.HeaderCell>
+                  <Table.HeaderCell>{t('seasons.text.begrunnelse')}</Table.HeaderCell>
                 </Table.Row>
               </Table.Head>
               <Table.Body>
@@ -467,13 +467,13 @@ export function AllocationProposal({ seasonId, onApplyComplete }: AllocationProp
             <Table>
               <Table.Head>
                 <Table.Row>
-                  <Table.HeaderCell>Organisasjon</Table.HeaderCell>
-                  <Table.HeaderCell>Lokale</Table.HeaderCell>
-                  <Table.HeaderCell>Dag</Table.HeaderCell>
-                  <Table.HeaderCell>Tidspunkt</Table.HeaderCell>
-                  <Table.HeaderCell>Prioritet</Table.HeaderCell>
-                  <Table.HeaderCell>Status</Table.HeaderCell>
-                  <Table.HeaderCell>Begrunnelse</Table.HeaderCell>
+                  <Table.HeaderCell>{t('seasons.text.organization')}</Table.HeaderCell>
+                  <Table.HeaderCell>{t('seasons.text.lokale')}</Table.HeaderCell>
+                  <Table.HeaderCell>{t('seasons.text.dag')}</Table.HeaderCell>
+                  <Table.HeaderCell>{t('seasons.text.tidspunkt')}</Table.HeaderCell>
+                  <Table.HeaderCell>{t('seasons.text.prioritet')}</Table.HeaderCell>
+                  <Table.HeaderCell>{t('seasons.text.status')}</Table.HeaderCell>
+                  <Table.HeaderCell>{t('seasons.text.begrunnelse')}</Table.HeaderCell>
                 </Table.Row>
               </Table.Head>
               <Table.Body>

@@ -66,7 +66,7 @@ export function DocsArticlePage() {
           {/* Article Content */}
           <div className={styles.content}>
             <section>
-              <Heading level={2} id="introduksjon">Introduksjon</Heading>
+              <Heading level={2} id="introduksjon">{t('common.text.introduksjon')}</Heading>
               <Paragraph>
                 {t('common.denne_guiden_viser_deg')}
               </Paragraph>
@@ -90,7 +90,7 @@ export function DocsArticlePage() {
                 {t('common.naar_du_har_valgt')}
               </Paragraph>
 
-              <Heading level={3} id="ekstra-alternativer">Ekstra alternativer</Heading>
+              <Heading level={3} id="ekstra-alternativer">{t('common.text.ekstraAlternativer')}</Heading>
               <Paragraph>
                 {t('common.du_kan_ogsaa_legge')}
               </Paragraph>
@@ -115,7 +115,7 @@ export function DocsArticlePage() {
             </section>
 
             <section>
-              <Heading level={2} id="ofte-stilte-sporsmal">Ofte stilte spørsmål</Heading>
+              <Heading level={2} id="ofte-stilte-sporsmal">{t('common.text.ofteStilteSporsmal')}</Heading>
               <Paragraph>
                 <strong>Kan jeg booke på vegne av andre?</strong><br />
                 Ja, hvis du har organisasjonsadministrator-tilgang.

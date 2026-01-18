@@ -196,9 +196,9 @@ export function CategoryEntitlementsTab({ tenantId }: CategoryEntitlementsTabPro
       {/* Save button */}
       {hasChanges && (
         <div style={{ marginTop: 'var(--ds-spacing-4)', display: 'flex', justifyContent: 'flex-end' }}>
-          <Button onClick={handleSave} disabled={updateMutation.isPending}>
+          <Button onClick={handleSave} disabled={updateMutation.isPending} type="button">
             {updateMutation.isPending ? (
-              <Spinner size="sm" aria-label="Lagrer..." />
+              <Spinner size="sm" aria-label={t('saasAdmin.ariaLabel.lagrer')} />
             ) : (
               <>
                 <SaveIcon />

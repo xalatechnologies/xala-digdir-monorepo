@@ -172,7 +172,7 @@ export function BookingContextSelector({
           gap: 'var(--ds-spacing-2)',
         }}
       >
-        <legend className="sr-only">Velg bookingkontekst</legend>
+        <legend className="sr-only">{t('common.text.velgBookingkontekst')}</legend>
 
         {/* Private Option */}
         <button

@@ -43,6 +43,7 @@
     "@sendgrid/mail": "^8.1.6",
     "@types/jsonwebtoken": "^9.0.10",
     "@xala/contracts": "workspace:*",
+    "dotenv": "^17.2.3",
     "drizzle-orm": "0.36.4",
     "fastify": "^5.0.0",
     "graphql": "^16.10.0",

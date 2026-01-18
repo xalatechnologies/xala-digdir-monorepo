@@ -252,7 +252,7 @@ export function Header({ title: _title }: HeaderProps) {
                   {...(unreadCount > 0 ? { badge: unreadCount, badgeColor: 'danger' as const } : {})}
                   size="md"
                   aria-label={`Varsler${unreadCount > 0 ? ` (${unreadCount} uleste)` : ''}`}
-                  title="Varsler"
+                  title={t('backoffice.title.notifications')}
                   onClick={() => navigate('/messages')}
                 />
                 <HeaderIconButton

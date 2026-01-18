@@ -121,7 +121,7 @@ function FilterTabs({ activeFilter, onFilterChange, counts }: FilterTabsProps) {
               border: 'none',
               background: 'transparent',
               cursor: 'pointer',
-              fontSize: '14px',
+              fontSize: 'var(--ds-font-size-4)',
               fontWeight: isActive ? 600 : 500,
               color: isActive
                 ? 'var(--ds-color-accent-text-default)'

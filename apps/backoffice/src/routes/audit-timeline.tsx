@@ -145,16 +145,16 @@ export function AuditTimelinePage() {
           alignItems: isMobile ? 'stretch' : 'flex-end',
         }}>
           <div style={{ flex: 1 }}>
-            <label style={{ display: 'block', marginBottom: 'var(--ds-spacing-2)', fontSize: 'var(--ds-font-size-sm)', fontWeight: 'var(--ds-font-weight-medium)' }}>Vedtak</label>
+            <label style={{ display: 'block', marginBottom: 'var(--ds-spacing-2)', fontSize: 'var(--ds-font-size-sm)', fontWeight: 'var(--ds-font-weight-medium)' }}>{t('backoffice.text.vedtak')}</label>
             <Select
               value={outcomeFilter}
               onChange={(e) => setOutcomeFilter(e.target.value as DecisionOutcome | 'all')}
               style={{ width: '100%' }}
             >
               <option value="all">{t('common.alle_vedtak')}</option>
-              <option value="approved">Godkjent</option>
+              <option value="approved">{t('backoffice.text.godkjent')}</option>
               <option value="rejected">{t('common.avslaatt')}</option>
-              <option value="returned">Returnert</option>
+              <option value="returned">{t('backoffice.text.returnert')}</option>
             </Select>
           </div>
           <div style={{ flex: 1 }}>

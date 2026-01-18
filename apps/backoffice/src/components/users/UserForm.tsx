@@ -121,7 +121,7 @@ export function UserForm({ user, onSubmit, onCancel }: UserFormProps) {
         )}
 
         {/* Basic Information */}
-        <FormSection title="Brukerinformasjon">
+        <FormSection title={t('users.title.brukerinformasjon')}>
           <Stack spacing={4}>
             <FormField
               label={t('common.fullt_navn')}
@@ -147,7 +147,7 @@ export function UserForm({ user, onSubmit, onCancel }: UserFormProps) {
                 type="email"
                 value={formData.email}
                 onChange={(e) => handleChange('email')(e.target.value)}
-                placeholder="ola.nordmann@kommune.no"
+                placeholder={t('users.placeholder.olanordmannkommuneno')}
                 
                 disabled={!!user} // Can't change email when editing
               />
@@ -161,7 +161,7 @@ export function UserForm({ user, onSubmit, onCancel }: UserFormProps) {
                 type="tel"
                 value={formData.phone || ''}
                 onChange={(e) => handleChange('phone')(e.target.value)}
-                placeholder="+47 12 34 56 78"
+                placeholder={t('users.placeholder.4712345678')}
               />
             </FormField>
           </Stack>

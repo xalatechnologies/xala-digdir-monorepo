@@ -378,7 +378,7 @@ export function ReportsPage() {
                   {kpis?.pendingRequests ?? 0}
                 </Heading>
                 {(kpis?.pendingRequests ?? 0) > 0 && (
-                  <Badge data-color="warning" data-size="sm">Krever handling</Badge>
+                  <Badge data-color="warning" data-size="sm">{t('backoffice.text.kreverHandling')}</Badge>
                 )}
               </div>
             </Card>

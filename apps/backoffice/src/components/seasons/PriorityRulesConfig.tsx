@@ -250,7 +250,7 @@ export function PriorityRulesConfig({ seasonId, canEdit }: PriorityRulesConfigPr
   if (isLoading) {
     return (
       <div style={{ display: 'flex', justifyContent: 'center', padding: 'var(--ds-spacing-8)' }}>
-        <Spinner data-size="lg" aria-label="Laster prioriteringsregler..." />
+        <Spinner data-size="lg" aria-label={t('seasons.ariaLabel.lasterPrioriteringsregler')} />
       </div>
     );
   }
@@ -294,17 +294,13 @@ export function PriorityRulesConfig({ seasonId, canEdit }: PriorityRulesConfigPr
           </div>
         </Card>
         <Card style={{ padding: 'var(--ds-spacing-3)' }}>
-          <div style={{ fontSize: 'var(--ds-font-size-sm)', color: 'var(--ds-color-neutral-text-subtle)' }}>
-            Ungdom
-          </div>
+          <div style={{ fontSize: 'var(--ds-font-size-sm)', color: 'var(--ds-color-neutral-text-subtle)' }}>{t('seasons.text.ungdom')}</div>
           <div style={{ fontSize: 'var(--ds-font-size-2xl)', fontWeight: 'var(--ds-font-weight-semibold)' }}>
             {stats.youthPriority}
           </div>
         </Card>
         <Card style={{ padding: 'var(--ds-spacing-3)' }}>
-          <div style={{ fontSize: 'var(--ds-font-size-sm)', color: 'var(--ds-color-neutral-text-subtle)' }}>
-            Senior
-          </div>
+          <div style={{ fontSize: 'var(--ds-font-size-sm)', color: 'var(--ds-color-neutral-text-subtle)' }}>{t('seasons.text.senior')}</div>
           <div style={{ fontSize: 'var(--ds-font-size-2xl)', fontWeight: 'var(--ds-font-weight-semibold)' }}>
             {stats.seniorPriority}
           </div>
@@ -333,13 +329,13 @@ export function PriorityRulesConfig({ seasonId, canEdit }: PriorityRulesConfigPr
           <Table>
             <Table.Head>
               <Table.Row>
-                <Table.HeaderCell>Regel</Table.HeaderCell>
-                <Table.HeaderCell>Type</Table.HeaderCell>
+                <Table.HeaderCell>{t('seasons.text.regel')}</Table.HeaderCell>
+                <Table.HeaderCell>{t('seasons.text.type')}</Table.HeaderCell>
                 <Table.HeaderCell>Prioritet</Table.HeaderCell>
-                <Table.HeaderCell>Betingelser</Table.HeaderCell>
+                <Table.HeaderCell>{t('seasons.text.betingelser')}</Table.HeaderCell>
                 <Table.HeaderCell>Status</Table.HeaderCell>
                 {/* Table column width requires specific pixel value for consistent layout */}
-                {canEdit && <Table.HeaderCell style={{ width: '100px' }}>Handlinger</Table.HeaderCell>}
+                {canEdit && <Table.HeaderCell style={{ width: '100px' }}>{t('seasons.text.handlinger')}</Table.HeaderCell>}
               </Table.Row>
             </Table.Head>
             <Table.Body>
@@ -514,8 +510,8 @@ export function PriorityRulesConfig({ seasonId, canEdit }: PriorityRulesConfigPr
                       fontSize: 'var(--ds-font-size-md)',
                     }}
                   >
-                    <option value="youth_priority">Ungdomsprioritet</option>
-                    <option value="senior_priority">Seniorprioritet</option>
+                    <option value="youth_priority">{t('seasons.text.ungdomsprioritet')}</option>
+                    <option value="senior_priority">{t('seasons.text.seniorprioritet')}</option>
                     <option value="local_priority">{t('common.lokal_prioritet')}</option>
                     <option value="regional_priority">{t('common.regional_prioritet')}</option>
                     <option value="custom">{t('common.tilpasset_regel')}</option>
@@ -550,9 +546,9 @@ export function PriorityRulesConfig({ seasonId, canEdit }: PriorityRulesConfigPr
                     }}
                   >
                     <option value="">{t('common.velg_aldersgruppe')}</option>
-                    <option value="youth">Ungdom</option>
-                    <option value="senior">Senior</option>
-                    <option value="adult">Voksen</option>
+                    <option value="youth">{t('seasons.text.ungdom')}</option>
+                    <option value="senior">{t('seasons.text.senior')}</option>
+                    <option value="adult">{t('seasons.text.voksen')}</option>
                   </select>
                 </div>
               )}
@@ -576,9 +572,9 @@ export function PriorityRulesConfig({ seasonId, canEdit }: PriorityRulesConfigPr
                     }}
                   >
                     <option value="">{t('common.velg_lokalitet')}</option>
-                    <option value="local">Lokal</option>
-                    <option value="regional">Regional</option>
-                    <option value="national">Nasjonal</option>
+                    <option value="local">{t('seasons.text.lokal')}</option>
+                    <option value="regional">{t('seasons.text.regional')}</option>
+                    <option value="national">{t('seasons.text.nasjonal')}</option>
                   </select>
                 </div>
               )}

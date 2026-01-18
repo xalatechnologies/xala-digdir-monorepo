@@ -30,7 +30,7 @@ export function Injectable(options?: { token?: string | symbol; singleton?: bool
  * Used when auto-resolution isn't possible
  */
 export function Inject(token: string | symbol): ParameterDecorator {
-  return function (target: Object, propertyKey: string | symbol | undefined, parameterIndex: number) {
+  return function (target: object, propertyKey: string | symbol | undefined, parameterIndex: number) {
     const existingTokens = Reflect.getMetadata('inject:tokens', target) || [];
     existingTokens[parameterIndex] = token;
     Reflect.defineMetadata('inject:tokens', existingTokens, target);
@@ -79,7 +79,7 @@ interface RouteMetadata {
 
 function createRouteDecorator(method: HttpMethod) {
   return function (path: string = ''): MethodDecorator {
-    return function (target: Object, propertyKey: string | symbol, descriptor: PropertyDescriptor) {
+    return function (target: object, propertyKey: string | symbol, descriptor: PropertyDescriptor) {
       const routes: RouteMetadata[] = Reflect.getMetadata('controller:routes', target.constructor) || [];
       routes.push({
         method,
@@ -114,7 +114,7 @@ export function Resolver(typeName?: string): ClassDecorator {
  * GraphQL field decorators
  */
 export function Query(name?: string): MethodDecorator {
-  return function (target: Object, propertyKey: string | symbol, descriptor: PropertyDescriptor) {
+  return function (target: object, propertyKey: string | symbol, descriptor: PropertyDescriptor) {
     const queries = Reflect.getMetadata('resolver:queries', target.constructor) || [];
     queries.push({ name: name || String(propertyKey), handler: String(propertyKey) });
     Reflect.defineMetadata('resolver:queries', queries, target.constructor);
@@ -123,7 +123,7 @@ export function Query(name?: string): MethodDecorator {
 }
 
 export function Mutation(name?: string): MethodDecorator {
-  return function (target: Object, propertyKey: string | symbol, descriptor: PropertyDescriptor) {
+  return function (target: object, propertyKey: string | symbol, descriptor: PropertyDescriptor) {
     const mutations = Reflect.getMetadata('resolver:mutations', target.constructor) || [];
     mutations.push({ name: name || String(propertyKey), handler: String(propertyKey) });
     Reflect.defineMetadata('resolver:mutations', mutations, target.constructor);

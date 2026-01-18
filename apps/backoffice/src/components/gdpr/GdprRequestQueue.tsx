@@ -333,10 +333,10 @@ export function GdprRequestQueue({ onRequestClick }: GdprRequestQueueProps) {
         <Table>
           <Table.Head>
             <Table.Row>
-              <Table.HeaderCell>Bruker</Table.HeaderCell>
-              <Table.HeaderCell>Type</Table.HeaderCell>
-              <Table.HeaderCell>Status</Table.HeaderCell>
-              <Table.HeaderCell>Forespurt</Table.HeaderCell>
+              <Table.HeaderCell>{t('gdpr.text.user')}</Table.HeaderCell>
+              <Table.HeaderCell>{t('gdpr.text.type')}</Table.HeaderCell>
+              <Table.HeaderCell>{t('gdpr.text.status')}</Table.HeaderCell>
+              <Table.HeaderCell>{t('gdpr.text.forespurt')}</Table.HeaderCell>
               <Table.HeaderCell>{t('common.dager_igjen')}</Table.HeaderCell>
               <Table.HeaderCell>ID</Table.HeaderCell>
               <Table.HeaderCell style={{ width: '60px' }}></Table.HeaderCell>
@@ -429,7 +429,7 @@ export function GdprRequestQueue({ onRequestClick }: GdprRequestQueueProps) {
                           type="button"
                           variant="tertiary"
                           onClick={(e) => e.stopPropagation()}
-                          aria-label="Handlinger"
+                          aria-label={t('gdpr.ariaLabel.handlinger')}
                           style={{
                             padding: 'var(--ds-spacing-2)',
                             display: 'flex',

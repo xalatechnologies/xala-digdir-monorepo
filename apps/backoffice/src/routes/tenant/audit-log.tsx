@@ -154,11 +154,11 @@ export function TenantAuditLogPage() {
         gap: 'var(--ds-spacing-4)',
       }}>
         <Card style={{ padding: 'var(--ds-spacing-4)' }}>
-          <Paragraph data-size="sm" style={{ color: 'var(--ds-color-neutral-text-subtle)', margin: 0 }}>Totalt i dag</Paragraph>
+          <Paragraph data-size="sm" style={{ color: 'var(--ds-color-neutral-text-subtle)', margin: 0 }}>{t('backoffice.text.totaltIDag')}</Paragraph>
           <Heading level={2} data-size="xl" style={{ margin: 0 }}>247</Heading>
         </Card>
         <Card style={{ padding: 'var(--ds-spacing-4)' }}>
-          <Paragraph data-size="sm" style={{ color: 'var(--ds-color-neutral-text-subtle)', margin: 0 }}>Advarsler</Paragraph>
+          <Paragraph data-size="sm" style={{ color: 'var(--ds-color-neutral-text-subtle)', margin: 0 }}>{t('backoffice.text.advarsler')}</Paragraph>
           <Heading level={2} data-size="xl" style={{ margin: 0, color: 'var(--ds-color-warning-text-default)' }}>12</Heading>
         </Card>
         <Card style={{ padding: 'var(--ds-spacing-4)' }}>
@@ -184,16 +184,16 @@ export function TenantAuditLogPage() {
             <Select value={typeFilter} onChange={(e) => setTypeFilter(e.target.value as EventType | 'all')} style={{ width: '100%' }}>
               <option value="all">{t('common.alle_typer')}</option>
               <option value="user">Bruker</option>
-              <option value="booking">Booking</option>
-              <option value="system">System</option>
+              <option value="booking">{t('backoffice.text.booking')}</option>
+              <option value="system">{t('backoffice.text.system')}</option>
               <option value="security">{t("rule.safety")}</option>
             </Select>
           </div>
           <div style={{ flex: 1 }}>
-            <Label style={{ display: 'block', marginBottom: 'var(--ds-spacing-2)', fontSize: 'var(--ds-font-size-sm)', fontWeight: 'var(--ds-font-weight-medium)' }}>Alvorlighet</Label>
+            <Label style={{ display: 'block', marginBottom: 'var(--ds-spacing-2)', fontSize: 'var(--ds-font-size-sm)', fontWeight: 'var(--ds-font-weight-medium)' }}>{t('backoffice.text.alvorlighet')}</Label>
             <Select value={severityFilter} onChange={(e) => setSeverityFilter(e.target.value as EventSeverity | 'all')} style={{ width: '100%' }}>
-              <option value="all">Alle</option>
-              <option value="info">Info</option>
+              <option value="all">{t('backoffice.text.alle')}</option>
+              <option value="info">{t('backoffice.text.info')}</option>
               <option value="warning">{t("ui.warning")}</option>
               <option value="error">{t("error.generic")}</option>
             </Select>
@@ -222,12 +222,12 @@ export function TenantAuditLogPage() {
           <Table>
             <Table.Head>
               <Table.Row>
-                <Table.HeaderCell>Tidspunkt</Table.HeaderCell>
+                <Table.HeaderCell>{t('backoffice.text.tidspunkt')}</Table.HeaderCell>
                 <Table.HeaderCell>Type</Table.HeaderCell>
-                <Table.HeaderCell>Handling</Table.HeaderCell>
+                <Table.HeaderCell>{t('backoffice.text.handling')}</Table.HeaderCell>
                 <Table.HeaderCell>{t("ui.details")}</Table.HeaderCell>
                 <Table.HeaderCell>IP</Table.HeaderCell>
-                <Table.HeaderCell>Alvorlighet</Table.HeaderCell>
+                <Table.HeaderCell>{t('backoffice.text.alvorlighet')}</Table.HeaderCell>
               </Table.Row>
             </Table.Head>
             <Table.Body>

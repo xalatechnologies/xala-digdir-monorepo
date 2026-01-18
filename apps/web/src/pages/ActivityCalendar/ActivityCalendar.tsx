@@ -76,7 +76,7 @@ export const ActivityCalendar: React.FC = () => {
       <div className="activity-filters">
         <button
           onClick={() => setSelectedCategory(null)}
-          className={!selectedCategory ? 'filter-btn active' : 'filter-btn'}
+          className={!selectedCategory ? 'filter-btn active' : 'filter-btn'} type="button"
         >
           {t('activityCalendar.all')}
         </button>
@@ -84,7 +84,7 @@ export const ActivityCalendar: React.FC = () => {
           <button
             key={cat}
             onClick={() => setSelectedCategory(cat)}
-            className={selectedCategory === cat ? 'filter-btn active' : 'filter-btn'}
+            className={selectedCategory === cat ? 'filter-btn active' : 'filter-btn'} type="button"
           >
             {cat}
           </button>
@@ -143,7 +143,7 @@ export const ActivityCalendar: React.FC = () => {
 
                   <button
                     className="btn-register"
-                    disabled={availability.status === 'FULL'}
+                    disabled={availability.status === 'FULL'} type="button"
                   >
                     {availability.status === 'FULL' ? t('activityCalendar.availability.full') : t('activityCalendar.register')}
                   </button>

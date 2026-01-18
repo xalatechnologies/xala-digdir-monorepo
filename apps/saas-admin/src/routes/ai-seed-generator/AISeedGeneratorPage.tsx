@@ -243,11 +243,11 @@ export function AISeedGeneratorPage() {
               <Button
                 onClick={handleGenerate}
                 disabled={isGenerating || !config.tenantId}
-                style={{ width: '100%' }}
+                style={{ width: '100%' }} type="button"
               >
                 {isGenerating ? (
                   <>
-                    <Spinner size="sm" aria-label="Genererer..." />
+                    <Spinner size="sm" aria-label={t('saasAdmin.ariaLabel.genererer')} />
                     Genererer...
                   </>
                 ) : (

@@ -12,6 +12,7 @@ import { useAuth, type SaasAdminRole } from '@xala/auth';
 import { useToast } from '../providers/ToastProvider';
 import styles from './ProtectedRoute.module.css';
 
+import { useT } from '@xala/i18n';
 interface ProtectedRouteProps {
   children: React.ReactNode;
   /**
@@ -21,7 +22,9 @@ interface ProtectedRouteProps {
   requiredRole?: SaasAdminRole;
 }
 
-export function ProtectedRoute({ children, requiredRole }: ProtectedRouteProps) {
+export function ProtectedRoute({
+  const t = useT();
+ children, requiredRole }: ProtectedRouteProps) {
   const { isLoading, isAuthenticated, checkRole } = useAuth();
   const location = useLocation();
   const { error } = useToast();
@@ -49,7 +52,7 @@ export function ProtectedRoute({ children, requiredRole }: ProtectedRouteProps) 
   if (isLoading) {
     return (
       <div className={styles.loadingContainer}>
-        <Spinner aria-label="Laster..." size="lg" />
+        <Spinner aria-label={t('saasAdmin.ariaLabel.laster')} size="lg" />
       </div>
     );
   }

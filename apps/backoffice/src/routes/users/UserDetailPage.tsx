@@ -107,7 +107,7 @@ export function UserDetailPage() {
   if (!user) {
     return (
       <div style={{ textAlign: 'center', padding: 'var(--ds-spacing-8)' }}>
-        <Heading level={3} data-size="sm">Bruker ikke funnet</Heading>
+        <Heading level={3} data-size="sm">{t('users.text.brukerIkkeFunnet')}</Heading>
         <Paragraph data-size="sm" style={{ color: 'var(--ds-color-neutral-text-subtle)', marginTop: 'var(--ds-spacing-2)' }}>
           Brukeren eksisterer ikke eller er slettet.
         </Paragraph>
@@ -185,7 +185,7 @@ export function UserDetailPage() {
             {/* Contact Information */}
             <Card>
               <Stack spacing={4}>
-                <Heading level={3} data-size="sm">Kontaktinformasjon</Heading>
+                <Heading level={3} data-size="sm">{t('users.text.kontaktinformasjon')}</Heading>
 
                 <div>
                   <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--ds-spacing-2)', marginBottom: 'var(--ds-spacing-1)' }}>
@@ -238,7 +238,7 @@ export function UserDetailPage() {
             {/* Role and Status */}
             <Card>
               <Stack spacing={4}>
-                <Heading level={3} data-size="sm">Rolle og tilgang</Heading>
+                <Heading level={3} data-size="sm">{t('users.text.rolleOgTilgang')}</Heading>
 
                 <div>
                   <div style={{ fontSize: 'var(--ds-font-size-sm)', color: 'var(--ds-color-neutral-text-subtle)', marginBottom: 'var(--ds-spacing-1)' }}>
@@ -282,7 +282,7 @@ export function UserDetailPage() {
             {/* Account Information */}
             <Card>
               <Stack spacing={4}>
-                <Heading level={3} data-size="sm">Kontoinformasjon</Heading>
+                <Heading level={3} data-size="sm">{t('users.text.kontoinformasjon')}</Heading>
 
                 {user.lastLoginAt && (
                   <div>

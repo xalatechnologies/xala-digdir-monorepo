@@ -215,7 +215,7 @@ export function RentalObjectsListView() {
         }
       >
         {/* Status Section */}
-        <DrawerSection title="Status" collapsible>
+        <DrawerSection title={t('backoffice.title.status')} collapsible>
           <Stack spacing="var(--ds-spacing-1)">
             {STATUS_OPTIONS.map((status) => (
               <DrawerItem
@@ -245,7 +245,7 @@ export function RentalObjectsListView() {
         </DrawerSection>
 
         {/* Capacity Section */}
-        <DrawerSection title="Kapasitet" collapsible defaultCollapsed>
+        <DrawerSection title={t('backoffice.title.kapasitet')} collapsible defaultCollapsed>
           <Stack spacing="var(--ds-spacing-1)">
             {CAPACITY_OPTIONS.map((cap) => (
               <DrawerItem
@@ -275,7 +275,7 @@ export function RentalObjectsListView() {
         </DrawerSection>
 
         {/* Sort Section */}
-        <DrawerSection title="Sortering" collapsible defaultCollapsed>
+        <DrawerSection title={t('backoffice.title.sortering')} collapsible defaultCollapsed>
           <Stack spacing="var(--ds-spacing-1)">
             {SORT_OPTIONS.map((sort) => (
               <DrawerItem
@@ -381,7 +381,7 @@ export function RentalObjectsListView() {
                 variant={viewMode === 'grid' ? 'primary' : 'tertiary'}
                 data-size="sm"
                 onClick={() => setViewMode('grid')}
-                aria-label="Rutenettvisning"
+                aria-label={t('backoffice.ariaLabel.rutenettvisning')}
                 style={{ padding: 'var(--ds-spacing-2)' }}
               >
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
@@ -394,7 +394,7 @@ export function RentalObjectsListView() {
                 variant={viewMode === 'table' ? 'primary' : 'tertiary'}
                 data-size="sm"
                 onClick={() => setViewMode('table')}
-                aria-label="Listevisning"
+                aria-label={t('backoffice.ariaLabel.listevisning')}
                 style={{ padding: 'var(--ds-spacing-2)' }}
               >
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">

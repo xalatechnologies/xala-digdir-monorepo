@@ -100,7 +100,7 @@ export function TenantFeaturesPage() {
   if (error) {
     return (
       <Alert data-color="danger">
-        <Heading level={3} data-size="xs">Feil ved lasting av moduler</Heading>
+        <Heading level={3} data-size="xs">{t('backoffice.text.feilVedLastingAvModuler')}</Heading>
         <Paragraph data-size="sm">
           {error instanceof Error ? error.message : 'En ukjent feil oppstod'}
         </Paragraph>
@@ -237,10 +237,10 @@ export function TenantFeaturesPage() {
                             {module.name?.no ?? module.key}
                           </Paragraph>
                           {module.isCore && (
-                            <Badge data-color="info" data-size="xs">Kjerne</Badge>
+                            <Badge data-color="info" data-size="xs">{t('backoffice.text.kjerne')}</Badge>
                           )}
                           {!dependenciesMet && (
-                            <Badge data-color="warning" data-size="xs">Mangler avhengigheter</Badge>
+                            <Badge data-color="warning" data-size="xs">{t('backoffice.text.manglerAvhengigheter')}</Badge>
                           )}
                         </div>
                         <Paragraph data-size="sm" style={{ margin: 0, color: 'var(--ds-color-neutral-text-subtle)' }}>
@@ -281,7 +281,7 @@ export function TenantFeaturesPage() {
 
                       <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--ds-spacing-3)' }}>
                         {module.isCore ? (
-                          <Badge data-color="info" data-size="sm">Alltid aktiv</Badge>
+                          <Badge data-color="info" data-size="sm">{t('backoffice.text.alltidAktiv')}</Badge>
                         ) : (
                           <Switch
                             checked={isEnabled}

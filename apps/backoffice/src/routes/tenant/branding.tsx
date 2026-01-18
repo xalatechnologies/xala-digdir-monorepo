@@ -8,7 +8,7 @@
  * - Email templates
  */
 
-/* eslint-disable digdir/no-hardcoded-typography -- Complex branding form preview with custom styling */
+ 
 
 import { useState, useEffect } from 'react';
 import {
@@ -163,7 +163,7 @@ export function TenantBrandingPage() {
             </div>
           </div>
           <div>
-            <Label style={{ display: 'block', marginBottom: 'var(--ds-spacing-2)', fontWeight: 'var(--ds-font-weight-medium)' }}>Aksentfarge</Label>
+            <Label style={{ display: 'block', marginBottom: 'var(--ds-spacing-2)', fontWeight: 'var(--ds-font-weight-medium)' }}>{t('backoffice.text.aksentfarge')}</Label>
             <div style={{ display: 'flex', gap: 'var(--ds-spacing-2)' }}>
               <input
                 type="color"

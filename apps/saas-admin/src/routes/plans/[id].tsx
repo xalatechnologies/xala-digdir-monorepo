@@ -304,7 +304,7 @@ export function PlanDetailPage() {
             <Table.Head>
               <Table.Row>
                 <Table.HeaderCell>{t('label.name')}</Table.HeaderCell>
-                <Table.HeaderCell>Slug</Table.HeaderCell>
+                <Table.HeaderCell>{t('saasAdmin.text.slug')}</Table.HeaderCell>
                 <Table.HeaderCell>{t('label.status')}</Table.HeaderCell>
                 <Table.HeaderCell>{t('saasAdmin.tenants.createdAt')}</Table.HeaderCell>
               </Table.Row>

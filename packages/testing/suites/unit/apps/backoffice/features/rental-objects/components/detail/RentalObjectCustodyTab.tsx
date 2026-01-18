@@ -169,7 +169,7 @@ export function RentalObjectCustodyTab({ rentalObjectId }: { rentalObjectId: str
                         <td style={{ padding: 'var(--ds-spacing-2) var(--ds-spacing-4)' }}>
                           <div style={{ display: 'flex', gap: 'var(--ds-spacing-1)', flexWrap: 'wrap' }}>
                             {(sub.scopes as string[]).map(s => (
-                              <Badge key={s} variant="neutral" data-size="xs" style={{ fontSize: '10px' }}>{s}</Badge>
+                              <Badge key={s} variant="neutral" data-size="xs" style={{ fontSize: 'var(--ds-font-size-1)' }}>{s}</Badge>
                             ))}
                           </div>
                         </td>

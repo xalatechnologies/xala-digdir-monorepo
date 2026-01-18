@@ -48,7 +48,7 @@ export function BrandingTab() {
               aria-label={t('common.logo_url')}
               value={brandingData.logo}
               onChange={(e) => updateField('logo', e.target.value)}
-              placeholder="https://example.com/logo.png"
+              placeholder={t('settings.placeholder.httpsexamplecomlogopng')}
             />
           </FormField>
 
@@ -82,7 +82,7 @@ export function BrandingTab() {
               aria-label={t('common.favicon_url')}
               value={brandingData.favicon}
               onChange={(e) => updateField('favicon', e.target.value)}
-              placeholder="https://example.com/favicon.ico"
+              placeholder={t('settings.placeholder.httpsexamplecomfaviconico')}
             />
           </FormField>
         </Stack>
