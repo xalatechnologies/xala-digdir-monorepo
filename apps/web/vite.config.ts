@@ -6,6 +6,11 @@ import path from 'path';
 export default defineConfig({
   // Load .env from app directory (for staging)
   envDir: path.resolve(__dirname, '.'),
+  server: {
+    host: '0.0.0.0',
+    port: 5173,
+    strictPort: true,
+  },
   plugins: [
     react(),
     VitePWA({

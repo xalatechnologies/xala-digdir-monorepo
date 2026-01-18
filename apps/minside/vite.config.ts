@@ -6,6 +6,11 @@ import path from 'path';
 export default defineConfig({
   // Load .env from monorepo root
   envDir: path.resolve(__dirname, '../..'),
+  server: {
+    host: '0.0.0.0',
+    port: 5174,
+    strictPort: true,
+  },
   plugins: [
     react(),
     VitePWA({
