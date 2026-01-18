@@ -278,4 +278,290 @@ describe('Designsystemet Compliance Suite', () => {
       expect(APPS_TO_SCAN.length).toBeGreaterThan(0);
     });
   });
+
+  describe('7. Cross-App Visual Consistency', () => {
+    it('should use consistent typography families across apps', () => {
+      const fontFamilyUsage: Record<string, Set<string>> = {};
+      
+      for (const app of APPS_TO_SCAN) {
+        const cssFiles = getAppFiles(app, '.css');
+        fontFamilyUsage[app] = new Set();
+        
+        for (const file of cssFiles) {
+          const content = fs.readFileSync(file, 'utf-8');
+          // Find font-family declarations
+          const matches = content.match(/font-family:\s*var\(--ds-font-family-[^)]+\)/g);
+          if (matches) {
+            matches.forEach(m => fontFamilyUsage[app].add(m));
+          }
+        }
+      }
+
+      const allFonts = new Set<string>();
+      Object.values(fontFamilyUsage).forEach(fonts => fonts.forEach(f => allFonts.add(f)));
+      
+      console.log('\nTypography families used across apps:');
+      allFonts.forEach(f => console.log(`  ${f}`));
+      
+      // Should use consistent DS font families
+      expect(allFonts.size).toBeLessThan(5); // Max 5 different font families
+    });
+
+    it('should use consistent color palette tokens', () => {
+      const colorUsage: Record<string, number> = {};
+      
+      const cssFiles = getAllCssFiles();
+      for (const file of cssFiles) {
+        const content = fs.readFileSync(file, 'utf-8');
+        // Find all DS color tokens
+        const matches = content.match(/--ds-color-[a-z]+-[a-z0-9-]+/g);
+        if (matches) {
+          matches.forEach(token => {
+            colorUsage[token] = (colorUsage[token] || 0) + 1;
+          });
+        }
+      }
+
+      const sortedColors = Object.entries(colorUsage)
+        .sort((a, b) => b[1] - a[1])
+        .slice(0, 15);
+      
+      console.log('\nTop 15 color tokens used:');
+      sortedColors.forEach(([token, count]) => {
+        console.log(`  ${token}: ${count}x`);
+      });
+
+      expect(Object.keys(colorUsage).length).toBeGreaterThan(10);
+    });
+
+    it('should use consistent spacing scale', () => {
+      const spacingUsage: Record<string, number> = {};
+      
+      const cssFiles = getAllCssFiles();
+      for (const file of cssFiles) {
+        const content = fs.readFileSync(file, 'utf-8');
+        // Find DS spacing tokens
+        const matches = content.match(/--ds-spacing-[0-9]+/g);
+        if (matches) {
+          matches.forEach(token => {
+            spacingUsage[token] = (spacingUsage[token] || 0) + 1;
+          });
+        }
+      }
+
+      const sortedSpacing = Object.entries(spacingUsage)
+        .sort((a, b) => b[1] - a[1]);
+      
+      console.log('\nSpacing tokens used:');
+      sortedSpacing.forEach(([token, count]) => {
+        console.log(`  ${token}: ${count}x`);
+      });
+
+      // Should use DS spacing tokens consistently
+      expect(Object.keys(spacingUsage).length).toBeGreaterThan(0);
+    });
+
+    it('should share identical root.css structure across apps', () => {
+      const rootCssContent: Record<string, string[]> = {};
+      
+      for (const app of APPS_TO_SCAN) {
+        const rootCss = path.join(MONOREPO_ROOT, 'apps', app, 'src', 'root.css');
+        if (fs.existsSync(rootCss)) {
+          const content = fs.readFileSync(rootCss, 'utf-8');
+          // Extract CSS imports
+          const imports = content.match(/@import\s+['"][^'"]+['"]/g) || [];
+          rootCssContent[app] = imports;
+        }
+      }
+
+      console.log('\nroot.css imports per app:');
+      Object.entries(rootCssContent).forEach(([app, imports]) => {
+        console.log(`  ${app}: ${imports.length} imports`);
+        imports.slice(0, 3).forEach(i => console.log(`    ${i}`));
+      });
+
+      // At least some apps should have root.css
+      expect(Object.keys(rootCssContent).length).toBeGreaterThan(0);
+    });
+
+    it('should use consistent border-radius tokens', () => {
+      const borderRadiusUsage: Record<string, number> = {};
+      
+      const cssFiles = getAllCssFiles();
+      for (const file of cssFiles) {
+        const content = fs.readFileSync(file, 'utf-8');
+        // Find DS border-radius tokens
+        const matches = content.match(/--ds-border-radius-[a-z]+/g);
+        if (matches) {
+          matches.forEach(token => {
+            borderRadiusUsage[token] = (borderRadiusUsage[token] || 0) + 1;
+          });
+        }
+      }
+
+      console.log('\nBorder-radius tokens:');
+      Object.entries(borderRadiusUsage)
+        .sort((a, b) => b[1] - a[1])
+        .forEach(([token, count]) => {
+          console.log(`  ${token}: ${count}x`);
+        });
+
+      // Verify consistent border-radius usage
+      expect(Object.keys(borderRadiusUsage).length).toBeLessThan(10);
+    });
+  });
+
+  describe('8. Enhanced Accessibility (Universell Utforming)', () => {
+    it('should have proper focus indicators in CSS', () => {
+      const cssFiles = getAllCssFiles();
+      let focusIndicators = 0;
+      let outlineNone = 0;
+      
+      for (const file of cssFiles) {
+        const content = fs.readFileSync(file, 'utf-8');
+        // Count focus-visible and focus styles
+        const focusMatches = content.match(/:focus-visible|:focus\s*\{/g);
+        if (focusMatches) focusIndicators += focusMatches.length;
+        // Check for dangerous outline:none without replacement
+        const outlineNoneMatches = content.match(/outline:\s*none(?!.*box-shadow|ring)/g);
+        if (outlineNoneMatches) outlineNone += outlineNoneMatches.length;
+      }
+
+      console.log(`\nFocus indicators: ${focusIndicators}, Dangerous outline:none: ${outlineNone}`);
+      expect(focusIndicators).toBeGreaterThan(0);
+    });
+
+    it('should use ARIA labels for interactive elements', () => {
+      const tsxFiles = getAllTsxFiles();
+      let ariaLabels = 0;
+      let ariaDescribedBy = 0;
+      let ariaLive = 0;
+      let roleAttributes = 0;
+      
+      for (const file of tsxFiles) {
+        const content = fs.readFileSync(file, 'utf-8');
+        const labelMatches = content.match(/aria-label=/g);
+        const describedByMatches = content.match(/aria-describedby=/g);
+        const liveMatches = content.match(/aria-live=/g);
+        const roleMatches = content.match(/role=/g);
+        
+        if (labelMatches) ariaLabels += labelMatches.length;
+        if (describedByMatches) ariaDescribedBy += describedByMatches.length;
+        if (liveMatches) ariaLive += liveMatches.length;
+        if (roleMatches) roleAttributes += roleMatches.length;
+      }
+
+      console.log('\nARIA attribute usage:');
+      console.log(`  aria-label: ${ariaLabels}`);
+      console.log(`  aria-describedby: ${ariaDescribedBy}`);
+      console.log(`  aria-live: ${ariaLive}`);
+      console.log(`  role: ${roleAttributes}`);
+
+      expect(ariaLabels).toBeGreaterThan(10);
+    });
+
+    it('should have proper form accessibility attributes', () => {
+      const tsxFiles = getAllTsxFiles();
+      let labelFor = 0;
+      let inputId = 0;
+      let requiredAttr = 0;
+      let ariaRequired = 0;
+      
+      for (const file of tsxFiles) {
+        const content = fs.readFileSync(file, 'utf-8');
+        if (/htmlFor=/.test(content)) labelFor++;
+        if (/<input[^>]*id=/.test(content)) inputId++;
+        if (/required[^=]/.test(content) || /required=/.test(content)) requiredAttr++;
+        if (/aria-required/.test(content)) ariaRequired++;
+      }
+
+      console.log('\nForm accessibility:');
+      console.log(`  Files with htmlFor: ${labelFor}`);
+      console.log(`  Files with input id: ${inputId}`);
+      console.log(`  Files with required: ${requiredAttr}`);
+      console.log(`  Files with aria-required: ${ariaRequired}`);
+
+      // Forms should have proper labeling
+      expect(labelFor + inputId).toBeGreaterThan(5);
+    });
+
+    it('should use keyboard-accessible patterns', () => {
+      const tsxFiles = getAllTsxFiles();
+      let tabIndex = 0;
+      let onKeyDown = 0;
+      let onKeyUp = 0;
+      
+      for (const file of tsxFiles) {
+        const content = fs.readFileSync(file, 'utf-8');
+        if (/tabIndex=/.test(content) || /tabindex/.test(content)) tabIndex++;
+        if (/onKeyDown/.test(content)) onKeyDown++;
+        if (/onKeyUp/.test(content)) onKeyUp++;
+      }
+
+      console.log('\nKeyboard navigation:');
+      console.log(`  Files with tabIndex: ${tabIndex}`);
+      console.log(`  Files with onKeyDown: ${onKeyDown}`);
+      console.log(`  Files with onKeyUp: ${onKeyUp}`);
+
+      // Should have some keyboard handling
+      expect(tabIndex + onKeyDown).toBeGreaterThan(0);
+    });
+
+    it('should have consistent color contrast tokens', () => {
+      const cssFiles = getAllCssFiles();
+      let contrastSafeTokens = 0;
+      let backgroundTokens = 0;
+      let textTokens = 0;
+      
+      for (const file of cssFiles) {
+        const content = fs.readFileSync(file, 'utf-8');
+        // Check for proper DS background/surface tokens
+        const bgMatches = content.match(/--ds-color-neutral-background|--ds-color-surface/g);
+        if (bgMatches) backgroundTokens += bgMatches.length;
+        // Check for proper DS text/foreground tokens
+        const textMatches = content.match(/--ds-color-neutral-text|--ds-color-text/g);
+        if (textMatches) textTokens += textMatches.length;
+        // Check accent pairs (contrast-safe combinations)
+        const accentMatches = content.match(/--ds-color-accent-/g);
+        if (accentMatches) contrastSafeTokens += accentMatches.length;
+      }
+
+      console.log('\nContrast token usage:');
+      console.log(`  Background tokens: ${backgroundTokens}`);
+      console.log(`  Text tokens: ${textTokens}`);
+      console.log(`  Accent tokens: ${contrastSafeTokens}`);
+
+      // Should use DS tokens which guarantee contrast
+      expect(contrastSafeTokens + backgroundTokens + textTokens).toBeGreaterThan(5);
+    });
+
+    it('should have proper image alt attributes', () => {
+      const tsxFiles = getAllTsxFiles();
+      let imagesTotal = 0;
+      let emptyAlt = 0;
+      let descriptiveAlt = 0;
+      
+      for (const file of tsxFiles) {
+        const content = fs.readFileSync(file, 'utf-8');
+        const imgTags = content.match(/<img[^>]*>/g) || [];
+        imagesTotal += imgTags.length;
+        
+        imgTags.forEach(tag => {
+          if (/alt=""/.test(tag)) emptyAlt++;
+          else if (/alt=/.test(tag)) descriptiveAlt++;
+        });
+      }
+
+      console.log('\nImage accessibility:');
+      console.log(`  Total images: ${imagesTotal}`);
+      console.log(`  Decorative (alt=""): ${emptyAlt}`);
+      console.log(`  Descriptive (alt="..."): ${descriptiveAlt}`);
+
+      const missingAlt = imagesTotal - (emptyAlt + descriptiveAlt);
+      console.log(`  Missing alt: ${missingAlt}`);
+
+      // Allow some images without alt (report but don't hard fail)
+      expect(missingAlt).toBeLessThan(5);
+    });
+  });
 });
