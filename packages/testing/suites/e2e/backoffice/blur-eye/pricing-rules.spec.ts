@@ -1,3 +1,4 @@
+import { setupMockApi } from '../../../../mocks/api-server.mock';
 import { test, expect } from '../fixtures/qa-expert.fixture';
 import { config } from '../config/backoffice.config';
 import {
@@ -17,6 +18,7 @@ import {
  */
 
 test.describe('Pricing Rules (Prisregler) E2E', () => {
+  setupMockApi();
   test.use({ storageState: 'tests/e2e/backoffice/.auth/admin.json' });
 
   test.beforeEach(async ({ page }) => {
@@ -29,6 +31,7 @@ test.describe('Pricing Rules (Prisregler) E2E', () => {
   });
 
   test.describe('PR1. Blur-Eye Structure', () => {
+  setupMockApi();
     test('PR1.1 Page has clear header', async ({ page }) => {
       const title = page.locator('h1, h2, [data-testid="page-title"]').first();
       await expect(title).toBeVisible({ timeout: 10000 });
@@ -69,6 +72,7 @@ test.describe('Pricing Rules (Prisregler) E2E', () => {
   });
 
   test.describe('PR2. Rule CRUD', () => {
+  setupMockApi();
     test('PR2.1 Can open create rule form', async ({ page }) => {
       const addBtn = page.locator('button:has-text("Legg til"), button:has-text("Ny")').first();
       
@@ -104,6 +108,7 @@ test.describe('Pricing Rules (Prisregler) E2E', () => {
   });
 
   test.describe('PR3. Runtime Stability', () => {
+  setupMockApi();
     test('PR3.1 No runtime errors', async ({ page, evidence }) => {
       expect(evidence.hasPageErrors()).toBe(false);
       expect(evidence.has5xxResponses()).toBe(false);

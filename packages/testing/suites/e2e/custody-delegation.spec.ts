@@ -1,3 +1,4 @@
+import { setupMockApi } from '../../mocks/api-server.mock';
 /**
  * E2E Tests: Rental Object Custody & Delegation (Backoffice Only)
  * 
@@ -47,6 +48,7 @@ async function mockOrgAdminAuth(page: Page) {
 }
 
 test.describe('Rental Object Custody & Delegation Flow (Backoffice Only)', () => {
+  setupMockApi();
   
   test('Tenant Admin assigns custody to Organization in Backoffice', async ({ page }) => {
     // 1. Setup API mocks

@@ -1,3 +1,4 @@
+import { setupMockApi } from '../../mocks/api-server.mock';
 /**
  * Minside App Session - Manual Verification Test
  *
@@ -9,6 +10,7 @@ import { test, expect } from '@playwright/test';
 const MINSIDE_URL = process.env.MINSIDE_URL || 'http://localhost:5174';
 
 test.describe('Minside Session - Manual Verification', () => {
+  setupMockApi();
   test('MANUAL-001: Open minside app for manual testing', async ({ page }) => {
     console.log('\n' + '='.repeat(80));
     console.log('MINSIDE SESSION MANUAL TEST');

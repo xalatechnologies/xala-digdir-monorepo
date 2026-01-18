@@ -1,3 +1,4 @@
+import { setupMockApi } from '../../mocks/api-server.mock';
 /**
  * Web App Login Flow - E2E Tests
  *
@@ -116,6 +117,7 @@ async function mockExpiredSession(page: Page) {
 // =============================================================================
 
 test.describe('Web Login Flow - Happy Path', () => {
+  setupMockApi();
   test('US-001: User can view login button on homepage when not authenticated', async ({ page }) => {
     await page.goto(WEB_URL);
 
@@ -282,6 +284,7 @@ test.describe('Web Login Flow - Happy Path', () => {
 // =============================================================================
 
 test.describe('Web Login Flow - Session Persistence', () => {
+  setupMockApi();
   test('SP-001: Session persists across page refreshes', async ({ page }) => {
     await mockSuccessfulOAuthCallback(page);
 
@@ -373,6 +376,7 @@ test.describe('Web Login Flow - Session Persistence', () => {
 // =============================================================================
 
 test.describe('Web Login Flow - Edge Cases', () => {
+  setupMockApi();
   test('EC-001: Handles expired session gracefully', async ({ page }) => {
     await mockExpiredSession(page);
 
@@ -495,6 +499,7 @@ test.describe('Web Login Flow - Edge Cases', () => {
 // =============================================================================
 
 test.describe('Web Login Flow - User Dropdown UI/UX', () => {
+  setupMockApi();
   test('UI-001: User dropdown shows correct user name', async ({ page }) => {
     await page.route('**/api/auth/session', async (route) => {
       await route.fulfill({
@@ -634,6 +639,7 @@ test.describe('Web Login Flow - User Dropdown UI/UX', () => {
 // =============================================================================
 
 test.describe('Web Login Flow - Flow Context Preservation', () => {
+  setupMockApi();
   test('FC-001: Login page preserves flow context from booking flow', async ({ page }) => {
     await mockSuccessfulOAuthCallback(page);
 

@@ -1,3 +1,4 @@
+import { setupMockApi } from '../../../mocks/api-server.mock';
 /**
  * Monitoring Workflow Journey E2E Test
  * Full flow: Create alert → Trigger → Acknowledge → Create incident → Resolve
@@ -8,6 +9,7 @@ const API_URL = 'http://localhost:4000';
 const TENANT_ID = 'test-tenant';
 
 test.describe('Monitoring Workflow Journey', () => {
+  setupMockApi();
   let alertId: string;
   let incidentId: string;
 

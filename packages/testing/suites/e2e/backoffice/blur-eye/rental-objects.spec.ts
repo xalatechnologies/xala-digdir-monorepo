@@ -1,3 +1,4 @@
+import { setupMockApi } from '../../../../mocks/api-server.mock';
 import { test, expect } from '../fixtures/qa-expert.fixture';
 import { config } from '../config/backoffice.config';
 
@@ -13,9 +14,11 @@ import { config } from '../config/backoffice.config';
  */
 
 test.describe('B. Rental Objects E2E', () => {
+  setupMockApi();
   test.use({ storageState: 'tests/e2e/backoffice/.auth/admin.json' });
 
   test.describe('B1. List Page Blur-Eye Structure', () => {
+  setupMockApi();
     test.beforeEach(async ({ page }) => {
       await page.goto('/rental-objects', { waitUntil: 'domcontentloaded' });
       await page.waitForTimeout(3000);
@@ -177,6 +180,7 @@ test.describe('B. Rental Objects E2E', () => {
   });
 
   test.describe('B2. List Page Functional Checks', () => {
+  setupMockApi();
     test.beforeEach(async ({ page }) => {
       await page.goto('/rental-objects', { waitUntil: 'domcontentloaded' });
       await page.waitForTimeout(3000);
@@ -283,6 +287,7 @@ test.describe('B. Rental Objects E2E', () => {
   });
 
   test.describe('B3. Create New (Wizard + Tabs)', () => {
+  setupMockApi();
     test.beforeEach(async ({ page }) => {
       await page.goto('/rental-objects', { waitUntil: 'domcontentloaded' });
       await page.waitForTimeout(3000);
@@ -414,6 +419,7 @@ test.describe('B. Rental Objects E2E', () => {
   });
 
   test.describe('B4. Edit Existing Listing', () => {
+  setupMockApi();
     test.beforeEach(async ({ page }) => {
       await page.goto('/rental-objects', { waitUntil: 'domcontentloaded' });
       await page.waitForTimeout(3000);
@@ -482,6 +488,7 @@ test.describe('B. Rental Objects E2E', () => {
   });
 
   test.describe('B5. Clone Listing', () => {
+  setupMockApi();
     test('B5.1 Clone action creates new record', async ({ page }) => {
       await page.goto('/rental-objects', { waitUntil: 'domcontentloaded' });
       await page.waitForTimeout(3000);
@@ -520,6 +527,7 @@ test.describe('B. Rental Objects E2E', () => {
   });
 
   test.describe('B6. Delete Listing', () => {
+  setupMockApi();
     test('B6.1 Delete shows confirmation dialog', async ({ page }) => {
       await page.goto('/rental-objects', { waitUntil: 'domcontentloaded' });
       await page.waitForTimeout(3000);

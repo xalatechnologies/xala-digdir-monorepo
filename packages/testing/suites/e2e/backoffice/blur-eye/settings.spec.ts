@@ -1,3 +1,4 @@
+import { setupMockApi } from '../../../../mocks/api-server.mock';
 import { test, expect } from '../fixtures/qa-expert.fixture';
 import { config } from '../config/backoffice.config';
 import {
@@ -15,6 +16,7 @@ import {
  */
 
 test.describe('Settings (Innstillinger) E2E', () => {
+  setupMockApi();
   test.use({ storageState: 'tests/e2e/backoffice/.auth/admin.json' });
 
   test.beforeEach(async ({ page }) => {
@@ -27,6 +29,7 @@ test.describe('Settings (Innstillinger) E2E', () => {
   });
 
   test.describe('SET1. Blur-Eye Structure', () => {
+  setupMockApi();
     test('SET1.1 Page has clear header', async ({ page }) => {
       const title = page.locator('h1, h2, [data-testid="page-title"]').first();
       await expect(title).toBeVisible({ timeout: 10000 });
@@ -56,6 +59,7 @@ test.describe('Settings (Innstillinger) E2E', () => {
   });
 
   test.describe('SET2. Settings Persistence', () => {
+  setupMockApi();
     test('SET2.1 Toggle persists after save', async ({ page }) => {
       const toggle = page.locator('[role="switch"], input[type="checkbox"]').first();
       
@@ -76,6 +80,7 @@ test.describe('Settings (Innstillinger) E2E', () => {
   });
 
   test.describe('SET3. Runtime Stability', () => {
+  setupMockApi();
     test('SET3.1 No runtime errors', async ({ page, evidence }) => {
       expect(evidence.hasPageErrors()).toBe(false);
       expect(evidence.has5xxResponses()).toBe(false);

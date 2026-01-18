@@ -1,3 +1,4 @@
+import { setupMockApi } from '../../../mocks/api-server.mock';
 /**
  * Rental Object Playwright E2E Tests
  * Demo journeys, performance, and security testing
@@ -9,6 +10,7 @@ import { test, expect, Page } from '@playwright/test';
 // =============================================================================
 
 test.describe('Rental Object Discovery Journey', () => {
+  setupMockApi();
   test('should browse rental objects by category', async ({ page }) => {
     await page.goto('/rental-objects');
     
@@ -56,6 +58,7 @@ test.describe('Rental Object Discovery Journey', () => {
 });
 
 test.describe('Rental Object Booking Journey', () => {
+  setupMockApi();
   test('should complete booking for PERIOD mode', async ({ page }) => {
     await page.goto('/rental-objects/meeting-room');
     
@@ -92,6 +95,7 @@ test.describe('Rental Object Booking Journey', () => {
 });
 
 test.describe('Admin Rental Object Management', () => {
+  setupMockApi();
   test.beforeEach(async ({ page }) => {
     // Login as admin
     await page.goto('/admin/login');
@@ -150,6 +154,7 @@ test.describe('Admin Rental Object Management', () => {
 // =============================================================================
 
 test.describe('Performance Tests', () => {
+  setupMockApi();
   test('rental object list should load under 2 seconds', async ({ page }) => {
     const startTime = Date.now();
     
@@ -183,6 +188,7 @@ test.describe('Performance Tests', () => {
 // =============================================================================
 
 test.describe('Security Tests', () => {
+  setupMockApi();
   test('should reject unauthenticated POST requests', async ({ request }) => {
     const response = await request.post('/api/rental-objects', {
       data: { name: 'Malicious Object' },
@@ -242,6 +248,7 @@ test.describe('Security Tests', () => {
 // =============================================================================
 
 test.describe('HCASE - Skien Kommune Demo Scenarios', () => {
+  setupMockApi();
   test('HCASE-001: Citizen books meeting room for konfirmasjon', async ({ page }) => {
     // Navigate to venue
     await page.goto('/rental-objects/kulturhuset-storsalen');

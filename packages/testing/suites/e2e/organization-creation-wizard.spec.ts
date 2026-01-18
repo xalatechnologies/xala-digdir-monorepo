@@ -1,3 +1,4 @@
+import { setupMockApi } from '../../mocks/api-server.mock';
 import { test, expect } from '@playwright/test';
 
 /**
@@ -20,9 +21,11 @@ const BACKOFFICE_URL = 'http://localhost:5174';
 const API_URL = 'http://localhost:3002';
 
 test.describe('Organization Creation Wizard', () => {
+  setupMockApi();
   let organizationId: string;
 
   test.describe('Wizard Navigation and UI', () => {
+  setupMockApi();
     test('renders wizard with stepper on new organization page', async ({ page }) => {
       // Step 1: Navigate to organization creation page
       await page.goto(`${BACKOFFICE_URL}/organizations/new`);
@@ -70,6 +73,7 @@ test.describe('Organization Creation Wizard', () => {
   });
 
   test.describe('Complete Organization Creation Flow', () => {
+  setupMockApi();
     test('completes full wizard flow and creates organization', async ({ page, request }) => {
       // Step 1: Navigate to wizard
       await page.goto(`${BACKOFFICE_URL}/organizations/new`);
@@ -147,6 +151,7 @@ test.describe('Organization Creation Wizard', () => {
   });
 
   test.describe('Backend Verification', () => {
+  setupMockApi();
     test('verifies organization was created in database', async ({ request }) => {
       test(!organizationId, 'No organization ID available from previous test');
 
@@ -216,6 +221,7 @@ test.describe('Organization Creation Wizard', () => {
   });
 
   test.describe('Form Validation', () => {
+  setupMockApi();
     test('shows validation error when submitting empty form', async ({ page }) => {
       await page.goto(`${BACKOFFICE_URL}/organizations/new`);
       await page.waitForLoadState('networkidle');
@@ -252,6 +258,7 @@ test.describe('Organization Creation Wizard', () => {
   });
 
   test.describe('Accessibility', () => {
+  setupMockApi();
     test('wizard has proper ARIA labels and structure', async ({ page }) => {
       await page.goto(`${BACKOFFICE_URL}/organizations/new`);
       await page.waitForLoadState('networkidle');

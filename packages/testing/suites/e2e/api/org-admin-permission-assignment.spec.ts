@@ -1,3 +1,4 @@
+import { setupMockApi } from '../../../mocks/api-server.mock';
 /**
  * Org Admin Permission Assignment E2E Test
  * Full flow: Login as Org Admin → Navigate to Members → Navigate to Permissions → Assign RO_BOOK → Verify
@@ -22,6 +23,7 @@ const TEST_MEMBER = {
 };
 
 test.describe('Org Admin Permission Assignment Flow', () => {
+  setupMockApi();
   let organizationId: string;
   let rentalObjectId: string;
   let accessGrantId: string;
@@ -259,6 +261,7 @@ test.describe('Org Admin Permission Assignment Flow', () => {
 });
 
 test.describe('Permission Assignment Without Access Grant (Negative Test)', () => {
+  setupMockApi();
   test('Cannot assign permissions without access grant', async ({ request }) => {
     // Use random IDs that don't have an access grant
     const randomOrgId = 'non-existent-org-id';
@@ -281,6 +284,7 @@ test.describe('Permission Assignment Without Access Grant (Negative Test)', () =
 });
 
 test.describe('Invalid Permission Values (Negative Test)', () => {
+  setupMockApi();
   test('Rejects invalid permission values', async ({ request }) => {
     const response = await request.post(`${API_URL}/api/permission-assignments`, {
       headers: { 'x-tenant-id': TENANT_ID },

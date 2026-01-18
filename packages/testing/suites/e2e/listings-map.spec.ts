@@ -1,3 +1,4 @@
+import { setupMockApi } from '../../mocks/api-server.mock';
 import { test, expect } from '@playwright/test';
 
 /**
@@ -10,6 +11,7 @@ import { test, expect } from '@playwright/test';
  */
 
 test.describe('Listings Page - Map View (Dynamic Import)', () => {
+  setupMockApi();
   test('should load page without mapbox, then load map on view switch', async ({ page }) => {
     // Navigate to homepage which displays listings in grid view by default
     await page.goto('/');

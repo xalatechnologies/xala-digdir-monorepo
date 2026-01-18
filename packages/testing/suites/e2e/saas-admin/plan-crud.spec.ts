@@ -1,3 +1,4 @@
+import { setupMockApi } from '../../../mocks/api-server.mock';
 /**
  * SaaS Admin - Plan CRUD E2E Tests
  * Tests for subscription plan creation, viewing, and management
@@ -6,6 +7,7 @@
 import { test, expect } from '@playwright/test';
 
 test.describe('Plan Management', () => {
+  setupMockApi();
   test.beforeEach(async ({ page }) => {
     // Login as SaaS Admin
     await page.goto('/login');
@@ -16,6 +18,7 @@ test.describe('Plan Management', () => {
   });
 
   test.describe('Plans List', () => {
+  setupMockApi();
     test('should display plans list page', async ({ page }) => {
       await page.goto('/plans');
       await expect(page.locator('h1')).toContainText('Abonnementsplaner');
@@ -46,6 +49,7 @@ test.describe('Plan Management', () => {
   });
 
   test.describe('Create Plan', () => {
+  setupMockApi();
     test('should navigate to create plan page', async ({ page }) => {
       await page.goto('/plans');
       await page.click('[data-testid="create-plan-button"]');
@@ -98,6 +102,7 @@ test.describe('Plan Management', () => {
   });
 
   test.describe('Plan Detail', () => {
+  setupMockApi();
     test('should display plan details', async ({ page }) => {
       await page.goto('/plans');
       await page.click('table tbody tr:first-child [data-testid="view-details"]');
@@ -125,6 +130,7 @@ test.describe('Plan Management', () => {
   });
 
   test.describe('Plan Status', () => {
+  setupMockApi();
     test('should change plan to inactive', async ({ page }) => {
       await page.goto('/plans');
       await page.click('table tbody tr:first-child [data-testid="actions-menu"]');

@@ -1,3 +1,4 @@
+import { setupMockApi } from '../../mocks/api-server.mock';
 /**
  * E2E Tests: SaaS Admin Data Page Components
  * 
@@ -57,6 +58,7 @@ async function waitForPageReady(page: Page) {
 // ============================================================================
 
 test.describe('SaaS Admin - Status Tabs Filtering', () => {
+  setupMockApi();
   test.beforeEach(async ({ page }) => {
     await page.goto(`${SAAS_ADMIN_URL}/login`);
     await mockSaasAdminAuth(page);
@@ -132,6 +134,7 @@ test.describe('SaaS Admin - Status Tabs Filtering', () => {
 // ============================================================================
 
 test.describe('SaaS Admin - Filter Chips', () => {
+  setupMockApi();
   test.beforeEach(async ({ page }) => {
     await page.goto(`${SAAS_ADMIN_URL}/login`);
     await mockSaasAdminAuth(page);
@@ -206,6 +209,7 @@ test.describe('SaaS Admin - Filter Chips', () => {
 // ============================================================================
 
 test.describe('SaaS Admin - Empty States', () => {
+  setupMockApi();
   test.beforeEach(async ({ page }) => {
     await page.goto(`${SAAS_ADMIN_URL}/login`);
     await mockSaasAdminAuth(page);
@@ -274,6 +278,7 @@ test.describe('SaaS Admin - Empty States', () => {
 // ============================================================================
 
 test.describe('SaaS Admin - Data Page Header', () => {
+  setupMockApi();
   test.beforeEach(async ({ page }) => {
     await page.goto(`${SAAS_ADMIN_URL}/login`);
     await mockSaasAdminAuth(page);
@@ -304,6 +309,7 @@ test.describe('SaaS Admin - Data Page Header', () => {
 // ============================================================================
 
 test.describe('SaaS Admin - Responsive Design', () => {
+  setupMockApi();
   test.beforeEach(async ({ page }) => {
     await page.goto(`${SAAS_ADMIN_URL}/login`);
     await mockSaasAdminAuth(page);
@@ -368,6 +374,7 @@ test.describe('SaaS Admin - Responsive Design', () => {
 // ============================================================================
 
 test.describe('SaaS Admin - i18n Translations', () => {
+  setupMockApi();
   test.beforeEach(async ({ page }) => {
     await page.goto(`${SAAS_ADMIN_URL}/login`);
     await mockSaasAdminAuth(page);
@@ -424,6 +431,7 @@ test.describe('SaaS Admin - i18n Translations', () => {
 // ============================================================================
 
 test.describe('SaaS Admin - Plans Page Components', () => {
+  setupMockApi();
   test.beforeEach(async ({ page }) => {
     await page.goto(`${SAAS_ADMIN_URL}/login`);
     await mockSaasAdminAuth(page);

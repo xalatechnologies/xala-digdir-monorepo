@@ -1,3 +1,4 @@
+import { setupMockApi } from '../../../mocks/api-server.mock';
 /**
  * E2E Test: Canonical Booking Approval Flow
  *
@@ -27,6 +28,7 @@ import { NotificationCenterPage } from '../../helpers/pages/NotificationCenterPa
 import { getTestBookingData, BOOKING_STATES, APPROVAL_REASON } from '../../fixtures/bookings.fixture';
 
 test.describe('Canonical Booking Approval Flow', () => {
+  setupMockApi();
   let bookingId: string;
   let bookingTitle: string;
   let bookingData: ReturnType<typeof getTestBookingData>;

@@ -1,3 +1,4 @@
+import { setupMockApi } from '../../../../mocks/api-server.mock';
 import { test, expect } from '../fixtures/qa-expert.fixture';
 import { config } from '../config/backoffice.config';
 import {
@@ -14,6 +15,7 @@ import {
  */
 
 test.describe('Help (Hjelp) E2E', () => {
+  setupMockApi();
   test.use({ storageState: 'tests/e2e/backoffice/.auth/admin.json' });
 
   test.beforeEach(async ({ page }) => {
@@ -26,6 +28,7 @@ test.describe('Help (Hjelp) E2E', () => {
   });
 
   test.describe('H1. Blur-Eye Structure', () => {
+  setupMockApi();
     test('H1.1 Page has clear header', async ({ page }) => {
       const title = page.locator('h1, h2, [data-testid="page-title"]').first();
       await expect(title).toBeVisible({ timeout: 10000 });
@@ -56,6 +59,7 @@ test.describe('Help (Hjelp) E2E', () => {
   });
 
   test.describe('H2. Content Navigation', () => {
+  setupMockApi();
     test('H2.1 Table of contents or navigation exists', async ({ page }) => {
       const toc = page.locator(
         '[data-testid*="toc"], [class*="table-of-contents"], nav[class*="help"], [class*="sidebar"]'
@@ -82,6 +86,7 @@ test.describe('Help (Hjelp) E2E', () => {
   });
 
   test.describe('H3. Search Functionality', () => {
+  setupMockApi();
     test('H3.1 Search input exists', async ({ page }) => {
       const search = page.locator(
         'input[type="search"], input[placeholder*="søk" i], [data-testid*="search"]'
@@ -107,6 +112,7 @@ test.describe('Help (Hjelp) E2E', () => {
   });
 
   test.describe('H4. Runtime Stability', () => {
+  setupMockApi();
     test('H4.1 No runtime errors', async ({ page, evidence }) => {
       expect(evidence.hasPageErrors()).toBe(false);
       expect(evidence.has5xxResponses()).toBe(false);

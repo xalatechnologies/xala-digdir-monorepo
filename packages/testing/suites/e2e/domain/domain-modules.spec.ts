@@ -1,3 +1,4 @@
+import { setupMockApi } from '../../../mocks/api-server.mock';
 /**
  * Domain Module E2E Tests
  *
@@ -14,6 +15,7 @@ import { test, expect } from '@playwright/test';
 // =============================================================================
 
 test.describe('Domain Module Registry', () => {
+  setupMockApi();
   test('should have BOOKING_RENTALS module registered', async ({ request }) => {
     const response = await request.get('/api/modules/catalog');
     expect(response.ok()).toBeTruthy();
@@ -54,7 +56,9 @@ test.describe('Domain Module Registry', () => {
 // =============================================================================
 
 test.describe('Domain Navigation', () => {
+  setupMockApi();
   test.describe('Backoffice Navigation', () => {
+  setupMockApi();
     test('should show rental objects link when module enabled', async ({
       page,
     }) => {
@@ -101,6 +105,7 @@ test.describe('Domain Navigation', () => {
   });
 
   test.describe('MinSide Navigation', () => {
+  setupMockApi();
     test('should show my bookings link', async ({ page }) => {
       await page.goto('/minside');
 
@@ -134,6 +139,7 @@ test.describe('Domain Navigation', () => {
 // =============================================================================
 
 test.describe('Adapter Fallback Behavior', () => {
+  setupMockApi();
   test('API should continue working when policy engine disabled', async ({
     request,
   }) => {
@@ -169,6 +175,7 @@ test.describe('Adapter Fallback Behavior', () => {
 // =============================================================================
 
 test.describe('Domain Group Status', () => {
+  setupMockApi();
   test('BOOKING_RENTALS domain should be active by default', async ({
     request,
   }) => {
@@ -193,6 +200,7 @@ test.describe('Domain Group Status', () => {
 // =============================================================================
 
 test.describe('Zero Breaking Changes', () => {
+  setupMockApi();
   test('existing rental objects endpoint should work', async ({ request }) => {
     const response = await request.get('/api/rental-objects');
     expect(response.ok()).toBeTruthy();

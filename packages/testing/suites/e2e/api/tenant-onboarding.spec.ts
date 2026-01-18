@@ -1,3 +1,4 @@
+import { setupMockApi } from '../../../mocks/api-server.mock';
 /**
  * Tenant Onboarding Journey E2E Test
  * Full flow: Create tenant → Invite users → Assign roles → Verify
@@ -7,6 +8,7 @@ import { test, expect } from '@playwright/test';
 const API_URL = 'http://localhost:4000';
 
 test.describe('Tenant Onboarding Journey', () => {
+  setupMockApi();
   let tenantId: string;
   let userId: string;
 

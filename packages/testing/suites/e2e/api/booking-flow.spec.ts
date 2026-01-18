@@ -1,3 +1,4 @@
+import { setupMockApi } from '../../../mocks/api-server.mock';
 /**
  * Booking Flow Journey E2E Test
  * Full flow: Browse listings → Check availability → Create booking → Confirm → Complete
@@ -8,6 +9,7 @@ const API_URL = 'http://localhost:4000';
 const TENANT_ID = 'test-tenant';
 
 test.describe('Booking Flow Journey', () => {
+  setupMockApi();
   let listingId: string;
   let bookingId: string;
 

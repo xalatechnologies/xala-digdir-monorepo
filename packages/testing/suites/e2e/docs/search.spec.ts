@@ -1,3 +1,4 @@
+import { setupMockApi } from '../../../mocks/api-server.mock';
 /**
  * Docs Learning E2E Tests - Search
  *
@@ -13,6 +14,7 @@ import { test, expect } from '@playwright/test';
 const DOCS_URL = process.env.DOCS_URL || 'http://localhost:5178/docs';
 
 test.describe('Docs Search', () => {
+  setupMockApi();
   test('Search page loads correctly', async ({ page }) => {
     await page.goto(`${DOCS_URL}/search`);
 
@@ -73,6 +75,7 @@ test.describe('Docs Search', () => {
 });
 
 test.describe('Header Search', () => {
+  setupMockApi();
   test('Header search redirects to search page', async ({ page }) => {
     await page.goto(DOCS_URL);
 

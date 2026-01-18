@@ -1,3 +1,4 @@
+import { setupMockApi } from '../../../../mocks/api-server.mock';
 import { test, expect } from '../fixtures/qa-expert.fixture';
 import { config } from '../config/backoffice.config';
 import {
@@ -17,9 +18,11 @@ import {
  */
 
 test.describe('Tenant Settings E2E', () => {
+  setupMockApi();
   test.use({ storageState: 'tests/e2e/backoffice/.auth/admin.json' });
 
   test.describe('TS1. Features Page (/tenant/features)', () => {
+  setupMockApi();
     test.beforeEach(async ({ page }) => {
       await page.goto('/tenant/features', { waitUntil: 'domcontentloaded' });
       await page.waitForTimeout(3000);
@@ -74,6 +77,7 @@ test.describe('Tenant Settings E2E', () => {
   });
 
   test.describe('TS2. Platform Settings Page (/tenant/settings)', () => {
+  setupMockApi();
     test.beforeEach(async ({ page }) => {
       await page.goto('/tenant/settings', { waitUntil: 'domcontentloaded' });
       await page.waitForTimeout(3000);
@@ -117,6 +121,7 @@ test.describe('Tenant Settings E2E', () => {
   });
 
   test.describe('TS3. Branding Page (/tenant/branding)', () => {
+  setupMockApi();
     test.beforeEach(async ({ page }) => {
       await page.goto('/tenant/branding', { waitUntil: 'domcontentloaded' });
       await page.waitForTimeout(3000);
@@ -159,6 +164,7 @@ test.describe('Tenant Settings E2E', () => {
   });
 
   test.describe('TS4. System Log Page (/tenant/audit-log)', () => {
+  setupMockApi();
     test.beforeEach(async ({ page }) => {
       await page.goto('/tenant/audit-log', { waitUntil: 'domcontentloaded' });
       await page.waitForTimeout(3000);
@@ -220,6 +226,7 @@ test.describe('Tenant Settings E2E', () => {
   });
 
   test.describe('TS5. No Forbidden Terminology', () => {
+  setupMockApi();
     const tenantPaths = ['/tenant/features', '/tenant/settings', '/tenant/branding', '/tenant/audit-log'];
     
     for (const path of tenantPaths) {

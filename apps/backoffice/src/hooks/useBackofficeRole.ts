@@ -18,7 +18,6 @@
  */
 
 import { useBackofficeRoleContext } from '../providers/BackofficeRoleProvider';
-import { useT } from '@xala/i18n';
 
 // =============================================================================
 // Re-exports for convenience
@@ -88,10 +87,22 @@ export type {
  *     // Navigate to role selection
  *   };
  *
- *   return <button onClick={handleSwitch}>{t('common.switch_role')}</button>;
+ *   return <button onClick={handleSwitch}>Switch Role</button>;
  * }
  * ```
- t('common.export_function_usebackofficerole_const') ```tsx
+ */
+export function useBackofficeRole() {
+  return useBackofficeRoleContext();
+}
+
+/**
+ * Helper hook to check if the user needs to select a role.
+ * Useful for routing guards.
+ *
+ * @returns {boolean} True if user needs to select a role
+ *
+ * @example
+ * ```tsx
  * function App() {
  *   const needsRoleSelection = useNeedsRoleSelection();
  *

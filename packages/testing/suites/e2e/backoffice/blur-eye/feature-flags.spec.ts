@@ -1,3 +1,4 @@
+import { setupMockApi } from '../../../../mocks/api-server.mock';
 import { test, expect } from '../fixtures/qa-expert.fixture';
 import { config } from '../config/backoffice.config';
 
@@ -56,9 +57,11 @@ const TRACKED_FLAGS: FeatureFlag[] = [
 ];
 
 test.describe('C. Feature Flags Integration', () => {
+  setupMockApi();
   test.use({ storageState: 'tests/e2e/backoffice/.auth/admin.json' });
 
   test.describe('C1. Capability Snapshot', () => {
+  setupMockApi();
     test('C1.1 Capture current feature flags state', async ({ page }) => {
       await page.goto('/', { waitUntil: 'domcontentloaded' });
       await page.waitForTimeout(3000);
@@ -130,6 +133,7 @@ test.describe('C. Feature Flags Integration', () => {
   });
 
   test.describe('C2. Sidebar Flag Visibility', () => {
+  setupMockApi();
     test.beforeEach(async ({ page }) => {
       await page.goto('/', { waitUntil: 'domcontentloaded' });
       await page.waitForTimeout(3000);
@@ -191,6 +195,7 @@ test.describe('C. Feature Flags Integration', () => {
   });
 
   test.describe('C3. Button/Action Flag Visibility', () => {
+  setupMockApi();
     test.beforeEach(async ({ page }) => {
       await page.goto('/rental-objects', { waitUntil: 'domcontentloaded' });
       await page.waitForTimeout(3000);
@@ -251,6 +256,7 @@ test.describe('C. Feature Flags Integration', () => {
   });
 
   test.describe('C4. Direct URL Blocking', () => {
+  setupMockApi();
     test.beforeEach(async ({ page }) => {
       await page.goto('/', { waitUntil: 'domcontentloaded' });
       await page.waitForTimeout(2000);
@@ -293,6 +299,7 @@ test.describe('C. Feature Flags Integration', () => {
   });
 
   test.describe('C5. Flag Reload Verification', () => {
+  setupMockApi();
     test('C5.1 Flags persist after page reload', async ({ page }) => {
       await page.goto('/', { waitUntil: 'domcontentloaded' });
       await page.waitForTimeout(2000);

@@ -1,3 +1,4 @@
+import { setupMockApi } from '../../mocks/api-server.mock';
 /**
  * Web App Login Flow - Manual Verification Test
  *
@@ -10,6 +11,7 @@ import { test, expect } from '@playwright/test';
 const WEB_URL = process.env.WEB_URL || 'http://localhost:5173';
 
 test.describe('Web Login Flow - Manual Verification', () => {
+  setupMockApi();
   test('MANUAL-001: Open browser and wait for manual testing', async ({ page }) => {
     console.log('\n' + '='.repeat(80));
     console.log('MANUAL TEST MODE');

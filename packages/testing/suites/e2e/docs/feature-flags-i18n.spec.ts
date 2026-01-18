@@ -1,3 +1,4 @@
+import { setupMockApi } from '../../../mocks/api-server.mock';
 /**
  * Docs Learning E2E Tests - Feature Flags
  *
@@ -12,6 +13,7 @@ import { test, expect } from '@playwright/test';
 const DOCS_URL = process.env.DOCS_URL || 'http://localhost:5178/docs';
 
 test.describe('Docs Feature Flags', () => {
+  setupMockApi();
   test('All sections visible with default flags', async ({ page }) => {
     await page.goto(DOCS_URL);
 
@@ -54,6 +56,7 @@ test.describe('Docs Feature Flags', () => {
 });
 
 test.describe('Docs i18n', () => {
+  setupMockApi();
   test('Language toggle changes content', async ({ page }) => {
     await page.goto(DOCS_URL);
 

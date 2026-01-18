@@ -1,3 +1,4 @@
+import { setupMockApi } from '../../mocks/api-server.mock';
 /**
  * E2E Tests: Tenant Admin Data Page Components
  * 
@@ -56,6 +57,7 @@ async function waitForPageReady(page: Page) {
 // ============================================================================
 
 test.describe('Tenant Admin - Users Page Empty States', () => {
+  setupMockApi();
   test.beforeEach(async ({ page }) => {
     await page.goto(`${TENANT_ADMIN_URL}/login`);
     await mockTenantAdminAuth(page);
@@ -101,6 +103,7 @@ test.describe('Tenant Admin - Users Page Empty States', () => {
 // ============================================================================
 
 test.describe('Tenant Admin - Data Page Header', () => {
+  setupMockApi();
   test.beforeEach(async ({ page }) => {
     await page.goto(`${TENANT_ADMIN_URL}/login`);
     await mockTenantAdminAuth(page);
@@ -131,6 +134,7 @@ test.describe('Tenant Admin - Data Page Header', () => {
 // ============================================================================
 
 test.describe('Tenant Admin - Feature Flags Empty States', () => {
+  setupMockApi();
   test.beforeEach(async ({ page }) => {
     await page.goto(`${TENANT_ADMIN_URL}/login`);
     await mockTenantAdminAuth(page);
@@ -161,6 +165,7 @@ test.describe('Tenant Admin - Feature Flags Empty States', () => {
 // ============================================================================
 
 test.describe('Tenant Admin - Responsive Design', () => {
+  setupMockApi();
   test.beforeEach(async ({ page }) => {
     await page.goto(`${TENANT_ADMIN_URL}/login`);
     await mockTenantAdminAuth(page);
@@ -203,6 +208,7 @@ test.describe('Tenant Admin - Responsive Design', () => {
 // ============================================================================
 
 test.describe('Tenant Admin - i18n Translations', () => {
+  setupMockApi();
   test.beforeEach(async ({ page }) => {
     await page.goto(`${TENANT_ADMIN_URL}/login`);
     await mockTenantAdminAuth(page);

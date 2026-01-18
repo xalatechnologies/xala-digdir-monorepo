@@ -1,3 +1,4 @@
+import { setupMockApi } from '../../../mocks/api-server.mock';
 /**
  * Case Handler Scope Enforcement E2E Test
  * Full flow: Create case handler scope → Login as Case Handler → Approve scoped booking → Fail on non-scoped
@@ -29,6 +30,7 @@ const TEST_ADMIN = {
 };
 
 test.describe('Case Handler Scope Enforcement', () => {
+  setupMockApi();
   let scopedListingId: string;
   let nonScopedListingId: string;
   let scopedBookingId: string;
@@ -355,6 +357,7 @@ test.describe('Case Handler Scope Enforcement', () => {
 });
 
 test.describe('Case Handler Scope Edge Cases', () => {
+  setupMockApi();
   test('User without case handler role cannot approve bookings', async ({ request }) => {
     // Regular user should not be able to approve
     const response = await request.post(`${API_URL}/api/bookings/some-booking-id/approve`, {
@@ -392,6 +395,7 @@ test.describe('Case Handler Scope Edge Cases', () => {
 });
 
 test.describe('RFC7807 Error Response Verification', () => {
+  setupMockApi();
   test('403 response includes Problem Details fields', async ({ request }) => {
     // Attempt an action without proper scope to verify error format
     const response = await request.post(`${API_URL}/api/bookings/non-existent-id/approve`, {

@@ -1,3 +1,4 @@
+import { setupMockApi } from '../../../mocks/api-server.mock';
 /**
  * Docs Learning E2E Tests - TOC & Navigation
  *
@@ -13,6 +14,7 @@ import { test, expect } from '@playwright/test';
 const DOCS_URL = process.env.DOCS_URL || 'http://localhost:5178/docs';
 
 test.describe('Docs TOC Component', () => {
+  setupMockApi();
   test('TOC displays headings from article content', async ({ page }) => {
     await page.goto(`${DOCS_URL}/booking/create-booking`);
 
@@ -70,6 +72,7 @@ test.describe('Docs TOC Component', () => {
 });
 
 test.describe('Docs Navigation', () => {
+  setupMockApi();
   test('Sidebar navigation works correctly', async ({ page }) => {
     await page.goto(DOCS_URL);
 

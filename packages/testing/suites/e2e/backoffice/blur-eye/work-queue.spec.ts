@@ -1,3 +1,4 @@
+import { setupMockApi } from '../../../../mocks/api-server.mock';
 import { test, expect } from '../fixtures/qa-expert.fixture';
 import { config } from '../config/backoffice.config';
 import {
@@ -17,6 +18,7 @@ import {
  */
 
 test.describe('Work Queue (Arbeidskø) E2E', () => {
+  setupMockApi();
   test.use({ storageState: 'tests/e2e/backoffice/.auth/admin.json' });
 
   test.beforeEach(async ({ page }) => {
@@ -29,6 +31,7 @@ test.describe('Work Queue (Arbeidskø) E2E', () => {
   });
 
   test.describe('WQ1. Blur-Eye Structure', () => {
+  setupMockApi();
     test('WQ1.1 Page has clear header', async ({ page }) => {
       const title = page.locator('h1, h2, [data-testid="page-title"]').first();
       await expect(title).toBeVisible({ timeout: 10000 });
@@ -78,6 +81,7 @@ test.describe('Work Queue (Arbeidskø) E2E', () => {
   });
 
   test.describe('WQ2. Approve/Deny Actions', () => {
+  setupMockApi();
     test('WQ2.1 Queue items have action buttons', async ({ page }) => {
       const firstItem = page.locator('table tbody tr, [data-testid*="queue-item"]').first();
       
@@ -147,6 +151,7 @@ test.describe('Work Queue (Arbeidskø) E2E', () => {
   });
 
   test.describe('WQ3. Queue Item Details', () => {
+  setupMockApi();
     test('WQ3.1 Can view item details', async ({ page }) => {
       const viewBtn = page.locator(
         'button:has-text("Vis"), button:has-text("Detaljer"), a[href*="detail"], [data-testid*="view"]'
@@ -173,6 +178,7 @@ test.describe('Work Queue (Arbeidskø) E2E', () => {
   });
 
   test.describe('WQ4. Runtime Stability', () => {
+  setupMockApi();
     test('WQ4.1 No runtime errors', async ({ page, evidence }) => {
       expect(evidence.hasPageErrors()).toBe(false);
       expect(evidence.has5xxResponses()).toBe(false);

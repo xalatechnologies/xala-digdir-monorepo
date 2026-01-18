@@ -1,3 +1,4 @@
+import { setupMockApi } from '../../../mocks/api-server.mock';
 /**
  * SaaS Admin Accessibility Tests
  *
@@ -52,6 +53,7 @@ async function waitForPageReady(page: Page) {
 // ============================================================================
 
 test.describe('SaaS Admin - WCAG 2.1 AA Compliance', () => {
+  setupMockApi();
   test.beforeEach(async ({ page }) => {
     await page.goto(`${SAAS_ADMIN_URL}/login`);
     await mockSaasAdminAuth(page);
@@ -118,6 +120,7 @@ test.describe('SaaS Admin - WCAG 2.1 AA Compliance', () => {
 // ============================================================================
 
 test.describe('SaaS Admin - Keyboard Navigation', () => {
+  setupMockApi();
   test.beforeEach(async ({ page }) => {
     await page.goto(`${SAAS_ADMIN_URL}/login`);
     await mockSaasAdminAuth(page);
@@ -189,6 +192,7 @@ test.describe('SaaS Admin - Keyboard Navigation', () => {
 // ============================================================================
 
 test.describe('SaaS Admin - Focus Management', () => {
+  setupMockApi();
   test.beforeEach(async ({ page }) => {
     await page.goto(`${SAAS_ADMIN_URL}/login`);
     await mockSaasAdminAuth(page);
@@ -225,6 +229,7 @@ test.describe('SaaS Admin - Focus Management', () => {
 // ============================================================================
 
 test.describe('SaaS Admin - Color Contrast', () => {
+  setupMockApi();
   test.beforeEach(async ({ page }) => {
     await page.goto(`${SAAS_ADMIN_URL}/login`);
     await mockSaasAdminAuth(page);
@@ -262,6 +267,7 @@ test.describe('SaaS Admin - Color Contrast', () => {
 // ============================================================================
 
 test.describe('SaaS Admin - Screen Reader Support', () => {
+  setupMockApi();
   test.beforeEach(async ({ page }) => {
     await page.goto(`${SAAS_ADMIN_URL}/login`);
     await mockSaasAdminAuth(page);

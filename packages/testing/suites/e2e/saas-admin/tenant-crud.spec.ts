@@ -1,3 +1,4 @@
+import { setupMockApi } from '../../../mocks/api-server.mock';
 /**
  * SaaS Admin - Tenant CRUD E2E Tests
  * Tests for tenant creation, editing, and management flows
@@ -6,6 +7,7 @@
 import { test, expect } from '@playwright/test';
 
 test.describe('Tenant Management', () => {
+  setupMockApi();
   test.beforeEach(async ({ page }) => {
     // Login as SaaS Admin
     await page.goto('/login');
@@ -16,6 +18,7 @@ test.describe('Tenant Management', () => {
   });
 
   test.describe('Tenant List', () => {
+  setupMockApi();
     test('should display tenants list page', async ({ page }) => {
       await page.goto('/tenants');
       await expect(page.locator('h1')).toContainText('Tenanter');
@@ -39,6 +42,7 @@ test.describe('Tenant Management', () => {
   });
 
   test.describe('Create Tenant', () => {
+  setupMockApi();
     test('should navigate to create tenant page', async ({ page }) => {
       await page.goto('/tenants');
       await page.click('[data-testid="create-tenant-button"]');
@@ -70,6 +74,7 @@ test.describe('Tenant Management', () => {
   });
 
   test.describe('Edit Tenant', () => {
+  setupMockApi();
     test('should navigate to edit page from detail', async ({ page }) => {
       await page.goto('/tenants');
       await page.click('table tbody tr:first-child [data-testid="view-details"]');
@@ -97,6 +102,7 @@ test.describe('Tenant Management', () => {
   });
 
   test.describe('Tenant Detail', () => {
+  setupMockApi();
     test('should display tenant details', async ({ page }) => {
       await page.goto('/tenants');
       await page.click('table tbody tr:first-child [data-testid="view-details"]');
@@ -123,6 +129,7 @@ test.describe('Tenant Management', () => {
   });
 
   test.describe('Suspend/Reactivate', () => {
+  setupMockApi();
     test('should suspend active tenant', async ({ page }) => {
       await page.goto('/tenants');
       await page.click('table tbody tr:first-child [data-testid="view-details"]');

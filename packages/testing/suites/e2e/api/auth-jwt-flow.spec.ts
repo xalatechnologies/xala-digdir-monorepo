@@ -1,3 +1,4 @@
+import { setupMockApi } from '../../../mocks/api-server.mock';
 /**
  * JWT Authentication Flow E2E Test (Playwright)
  *
@@ -12,6 +13,7 @@ import { test, expect } from '@playwright/test';
 const API_URL = process.env.API_URL || 'http://localhost:4000';
 
 test.describe('JWT Authentication Flow', () => {
+  setupMockApi();
   let authToken: string;
 
   test('Step 1: Login returns valid JWT token', async ({ request }) => {

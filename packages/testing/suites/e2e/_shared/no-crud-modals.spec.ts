@@ -1,3 +1,4 @@
+import { setupMockApi } from '../../../mocks/api-server.mock';
 /**
  * No CRUD Modals Gate Test
  * Verifies that all create/edit operations use dedicated pages, not modals
@@ -8,8 +9,10 @@
 import { test, expect } from '@playwright/test';
 
 test.describe('GATE-G2: No CRUD Modals', () => {
+  setupMockApi();
   
   test.describe('Backoffice', () => {
+  setupMockApi();
     test('rental object creation uses dedicated page', async ({ page }) => {
       await page.goto('/backoffice/rental-objects');
       
@@ -72,6 +75,7 @@ test.describe('GATE-G2: No CRUD Modals', () => {
   });
 
   test.describe('MinSide', () => {
+  setupMockApi();
     test('organization creation uses dedicated page', async ({ page }) => {
       await page.goto('/minside/organizations');
       
@@ -94,6 +98,7 @@ test.describe('GATE-G2: No CRUD Modals', () => {
   });
 
   test.describe('Allowed Modals (Exceptions)', () => {
+  setupMockApi();
     test('confirmation dialogs ARE allowed', async ({ page }) => {
       await page.goto('/backoffice/rental-objects');
       

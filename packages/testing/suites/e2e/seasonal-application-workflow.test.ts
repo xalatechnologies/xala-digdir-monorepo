@@ -17,6 +17,7 @@
  */
 
 import { describe, it, expect, beforeAll, afterAll } from 'vitest';
+import { setupMockApi } from '../../mocks/api-server.mock';
 
 const API_URL = process.env.API_URL || 'http://localhost:3002';
 const TENANT_ID = process.env.TENANT_ID || 'f47ac10b-58cc-4372-a567-0e02b2c3d479';
@@ -37,10 +38,12 @@ let testPriorityRuleId1: string;
 let testPriorityRuleId2: string;
 
 describe('Seasonal Application Workflow - End-to-End', () => {
+  setupMockApi();
   // =========================================================================
   // STEP 1: Admin creates new season with application window
   // =========================================================================
   describe('Step 1: Create Season with Application Window', () => {
+  setupMockApi();
     it('should create a new season with application dates', async () => {
       const seasonData = {
         name: 'E2E Test Season - Vår 2026',
@@ -94,6 +97,7 @@ describe('Seasonal Application Workflow - End-to-End', () => {
   // STEP 2: Admin configures priority rules
   // =========================================================================
   describe('Step 2: Configure Priority Rules', () => {
+  setupMockApi();
     it('should create youth priority rule', async () => {
       const ruleData = {
         seasonId: testSeasonId,
@@ -173,6 +177,7 @@ describe('Seasonal Application Workflow - End-to-End', () => {
   // STEP 3: Organization submits applications
   // =========================================================================
   describe('Step 3: Submit Season Applications', () => {
+  setupMockApi();
     // First, we need to get or create test organizations and listings
     beforeAll(async () => {
       // Get an existing listing (assuming one exists)
@@ -282,6 +287,7 @@ describe('Seasonal Application Workflow - End-to-End', () => {
   // STEP 4: System detects conflicts
   // =========================================================================
   describe('Step 4: Detect Application Conflicts', () => {
+  setupMockApi();
     it('should detect conflicts between applications', async () => {
       const res = await fetch(`${API_URL}/api/season-applications/conflicts?seasonId=${testSeasonId}`, {
         headers,
@@ -323,6 +329,7 @@ describe('Seasonal Application Workflow - End-to-End', () => {
   // STEP 5: Admin reviews applications with priority order
   // =========================================================================
   describe('Step 5: Review Applications by Priority', () => {
+  setupMockApi();
     it('should retrieve applications sorted by priority', async () => {
       const res = await fetch(`${API_URL}/api/season-applications/priority?seasonId=${testSeasonId}`, {
         headers,
@@ -367,6 +374,7 @@ describe('Seasonal Application Workflow - End-to-End', () => {
   // STEP 6: System generates allocation proposals
   // =========================================================================
   describe('Step 6: Generate Allocation Proposals', () => {
+  setupMockApi();
     it('should generate allocation proposal for the season', async () => {
       const res = await fetch(`${API_URL}/api/season-applications/allocation-proposal?seasonId=${testSeasonId}`, {
         headers,
@@ -416,6 +424,7 @@ describe('Seasonal Application Workflow - End-to-End', () => {
   // STEP 7: Admin approves applications
   // =========================================================================
   describe('Step 7: Approve Applications', () => {
+  setupMockApi();
     it('should approve the high-priority youth application', async () => {
       const res = await fetch(`${API_URL}/api/season-applications/${testApplicationId1}/approve`, {
         method: 'PUT',
@@ -453,6 +462,7 @@ describe('Seasonal Application Workflow - End-to-End', () => {
   // STEP 8: Admin allocates approved applications
   // =========================================================================
   describe('Step 8: Allocate Approved Applications', () => {
+  setupMockApi();
     it('should allocate approved application and generate recurring bookings', async () => {
       const res = await fetch(`${API_URL}/api/season-applications/${testApplicationId1}/allocate`, {
         method: 'POST',
@@ -492,6 +502,7 @@ describe('Seasonal Application Workflow - End-to-End', () => {
   // STEP 9: Admin finalizes season allocations
   // =========================================================================
   describe('Step 9: Finalize Season Allocations', () => {
+  setupMockApi();
     it('should finalize all season allocations', async () => {
       const res = await fetch(`${API_URL}/api/seasons/${testSeasonId}/finalize-allocations`, {
         method: 'POST',
@@ -523,6 +534,7 @@ describe('Seasonal Application Workflow - End-to-End', () => {
   // STEP 10: Verify notifications sent
   // =========================================================================
   describe('Step 10: Verify Notification System', () => {
+  setupMockApi();
     it('should have sent notification for approved application', async () => {
       // Note: This verifies that the notification system was triggered
       // In a real system, we would check a notifications table or queue
@@ -552,6 +564,7 @@ describe('Seasonal Application Workflow - End-to-End', () => {
   // STEP 11: Rejected applicant submits appeal
   // =========================================================================
   describe('Step 11: Submit Appeal for Rejected Application', () => {
+  setupMockApi();
     it('should submit appeal for rejected application', async () => {
       const appealData = {
         appealReason: 'Vi har ikke andre tilgjengelige treningstider og håper på gjennomgang.',
@@ -596,6 +609,7 @@ describe('Seasonal Application Workflow - End-to-End', () => {
   // STEP 12: Admin processes appeal
   // =========================================================================
   describe('Step 12: Process Appeal', () => {
+  setupMockApi();
     it('should approve appeal and change application status', async () => {
       const res = await fetch(`${API_URL}/api/season-applications/${testApplicationId2}/appeal/approve`, {
         method: 'PUT',

@@ -1,3 +1,4 @@
+import { setupMockApi } from '../../../../mocks/api-server.mock';
 import { test, expect } from '../fixtures/qa-expert.fixture';
 import { config } from '../config/backoffice.config';
 import {
@@ -17,6 +18,7 @@ import {
  */
 
 test.describe('Audit Timeline E2E', () => {
+  setupMockApi();
   test.use({ storageState: 'tests/e2e/backoffice/.auth/admin.json' });
 
   test.beforeEach(async ({ page }) => {
@@ -29,6 +31,7 @@ test.describe('Audit Timeline E2E', () => {
   });
 
   test.describe('AT1. Blur-Eye Structure', () => {
+  setupMockApi();
     test('AT1.1 Page has clear header', async ({ page }) => {
       const title = page.locator('h1, h2, [data-testid="page-title"]').first();
       await expect(title).toBeVisible({ timeout: 10000 });
@@ -67,6 +70,7 @@ test.describe('Audit Timeline E2E', () => {
   });
 
   test.describe('AT2. Timeline Navigation', () => {
+  setupMockApi();
     test('AT2.1 Can load more entries', async ({ page }) => {
       const loadMoreBtn = page.locator(
         'button:has-text("Last mer"), button:has-text("Load more"), [data-testid*="load-more"]'
@@ -96,6 +100,7 @@ test.describe('Audit Timeline E2E', () => {
   });
 
   test.describe('AT3. Entry Details', () => {
+  setupMockApi();
     test('AT3.1 Entry shows key fields', async ({ page }) => {
       const entry = page.locator(
         'table tbody tr, [data-testid*="timeline-entry"], [class*="activity-item"]'
@@ -141,6 +146,7 @@ test.describe('Audit Timeline E2E', () => {
   });
 
   test.describe('AT4. Runtime Stability', () => {
+  setupMockApi();
     test('AT4.1 No runtime errors', async ({ page, evidence }) => {
       expect(evidence.hasPageErrors()).toBe(false);
       expect(evidence.has5xxResponses()).toBe(false);

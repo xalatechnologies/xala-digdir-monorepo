@@ -1,3 +1,4 @@
+import { setupMockApi } from '../../../../mocks/api-server.mock';
 import { test, expect } from '../fixtures/qa-expert.fixture';
 import { config } from '../config/backoffice.config';
 import {
@@ -17,6 +18,7 @@ import {
  */
 
 test.describe('Seasons (Sesonger) E2E', () => {
+  setupMockApi();
   test.use({ storageState: 'tests/e2e/backoffice/.auth/admin.json' });
 
   test.beforeEach(async ({ page }) => {
@@ -29,6 +31,7 @@ test.describe('Seasons (Sesonger) E2E', () => {
   });
 
   test.describe('S1. Blur-Eye Structure', () => {
+  setupMockApi();
     test('S1.1 Page has clear header', async ({ page }) => {
       const moduleConfig = config.modules.seasons;
       const result = await assertBlurEyeListView(page, {
@@ -70,6 +73,7 @@ test.describe('Seasons (Sesonger) E2E', () => {
   });
 
   test.describe('S2. Season CRUD', () => {
+  setupMockApi();
     test('S2.1 Can open create season form', async ({ page }) => {
       const addBtn = page.locator(
         'button:has-text("Legg til"), button:has-text("Ny"), a[href*="new"]'
@@ -123,6 +127,7 @@ test.describe('Seasons (Sesonger) E2E', () => {
   });
 
   test.describe('S3. Date Range Validation', () => {
+  setupMockApi();
     test('S3.1 Season has date fields', async ({ page }) => {
       const addBtn = page.locator('button:has-text("Legg til"), button:has-text("Ny")').first();
       
@@ -147,6 +152,7 @@ test.describe('Seasons (Sesonger) E2E', () => {
   });
 
   test.describe('S4. Runtime Stability', () => {
+  setupMockApi();
     test('S4.1 No runtime errors', async ({ page, evidence }) => {
       expect(evidence.hasPageErrors()).toBe(false);
       expect(evidence.has5xxResponses()).toBe(false);

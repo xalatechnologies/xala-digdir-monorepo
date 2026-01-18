@@ -1,3 +1,4 @@
+import { setupMockApi } from '../../../../mocks/api-server.mock';
 import { test, expect } from '../fixtures/qa-expert.fixture';
 import { config } from '../config/backoffice.config';
 import {
@@ -15,6 +16,7 @@ import {
  */
 
 test.describe('Economy Invoices (Fakturaer) E2E', () => {
+  setupMockApi();
   test.use({ storageState: 'tests/e2e/backoffice/.auth/admin.json' });
 
   test.beforeEach(async ({ page }) => {
@@ -27,6 +29,7 @@ test.describe('Economy Invoices (Fakturaer) E2E', () => {
   });
 
   test.describe('E1. Blur-Eye Structure', () => {
+  setupMockApi();
     test('E1.1 Page has clear header', async ({ page }) => {
       const title = page.locator('h1, h2, [data-testid="page-title"]').first();
       await expect(title).toBeVisible({ timeout: 10000 });
@@ -65,6 +68,7 @@ test.describe('Economy Invoices (Fakturaer) E2E', () => {
   });
 
   test.describe('E2. Invoice List Behavior', () => {
+  setupMockApi();
     test('E2.1 Search filters invoices', async ({ page }) => {
       const search = page.locator('input[type="search"], input[placeholder*="søk" i]').first();
       
@@ -95,6 +99,7 @@ test.describe('Economy Invoices (Fakturaer) E2E', () => {
   });
 
   test.describe('E3. Export Functionality', () => {
+  setupMockApi();
     test('E3.1 Export buttons exist', async ({ page }) => {
       const exportBtn = page.locator(
         'button:has-text("Eksporter"), button:has-text("Export"), [data-testid*="export"]'
@@ -106,6 +111,7 @@ test.describe('Economy Invoices (Fakturaer) E2E', () => {
   });
 
   test.describe('E4. Feature Flag Visibility', () => {
+  setupMockApi();
     test('E4.1 Economy appears in sidebar when flag ON', async ({ page }) => {
       await page.goto('/');
       await page.waitForTimeout(2000);
@@ -118,6 +124,7 @@ test.describe('Economy Invoices (Fakturaer) E2E', () => {
   });
 
   test.describe('E5. Runtime Stability', () => {
+  setupMockApi();
     test('E5.1 No runtime errors', async ({ page, evidence }) => {
       expect(evidence.hasPageErrors()).toBe(false);
       expect(evidence.has5xxResponses()).toBe(false);

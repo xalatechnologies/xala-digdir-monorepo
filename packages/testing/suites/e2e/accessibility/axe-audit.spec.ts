@@ -1,3 +1,4 @@
+import { setupMockApi } from '../../../mocks/api-server.mock';
 /**
  * WCAG 2.1 Accessibility E2E Tests
  *
@@ -39,6 +40,7 @@ async function runAxeTest(page: any, pageName: string) {
 // =============================================================================
 
 test.describe('Web (Public) Accessibility', () => {
+  setupMockApi();
   test('Home page should pass WCAG 2.1 AA', async ({ page }) => {
     await page.goto(WEB_URL);
     await page.waitForLoadState('networkidle');
@@ -105,6 +107,7 @@ test.describe('Web (Public) Accessibility', () => {
 // =============================================================================
 
 test.describe('Backoffice Accessibility', () => {
+  setupMockApi();
   test('Login page should pass WCAG 2.1 AA', async ({ page }) => {
     await page.goto(BACKOFFICE_URL);
     await page.waitForLoadState('networkidle');
@@ -157,6 +160,7 @@ test.describe('Backoffice Accessibility', () => {
 // =============================================================================
 
 test.describe('MinSide Accessibility', () => {
+  setupMockApi();
   test('Landing page should pass WCAG 2.1 AA', async ({ page }) => {
     await page.goto(MINSIDE_URL);
     await page.waitForLoadState('networkidle');
@@ -176,6 +180,7 @@ test.describe('MinSide Accessibility', () => {
 // =============================================================================
 
 test.describe('Keyboard Navigation', () => {
+  setupMockApi();
   test('Web home should be navigable with keyboard only', async ({ page }) => {
     await page.goto(WEB_URL);
     await page.waitForLoadState('networkidle');
@@ -269,6 +274,7 @@ test.describe('Keyboard Navigation', () => {
 // =============================================================================
 
 test.describe('ARIA Labels', () => {
+  setupMockApi();
   test('Interactive elements should have accessible names', async ({ page }) => {
     await page.goto(WEB_URL);
     await page.waitForLoadState('networkidle');
@@ -322,6 +328,7 @@ test.describe('ARIA Labels', () => {
 // =============================================================================
 
 test.describe('Color Contrast', () => {
+  setupMockApi();
   test('Text should meet WCAG 2.1 AA contrast ratio', async ({ page }) => {
     await page.goto(WEB_URL);
     await page.waitForLoadState('networkidle');

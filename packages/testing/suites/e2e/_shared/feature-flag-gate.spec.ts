@@ -1,3 +1,4 @@
+import { setupMockApi } from '../../../mocks/api-server.mock';
 /**
  * Feature Flag Gate Test
  * Verifies that disabling a module removes it from navigation and access
@@ -8,8 +9,10 @@
 import { test, expect } from '@playwright/test';
 
 test.describe('GATE-G3: Feature Flag Gate Enforcement', () => {
+  setupMockApi();
   
   test.describe('Module Visibility When Enabled', () => {
+  setupMockApi();
     test('SEASONS module shows in navigation when enabled', async ({ page }) => {
       // Login as user with SEASONS enabled
       await page.goto('/backoffice');
@@ -40,6 +43,7 @@ test.describe('GATE-G3: Feature Flag Gate Enforcement', () => {
   });
 
   test.describe('Module Hidden When Disabled', () => {
+  setupMockApi();
     // Note: These tests require a tenant with specific modules disabled
     // Configure test fixtures accordingly
     
@@ -87,6 +91,7 @@ test.describe('GATE-G3: Feature Flag Gate Enforcement', () => {
   });
 
   test.describe('Dynamic Module Toggle', () => {
+  setupMockApi();
     test('navigation updates when module is toggled', async ({ page }) => {
       // This test simulates what happens when admin enables/disables a module
       
@@ -103,6 +108,7 @@ test.describe('GATE-G3: Feature Flag Gate Enforcement', () => {
   });
 
   test.describe('Capability-Gated UI Elements', () => {
+  setupMockApi();
     test('edit button hidden without WRITE capability', async ({ page }) => {
       // Login as read-only user
       await page.goto('/backoffice/rental-objects');

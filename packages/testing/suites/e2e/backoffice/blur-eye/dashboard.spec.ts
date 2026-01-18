@@ -1,3 +1,4 @@
+import { setupMockApi } from '../../../../mocks/api-server.mock';
 import { test, expect } from '../fixtures/qa-expert.fixture';
 import { config } from '../config/backoffice.config';
 import {
@@ -20,6 +21,7 @@ import {
  */
 
 test.describe('Dashboard (Oversikt) E2E', () => {
+  setupMockApi();
   test.use({ storageState: 'tests/e2e/backoffice/.auth/admin.json' });
 
   test.beforeEach(async ({ page }) => {
@@ -32,6 +34,7 @@ test.describe('Dashboard (Oversikt) E2E', () => {
   });
 
   test.describe('D1. Blur-Eye Structure', () => {
+  setupMockApi();
     test('D1.1 Page has clear header/title', async ({ page }) => {
       const title = page.locator('h1, h2, [data-testid="page-title"]').first();
       await expect(title).toBeVisible({ timeout: 10000 });
@@ -103,6 +106,7 @@ test.describe('Dashboard (Oversikt) E2E', () => {
   });
 
   test.describe('D2. Widget Data Correctness', () => {
+  setupMockApi();
     test('D2.1 Pending items widget reflects queue', async ({ page }) => {
       // Find pending/queue widget
       const pendingWidget = page.locator(
@@ -143,6 +147,7 @@ test.describe('Dashboard (Oversikt) E2E', () => {
   });
 
   test.describe('D3. Quick Actions Navigation', () => {
+  setupMockApi();
     test('D3.1 Quick action links work', async ({ page }) => {
       const actionLinks = page.locator('a[href*="wizard"], a[href*="new"], a[href*="create"]');
       const linkCount = await actionLinks.count();
@@ -169,6 +174,7 @@ test.describe('Dashboard (Oversikt) E2E', () => {
   });
 
   test.describe('D4. Runtime Stability', () => {
+  setupMockApi();
     test('D4.1 No page errors on load', async ({ page, evidence }) => {
       expect(evidence.hasPageErrors()).toBe(false);
       console.log('✓ No page errors detected');

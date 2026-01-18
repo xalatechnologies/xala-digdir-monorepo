@@ -1,3 +1,4 @@
+import { setupMockApi } from '../../../../mocks/api-server.mock';
 import { test, expect } from '../fixtures/qa-expert.fixture';
 import { config } from '../config/backoffice.config';
 import {
@@ -17,6 +18,7 @@ import {
  */
 
 test.describe('GDPR Requests (Personvernforespørsler) E2E', () => {
+  setupMockApi();
   test.use({ storageState: 'tests/e2e/backoffice/.auth/admin.json' });
 
   test.beforeEach(async ({ page }) => {
@@ -29,6 +31,7 @@ test.describe('GDPR Requests (Personvernforespørsler) E2E', () => {
   });
 
   test.describe('GR1. Blur-Eye Structure', () => {
+  setupMockApi();
     test('GR1.1 Page has clear header', async ({ page }) => {
       const title = page.locator('h1, h2, [data-testid="page-title"]').first();
       await expect(title).toBeVisible({ timeout: 10000 });
@@ -67,6 +70,7 @@ test.describe('GDPR Requests (Personvernforespørsler) E2E', () => {
   });
 
   test.describe('GR2. Request Processing', () => {
+  setupMockApi();
     test('GR2.1 Request items have action buttons', async ({ page }) => {
       const firstRequest = page.locator('table tbody tr, [data-testid*="request-row"]').first();
       
@@ -94,6 +98,7 @@ test.describe('GDPR Requests (Personvernforespørsler) E2E', () => {
   });
 
   test.describe('GR3. Runtime Stability', () => {
+  setupMockApi();
     test('GR3.1 No runtime errors', async ({ page, evidence }) => {
       expect(evidence.hasPageErrors()).toBe(false);
       expect(evidence.has5xxResponses()).toBe(false);

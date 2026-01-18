@@ -1,3 +1,4 @@
+import { setupMockApi } from '../../../mocks/api-server.mock';
 /**
  * SaaS Admin Localization Tests
  *
@@ -52,6 +53,7 @@ async function setLanguage(page: Page, lang: 'nb' | 'en') {
 // ============================================================================
 
 test.describe('SaaS Admin - Norwegian (nb) Default', () => {
+  setupMockApi();
   test.beforeEach(async ({ page }) => {
     await page.goto(`${SAAS_ADMIN_URL}/login`);
     await setLanguage(page, 'nb');
@@ -99,6 +101,7 @@ test.describe('SaaS Admin - Norwegian (nb) Default', () => {
 // ============================================================================
 
 test.describe('SaaS Admin - English (en)', () => {
+  setupMockApi();
   test.beforeEach(async ({ page }) => {
     await page.goto(`${SAAS_ADMIN_URL}/login`);
     await setLanguage(page, 'en');
@@ -132,6 +135,7 @@ test.describe('SaaS Admin - English (en)', () => {
 // ============================================================================
 
 test.describe('SaaS Admin - Language Switching', () => {
+  setupMockApi();
   test.beforeEach(async ({ page }) => {
     await page.goto(`${SAAS_ADMIN_URL}/login`);
     await mockSaasAdminAuth(page);
@@ -190,6 +194,7 @@ test.describe('SaaS Admin - Language Switching', () => {
 // ============================================================================
 
 test.describe('SaaS Admin - Missing i18n Keys', () => {
+  setupMockApi();
   test.beforeEach(async ({ page }) => {
     await page.goto(`${SAAS_ADMIN_URL}/login`);
     await mockSaasAdminAuth(page);
@@ -246,6 +251,7 @@ test.describe('SaaS Admin - Missing i18n Keys', () => {
 // ============================================================================
 
 test.describe('SaaS Admin - Hardcoded Strings', () => {
+  setupMockApi();
   test.beforeEach(async ({ page }) => {
     await page.goto(`${SAAS_ADMIN_URL}/login`);
     await mockSaasAdminAuth(page);
@@ -323,6 +329,7 @@ test.describe('SaaS Admin - Hardcoded Strings', () => {
 // ============================================================================
 
 test.describe('SaaS Admin - Locale Formatting', () => {
+  setupMockApi();
   test.beforeEach(async ({ page }) => {
     await page.goto(`${SAAS_ADMIN_URL}/login`);
     await mockSaasAdminAuth(page);
@@ -358,6 +365,7 @@ test.describe('SaaS Admin - Locale Formatting', () => {
 // ============================================================================
 
 test.describe('SaaS Admin - RTL Support', () => {
+  setupMockApi();
   test('page has correct dir attribute', async ({ page }) => {
     await page.goto(`${SAAS_ADMIN_URL}/login`);
     await mockSaasAdminAuth(page);

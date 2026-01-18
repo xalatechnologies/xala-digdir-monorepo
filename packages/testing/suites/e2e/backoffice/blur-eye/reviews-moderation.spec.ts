@@ -1,3 +1,4 @@
+import { setupMockApi } from '../../../../mocks/api-server.mock';
 import { test, expect } from '../fixtures/qa-expert.fixture';
 import { config } from '../config/backoffice.config';
 import {
@@ -16,6 +17,7 @@ import {
  */
 
 test.describe('Reviews Moderation (Anmeldelser) E2E', () => {
+  setupMockApi();
   test.use({ storageState: 'tests/e2e/backoffice/.auth/admin.json' });
 
   test.beforeEach(async ({ page }) => {
@@ -28,6 +30,7 @@ test.describe('Reviews Moderation (Anmeldelser) E2E', () => {
   });
 
   test.describe('RM1. Blur-Eye Structure', () => {
+  setupMockApi();
     test('RM1.1 Page has clear header', async ({ page }) => {
       const title = page.locator('h1, h2, [data-testid="page-title"]').first();
       await expect(title).toBeVisible({ timeout: 10000 });
@@ -54,6 +57,7 @@ test.describe('Reviews Moderation (Anmeldelser) E2E', () => {
   });
 
   test.describe('RM2. Moderation Actions', () => {
+  setupMockApi();
     test('RM2.1 Review items have moderation buttons', async ({ page }) => {
       const firstReview = page.locator('table tbody tr, [data-testid*="review-row"]').first();
       
@@ -86,6 +90,7 @@ test.describe('Reviews Moderation (Anmeldelser) E2E', () => {
   });
 
   test.describe('RM3. Runtime Stability', () => {
+  setupMockApi();
     test('RM3.1 No runtime errors', async ({ page, evidence }) => {
       expect(evidence.hasPageErrors()).toBe(false);
       expect(evidence.has5xxResponses()).toBe(false);

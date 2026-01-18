@@ -1,3 +1,4 @@
+import { setupMockApi } from '../../../../mocks/api-server.mock';
 import { test, expect } from '../fixtures/qa-expert.fixture';
 import { config } from '../config/backoffice.config';
 import {
@@ -14,6 +15,7 @@ import {
  */
 
 test.describe('Blocks (Blokkeringer) E2E', () => {
+  setupMockApi();
   test.use({ storageState: 'tests/e2e/backoffice/.auth/admin.json' });
 
   test.beforeEach(async ({ page }) => {
@@ -26,6 +28,7 @@ test.describe('Blocks (Blokkeringer) E2E', () => {
   });
 
   test.describe('BL1. Blur-Eye Structure', () => {
+  setupMockApi();
     test('BL1.1 Page has clear header', async ({ page }) => {
       const title = page.locator('h1, h2, [data-testid="page-title"]').first();
       await expect(title).toBeVisible({ timeout: 10000 });
@@ -61,6 +64,7 @@ test.describe('Blocks (Blokkeringer) E2E', () => {
   });
 
   test.describe('BL2. Block CRUD', () => {
+  setupMockApi();
     test('BL2.1 Can open create block form', async ({ page }) => {
       const addBtn = page.locator('button:has-text("Legg til"), button:has-text("Ny")').first();
       
@@ -98,6 +102,7 @@ test.describe('Blocks (Blokkeringer) E2E', () => {
   });
 
   test.describe('BL3. Feature Flag Visibility', () => {
+  setupMockApi();
     test('BL3.1 Blocks appears in sidebar when flag ON', async ({ page }) => {
       await page.goto('/');
       await page.waitForTimeout(2000);
@@ -110,6 +115,7 @@ test.describe('Blocks (Blokkeringer) E2E', () => {
   });
 
   test.describe('BL4. Runtime Stability', () => {
+  setupMockApi();
     test('BL4.1 No runtime errors', async ({ page, evidence }) => {
       expect(evidence.hasPageErrors()).toBe(false);
       expect(evidence.has5xxResponses()).toBe(false);
