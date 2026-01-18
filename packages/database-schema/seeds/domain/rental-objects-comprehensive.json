@@ -5183,7 +5183,7 @@
       "name": "Møterom P - Skien",
       "slug": "moterom-p-skien-41",
       "description": "Moderne møterom p i Skien. Perfekt for trening, events og arrangementer. Godt vedlikeholdt med moderne fasiliteter.",
-      "category_key": "MØTEROM",
+      "category_key": "LOKALER_OG_BANER",
       "time_mode": "PERIOD",
       "features": [
         "SHARED_CAPACITY"
@@ -5311,7 +5311,7 @@
       "name": "Møterom Q - Porsgrunn",
       "slug": "moterom-q-porsgrunn-42",
       "description": "Moderne møterom q i Porsgrunn. Perfekt for trening, events og arrangementer. Godt vedlikeholdt med moderne fasiliteter.",
-      "category_key": "MØTEROM",
+      "category_key": "LOKALER_OG_BANER",
       "time_mode": "PERIOD",
       "features": [
         "SHARED_CAPACITY"
@@ -5439,7 +5439,7 @@
       "name": "Møterom R - Bamble",
       "slug": "moterom-r-bamble-43",
       "description": "Moderne møterom r i Bamble. Perfekt for trening, events og arrangementer. Godt vedlikeholdt med moderne fasiliteter.",
-      "category_key": "MØTEROM",
+      "category_key": "LOKALER_OG_BANER",
       "time_mode": "PERIOD",
       "features": [
         "SHARED_CAPACITY"
@@ -5567,7 +5567,7 @@
       "name": "Møterom S - Notodden",
       "slug": "moterom-s-notodden-44",
       "description": "Moderne møterom s i Notodden. Perfekt for trening, events og arrangementer. Godt vedlikeholdt med moderne fasiliteter.",
-      "category_key": "MØTEROM",
+      "category_key": "LOKALER_OG_BANER",
       "time_mode": "PERIOD",
       "features": [
         "SHARED_CAPACITY"
@@ -5695,7 +5695,7 @@
       "name": "Møterom T - Kragerø",
       "slug": "moterom-t-kragero-45",
       "description": "Moderne møterom t i Kragerø. Perfekt for trening, events og arrangementer. Godt vedlikeholdt med moderne fasiliteter.",
-      "category_key": "MØTEROM",
+      "category_key": "LOKALER_OG_BANER",
       "time_mode": "PERIOD",
       "features": [
         "SHARED_CAPACITY"
@@ -5823,7 +5823,7 @@
       "name": "Møterom U - Skien",
       "slug": "moterom-u-skien-46",
       "description": "Moderne møterom u i Skien. Perfekt for trening, events og arrangementer. Godt vedlikeholdt med moderne fasiliteter.",
-      "category_key": "MØTEROM",
+      "category_key": "LOKALER_OG_BANER",
       "time_mode": "PERIOD",
       "features": [
         "SHARED_CAPACITY"
@@ -5951,7 +5951,7 @@
       "name": "Møterom V - Porsgrunn",
       "slug": "moterom-v-porsgrunn-47",
       "description": "Moderne møterom v i Porsgrunn. Perfekt for trening, events og arrangementer. Godt vedlikeholdt med moderne fasiliteter.",
-      "category_key": "MØTEROM",
+      "category_key": "LOKALER_OG_BANER",
       "time_mode": "PERIOD",
       "features": [
         "SHARED_CAPACITY"
@@ -6079,7 +6079,7 @@
       "name": "Møterom W - Bamble",
       "slug": "moterom-w-bamble-48",
       "description": "Moderne møterom w i Bamble. Perfekt for trening, events og arrangementer. Godt vedlikeholdt med moderne fasiliteter.",
-      "category_key": "MØTEROM",
+      "category_key": "LOKALER_OG_BANER",
       "time_mode": "PERIOD",
       "features": [
         "SHARED_CAPACITY"
@@ -6207,7 +6207,7 @@
       "name": "Møterom X - Notodden",
       "slug": "moterom-x-notodden-49",
       "description": "Moderne møterom x i Notodden. Perfekt for trening, events og arrangementer. Godt vedlikeholdt med moderne fasiliteter.",
-      "category_key": "MØTEROM",
+      "category_key": "LOKALER_OG_BANER",
       "time_mode": "PERIOD",
       "features": [
         "SHARED_CAPACITY"
@@ -6335,7 +6335,7 @@
       "name": "Møterom Y - Kragerø",
       "slug": "moterom-y-kragero-50",
       "description": "Moderne møterom y i Kragerø. Perfekt for trening, events og arrangementer. Godt vedlikeholdt med moderne fasiliteter.",
-      "category_key": "MØTEROM",
+      "category_key": "LOKALER_OG_BANER",
       "time_mode": "PERIOD",
       "features": [
         "SHARED_CAPACITY"
@@ -6463,7 +6463,7 @@
       "name": "Duker og Stoler - Skien",
       "slug": "duker-og-stoler-skien-51",
       "description": "Moderne duker og stoler i Skien. Perfekt for trening, events og arrangementer. Godt vedlikeholdt med moderne fasiliteter.",
-      "category_key": "UTSTYR",
+      "category_key": "UTSTYR_OG_INVENTAR",
       "time_mode": "ITEM",
       "features": [
         "INVENTORY"
@@ -6591,7 +6591,7 @@
       "name": "Lydutstyr - Porsgrunn",
       "slug": "lydutstyr-porsgrunn-52",
       "description": "Moderne lydutstyr i Porsgrunn. Perfekt for trening, events og arrangementer. Godt vedlikeholdt med moderne fasiliteter.",
-      "category_key": "UTSTYR",
+      "category_key": "UTSTYR_OG_INVENTAR",
       "time_mode": "ITEM",
       "features": [
         "INVENTORY"
@@ -6719,7 +6719,7 @@
       "name": "Projektorer - Bamble",
       "slug": "projektorer-bamble-53",
       "description": "Moderne projektorer i Bamble. Perfekt for trening, events og arrangementer. Godt vedlikeholdt med moderne fasiliteter.",
-      "category_key": "UTSTYR",
+      "category_key": "UTSTYR_OG_INVENTAR",
       "time_mode": "ITEM",
       "features": [
         "INVENTORY"
@@ -6847,7 +6847,7 @@
       "name": "Telt - Notodden",
       "slug": "telt-notodden-54",
       "description": "Moderne telt i Notodden. Perfekt for trening, events og arrangementer. Godt vedlikeholdt med moderne fasiliteter.",
-      "category_key": "UTSTYR",
+      "category_key": "UTSTYR_OG_INVENTAR",
       "time_mode": "ITEM",
       "features": [
         "INVENTORY"
@@ -6975,7 +6975,7 @@
       "name": "Fotballutstyr - Kragerø",
       "slug": "fotballutstyr-kragero-55",
       "description": "Moderne fotballutstyr i Kragerø. Perfekt for trening, events og arrangementer. Godt vedlikeholdt med moderne fasiliteter.",
-      "category_key": "UTSTYR",
+      "category_key": "UTSTYR_OG_INVENTAR",
       "time_mode": "ITEM",
       "features": [
         "INVENTORY"
@@ -7103,7 +7103,7 @@
       "name": "Duker og Stoler - Skien",
       "slug": "duker-og-stoler-skien-56",
       "description": "Moderne duker og stoler i Skien. Perfekt for trening, events og arrangementer. Godt vedlikeholdt med moderne fasiliteter.",
-      "category_key": "UTSTYR",
+      "category_key": "UTSTYR_OG_INVENTAR",
       "time_mode": "ITEM",
       "features": [
         "INVENTORY"
@@ -7231,7 +7231,7 @@
       "name": "Lydutstyr - Porsgrunn",
       "slug": "lydutstyr-porsgrunn-57",
       "description": "Moderne lydutstyr i Porsgrunn. Perfekt for trening, events og arrangementer. Godt vedlikeholdt med moderne fasiliteter.",
-      "category_key": "UTSTYR",
+      "category_key": "UTSTYR_OG_INVENTAR",
       "time_mode": "ITEM",
       "features": [
         "INVENTORY"
@@ -7359,7 +7359,7 @@
       "name": "Projektorer - Bamble",
       "slug": "projektorer-bamble-58",
       "description": "Moderne projektorer i Bamble. Perfekt for trening, events og arrangementer. Godt vedlikeholdt med moderne fasiliteter.",
-      "category_key": "UTSTYR",
+      "category_key": "UTSTYR_OG_INVENTAR",
       "time_mode": "ITEM",
       "features": [
         "INVENTORY"
@@ -7487,7 +7487,7 @@
       "name": "Telt - Notodden",
       "slug": "telt-notodden-59",
       "description": "Moderne telt i Notodden. Perfekt for trening, events og arrangementer. Godt vedlikeholdt med moderne fasiliteter.",
-      "category_key": "UTSTYR",
+      "category_key": "UTSTYR_OG_INVENTAR",
       "time_mode": "ITEM",
       "features": [
         "INVENTORY"
@@ -7615,7 +7615,7 @@
       "name": "Fotballutstyr - Kragerø",
       "slug": "fotballutstyr-kragero-60",
       "description": "Moderne fotballutstyr i Kragerø. Perfekt for trening, events og arrangementer. Godt vedlikeholdt med moderne fasiliteter.",
-      "category_key": "UTSTYR",
+      "category_key": "UTSTYR_OG_INVENTAR",
       "time_mode": "ITEM",
       "features": [
         "INVENTORY"
@@ -7743,7 +7743,7 @@
       "name": "Arrangementssted 62 - Skien",
       "slug": "arrangementssted-62-skien-61",
       "description": "Moderne arrangementssted 62 i Skien. Perfekt for trening, events og arrangementer. Godt vedlikeholdt med moderne fasiliteter.",
-      "category_key": "ARRANGEMENT",
+      "category_key": "OPPLEVELSER_OG_ARRANGEMENT",
       "time_mode": "PERIOD",
       "features": [
         "SHARED_CAPACITY"
@@ -7871,7 +7871,7 @@
       "name": "Arrangementssted 63 - Porsgrunn",
       "slug": "arrangementssted-63-porsgrunn-62",
       "description": "Moderne arrangementssted 63 i Porsgrunn. Perfekt for trening, events og arrangementer. Godt vedlikeholdt med moderne fasiliteter.",
-      "category_key": "ARRANGEMENT",
+      "category_key": "OPPLEVELSER_OG_ARRANGEMENT",
       "time_mode": "PERIOD",
       "features": [
         "SHARED_CAPACITY"
@@ -7999,7 +7999,7 @@
       "name": "Arrangementssted 64 - Bamble",
       "slug": "arrangementssted-64-bamble-63",
       "description": "Moderne arrangementssted 64 i Bamble. Perfekt for trening, events og arrangementer. Godt vedlikeholdt med moderne fasiliteter.",
-      "category_key": "ARRANGEMENT",
+      "category_key": "OPPLEVELSER_OG_ARRANGEMENT",
       "time_mode": "PERIOD",
       "features": [
         "SHARED_CAPACITY"
@@ -8127,7 +8127,7 @@
       "name": "Arrangementssted 65 - Notodden",
       "slug": "arrangementssted-65-notodden-64",
       "description": "Moderne arrangementssted 65 i Notodden. Perfekt for trening, events og arrangementer. Godt vedlikeholdt med moderne fasiliteter.",
-      "category_key": "ARRANGEMENT",
+      "category_key": "OPPLEVELSER_OG_ARRANGEMENT",
       "time_mode": "PERIOD",
       "features": [
         "SHARED_CAPACITY"
@@ -8255,7 +8255,7 @@
       "name": "Arrangementssted 66 - Kragerø",
       "slug": "arrangementssted-66-kragero-65",
       "description": "Moderne arrangementssted 66 i Kragerø. Perfekt for trening, events og arrangementer. Godt vedlikeholdt med moderne fasiliteter.",
-      "category_key": "ARRANGEMENT",
+      "category_key": "OPPLEVELSER_OG_ARRANGEMENT",
       "time_mode": "PERIOD",
       "features": [
         "SHARED_CAPACITY"
@@ -8383,7 +8383,7 @@
       "name": "Arrangementssted 67 - Skien",
       "slug": "arrangementssted-67-skien-66",
       "description": "Moderne arrangementssted 67 i Skien. Perfekt for trening, events og arrangementer. Godt vedlikeholdt med moderne fasiliteter.",
-      "category_key": "ARRANGEMENT",
+      "category_key": "OPPLEVELSER_OG_ARRANGEMENT",
       "time_mode": "PERIOD",
       "features": [
         "SHARED_CAPACITY"
@@ -8511,7 +8511,7 @@
       "name": "Arrangementssted 68 - Porsgrunn",
       "slug": "arrangementssted-68-porsgrunn-67",
       "description": "Moderne arrangementssted 68 i Porsgrunn. Perfekt for trening, events og arrangementer. Godt vedlikeholdt med moderne fasiliteter.",
-      "category_key": "ARRANGEMENT",
+      "category_key": "OPPLEVELSER_OG_ARRANGEMENT",
       "time_mode": "PERIOD",
       "features": [
         "SHARED_CAPACITY"
@@ -8639,7 +8639,7 @@
       "name": "Arrangementssted 69 - Bamble",
       "slug": "arrangementssted-69-bamble-68",
       "description": "Moderne arrangementssted 69 i Bamble. Perfekt for trening, events og arrangementer. Godt vedlikeholdt med moderne fasiliteter.",
-      "category_key": "ARRANGEMENT",
+      "category_key": "OPPLEVELSER_OG_ARRANGEMENT",
       "time_mode": "PERIOD",
       "features": [
         "SHARED_CAPACITY"
@@ -8767,7 +8767,7 @@
       "name": "Arrangementssted 70 - Notodden",
       "slug": "arrangementssted-70-notodden-69",
       "description": "Moderne arrangementssted 70 i Notodden. Perfekt for trening, events og arrangementer. Godt vedlikeholdt med moderne fasiliteter.",
-      "category_key": "ARRANGEMENT",
+      "category_key": "OPPLEVELSER_OG_ARRANGEMENT",
       "time_mode": "PERIOD",
       "features": [
         "SHARED_CAPACITY"
@@ -8895,7 +8895,7 @@
       "name": "Arrangementssted 71 - Kragerø",
       "slug": "arrangementssted-71-kragero-70",
       "description": "Moderne arrangementssted 71 i Kragerø. Perfekt for trening, events og arrangementer. Godt vedlikeholdt med moderne fasiliteter.",
-      "category_key": "ARRANGEMENT",
+      "category_key": "OPPLEVELSER_OG_ARRANGEMENT",
       "time_mode": "PERIOD",
       "features": [
         "SHARED_CAPACITY"

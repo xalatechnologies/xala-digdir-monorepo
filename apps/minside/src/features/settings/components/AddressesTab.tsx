@@ -88,10 +88,10 @@ export function AddressesTab() {
         <Stack spacing={3}>
           <div>
             <Heading level={3} data-size="sm" style={{ marginBottom: 'var(--ds-spacing-2)' }}>
-              Adresseinformasjon
+              {t('common.adresseinformasjon')}
             </Heading>
             <Paragraph data-size="sm" style={{ color: 'var(--ds-color-neutral-text-subtle)' }}>
-              Administrer din bostedsadresse og fakturaadresse. Disse brukes for kommunikasjon og fakturering.
+              {t('common.administrer.bostedsadresse.og.fakturaadresse')}
             </Paragraph>
           </div>
         </Stack>
@@ -102,16 +102,16 @@ export function AddressesTab() {
         <Stack spacing={5}>
           <div>
             <Heading level={3} data-size="sm" style={{ marginBottom: 'var(--ds-spacing-2)' }}>
-              Bostedsadresse
+              {t('common.bostedsadresse')}
             </Heading>
             <Paragraph data-size="sm" style={{ color: 'var(--ds-color-neutral-text-subtle)' }}>
-              Din registrerte bostedsadresse
+              {t('common.din.registrerte.bostedsadresse')}
             </Paragraph>
           </div>
 
           <Stack spacing={4}>
-            <FormField label="Gateadresse" required>
-              <Textfield aria-label="Gateadresse"
+            <FormField label={t('common.gateadresse')} required>
+              <Textfield aria-label={t('common.gateadresse')}
                 value={addressData.residenceAddress.street}
                 onChange={(e) => setAddressData(prev => ({
                   ...prev,
@@ -122,8 +122,8 @@ export function AddressesTab() {
             </FormField>
 
             <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr', gap: 'var(--ds-spacing-3)' }}>
-              <FormField label="Poststed" required>
-                <Textfield aria-label="Poststed"
+              <FormField label={t('common.poststed')} required>
+                <Textfield aria-label={t('common.poststed')}
                   value={addressData.residenceAddress.city}
                   onChange={(e) => setAddressData(prev => ({
                     ...prev,
@@ -133,7 +133,7 @@ export function AddressesTab() {
                 />
               </FormField>
 
-              <FormField label="Postnummer" required>
+              <FormField label={t('common.postnummer')} required>
                 <Textfield aria-label={t('common.postnummer_bosted')}
                   value={addressData.residenceAddress.postalCode}
                   onChange={(e) => setAddressData(prev => ({
@@ -146,7 +146,7 @@ export function AddressesTab() {
               </FormField>
             </div>
 
-            <FormField label="Land" required>
+            <FormField label={t('common.land')} required>
               <Select
                 value={addressData.residenceAddress.country || 'Norge'}
                 onChange={(e) => setAddressData(prev => ({
@@ -170,10 +170,10 @@ export function AddressesTab() {
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
             <div>
               <Heading level={3} data-size="sm" style={{ marginBottom: 'var(--ds-spacing-2)' }}>
-                Fakturaadresse
+                {t('common.fakturaadresse')}
               </Heading>
               <Paragraph data-size="sm" style={{ color: 'var(--ds-color-neutral-text-subtle)' }}>
-                Adresse for fakturering og betalingsinformasjon
+                {t('common.adresse.for.fakturering')}
               </Paragraph>
             </div>
             <Button
@@ -182,13 +182,13 @@ export function AddressesTab() {
               onClick={handleCopyResidenceToInvoice} type="button"
             >
               <CopyIcon />
-              Kopier fra bostedsadresse
+              {t('common.kopier.fra.bostedsadresse')}
             </Button>
           </div>
 
           <Stack spacing={4}>
-            <FormField label="Gateadresse" required>
-              <Textfield aria-label="Gateadresse"
+            <FormField label={t('common.gateadresse')} required>
+              <Textfield aria-label={t('common.gateadresse')}
                 value={addressData.invoiceAddress.street}
                 onChange={(e) => setAddressData(prev => ({
                   ...prev,
@@ -199,8 +199,8 @@ export function AddressesTab() {
             </FormField>
 
             <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr', gap: 'var(--ds-spacing-3)' }}>
-              <FormField label="Poststed" required>
-                <Textfield aria-label="Poststed"
+              <FormField label={t('common.poststed')} required>
+                <Textfield aria-label={t('common.poststed')}
                   value={addressData.invoiceAddress.city}
                   onChange={(e) => setAddressData(prev => ({
                     ...prev,
@@ -210,7 +210,7 @@ export function AddressesTab() {
                 />
               </FormField>
 
-              <FormField label="Postnummer" required>
+              <FormField label={t('common.postnummer')} required>
                 <Textfield aria-label={t('common.postnummer_faktura')}
                   value={addressData.invoiceAddress.postalCode}
                   onChange={(e) => setAddressData(prev => ({
@@ -223,7 +223,7 @@ export function AddressesTab() {
               </FormField>
             </div>
 
-            <FormField label="Land" required>
+            <FormField label={t('common.land')} required>
               <Select
                 value={addressData.invoiceAddress.country || 'Norge'}
                 onChange={(e) => setAddressData(prev => ({
@@ -248,11 +248,10 @@ export function AddressesTab() {
             <InfoIcon style={{ color: 'var(--ds-color-info-text-default)', marginTop: '2px', flexShrink: 0 }} />
             <div>
               <Paragraph data-size="sm" style={{ fontWeight: 'var(--ds-font-weight-semibold)', marginBottom: 'var(--ds-spacing-1)' }}>
-                Adresseverifikasjon
+                {t('common.adresseverifikasjon')}
               </Paragraph>
               <Paragraph data-size="sm" style={{ color: 'var(--ds-color-neutral-text-subtle)' }}>
-                Vi verifiserer adresseinformasjon mot offentlige registre for å sikre korrekt levering og kommunikasjon.
-                Endringer i adresse kan ta opptil 24 timer å tre i kraft.
+                {t('common.vi.verifiserer.adresse.info')}
               </Paragraph>
             </div>
           </div>
@@ -268,7 +267,7 @@ export function AddressesTab() {
           aria-label={isSaving ? t('common.lagrer_adresser') : 'Lagre adresser'}
         >
           <SaveIcon />
-          {isSaving ? t('common.lagrer') : 'Lagre adresser'}
+          {isSaving ? t('common.lagrer') : t('common.lagre_adresser')}
         </Button>
       </div>
     </Stack>

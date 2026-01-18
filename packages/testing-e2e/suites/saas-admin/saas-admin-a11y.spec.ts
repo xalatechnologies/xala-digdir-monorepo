@@ -47,6 +47,7 @@ async function mockSaasAdminAuth(page: Page) {
 async function waitForPageReady(page: Page) {
   await page.waitForLoadState('networkidle');
   await page.waitForTimeout(500);
+}
 
 // ============================================================================
 // Test Suite: WCAG 2.1 AA Compliance

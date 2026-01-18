@@ -905,5 +905,14 @@
   "okt.og.sikkerhet": "Økt og sikkerhet",
   "administrer.din.paalogging.og.sikkerhet": "Administrer din pålogging og sikkerhet",
   "logg.ut.av.konto.paa.enhet": "Logg ut av din konto på denne enheten",
-  "velg.spraak.for.brukergrensesnittet": "Velg språk for brukergrensesnittet"
+  "velg.spraak.for.brukergrensesnittet": "Velg språk for brukergrensesnittet",
+  "adresseinformasjon": "Adresseinformasjon",
+  "administrer.bostedsadresse.og.fakturaadresse": "Administrer din bostedsadresse og fakturaadresse. Disse brukes for kommunikasjon og fakturering.",
+  "bostedsadresse": "Bostedsadresse",
+  "din.registrerte.bostedsadresse": "Din registrerte bostedsadresse",
+  "fakturaadresse": "Fakturaadresse",
+  "adresse.for.fakturering": "Adresse for fakturering og betalingsinformasjon",
+  "kopier.fra.bostedsadresse": "Kopier fra bostedsadresse",
+  "adresseverifikasjon": "Adresseverifikasjon",
+  "vi.verifiserer.adresse.info": "Vi verifiserer adresseinformasjon mot offentlige registre for å sikre korrekt levering og kommunikasjon. Endringer i adresse kan ta opptil 24 timer å tre i kraft."
 }

@@ -1,0 +1,66 @@
+# Page snapshot
+
+```yaml
+- generic [ref=e4]:
+  - generic [ref=e5]:
+    - generic [ref=e6]:
+      - link "DIGILIST DIGILIST ENKEL BOOKING" [ref=e8] [cursor=pointer]:
+        - /url: /
+        - img "DIGILIST" [ref=e9]
+        - generic [ref=e10]:
+          - generic [ref=e11]: DIGILIST
+          - generic [ref=e12]: ENKEL BOOKING
+      - generic [ref=e13]:
+        - heading "Logg inn" [level=1] [ref=e14]
+        - paragraph [ref=e15]: Velg innloggingsmetode for å fortsette.
+        - generic [ref=e16]:
+          - button "ID-porten Personlig innlogging med BankID eller MinID" [ref=e17] [cursor=pointer]:
+            - generic [ref=e18]:
+              - generic [ref=e19]: ID-porten
+              - generic [ref=e20]: Personlig innlogging med BankID eller MinID
+          - button "Demo Innlogging Logg inn med demo-token (kun for testing)" [ref=e21] [cursor=pointer]:
+            - generic [ref=e22]:
+              - generic [ref=e23]: Demo Innlogging
+              - generic [ref=e24]: Logg inn med demo-token (kun for testing)
+    - generic [ref=e25]:
+      - generic [ref=e26]:
+        - link "Personvern" [ref=e27] [cursor=pointer]:
+          - /url: https://digilist.no/personvern
+        - generic [ref=e28]: ·
+        - link "Vilkår for bruk" [ref=e29] [cursor=pointer]:
+          - /url: https://digilist.no/cookies
+        - generic [ref=e30]: ·
+        - link "Kontakt support" [ref=e31] [cursor=pointer]:
+          - /url: https://digilist.no/#book-demo
+      - paragraph [ref=e32]: © 2026 Digilist. Alle rettigheter reservert.
+  - generic [ref=e34]:
+    - generic [ref=e35]:
+      - paragraph [ref=e36]: Backoffice
+      - heading "En helhetlig bookingløsning" [level=2] [ref=e37]
+      - paragraph [ref=e38]: Skybasert plattform for booking av kommunale anlegg og ressurser med moderne design, betaling og rapportering.
+    - generic [ref=e39]:
+      - generic [ref=e40]:
+        - img [ref=e42]
+        - generic [ref=e47]:
+          - paragraph [ref=e48]: Komplett plattform
+          - paragraph [ref=e49]: Booking, betaling, kalender og rapportering i én løsning
+      - generic [ref=e50]:
+        - img [ref=e52]
+        - generic [ref=e58]:
+          - paragraph [ref=e59]: Automatisering
+          - paragraph [ref=e60]: Regelbasert godkjenning reduserer manuelt arbeid
+      - generic [ref=e61]:
+        - img [ref=e63]
+        - generic [ref=e66]:
+          - paragraph [ref=e67]: GDPR-klar & Sikker
+          - paragraph [ref=e68]: Full etterlevelse av personvernregler og norske standarder
+    - generic [ref=e69]:
+      - paragraph [ref=e70]: Integrasjoner & Sertifiseringer
+      - generic [ref=e71]:
+        - generic [ref=e72]: BankID
+        - generic [ref=e73]: Vipps
+        - generic [ref=e74]: Visma
+        - generic [ref=e75]: RCO
+        - generic [ref=e76]: ISO 27001
+        - generic [ref=e77]: ISO 27701
+```
