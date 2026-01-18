@@ -38,9 +38,10 @@ export function TenantBrandingPage() {
     typeof window !== 'undefined' ? window.innerWidth < MOBILE_BREAKPOINT : false
   );
 
+  const t = useT();
+  
   // Branding state
   const [branding, setBranding] = useState({
-  const t = useT();
     primaryColor: '#2563eb',
     accentColor: '#3b82f6',
     logoUrl: '',
