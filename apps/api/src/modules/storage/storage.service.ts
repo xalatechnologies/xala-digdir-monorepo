@@ -39,15 +39,17 @@ export class StorageService {
   ];
 
   constructor() {
-    // Storage directory: apps/api/storage/
-    this.baseDir = path.join(process.cwd(), 'storage');
+    // Storage directory: /var/www/digilist-storage/uploads or STORAGE_PATH env var
+    this.baseDir = process.env.STORAGE_PATH || path.join(process.cwd(), 'storage');
     // Base URL for serving files
     this.baseUrl = process.env.STORAGE_BASE_URL || '/storage';
   }
 
   /**
    * Upload a file to storage
-   * Creates directory structure: storage/{tenantId}/{category}/{filename}
+   * Creates directory structure: 
+   * - For tenant uploads: storage/{tenantId}/{category}/{filename}
+   * - For seed images: storage/seed-images/{category}/{filename}
    */
   async uploadFile(options: UploadFileOptions): Promise<StoredFile> {
     const { tenantId, category, filename, buffer, mimetype } = options;
@@ -68,16 +70,25 @@ export class StorageService {
     const hash = crypto.randomBytes(4).toString('hex');
     const uniqueFilename = `${basename}-${hash}${ext}`;
 
-    // Create directory structure
-    const categoryDir = path.join(this.baseDir, tenantId, category);
+    // Create directory structure based on category
+    let categoryDir: string;
+    let url: string;
+    
+    if (category === 'seed-images') {
+      // Seed images go directly in seed-images folder
+      categoryDir = path.join(this.baseDir, 'seed-images');
+      url = `${this.baseUrl}/seed-images/${uniqueFilename}`;
+    } else {
+      // Tenant-specific uploads
+      categoryDir = path.join(this.baseDir, tenantId, category);
+      url = `${this.baseUrl}/${tenantId}/${category}/${uniqueFilename}`;
+    }
+    
     await fs.mkdir(categoryDir, { recursive: true });
 
     // Write file
     const filePath = path.join(categoryDir, uniqueFilename);
     await fs.writeFile(filePath, buffer);
-
-    // Generate URL
-    const url = `${this.baseUrl}/${tenantId}/${category}/${uniqueFilename}`;
 
     return {
       id: hash,
@@ -184,12 +195,22 @@ export class StorageService {
     const seedImagesDir = path.join(this.baseDir, 'seed-images');
     await fs.mkdir(seedImagesDir, { recursive: true });
     
-    // Create subdirectories for each category
-    const categories = ['lokaler-og-baner', 'møterom', 'utstyr', 'arrangement'];
+    // Create subdirectories matching actual seed structure
+    const categories = [
+      'Bibliotek',
+      'lokaler-og-baner',
+      'møterom',
+      'Møterom og kursrom',
+      'Selskapslokaler',
+      'Svømmehall',
+      'utstyr',
+      'arrangement'
+    ];
     for (const category of categories) {
       await fs.mkdir(path.join(seedImagesDir, category), { recursive: true });
     }
 
     console.log(`✓ Storage initialized at: ${this.baseDir}`);
+    console.log(`✓ Seed images directory: ${seedImagesDir}`);
   }
 }
