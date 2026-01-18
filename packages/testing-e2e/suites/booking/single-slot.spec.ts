@@ -36,6 +36,7 @@ async function loginAsRole(page: any, role: string) {
       },
     ]);
   }
+}
 
 // =============================================================================
 // Citizen Booking Journey

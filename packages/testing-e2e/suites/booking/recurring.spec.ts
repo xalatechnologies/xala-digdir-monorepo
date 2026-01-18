@@ -51,7 +51,7 @@ test.describe('Recurring Booking Preview', () => {
     const rentalObjectId = list.data?.[0]?.id;
 
     if (!rentalObjectId) {
-      test();
+      test.skip();
       return;
     }
 
@@ -98,7 +98,7 @@ test.describe('Recurring Booking Preview', () => {
     const rentalObjectId = list.data?.[0]?.id;
 
     if (!rentalObjectId) {
-      test();
+      test.skip();
       return;
     }
 
