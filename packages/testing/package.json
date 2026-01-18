@@ -1,0 +1,79 @@
+{
+  "name": "@digilist/testing",
+  "version": "1.0.0",
+  "description": "Centralized testing infrastructure for Digilist Platform - unit, integration, e2e, security, compliance, accessibility, and performance tests",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    },
+    "./fixtures": {
+      "import": "./dist/fixtures/index.js",
+      "types": "./dist/fixtures/index.d.ts"
+    },
+    "./mocks": {
+      "import": "./dist/mocks/index.js",
+      "types": "./dist/mocks/index.d.ts"
+    },
+    "./utils": {
+      "import": "./dist/utils/index.js",
+      "types": "./dist/utils/index.d.ts"
+    },
+    "./setup": {
+      "import": "./dist/setup/index.js",
+      "types": "./dist/setup/index.d.ts"
+    }
+  },
+  "scripts": {
+    "build": "tsup",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:unit": "vitest run suites/unit",
+    "test:unit:api": "vitest run suites/unit/api",
+    "test:unit:apps": "vitest run suites/unit/apps",
+    "test:unit:packages": "vitest run suites/unit/packages",
+    "test:integration": "vitest run suites/integration",
+    "test:integration:api": "vitest run suites/integration/api",
+    "test:integration:rbac": "vitest run suites/integration/rbac",
+    "test:e2e": "playwright test suites/e2e",
+    "test:e2e:backoffice": "playwright test suites/e2e/backoffice",
+    "test:e2e:web": "playwright test suites/e2e/web",
+    "test:e2e:minside": "playwright test suites/e2e/minside",
+    "test:security": "vitest run suites/security",
+    "test:security:auth": "vitest run suites/security/auth",
+    "test:security:penetration": "vitest run suites/security/penetration",
+    "test:security:rbac": "vitest run suites/security/rbac",
+    "test:compliance": "vitest run suites/compliance",
+    "test:compliance:gdpr": "vitest run suites/compliance/gdpr",
+    "test:compliance:wcag": "playwright test suites/compliance/wcag",
+    "test:compliance:soc2": "vitest run suites/compliance/soc2",
+    "test:compliance:i18n": "vitest run suites/compliance/i18n",
+    "test:performance": "vitest run suites/performance",
+    "test:contracts": "vitest run contracts",
+    "test:all": "pnpm test:unit && pnpm test:integration && pnpm test:security && pnpm test:compliance",
+    "test:ci": "vitest run --reporter=junit --outputFile=reports/junit/results.xml",
+    "coverage": "vitest run --coverage",
+    "report:html": "vitest run --reporter=html --outputFile=reports/html/index.html"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.40.0",
+    "@testing-library/jest-dom": "^6.4.0",
+    "@testing-library/react": "^14.2.0",
+    "@testing-library/user-event": "^14.5.0",
+    "@types/node": "^20.11.0",
+    "@vitest/coverage-v8": "^1.2.0",
+    "@vitest/ui": "^1.2.0",
+    "axe-core": "^4.8.0",
+    "happy-dom": "^13.0.0",
+    "msw": "^2.1.0",
+    "typescript": "^5.3.0",
+    "vitest": "^1.2.0"
+  },
+  "peerDependencies": {
+    "react": "^18.0.0 || ^19.0.0",
+    "react-dom": "^18.0.0 || ^19.0.0"
+  }
+}

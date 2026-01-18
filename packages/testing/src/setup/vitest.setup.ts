@@ -1,25 +1,17 @@
+/**
+ * Global Vitest setup for @digilist/testing
+ * 
+ * This file is imported by all test suites.
+ * It sets up common mocks, matchers, and test utilities.
+ */
+
 import '@testing-library/jest-dom/vitest';
 import { cleanup } from '@testing-library/react';
 import { afterEach, vi } from 'vitest';
+import { setupI18nMock } from '../mocks/i18n.mock.js';
 
-// Global i18n mock - returns the key as the translation text
-// This allows tests to use translation keys for label lookup
-vi.mock('@xala/i18n', () => ({
-  useT: () => (key: string) => key,
-  useLocale: () => 'nb',
-  t: (key: string) => key,
-  T: ({ id }: { id: string }) => id,
-  translations: {},
-  interpolate: (text: string) => text,
-  I18nProvider: ({ children }: { children: React.ReactNode }) => children,
-  createI18n: () => ({
-    useT: () => (key: string) => key,
-    useLocale: () => 'nb',
-    t: (key: string) => key,
-  }),
-  getLocale: () => 'nb',
-  setLocale: () => {},
-}));
+// Setup i18n mock globally
+setupI18nMock();
 
 // Cleanup after each test
 afterEach(() => {
@@ -48,33 +40,27 @@ mockIntersectionObserver.mockReturnValue({
   unobserve: () => null,
   disconnect: () => null,
 });
-window.IntersectionObserver = mockIntersectionObserver;
+window.IntersectionObserver = mockIntersectionObserver as unknown as typeof IntersectionObserver;
 
-// Mock ResizeObserver as a class
+// Mock ResizeObserver
 global.ResizeObserver = class ResizeObserver {
   observe = vi.fn();
   unobserve = vi.fn();
   disconnect = vi.fn();
 };
 
-// Mock document.getAnimations (needed for design system animations)
+// Mock document.getAnimations
 Document.prototype.getAnimations = vi.fn(() => []);
 
-// Mock HTMLDialogElement (needed for Dialog component)
+// Mock HTMLDialogElement
 if (typeof HTMLDialogElement === 'undefined') {
-  global.HTMLDialogElement = class HTMLDialogElement extends HTMLElement {
+  (global as any).HTMLDialogElement = class HTMLDialogElement extends HTMLElement {
     open = false;
     returnValue = '';
-    showModal = vi.fn(function (this: HTMLDialogElement) {
-      this.open = true;
-    });
-    close = vi.fn(function (this: HTMLDialogElement) {
-      this.open = false;
-    });
-    show = vi.fn(function (this: HTMLDialogElement) {
-      this.open = true;
-    });
-  } as typeof HTMLDialogElement;
+    showModal = vi.fn(function (this: any) { this.open = true; });
+    close = vi.fn(function (this: any) { this.open = false; });
+    show = vi.fn(function (this: any) { this.open = true; });
+  };
 } else {
   HTMLDialogElement.prototype.showModal = vi.fn(function (this: HTMLDialogElement) {
     this.open = true;
@@ -85,4 +71,10 @@ if (typeof HTMLDialogElement === 'undefined') {
   HTMLDialogElement.prototype.show = vi.fn(function (this: HTMLDialogElement) {
     this.open = true;
   });
+}
+
+// Export setup function that can be called explicitly
+export function setupTestEnvironment() {
+  // Already set up above, but can be extended
+  console.log('[Testing] Test environment initialized');
 }

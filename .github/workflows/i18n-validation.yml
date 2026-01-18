@@ -1,0 +1,161 @@
+name: i18n Validation (Zero-Tolerance)
+
+on:
+  pull_request:
+    paths:
+      - 'apps/**/*.{ts,tsx,js,jsx}'
+      - 'packages/**/*.{ts,tsx,js,jsx}'
+      - 'packages/i18n/src/locales/**'
+      - 'scripts/scan-i18n-comprehensive.js'
+  push:
+    branches:
+      - main
+      - develop
+    paths:
+      - 'apps/**/*.{ts,tsx,js,jsx}'
+      - 'packages/**/*.{ts,tsx,js,jsx}'
+
+jobs:
+  scan-hardcoded-strings:
+    name: Scan for Hardcoded Strings
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'pnpm'
+      
+      - name: Install pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 8
+      
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+      
+      - name: Run i18n comprehensive scan
+        id: i18n_scan
+        run: |
+          echo "🔍 Running comprehensive i18n scan..."
+          node scripts/scan-i18n-comprehensive.js --all > scan-output.log 2>&1 || true
+          cat scan-output.log
+          
+          # Extract issue count
+          ISSUES=$(grep "Total Issues:" scan-output.log | awk '{print $3}' || echo "0")
+          echo "issues=$ISSUES" >> $GITHUB_OUTPUT
+          
+          # Save report as artifact
+          if [ -f "i18n-comprehensive-report.json" ]; then
+            echo "report_exists=true" >> $GITHUB_OUTPUT
+          fi
+      
+      - name: Check for violations
+        run: |
+          ISSUES=${{ steps.i18n_scan.outputs.issues }}
+          echo "📊 Found $ISSUES i18n violations"
+          
+          if [ "$ISSUES" != "0" ]; then
+            echo "❌ ZERO-TOLERANCE POLICY: No hardcoded strings allowed"
+            echo "📋 Review the detailed report below"
+            echo ""
+            echo "To fix these issues:"
+            echo "1. Run: node scripts/scan-i18n-comprehensive.js --all"
+            echo "2. Review i18n-comprehensive-report.json for suggested fixes"
+            echo "3. Use t() hook for all user-facing strings"
+            echo "4. Add missing translation keys to packages/i18n/src/locales/nb.ts"
+            exit 1
+          fi
+          
+          echo "✅ Zero i18n violations - excellent work!"
+      
+      - name: Upload scan report
+        if: always() && steps.i18n_scan.outputs.report_exists == 'true'
+        uses: actions/upload-artifact@v3
+        with:
+          name: i18n-scan-report
+          path: |
+            i18n-comprehensive-report.json
+            scan-output.log
+          retention-days: 30
+      
+      - name: Comment PR with results
+        if: github.event_name == 'pull_request' && steps.i18n_scan.outputs.issues != '0'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            const report = JSON.parse(fs.readFileSync('i18n-comprehensive-report.json', 'utf8'));
+            const issues = ${{ steps.i18n_scan.outputs.issues }};
+            
+            // Build comment body
+            let body = `## 🌐 i18n Validation Report\n\n`;
+            body += `**Status:** ❌ ${issues} violations found\n\n`;
+            body += `### Summary\n`;
+            body += `- Hardcoded Strings: ${report.summary.hardcodedStrings}\n`;
+            body += `- Missing t() Import: ${report.summary.missingT}\n`;
+            body += `- Missing Translation Keys: ${report.usedButMissingKeys.length}\n\n`;
+            
+            body += `### Issues by App\n`;
+            Object.entries(report.apps).forEach(([app, data]) => {
+              body += `- **${app}**: ${data.issues.length} issues\n`;
+            });
+            
+            body += `\n### Top 5 Files\n`;
+            const topFiles = report.topFiles.slice(0, 5);
+            topFiles.forEach((file, i) => {
+              body += `${i + 1}. \`${file.file}\` (${file.issueCount} issues)\n`;
+            });
+            
+            body += `\n### How to Fix\n`;
+            body += `1. Download the scan report from workflow artifacts\n`;
+            body += `2. Run locally: \`node scripts/scan-i18n-comprehensive.js --all\`\n`;
+            body += `3. Each issue includes \`suggestedKey\` and \`fix\` fields\n`;
+            body += `4. Use \`t()\` hook for all user-facing strings\n\n`;
+            body += `**ZERO-TOLERANCE POLICY**: This PR cannot be merged until all violations are fixed.\n`;
+            
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: body
+            });
+  
+  validate-translation-keys:
+    name: Validate Translation Key Parity
+    runs-on: ubuntu-latest
+    if: contains(github.event.head_commit.modified, 'packages/i18n/src/locales/')
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'pnpm'
+      
+      - name: Install pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 8
+      
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+      
+      - name: Check translation key parity
+        run: |
+          pnpm i18n:check
+          if [ $? -ne 0 ]; then
+            echo "❌ Translation key parity check failed"
+            echo "All language files (nb.ts, en.ts) must have the same keys"
+            exit 1
+          fi
+          echo "✅ Translation keys are in sync"
