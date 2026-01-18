@@ -24,20 +24,20 @@ import {
 import { useSaasTenants } from '@digilist/client-sdk/hooks';
 import { useT } from '@xala/i18n';
 
-// Entity types available for AI generation
+// Entity types available for AI generation (keys for i18n, translated in component)
 const ENTITY_TYPES = [
-  { value: 'rental_objects', label: 'Leieobjekter', description: 'Lokaler, utstyr, anlegg', count: '5-50' },
-  { value: 'users', label: 'Brukere', description: 'Sluttbrukere og admins', count: '10-100' },
-  { value: 'organizations', label: 'Organisasjoner', description: 'Idrettslag, foreninger', count: '5-30' },
-  { value: 'bookings', label: 'Bookinger', description: 'Reservasjoner og kalenderdata', count: '20-200' },
-  { value: 'reviews', label: 'Anmeldelser', description: 'Ratings og tilbakemeldinger', count: '10-100' },
+  { value: 'rental_objects', labelKey: 'common.leieobjekter', descriptionKey: 'common.lokaler_utstyr_anlegg', count: '5-50' },
+  { value: 'users', labelKey: 'common.brukere', descriptionKey: 'common.sluttbrukere_og_admins', count: '10-100' },
+  { value: 'organizations', labelKey: 'common.organisasjoner', descriptionKey: 'common.idrettslag_foreninger', count: '5-30' },
+  { value: 'bookings', labelKey: 'common.bookinger', descriptionKey: 'common.reservasjoner_og_kalenderdata', count: '20-200' },
+  { value: 'reviews', labelKey: 'common.anmeldelser', descriptionKey: 'common.ratings_og_tilbakemeldinger', count: '10-100' },
 ] as const;
 
-// Preset configurations
+// Preset configurations (keys for i18n, translated in component)
 const PRESETS = [
-  { name: 'Demo kommune', entities: { rental_objects: 15, users: 25, organizations: 8, bookings: 50 } },
-  { name: 'Lite testmiljø', entities: { rental_objects: 5, users: 10, organizations: 3, bookings: 15 } },
-  { name: 'Stort produksjonsmiljø', entities: { rental_objects: 40, users: 100, organizations: 25, bookings: 200 } },
+  { nameKey: 'common.demo_kommune', entities: { rental_objects: 15, users: 25, organizations: 8, bookings: 50 } },
+  { nameKey: 'common.lite_testmiljo', entities: { rental_objects: 5, users: 10, organizations: 3, bookings: 15 } },
+  { nameKey: 'common.stort_produksjonsmiljo', entities: { rental_objects: 40, users: 100, organizations: 25, bookings: 200 } },
 ];
 
 interface GenerationConfig {
@@ -71,7 +71,7 @@ export function AISeedGeneratorPage() {
   const tenants = tenantsData?.data ?? [];
 
   const handlePresetSelect = (presetName: string) => {
-    const preset = PRESETS.find((p) => p.name === presetName);
+    const preset = PRESETS.find((p) => p.nameKey === presetName);
     if (preset) {
       const firstEntity = Object.entries(preset.entities)[0];
       if (firstEntity) {
@@ -116,7 +116,7 @@ export function AISeedGeneratorPage() {
         setGenerationLog((prev) => [...prev, `Generering fullført på ${(duration / 1000).toFixed(1)}s`]);
         setResult({
           success: true,
-          message: `Genererte ${data.count ?? config.count} ${ENTITY_TYPES.find((e) => e.value === config.entityType)?.label ?? config.entityType}`,
+          message: `Genererte ${data.count ?? config.count} ${t(ENTITY_TYPES.find((e) => e.value === config.entityType)?.labelKey ?? config.entityType)}`,
           entitiesCreated: data.count ?? config.count,
           duration,
         });
@@ -193,13 +193,13 @@ export function AISeedGeneratorPage() {
               >
                 {ENTITY_TYPES.map((entity) => (
                   <option key={entity.value} value={entity.value}>
-                    {entity.label}
+                    {t(entity.labelKey)}
                   </option>
                 ))}
               </Select>
               {selectedEntityInfo && (
                 <Paragraph data-size="xs" style={{ marginTop: 'var(--ds-spacing-1)', color: 'var(--ds-color-neutral-text-subtle)' }}>
-                  {selectedEntityInfo.description} • Anbefalt: {selectedEntityInfo.count}
+                  {t(selectedEntityInfo.descriptionKey)} • Anbefalt: {selectedEntityInfo.count}
                 </Paragraph>
               )}
             </div>
@@ -226,13 +226,13 @@ export function AISeedGeneratorPage() {
               <div style={{ display: 'flex', gap: 'var(--ds-spacing-2)', flexWrap: 'wrap' }}>
                 {PRESETS.map((preset) => (
                   <Button
-                    key={preset.name}
+                    key={preset.nameKey}
                     variant="tertiary"
                     data-size="sm"
-                    onClick={() => handlePresetSelect(preset.name)}
+                    onClick={() => handlePresetSelect(preset.nameKey)}
                     type="button"
                   >
-                    {preset.name}
+                    {t(preset.nameKey)}
                   </Button>
                 ))}
               </div>
@@ -253,7 +253,7 @@ export function AISeedGeneratorPage() {
                 ) : (
                   <>
                     <PlayIcon />
-                    Generer {config.count} {selectedEntityInfo?.label ?? 'entiteter'}
+                    Generer {config.count} {selectedEntityInfo ? t(selectedEntityInfo.labelKey) : 'entiteter'}
                   </>
                 )}
               </Button>
@@ -275,7 +275,7 @@ export function AISeedGeneratorPage() {
               </div>
               <div style={{ display: 'flex', justifyContent: 'space-between' }}>
                 <span style={{ color: 'var(--ds-color-neutral-text-subtle)' }}>{t('common.type')}</span>
-                <strong>{selectedEntityInfo?.label ?? '—'}</strong>
+                <strong>{selectedEntityInfo ? t(selectedEntityInfo.labelKey) : '—'}</strong>
               </div>
               <div style={{ display: 'flex', justifyContent: 'space-between' }}>
                 <span style={{ color: 'var(--ds-color-neutral-text-subtle)' }}>Antall:</span>

@@ -1,12 +1,13 @@
 #!/bin/bash
 set -e
 
+ENV="${1:-dev}"
 VPS_HOST="${VPS_HOST:-72.61.23.56}"
-DB_USER="digilist_test"
-DB_PASS="test_password_2026"
-DB_NAME="digilist_test"
+DB_USER="digilist_${ENV}"
+DB_PASS="${ENV}_password_2026"
+DB_NAME="digilist_${ENV}"
 
-echo "🗄️  Deploying Database..."
+echo "🗄️  Deploying Database ($ENV)..."
 
 # Create database user
 ssh root@$VPS_HOST "sudo -u postgres psql -c \"CREATE USER $DB_USER WITH PASSWORD '$DB_PASS';\"" 2>/dev/null || echo "User exists"

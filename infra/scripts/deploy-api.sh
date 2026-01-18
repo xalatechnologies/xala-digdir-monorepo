@@ -1,10 +1,12 @@
 #!/bin/bash
 set -e
 
+ENV="${1:-dev}"
 VPS_HOST="${VPS_HOST:-72.61.23.56}"
 APP_DIR="/home/digilist/digilist-platform"
+DB_URL="postgresql://digilist_${ENV}:${ENV}_password_2026@localhost:5432/digilist_${ENV}"
 
-echo "🚀 Deploying API..."
+echo "🚀 Deploying API ($ENV)..."
 
 # Deploy code
 rsync -avz --delete \
@@ -19,9 +21,9 @@ rsync -avz --delete \
 ssh root@$VPS_HOST "cd $APP_DIR && pnpm install --frozen-lockfile && pnpm --filter @digilist/api build"
 
 # Run migrations
-ssh root@$VPS_HOST "cd $APP_DIR && DATABASE_URL='postgresql://digilist_test:test_password_2026@localhost:5432/digilist_test' pnpm --filter @digilist/database-schema db:push"
+ssh root@$VPS_HOST "cd $APP_DIR && DATABASE_URL='$DB_URL' pnpm --filter @digilist/database-schema db:push"
 
 # Restart API with PM2
-ssh root@$VPS_HOST "cd $APP_DIR && pm2 restart api || pm2 start apps/api/dist/main.js --name api"
+ssh root@$VPS_HOST "cd $APP_DIR && pm2 restart api-$ENV || pm2 start apps/api/dist/main.js --name api-$ENV"
 
-echo "✅ API deployed"
+echo "✅ API deployed ($ENV)"
