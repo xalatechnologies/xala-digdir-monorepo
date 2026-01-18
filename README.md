@@ -18,18 +18,26 @@ The Digilist Platform is a production-ready monorepo implementing a contract-fir
 - `apps/web` - Public-facing listing discovery and booking interface
 - `apps/minside` - Authenticated user portal for booking management
 - `apps/backoffice` - Administrative interface for resource management
-- `apps/tenant-admin` - Tenant-level configuration and branding
-- `apps/saas-admin` - Platform-level administration and monitoring
-- `apps/monitoring` - System health and metrics dashboard
-- `apps/docs-learning` - Internal documentation and training materials
+- `apps/tenant-admin` - Tenant configuration and white-label branding
+- `apps/saas-admin` - Platform administration and subscription management
+- `apps/monitoring` - System health monitoring and metrics dashboard
+- `apps/docs-learning` - Documentation portal and learning resources
 
 **Shared Packages:**
-- `packages/ds` - Design system facade enforcing Norwegian Designsystemet compliance
+- `packages/auth` - Authentication utilities and session management
 - `packages/client-sdk` - Type-safe API client with React Query integration
 - `packages/contracts` - Zod-based API contracts and projection DTOs
-- `packages/i18n` - Internationalization supporting Norwegian Bokmål and English
 - `packages/database-schema` - Drizzle ORM schema definitions
+- `packages/docs-content` - Markdown documentation content and metadata
+- `packages/ds` - Design system facade enforcing Norwegian Designsystemet compliance
+- `packages/ds-registry` - Component documentation and usage examples
+- `packages/ds-themes` - Theme token registry and runtime theme switching
 - `packages/eslint-config` - Custom ESLint rules enforcing architectural patterns
+- `packages/i18n` - Internationalization supporting Norwegian Bokmål and English
+- `packages/observability` - Logging, monitoring, and error tracking utilities
+- `packages/platform` - Platform-level utilities and shared constants
+- `packages/sdk-core` - Core SDK functionality and base client
+- `packages/testing` - Shared test utilities and testing infrastructure
 
 ## Design System Integration
 
@@ -193,23 +201,123 @@ The CLI processes `designsystemet.config.json` and outputs compiled theme assets
 
 ## Infrastructure
 
-Complete infrastructure documentation is available in `infra/`:
+The platform includes production-ready infrastructure automation and deployment tooling:
 
-- Docker configurations for development, staging, and production
-- PM2 process manager configurations
-- Encrypted secrets management with age
-- Deployment automation scripts
-- VPS setup and configuration guides
+**Docker Environments:**
+- `infra/docker/compose/` - Multi-environment Docker Compose configurations
+  - Development: 12 containers with hot reload and dev tools
+  - Staging: 10 containers with production builds
+  - Production: 10 containers with optimized builds and security hardening
+- `infra/docker/dockerfiles/` - Multi-stage Dockerfiles for API and frontend apps
+- `infra/docker/nginx/` - Nginx reverse proxy configurations
+- `infra/docker/postgres/` - PostgreSQL initialization scripts
 
-See `infra/AGENTS.md` for infrastructure commands and `infra/SETUP_GUIDE.md` for deployment procedures.
+**Process Management:**
+- `infra/pm2/` - PM2 ecosystem configurations for zero-downtime deployments
+  - Staging configuration with debug logging
+  - Production configuration with clustering and graceful shutdown
+
+**Secrets Management:**
+- `infra/secrets/` - Age-encrypted secrets for staging and production
+  - Deploy-time injection (not runtime fetching)
+  - Separate encrypted files per app and environment
+  - Public key committed, private key in password manager
+
+**Environment Configuration:**
+- `infra/env/` - Environment variable templates
+  - Development, Docker, staging, and production templates
+  - Clear documentation of required variables
+
+**Deployment Automation:**
+- `infra/scripts/` - Automated deployment and utility scripts
+  - `setup-vps.sh` - Automated VPS provisioning
+  - `deploy-staging.sh` - Staging deployment automation
+  - `deploy-production.sh` - Production deployment automation
+  - `encrypt-secrets.sh` - Interactive secret encryption helper
+  - `generate-secrets.sh` - Strong secret generation utility
+
+**Documentation:**
+- `infra/AGENTS.md` - Quick reference commands for infrastructure tasks
+- `infra/CLAUDE.md` - Infrastructure context for AI assistants
+- `infra/SETUP_GUIDE.md` - Complete 60+ page setup guide
+- `infra/docs/SECRETS_MANAGEMENT.md` - Comprehensive secrets management guide
+- `VPS_SETUP_GUIDE.md` - VPS provisioning and configuration guide
+
+**Key Features:**
+- Automated VPS setup with single command
+- Encrypted secrets with age (never commit plaintext)
+- Zero-downtime deployments with PM2 reload
+- Multi-environment support (dev, staging, production)
+- GitHub Actions CI/CD integration
+- Database schema validation and migrations
+- Health checks and monitoring integration
+
+## Development Guidelines
+
+**Contract-First Architecture:**
+- All API endpoints defined in `packages/contracts` using Zod schemas
+- Projection DTOs prevent data transformation in frontend
+- Type safety enforced end-to-end from database to UI
+- Never create transformers, mappers, or view models in applications
+
+**Design System Compliance:**
+- Import only from `@xala/ds`, never from `@digdir/*` packages
+- Single CSS import in application entry point
+- Use semantic components, not raw HTML elements
+- Extend components via `asChild` pattern for semantic correctness
+
+**Code Quality Standards:**
+- TypeScript strict mode enabled across all packages
+- Explicit return types required for all functions
+- No `any` type usage - create specific interfaces
+- Maximum file length: 200 lines
+- Maximum function length: 20 lines
+- Cyclomatic complexity under 10
+
+**Internationalization:**
+- All user-facing text must use `useT()` hook
+- Support for Norwegian Bokmål (primary) and English (fallback)
+- Never hardcode user-facing strings
+- Run i18n scanner before commits
+
+**Security Requirements:**
+- All secrets encrypted with age before committing
+- Environment variables for configuration, never hardcoded values
+- RBAC enforced at API level, not in frontend
+- Audit logging for all mutations
+- GDPR compliance with consent management
+
+**Testing Standards:**
+- Unit tests for business logic
+- Integration tests for API endpoints
+- Component tests for UI elements
+- E2E tests for critical user flows
+- Minimum 80% code coverage
 
 ## Documentation
 
+**Platform Documentation:**
 - `AGENTS.md` - AI agent guidelines and platform overview
 - `CLAUDE.md` - Development context and critical requirements
-- `infra/SETUP_GUIDE.md` - Infrastructure setup procedures
-- `docs/architecture/` - System architecture documentation
+- `README.md` - This file - platform overview and quick start
+
+**Infrastructure Documentation:**
+- `infra/AGENTS.md` - Infrastructure commands reference
+- `infra/CLAUDE.md` - Infrastructure context for AI assistants
+- `infra/SETUP_GUIDE.md` - Complete infrastructure setup (60+ pages)
+- `infra/docs/SECRETS_MANAGEMENT.md` - Secrets management guide
+- `VPS_SETUP_GUIDE.md` - VPS provisioning guide
+- `INFRASTRUCTURE_SETUP_COMPLETE.md` - Setup completion status
+
+**Architecture Documentation:**
+- `docs/architecture/` - System design and architecture decisions
 - `docs/operations/` - Operational procedures and runbooks
+- `docs/guides/` - Development and deployment guides
+
+**Package-Specific Documentation:**
+- Each package contains its own README with usage examples
+- API documentation generated from Zod schemas
+- Component documentation in `packages/ds-registry`
 
 ## License
 
