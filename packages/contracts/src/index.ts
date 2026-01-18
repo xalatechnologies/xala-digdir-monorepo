@@ -43,6 +43,9 @@ export * from './projections';
 // Storage
 export * from './storage';
 
+// Monitoring DTOs
+export * from './monitoring';
+
 // Modules
 export * from './modules';
 

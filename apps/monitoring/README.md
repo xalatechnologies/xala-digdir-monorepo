@@ -2,7 +2,13 @@
 
 Production monitoring and observability dashboard for the Digilist platform.
 
-## Overview
+**Status:** ✅ Foundation Complete - Ready for UI Development  
+**Port:** 5175  
+**Package:** `@xala/monitoring`
+
+---
+
+## 🎯 Overview
 
 Monitoring is the system observability application where administrators can:
 - View system health and performance metrics
@@ -10,8 +16,10 @@ Monitoring is the system observability application where administrators can:
 - Track synthetic monitor runs
 - Access Grafana dashboards
 - View system logs and audit trails
-- Configure monitoring settings and audit trails
 - Configure monitoring settings
+
+**Cloned from:** MinSide app (preserving UI/UX patterns)  
+**Integrates:** `@xala/observability` package (Grafana, Prometheus, Loki, Tempo)
 
 **Technology Stack:**
 - **Frontend:** Vite + React 18 + TypeScript
@@ -22,23 +30,151 @@ Monitoring is the system observability application where administrators can:
 
 ---
 
-## Installation
+## 🚀 Quick Start
 
 ```bash
 # From monorepo root
 pnpm install
 
-# Run minside app
-cd apps/minside && pnpm dev
+# Run monitoring app
+pnpm --filter @xala/monitoring dev
 ```
 
-The app will be available at: **http://localhost:5173**
+The app will be available at: **http://localhost:5175**
 
 ---
 
-## 🔐 OAuth Authentication
+## 📦 What's Included
 
-Minside uses **OAuth 2.0 Authorization Code Flow** with **HTTP-only cookies** for secure authentication.
+### ✅ Complete Foundation
+- **App Shell:** Cloned from MinSide with all UI patterns
+- **50+ DTOs:** Type-safe contracts in `@xala/contracts/monitoring/`
+- **25 Service Methods:** API client in `@digilist/client-sdk`
+- **22 React Query Hooks:** Ready for data fetching
+- **Complete Documentation:** See `docs/` folder
+
+### ⏳ Needs Implementation
+- **UI Pages:** Overview, Incidents, Synthetics, Dashboards, Logs, Audit
+- **Backend API:** 23 new endpoints (see `docs/PHASE_3_COMPLETE.md`)
+- **Database Tables:** Incidents, Synthetic Monitors, Runs
+- **Grafana Adapter:** Dashboard integration
+
+---
+
+## 🛠️ Development
+
+### Available Commands
+
+```bash
+# Development
+pnpm dev                    # Start dev server (port 5175)
+pnpm build                  # Build for production
+pnpm preview                # Preview production build
+
+# Testing
+pnpm test                   # Run unit tests
+pnpm test:e2e              # Run E2E tests
+
+# Linting
+pnpm lint                   # Run ESLint
+pnpm typecheck              # Run TypeScript checks
+```
+
+### Using React Query Hooks
+
+```typescript
+import { 
+  useMonitoringOverview,
+  useIncidents,
+  useCreateIncident,
+  useSyntheticMonitors,
+  useGrafanaDashboards 
+} from '@digilist/client-sdk/hooks';
+
+function OverviewPage() {
+  const { data, isLoading } = useMonitoringOverview();
+  
+  if (isLoading) return <LoadingSpinner />;
+  
+  return (
+    <div>
+      <SystemHealth health={data.health} />
+      <SystemMetrics metrics={data.metrics} />
+      <RecentIncidents incidents={data.recentIncidents} />
+    </div>
+  );
+}
+```
+
+### Mock Data Development
+
+For UI development without backend:
+
+```bash
+# Install MSW
+pnpm add -D msw
+
+# Create mock handlers
+# See docs/PHASE_3_COMPLETE.md for examples
+```
+
+---
+
+---
+
+## 📚 Documentation
+
+### For Developers
+- **[migration-map.md](docs/migration-map.md)** - Complete UI development guide
+- **[PHASE_2_SUMMARY.md](docs/PHASE_2_SUMMARY.md)** - Data layer reference
+- **[AGENTS.md](AGENTS.md)** - Development commands
+
+### For Backend Team
+- **[PHASE_3_PLAN.md](docs/PHASE_3_PLAN.md)** - Backend requirements
+- **[PHASE_3_COMPLETE.md](docs/PHASE_3_COMPLETE.md)** - Implementation guide
+
+### Project Overview
+- **[PROJECT_SUMMARY.md](docs/PROJECT_SUMMARY.md)** - Complete project summary
+
+---
+
+## 🏗️ Architecture
+
+### Data Flow
+```
+UI Components
+    ↓
+React Query Hooks (22)
+    ↓
+Monitoring Service (25 methods)
+    ↓
+@xala/sdk-core (HTTP Client)
+    ↓
+API Endpoints
+    ↓
+├─→ Database (Drizzle)
+├─→ Grafana API
+├─→ Loki (Logs)
+└─→ Prometheus (Metrics)
+```
+
+### Key Packages
+- `@xala/monitoring` - This app
+- `@xala/contracts` - DTOs and types
+- `@digilist/client-sdk` - API client
+- `@xala/observability` - Grafana/Prometheus integration
+- `@xala/ds` - Design system components
+
+---
+
+## 🔐 Authentication & RBAC
+
+Monitoring uses **OAuth 2.0 Authorization Code Flow** with **HTTP-only cookies**.
+
+### Roles
+- **SaaS Admin:** Full access, cross-tenant queries
+- **Tenant Admin:** Tenant-scoped access, can manage incidents/monitors
+- **Viewer:** Read-only access
 
 ### Supported OAuth Providers
 

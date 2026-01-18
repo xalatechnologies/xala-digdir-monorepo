@@ -25,10 +25,10 @@ const CONFIG = {
   extensions: ['.tsx', '.ts', '.jsx', '.js'],
 
   // Directories to skip
-  skipDirs: ['node_modules', 'dist', 'build', '.git', 'coverage', 'api'],
+  skipDirs: ['node_modules', 'dist', 'build', '.git', 'coverage', 'api', '__tests__', 'test', 'tests', 'fixtures', '__mocks__'],
 
   // Files to skip
-  skipFiles: ['.test.', '.spec.', '.stories.'],
+  skipFiles: ['.test.', '.spec.', '.stories.', 'fixtures', 'mock', '.mock.'],
 
   // Minimum string length to report (avoid single chars like "X", "Y")
   minStringLength: 2,

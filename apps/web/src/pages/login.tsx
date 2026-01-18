@@ -195,3 +195,6 @@ export function Login(): React.ReactElement {
     />
   );
 }
+
+// Export alias for backward compatibility with App.tsx
+export { Login as LoginPage };

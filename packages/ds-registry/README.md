@@ -1,232 +1,162 @@
 # @xala/ds-registry
 
-A comprehensive registry for Designsystemet components, patterns, and usage guidelines.
+📚 **DOCUMENTATION PACKAGE** - Component metadata and examples.
 
-## Quick Start
+## Purpose
 
-### Simple JSON Registry (Recommended)
+Provides structured documentation for `@xala/ds` components:
+- Component metadata (props, types, guidelines)
+- Code examples (copy-paste ready TSX)
+- Usage patterns (best practices)
+- Design guidelines
 
-The registry is available as a single JSON file for maximum simplicity:
+## Architecture
 
-```typescript
-// Import the JSON registry utilities
-import { components, patterns, examples, getComponent } from '@xala/ds-registry/registry';
-
-// Or import the raw JSON directly
-import registryData from '@xala/ds-registry/registry.json';
-
-// Get component info
-const buttonInfo = components.button;
-console.log(buttonInfo.description);
-// Output: Primary action element with multiple variants and sizes.
-
-// Get all components in a category
-const inputComponents = Object.values(components)
-  .filter(c => c.category === 'input');
-
-// Find a specific component
-const alertComponent = getComponent('alert');
+```
+@xala/ds-registry (Documentation metadata)
+    ├── Component registry (JSON + TypeScript)
+    ├── Code examples (TSX files)
+    ├── Usage patterns (asChild, providers, etc.)
+    └── Guidelines (accessibility, i18n, etc.)
+         └── Used by documentation site
 ```
 
-### TypeScript Registry (Legacy)
+## Contents
 
-For full TypeScript support, use the complex registry:
-
+### Component Registry
 ```typescript
-import { components, patterns, examples } from '@xala/ds-registry';
+import { components } from '@xala/ds-registry/registry';
 
+// Get component metadata
 const buttonInfo = components.button;
+console.log(buttonInfo.description);
+console.log(buttonInfo.props);
+```
+
+### Code Examples
+```typescript
+import { examples } from '@xala/ds-registry/examples';
+
+// Get all examples for a component
+const buttonExamples = Object.values(examples)
+  .filter(e => e.component === 'button');
+```
+
+### Usage Patterns
+```typescript
+import { patterns } from '@xala/ds-registry/patterns';
+
+// Learn about asChild pattern, provider usage, etc.
+console.log(patterns.asChild);
+```
+
+## Consumers
+
+### ✅ Intended Users
+
+1. **Documentation Site** (`apps/docs-learning`)
+   - Generates component documentation pages
+   - Shows interactive examples
+   - Displays props tables
+
+2. **Development Tools**
+   - IDE plugins (autocomplete, hints)
+   - Linters (enforce best practices)
+   - Code generators (scaffolding)
+
+3. **Storybook** (future)
+   - Component playground
+   - Visual testing
+   - Design QA
+
+### ❌ Not For
+
+**Production Apps** - They import components directly from `@xala/ds`:
+```typescript
+// ❌ DON'T import registry in production apps
+import { registry } from '@xala/ds-registry';
+
+// ✅ DO import components from @xala/ds
+import { Button, Card } from '@xala/ds';
+```
+
+## For App Developers
+
+You don't need this package! Just use `@xala/ds`:
+```typescript
+import { Button, Card, Heading } from '@xala/ds';
+import { AppShell, ContentLayout } from '@xala/ds';
+import { RentalObjectCard } from '@xala/ds';
+```
+
+## For Documentation Developers
+
+If you're building the docs site, use the JSON registry:
+```typescript
+// Simple, lightweight access
+import registry from '@xala/ds-registry/registry.json';
+
+// TypeScript access with types
+import { components, patterns, examples } from '@xala/ds-registry';
 ```
 
 ## Registry Structure
 
-### JSON Registry Format
-
+### registry.json
 ```json
 {
-  "version": "1.0.0",
-  "lastUpdated": "2025-01-12",
-  "components": { ... },
-  "patterns": { ... },
-  "examples": { ... },
-  "guidelines": { ... },
-  "rules": { ... },
-  "metadata": { ... }
+  "metadata": {
+    "version": "1.0.0",
+    "generatedAt": "2026-01-18T10:00:00Z"
+  },
+  "components": {
+    "button": {
+      "name": "Button",
+      "description": "Interactive button component",
+      "category": "primitives",
+      "props": { ... },
+      "examples": ["button-variants", "button-sizes"]
+    }
+  }
 }
 ```
 
-### Components
-
-Each component includes:
-- Basic metadata (name, category, description)
-- Import path from `@xala/ds`
-- Accessibility features
-- Common use cases
-- Related components
-- Props documentation (when available)
-
-### Patterns
-
-UI patterns include:
-- Components used
-- When to use the pattern
-- Accessibility considerations
-- Related patterns
-
-### Examples
-
-Code examples provide:
-- Copy-paste ready implementations
-- Component associations
-- Tags for categorization
-
-### Guidelines
-
-Best practices cover:
-- Accessibility requirements
-- Styling guidelines
-- Performance recommendations
-- Architecture rules
-
-## Usage Examples
-
-### Finding Components
-
-```typescript
-// Get all input components
-const inputComponents = Object.values(components)
-  .filter(c => c.category === 'input');
-
-// Check if a component supports asChild
-if (components.button.supportsAsChild) {
-  // Component supports asChild pattern
-}
-```
-
-### Working with Patterns
-
-```typescript
-// Get form validation pattern
-const formPattern = patterns.formValidation;
-console.log(formPattern.components);
-// ["ErrorSummary", "Field", "Input", "Button"]
-```
-
-### Using Examples
-
-```typescript
-// Get all button examples
-const buttonExamples = Object.values(examples)
-  .filter(e => e.component === 'button');
-
-// Use an example
-const example = buttonExamples[0];
-console.log(example.code);
-```
-
-## Development Rules
-
-### Required Rules
-
-1. **Import Restrictions**
-   - Must import UI only from `@xala/ds`
-   - Must not import `@digdir/*` packages directly
-   - Must import `@xala/ds/styles` exactly once
-
-2. **Styling Guidelines**
-   - No custom UI components in apps
-   - Avoid custom CSS
-   - Use component variants and design tokens
-
-3. **Accessibility Requirements**
-   - All interactive elements keyboard accessible
-   - Proper ARIA attributes and semantic HTML
-   - WCAG 2.2 AA color contrast
-
-## Registry Statistics
-
-The registry now includes **60+ components** organized across multiple categories:
+## Build Process
 
 ```bash
-# View registry metadata
-pnpm validate
+# Compile TypeScript registry to dist/
+npm run build
 
-# Output:
-# {
-#   totalComponents: 62,
-#   totalPatterns: 4,
-#   totalExamples: 4,
-#   totalGuidelines: 3,
-#   categories: {
-#     components: [
-#       "feedback",      // Alert, ErrorSummary, ProgressBar, Skeleton
-#       "input",         // Button, Checkbox, Field, Input, Radio, Select, etc.
-#       "layout",        // Card, Divider, Table
-#       "media",         // Avatar
-#       "navigation",    // Link, Navigation, NavigationLink, Pagination, Tabs
-#       "utility",       // Badge, Dialog, Drawer, Spinner, Switch, Tooltip, etc.
-#       "composed",      // AppHeader, ContentLayout, FilterBar, Navigation, etc.
-#       "block",         // ListingCard, BookingSection, StatCard, ImageGallery, etc.
-#       "shell",         // AppShell, LoginLayout
-#       "typography"     // Heading, Paragraph, Label, List
-#     ],
-#     patterns: ["forms", "navigation", "themes", "utilities"],
-#     guidelines: ["architecture", "styling", "accessibility"]
-#   },
-#   themes: ["digdir", "altinn", "uutilsynet", "portal"],
-#   dataAttributes: {
-#     colorScheme: ["auto", "light", "dark"],
-#     size: ["sm", "md", "lg"],
-#     typography: ["primary", "secondary"]
-#   }
-# }
+# Watch for changes during development
+npm run dev
+
+# Validate registry structure
+npm run validate
 ```
 
-### Component Categories
+## Examples
 
-- **Primitives**: Basic building blocks (Button, Input, Card, etc.)
-- **Composed**: Mid-level components (AppHeader, ContentLayout, Navigation, etc.)
-- **Blocks**: Business-specific components (ListingCard, BookingSection, StatCard, etc.)
-- **Shells**: Application-level layouts (AppShell, LoginLayout)
+Located in `examples/` directory:
+- `blocks/` - Business logic components
+- `composed/` - Mid-level components  
+- `shells/` - Application layouts
+- `patterns/` - Usage patterns
 
-### Example Categories
+Each example is a standalone TSX file that can be:
+- Rendered in docs
+- Copied to clipboard
+- Run in CodeSandbox
 
-The registry includes copy-paste ready examples for:
-- **Basic usage**: Simple component implementations
-- **AsChild pattern**: Rendering components as different elements
-- **Form patterns**: Validation, field composition, error handling
-- **Theme switching**: Runtime theme and color scheme control
-- **Navigation**: Links, buttons, routing integration
+## Guidelines
 
-## Available Themes
+Located in `src/guidelines.ts`:
+- Accessibility best practices
+- i18n requirements
+- Performance tips
+- Common patterns
 
-- `digdir`: Default Digdir theme
-- `altinn`: Altinn theme
-- `uutilsynet`: Utsynet theme
-- `portal`: Portal theme
+## Related Documentation
 
-## Data Attributes
-
-Designsystemet uses these data attributes:
-- `data-color-scheme`: "auto" | "light" | "dark"
-- `data-size`: "sm" | "md" | "lg"
-- `data-typography`: "primary" | "secondary"
-
-## Contributing
-
-To update the registry:
-
-1. Edit `registry.json` directly
-2. Update component documentation
-3. Add new examples as needed
-4. Run `pnpm validate` to check structure
-
-The JSON format makes it easy to:
-- Parse in any language
-- Generate documentation
-- Create tooling
-- Sync with design system updates
-
-## License
-
-Internal Xala package - not for external distribution.
+- [Design System Architecture](../../docs/architecture/design-system.md)
+- [Design System Package Analysis](../../docs/DESIGN_SYSTEM_PACKAGES_ANALYSIS.md)
+- [@xala/ds README](../ds/README.md)

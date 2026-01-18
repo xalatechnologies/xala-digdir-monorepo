@@ -79,14 +79,33 @@ export const guardrails = [
               group: ['@digdir/designsystemet-theme'],
               message: "Do not import theme CSS directly. Use @xala/ds DesignsystemetProvider to switch themes.",
             },
+            {
+              group: ['@xala/ds-themes'],
+              message: "@xala/ds-themes is internal infrastructure. Use theme API from '@xala/ds' instead (ThemeProvider, useTheme).",
+            },
+            {
+              group: ['@xala/ds-registry'],
+              message: "@xala/ds-registry is for documentation only. Import components from '@xala/ds' instead.",
+            },
+            {
+              group: ['@xala/platform'],
+              message: "@xala/platform is DEPRECATED. Use '@xala/contracts' instead. This package will be removed in v2.0.0.",
+            },
           ],
         },
       ],
     },
   },
   {
-    // Allow theme CSS imports ONLY in packages/ds/src/styles.ts
-    files: ['packages/ds/src/styles.ts'],
+    // Allow theme imports ONLY in packages/ds/src/provider.tsx and styles.ts
+    files: ['packages/ds/src/styles.ts', 'packages/ds/src/provider.tsx'],
+    rules: {
+      'no-restricted-imports': 'off',
+    },
+  },
+  {
+    // Allow ds-themes imports ONLY within ds-registry examples
+    files: ['packages/ds-registry/examples/**/*.{ts,tsx}'],
     rules: {
       'no-restricted-imports': 'off',
     },

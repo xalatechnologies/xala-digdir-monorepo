@@ -57,6 +57,7 @@
   "author": "Xala Technologies",
   "license": "MIT",
   "dependencies": {
+    "@types/node": "^22.10.5",
     "zod": "^3.22.4"
   },
   "devDependencies": {
