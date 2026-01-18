@@ -1,7 +1,7 @@
 {
   "meta": {
     "version": "1.1.0",
-    "created": "2026-01-18T17:42:37.778Z",
+    "created": "2026-01-18T17:43:30.686Z",
     "description": "Comprehensive seed data for Digilist Platform - WITH REAL IMAGES",
     "schema_version": "v3",
     "total_objects": 70
@@ -73,23 +73,23 @@
       "capacity": 300,
       "images": [
         {
-          "url": "/seed-images/lokaler-og-baner/soccer-field.png",
-          "alt": "Fotballbane hovedbilde",
-          "thumbnail": "/seed-images/lokaler-og-baner/soccer-field.png",
+          "url": "/storage/seed-images/lokaler-og-baner/024053.jpg",
+          "alt": "Fotballbane - Skien - bilde 1",
+          "thumbnail": "/storage/seed-images/lokaler-og-baner/024053.jpg",
           "is_primary": true,
           "sort_order": 1
         },
         {
-          "url": "/seed-images/lokaler-og-baner/tennis-court.png",
-          "alt": "Fotballbane interiør",
-          "thumbnail": "/seed-images/lokaler-og-baner/tennis-court.png",
+          "url": "/storage/seed-images/lokaler-og-baner/03da9a60-2306-45e8-bf8c-bacacccc24a5.jpeg",
+          "alt": "Fotballbane - Skien - bilde 2",
+          "thumbnail": "/storage/seed-images/lokaler-og-baner/03da9a60-2306-45e8-bf8c-bacacccc24a5.jpeg",
           "is_primary": false,
           "sort_order": 2
         },
         {
-          "url": "/seed-images/lokaler-og-baner/swimming-pool.png",
-          "alt": "Fotballbane fasiliteter",
-          "thumbnail": "/seed-images/lokaler-og-baner/swimming-pool.png",
+          "url": "/storage/seed-images/lokaler-og-baner/16d2d5b6-d410-4f38-975c-e29a00f2285c.jpeg",
+          "alt": "Fotballbane - Skien - bilde 3",
+          "thumbnail": "/storage/seed-images/lokaler-og-baner/16d2d5b6-d410-4f38-975c-e29a00f2285c.jpeg",
           "is_primary": false,
           "sort_order": 3
         }
@@ -201,23 +201,23 @@
       "capacity": 50,
       "images": [
         {
-          "url": "/seed-images/lokaler-og-baner/tennis-court.png",
-          "alt": "Tennisbane hovedbilde",
-          "thumbnail": "/seed-images/lokaler-og-baner/tennis-court.png",
+          "url": "/storage/seed-images/lokaler-og-baner/17nyhdalselv_3.png__.jpg",
+          "alt": "Tennisbane - Porsgrunn - bilde 1",
+          "thumbnail": "/storage/seed-images/lokaler-og-baner/17nyhdalselv_3.png__.jpg",
           "is_primary": true,
           "sort_order": 1
         },
         {
-          "url": "/seed-images/lokaler-og-baner/swimming-pool.png",
-          "alt": "Tennisbane interiør",
-          "thumbnail": "/seed-images/lokaler-og-baner/swimming-pool.png",
+          "url": "/storage/seed-images/lokaler-og-baner/2020-deichman-foto-joerg-wiesner-DSC0538-H-9071832- Foto_Jörg_Wiesner.jpg",
+          "alt": "Tennisbane - Porsgrunn - bilde 2",
+          "thumbnail": "/storage/seed-images/lokaler-og-baner/2020-deichman-foto-joerg-wiesner-DSC0538-H-9071832- Foto_Jörg_Wiesner.jpg",
           "is_primary": false,
           "sort_order": 2
         },
         {
-          "url": "/seed-images/lokaler-og-baner/gymnasium.png",
-          "alt": "Tennisbane fasiliteter",
-          "thumbnail": "/seed-images/lokaler-og-baner/gymnasium.png",
+          "url": "/storage/seed-images/lokaler-og-baner/2022-lindbak-halden-bibliotek-dsr-25.webp",
+          "alt": "Tennisbane - Porsgrunn - bilde 3",
+          "thumbnail": "/storage/seed-images/lokaler-og-baner/2022-lindbak-halden-bibliotek-dsr-25.webp",
           "is_primary": false,
           "sort_order": 3
         }
@@ -329,23 +329,23 @@
       "capacity": 200,
       "images": [
         {
-          "url": "/seed-images/lokaler-og-baner/swimming-pool.png",
-          "alt": "Svømmehall hovedbilde",
-          "thumbnail": "/seed-images/lokaler-og-baner/swimming-pool.png",
+          "url": "/storage/seed-images/Svømmehall/Stavanger-Svømmehall-computer-aided-drowning-swimeye-gallery-1.jpg",
+          "alt": "Svømmehall - Bamble - bilde 1",
+          "thumbnail": "/storage/seed-images/Svømmehall/Stavanger-Svømmehall-computer-aided-drowning-swimeye-gallery-1.jpg",
           "is_primary": true,
           "sort_order": 1
         },
         {
-          "url": "/seed-images/lokaler-og-baner/gymnasium.png",
-          "alt": "Svømmehall interiør",
-          "thumbnail": "/seed-images/lokaler-og-baner/gymnasium.png",
+          "url": "/storage/seed-images/Svømmehall/Tanasvømmehall.jpg",
+          "alt": "Svømmehall - Bamble - bilde 2",
+          "thumbnail": "/storage/seed-images/Svømmehall/Tanasvømmehall.jpg",
           "is_primary": false,
           "sort_order": 2
         },
         {
-          "url": "/seed-images/lokaler-og-baner/sports-hall.png",
-          "alt": "Svømmehall fasiliteter",
-          "thumbnail": "/seed-images/lokaler-og-baner/sports-hall.png",
+          "url": "/storage/seed-images/Svømmehall/drammensbadet_7.jpg",
+          "alt": "Svømmehall - Bamble - bilde 3",
+          "thumbnail": "/storage/seed-images/Svømmehall/drammensbadet_7.jpg",
           "is_primary": false,
           "sort_order": 3
         }
@@ -457,23 +457,23 @@
       "capacity": 100,
       "images": [
         {
-          "url": "/seed-images/lokaler-og-baner/gymnasium.png",
-          "alt": "Gymnastikksal hovedbilde",
-          "thumbnail": "/seed-images/lokaler-og-baner/gymnasium.png",
+          "url": "/storage/seed-images/Gymsal/Gymsal og idrettshall.jpg",
+          "alt": "Gymnastikksal - Notodden - bilde 1",
+          "thumbnail": "/storage/seed-images/Gymsal/Gymsal og idrettshall.jpg",
           "is_primary": true,
           "sort_order": 1
         },
         {
-          "url": "/seed-images/lokaler-og-baner/sports-hall.png",
-          "alt": "Gymnastikksal interiør",
-          "thumbnail": "/seed-images/lokaler-og-baner/sports-hall.png",
+          "url": "/storage/seed-images/Gymsal/Gymsal.webp",
+          "alt": "Gymnastikksal - Notodden - bilde 2",
+          "thumbnail": "/storage/seed-images/Gymsal/Gymsal.webp",
           "is_primary": false,
           "sort_order": 2
         },
         {
-          "url": "/seed-images/lokaler-og-baner/soccer-field.png",
-          "alt": "Gymnastikksal fasiliteter",
-          "thumbnail": "/seed-images/lokaler-og-baner/soccer-field.png",
+          "url": "/storage/seed-images/Gymsal/IMG_3331+Gymsal.jpeg",
+          "alt": "Gymnastikksal - Notodden - bilde 3",
+          "thumbnail": "/storage/seed-images/Gymsal/IMG_3331+Gymsal.jpeg",
           "is_primary": false,
           "sort_order": 3
         }
@@ -585,23 +585,23 @@
       "capacity": 100,
       "images": [
         {
-          "url": "/seed-images/lokaler-og-baner/sports-hall.png",
-          "alt": "Basketballbane hovedbilde",
-          "thumbnail": "/seed-images/lokaler-og-baner/sports-hall.png",
+          "url": "/storage/seed-images/lokaler-og-baner/3.jpg",
+          "alt": "Basketballbane - Kragerø - bilde 1",
+          "thumbnail": "/storage/seed-images/lokaler-og-baner/3.jpg",
           "is_primary": true,
           "sort_order": 1
         },
         {
-          "url": "/seed-images/lokaler-og-baner/soccer-field.png",
-          "alt": "Basketballbane interiør",
-          "thumbnail": "/seed-images/lokaler-og-baner/soccer-field.png",
+          "url": "/storage/seed-images/lokaler-og-baner/3TSluppen_3.jpg",
+          "alt": "Basketballbane - Kragerø - bilde 2",
+          "thumbnail": "/storage/seed-images/lokaler-og-baner/3TSluppen_3.jpg",
           "is_primary": false,
           "sort_order": 2
         },
         {
-          "url": "/seed-images/lokaler-og-baner/tennis-court.png",
-          "alt": "Basketballbane fasiliteter",
-          "thumbnail": "/seed-images/lokaler-og-baner/tennis-court.png",
+          "url": "/storage/seed-images/lokaler-og-baner/4460a22c20b003cf295b0e88b8d990a80043917a-4200x2800.jpg",
+          "alt": "Basketballbane - Kragerø - bilde 3",
+          "thumbnail": "/storage/seed-images/lokaler-og-baner/4460a22c20b003cf295b0e88b8d990a80043917a-4200x2800.jpg",
           "is_primary": false,
           "sort_order": 3
         }
@@ -713,23 +713,23 @@
       "capacity": 80,
       "images": [
         {
-          "url": "/seed-images/lokaler-og-baner/soccer-field.png",
-          "alt": "Volleyballbane hovedbilde",
-          "thumbnail": "/seed-images/lokaler-og-baner/soccer-field.png",
+          "url": "/storage/seed-images/lokaler-og-baner/44660_edited.jpg",
+          "alt": "Volleyballbane - Skien - bilde 1",
+          "thumbnail": "/storage/seed-images/lokaler-og-baner/44660_edited.jpg",
           "is_primary": true,
           "sort_order": 1
         },
         {
-          "url": "/seed-images/lokaler-og-baner/tennis-court.png",
-          "alt": "Volleyballbane interiør",
-          "thumbnail": "/seed-images/lokaler-og-baner/tennis-court.png",
+          "url": "/storage/seed-images/lokaler-og-baner/457796714_1701260397292790_2330091316797821475_n.jpg",
+          "alt": "Volleyballbane - Skien - bilde 2",
+          "thumbnail": "/storage/seed-images/lokaler-og-baner/457796714_1701260397292790_2330091316797821475_n.jpg",
           "is_primary": false,
           "sort_order": 2
         },
         {
-          "url": "/seed-images/lokaler-og-baner/swimming-pool.png",
-          "alt": "Volleyballbane fasiliteter",
-          "thumbnail": "/seed-images/lokaler-og-baner/swimming-pool.png",
+          "url": "/storage/seed-images/lokaler-og-baner/4f9c3335d0754df7915daffd407cb736.jpg",
+          "alt": "Volleyballbane - Skien - bilde 3",
+          "thumbnail": "/storage/seed-images/lokaler-og-baner/4f9c3335d0754df7915daffd407cb736.jpg",
           "is_primary": false,
           "sort_order": 3
         }
@@ -841,23 +841,23 @@
       "capacity": 120,
       "images": [
         {
-          "url": "/seed-images/lokaler-og-baner/tennis-court.png",
-          "alt": "Badmintonhall hovedbilde",
-          "thumbnail": "/seed-images/lokaler-og-baner/tennis-court.png",
+          "url": "/storage/seed-images/Idrettshaller/Tennisbane.webp",
+          "alt": "Badmintonhall - Porsgrunn - bilde 1",
+          "thumbnail": "/storage/seed-images/Idrettshaller/Tennisbane.webp",
           "is_primary": true,
           "sort_order": 1
         },
         {
-          "url": "/seed-images/lokaler-og-baner/swimming-pool.png",
-          "alt": "Badmintonhall interiør",
-          "thumbnail": "/seed-images/lokaler-og-baner/swimming-pool.png",
+          "url": "/storage/seed-images/Idrettshaller/USF_19-scaled-e1755845730989.jpeg",
+          "alt": "Badmintonhall - Porsgrunn - bilde 2",
+          "thumbnail": "/storage/seed-images/Idrettshaller/USF_19-scaled-e1755845730989.jpeg",
           "is_primary": false,
           "sort_order": 2
         },
         {
-          "url": "/seed-images/lokaler-og-baner/gymnasium.png",
-          "alt": "Badmintonhall fasiliteter",
-          "thumbnail": "/seed-images/lokaler-og-baner/gymnasium.png",
+          "url": "/storage/seed-images/Idrettshaller/Ullern-flerbrukshall_01.jpg",
+          "alt": "Badmintonhall - Porsgrunn - bilde 3",
+          "thumbnail": "/storage/seed-images/Idrettshaller/Ullern-flerbrukshall_01.jpg",
           "is_primary": false,
           "sort_order": 3
         }
@@ -969,23 +969,23 @@
       "capacity": 250,
       "images": [
         {
-          "url": "/seed-images/lokaler-og-baner/swimming-pool.png",
-          "alt": "Håndballbane hovedbilde",
-          "thumbnail": "/seed-images/lokaler-og-baner/swimming-pool.png",
+          "url": "/storage/seed-images/lokaler-og-baner/7a8c64f0-02d8-4eba-a73d-25a02c2af0ff.jpeg",
+          "alt": "Håndballbane - Bamble - bilde 1",
+          "thumbnail": "/storage/seed-images/lokaler-og-baner/7a8c64f0-02d8-4eba-a73d-25a02c2af0ff.jpeg",
           "is_primary": true,
           "sort_order": 1
         },
         {
-          "url": "/seed-images/lokaler-og-baner/gymnasium.png",
-          "alt": "Håndballbane interiør",
-          "thumbnail": "/seed-images/lokaler-og-baner/gymnasium.png",
+          "url": "/storage/seed-images/lokaler-og-baner/A-Sport-padelbaner-1430px.jpg",
+          "alt": "Håndballbane - Bamble - bilde 2",
+          "thumbnail": "/storage/seed-images/lokaler-og-baner/A-Sport-padelbaner-1430px.jpg",
           "is_primary": false,
           "sort_order": 2
         },
         {
-          "url": "/seed-images/lokaler-og-baner/sports-hall.png",
-          "alt": "Håndballbane fasiliteter",
-          "thumbnail": "/seed-images/lokaler-og-baner/sports-hall.png",
+          "url": "/storage/seed-images/lokaler-og-baner/Apning26-1200x900.jpg",
+          "alt": "Håndballbane - Bamble - bilde 3",
+          "thumbnail": "/storage/seed-images/lokaler-og-baner/Apning26-1200x900.jpg",
           "is_primary": false,
           "sort_order": 3
         }
@@ -1097,23 +1097,23 @@
       "capacity": 500,
       "images": [
         {
-          "url": "/seed-images/lokaler-og-baner/gymnasium.png",
-          "alt": "Ishall hovedbilde",
-          "thumbnail": "/seed-images/lokaler-og-baner/gymnasium.png",
+          "url": "/storage/seed-images/Idrettshaller/ceef422d58d849c0933e29b408ee2bd1.jpg",
+          "alt": "Ishall - Notodden - bilde 1",
+          "thumbnail": "/storage/seed-images/Idrettshaller/ceef422d58d849c0933e29b408ee2bd1.jpg",
           "is_primary": true,
           "sort_order": 1
         },
         {
-          "url": "/seed-images/lokaler-og-baner/sports-hall.png",
-          "alt": "Ishall interiør",
-          "thumbnail": "/seed-images/lokaler-og-baner/sports-hall.png",
+          "url": "/storage/seed-images/Idrettshaller/djı_0212.jpg",
+          "alt": "Ishall - Notodden - bilde 2",
+          "thumbnail": "/storage/seed-images/Idrettshaller/djı_0212.jpg",
           "is_primary": false,
           "sort_order": 2
         },
         {
-          "url": "/seed-images/lokaler-og-baner/soccer-field.png",
-          "alt": "Ishall fasiliteter",
-          "thumbnail": "/seed-images/lokaler-og-baner/soccer-field.png",
+          "url": "/storage/seed-images/Idrettshaller/hero.avif",
+          "alt": "Ishall - Notodden - bilde 3",
+          "thumbnail": "/storage/seed-images/Idrettshaller/hero.avif",
           "is_primary": false,
           "sort_order": 3
         }
@@ -1225,23 +1225,23 @@
       "capacity": 300,
       "images": [
         {
-          "url": "/seed-images/lokaler-og-baner/sports-hall.png",
-          "alt": "Idrettshall hovedbilde",
-          "thumbnail": "/seed-images/lokaler-og-baner/sports-hall.png",
+          "url": "/storage/seed-images/Idrettshaller/kunstgraesbane-tennis-kit-safefloor.w1200.webp",
+          "alt": "Idrettshall - Kragerø - bilde 1",
+          "thumbnail": "/storage/seed-images/Idrettshaller/kunstgraesbane-tennis-kit-safefloor.w1200.webp",
           "is_primary": true,
           "sort_order": 1
         },
         {
-          "url": "/seed-images/lokaler-og-baner/soccer-field.png",
-          "alt": "Idrettshall interiør",
-          "thumbnail": "/seed-images/lokaler-og-baner/soccer-field.png",
+          "url": "/storage/seed-images/Idrettshaller/maxresdefault.jpg",
+          "alt": "Idrettshall - Kragerø - bilde 2",
+          "thumbnail": "/storage/seed-images/Idrettshaller/maxresdefault.jpg",
           "is_primary": false,
           "sort_order": 2
         },
         {
-          "url": "/seed-images/lokaler-og-baner/tennis-court.png",
-          "alt": "Idrettshall fasiliteter",
-          "thumbnail": "/seed-images/lokaler-og-baner/tennis-court.png",
+          "url": "/storage/seed-images/Idrettshaller/norsk-padel-leverandoer-padegalis-padelbaner-2.jpg",
+          "alt": "Idrettshall - Kragerø - bilde 3",
+          "thumbnail": "/storage/seed-images/Idrettshaller/norsk-padel-leverandoer-padegalis-padelbaner-2.jpg",
           "is_primary": false,
           "sort_order": 3
         }
@@ -1353,23 +1353,23 @@
       "capacity": 300,
       "images": [
         {
-          "url": "/seed-images/lokaler-og-baner/soccer-field.png",
-          "alt": "Fotballbane hovedbilde",
-          "thumbnail": "/seed-images/lokaler-og-baner/soccer-field.png",
+          "url": "/storage/seed-images/lokaler-og-baner/Gallery_3.jpg",
+          "alt": "Fotballbane - Skien - bilde 1",
+          "thumbnail": "/storage/seed-images/lokaler-og-baner/Gallery_3.jpg",
           "is_primary": true,
           "sort_order": 1
         },
         {
-          "url": "/seed-images/lokaler-og-baner/tennis-court.png",
-          "alt": "Fotballbane interiør",
-          "thumbnail": "/seed-images/lokaler-og-baner/tennis-court.png",
+          "url": "/storage/seed-images/lokaler-og-baner/Grendehuset-1.jpeg",
+          "alt": "Fotballbane - Skien - bilde 2",
+          "thumbnail": "/storage/seed-images/lokaler-og-baner/Grendehuset-1.jpeg",
           "is_primary": false,
           "sort_order": 2
         },
         {
-          "url": "/seed-images/lokaler-og-baner/swimming-pool.png",
-          "alt": "Fotballbane fasiliteter",
-          "thumbnail": "/seed-images/lokaler-og-baner/swimming-pool.png",
+          "url": "/storage/seed-images/lokaler-og-baner/GudA5+grendahus+-+samfunnshus.jpg",
+          "alt": "Fotballbane - Skien - bilde 3",
+          "thumbnail": "/storage/seed-images/lokaler-og-baner/GudA5+grendahus+-+samfunnshus.jpg",
           "is_primary": false,
           "sort_order": 3
         }
@@ -1481,23 +1481,23 @@
       "capacity": 50,
       "images": [
         {
-          "url": "/seed-images/lokaler-og-baner/tennis-court.png",
-          "alt": "Tennisbane hovedbilde",
-          "thumbnail": "/seed-images/lokaler-og-baner/tennis-court.png",
+          "url": "/storage/seed-images/lokaler-og-baner/Gymsal og idrettshall.jpg",
+          "alt": "Tennisbane - Porsgrunn - bilde 1",
+          "thumbnail": "/storage/seed-images/lokaler-og-baner/Gymsal og idrettshall.jpg",
           "is_primary": true,
           "sort_order": 1
         },
         {
-          "url": "/seed-images/lokaler-og-baner/swimming-pool.png",
-          "alt": "Tennisbane interiør",
-          "thumbnail": "/seed-images/lokaler-og-baner/swimming-pool.png",
+          "url": "/storage/seed-images/lokaler-og-baner/Gymsal.webp",
+          "alt": "Tennisbane - Porsgrunn - bilde 2",
+          "thumbnail": "/storage/seed-images/lokaler-og-baner/Gymsal.webp",
           "is_primary": false,
           "sort_order": 2
         },
         {
-          "url": "/seed-images/lokaler-og-baner/gymnasium.png",
-          "alt": "Tennisbane fasiliteter",
-          "thumbnail": "/seed-images/lokaler-og-baner/gymnasium.png",
+          "url": "/storage/seed-images/lokaler-og-baner/Haakonsvern-MTA_Ivan-Brodey_0029-2560x1701.webp",
+          "alt": "Tennisbane - Porsgrunn - bilde 3",
+          "thumbnail": "/storage/seed-images/lokaler-og-baner/Haakonsvern-MTA_Ivan-Brodey_0029-2560x1701.webp",
           "is_primary": false,
           "sort_order": 3
         }
@@ -1609,23 +1609,23 @@
       "capacity": 200,
       "images": [
         {
-          "url": "/seed-images/lokaler-og-baner/swimming-pool.png",
-          "alt": "Svømmehall hovedbilde",
-          "thumbnail": "/seed-images/lokaler-og-baner/swimming-pool.png",
+          "url": "/storage/seed-images/Svømmehall/Ankerskogen_svoemmehall2.JPG",
+          "alt": "Svømmehall - Bamble - bilde 1",
+          "thumbnail": "/storage/seed-images/Svømmehall/Ankerskogen_svoemmehall2.JPG",
           "is_primary": true,
           "sort_order": 1
         },
         {
-          "url": "/seed-images/lokaler-og-baner/gymnasium.png",
-          "alt": "Svømmehall interiør",
-          "thumbnail": "/seed-images/lokaler-og-baner/gymnasium.png",
+          "url": "/storage/seed-images/Svømmehall/Bassengutstyr(1).webp",
+          "alt": "Svømmehall - Bamble - bilde 2",
+          "thumbnail": "/storage/seed-images/Svømmehall/Bassengutstyr(1).webp",
           "is_primary": false,
           "sort_order": 2
         },
         {
-          "url": "/seed-images/lokaler-og-baner/sports-hall.png",
-          "alt": "Svømmehall fasiliteter",
-          "thumbnail": "/seed-images/lokaler-og-baner/sports-hall.png",
+          "url": "/storage/seed-images/Svømmehall/Familiebasseng Sklie1.jpg",
+          "alt": "Svømmehall - Bamble - bilde 3",
+          "thumbnail": "/storage/seed-images/Svømmehall/Familiebasseng Sklie1.jpg",
           "is_primary": false,
           "sort_order": 3
         }
@@ -1737,23 +1737,23 @@
       "capacity": 100,
       "images": [
         {
-          "url": "/seed-images/lokaler-og-baner/gymnasium.png",
-          "alt": "Gymnastikksal hovedbilde",
-          "thumbnail": "/seed-images/lokaler-og-baner/gymnasium.png",
+          "url": "/storage/seed-images/Gymsal/unisport-as-VGS-Flerbrukshall-7.jpg",
+          "alt": "Gymnastikksal - Notodden - bilde 1",
+          "thumbnail": "/storage/seed-images/Gymsal/unisport-as-VGS-Flerbrukshall-7.jpg",
           "is_primary": true,
           "sort_order": 1
         },
         {
-          "url": "/seed-images/lokaler-og-baner/sports-hall.png",
-          "alt": "Gymnastikksal interiør",
-          "thumbnail": "/seed-images/lokaler-og-baner/sports-hall.png",
+          "url": "/storage/seed-images/Gymsal/20221116_102442.jpg",
+          "alt": "Gymnastikksal - Notodden - bilde 2",
+          "thumbnail": "/storage/seed-images/Gymsal/20221116_102442.jpg",
           "is_primary": false,
           "sort_order": 2
         },
         {
-          "url": "/seed-images/lokaler-og-baner/soccer-field.png",
-          "alt": "Gymnastikksal fasiliteter",
-          "thumbnail": "/seed-images/lokaler-og-baner/soccer-field.png",
+          "url": "/storage/seed-images/Gymsal/20250408_160646.jpg",
+          "alt": "Gymnastikksal - Notodden - bilde 3",
+          "thumbnail": "/storage/seed-images/Gymsal/20250408_160646.jpg",
           "is_primary": false,
           "sort_order": 3
         }
@@ -1865,23 +1865,23 @@
       "capacity": 100,
       "images": [
         {
-          "url": "/seed-images/lokaler-og-baner/sports-hall.png",
-          "alt": "Basketballbane hovedbilde",
-          "thumbnail": "/seed-images/lokaler-og-baner/sports-hall.png",
+          "url": "/storage/seed-images/lokaler-og-baner/Tennisbane.webp",
+          "alt": "Basketballbane - Kragerø - bilde 1",
+          "thumbnail": "/storage/seed-images/lokaler-og-baner/Tennisbane.webp",
           "is_primary": true,
           "sort_order": 1
         },
         {
-          "url": "/seed-images/lokaler-og-baner/soccer-field.png",
-          "alt": "Basketballbane interiør",
-          "thumbnail": "/seed-images/lokaler-og-baner/soccer-field.png",
+          "url": "/storage/seed-images/lokaler-og-baner/Trosvikhallen_ERHA-7898.jpg",
+          "alt": "Basketballbane - Kragerø - bilde 2",
+          "thumbnail": "/storage/seed-images/lokaler-og-baner/Trosvikhallen_ERHA-7898.jpg",
           "is_primary": false,
           "sort_order": 2
         },
         {
-          "url": "/seed-images/lokaler-og-baner/tennis-court.png",
-          "alt": "Basketballbane fasiliteter",
-          "thumbnail": "/seed-images/lokaler-og-baner/tennis-court.png",
+          "url": "/storage/seed-images/lokaler-og-baner/USF_19-scaled-e1755845730989.jpeg",
+          "alt": "Basketballbane - Kragerø - bilde 3",
+          "thumbnail": "/storage/seed-images/lokaler-og-baner/USF_19-scaled-e1755845730989.jpeg",
           "is_primary": false,
           "sort_order": 3
         }
@@ -1993,23 +1993,23 @@
       "capacity": 80,
       "images": [
         {
-          "url": "/seed-images/lokaler-og-baner/soccer-field.png",
-          "alt": "Volleyballbane hovedbilde",
-          "thumbnail": "/seed-images/lokaler-og-baner/soccer-field.png",
+          "url": "/storage/seed-images/lokaler-og-baner/Ullern-flerbrukshall_01.jpg",
+          "alt": "Volleyballbane - Skien - bilde 1",
+          "thumbnail": "/storage/seed-images/lokaler-og-baner/Ullern-flerbrukshall_01.jpg",
           "is_primary": true,
           "sort_order": 1
         },
         {
-          "url": "/seed-images/lokaler-og-baner/tennis-court.png",
-          "alt": "Volleyballbane interiør",
-          "thumbnail": "/seed-images/lokaler-og-baner/tennis-court.png",
+          "url": "/storage/seed-images/lokaler-og-baner/Ullern-flerbrukshall_02.jpg",
+          "alt": "Volleyballbane - Skien - bilde 2",
+          "thumbnail": "/storage/seed-images/lokaler-og-baner/Ullern-flerbrukshall_02.jpg",
           "is_primary": false,
           "sort_order": 2
         },
         {
-          "url": "/seed-images/lokaler-og-baner/swimming-pool.png",
-          "alt": "Volleyballbane fasiliteter",
-          "thumbnail": "/seed-images/lokaler-og-baner/swimming-pool.png",
+          "url": "/storage/seed-images/lokaler-og-baner/Vikasen-skole-gymsal-Carl-Erik-Eriksson-scaled.jpg",
+          "alt": "Volleyballbane - Skien - bilde 3",
+          "thumbnail": "/storage/seed-images/lokaler-og-baner/Vikasen-skole-gymsal-Carl-Erik-Eriksson-scaled.jpg",
           "is_primary": false,
           "sort_order": 3
         }
@@ -2121,23 +2121,23 @@
       "capacity": 120,
       "images": [
         {
-          "url": "/seed-images/lokaler-og-baner/tennis-court.png",
-          "alt": "Badmintonhall hovedbilde",
-          "thumbnail": "/seed-images/lokaler-og-baner/tennis-court.png",
+          "url": "/storage/seed-images/Idrettshaller/Lusail_sports_Arena,_interior1.jpg",
+          "alt": "Badmintonhall - Porsgrunn - bilde 1",
+          "thumbnail": "/storage/seed-images/Idrettshaller/Lusail_sports_Arena,_interior1.jpg",
           "is_primary": true,
           "sort_order": 1
         },
         {
-          "url": "/seed-images/lokaler-og-baner/swimming-pool.png",
-          "alt": "Badmintonhall interiør",
-          "thumbnail": "/seed-images/lokaler-og-baner/swimming-pool.png",
+          "url": "/storage/seed-images/Idrettshaller/NFS_Idrettsbygg_Hallen_04.jpg",
+          "alt": "Badmintonhall - Porsgrunn - bilde 2",
+          "thumbnail": "/storage/seed-images/Idrettshaller/NFS_Idrettsbygg_Hallen_04.jpg",
           "is_primary": false,
           "sort_order": 2
         },
         {
-          "url": "/seed-images/lokaler-og-baner/gymnasium.png",
-          "alt": "Badmintonhall fasiliteter",
-          "thumbnail": "/seed-images/lokaler-og-baner/gymnasium.png",
+          "url": "/storage/seed-images/Idrettshaller/Ormelet-kunstgressbane-frittfallfoto.no_20250515-611-615_2025-05-27-125110_enna.jpeg",
+          "alt": "Badmintonhall - Porsgrunn - bilde 3",
+          "thumbnail": "/storage/seed-images/Idrettshaller/Ormelet-kunstgressbane-frittfallfoto.no_20250515-611-615_2025-05-27-125110_enna.jpeg",
           "is_primary": false,
           "sort_order": 3
         }
@@ -2249,23 +2249,23 @@
       "capacity": 250,
       "images": [
         {
-          "url": "/seed-images/lokaler-og-baner/swimming-pool.png",
-          "alt": "Håndballbane hovedbilde",
-          "thumbnail": "/seed-images/lokaler-og-baner/swimming-pool.png",
+          "url": "/storage/seed-images/lokaler-og-baner/bef316ed-dc21-415c-963c-261bd6ada695.jpeg",
+          "alt": "Håndballbane - Bamble - bilde 1",
+          "thumbnail": "/storage/seed-images/lokaler-og-baner/bef316ed-dc21-415c-963c-261bd6ada695.jpeg",
           "is_primary": true,
           "sort_order": 1
         },
         {
-          "url": "/seed-images/lokaler-og-baner/gymnasium.png",
-          "alt": "Håndballbane interiør",
-          "thumbnail": "/seed-images/lokaler-og-baner/gymnasium.png",
+          "url": "/storage/seed-images/lokaler-og-baner/biblioteket.jpg",
+          "alt": "Håndballbane - Bamble - bilde 2",
+          "thumbnail": "/storage/seed-images/lokaler-og-baner/biblioteket.jpg",
           "is_primary": false,
           "sort_order": 2
         },
         {
-          "url": "/seed-images/lokaler-og-baner/sports-hall.png",
-          "alt": "Håndballbane fasiliteter",
-          "thumbnail": "/seed-images/lokaler-og-baner/sports-hall.png",
+          "url": "/storage/seed-images/lokaler-og-baner/biblioteket2.jpg",
+          "alt": "Håndballbane - Bamble - bilde 3",
+          "thumbnail": "/storage/seed-images/lokaler-og-baner/biblioteket2.jpg",
           "is_primary": false,
           "sort_order": 3
         }
@@ -2377,23 +2377,23 @@
       "capacity": 500,
       "images": [
         {
-          "url": "/seed-images/lokaler-og-baner/gymnasium.png",
-          "alt": "Ishall hovedbilde",
-          "thumbnail": "/seed-images/lokaler-og-baner/gymnasium.png",
+          "url": "/storage/seed-images/Idrettshaller/Ullern-flerbrukshall_02.jpg",
+          "alt": "Ishall - Notodden - bilde 1",
+          "thumbnail": "/storage/seed-images/Idrettshaller/Ullern-flerbrukshall_02.jpg",
           "is_primary": true,
           "sort_order": 1
         },
         {
-          "url": "/seed-images/lokaler-og-baner/sports-hall.png",
-          "alt": "Ishall interiør",
-          "thumbnail": "/seed-images/lokaler-og-baner/sports-hall.png",
+          "url": "/storage/seed-images/Idrettshaller/a1e7c8ca-588e-48fd-bc8c-3f956913fc13.jpeg",
+          "alt": "Ishall - Notodden - bilde 2",
+          "thumbnail": "/storage/seed-images/Idrettshaller/a1e7c8ca-588e-48fd-bc8c-3f956913fc13.jpeg",
           "is_primary": false,
           "sort_order": 2
         },
         {
-          "url": "/seed-images/lokaler-og-baner/soccer-field.png",
-          "alt": "Ishall fasiliteter",
-          "thumbnail": "/seed-images/lokaler-og-baner/soccer-field.png",
+          "url": "/storage/seed-images/Idrettshaller/baner3_16x9__fullskjerm.jpg",
+          "alt": "Ishall - Notodden - bilde 3",
+          "thumbnail": "/storage/seed-images/Idrettshaller/baner3_16x9__fullskjerm.jpg",
           "is_primary": false,
           "sort_order": 3
         }
@@ -2505,23 +2505,23 @@
       "capacity": 300,
       "images": [
         {
-          "url": "/seed-images/lokaler-og-baner/sports-hall.png",
-          "alt": "Idrettshall hovedbilde",
-          "thumbnail": "/seed-images/lokaler-og-baner/sports-hall.png",
+          "url": "/storage/seed-images/Idrettshaller/ceef422d58d849c0933e29b408ee2bd1.jpg",
+          "alt": "Idrettshall - Kragerø - bilde 1",
+          "thumbnail": "/storage/seed-images/Idrettshaller/ceef422d58d849c0933e29b408ee2bd1.jpg",
           "is_primary": true,
           "sort_order": 1
         },
         {
-          "url": "/seed-images/lokaler-og-baner/soccer-field.png",
-          "alt": "Idrettshall interiør",
-          "thumbnail": "/seed-images/lokaler-og-baner/soccer-field.png",
+          "url": "/storage/seed-images/Idrettshaller/djı_0212.jpg",
+          "alt": "Idrettshall - Kragerø - bilde 2",
+          "thumbnail": "/storage/seed-images/Idrettshaller/djı_0212.jpg",
           "is_primary": false,
           "sort_order": 2
         },
         {
-          "url": "/seed-images/lokaler-og-baner/tennis-court.png",
-          "alt": "Idrettshall fasiliteter",
-          "thumbnail": "/seed-images/lokaler-og-baner/tennis-court.png",
+          "url": "/storage/seed-images/Idrettshaller/hero.avif",
+          "alt": "Idrettshall - Kragerø - bilde 3",
+          "thumbnail": "/storage/seed-images/Idrettshaller/hero.avif",
           "is_primary": false,
           "sort_order": 3
         }
@@ -2633,23 +2633,23 @@
       "capacity": 300,
       "images": [
         {
-          "url": "/seed-images/lokaler-og-baner/soccer-field.png",
-          "alt": "Fotballbane hovedbilde",
-          "thumbnail": "/seed-images/lokaler-og-baner/soccer-field.png",
+          "url": "/storage/seed-images/lokaler-og-baner/heggedal-skole_forside.jpg",
+          "alt": "Fotballbane - Skien - bilde 1",
+          "thumbnail": "/storage/seed-images/lokaler-og-baner/heggedal-skole_forside.jpg",
           "is_primary": true,
           "sort_order": 1
         },
         {
-          "url": "/seed-images/lokaler-og-baner/tennis-court.png",
-          "alt": "Fotballbane interiør",
-          "thumbnail": "/seed-images/lokaler-og-baner/tennis-court.png",
+          "url": "/storage/seed-images/lokaler-og-baner/heradstun-17-mai-25.jpg",
+          "alt": "Fotballbane - Skien - bilde 2",
+          "thumbnail": "/storage/seed-images/lokaler-og-baner/heradstun-17-mai-25.jpg",
           "is_primary": false,
           "sort_order": 2
         },
         {
-          "url": "/seed-images/lokaler-og-baner/swimming-pool.png",
-          "alt": "Fotballbane fasiliteter",
-          "thumbnail": "/seed-images/lokaler-og-baner/swimming-pool.png",
+          "url": "/storage/seed-images/lokaler-og-baner/hero.avif",
+          "alt": "Fotballbane - Skien - bilde 3",
+          "thumbnail": "/storage/seed-images/lokaler-og-baner/hero.avif",
           "is_primary": false,
           "sort_order": 3
         }
@@ -2761,23 +2761,23 @@
       "capacity": 50,
       "images": [
         {
-          "url": "/seed-images/lokaler-og-baner/tennis-court.png",
-          "alt": "Tennisbane hovedbilde",
-          "thumbnail": "/seed-images/lokaler-og-baner/tennis-court.png",
+          "url": "/storage/seed-images/lokaler-og-baner/horndalen-grendehus-3.jpg",
+          "alt": "Tennisbane - Porsgrunn - bilde 1",
+          "thumbnail": "/storage/seed-images/lokaler-og-baner/horndalen-grendehus-3.jpg",
           "is_primary": true,
           "sort_order": 1
         },
         {
-          "url": "/seed-images/lokaler-og-baner/swimming-pool.png",
-          "alt": "Tennisbane interiør",
-          "thumbnail": "/seed-images/lokaler-og-baner/swimming-pool.png",
+          "url": "/storage/seed-images/lokaler-og-baner/img-20210322-125409.jpg",
+          "alt": "Tennisbane - Porsgrunn - bilde 2",
+          "thumbnail": "/storage/seed-images/lokaler-og-baner/img-20210322-125409.jpg",
           "is_primary": false,
           "sort_order": 2
         },
         {
-          "url": "/seed-images/lokaler-og-baner/gymnasium.png",
-          "alt": "Tennisbane fasiliteter",
-          "thumbnail": "/seed-images/lokaler-og-baner/gymnasium.png",
+          "url": "/storage/seed-images/lokaler-og-baner/img_8396-large.jpg",
+          "alt": "Tennisbane - Porsgrunn - bilde 3",
+          "thumbnail": "/storage/seed-images/lokaler-og-baner/img_8396-large.jpg",
           "is_primary": false,
           "sort_order": 3
         }
@@ -2889,23 +2889,23 @@
       "capacity": 200,
       "images": [
         {
-          "url": "/seed-images/lokaler-og-baner/swimming-pool.png",
-          "alt": "Svømmehall hovedbilde",
-          "thumbnail": "/seed-images/lokaler-og-baner/swimming-pool.png",
+          "url": "/storage/seed-images/Svømmehall/Stavanger-Svømmehall-computer-aided-drowning-swimeye-gallery-1.jpg",
+          "alt": "Svømmehall - Bamble - bilde 1",
+          "thumbnail": "/storage/seed-images/Svømmehall/Stavanger-Svømmehall-computer-aided-drowning-swimeye-gallery-1.jpg",
           "is_primary": true,
           "sort_order": 1
         },
         {
-          "url": "/seed-images/lokaler-og-baner/gymnasium.png",
-          "alt": "Svømmehall interiør",
-          "thumbnail": "/seed-images/lokaler-og-baner/gymnasium.png",
+          "url": "/storage/seed-images/Svømmehall/Tanasvømmehall.jpg",
+          "alt": "Svømmehall - Bamble - bilde 2",
+          "thumbnail": "/storage/seed-images/Svømmehall/Tanasvømmehall.jpg",
           "is_primary": false,
           "sort_order": 2
         },
         {
-          "url": "/seed-images/lokaler-og-baner/sports-hall.png",
-          "alt": "Svømmehall fasiliteter",
-          "thumbnail": "/seed-images/lokaler-og-baner/sports-hall.png",
+          "url": "/storage/seed-images/Svømmehall/drammensbadet_7.jpg",
+          "alt": "Svømmehall - Bamble - bilde 3",
+          "thumbnail": "/storage/seed-images/Svømmehall/drammensbadet_7.jpg",
           "is_primary": false,
           "sort_order": 3
         }
@@ -3017,23 +3017,23 @@
       "capacity": 100,
       "images": [
         {
-          "url": "/seed-images/lokaler-og-baner/gymnasium.png",
-          "alt": "Gymnastikksal hovedbilde",
-          "thumbnail": "/seed-images/lokaler-og-baner/gymnasium.png",
+          "url": "/storage/seed-images/Gymsal/Gymsal og idrettshall.jpg",
+          "alt": "Gymnastikksal - Notodden - bilde 1",
+          "thumbnail": "/storage/seed-images/Gymsal/Gymsal og idrettshall.jpg",
           "is_primary": true,
           "sort_order": 1
         },
         {
-          "url": "/seed-images/lokaler-og-baner/sports-hall.png",
-          "alt": "Gymnastikksal interiør",
-          "thumbnail": "/seed-images/lokaler-og-baner/sports-hall.png",
+          "url": "/storage/seed-images/Gymsal/Gymsal.webp",
+          "alt": "Gymnastikksal - Notodden - bilde 2",
+          "thumbnail": "/storage/seed-images/Gymsal/Gymsal.webp",
           "is_primary": false,
           "sort_order": 2
         },
         {
-          "url": "/seed-images/lokaler-og-baner/soccer-field.png",
-          "alt": "Gymnastikksal fasiliteter",
-          "thumbnail": "/seed-images/lokaler-og-baner/soccer-field.png",
+          "url": "/storage/seed-images/Gymsal/IMG_3331+Gymsal.jpeg",
+          "alt": "Gymnastikksal - Notodden - bilde 3",
+          "thumbnail": "/storage/seed-images/Gymsal/IMG_3331+Gymsal.jpeg",
           "is_primary": false,
           "sort_order": 3
         }
@@ -3145,23 +3145,23 @@
       "capacity": 100,
       "images": [
         {
-          "url": "/seed-images/lokaler-og-baner/sports-hall.png",
-          "alt": "Basketballbane hovedbilde",
-          "thumbnail": "/seed-images/lokaler-og-baner/sports-hall.png",
+          "url": "/storage/seed-images/lokaler-og-baner/oddheim-samfunnshus-i-lutnes.jpg",
+          "alt": "Basketballbane - Kragerø - bilde 1",
+          "thumbnail": "/storage/seed-images/lokaler-og-baner/oddheim-samfunnshus-i-lutnes.jpg",
           "is_primary": true,
           "sort_order": 1
         },
         {
-          "url": "/seed-images/lokaler-og-baner/soccer-field.png",
-          "alt": "Basketballbane interiør",
-          "thumbnail": "/seed-images/lokaler-og-baner/soccer-field.png",
+          "url": "/storage/seed-images/lokaler-og-baner/offlines_1759237521224-36381a6d-28ca-4c95-b587-9e025923e74f-cageball.jpg",
+          "alt": "Basketballbane - Kragerø - bilde 2",
+          "thumbnail": "/storage/seed-images/lokaler-og-baner/offlines_1759237521224-36381a6d-28ca-4c95-b587-9e025923e74f-cageball.jpg",
           "is_primary": false,
           "sort_order": 2
         },
         {
-          "url": "/seed-images/lokaler-og-baner/tennis-court.png",
-          "alt": "Basketballbane fasiliteter",
-          "thumbnail": "/seed-images/lokaler-og-baner/tennis-court.png",
+          "url": "/storage/seed-images/lokaler-og-baner/padelhall-1-1200x675.jpg",
+          "alt": "Basketballbane - Kragerø - bilde 3",
+          "thumbnail": "/storage/seed-images/lokaler-og-baner/padelhall-1-1200x675.jpg",
           "is_primary": false,
           "sort_order": 3
         }
@@ -3273,23 +3273,23 @@
       "capacity": 80,
       "images": [
         {
-          "url": "/seed-images/lokaler-og-baner/soccer-field.png",
-          "alt": "Volleyballbane hovedbilde",
-          "thumbnail": "/seed-images/lokaler-og-baner/soccer-field.png",
+          "url": "/storage/seed-images/lokaler-og-baner/polar-27-scaled.jpg",
+          "alt": "Volleyballbane - Skien - bilde 1",
+          "thumbnail": "/storage/seed-images/lokaler-og-baner/polar-27-scaled.jpg",
           "is_primary": true,
           "sort_order": 1
         },
         {
-          "url": "/seed-images/lokaler-og-baner/tennis-court.png",
-          "alt": "Volleyballbane interiør",
-          "thumbnail": "/seed-images/lokaler-og-baner/tennis-court.png",
+          "url": "/storage/seed-images/lokaler-og-baner/soccer-field.png",
+          "alt": "Volleyballbane - Skien - bilde 2",
+          "thumbnail": "/storage/seed-images/lokaler-og-baner/soccer-field.png",
           "is_primary": false,
           "sort_order": 2
         },
         {
-          "url": "/seed-images/lokaler-og-baner/swimming-pool.png",
-          "alt": "Volleyballbane fasiliteter",
-          "thumbnail": "/seed-images/lokaler-og-baner/swimming-pool.png",
+          "url": "/storage/seed-images/lokaler-og-baner/sports-hall.png",
+          "alt": "Volleyballbane - Skien - bilde 3",
+          "thumbnail": "/storage/seed-images/lokaler-og-baner/sports-hall.png",
           "is_primary": false,
           "sort_order": 3
         }
@@ -3401,23 +3401,23 @@
       "capacity": 120,
       "images": [
         {
-          "url": "/seed-images/lokaler-og-baner/tennis-court.png",
-          "alt": "Badmintonhall hovedbilde",
-          "thumbnail": "/seed-images/lokaler-og-baner/tennis-court.png",
+          "url": "/storage/seed-images/Idrettshaller/Haakonsvern-MTA_Ivan-Brodey_0029-2560x1701.webp",
+          "alt": "Badmintonhall - Porsgrunn - bilde 1",
+          "thumbnail": "/storage/seed-images/Idrettshaller/Haakonsvern-MTA_Ivan-Brodey_0029-2560x1701.webp",
           "is_primary": true,
           "sort_order": 1
         },
         {
-          "url": "/seed-images/lokaler-og-baner/swimming-pool.png",
-          "alt": "Badmintonhall interiør",
-          "thumbnail": "/seed-images/lokaler-og-baner/swimming-pool.png",
+          "url": "/storage/seed-images/Idrettshaller/Hellemyr kunstgressbane og Hellemyrhallen_954b95.jpg",
+          "alt": "Badmintonhall - Porsgrunn - bilde 2",
+          "thumbnail": "/storage/seed-images/Idrettshaller/Hellemyr kunstgressbane og Hellemyrhallen_954b95.jpg",
           "is_primary": false,
           "sort_order": 2
         },
         {
-          "url": "/seed-images/lokaler-og-baner/gymnasium.png",
-          "alt": "Badmintonhall fasiliteter",
-          "thumbnail": "/seed-images/lokaler-og-baner/gymnasium.png",
+          "url": "/storage/seed-images/Idrettshaller/Lade_idrettspark.png",
+          "alt": "Badmintonhall - Porsgrunn - bilde 3",
+          "thumbnail": "/storage/seed-images/Idrettshaller/Lade_idrettspark.png",
           "is_primary": false,
           "sort_order": 3
         }
@@ -3529,23 +3529,23 @@
       "capacity": 250,
       "images": [
         {
-          "url": "/seed-images/lokaler-og-baner/swimming-pool.png",
-          "alt": "Håndballbane hovedbilde",
-          "thumbnail": "/seed-images/lokaler-og-baner/swimming-pool.png",
+          "url": "/storage/seed-images/lokaler-og-baner/unisport-as-VGS-Flerbrukshall-7.jpg",
+          "alt": "Håndballbane - Bamble - bilde 1",
+          "thumbnail": "/storage/seed-images/lokaler-og-baner/unisport-as-VGS-Flerbrukshall-7.jpg",
           "is_primary": true,
           "sort_order": 1
         },
         {
-          "url": "/seed-images/lokaler-og-baner/gymnasium.png",
-          "alt": "Håndballbane interiør",
-          "thumbnail": "/seed-images/lokaler-og-baner/gymnasium.png",
+          "url": "/storage/seed-images/lokaler-og-baner/024053.jpg",
+          "alt": "Håndballbane - Bamble - bilde 2",
+          "thumbnail": "/storage/seed-images/lokaler-og-baner/024053.jpg",
           "is_primary": false,
           "sort_order": 2
         },
         {
-          "url": "/seed-images/lokaler-og-baner/sports-hall.png",
-          "alt": "Håndballbane fasiliteter",
-          "thumbnail": "/seed-images/lokaler-og-baner/sports-hall.png",
+          "url": "/storage/seed-images/lokaler-og-baner/03da9a60-2306-45e8-bf8c-bacacccc24a5.jpeg",
+          "alt": "Håndballbane - Bamble - bilde 3",
+          "thumbnail": "/storage/seed-images/lokaler-og-baner/03da9a60-2306-45e8-bf8c-bacacccc24a5.jpeg",
           "is_primary": false,
           "sort_order": 3
         }
@@ -3657,23 +3657,23 @@
       "capacity": 500,
       "images": [
         {
-          "url": "/seed-images/lokaler-og-baner/gymnasium.png",
-          "alt": "Ishall hovedbilde",
-          "thumbnail": "/seed-images/lokaler-og-baner/gymnasium.png",
+          "url": "/storage/seed-images/Idrettshaller/Tennisbane.webp",
+          "alt": "Ishall - Notodden - bilde 1",
+          "thumbnail": "/storage/seed-images/Idrettshaller/Tennisbane.webp",
           "is_primary": true,
           "sort_order": 1
         },
         {
-          "url": "/seed-images/lokaler-og-baner/sports-hall.png",
-          "alt": "Ishall interiør",
-          "thumbnail": "/seed-images/lokaler-og-baner/sports-hall.png",
+          "url": "/storage/seed-images/Idrettshaller/USF_19-scaled-e1755845730989.jpeg",
+          "alt": "Ishall - Notodden - bilde 2",
+          "thumbnail": "/storage/seed-images/Idrettshaller/USF_19-scaled-e1755845730989.jpeg",
           "is_primary": false,
           "sort_order": 2
         },
         {
-          "url": "/seed-images/lokaler-og-baner/soccer-field.png",
-          "alt": "Ishall fasiliteter",
-          "thumbnail": "/seed-images/lokaler-og-baner/soccer-field.png",
+          "url": "/storage/seed-images/Idrettshaller/Ullern-flerbrukshall_01.jpg",
+          "alt": "Ishall - Notodden - bilde 3",
+          "thumbnail": "/storage/seed-images/Idrettshaller/Ullern-flerbrukshall_01.jpg",
           "is_primary": false,
           "sort_order": 3
         }
@@ -3785,23 +3785,23 @@
       "capacity": 300,
       "images": [
         {
-          "url": "/seed-images/lokaler-og-baner/sports-hall.png",
-          "alt": "Idrettshall hovedbilde",
-          "thumbnail": "/seed-images/lokaler-og-baner/sports-hall.png",
+          "url": "/storage/seed-images/Idrettshaller/Ullern-flerbrukshall_02.jpg",
+          "alt": "Idrettshall - Kragerø - bilde 1",
+          "thumbnail": "/storage/seed-images/Idrettshaller/Ullern-flerbrukshall_02.jpg",
           "is_primary": true,
           "sort_order": 1
         },
         {
-          "url": "/seed-images/lokaler-og-baner/soccer-field.png",
-          "alt": "Idrettshall interiør",
-          "thumbnail": "/seed-images/lokaler-og-baner/soccer-field.png",
+          "url": "/storage/seed-images/Idrettshaller/a1e7c8ca-588e-48fd-bc8c-3f956913fc13.jpeg",
+          "alt": "Idrettshall - Kragerø - bilde 2",
+          "thumbnail": "/storage/seed-images/Idrettshaller/a1e7c8ca-588e-48fd-bc8c-3f956913fc13.jpeg",
           "is_primary": false,
           "sort_order": 2
         },
         {
-          "url": "/seed-images/lokaler-og-baner/tennis-court.png",
-          "alt": "Idrettshall fasiliteter",
-          "thumbnail": "/seed-images/lokaler-og-baner/tennis-court.png",
+          "url": "/storage/seed-images/Idrettshaller/baner3_16x9__fullskjerm.jpg",
+          "alt": "Idrettshall - Kragerø - bilde 3",
+          "thumbnail": "/storage/seed-images/Idrettshaller/baner3_16x9__fullskjerm.jpg",
           "is_primary": false,
           "sort_order": 3
         }
@@ -3913,23 +3913,23 @@
       "capacity": 300,
       "images": [
         {
-          "url": "/seed-images/lokaler-og-baner/soccer-field.png",
-          "alt": "Fotballbane hovedbilde",
-          "thumbnail": "/seed-images/lokaler-og-baner/soccer-field.png",
+          "url": "/storage/seed-images/lokaler-og-baner/20251010172445fe1f1.webp",
+          "alt": "Fotballbane - Skien - bilde 1",
+          "thumbnail": "/storage/seed-images/lokaler-og-baner/20251010172445fe1f1.webp",
           "is_primary": true,
           "sort_order": 1
         },
         {
-          "url": "/seed-images/lokaler-og-baner/tennis-court.png",
-          "alt": "Fotballbane interiør",
-          "thumbnail": "/seed-images/lokaler-og-baner/tennis-court.png",
+          "url": "/storage/seed-images/lokaler-og-baner/231769_97c2dae91e614220a987eff0185d0c4d~mv2.avif",
+          "alt": "Fotballbane - Skien - bilde 2",
+          "thumbnail": "/storage/seed-images/lokaler-og-baner/231769_97c2dae91e614220a987eff0185d0c4d~mv2.avif",
           "is_primary": false,
           "sort_order": 2
         },
         {
-          "url": "/seed-images/lokaler-og-baner/swimming-pool.png",
-          "alt": "Fotballbane fasiliteter",
-          "thumbnail": "/seed-images/lokaler-og-baner/swimming-pool.png",
+          "url": "/storage/seed-images/lokaler-og-baner/2328762.jpeg",
+          "alt": "Fotballbane - Skien - bilde 3",
+          "thumbnail": "/storage/seed-images/lokaler-og-baner/2328762.jpeg",
           "is_primary": false,
           "sort_order": 3
         }
@@ -4041,23 +4041,23 @@
       "capacity": 50,
       "images": [
         {
-          "url": "/seed-images/lokaler-og-baner/tennis-court.png",
-          "alt": "Tennisbane hovedbilde",
-          "thumbnail": "/seed-images/lokaler-og-baner/tennis-court.png",
+          "url": "/storage/seed-images/lokaler-og-baner/26f54ed4dde24bf8b55b069eb38dc048.jpg",
+          "alt": "Tennisbane - Porsgrunn - bilde 1",
+          "thumbnail": "/storage/seed-images/lokaler-og-baner/26f54ed4dde24bf8b55b069eb38dc048.jpg",
           "is_primary": true,
           "sort_order": 1
         },
         {
-          "url": "/seed-images/lokaler-og-baner/swimming-pool.png",
-          "alt": "Tennisbane interiør",
-          "thumbnail": "/seed-images/lokaler-og-baner/swimming-pool.png",
+          "url": "/storage/seed-images/lokaler-og-baner/3.jpg",
+          "alt": "Tennisbane - Porsgrunn - bilde 2",
+          "thumbnail": "/storage/seed-images/lokaler-og-baner/3.jpg",
           "is_primary": false,
           "sort_order": 2
         },
         {
-          "url": "/seed-images/lokaler-og-baner/gymnasium.png",
-          "alt": "Tennisbane fasiliteter",
-          "thumbnail": "/seed-images/lokaler-og-baner/gymnasium.png",
+          "url": "/storage/seed-images/lokaler-og-baner/3TSluppen_3.jpg",
+          "alt": "Tennisbane - Porsgrunn - bilde 3",
+          "thumbnail": "/storage/seed-images/lokaler-og-baner/3TSluppen_3.jpg",
           "is_primary": false,
           "sort_order": 3
         }
@@ -4169,23 +4169,23 @@
       "capacity": 200,
       "images": [
         {
-          "url": "/seed-images/lokaler-og-baner/swimming-pool.png",
-          "alt": "Svømmehall hovedbilde",
-          "thumbnail": "/seed-images/lokaler-og-baner/swimming-pool.png",
+          "url": "/storage/seed-images/Svømmehall/Ankerskogen_svoemmehall2.JPG",
+          "alt": "Svømmehall - Bamble - bilde 1",
+          "thumbnail": "/storage/seed-images/Svømmehall/Ankerskogen_svoemmehall2.JPG",
           "is_primary": true,
           "sort_order": 1
         },
         {
-          "url": "/seed-images/lokaler-og-baner/gymnasium.png",
-          "alt": "Svømmehall interiør",
-          "thumbnail": "/seed-images/lokaler-og-baner/gymnasium.png",
+          "url": "/storage/seed-images/Svømmehall/Bassengutstyr(1).webp",
+          "alt": "Svømmehall - Bamble - bilde 2",
+          "thumbnail": "/storage/seed-images/Svømmehall/Bassengutstyr(1).webp",
           "is_primary": false,
           "sort_order": 2
         },
         {
-          "url": "/seed-images/lokaler-og-baner/sports-hall.png",
-          "alt": "Svømmehall fasiliteter",
-          "thumbnail": "/seed-images/lokaler-og-baner/sports-hall.png",
+          "url": "/storage/seed-images/Svømmehall/Familiebasseng Sklie1.jpg",
+          "alt": "Svømmehall - Bamble - bilde 3",
+          "thumbnail": "/storage/seed-images/Svømmehall/Familiebasseng Sklie1.jpg",
           "is_primary": false,
           "sort_order": 3
         }
@@ -4297,23 +4297,23 @@
       "capacity": 100,
       "images": [
         {
-          "url": "/seed-images/lokaler-og-baner/gymnasium.png",
-          "alt": "Gymnastikksal hovedbilde",
-          "thumbnail": "/seed-images/lokaler-og-baner/gymnasium.png",
+          "url": "/storage/seed-images/Gymsal/unisport-as-VGS-Flerbrukshall-7.jpg",
+          "alt": "Gymnastikksal - Notodden - bilde 1",
+          "thumbnail": "/storage/seed-images/Gymsal/unisport-as-VGS-Flerbrukshall-7.jpg",
           "is_primary": true,
           "sort_order": 1
         },
         {
-          "url": "/seed-images/lokaler-og-baner/sports-hall.png",
-          "alt": "Gymnastikksal interiør",
-          "thumbnail": "/seed-images/lokaler-og-baner/sports-hall.png",
+          "url": "/storage/seed-images/Gymsal/20221116_102442.jpg",
+          "alt": "Gymnastikksal - Notodden - bilde 2",
+          "thumbnail": "/storage/seed-images/Gymsal/20221116_102442.jpg",
           "is_primary": false,
           "sort_order": 2
         },
         {
-          "url": "/seed-images/lokaler-og-baner/soccer-field.png",
-          "alt": "Gymnastikksal fasiliteter",
-          "thumbnail": "/seed-images/lokaler-og-baner/soccer-field.png",
+          "url": "/storage/seed-images/Gymsal/20250408_160646.jpg",
+          "alt": "Gymnastikksal - Notodden - bilde 3",
+          "thumbnail": "/storage/seed-images/Gymsal/20250408_160646.jpg",
           "is_primary": false,
           "sort_order": 3
         }
@@ -4425,23 +4425,23 @@
       "capacity": 100,
       "images": [
         {
-          "url": "/seed-images/lokaler-og-baner/sports-hall.png",
-          "alt": "Basketballbane hovedbilde",
-          "thumbnail": "/seed-images/lokaler-og-baner/sports-hall.png",
+          "url": "/storage/seed-images/lokaler-og-baner/6b15d64678f84e989476076004156393.jpg",
+          "alt": "Basketballbane - Kragerø - bilde 1",
+          "thumbnail": "/storage/seed-images/lokaler-og-baner/6b15d64678f84e989476076004156393.jpg",
           "is_primary": true,
           "sort_order": 1
         },
         {
-          "url": "/seed-images/lokaler-og-baner/soccer-field.png",
-          "alt": "Basketballbane interiør",
-          "thumbnail": "/seed-images/lokaler-og-baner/soccer-field.png",
+          "url": "/storage/seed-images/lokaler-og-baner/7a8c64f0-02d8-4eba-a73d-25a02c2af0ff.jpeg",
+          "alt": "Basketballbane - Kragerø - bilde 2",
+          "thumbnail": "/storage/seed-images/lokaler-og-baner/7a8c64f0-02d8-4eba-a73d-25a02c2af0ff.jpeg",
           "is_primary": false,
           "sort_order": 2
         },
         {
-          "url": "/seed-images/lokaler-og-baner/tennis-court.png",
-          "alt": "Basketballbane fasiliteter",
-          "thumbnail": "/seed-images/lokaler-og-baner/tennis-court.png",
+          "url": "/storage/seed-images/lokaler-og-baner/A-Sport-padelbaner-1430px.jpg",
+          "alt": "Basketballbane - Kragerø - bilde 3",
+          "thumbnail": "/storage/seed-images/lokaler-og-baner/A-Sport-padelbaner-1430px.jpg",
           "is_primary": false,
           "sort_order": 3
         }
@@ -4553,23 +4553,23 @@
       "capacity": 80,
       "images": [
         {
-          "url": "/seed-images/lokaler-og-baner/soccer-field.png",
-          "alt": "Volleyballbane hovedbilde",
-          "thumbnail": "/seed-images/lokaler-og-baner/soccer-field.png",
+          "url": "/storage/seed-images/lokaler-og-baner/Apning26-1200x900.jpg",
+          "alt": "Volleyballbane - Skien - bilde 1",
+          "thumbnail": "/storage/seed-images/lokaler-og-baner/Apning26-1200x900.jpg",
           "is_primary": true,
           "sort_order": 1
         },
         {
-          "url": "/seed-images/lokaler-og-baner/tennis-court.png",
-          "alt": "Volleyballbane interiør",
-          "thumbnail": "/seed-images/lokaler-og-baner/tennis-court.png",
+          "url": "/storage/seed-images/lokaler-og-baner/Blaker.jpeg",
+          "alt": "Volleyballbane - Skien - bilde 2",
+          "thumbnail": "/storage/seed-images/lokaler-og-baner/Blaker.jpeg",
           "is_primary": false,
           "sort_order": 2
         },
         {
-          "url": "/seed-images/lokaler-og-baner/swimming-pool.png",
-          "alt": "Volleyballbane fasiliteter",
-          "thumbnail": "/seed-images/lokaler-og-baner/swimming-pool.png",
+          "url": "/storage/seed-images/lokaler-og-baner/C9F9AD74-B90D-48BE-9374-7EA324F15DB2-1024x768.jpeg",
+          "alt": "Volleyballbane - Skien - bilde 3",
+          "thumbnail": "/storage/seed-images/lokaler-og-baner/C9F9AD74-B90D-48BE-9374-7EA324F15DB2-1024x768.jpeg",
           "is_primary": false,
           "sort_order": 3
         }
@@ -4681,23 +4681,23 @@
       "capacity": 120,
       "images": [
         {
-          "url": "/seed-images/lokaler-og-baner/tennis-court.png",
-          "alt": "Badmintonhall hovedbilde",
-          "thumbnail": "/seed-images/lokaler-og-baner/tennis-court.png",
+          "url": "/storage/seed-images/Idrettshaller/DJI_0062_0 (1).jpg",
+          "alt": "Badmintonhall - Porsgrunn - bilde 1",
+          "thumbnail": "/storage/seed-images/Idrettshaller/DJI_0062_0 (1).jpg",
           "is_primary": true,
           "sort_order": 1
         },
         {
-          "url": "/seed-images/lokaler-og-baner/swimming-pool.png",
-          "alt": "Badmintonhall interiør",
-          "thumbnail": "/seed-images/lokaler-og-baner/swimming-pool.png",
+          "url": "/storage/seed-images/Idrettshaller/DJI_0062_0.jpg",
+          "alt": "Badmintonhall - Porsgrunn - bilde 2",
+          "thumbnail": "/storage/seed-images/Idrettshaller/DJI_0062_0.jpg",
           "is_primary": false,
           "sort_order": 2
         },
         {
-          "url": "/seed-images/lokaler-og-baner/gymnasium.png",
-          "alt": "Badmintonhall fasiliteter",
-          "thumbnail": "/seed-images/lokaler-og-baner/gymnasium.png",
+          "url": "/storage/seed-images/Idrettshaller/Gallery_3.jpg",
+          "alt": "Badmintonhall - Porsgrunn - bilde 3",
+          "thumbnail": "/storage/seed-images/Idrettshaller/Gallery_3.jpg",
           "is_primary": false,
           "sort_order": 3
         }
@@ -4809,23 +4809,23 @@
       "capacity": 250,
       "images": [
         {
-          "url": "/seed-images/lokaler-og-baner/swimming-pool.png",
-          "alt": "Håndballbane hovedbilde",
-          "thumbnail": "/seed-images/lokaler-og-baner/swimming-pool.png",
+          "url": "/storage/seed-images/lokaler-og-baner/Flesberg-Samfunnshus.jpg",
+          "alt": "Håndballbane - Bamble - bilde 1",
+          "thumbnail": "/storage/seed-images/lokaler-og-baner/Flesberg-Samfunnshus.jpg",
           "is_primary": true,
           "sort_order": 1
         },
         {
-          "url": "/seed-images/lokaler-og-baner/gymnasium.png",
-          "alt": "Håndballbane interiør",
-          "thumbnail": "/seed-images/lokaler-og-baner/gymnasium.png",
+          "url": "/storage/seed-images/lokaler-og-baner/Gallery_3.jpg",
+          "alt": "Håndballbane - Bamble - bilde 2",
+          "thumbnail": "/storage/seed-images/lokaler-og-baner/Gallery_3.jpg",
           "is_primary": false,
           "sort_order": 2
         },
         {
-          "url": "/seed-images/lokaler-og-baner/sports-hall.png",
-          "alt": "Håndballbane fasiliteter",
-          "thumbnail": "/seed-images/lokaler-og-baner/sports-hall.png",
+          "url": "/storage/seed-images/lokaler-og-baner/Grendehuset-1.jpeg",
+          "alt": "Håndballbane - Bamble - bilde 3",
+          "thumbnail": "/storage/seed-images/lokaler-og-baner/Grendehuset-1.jpeg",
           "is_primary": false,
           "sort_order": 3
         }
@@ -4937,23 +4937,23 @@
       "capacity": 500,
       "images": [
         {
-          "url": "/seed-images/lokaler-og-baner/gymnasium.png",
-          "alt": "Ishall hovedbilde",
-          "thumbnail": "/seed-images/lokaler-og-baner/gymnasium.png",
+          "url": "/storage/seed-images/Idrettshaller/Lusail_sports_Arena,_interior1.jpg",
+          "alt": "Ishall - Notodden - bilde 1",
+          "thumbnail": "/storage/seed-images/Idrettshaller/Lusail_sports_Arena,_interior1.jpg",
           "is_primary": true,
           "sort_order": 1
         },
         {
-          "url": "/seed-images/lokaler-og-baner/sports-hall.png",
-          "alt": "Ishall interiør",
-          "thumbnail": "/seed-images/lokaler-og-baner/sports-hall.png",
+          "url": "/storage/seed-images/Idrettshaller/NFS_Idrettsbygg_Hallen_04.jpg",
+          "alt": "Ishall - Notodden - bilde 2",
+          "thumbnail": "/storage/seed-images/Idrettshaller/NFS_Idrettsbygg_Hallen_04.jpg",
           "is_primary": false,
           "sort_order": 2
         },
         {
-          "url": "/seed-images/lokaler-og-baner/soccer-field.png",
-          "alt": "Ishall fasiliteter",
-          "thumbnail": "/seed-images/lokaler-og-baner/soccer-field.png",
+          "url": "/storage/seed-images/Idrettshaller/Ormelet-kunstgressbane-frittfallfoto.no_20250515-611-615_2025-05-27-125110_enna.jpeg",
+          "alt": "Ishall - Notodden - bilde 3",
+          "thumbnail": "/storage/seed-images/Idrettshaller/Ormelet-kunstgressbane-frittfallfoto.no_20250515-611-615_2025-05-27-125110_enna.jpeg",
           "is_primary": false,
           "sort_order": 3
         }
@@ -5065,23 +5065,23 @@
       "capacity": 300,
       "images": [
         {
-          "url": "/seed-images/lokaler-og-baner/sports-hall.png",
-          "alt": "Idrettshall hovedbilde",
-          "thumbnail": "/seed-images/lokaler-og-baner/sports-hall.png",
+          "url": "/storage/seed-images/Idrettshaller/Tennisbane.webp",
+          "alt": "Idrettshall - Kragerø - bilde 1",
+          "thumbnail": "/storage/seed-images/Idrettshaller/Tennisbane.webp",
           "is_primary": true,
           "sort_order": 1
         },
         {
-          "url": "/seed-images/lokaler-og-baner/soccer-field.png",
-          "alt": "Idrettshall interiør",
-          "thumbnail": "/seed-images/lokaler-og-baner/soccer-field.png",
+          "url": "/storage/seed-images/Idrettshaller/USF_19-scaled-e1755845730989.jpeg",
+          "alt": "Idrettshall - Kragerø - bilde 2",
+          "thumbnail": "/storage/seed-images/Idrettshaller/USF_19-scaled-e1755845730989.jpeg",
           "is_primary": false,
           "sort_order": 2
         },
         {
-          "url": "/seed-images/lokaler-og-baner/tennis-court.png",
-          "alt": "Idrettshall fasiliteter",
-          "thumbnail": "/seed-images/lokaler-og-baner/tennis-court.png",
+          "url": "/storage/seed-images/Idrettshaller/Ullern-flerbrukshall_01.jpg",
+          "alt": "Idrettshall - Kragerø - bilde 3",
+          "thumbnail": "/storage/seed-images/Idrettshaller/Ullern-flerbrukshall_01.jpg",
           "is_primary": false,
           "sort_order": 3
         }
@@ -5193,23 +5193,23 @@
       "capacity": 30,
       "images": [
         {
-          "url": "/seed-images/møterom/meeting-room.png",
-          "alt": "Møterom P hovedbilde",
-          "thumbnail": "/seed-images/møterom/meeting-room.png",
+          "url": "/storage/seed-images/Møterom og kursrom/691bbcd6c2b9e4be057ff8e5_Pipervika.webp",
+          "alt": "Møterom P - Skien - bilde 1",
+          "thumbnail": "/storage/seed-images/Møterom og kursrom/691bbcd6c2b9e4be057ff8e5_Pipervika.webp",
           "is_primary": true,
           "sort_order": 1
         },
         {
-          "url": "/seed-images/møterom/meeting-room.png",
-          "alt": "Møterom P interiør",
-          "thumbnail": "/seed-images/møterom/meeting-room.png",
+          "url": "/storage/seed-images/Møterom og kursrom/IMG20231024145510_31d736.jpg",
+          "alt": "Møterom P - Skien - bilde 2",
+          "thumbnail": "/storage/seed-images/Møterom og kursrom/IMG20231024145510_31d736.jpg",
           "is_primary": false,
           "sort_order": 2
         },
         {
-          "url": "/seed-images/møterom/meeting-room.png",
-          "alt": "Møterom P fasiliteter",
-          "thumbnail": "/seed-images/møterom/meeting-room.png",
+          "url": "/storage/seed-images/Møterom og kursrom/IMG_3107.jpg",
+          "alt": "Møterom P - Skien - bilde 3",
+          "thumbnail": "/storage/seed-images/Møterom og kursrom/IMG_3107.jpg",
           "is_primary": false,
           "sort_order": 3
         }
@@ -5321,23 +5321,23 @@
       "capacity": 10,
       "images": [
         {
-          "url": "/seed-images/møterom/meeting-room.png",
-          "alt": "Møterom Q hovedbilde",
-          "thumbnail": "/seed-images/møterom/meeting-room.png",
+          "url": "/storage/seed-images/Møterom og kursrom/Møterom-1_4dd9e0.jpg",
+          "alt": "Møterom Q - Porsgrunn - bilde 1",
+          "thumbnail": "/storage/seed-images/Møterom og kursrom/Møterom-1_4dd9e0.jpg",
           "is_primary": true,
           "sort_order": 1
         },
         {
-          "url": "/seed-images/møterom/meeting-room.png",
-          "alt": "Møterom Q interiør",
-          "thumbnail": "/seed-images/møterom/meeting-room.png",
+          "url": "/storage/seed-images/Møterom og kursrom/RKH-innendors-scaled.jpg",
+          "alt": "Møterom Q - Porsgrunn - bilde 2",
+          "thumbnail": "/storage/seed-images/Møterom og kursrom/RKH-innendors-scaled.jpg",
           "is_primary": false,
           "sort_order": 2
         },
         {
-          "url": "/seed-images/møterom/meeting-room.png",
-          "alt": "Møterom Q fasiliteter",
-          "thumbnail": "/seed-images/møterom/meeting-room.png",
+          "url": "/storage/seed-images/Møterom og kursrom/andreas-tangen (1).jpg",
+          "alt": "Møterom Q - Porsgrunn - bilde 3",
+          "thumbnail": "/storage/seed-images/Møterom og kursrom/andreas-tangen (1).jpg",
           "is_primary": false,
           "sort_order": 3
         }
@@ -5449,23 +5449,23 @@
       "capacity": 20,
       "images": [
         {
-          "url": "/seed-images/møterom/meeting-room.png",
-          "alt": "Møterom R hovedbilde",
-          "thumbnail": "/seed-images/møterom/meeting-room.png",
+          "url": "/storage/seed-images/Møterom og kursrom/moterom_1d1_a.webp",
+          "alt": "Møterom R - Bamble - bilde 1",
+          "thumbnail": "/storage/seed-images/Møterom og kursrom/moterom_1d1_a.webp",
           "is_primary": true,
           "sort_order": 1
         },
         {
-          "url": "/seed-images/møterom/meeting-room.png",
-          "alt": "Møterom R interiør",
-          "thumbnail": "/seed-images/møterom/meeting-room.png",
+          "url": "/storage/seed-images/Møterom og kursrom/moterom_u1c6.webp",
+          "alt": "Møterom R - Bamble - bilde 2",
+          "thumbnail": "/storage/seed-images/Møterom og kursrom/moterom_u1c6.webp",
           "is_primary": false,
           "sort_order": 2
         },
         {
-          "url": "/seed-images/møterom/meeting-room.png",
-          "alt": "Møterom R fasiliteter",
-          "thumbnail": "/seed-images/møterom/meeting-room.png",
+          "url": "/storage/seed-images/Møterom og kursrom/møterom-magnus-web_1.webp",
+          "alt": "Møterom R - Bamble - bilde 3",
+          "thumbnail": "/storage/seed-images/Møterom og kursrom/møterom-magnus-web_1.webp",
           "is_primary": false,
           "sort_order": 3
         }
@@ -5577,23 +5577,23 @@
       "capacity": 30,
       "images": [
         {
-          "url": "/seed-images/møterom/meeting-room.png",
-          "alt": "Møterom S hovedbilde",
-          "thumbnail": "/seed-images/møterom/meeting-room.png",
+          "url": "/storage/seed-images/Møterom og kursrom/møterom-matt-web_3.webp",
+          "alt": "Møterom S - Notodden - bilde 1",
+          "thumbnail": "/storage/seed-images/Møterom og kursrom/møterom-matt-web_3.webp",
           "is_primary": true,
           "sort_order": 1
         },
         {
-          "url": "/seed-images/møterom/meeting-room.png",
-          "alt": "Møterom S interiør",
-          "thumbnail": "/seed-images/møterom/meeting-room.png",
+          "url": "/storage/seed-images/Møterom og kursrom/2020-deichman-foto-joerg-wiesner-DSC0492-H-9071822- Foto_Jörg_Wiesner.jpg",
+          "alt": "Møterom S - Notodden - bilde 2",
+          "thumbnail": "/storage/seed-images/Møterom og kursrom/2020-deichman-foto-joerg-wiesner-DSC0492-H-9071822- Foto_Jörg_Wiesner.jpg",
           "is_primary": false,
           "sort_order": 2
         },
         {
-          "url": "/seed-images/møterom/meeting-room.png",
-          "alt": "Møterom S fasiliteter",
-          "thumbnail": "/seed-images/møterom/meeting-room.png",
+          "url": "/storage/seed-images/Møterom og kursrom/49163_153896_377661_R.jpg",
+          "alt": "Møterom S - Notodden - bilde 3",
+          "thumbnail": "/storage/seed-images/Møterom og kursrom/49163_153896_377661_R.jpg",
           "is_primary": false,
           "sort_order": 3
         }
@@ -5705,23 +5705,23 @@
       "capacity": 10,
       "images": [
         {
-          "url": "/seed-images/møterom/meeting-room.png",
-          "alt": "Møterom T hovedbilde",
-          "thumbnail": "/seed-images/møterom/meeting-room.png",
+          "url": "/storage/seed-images/Møterom og kursrom/6852bd2137b6a42466a42f27_Biblioteket_sentralen_oslo_foto_katrine_lunke_20256.jpg",
+          "alt": "Møterom T - Kragerø - bilde 1",
+          "thumbnail": "/storage/seed-images/Møterom og kursrom/6852bd2137b6a42466a42f27_Biblioteket_sentralen_oslo_foto_katrine_lunke_20256.jpg",
           "is_primary": true,
           "sort_order": 1
         },
         {
-          "url": "/seed-images/møterom/meeting-room.png",
-          "alt": "Møterom T interiør",
-          "thumbnail": "/seed-images/møterom/meeting-room.png",
+          "url": "/storage/seed-images/Møterom og kursrom/691bbcd6c2b9e4be057ff8e5_Pipervika.webp",
+          "alt": "Møterom T - Kragerø - bilde 2",
+          "thumbnail": "/storage/seed-images/Møterom og kursrom/691bbcd6c2b9e4be057ff8e5_Pipervika.webp",
           "is_primary": false,
           "sort_order": 2
         },
         {
-          "url": "/seed-images/møterom/meeting-room.png",
-          "alt": "Møterom T fasiliteter",
-          "thumbnail": "/seed-images/møterom/meeting-room.png",
+          "url": "/storage/seed-images/Møterom og kursrom/IMG20231024145510_31d736.jpg",
+          "alt": "Møterom T - Kragerø - bilde 3",
+          "thumbnail": "/storage/seed-images/Møterom og kursrom/IMG20231024145510_31d736.jpg",
           "is_primary": false,
           "sort_order": 3
         }
@@ -5833,23 +5833,23 @@
       "capacity": 20,
       "images": [
         {
-          "url": "/seed-images/møterom/meeting-room.png",
-          "alt": "Møterom U hovedbilde",
-          "thumbnail": "/seed-images/møterom/meeting-room.png",
+          "url": "/storage/seed-images/Møterom og kursrom/IMG_3107.jpg",
+          "alt": "Møterom U - Skien - bilde 1",
+          "thumbnail": "/storage/seed-images/Møterom og kursrom/IMG_3107.jpg",
           "is_primary": true,
           "sort_order": 1
         },
         {
-          "url": "/seed-images/møterom/meeting-room.png",
-          "alt": "Møterom U interiør",
-          "thumbnail": "/seed-images/møterom/meeting-room.png",
+          "url": "/storage/seed-images/Møterom og kursrom/Møterom-1_4dd9e0.jpg",
+          "alt": "Møterom U - Skien - bilde 2",
+          "thumbnail": "/storage/seed-images/Møterom og kursrom/Møterom-1_4dd9e0.jpg",
           "is_primary": false,
           "sort_order": 2
         },
         {
-          "url": "/seed-images/møterom/meeting-room.png",
-          "alt": "Møterom U fasiliteter",
-          "thumbnail": "/seed-images/møterom/meeting-room.png",
+          "url": "/storage/seed-images/Møterom og kursrom/RKH-innendors-scaled.jpg",
+          "alt": "Møterom U - Skien - bilde 3",
+          "thumbnail": "/storage/seed-images/Møterom og kursrom/RKH-innendors-scaled.jpg",
           "is_primary": false,
           "sort_order": 3
         }
@@ -5961,23 +5961,23 @@
       "capacity": 30,
       "images": [
         {
-          "url": "/seed-images/møterom/meeting-room.png",
-          "alt": "Møterom V hovedbilde",
-          "thumbnail": "/seed-images/møterom/meeting-room.png",
+          "url": "/storage/seed-images/Møterom og kursrom/andreas-tangen (1).jpg",
+          "alt": "Møterom V - Porsgrunn - bilde 1",
+          "thumbnail": "/storage/seed-images/Møterom og kursrom/andreas-tangen (1).jpg",
           "is_primary": true,
           "sort_order": 1
         },
         {
-          "url": "/seed-images/møterom/meeting-room.png",
-          "alt": "Møterom V interiør",
-          "thumbnail": "/seed-images/møterom/meeting-room.png",
+          "url": "/storage/seed-images/Møterom og kursrom/moterom_1d1_a.webp",
+          "alt": "Møterom V - Porsgrunn - bilde 2",
+          "thumbnail": "/storage/seed-images/Møterom og kursrom/moterom_1d1_a.webp",
           "is_primary": false,
           "sort_order": 2
         },
         {
-          "url": "/seed-images/møterom/meeting-room.png",
-          "alt": "Møterom V fasiliteter",
-          "thumbnail": "/seed-images/møterom/meeting-room.png",
+          "url": "/storage/seed-images/Møterom og kursrom/moterom_u1c6.webp",
+          "alt": "Møterom V - Porsgrunn - bilde 3",
+          "thumbnail": "/storage/seed-images/Møterom og kursrom/moterom_u1c6.webp",
           "is_primary": false,
           "sort_order": 3
         }
@@ -6089,23 +6089,23 @@
       "capacity": 10,
       "images": [
         {
-          "url": "/seed-images/møterom/meeting-room.png",
-          "alt": "Møterom W hovedbilde",
-          "thumbnail": "/seed-images/møterom/meeting-room.png",
+          "url": "/storage/seed-images/Møterom og kursrom/møterom-magnus-web_1.webp",
+          "alt": "Møterom W - Bamble - bilde 1",
+          "thumbnail": "/storage/seed-images/Møterom og kursrom/møterom-magnus-web_1.webp",
           "is_primary": true,
           "sort_order": 1
         },
         {
-          "url": "/seed-images/møterom/meeting-room.png",
-          "alt": "Møterom W interiør",
-          "thumbnail": "/seed-images/møterom/meeting-room.png",
+          "url": "/storage/seed-images/Møterom og kursrom/møterom-matt-web_3.webp",
+          "alt": "Møterom W - Bamble - bilde 2",
+          "thumbnail": "/storage/seed-images/Møterom og kursrom/møterom-matt-web_3.webp",
           "is_primary": false,
           "sort_order": 2
         },
         {
-          "url": "/seed-images/møterom/meeting-room.png",
-          "alt": "Møterom W fasiliteter",
-          "thumbnail": "/seed-images/møterom/meeting-room.png",
+          "url": "/storage/seed-images/Møterom og kursrom/2020-deichman-foto-joerg-wiesner-DSC0492-H-9071822- Foto_Jörg_Wiesner.jpg",
+          "alt": "Møterom W - Bamble - bilde 3",
+          "thumbnail": "/storage/seed-images/Møterom og kursrom/2020-deichman-foto-joerg-wiesner-DSC0492-H-9071822- Foto_Jörg_Wiesner.jpg",
           "is_primary": false,
           "sort_order": 3
         }
@@ -6217,23 +6217,23 @@
       "capacity": 20,
       "images": [
         {
-          "url": "/seed-images/møterom/meeting-room.png",
-          "alt": "Møterom X hovedbilde",
-          "thumbnail": "/seed-images/møterom/meeting-room.png",
+          "url": "/storage/seed-images/Møterom og kursrom/49163_153896_377661_R.jpg",
+          "alt": "Møterom X - Notodden - bilde 1",
+          "thumbnail": "/storage/seed-images/Møterom og kursrom/49163_153896_377661_R.jpg",
           "is_primary": true,
           "sort_order": 1
         },
         {
-          "url": "/seed-images/møterom/meeting-room.png",
-          "alt": "Møterom X interiør",
-          "thumbnail": "/seed-images/møterom/meeting-room.png",
+          "url": "/storage/seed-images/Møterom og kursrom/6852bd2137b6a42466a42f27_Biblioteket_sentralen_oslo_foto_katrine_lunke_20256.jpg",
+          "alt": "Møterom X - Notodden - bilde 2",
+          "thumbnail": "/storage/seed-images/Møterom og kursrom/6852bd2137b6a42466a42f27_Biblioteket_sentralen_oslo_foto_katrine_lunke_20256.jpg",
           "is_primary": false,
           "sort_order": 2
         },
         {
-          "url": "/seed-images/møterom/meeting-room.png",
-          "alt": "Møterom X fasiliteter",
-          "thumbnail": "/seed-images/møterom/meeting-room.png",
+          "url": "/storage/seed-images/Møterom og kursrom/691bbcd6c2b9e4be057ff8e5_Pipervika.webp",
+          "alt": "Møterom X - Notodden - bilde 3",
+          "thumbnail": "/storage/seed-images/Møterom og kursrom/691bbcd6c2b9e4be057ff8e5_Pipervika.webp",
           "is_primary": false,
           "sort_order": 3
         }
@@ -6345,23 +6345,23 @@
       "capacity": 30,
       "images": [
         {
-          "url": "/seed-images/møterom/meeting-room.png",
-          "alt": "Møterom Y hovedbilde",
-          "thumbnail": "/seed-images/møterom/meeting-room.png",
+          "url": "/storage/seed-images/Møterom og kursrom/IMG20231024145510_31d736.jpg",
+          "alt": "Møterom Y - Kragerø - bilde 1",
+          "thumbnail": "/storage/seed-images/Møterom og kursrom/IMG20231024145510_31d736.jpg",
           "is_primary": true,
           "sort_order": 1
         },
         {
-          "url": "/seed-images/møterom/meeting-room.png",
-          "alt": "Møterom Y interiør",
-          "thumbnail": "/seed-images/møterom/meeting-room.png",
+          "url": "/storage/seed-images/Møterom og kursrom/IMG_3107.jpg",
+          "alt": "Møterom Y - Kragerø - bilde 2",
+          "thumbnail": "/storage/seed-images/Møterom og kursrom/IMG_3107.jpg",
           "is_primary": false,
           "sort_order": 2
         },
         {
-          "url": "/seed-images/møterom/meeting-room.png",
-          "alt": "Møterom Y fasiliteter",
-          "thumbnail": "/seed-images/møterom/meeting-room.png",
+          "url": "/storage/seed-images/Møterom og kursrom/Møterom-1_4dd9e0.jpg",
+          "alt": "Møterom Y - Kragerø - bilde 3",
+          "thumbnail": "/storage/seed-images/Møterom og kursrom/Møterom-1_4dd9e0.jpg",
           "is_primary": false,
           "sort_order": 3
         }
@@ -6473,23 +6473,23 @@
       "capacity": 1,
       "images": [
         {
-          "url": "/seed-images/utstyr/sports-hall.png",
-          "alt": "Duker og Stoler hovedbilde",
-          "thumbnail": "/seed-images/utstyr/sports-hall.png",
+          "url": "/storage/seed-images/utstyr/28cbf6_klappbord-med-stoler-tilgjengelig-for-leie.jpg",
+          "alt": "Duker og Stoler - Skien - bilde 1",
+          "thumbnail": "/storage/seed-images/utstyr/28cbf6_klappbord-med-stoler-tilgjengelig-for-leie.jpg",
           "is_primary": true,
           "sort_order": 1
         },
         {
-          "url": "/seed-images/utstyr/sports-hall.png",
-          "alt": "Duker og Stoler interiør",
-          "thumbnail": "/seed-images/utstyr/sports-hall.png",
+          "url": "/storage/seed-images/utstyr/4x8-med-3-vegger.jpg",
+          "alt": "Duker og Stoler - Skien - bilde 2",
+          "thumbnail": "/storage/seed-images/utstyr/4x8-med-3-vegger.jpg",
           "is_primary": false,
           "sort_order": 2
         },
         {
-          "url": "/seed-images/utstyr/sports-hall.png",
-          "alt": "Duker og Stoler fasiliteter",
-          "thumbnail": "/seed-images/utstyr/sports-hall.png",
+          "url": "/storage/seed-images/utstyr/HULL-CLEANING-3.jpg",
+          "alt": "Duker og Stoler - Skien - bilde 3",
+          "thumbnail": "/storage/seed-images/utstyr/HULL-CLEANING-3.jpg",
           "is_primary": false,
           "sort_order": 3
         }
@@ -6601,23 +6601,23 @@
       "capacity": 1,
       "images": [
         {
-          "url": "/seed-images/utstyr/sports-hall.png",
-          "alt": "Lydutstyr hovedbilde",
-          "thumbnail": "/seed-images/utstyr/sports-hall.png",
+          "url": "/storage/seed-images/utstyr/Infra-Anlegg-Cat-374-772G-LoRes-1320x790.jpg",
+          "alt": "Lydutstyr - Porsgrunn - bilde 1",
+          "thumbnail": "/storage/seed-images/utstyr/Infra-Anlegg-Cat-374-772G-LoRes-1320x790.jpg",
           "is_primary": true,
           "sort_order": 1
         },
         {
-          "url": "/seed-images/utstyr/sports-hall.png",
-          "alt": "Lydutstyr interiør",
-          "thumbnail": "/seed-images/utstyr/sports-hall.png",
+          "url": "/storage/seed-images/utstyr/Lastebil_logo.webp",
+          "alt": "Lydutstyr - Porsgrunn - bilde 2",
+          "thumbnail": "/storage/seed-images/utstyr/Lastebil_logo.webp",
           "is_primary": false,
           "sort_order": 2
         },
         {
-          "url": "/seed-images/utstyr/sports-hall.png",
-          "alt": "Lydutstyr fasiliteter",
-          "thumbnail": "/seed-images/utstyr/sports-hall.png",
+          "url": "/storage/seed-images/utstyr/Utleie-av-bryllupsstoler-1280.jpg",
+          "alt": "Lydutstyr - Porsgrunn - bilde 3",
+          "thumbnail": "/storage/seed-images/utstyr/Utleie-av-bryllupsstoler-1280.jpg",
           "is_primary": false,
           "sort_order": 3
         }
@@ -6729,23 +6729,23 @@
       "capacity": 1,
       "images": [
         {
-          "url": "/seed-images/utstyr/sports-hall.png",
-          "alt": "Projektorer hovedbilde",
-          "thumbnail": "/seed-images/utstyr/sports-hall.png",
+          "url": "/storage/seed-images/utstyr/alpint-1-1920x1080.jpg",
+          "alt": "Projektorer - Bamble - bilde 1",
+          "thumbnail": "/storage/seed-images/utstyr/alpint-1-1920x1080.jpg",
           "is_primary": true,
           "sort_order": 1
         },
         {
-          "url": "/seed-images/utstyr/sports-hall.png",
-          "alt": "Projektorer interiør",
-          "thumbnail": "/seed-images/utstyr/sports-hall.png",
+          "url": "/storage/seed-images/utstyr/catering-oslo-scaled.jpg",
+          "alt": "Projektorer - Bamble - bilde 2",
+          "thumbnail": "/storage/seed-images/utstyr/catering-oslo-scaled.jpg",
           "is_primary": false,
           "sort_order": 2
         },
         {
-          "url": "/seed-images/utstyr/sports-hall.png",
-          "alt": "Projektorer fasiliteter",
-          "thumbnail": "/seed-images/utstyr/sports-hall.png",
+          "url": "/storage/seed-images/utstyr/ec0199_1920_1280_1718534386.webp",
+          "alt": "Projektorer - Bamble - bilde 3",
+          "thumbnail": "/storage/seed-images/utstyr/ec0199_1920_1280_1718534386.webp",
           "is_primary": false,
           "sort_order": 3
         }
@@ -6857,23 +6857,23 @@
       "capacity": 1,
       "images": [
         {
-          "url": "/seed-images/utstyr/sports-hall.png",
-          "alt": "Telt hovedbilde",
-          "thumbnail": "/seed-images/utstyr/sports-hall.png",
+          "url": "/storage/seed-images/utstyr/leietelt_stor.jpg",
+          "alt": "Telt - Notodden - bilde 1",
+          "thumbnail": "/storage/seed-images/utstyr/leietelt_stor.jpg",
           "is_primary": true,
           "sort_order": 1
         },
         {
-          "url": "/seed-images/utstyr/sports-hall.png",
-          "alt": "Telt interiør",
-          "thumbnail": "/seed-images/utstyr/sports-hall.png",
+          "url": "/storage/seed-images/utstyr/puzzi_10_1718560787.webp",
+          "alt": "Telt - Notodden - bilde 2",
+          "thumbnail": "/storage/seed-images/utstyr/puzzi_10_1718560787.webp",
           "is_primary": false,
           "sort_order": 2
         },
         {
-          "url": "/seed-images/utstyr/sports-hall.png",
-          "alt": "Telt fasiliteter",
-          "thumbnail": "/seed-images/utstyr/sports-hall.png",
+          "url": "/storage/seed-images/utstyr/svart-klappstol-uten-pute-mai-2025-1.jpeg",
+          "alt": "Telt - Notodden - bilde 3",
+          "thumbnail": "/storage/seed-images/utstyr/svart-klappstol-uten-pute-mai-2025-1.jpeg",
           "is_primary": false,
           "sort_order": 3
         }
@@ -6985,23 +6985,23 @@
       "capacity": 1,
       "images": [
         {
-          "url": "/seed-images/utstyr/sports-hall.png",
-          "alt": "Fotballutstyr hovedbilde",
-          "thumbnail": "/seed-images/utstyr/sports-hall.png",
+          "url": "/storage/seed-images/utstyr/truger-snowshoe-1200x675.jpg",
+          "alt": "Fotballutstyr - Kragerø - bilde 1",
+          "thumbnail": "/storage/seed-images/utstyr/truger-snowshoe-1200x675.jpg",
           "is_primary": true,
           "sort_order": 1
         },
         {
-          "url": "/seed-images/utstyr/sports-hall.png",
-          "alt": "Fotballutstyr interiør",
-          "thumbnail": "/seed-images/utstyr/sports-hall.png",
+          "url": "/storage/seed-images/utstyr/utstyr07.jpeg",
+          "alt": "Fotballutstyr - Kragerø - bilde 2",
+          "thumbnail": "/storage/seed-images/utstyr/utstyr07.jpeg",
           "is_primary": false,
           "sort_order": 2
         },
         {
-          "url": "/seed-images/utstyr/sports-hall.png",
-          "alt": "Fotballutstyr fasiliteter",
-          "thumbnail": "/seed-images/utstyr/sports-hall.png",
+          "url": "/storage/seed-images/utstyr/w1200h1200-3.jpg",
+          "alt": "Fotballutstyr - Kragerø - bilde 3",
+          "thumbnail": "/storage/seed-images/utstyr/w1200h1200-3.jpg",
           "is_primary": false,
           "sort_order": 3
         }
@@ -7113,23 +7113,23 @@
       "capacity": 1,
       "images": [
         {
-          "url": "/seed-images/utstyr/sports-hall.png",
-          "alt": "Duker og Stoler hovedbilde",
-          "thumbnail": "/seed-images/utstyr/sports-hall.png",
+          "url": "/storage/seed-images/utstyr/28cbf6_klappbord-med-stoler-tilgjengelig-for-leie.jpg",
+          "alt": "Duker og Stoler - Skien - bilde 1",
+          "thumbnail": "/storage/seed-images/utstyr/28cbf6_klappbord-med-stoler-tilgjengelig-for-leie.jpg",
           "is_primary": true,
           "sort_order": 1
         },
         {
-          "url": "/seed-images/utstyr/sports-hall.png",
-          "alt": "Duker og Stoler interiør",
-          "thumbnail": "/seed-images/utstyr/sports-hall.png",
+          "url": "/storage/seed-images/utstyr/4x8-med-3-vegger.jpg",
+          "alt": "Duker og Stoler - Skien - bilde 2",
+          "thumbnail": "/storage/seed-images/utstyr/4x8-med-3-vegger.jpg",
           "is_primary": false,
           "sort_order": 2
         },
         {
-          "url": "/seed-images/utstyr/sports-hall.png",
-          "alt": "Duker og Stoler fasiliteter",
-          "thumbnail": "/seed-images/utstyr/sports-hall.png",
+          "url": "/storage/seed-images/utstyr/HULL-CLEANING-3.jpg",
+          "alt": "Duker og Stoler - Skien - bilde 3",
+          "thumbnail": "/storage/seed-images/utstyr/HULL-CLEANING-3.jpg",
           "is_primary": false,
           "sort_order": 3
         }
@@ -7241,23 +7241,23 @@
       "capacity": 1,
       "images": [
         {
-          "url": "/seed-images/utstyr/sports-hall.png",
-          "alt": "Lydutstyr hovedbilde",
-          "thumbnail": "/seed-images/utstyr/sports-hall.png",
+          "url": "/storage/seed-images/utstyr/Infra-Anlegg-Cat-374-772G-LoRes-1320x790.jpg",
+          "alt": "Lydutstyr - Porsgrunn - bilde 1",
+          "thumbnail": "/storage/seed-images/utstyr/Infra-Anlegg-Cat-374-772G-LoRes-1320x790.jpg",
           "is_primary": true,
           "sort_order": 1
         },
         {
-          "url": "/seed-images/utstyr/sports-hall.png",
-          "alt": "Lydutstyr interiør",
-          "thumbnail": "/seed-images/utstyr/sports-hall.png",
+          "url": "/storage/seed-images/utstyr/Lastebil_logo.webp",
+          "alt": "Lydutstyr - Porsgrunn - bilde 2",
+          "thumbnail": "/storage/seed-images/utstyr/Lastebil_logo.webp",
           "is_primary": false,
           "sort_order": 2
         },
         {
-          "url": "/seed-images/utstyr/sports-hall.png",
-          "alt": "Lydutstyr fasiliteter",
-          "thumbnail": "/seed-images/utstyr/sports-hall.png",
+          "url": "/storage/seed-images/utstyr/Utleie-av-bryllupsstoler-1280.jpg",
+          "alt": "Lydutstyr - Porsgrunn - bilde 3",
+          "thumbnail": "/storage/seed-images/utstyr/Utleie-av-bryllupsstoler-1280.jpg",
           "is_primary": false,
           "sort_order": 3
         }
@@ -7369,23 +7369,23 @@
       "capacity": 1,
       "images": [
         {
-          "url": "/seed-images/utstyr/sports-hall.png",
-          "alt": "Projektorer hovedbilde",
-          "thumbnail": "/seed-images/utstyr/sports-hall.png",
+          "url": "/storage/seed-images/utstyr/alpint-1-1920x1080.jpg",
+          "alt": "Projektorer - Bamble - bilde 1",
+          "thumbnail": "/storage/seed-images/utstyr/alpint-1-1920x1080.jpg",
           "is_primary": true,
           "sort_order": 1
         },
         {
-          "url": "/seed-images/utstyr/sports-hall.png",
-          "alt": "Projektorer interiør",
-          "thumbnail": "/seed-images/utstyr/sports-hall.png",
+          "url": "/storage/seed-images/utstyr/catering-oslo-scaled.jpg",
+          "alt": "Projektorer - Bamble - bilde 2",
+          "thumbnail": "/storage/seed-images/utstyr/catering-oslo-scaled.jpg",
           "is_primary": false,
           "sort_order": 2
         },
         {
-          "url": "/seed-images/utstyr/sports-hall.png",
-          "alt": "Projektorer fasiliteter",
-          "thumbnail": "/seed-images/utstyr/sports-hall.png",
+          "url": "/storage/seed-images/utstyr/ec0199_1920_1280_1718534386.webp",
+          "alt": "Projektorer - Bamble - bilde 3",
+          "thumbnail": "/storage/seed-images/utstyr/ec0199_1920_1280_1718534386.webp",
           "is_primary": false,
           "sort_order": 3
         }
@@ -7497,23 +7497,23 @@
       "capacity": 1,
       "images": [
         {
-          "url": "/seed-images/utstyr/sports-hall.png",
-          "alt": "Telt hovedbilde",
-          "thumbnail": "/seed-images/utstyr/sports-hall.png",
+          "url": "/storage/seed-images/utstyr/leietelt_stor.jpg",
+          "alt": "Telt - Notodden - bilde 1",
+          "thumbnail": "/storage/seed-images/utstyr/leietelt_stor.jpg",
           "is_primary": true,
           "sort_order": 1
         },
         {
-          "url": "/seed-images/utstyr/sports-hall.png",
-          "alt": "Telt interiør",
-          "thumbnail": "/seed-images/utstyr/sports-hall.png",
+          "url": "/storage/seed-images/utstyr/puzzi_10_1718560787.webp",
+          "alt": "Telt - Notodden - bilde 2",
+          "thumbnail": "/storage/seed-images/utstyr/puzzi_10_1718560787.webp",
           "is_primary": false,
           "sort_order": 2
         },
         {
-          "url": "/seed-images/utstyr/sports-hall.png",
-          "alt": "Telt fasiliteter",
-          "thumbnail": "/seed-images/utstyr/sports-hall.png",
+          "url": "/storage/seed-images/utstyr/svart-klappstol-uten-pute-mai-2025-1.jpeg",
+          "alt": "Telt - Notodden - bilde 3",
+          "thumbnail": "/storage/seed-images/utstyr/svart-klappstol-uten-pute-mai-2025-1.jpeg",
           "is_primary": false,
           "sort_order": 3
         }
@@ -7625,23 +7625,23 @@
       "capacity": 1,
       "images": [
         {
-          "url": "/seed-images/utstyr/sports-hall.png",
-          "alt": "Fotballutstyr hovedbilde",
-          "thumbnail": "/seed-images/utstyr/sports-hall.png",
+          "url": "/storage/seed-images/utstyr/truger-snowshoe-1200x675.jpg",
+          "alt": "Fotballutstyr - Kragerø - bilde 1",
+          "thumbnail": "/storage/seed-images/utstyr/truger-snowshoe-1200x675.jpg",
           "is_primary": true,
           "sort_order": 1
         },
         {
-          "url": "/seed-images/utstyr/sports-hall.png",
-          "alt": "Fotballutstyr interiør",
-          "thumbnail": "/seed-images/utstyr/sports-hall.png",
+          "url": "/storage/seed-images/utstyr/utstyr07.jpeg",
+          "alt": "Fotballutstyr - Kragerø - bilde 2",
+          "thumbnail": "/storage/seed-images/utstyr/utstyr07.jpeg",
           "is_primary": false,
           "sort_order": 2
         },
         {
-          "url": "/seed-images/utstyr/sports-hall.png",
-          "alt": "Fotballutstyr fasiliteter",
-          "thumbnail": "/seed-images/utstyr/sports-hall.png",
+          "url": "/storage/seed-images/utstyr/w1200h1200-3.jpg",
+          "alt": "Fotballutstyr - Kragerø - bilde 3",
+          "thumbnail": "/storage/seed-images/utstyr/w1200h1200-3.jpg",
           "is_primary": false,
           "sort_order": 3
         }
@@ -7753,23 +7753,23 @@
       "capacity": 300,
       "images": [
         {
-          "url": "/seed-images/arrangement/sports-hall.png",
-          "alt": "Arrangementssted 62 hovedbilde",
-          "thumbnail": "/seed-images/arrangement/sports-hall.png",
+          "url": "/storage/seed-images/Selskapslokaler/KH_KBOUS3.jpg",
+          "alt": "Arrangementssted 62 - Skien - bilde 1",
+          "thumbnail": "/storage/seed-images/Selskapslokaler/KH_KBOUS3.jpg",
           "is_primary": true,
           "sort_order": 1
         },
         {
-          "url": "/seed-images/arrangement/sports-hall.png",
-          "alt": "Arrangementssted 62 interiør",
-          "thumbnail": "/seed-images/arrangement/sports-hall.png",
+          "url": "/storage/seed-images/Selskapslokaler/Kursrom-Himmel-og-HavWordpress-scaled.jpg",
+          "alt": "Arrangementssted 62 - Skien - bilde 2",
+          "thumbnail": "/storage/seed-images/Selskapslokaler/Kursrom-Himmel-og-HavWordpress-scaled.jpg",
           "is_primary": false,
           "sort_order": 2
         },
         {
-          "url": "/seed-images/arrangement/sports-hall.png",
-          "alt": "Arrangementssted 62 fasiliteter",
-          "thumbnail": "/seed-images/arrangement/sports-hall.png",
+          "url": "/storage/seed-images/Selskapslokaler/Ry002_wfwrd4.jpg",
+          "alt": "Arrangementssted 62 - Skien - bilde 3",
+          "thumbnail": "/storage/seed-images/Selskapslokaler/Ry002_wfwrd4.jpg",
           "is_primary": false,
           "sort_order": 3
         }
@@ -7881,23 +7881,23 @@
       "capacity": 400,
       "images": [
         {
-          "url": "/seed-images/arrangement/sports-hall.png",
-          "alt": "Arrangementssted 63 hovedbilde",
-          "thumbnail": "/seed-images/arrangement/sports-hall.png",
+          "url": "/storage/seed-images/Selskapslokaler/Sjømagasinet_June+2020_Kyle+Meyr_LR0016.webp",
+          "alt": "Arrangementssted 63 - Porsgrunn - bilde 1",
+          "thumbnail": "/storage/seed-images/Selskapslokaler/Sjømagasinet_June+2020_Kyle+Meyr_LR0016.webp",
           "is_primary": true,
           "sort_order": 1
         },
         {
-          "url": "/seed-images/arrangement/sports-hall.png",
-          "alt": "Arrangementssted 63 interiør",
-          "thumbnail": "/seed-images/arrangement/sports-hall.png",
+          "url": "/storage/seed-images/Selskapslokaler/Utleiepartner-telt-bord-og-benker.jpg",
+          "alt": "Arrangementssted 63 - Porsgrunn - bilde 2",
+          "thumbnail": "/storage/seed-images/Selskapslokaler/Utleiepartner-telt-bord-og-benker.jpg",
           "is_primary": false,
           "sort_order": 2
         },
         {
-          "url": "/seed-images/arrangement/sports-hall.png",
-          "alt": "Arrangementssted 63 fasiliteter",
-          "thumbnail": "/seed-images/arrangement/sports-hall.png",
+          "url": "/storage/seed-images/Selskapslokaler/catering.jpg",
+          "alt": "Arrangementssted 63 - Porsgrunn - bilde 3",
+          "thumbnail": "/storage/seed-images/Selskapslokaler/catering.jpg",
           "is_primary": false,
           "sort_order": 3
         }
@@ -8009,23 +8009,23 @@
       "capacity": 500,
       "images": [
         {
-          "url": "/seed-images/arrangement/sports-hall.png",
-          "alt": "Arrangementssted 64 hovedbilde",
-          "thumbnail": "/seed-images/arrangement/sports-hall.png",
+          "url": "/storage/seed-images/Selskapslokaler/inside.jpg",
+          "alt": "Arrangementssted 64 - Bamble - bilde 1",
+          "thumbnail": "/storage/seed-images/Selskapslokaler/inside.jpg",
           "is_primary": true,
           "sort_order": 1
         },
         {
-          "url": "/seed-images/arrangement/sports-hall.png",
-          "alt": "Arrangementssted 64 interiør",
-          "thumbnail": "/seed-images/arrangement/sports-hall.png",
+          "url": "/storage/seed-images/Selskapslokaler/mat-1.jpg",
+          "alt": "Arrangementssted 64 - Bamble - bilde 2",
+          "thumbnail": "/storage/seed-images/Selskapslokaler/mat-1.jpg",
           "is_primary": false,
           "sort_order": 2
         },
         {
-          "url": "/seed-images/arrangement/sports-hall.png",
-          "alt": "Arrangementssted 64 fasiliteter",
-          "thumbnail": "/seed-images/arrangement/sports-hall.png",
+          "url": "/storage/seed-images/Selskapslokaler/norway-bergen-selskapslokaler-event-venues-and-banquet-halls-restaurants-bryllup-11.avif",
+          "alt": "Arrangementssted 64 - Bamble - bilde 3",
+          "thumbnail": "/storage/seed-images/Selskapslokaler/norway-bergen-selskapslokaler-event-venues-and-banquet-halls-restaurants-bryllup-11.avif",
           "is_primary": false,
           "sort_order": 3
         }
@@ -8137,23 +8137,23 @@
       "capacity": 600,
       "images": [
         {
-          "url": "/seed-images/arrangement/sports-hall.png",
-          "alt": "Arrangementssted 65 hovedbilde",
-          "thumbnail": "/seed-images/arrangement/sports-hall.png",
+          "url": "/storage/seed-images/Selskapslokaler/storaas_bryllup-2.jpg",
+          "alt": "Arrangementssted 65 - Notodden - bilde 1",
+          "thumbnail": "/storage/seed-images/Selskapslokaler/storaas_bryllup-2.jpg",
           "is_primary": true,
           "sort_order": 1
         },
         {
-          "url": "/seed-images/arrangement/sports-hall.png",
-          "alt": "Arrangementssted 65 interiør",
-          "thumbnail": "/seed-images/arrangement/sports-hall.png",
+          "url": "/storage/seed-images/Selskapslokaler/090323-Trondheim Spektrum-Main-0023.jpg.webp",
+          "alt": "Arrangementssted 65 - Notodden - bilde 2",
+          "thumbnail": "/storage/seed-images/Selskapslokaler/090323-Trondheim Spektrum-Main-0023.jpg.webp",
           "is_primary": false,
           "sort_order": 2
         },
         {
-          "url": "/seed-images/arrangement/sports-hall.png",
-          "alt": "Arrangementssted 65 fasiliteter",
-          "thumbnail": "/seed-images/arrangement/sports-hall.png",
+          "url": "/storage/seed-images/Selskapslokaler/090323-Trondheim Spektrum-Main-0027.jpg.webp",
+          "alt": "Arrangementssted 65 - Notodden - bilde 3",
+          "thumbnail": "/storage/seed-images/Selskapslokaler/090323-Trondheim Spektrum-Main-0027.jpg.webp",
           "is_primary": false,
           "sort_order": 3
         }
@@ -8265,23 +8265,23 @@
       "capacity": 200,
       "images": [
         {
-          "url": "/seed-images/arrangement/sports-hall.png",
-          "alt": "Arrangementssted 66 hovedbilde",
-          "thumbnail": "/seed-images/arrangement/sports-hall.png",
+          "url": "/storage/seed-images/Selskapslokaler/11b22e7c96134a8fb73de246521188d1.jpg",
+          "alt": "Arrangementssted 66 - Kragerø - bilde 1",
+          "thumbnail": "/storage/seed-images/Selskapslokaler/11b22e7c96134a8fb73de246521188d1.jpg",
           "is_primary": true,
           "sort_order": 1
         },
         {
-          "url": "/seed-images/arrangement/sports-hall.png",
-          "alt": "Arrangementssted 66 interiør",
-          "thumbnail": "/seed-images/arrangement/sports-hall.png",
+          "url": "/storage/seed-images/Selskapslokaler/1ZQSyaO8dmvay9ZuLZDjD.jpg",
+          "alt": "Arrangementssted 66 - Kragerø - bilde 2",
+          "thumbnail": "/storage/seed-images/Selskapslokaler/1ZQSyaO8dmvay9ZuLZDjD.jpg",
           "is_primary": false,
           "sort_order": 2
         },
         {
-          "url": "/seed-images/arrangement/sports-hall.png",
-          "alt": "Arrangementssted 66 fasiliteter",
-          "thumbnail": "/seed-images/arrangement/sports-hall.png",
+          "url": "/storage/seed-images/Selskapslokaler/2+(49).webp",
+          "alt": "Arrangementssted 66 - Kragerø - bilde 3",
+          "thumbnail": "/storage/seed-images/Selskapslokaler/2+(49).webp",
           "is_primary": false,
           "sort_order": 3
         }
@@ -8393,23 +8393,23 @@
       "capacity": 300,
       "images": [
         {
-          "url": "/seed-images/arrangement/sports-hall.png",
-          "alt": "Arrangementssted 67 hovedbilde",
-          "thumbnail": "/seed-images/arrangement/sports-hall.png",
+          "url": "/storage/seed-images/Selskapslokaler/20241101_BH_VA_Mortens_Kro_tilbygg_011.jpg",
+          "alt": "Arrangementssted 67 - Skien - bilde 1",
+          "thumbnail": "/storage/seed-images/Selskapslokaler/20241101_BH_VA_Mortens_Kro_tilbygg_011.jpg",
           "is_primary": true,
           "sort_order": 1
         },
         {
-          "url": "/seed-images/arrangement/sports-hall.png",
-          "alt": "Arrangementssted 67 interiør",
-          "thumbnail": "/seed-images/arrangement/sports-hall.png",
+          "url": "/storage/seed-images/Selskapslokaler/66d0431ff9a8fa50aa016de5_direktørrommet-sentralen-oslo-foto-katrine-lunke (40).jpg",
+          "alt": "Arrangementssted 67 - Skien - bilde 2",
+          "thumbnail": "/storage/seed-images/Selskapslokaler/66d0431ff9a8fa50aa016de5_direktørrommet-sentralen-oslo-foto-katrine-lunke (40).jpg",
           "is_primary": false,
           "sort_order": 2
         },
         {
-          "url": "/seed-images/arrangement/sports-hall.png",
-          "alt": "Arrangementssted 67 fasiliteter",
-          "thumbnail": "/seed-images/arrangement/sports-hall.png",
+          "url": "/storage/seed-images/Selskapslokaler/929_19d0ceeb-5f46-4c41-bf7a-158a5f5e085e.avif",
+          "alt": "Arrangementssted 67 - Skien - bilde 3",
+          "thumbnail": "/storage/seed-images/Selskapslokaler/929_19d0ceeb-5f46-4c41-bf7a-158a5f5e085e.avif",
           "is_primary": false,
           "sort_order": 3
         }
@@ -8521,23 +8521,23 @@
       "capacity": 400,
       "images": [
         {
-          "url": "/seed-images/arrangement/sports-hall.png",
-          "alt": "Arrangementssted 68 hovedbilde",
-          "thumbnail": "/seed-images/arrangement/sports-hall.png",
+          "url": "/storage/seed-images/Selskapslokaler/Julebygda-grendahus-salen-selskapslokale-2.jpg",
+          "alt": "Arrangementssted 68 - Porsgrunn - bilde 1",
+          "thumbnail": "/storage/seed-images/Selskapslokaler/Julebygda-grendahus-salen-selskapslokale-2.jpg",
           "is_primary": true,
           "sort_order": 1
         },
         {
-          "url": "/seed-images/arrangement/sports-hall.png",
-          "alt": "Arrangementssted 68 interiør",
-          "thumbnail": "/seed-images/arrangement/sports-hall.png",
+          "url": "/storage/seed-images/Selskapslokaler/KH_KBOUS3.jpg",
+          "alt": "Arrangementssted 68 - Porsgrunn - bilde 2",
+          "thumbnail": "/storage/seed-images/Selskapslokaler/KH_KBOUS3.jpg",
           "is_primary": false,
           "sort_order": 2
         },
         {
-          "url": "/seed-images/arrangement/sports-hall.png",
-          "alt": "Arrangementssted 68 fasiliteter",
-          "thumbnail": "/seed-images/arrangement/sports-hall.png",
+          "url": "/storage/seed-images/Selskapslokaler/Kursrom-Himmel-og-HavWordpress-scaled.jpg",
+          "alt": "Arrangementssted 68 - Porsgrunn - bilde 3",
+          "thumbnail": "/storage/seed-images/Selskapslokaler/Kursrom-Himmel-og-HavWordpress-scaled.jpg",
           "is_primary": false,
           "sort_order": 3
         }
@@ -8649,23 +8649,23 @@
       "capacity": 500,
       "images": [
         {
-          "url": "/seed-images/arrangement/sports-hall.png",
-          "alt": "Arrangementssted 69 hovedbilde",
-          "thumbnail": "/seed-images/arrangement/sports-hall.png",
+          "url": "/storage/seed-images/Selskapslokaler/Ry002_wfwrd4.jpg",
+          "alt": "Arrangementssted 69 - Bamble - bilde 1",
+          "thumbnail": "/storage/seed-images/Selskapslokaler/Ry002_wfwrd4.jpg",
           "is_primary": true,
           "sort_order": 1
         },
         {
-          "url": "/seed-images/arrangement/sports-hall.png",
-          "alt": "Arrangementssted 69 interiør",
-          "thumbnail": "/seed-images/arrangement/sports-hall.png",
+          "url": "/storage/seed-images/Selskapslokaler/Sjømagasinet_June+2020_Kyle+Meyr_LR0016.webp",
+          "alt": "Arrangementssted 69 - Bamble - bilde 2",
+          "thumbnail": "/storage/seed-images/Selskapslokaler/Sjømagasinet_June+2020_Kyle+Meyr_LR0016.webp",
           "is_primary": false,
           "sort_order": 2
         },
         {
-          "url": "/seed-images/arrangement/sports-hall.png",
-          "alt": "Arrangementssted 69 fasiliteter",
-          "thumbnail": "/seed-images/arrangement/sports-hall.png",
+          "url": "/storage/seed-images/Selskapslokaler/Utleiepartner-telt-bord-og-benker.jpg",
+          "alt": "Arrangementssted 69 - Bamble - bilde 3",
+          "thumbnail": "/storage/seed-images/Selskapslokaler/Utleiepartner-telt-bord-og-benker.jpg",
           "is_primary": false,
           "sort_order": 3
         }
@@ -8777,23 +8777,23 @@
       "capacity": 600,
       "images": [
         {
-          "url": "/seed-images/arrangement/sports-hall.png",
-          "alt": "Arrangementssted 70 hovedbilde",
-          "thumbnail": "/seed-images/arrangement/sports-hall.png",
+          "url": "/storage/seed-images/Selskapslokaler/catering.jpg",
+          "alt": "Arrangementssted 70 - Notodden - bilde 1",
+          "thumbnail": "/storage/seed-images/Selskapslokaler/catering.jpg",
           "is_primary": true,
           "sort_order": 1
         },
         {
-          "url": "/seed-images/arrangement/sports-hall.png",
-          "alt": "Arrangementssted 70 interiør",
-          "thumbnail": "/seed-images/arrangement/sports-hall.png",
+          "url": "/storage/seed-images/Selskapslokaler/inside.jpg",
+          "alt": "Arrangementssted 70 - Notodden - bilde 2",
+          "thumbnail": "/storage/seed-images/Selskapslokaler/inside.jpg",
           "is_primary": false,
           "sort_order": 2
         },
         {
-          "url": "/seed-images/arrangement/sports-hall.png",
-          "alt": "Arrangementssted 70 fasiliteter",
-          "thumbnail": "/seed-images/arrangement/sports-hall.png",
+          "url": "/storage/seed-images/Selskapslokaler/mat-1.jpg",
+          "alt": "Arrangementssted 70 - Notodden - bilde 3",
+          "thumbnail": "/storage/seed-images/Selskapslokaler/mat-1.jpg",
           "is_primary": false,
           "sort_order": 3
         }
@@ -8905,23 +8905,23 @@
       "capacity": 200,
       "images": [
         {
-          "url": "/seed-images/arrangement/sports-hall.png",
-          "alt": "Arrangementssted 71 hovedbilde",
-          "thumbnail": "/seed-images/arrangement/sports-hall.png",
+          "url": "/storage/seed-images/Selskapslokaler/norway-bergen-selskapslokaler-event-venues-and-banquet-halls-restaurants-bryllup-11.avif",
+          "alt": "Arrangementssted 71 - Kragerø - bilde 1",
+          "thumbnail": "/storage/seed-images/Selskapslokaler/norway-bergen-selskapslokaler-event-venues-and-banquet-halls-restaurants-bryllup-11.avif",
           "is_primary": true,
           "sort_order": 1
         },
         {
-          "url": "/seed-images/arrangement/sports-hall.png",
-          "alt": "Arrangementssted 71 interiør",
-          "thumbnail": "/seed-images/arrangement/sports-hall.png",
+          "url": "/storage/seed-images/Selskapslokaler/storaas_bryllup-2.jpg",
+          "alt": "Arrangementssted 71 - Kragerø - bilde 2",
+          "thumbnail": "/storage/seed-images/Selskapslokaler/storaas_bryllup-2.jpg",
           "is_primary": false,
           "sort_order": 2
         },
         {
-          "url": "/seed-images/arrangement/sports-hall.png",
-          "alt": "Arrangementssted 71 fasiliteter",
-          "thumbnail": "/seed-images/arrangement/sports-hall.png",
+          "url": "/storage/seed-images/Selskapslokaler/090323-Trondheim Spektrum-Main-0023.jpg.webp",
+          "alt": "Arrangementssted 71 - Kragerø - bilde 3",
+          "thumbnail": "/storage/seed-images/Selskapslokaler/090323-Trondheim Spektrum-Main-0023.jpg.webp",
           "is_primary": false,
           "sort_order": 3
         }

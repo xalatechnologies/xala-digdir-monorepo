@@ -12,15 +12,39 @@ import { fileURLToPath } from 'url';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-// Category mapping: rental object category -> storage folder
-const CATEGORY_MAPPING = {
-  'sports-facilities': 'lokaler-og-baner',
-  'meeting-rooms': 'Møterom og kursrom',
-  'equipment': 'utstyr',
-  'event-venues': 'Selskapslokaler',
-  'libraries': 'Bibliotek',
-  'swimming-pools': 'Svømmehall',
+// Name pattern mapping: rental object name patterns -> storage folder
+const NAME_TO_FOLDER_MAPPING = {
+  'Fotballbane': 'lokaler-og-baner',
+  'Tennisbane': 'lokaler-og-baner',
+  'Svømmehall': 'Svømmehall',
+  'Gymnastikksal': 'Gymsal',
+  'Basketballbane': 'lokaler-og-baner',
+  'Volleyballbane': 'lokaler-og-baner',
+  'Badmintonhall': 'Idrettshaller',
+  'Håndballbane': 'lokaler-og-baner',
+  'Ishall': 'Idrettshaller',
+  'Idrettshall': 'Idrettshaller',
+  'Møterom': 'Møterom og kursrom',
+  'Duker og Stoler': 'utstyr',
+  'Lydutstyr': 'utstyr',
+  'Projektorer': 'utstyr',
+  'Telt': 'utstyr',
+  'Fotballutstyr': 'utstyr',
+  'Arrangementssted': 'Selskapslokaler',
+  'Bibliotek': 'Bibliotek',
+  'Kulturhus': 'Kulturhus',
+  'Grendehus': 'Grendehus og sammfunnshus',
 };
+
+// Function to determine folder from rental object name
+function getFolderFromName(name) {
+  for (const [pattern, folder] of Object.entries(NAME_TO_FOLDER_MAPPING)) {
+    if (name.includes(pattern)) {
+      return folder;
+    }
+  }
+  return null;
+}
 
 // Paths
 const SEED_FILE = path.join(__dirname, '../domain/rental-objects-comprehensive.json');
@@ -32,34 +56,39 @@ const seedData = JSON.parse(fs.readFileSync(SEED_FILE, 'utf-8'));
 
 // Get images from storage folders
 console.log('📁 Scanning storage folders...');
-const imagesByCategory = {};
+const imagesByFolder = {};
 
-Object.entries(CATEGORY_MAPPING).forEach(([rentalCategory, storageFolder]) => {
+// Get all unique folders from mapping
+const uniqueFolders = [...new Set(Object.values(NAME_TO_FOLDER_MAPPING))];
+
+uniqueFolders.forEach(storageFolder => {
   const folderPath = path.join(STORAGE_DIR, storageFolder);
   
   if (fs.existsSync(folderPath)) {
     const files = fs.readdirSync(folderPath)
-      .filter(file => /\.(jpg|jpeg|png|webp)$/i.test(file))
+      .filter(file => /\.(jpg|jpeg|png|webp|avif)$/i.test(file))
       .map(file => `/storage/seed-images/${storageFolder}/${file}`);
     
-    imagesByCategory[rentalCategory] = files;
+    imagesByFolder[storageFolder] = files;
     console.log(`  ✓ ${storageFolder}: ${files.length} images`);
   } else {
     console.log(`  ⚠ ${storageFolder}: folder not found`);
-    imagesByCategory[rentalCategory] = [];
+    imagesByFolder[storageFolder] = [];
   }
 });
 
 // Update rental objects with real images
 console.log('\n🖼️  Mapping images to rental objects...');
 let updatedCount = 0;
+let skippedCount = 0;
 
 seedData.rental_objects.forEach((obj, index) => {
-  const category = obj.category;
-  const availableImages = imagesByCategory[category] || [];
+  const folder = getFolderFromName(obj.name);
+  const availableImages = folder ? imagesByFolder[folder] : [];
   
-  if (availableImages.length === 0) {
-    console.log(`  ⚠ No images for category: ${category} (${obj.name})`);
+  if (!folder || availableImages.length === 0) {
+    console.log(`  ⚠ No images for: ${obj.name} (folder: ${folder || 'not found'})`);
+    skippedCount++;
     return;
   }
   
@@ -94,5 +123,6 @@ console.log(`\n💾 Writing updated seed data...`);
 fs.writeFileSync(SEED_FILE, JSON.stringify(seedData, null, 2), 'utf-8');
 
 console.log(`\n✅ Complete!`);
-console.log(`   Updated ${updatedCount} rental objects with real images`);
+console.log(`   Updated: ${updatedCount} rental objects with real images`);
+console.log(`   Skipped: ${skippedCount} rental objects (no matching images)`);
 console.log(`   File: ${SEED_FILE}`);
