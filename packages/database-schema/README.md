@@ -1,63 +1,126 @@
-# @digilist/database-schema
+# Database Schema Package
 
-Modular Drizzle ORM schemas and seed data for the Digilist platform.
+> **Single Source of Truth** for all Drizzle ORM schema definitions in the Digilist platform.
 
-## Why This Package?
+## Overview
 
-**Problem:** Drizzle Kit hangs when generating migrations from large monolithic schema files (900+ lines).
+This package contains all database table definitions, organized into logical modules. It is designed to:
 
-**Solution:** Extract schemas into focused, isolated packages that Drizzle Kit can process efficiently.
+1. **Eliminate circular dependencies** that caused Drizzle Kit to hang
+2. **Enable automatic migration generation** via `pnpm db:generate`
+3. **Provide type-safe exports** for all database tables
+4. **Centralize schema governance** in one package
 
-**Bonus:** Centralized seed data management alongside schema definitions.
-
-## Structure
+## Package Structure
 
 ```
 @digilist/database-schema/
 ├── src/
-│   ├── schemas.ts          # PostgreSQL schema namespaces
-│   ├── entitlements.ts     # Entitlements & feature flags tables
-│   └── index.ts            # Package exports
-├── migrations/             # Auto-generated migrations
-├── drizzle.config.ts       # Drizzle Kit configuration
-└── package.json
+│   ├── schemas.ts           # pgSchema definitions (platform, domain, saas, etc.)
+│   ├── core/                # Foundation tables (no external dependencies)
+│   │   ├── tenants.ts       # Multi-tenant foundation
+│   │   ├── organizations.ts # Organization hierarchy
+│   │   ├── users.ts         # User accounts
+│   │   └── index.ts
+│   ├── domain/              # Business entities
+│   │   ├── rental-objects.ts # Core rental inventory
+│   │   ├── bookings.ts      # Booking transactions
+│   │   └── index.ts
+│   ├── platform/            # Infrastructure tables
+│   │   ├── sessions.ts      # Authentication sessions
+│   │   ├── memberships.ts   # Org memberships, permissions
+│   │   └── index.ts
+│   ├── saas/                # Multi-tenancy & entitlements
+│   │   ├── entitlements.ts  # 7 entitlement tables
+│   │   └── index.ts
+│   ├── compliance/          # Audit & governance
+│   │   ├── audit-logs.ts    # Activity tracking
+│   │   └── index.ts
+│   └── index.ts             # Master export
+├── seeds/                   # Seed data
+│   ├── route-policies.json
+│   ├── nav-policies.json
+│   ├── plan-entitlements.json
+│   └── import.ts
+├── migrations/              # Auto-generated SQL
+└── drizzle.config.ts
 ```
+
+## Modules
+
+### Core Module (`/core`)
+Foundation tables with no external dependencies.
+
+| Table | Description |
+|-------|-------------|
+| `tenants` | Multi-tenant root entity |
+| `organizations` | Hierarchical org structure |
+| `users` | User accounts with RBAC roles |
+
+### Domain Module (`/domain`)
+Business logic entities.
+
+| Table | Description |
+|-------|-------------|
+| `rentalObjects` | Rental inventory items |
+| `bookings` | Booking transactions |
+
+### Platform Module (`/platform`)
+Infrastructure and authentication.
+
+| Table | Description |
+|-------|-------------|
+| `sessions` | JWT refresh token sessions |
+| `orgMemberships` | Organization membership |
+| `accessGrants` | Resource access grants |
+| `permissionAssignments` | User-level permissions |
+| `caseHandlerScopes` | Case handler assignments |
+
+### SaaS Module (`/saas`)
+Entitlements and feature flags.
+
+| Table | Description |
+|-------|-------------|
+| `planEntitlements` | Base entitlements per plan |
+| `tenantEntitlementOverrides` | Tenant-specific overrides |
+| `integrationConfigs` | Integration configurations |
+| `routePolicies` | Route-level access control |
+| `navPolicies` | Navigation visibility |
+| `globalKillSwitches` | Emergency disable |
+| `entitlementAuditLog` | Change tracking |
+
+### Compliance Module (`/compliance`)
+Audit and governance.
+
+| Table | Description |
+|-------|-------------|
+| `auditLogs` | Activity audit trail |
 
 ## Usage
 
-### In API
+### Importing Tables
 
 ```typescript
-import { 
-  planEntitlements, 
-  tenantEntitlementOverrides,
-  routePolicies,
-  navPolicies 
-} from '@digilist/database-schema/entitlements';
+// Import everything
+import { tenants, users, bookings } from '@digilist/database-schema';
 
-// Use in queries
-const overrides = await db
-  .select()
-  .from(tenantEntitlementOverrides)
-  .where(eq(tenantEntitlementOverrides.tenantId, tenantId));
+// Import from specific module
+import { tenants, users } from '@digilist/database-schema/core';
+import { planEntitlements } from '@digilist/database-schema/saas';
+
+// Import types
+import type { Tenant, User, Booking } from '@digilist/database-schema';
 ```
 
-### Generate Migrations
+### Generating Migrations
 
 ```bash
 cd packages/database-schema
-pnpm db:generate
+pnpm db:generate   # Generate SQL migrations
+pnpm db:push       # Push schema to database (dev only)
 ```
 
-This will create migration files in `packages/database-schema/migrations/`.
-
-### Copy Migrations to API
-
-```bash
-cp packages/database-schema/migrations/*.sql apps/api/drizzle/
-```
-
-### Import Seed Data
+### Importing Seeds
 
 ```bash
 cd packages/database-schema
@@ -65,42 +128,17 @@ export DATABASE_URL="postgresql://..."
 pnpm seed
 ```
 
-This will import:
-- Route policies (20+ routes across all apps)
-- Navigation policies (hierarchical nav structure)
-- Plan entitlements (Free, Pro, Enterprise defaults)
+## Schema Conventions
 
-**Note:** Plan entitlements require plans to exist in `saas.plans` table first.
+1. **All tables use UUID primary keys** with `defaultRandom()`
+2. **All tables have `createdAt` and `updatedAt`** timestamps
+3. **Foreign keys use `onDelete: 'cascade'`** for dependent tables
+4. **Indexes are named** with `{table}_{column}_idx` pattern
+5. **Each module has its own pgSchema** (platform, domain, saas, compliance, monitoring)
 
-## Seed Data
+## Adding New Tables
 
-Seed data is stored in `seeds/` directory:
-
-```
-seeds/
-├── route-policies.json       # Route access control
-├── nav-policies.json          # Navigation structure
-├── plan-entitlements.json     # Plan defaults
-└── import.ts                  # Import script
-```
-
-### Editing Seed Data
-
-1. Edit JSON files in `seeds/`
-2. Run `pnpm seed` to import
-3. Data is idempotent (uses `onConflictDoNothing`)
-
-## Benefits
-
-✅ **Fast migration generation** - Small, focused schemas  
-✅ **No hanging** - Drizzle Kit processes efficiently  
-✅ **Modular** - Easy to maintain and extend  
-✅ **Type-safe** - Full TypeScript support  
-✅ **Reusable** - Can be used across multiple apps
-
-## Adding New Schemas
-
-1. Create new schema file in `src/` (e.g., `src/analytics.ts`)
-2. Export from `src/index.ts`
-3. Update `drizzle.config.ts` if needed
-4. Run `pnpm db:generate`
+1. Create table file in appropriate module (e.g., `src/domain/new-table.ts`)
+2. Export from module's `index.ts`
+3. Run `pnpm db:generate` to create migration
+4. Copy migration to `apps/api/drizzle/` if needed
