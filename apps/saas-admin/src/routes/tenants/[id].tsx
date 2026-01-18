@@ -293,7 +293,13 @@ export function TenantDetailPage() {
         <StatCard
           title="Organisasjoner"
           value={`${tenant.usage.organizationsCount} / ${tenant.seatLimits.maxOrganizations}`}
-          description={`${Math.round((tenant.usage.organizationsCount / tenant.seatLimits.maxOrganizations) * 100)}% brukt`t('common.colorvardscolorsuccesstextdefault_iconbuildingicon_statcard_titleleieobjekter')`${tenant.usage.listingsCount} / ${tenant.seatLimits.maxListings}`}
+          description="Aktive organisasjoner"
+          color="var(--ds-color-info-text-default)"
+          icon={<UsersIcon />}
+        />
+        <StatCard
+          title="Leieobjekter"
+          value={`${tenant.usage.listingsCount} / ${tenant.seatLimits.maxListings}`}
           description={`${Math.round((tenant.usage.listingsCount / tenant.seatLimits.maxListings) * 100)}% brukt`}
           color="var(--ds-color-warning-text-default)"
           icon={<CalendarIcon />}
