@@ -1,0 +1,976 @@
+/**
+ * Settings Page - User Profile Management
+ * Comprehensive tabbed settings for end users
+ */
+
+import { useState, useRef, useEffect } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import {
+  Card,
+  Heading,
+  Paragraph,
+  Button,
+  Spinner,
+  Tabs,
+  Stack,
+  FormField,
+  Textfield,
+  Select,
+  Switch,
+  Alert,
+  SaveIcon,
+  CheckCircleIcon,
+  UserIcon,
+  CameraIcon,
+  DownloadIcon,
+  TrashIcon,
+  ShieldIcon,
+  BellIcon,
+  SettingsIcon,
+  MapPinIcon,
+  HomeIcon,
+} from '@xala/ds';
+import {
+  useCurrentUser,
+  useUpdateCurrentUser,
+  useUploadUserAvatar,
+  useExportData,
+  useDeleteAccount,
+  useConsents,
+  useUpdateConsents,
+  type Address,
+} from '@digilist/client-sdk';
+import { useLocale, useT } from '@xala/i18n';
+import { useAuth } from '@xala/auth';
+
+export function SettingsPage() {
+  const navigate = useNavigate();
+  const { logout } = useAuth();
+  const { locale, setLocale } = useLocale();
+  const t = useT();
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const tabsListRef = useRef<HTMLDivElement>(null);
+  const [avatarPreview, setAvatarPreview] = useState<string | null>(null);
+  const [activeTab, setActiveTab] = useState('profile');
+  const [showLeftIndicator, setShowLeftIndicator] = useState(false);
+  const [showRightIndicator, setShowRightIndicator] = useState(false);
+
+  // Queries
+  const { data: currentUserData, isLoading: isLoadingUser } = useCurrentUser();
+  const currentUser = currentUserData?.data;
+
+  const { data: consentsData } = useConsents();
+  const consents = consentsData?.data;
+
+  // Mutations
+  const updateProfileMutation = useUpdateCurrentUser();
+  const uploadAvatarMutation = useUploadUserAvatar();
+  const exportDataMutation = useExportData();
+  const deleteAccountMutation = useDeleteAccount();
+  const updateConsentsMutation = useUpdateConsents();
+
+  const [profileData, setProfileData] = useState({
+    name: '',
+    email: '',
+    phone: '',
+    dateOfBirth: '',
+    nationalId: '',
+    invoiceAddress: {
+      street: '',
+      city: '',
+      postalCode: '',
+      country: '',
+    } as Address,
+    residenceAddress: {
+      street: '',
+      city: '',
+      postalCode: '',
+      country: '',
+    } as Address,
+  });
+
+  const [consentSettings, setConsentSettings] = useState({
+    marketing: false,
+    analytics: false,
+    thirdPartySharing: false,
+  });
+
+  const [isSaving, setIsSaving] = useState(false);
+  const [saveSuccess, setSaveSuccess] = useState(false);
+  const [isUploadingAvatar, setIsUploadingAvatar] = useState(false);
+  const [isExporting, setIsExporting] = useState(false);
+
+  // Load current user into profile form
+  useState(() => {
+    if (currentUser) {
+      setProfileData({
+        name: currentUser.name || '',
+        email: currentUser.email || '',
+        phone: currentUser.phone || '',
+        dateOfBirth: currentUser.dateOfBirth || '',
+        nationalId: currentUser.nationalId || '',
+        invoiceAddress: currentUser.invoiceAddress || { street: '', city: '', postalCode: '', country: '' },
+        residenceAddress: currentUser.residenceAddress || { street: '', city: '', postalCode: '', country: '' },
+      });
+      if (currentUser.avatar) {
+        setAvatarPreview(currentUser.avatar);
+      }
+    }
+  });
+
+  // Load consents
+  useState(() => {
+    if (consents) {
+      setConsentSettings({
+        marketing: consents.marketing || false,
+        analytics: consents.analytics || false,
+        thirdPartySharing: consents.thirdPartySharing || false,
+      });
+    }
+  });
+
+  const handleSaveProfile = async () => {
+    setIsSaving(true);
+    setSaveSuccess(false);
+    try {
+      await updateProfileMutation.mutateAsync(profileData);
+      setSaveSuccess(true);
+      setTimeout(() => setSaveSuccess(false), 3000);
+    } catch (error) {
+      console.error('Failed to save profile:', error);
+    } finally {
+      setIsSaving(false);
+    }
+  };
+
+  const handleAvatarChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file || !currentUser) return;
+
+    // Show preview
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      setAvatarPreview(reader.result as string);
+    };
+    reader.readAsDataURL(file);
+
+    // Upload avatar
+    setIsUploadingAvatar(true);
+    try {
+      await uploadAvatarMutation.mutateAsync({
+        id: currentUser.id,
+        file,
+        options: { compress: true },
+      });
+    } catch (error) {
+      console.error('Failed to upload avatar:', error);
+    } finally {
+      setIsUploadingAvatar(false);
+    }
+  };
+
+  const handleCopyResidenceToInvoice = () => {
+    setProfileData(prev => ({
+      ...prev,
+      invoiceAddress: { ...prev.residenceAddress },
+    }));
+  };
+
+  const handleExportData = async () => {
+    setIsExporting(true);
+    try {
+      const result = await exportDataMutation.mutateAsync();
+      // Create download link
+      const dataStr = JSON.stringify(result.data, null, 2);
+      const dataBlob = new Blob([dataStr], { type: 'application/json' });
+      const url = URL.createObjectURL(dataBlob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = `mine-data-${new Date().toISOString()}.json`;
+      link.click();
+      URL.revokeObjectURL(url);
+    } catch (error) {
+      console.error('Failed to export data:', error);
+    } finally {
+      setIsExporting(false);
+    }
+  };
+
+  const handleDeleteAccount = async () => {
+    if (confirm(t('settings.data.deleteAccountConfirm'))) {
+      try {
+        await deleteAccountMutation.mutateAsync();
+        logout();
+        navigate('/');
+      } catch (error) {
+        console.error('Failed to delete account:', error);
+      }
+    }
+  };
+
+  const handleUpdateConsents = async (field: keyof typeof consentSettings, value: boolean) => {
+    const newConsents = { ...consentSettings, [field]: value };
+    setConsentSettings(newConsents);
+    try {
+      await updateConsentsMutation.mutateAsync(newConsents);
+    } catch (error) {
+      console.error('Failed to update consents:', error);
+    }
+  };
+
+  // Update scroll indicators based on scroll position
+  const updateScrollIndicators = () => {
+    const container = tabsListRef.current;
+    if (!container) return;
+
+    const { scrollLeft, scrollWidth, clientWidth } = container;
+    const hasOverflow = scrollWidth > clientWidth;
+
+    if (!hasOverflow) {
+      setShowLeftIndicator(false);
+      setShowRightIndicator(false);
+      return;
+    }
+
+    setShowLeftIndicator(scrollLeft > 5);
+    setShowRightIndicator(scrollLeft < scrollWidth - clientWidth - 5);
+  };
+
+  // Set up scroll listener and initial check
+  useEffect(() => {
+    const container = tabsListRef.current;
+    if (!container) return;
+
+    updateScrollIndicators();
+
+    container.addEventListener('scroll', updateScrollIndicators);
+    window.addEventListener('resize', updateScrollIndicators);
+
+    return () => {
+      container.removeEventListener('scroll', updateScrollIndicators);
+      window.removeEventListener('resize', updateScrollIndicators);
+    };
+  }, []);
+
+  if (isLoadingUser) {
+    return (
+      <div style={{ display: 'flex', justifyContent: 'center', padding: 'var(--ds-spacing-8)' }}>
+        <Spinner data-size="lg" aria-label="Laster..." />
+      </div>
+    );
+  }
+
+  return (
+    <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--ds-spacing-5)' }}>
+      {/* Header */}
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+        <div>
+          <Heading level={1} data-size="lg" style={{ margin: 0 }}>
+            Innstillinger
+          </Heading>
+          <Paragraph
+            data-size="sm"
+            style={{ color: 'var(--ds-color-neutral-text-subtle)', marginTop: 'var(--ds-spacing-1)', marginBottom: 0 }}
+          >
+            Administrer din konto og preferanser
+          </Paragraph>
+        </div>
+        {saveSuccess && (
+          <Alert style={{ maxWidth: '400px' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--ds-spacing-2)' }}>
+              <CheckCircleIcon />
+              Endringene ble lagret
+            </div>
+          </Alert>
+        )}
+      </div>
+
+      {/* Tabs */}
+      <div style={{
+        backgroundColor: 'var(--ds-color-neutral-background-default)',
+        borderRadius: 'var(--ds-border-radius-lg)',
+        padding: 'var(--ds-spacing-6)',
+        boxShadow: 'var(--ds-shadow-xsmall)',
+      }}>
+        <Tabs value={activeTab} onChange={setActiveTab}>
+          {/* Tabs container with scroll indicators */}
+          <div style={{ position: 'relative', marginBottom: 'var(--ds-spacing-6)' }}>
+            {/* Left gradient indicator */}
+            {showLeftIndicator && (
+              <div
+                style={{
+                  position: 'absolute',
+                  top: 0,
+                  left: 0,
+                  width: '40px',
+                  height: '100%',
+                  background: 'linear-gradient(to right, var(--ds-color-neutral-background-default), transparent)',
+                  pointerEvents: 'none',
+                  zIndex: 1,
+                  transition: 'opacity 0.3s ease',
+                }}
+                aria-hidden="true"
+              />
+            )}
+
+            {/* Right gradient indicator */}
+            {showRightIndicator && (
+              <div
+                style={{
+                  position: 'absolute',
+                  top: 0,
+                  right: 0,
+                  width: '40px',
+                  height: '100%',
+                  background: 'linear-gradient(to left, var(--ds-color-neutral-background-default), transparent)',
+                  pointerEvents: 'none',
+                  zIndex: 1,
+                  transition: 'opacity 0.3s ease',
+                }}
+                aria-hidden="true"
+              />
+            )}
+
+            {/* eslint-disable-next-line digdir/prefer-ds-components -- Using div wrapper for ref on Tabs.List */}
+            <div
+              ref={tabsListRef}
+              style={{
+                overflowX: 'auto',
+                scrollbarWidth: 'none',
+                msOverflowStyle: 'none',
+                WebkitOverflowScrolling: 'touch',
+              }}
+            >
+              <Tabs.List style={{ marginBottom: 0 }}>
+                <Tabs.Tab value="profile">
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--ds-spacing-2)' }}>
+                    <UserIcon style={{ fontSize: 'var(--ds-font-size-md)' }} />
+                    Min profil
+                  </div>
+                </Tabs.Tab>
+                <Tabs.Tab value="addresses">
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--ds-spacing-2)' }}>
+                    <HomeIcon style={{ fontSize: 'var(--ds-font-size-md)' }} />
+                    Adresser
+                  </div>
+                </Tabs.Tab>
+                <Tabs.Tab value="privacy">
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--ds-spacing-2)' }}>
+                    <ShieldIcon style={{ fontSize: 'var(--ds-font-size-md)' }} />
+                    Personvern
+                  </div>
+                </Tabs.Tab>
+                <Tabs.Tab value="notifications">
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--ds-spacing-2)' }}>
+                    <BellIcon style={{ fontSize: 'var(--ds-font-size-md)' }} />
+                    Varsler
+                  </div>
+                </Tabs.Tab>
+                <Tabs.Tab value="preferences">
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--ds-spacing-2)' }}>
+                    <SettingsIcon style={{ fontSize: 'var(--ds-font-size-md)' }} />
+                    Preferanser
+                  </div>
+                </Tabs.Tab>
+              </Tabs.List>
+            </div>
+
+            <style>{`
+              [ref="${tabsListRef}"] {
+                -ms-overflow-style: none;
+                scrollbar-width: none;
+              }
+              [ref="${tabsListRef}"]::-webkit-scrollbar {
+                display: none;
+              }
+            `}</style>
+          </div>
+
+          {/* Profile Tab */}
+          <Tabs.Panel value="profile">
+            <Stack spacing={6}>
+            {/* Avatar Section */}
+            <Card>
+              <Stack spacing={5}>
+                <div>
+                  <Heading level={3} data-size="sm" style={{ marginBottom: 'var(--ds-spacing-3)' }}>
+                    Profilbilde
+                  </Heading>
+                  <Paragraph data-size="sm" style={{ color: 'var(--ds-color-neutral-text-subtle)' }}>
+                    Last opp et profilbilde som vises i systemet
+                  </Paragraph>
+                </div>
+
+                <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--ds-spacing-4)' }}>
+                  <div style={{
+                    position: 'relative',
+                    width: '120px',
+                    height: '120px',
+                    borderRadius: 'var(--ds-border-radius-full)',
+                    overflow: 'hidden',
+                    backgroundColor: 'var(--ds-color-neutral-surface-subtle)',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                  }}>
+                    {avatarPreview ? (
+                      <img
+                        src={avatarPreview}
+                        alt={t('settings.profile.avatar')}
+                        style={{
+                          width: '100%',
+                          height: '100%',
+                          objectFit: 'cover',
+                        }}
+                      />
+                    ) : (
+                      <UserIcon style={{ fontSize: 'var(--ds-font-size-2xl)', color: 'var(--ds-color-neutral-text-subtle)' }} />
+                    )}
+                  </div>
+
+                  <Stack spacing={2}>
+                    {/* eslint-disable-next-line digdir/prefer-ds-components -- Hidden file input for avatar upload */}
+                    <input
+                      ref={fileInputRef}
+                      type="file"
+                      accept="image/*"
+                      onChange={handleAvatarChange}
+                      style={{ display: 'none' }}
+                    />
+                    <Button
+                      variant="secondary"
+                      data-size="sm"
+                      onClick={() => fileInputRef.current?.click()}
+                      disabled={isUploadingAvatar}
+                      type="button"
+                      aria-label={t('settings.profile.changeAvatar')}
+                    >
+                      <CameraIcon />
+                      {isUploadingAvatar ? t('settings.profile.uploading') : t('settings.profile.changeImage')}
+                    </Button>
+                    <Paragraph data-size="xs" style={{ color: 'var(--ds-color-neutral-text-subtle)' }}>
+                      {t('settings.profile.imageFormats')}
+                    </Paragraph>
+                  </Stack>
+                </div>
+              </Stack>
+            </Card>
+
+            {/* Personal Information */}
+            <Card>
+              <Stack spacing={5}>
+                <div>
+                  <Heading level={3} data-size="sm" style={{ marginBottom: 'var(--ds-spacing-3)' }}>
+                    {t('settings.profile.personalInfo')}
+                  </Heading>
+                  <Paragraph data-size="sm" style={{ color: 'var(--ds-color-neutral-text-subtle)' }}>
+                    {t('settings.profile.personalInfoDesc')}
+                  </Paragraph>
+                </div>
+
+                <Stack spacing={4}>
+                  <FormField label={t('settings.profile.fullName')} required>
+                    <Textfield
+                      value={profileData.name}
+                      onChange={(e) => setProfileData(prev => ({ ...prev, name: e.target.value }))}
+                      placeholder={t('settings.profile.fullNamePlaceholder')}
+                      aria-label={t('settings.profile.fullName')}
+                    />
+                  </FormField>
+
+                  <FormField label={t('settings.profile.email')} required>
+                    <Textfield
+                      type="email"
+                      value={profileData.email}
+                      onChange={(e) => setProfileData(prev => ({ ...prev, email: e.target.value }))}
+                      placeholder={t('settings.profile.emailPlaceholder')}
+                      aria-label={t('settings.profile.email')}
+                    />
+                  </FormField>
+
+                  <FormField label={t('settings.profile.phone')}>
+                    <Textfield
+                      type="tel"
+                      value={profileData.phone}
+                      onChange={(e) => setProfileData(prev => ({ ...prev, phone: e.target.value }))}
+                      placeholder={t('settings.profile.phonePlaceholder')}
+                      aria-label={t('settings.profile.phone')}
+                    />
+                  </FormField>
+
+                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 'var(--ds-spacing-3)' }}>
+                    <FormField label={t('settings.profile.dateOfBirth')}>
+                      <Textfield
+                        type="date"
+                        value={profileData.dateOfBirth}
+                        onChange={(e) => setProfileData(prev => ({ ...prev, dateOfBirth: e.target.value }))}
+                        aria-label={t('settings.profile.dateOfBirth')}
+                      />
+                    </FormField>
+
+                    <FormField label={t('settings.profile.nationalId')}>
+                      <Textfield
+                        value={profileData.nationalId}
+                        onChange={(e) => setProfileData(prev => ({ ...prev, nationalId: e.target.value }))}
+                        placeholder={t('settings.profile.nationalIdPlaceholder')}
+                        maxLength={11}
+                        aria-label={t('settings.profile.nationalId')}
+                      />
+                    </FormField>
+                  </div>
+                </Stack>
+
+                <div style={{ paddingTop: 'var(--ds-spacing-4)', borderTop: '1px solid var(--ds-color-neutral-border-subtle)' }}>
+                  <Button onClick={handleSaveProfile} disabled={isSaving} type="button" aria-label={t('settings.profile.save')}>
+                    <SaveIcon />
+                    {isSaving ? t('settings.profile.saving') : t('settings.profile.save')}
+                  </Button>
+                </div>
+              </Stack>
+            </Card>
+          </Stack>
+        </Tabs.Panel>
+
+        {/* Addresses Tab */}
+        <Tabs.Panel value="addresses">
+          <Stack spacing={6}>
+            {/* Residence Address */}
+            <Card>
+              <Stack spacing={5}>
+                <div>
+                  <Heading level={3} data-size="sm" style={{ marginBottom: 'var(--ds-spacing-3)' }}>
+                    <MapPinIcon style={{ verticalAlign: 'middle', marginRight: 'var(--ds-spacing-2)' }} />
+                    {t('settings.address.residence')}
+                  </Heading>
+                  <Paragraph data-size="sm" style={{ color: 'var(--ds-color-neutral-text-subtle)' }}>
+                    {t('settings.address.residenceDesc')}
+                  </Paragraph>
+                </div>
+
+                <Stack spacing={4}>
+                  <FormField label={t('settings.address.street')}>
+                    <Textfield
+                      value={profileData.residenceAddress.street || ''}
+                      onChange={(e) => setProfileData(prev => ({
+                        ...prev,
+                        residenceAddress: { ...prev.residenceAddress, street: e.target.value }
+                      }))}
+                      placeholder={t('settings.address.streetPlaceholder')}
+                      aria-label={t('settings.address.street')}
+                    />
+                  </FormField>
+
+                  <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr', gap: 'var(--ds-spacing-3)' }}>
+                    <FormField label={t('settings.address.city')}>
+                      <Textfield
+                        value={profileData.residenceAddress.city || ''}
+                        onChange={(e) => setProfileData(prev => ({
+                          ...prev,
+                          residenceAddress: { ...prev.residenceAddress, city: e.target.value }
+                        }))}
+                        placeholder={t('settings.address.cityPlaceholder')}
+                        aria-label={t('settings.address.city')}
+                      />
+                    </FormField>
+
+                    <FormField label={t('settings.address.postalCode')}>
+                      <Textfield
+                        value={profileData.residenceAddress.postalCode || ''}
+                        onChange={(e) => setProfileData(prev => ({
+                          ...prev,
+                          residenceAddress: { ...prev.residenceAddress, postalCode: e.target.value }
+                        }))}
+                        placeholder={t('settings.address.postalCodePlaceholder')}
+                        maxLength={4}
+                        aria-label={t('settings.address.postalCode')}
+                      />
+                    </FormField>
+                  </div>
+
+                  <FormField label={t('settings.address.country')}>
+                    <Select
+                      value={profileData.residenceAddress.country || ''}
+                      onChange={(e) => setProfileData(prev => ({
+                        ...prev,
+                        residenceAddress: { ...prev.residenceAddress, country: e.target.value }
+                      }))}
+                    >
+                      <option value={t('norge')}>{t('norge')}</option>
+                      <option value={t('sverige')}>{t('sverige')}</option>
+                      <option value={t('danmark')}>{t('danmark')}</option>
+                      <option value={t('finland')}>{t('finland')}</option>
+                    </Select>
+                  </FormField>
+                </Stack>
+              </Stack>
+            </Card>
+
+            {/* Invoice Address */}
+            <Card>
+              <Stack spacing={5}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+                  <div>
+                    <Heading level={3} data-size="sm" style={{ marginBottom: 'var(--ds-spacing-3)' }}>
+                      <HomeIcon style={{ verticalAlign: 'middle', marginRight: 'var(--ds-spacing-2)' }} />
+                      {t('settings.address.invoice')}
+                    </Heading>
+                    <Paragraph data-size="sm" style={{ color: 'var(--ds-color-neutral-text-subtle)' }}>
+                      {t('settings.address.invoiceDesc')}
+                    </Paragraph>
+                  </div>
+                  <Button
+                    variant="tertiary"
+                    data-size="sm"
+                    onClick={handleCopyResidenceToInvoice} type="button"
+                  >
+                    {t('settings.address.copyResidence')}
+                  </Button>
+                </div>
+
+                <Stack spacing={4}>
+                  <FormField label={t('settings.address.street')}>
+                    <Textfield
+                      value={profileData.invoiceAddress.street || ''}
+                      onChange={(e) => setProfileData(prev => ({
+                        ...prev,
+                        invoiceAddress: { ...prev.invoiceAddress, street: e.target.value }
+                      }))}
+                      placeholder={t('settings.address.streetPlaceholder')}
+                      aria-label={t('settings.address.street')}
+                    />
+                  </FormField>
+
+                  <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr', gap: 'var(--ds-spacing-3)' }}>
+                    <FormField label={t('settings.address.city')}>
+                      <Textfield
+                        value={profileData.invoiceAddress.city || ''}
+                        onChange={(e) => setProfileData(prev => ({
+                          ...prev,
+                          invoiceAddress: { ...prev.invoiceAddress, city: e.target.value }
+                        }))}
+                        placeholder={t('settings.address.cityPlaceholder')}
+                        aria-label={t('settings.address.city')}
+                      />
+                    </FormField>
+
+                    <FormField label={t('settings.address.postalCode')}>
+                      <Textfield
+                        value={profileData.invoiceAddress.postalCode || ''}
+                        onChange={(e) => setProfileData(prev => ({
+                          ...prev,
+                          invoiceAddress: { ...prev.invoiceAddress, postalCode: e.target.value }
+                        }))}
+                        placeholder={t('settings.address.postalCodePlaceholder')}
+                        maxLength={4}
+                        aria-label={t('settings.address.postalCode')}
+                      />
+                    </FormField>
+                  </div>
+
+                  <FormField label={t('settings.address.country')}>
+                    <Select
+                      value={profileData.invoiceAddress.country || ''}
+                      onChange={(e) => setProfileData(prev => ({
+                        ...prev,
+                        invoiceAddress: { ...prev.invoiceAddress, country: e.target.value }
+                      }))}
+                    >
+                      <option value={t('norge')}>{t('norge')}</option>
+                      <option value={t('sverige')}>{t('sverige')}</option>
+                      <option value={t('danmark')}>{t('danmark')}</option>
+                      <option value={t('finland')}>{t('finland')}</option>
+                    </Select>
+                  </FormField>
+                </Stack>
+
+                <div style={{ paddingTop: 'var(--ds-spacing-4)', borderTop: '1px solid var(--ds-color-neutral-border-subtle)' }}>
+                  <Button onClick={handleSaveProfile} disabled={isSaving} type="button" aria-label={t('settings.profile.saveAddresses')}>
+                    <SaveIcon />
+                    {isSaving ? t('settings.profile.savingAddresses') : t('settings.profile.saveAddresses')}
+                  </Button>
+                </div>
+              </Stack>
+            </Card>
+          </Stack>
+        </Tabs.Panel>
+
+        {/* Privacy Tab */}
+        <Tabs.Panel value="privacy">
+          <Stack spacing={6}>
+            {/* Data Export */}
+            <Card>
+              <Stack spacing={4}>
+                <div>
+                  <Heading level={3} data-size="sm" style={{ marginBottom: 'var(--ds-spacing-2)' }}>
+                    <ShieldIcon style={{ verticalAlign: 'middle', marginRight: 'var(--ds-spacing-2)' }} />
+                    Dataeksport
+                  </Heading>
+                  <Paragraph data-size="sm" style={{ color: 'var(--ds-color-neutral-text-subtle)' }}>
+                    Last ned en kopi av alle dine personopplysninger
+                  </Paragraph>
+                </div>
+
+                <Alert>
+                  <Paragraph data-size="sm" style={{ margin: 0 }}>
+                    I henhold til GDPR har du rett til å få en kopi av dine personopplysninger. Eksporten inkluderer profil, bookinger, meldinger og aktivitetslogg.
+                  </Paragraph>
+                </Alert>
+
+                <Button
+                  variant="secondary"
+                  onClick={handleExportData}
+                  disabled={isExporting}
+                  type="button"
+                  aria-label={t('settings.data.export')}
+                >
+                  <DownloadIcon />
+                  {isExporting ? t('settings.data.exporting') : t('settings.data.download')}
+                </Button>
+              </Stack>
+            </Card>
+
+            {/* Consent Settings */}
+            <Card>
+              <Stack spacing={4}>
+                <div>
+                  <Heading level={3} data-size="sm" style={{ marginBottom: 'var(--ds-spacing-2)' }}>
+                    {t('settings.consent.title')}
+                  </Heading>
+                  <Paragraph data-size="sm" style={{ color: 'var(--ds-color-neutral-text-subtle)' }}>
+                    {t('settings.consent.desc')}
+                  </Paragraph>
+                </div>
+
+                <Stack spacing={3}>
+                  <div style={{
+                    padding: 'var(--ds-spacing-4)',
+                    backgroundColor: 'var(--ds-color-neutral-surface-subtle)',
+                    borderRadius: 'var(--ds-border-radius-md)',
+                    display: 'flex',
+                    justifyContent: 'space-between',
+                    alignItems: 'center'
+                  }}>
+                    <div>
+                      <Paragraph data-size="sm" style={{ margin: 0, fontWeight: 'var(--ds-font-weight-medium)' }}>
+                        {t('settings.consent.marketing')}
+                      </Paragraph>
+                      <Paragraph data-size="xs" style={{ margin: 0, marginTop: 'var(--ds-spacing-1)', color: 'var(--ds-color-neutral-text-subtle)' }}>
+                        {t('settings.consent.marketingDesc')}
+                      </Paragraph>
+                    </div>
+                    <Switch
+                      checked={consentSettings.marketing}
+                      onChange={(e) => handleUpdateConsents('marketing', e.target.checked)}
+                      aria-label={t('settings.consent.marketing')}
+                    />
+                  </div>
+
+                  <div style={{
+                    padding: 'var(--ds-spacing-4)',
+                    backgroundColor: 'var(--ds-color-neutral-surface-subtle)',
+                    borderRadius: 'var(--ds-border-radius-md)',
+                    display: 'flex',
+                    justifyContent: 'space-between',
+                    alignItems: 'center'
+                  }}>
+                    <div>
+                      <Paragraph data-size="sm" style={{ margin: 0, fontWeight: 'var(--ds-font-weight-medium)' }}>
+                        {t('settings.consent.analytics')}
+                      </Paragraph>
+                      <Paragraph data-size="xs" style={{ margin: 0, marginTop: 'var(--ds-spacing-1)', color: 'var(--ds-color-neutral-text-subtle)' }}>
+                        {t('settings.consent.analyticsDesc')}
+                      </Paragraph>
+                    </div>
+                    <Switch
+                      checked={consentSettings.analytics}
+                      onChange={(e) => handleUpdateConsents('analytics', e.target.checked)}
+                      aria-label={t('settings.consent.analytics')}
+                    />
+                  </div>
+
+                  <div style={{
+                    padding: 'var(--ds-spacing-4)',
+                    backgroundColor: 'var(--ds-color-neutral-surface-subtle)',
+                    borderRadius: 'var(--ds-border-radius-md)',
+                    display: 'flex',
+                    justifyContent: 'space-between',
+                    alignItems: 'center'
+                  }}>
+                    <div>
+                      <Paragraph data-size="sm" style={{ margin: 0, fontWeight: 'var(--ds-font-weight-medium)' }}>
+                        {t('settings.consent.thirdParty')}
+                      </Paragraph>
+                      <Paragraph data-size="xs" style={{ margin: 0, marginTop: 'var(--ds-spacing-1)', color: 'var(--ds-color-neutral-text-subtle)' }}>
+                        {t('settings.consent.thirdPartyDesc')}
+                      </Paragraph>
+                    </div>
+                    <Switch
+                      checked={consentSettings.thirdPartySharing}
+                      onChange={(e) => handleUpdateConsents('thirdPartySharing', e.target.checked)}
+                      aria-label={t('settings.consent.thirdParty')}
+                    />
+                  </div>
+                </Stack>
+              </Stack>
+            </Card>
+
+            {/* Delete Account */}
+            <Card>
+              <Stack spacing={4}>
+                <div>
+                  <Heading level={3} data-size="sm" style={{ marginBottom: 'var(--ds-spacing-2)', color: 'var(--ds-color-danger-text-default)' }}>
+                    Slett konto
+                  </Heading>
+                  <Paragraph data-size="sm" style={{ color: 'var(--ds-color-neutral-text-subtle)' }}>
+                    Permanent sletting av din konto og alle tilknyttede data
+                  </Paragraph>
+                </div>
+
+                <Alert>
+                  <Stack spacing={2}>
+                    <Paragraph data-size="sm" style={{ margin: 0, fontWeight: 'var(--ds-font-weight-medium)' }}>
+                      Dette kan ikke angres
+                    </Paragraph>
+                    <Paragraph data-size="sm" style={{ margin: 0 }}>
+                      Ved sletting av kontoen vil alle dine personopplysninger, bookinger, meldinger og aktivitetshistorikk bli permanent fjernet. Denne handlingen kan ikke reverseres.
+                    </Paragraph>
+                  </Stack>
+                </Alert>
+
+                <Button
+                  variant="secondary"
+                  onClick={handleDeleteAccount}
+                  style={{
+                    backgroundColor: 'var(--ds-color-danger-surface-default)',
+                    color: 'var(--ds-color-danger-text-default)',
+                    borderColor: 'var(--ds-color-danger-border-default)'
+                  }} type="button"
+                >
+                  <TrashIcon />
+                  Slett min konto
+                </Button>
+              </Stack>
+            </Card>
+          </Stack>
+        </Tabs.Panel>
+
+        {/* Notifications Tab */}
+        <Tabs.Panel value="notifications">
+          <Stack spacing={6}>
+            <Card>
+              <Stack spacing={4}>
+                <div>
+                  <Heading level={3} data-size="sm" style={{ marginBottom: 'var(--ds-spacing-2)' }}>
+                    Varslingsinnstillinger
+                  </Heading>
+                  <Paragraph data-size="sm" style={{ color: 'var(--ds-color-neutral-text-subtle)' }}>
+                    Administrer hvordan og når du mottar varsler
+                  </Paragraph>
+                </div>
+
+                <Alert>
+                  <Paragraph data-size="sm" style={{ margin: 0 }}>
+                    Detaljerte varslingsinnstillinger er tilgjengelige på en egen side hvor du kan konfigurere e-post, SMS og push-varsler for ulike hendelser.
+                  </Paragraph>
+                </Alert>
+
+                <Link to="/settings/notifications">
+                  <Button variant="secondary" type="button">
+                    Åpne varslingsinnstillinger
+                  </Button>
+                </Link>
+              </Stack>
+            </Card>
+          </Stack>
+        </Tabs.Panel>
+
+        {/* Preferences Tab */}
+        <Tabs.Panel value="preferences">
+          <Stack spacing={6}>
+            {/* Language */}
+            <Card>
+              <Stack spacing={4}>
+                <div>
+                  <Heading level={3} data-size="sm" style={{ marginBottom: 'var(--ds-spacing-2)' }}>
+                    Språk
+                  </Heading>
+                  <Paragraph data-size="sm" style={{ color: 'var(--ds-color-neutral-text-subtle)' }}>
+                    Velg språk for brukergrensesnittet
+                  </Paragraph>
+                </div>
+
+                <FormField label={t('settings.language.preferred')}>
+                  <Select value={locale} onChange={(e) => setLocale(e.target.value as 'nb' | 'en')}>
+                    <option value="nb">{t('settings.language.norskBokmal')}</option>
+                    <option value="nn">{t('settings.language.norskNynorsk')}</option>
+                    <option value="en">{t('settings.language.english')}</option>
+                  </Select>
+                </FormField>
+              </Stack>
+            </Card>
+
+            {/* Display Settings */}
+            <Card>
+              <Stack spacing={4}>
+                <div>
+                  <Heading level={3} data-size="sm" style={{ marginBottom: 'var(--ds-spacing-2)' }}>
+                    Utseende
+                  </Heading>
+                  <Paragraph data-size="sm" style={{ color: 'var(--ds-color-neutral-text-subtle)' }}>
+                    Tilpass hvordan systemet ser ut
+                  </Paragraph>
+                </div>
+
+                <div style={{
+                  padding: 'var(--ds-spacing-4)',
+                  backgroundColor: 'var(--ds-color-neutral-surface-subtle)',
+                  borderRadius: 'var(--ds-border-radius-md)'
+                }}>
+                  <Paragraph data-size="sm" style={{ margin: 0, color: 'var(--ds-color-neutral-text-subtle)' }}>
+                    Tema og utseendeinnstillinger kommer snart
+                  </Paragraph>
+                </div>
+              </Stack>
+            </Card>
+
+            {/* Session & Security */}
+            <Card>
+              <Stack spacing={4}>
+                <div>
+                  <Heading level={3} data-size="sm" style={{ marginBottom: 'var(--ds-spacing-2)' }}>
+                    Økt og sikkerhet
+                  </Heading>
+                  <Paragraph data-size="sm" style={{ color: 'var(--ds-color-neutral-text-subtle)' }}>
+                    Administrer din pålogging og sikkerhet
+                  </Paragraph>
+                </div>
+
+                <div style={{
+                  display: 'flex',
+                  justifyContent: 'space-between',
+                  alignItems: 'center',
+                  padding: 'var(--ds-spacing-4)',
+                  backgroundColor: 'var(--ds-color-neutral-surface-subtle)',
+                  borderRadius: 'var(--ds-border-radius-md)'
+                }}>
+                  <div>
+                    <Paragraph data-size="sm" style={{ margin: 0, fontWeight: 'var(--ds-font-weight-medium)' }}>
+                      Logg ut
+                    </Paragraph>
+                    <Paragraph data-size="xs" style={{ margin: 0, marginTop: 'var(--ds-spacing-1)', color: 'var(--ds-color-neutral-text-subtle)' }}>
+                      Logg ut av din konto på denne enheten
+                    </Paragraph>
+                  </div>
+                  <Button variant="secondary" data-size="sm" onClick={logout} type="button">
+                    Logg ut
+                  </Button>
+                </div>
+              </Stack>
+            </Card>
+          </Stack>
+        </Tabs.Panel>
+      </Tabs>
+      </div>
+    </div>
+  );
+}
