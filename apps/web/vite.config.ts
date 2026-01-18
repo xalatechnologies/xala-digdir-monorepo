@@ -123,6 +123,7 @@ export default defineConfig({
       '@digilist/client-sdk': path.resolve(__dirname, '../../packages/client-sdk/src'),
       '@digilist/client-sdk/hooks': path.resolve(__dirname, '../../packages/client-sdk/src/hooks'),
       '@digilist/client-sdk/types': path.resolve(__dirname, '../../packages/client-sdk/src/types'),
+      '@xala/ds-themes': path.resolve(__dirname, '../../packages/ds-themes/src'),
     },
   },
   optimizeDeps: {
