@@ -177,13 +177,7 @@ echo ""
 
 # Step 6: Run migrations
 echo "🔄 Step 6: Running database migrations..."
-ssh ${VPS_USER}@${VPS_HOST} << ENDSSH
-set -e
-cd ${DEPLOY_PATH}/packages/database-schema
-export DATABASE_URL='${DB_URL}'
-echo "Running migrations with DATABASE_URL: \${DATABASE_URL}"
-pnpm db:push
-ENDSSH
+ssh ${VPS_USER}@${VPS_HOST} "cd ${DEPLOY_PATH}/packages/database-schema && DATABASE_URL='${DB_URL}' pnpm db:push"
 log_info "Database migrations complete"
 echo ""
 
