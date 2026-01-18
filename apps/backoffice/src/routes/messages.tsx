@@ -1,8 +1,8 @@
 /* eslint-disable digdir/require-interactive-labels -- Complex messaging interface with native inputs */
 
 import { useState, useEffect, useRef, useMemo, type ChangeEvent, type KeyboardEvent } from 'react';
-import {
 import { useT } from '@xala/i18n';
+import {
   Card,
   Heading,
   Paragraph,
