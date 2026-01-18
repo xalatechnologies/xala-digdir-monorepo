@@ -43,10 +43,10 @@ async function importDemoUsers() {
         );
 
         if (existingUser.rows.length > 0) {
-          // Update existing user
+          // Update existing user (including tenant_id if missing)
           await client.query(
             `UPDATE platform.users
-             SET name = $1, role = $2, demo_token = $3, status = $4, national_id = $5, metadata = $6
+             SET name = $1, role = $2, demo_token = $3, status = $4, national_id = $5, metadata = $6, tenant_id = COALESCE(tenant_id, $8)
              WHERE email = $7`,
             [
               user.name,
@@ -55,7 +55,8 @@ async function importDemoUsers() {
               user.status,
               user.national_id || null,
               JSON.stringify(user.metadata || {}),
-              user.email
+              user.email,
+              tenantId
             ]
           );
           updated++;
