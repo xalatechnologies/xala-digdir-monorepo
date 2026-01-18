@@ -14,19 +14,27 @@
     "build": "tsc",
     "dev": "tsc --watch",
     "lint": "eslint src/",
-    "test": "vitest",
-    "grafana:provision": "node scripts/provision-grafana.js",
-    "prometheus:validate": "promtool check rules prometheus/rules/*.yml",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:coverage": "vitest run --coverage",
+    "test:integration": "vitest run --config vitest.integration.config.ts",
+    "test:all": "bash scripts/test-all.sh",
+    "validate": "bash scripts/validate-prometheus.sh && bash scripts/validate-grafana.sh",
+    "prometheus:validate": "bash scripts/validate-prometheus.sh",
+    "grafana:validate": "bash scripts/validate-grafana.sh",
     "docker:up": "docker-compose -f docker-compose.observability.yml up -d",
-    "docker:down": "docker-compose -f docker-compose.observability.yml down"
+    "docker:down": "docker-compose -f docker-compose.observability.yml down",
+    "docker:logs": "docker-compose -f docker-compose.observability.yml logs -f"
   },
   "dependencies": {
     "prom-client": "^15.1.3"
   },
   "devDependencies": {
     "@types/node": "^22.0.0",
+    "@vitest/coverage-v8": "^2.1.8",
     "typescript": "^5.6.3",
-    "vitest": "^2.1.8"
+    "vitest": "^2.1.8",
+    "yaml": "^2.3.4"
   },
   "keywords": [
     "observability",

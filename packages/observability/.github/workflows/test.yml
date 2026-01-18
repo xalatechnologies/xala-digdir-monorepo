@@ -1,0 +1,116 @@
+# Observability Package - CI/CD Testing
+name: Test Observability Package
+
+on:
+  push:
+    branches: [main, develop]
+    paths:
+      - 'packages/observability/**'
+  pull_request:
+    branches: [main, develop]
+    paths:
+      - 'packages/observability/**'
+
+jobs:
+  test:
+    name: Test & Validate
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 9
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'pnpm'
+      
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+        working-directory: packages/observability
+      
+      - name: Run unit tests
+        run: pnpm test
+        working-directory: packages/observability
+      
+      - name: Run test coverage
+        run: pnpm test:coverage
+        working-directory: packages/observability
+      
+      - name: Upload coverage reports
+        uses: codecov/codecov-action@v4
+        with:
+          files: ./packages/observability/coverage/lcov.info
+          flags: observability
+      
+      - name: Build TypeScript
+        run: pnpm build
+        working-directory: packages/observability
+      
+      - name: Validate Prometheus config
+        run: |
+          docker run --rm -v $(pwd):/workspace -w /workspace/packages/observability \
+            prom/prometheus:latest promtool check config prometheus/prometheus.yml
+      
+      - name: Validate Prometheus rules
+        run: |
+          docker run --rm -v $(pwd):/workspace -w /workspace/packages/observability \
+            prom/prometheus:latest promtool check rules prometheus/rules/*.yml
+      
+      - name: Validate Grafana dashboards
+        run: bash scripts/validate-grafana.sh
+        working-directory: packages/observability
+      
+      - name: Check for TypeScript errors
+        run: pnpm tsc --noEmit
+        working-directory: packages/observability
+
+  integration:
+    name: Integration Tests
+    runs-on: ubuntu-latest
+    needs: test
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 9
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'pnpm'
+      
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+        working-directory: packages/observability
+      
+      - name: Start observability stack
+        run: docker-compose -f docker-compose.observability.yml up -d
+        working-directory: packages/observability
+      
+      - name: Wait for services
+        run: |
+          echo "Waiting for Prometheus..."
+          timeout 60 bash -c 'until curl -f http://localhost:9090/-/healthy; do sleep 2; done'
+          echo "Waiting for Grafana..."
+          timeout 60 bash -c 'until curl -f http://localhost:3000/api/health; do sleep 2; done'
+      
+      - name: Run integration tests
+        run: pnpm test:integration
+        working-directory: packages/observability
+      
+      - name: Stop observability stack
+        if: always()
+        run: docker-compose -f docker-compose.observability.yml down
+        working-directory: packages/observability
