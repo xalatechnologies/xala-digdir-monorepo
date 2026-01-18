@@ -11,6 +11,8 @@ import { translations } from '@digilist/database-schema';
 import { eq, and, or, isNull } from 'drizzle-orm';
 
 export const i18nRoutes: FastifyPluginAsync = async (fastify) => {
+  // Resolve db from the DI container
+  const db = container.resolve<any>('Database');
   /**
    * GET /api/i18n/:lang
    * Get all translations for a specific language

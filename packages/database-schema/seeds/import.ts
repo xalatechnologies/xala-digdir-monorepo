@@ -54,25 +54,37 @@ async function importSeeds() {
     console.log('✅ Navigation policies imported\n');
 
     // Import plan entitlements (requires plan IDs from database)
-    console.log(`📦 Importing ${planEntitlementsData.length} plan entitlements...`);
-    console.log('⚠️  Note: This requires plans to exist in saas.plans table');
+    console.log(`📦 Checking for plan entitlements...`);
     
-    // Group by plan name
-    const byPlan = planEntitlementsData.reduce((acc: any, item: any) => {
-      if (!acc[item.planName]) acc[item.planName] = [];
-      acc[item.planName].push(item);
-      return acc;
-    }, {});
-
-    // Get plan IDs from database
-    const plans = await db.execute(
-      postgres.sql`SELECT id, name FROM saas.plans WHERE name IN ('Free', 'Pro', 'Enterprise')`
-    );
-
-    if (plans.length === 0) {
-      console.log('⚠️  No plans found in database. Skipping plan entitlements.');
-      console.log('   Create plans first, then run this seed again.');
+    // Check if plans table exists
+    const tableCheck = await queryClient`
+      SELECT EXISTS (
+        SELECT FROM information_schema.tables 
+        WHERE table_schema = 'saas' 
+        AND table_name = 'plans'
+      )
+    `;
+    
+    if (!tableCheck[0].exists) {
+      console.log('⚠️  saas.plans table does not exist. Skipping plan entitlements.');
+      console.log('   This is expected if you haven\'t created the plans table yet.');
     } else {
+      console.log(`📦 Importing ${planEntitlementsData.length} plan entitlements...`);
+      
+      // Group by plan name
+      const byPlan = planEntitlementsData.reduce((acc: any, item: any) => {
+        if (!acc[item.planName]) acc[item.planName] = [];
+        acc[item.planName].push(item);
+        return acc;
+      }, {});
+
+      // Get plan IDs from database
+      const plans = await queryClient`SELECT id, name FROM saas.plans WHERE name IN ('Free', 'Pro', 'Enterprise')`;
+
+      if (plans.length === 0) {
+        console.log('⚠️  No plans found in database. Skipping plan entitlements.');
+        console.log('   Create plans first, then run this seed again.');
+      } else {
       const planMap = new Map(plans.map((p: any) => [p.name, p.id]));
 
       for (const [planName, entitlements] of Object.entries(byPlan)) {
@@ -89,13 +101,15 @@ async function importSeeds() {
             key: ent.key,
             defaultEnabled: ent.defaultEnabled,
           }).onConflictDoNothing();
+          totalImported++;
         }
         console.log(`   ✓ ${planName}: ${(entitlements as any[]).length} entitlements`);
       }
-      console.log('✅ Plan entitlements imported\n');
+      console.log(`✅ Imported ${totalImported} plan entitlements`);
+      }
     }
 
-    console.log('🎉 Seed import completed successfully!');
+    console.log('\n✅ Seed import completed successfully!');
   } catch (error) {
     console.error('❌ Seed import failed:', error);
     process.exit(1);

@@ -79,6 +79,9 @@ COPY packages ./packages
 # Re-run install to create proper symlinks in app node_modules
 RUN pnpm install --frozen-lockfile
 
+# Build shared packages that frontend apps depend on
+RUN pnpm build --filter @xala/i18n --filter @xala/contracts --filter @digilist/client-sdk
+
 # Expose port
 EXPOSE ${APP_PORT}
 

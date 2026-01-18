@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import {
 import { useT } from '@xala/i18n';
+import {
   HeaderSearch,
   HeaderActions,
   HeaderIconButton,

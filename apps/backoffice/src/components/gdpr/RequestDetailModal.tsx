@@ -61,10 +61,10 @@ function getStatusColor(status: GdprRequestStatus): 'success' | 'warning' | 'inf
 // Helper to get status label
 function getStatusLabel(status: GdprRequestStatus): string {
   const labelMap: Record<GdprRequestStatus, string> = {
-    pending: t("status.pending"),
+    pending: 'Venter',
     processing: 'Behandles',
-    completed: t("status.completed"),
-    rejected: 't('actions.avslaa')tt',
+    completed: 'Fullført',
+    rejected: 'Avslått',
   };
   return labelMap[status];
 }
