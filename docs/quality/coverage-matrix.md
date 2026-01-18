@@ -1,185 +1,115 @@
-# Requirements → Tests Coverage Matrix
+# Coverage Matrix
 
-## Overview
+> **Last Updated**: 2026-01-18  
+> **Status**: In Progress
 
-This document maps SSA-L tender requirements to specific test files and validates coverage.
+## Requirements → Tests Mapping
 
----
+### Authentication & Authorization
 
-## Tender Requirements Mapping
+| Requirement | Test IDs | Status |
+|-------------|----------|--------|
+| Session creation/validation | `tests/unit/saas/*`, `tests/integration/rbac-flow.test.ts` | ✅ |
+| Role-based access control | `tests/rbac/*`, `tests/e2e/backoffice/rbac/*` | ✅ |
+| Tenant isolation | `tests/integration/rbac/*` | ✅ |
+| Norwegian eID (BankID) | `tests/authentication/*` | ⚠️ Partial |
 
-### K-1: Minimum 40 Rental Objects
+### Rental Objects
 
-| Requirement | Test | Status |
-|-------------|------|--------|
-| Support 40+ rental objects | `tests/integration/schema/schema-coverage.test.ts` | ✅ |
-| Seed 40+ objects for demo | `apps/api/src/database/seeds/rental-objects.seed.ts` | ✅ |
-| Browse/filter all objects | `tests/e2e/web/listing-browse.spec.ts` | ⚠️ |
+| Requirement | Test IDs | Status |
+|-------------|----------|--------|
+| CRUD operations | `tests/unit/rental-objects/*` | ✅ |
+| Category filtering | `tests/unit/metadata/*` | ✅ |
+| Public listing display | `tests/e2e/web/*` | ⚠️ Partial |
+| Calendar availability | `tests/e2e/backoffice/crud/calendar.spec.ts` | ✅ |
 
-### K-2: Demo Solution (Citizen + Admin + Case Handler)
+### Bookings
 
-| Requirement | Test | Status |
-|-------------|------|--------|
-| Citizen journey | `tests/e2e/web/` | ⚠️ |
-| Admin journey | `tests/e2e/backoffice/` | ✅ |
-| Case handler journey | `tests/journeys/auth-rbac.spec.ts` | ✅ |
+| Requirement | Test IDs | Status |
+|-------------|----------|--------|
+| Single slot booking | `tests/e2e/booking/*` | ✅ |
+| Recurring booking | `tests/e2e/booking/*` | ⚠️ Partial |
+| Approval workflow | `tests/e2e/backoffice/workflows/*` | ✅ |
+| Pricing calculation | `tests/unit/sdk-parity.test.ts` | ✅ |
 
-### K-3: Secure Authentication (ID-porten)
+### Organizations & Custody
 
-| Requirement | Test | Status |
-|-------------|------|--------|
-| ID-porten integration | `tests/e2e/auth-flow-all-apps.spec.ts` | ✅ |
-| Session management | `tests/journeys/auth-rbac-comprehensive.spec.ts` | ✅ |
-| RBAC enforcement | `tests/integration/rbac-flow.test.ts` | ✅ |
+| Requirement | Test IDs | Status |
+|-------------|----------|--------|
+| Org creation | `tests/e2e/backoffice/crud/organizations.spec.ts` | ✅ |
+| Access grants | `tests/unit/custody-evaluator.test.ts` | ✅ |
+| Subdelegation | `tests/unit/custody-evaluator.test.ts` | ⚠️ Partial |
+| Org-scoped views | `tests/e2e/backoffice/org-*-flow.spec.ts` | ✅ |
 
-### K-4: Recurring Bookings / Seasonal Leasing
+### Entitlements & Feature Flags
 
-| Requirement | Test | Status |
-|-------------|------|--------|
-| Single event booking | `tests/e2e/booking/single-slot.spec.ts` | ❌ |
-| Recurring booking | `tests/e2e/booking/recurring.spec.ts` | ❌ |
-| Seasonal leasing | `tests/e2e/seasonal-application-workflow.test.ts` | ✅ |
+| Requirement | Test IDs | Status |
+|-------------|----------|--------|
+| Module evaluation | `tests/unit/saas/feature-flag-evaluation.test.ts` | ✅ |
+| Kill switch precedence | `tests/unit/saas/feature-flag-evaluation.test.ts` | ✅ |
+| Sidebar filtering | `tests/e2e/backoffice/blur-eye/*` | ✅ |
+| Server enforcement | `tests/integration/rbac/*` | ⚠️ Partial |
 
-### K-5: Payment at Booking
+### SaaS Admin
 
-| Requirement | Test | Status |
-|-------------|------|--------|
-| Payment integration | `tests/e2e/booking/payment.spec.ts` | ❌ |
-| Vipps integration | `tests/integration/payments/vipps.test.ts` | ❌ |
+| Requirement | Test IDs | Status |
+|-------------|----------|--------|
+| Plans management | `tests/e2e/saas-admin-flow.spec.ts` | ✅ |
+| License keys | `tests/unit/saas/license-key.test.ts` | ✅ |
+| Tenant management | `tests/e2e/tenant-admin-flow.spec.ts` | ✅ |
+| Billing webhooks | - | ❌ Missing |
 
-### K-6: WCAG 2.1 Compliance
+### Compliance
 
-| Requirement | Test | Status |
-|-------------|------|--------|
-| Automated Axe checks | `tests/e2e/accessibility/axe-audit.spec.ts` | ❌ |
-| Keyboard navigation | `tests/e2e/accessibility/keyboard.spec.ts` | ❌ |
-| Screen reader | Manual | ⚠️ |
-
-### K-7: Rule Conditions per Locale
-
-| Requirement | Test | Status |
-|-------------|------|--------|
-| Approval rules | `tests/e2e/booking/approval.spec.ts` | ❌ |
-| Age limits | `tests/unit/booking/validation.test.ts` | ❌ |
-| Terms acceptance | `tests/e2e/booking/terms.spec.ts` | ❌ |
-
-### K-8: Integrations (RCO, Archive, Visma)
-
-| Requirement | Test | Status |
-|-------------|------|--------|
-| RCO locks | `tests/integration/rco/locks.test.ts` | ❌ |
-| Archive (Acos) | `tests/integration/archive/acos.test.ts` | ❌ |
-| Visma Enterprise | `tests/integration/payments/visma.test.ts` | ❌ |
-
-### K-9: GDPR / Privacy by Design
-
-| Requirement | Test | Status |
-|-------------|------|--------|
-| Data subject rights | `tests/integration/gdpr/dsar.test.ts` | ❌ |
-| Data export | `tests/e2e/gdpr/export.spec.ts` | ❌ |
-| Consent management | `tests/integration/gdpr/consent.test.ts` | ❌ |
-
-### K-10: Cloud Security
-
-| Requirement | Test | Status |
-|-------------|------|--------|
-| EU/EØS data locality | Infrastructure | ✅ |
-| TLS encryption | `tests/security/headers.test.ts` | ❌ |
-| Security headers | `tests/security/headers.test.ts` | ❌ |
-| Vulnerability scanning | CI/CD | ⚠️ |
+| Requirement | Test IDs | Status |
+|-------------|----------|--------|
+| WCAG 2.1 AA | `tests/e2e/accessibility/axe-audit.spec.ts` | ✅ |
+| i18n nb/en | `tests/e2e/backoffice/compliance/localization.spec.ts` | ✅ |
+| GDPR consent | `tests/integration/gdpr/*` | ⚠️ Partial |
+| Audit logging | `tests/e2e/backoffice/blur-eye/audit-timeline.spec.ts` | ✅ |
 
 ---
 
-## API Endpoint Coverage
+## Role × Capability Matrix
 
-### Authentication (`/api/auth`)
+| Capability | super_admin | admin | saksbehandler | org_admin | org_member | user |
+|------------|:-----------:|:-----:|:-------------:|:---------:|:----------:|:----:|
+| View all tenants | ✅ | ❌ | ❌ | ❌ | ❌ | ❌ |
+| Manage plans | ✅ | ❌ | ❌ | ❌ | ❌ | ❌ |
+| Manage tenant settings | ✅ | ✅ | ❌ | ❌ | ❌ | ❌ |
+| Manage rental objects | ✅ | ✅ | ❌ | ✅* | ❌ | ❌ |
+| Approve bookings | ✅ | ✅ | ✅ | ✅* | ❌ | ❌ |
+| View work queue | ✅ | ✅ | ✅ | ❌ | ❌ | ❌ |
+| Manage org members | ✅ | ✅ | ❌ | ✅ | ❌ | ❌ |
+| Subdelegate custody | ✅ | ✅ | ❌ | ✅ | ❌ | ❌ |
+| View assigned ROs | ✅ | ✅ | ✅ | ✅ | ✅ | ❌ |
+| Create bookings | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
+| View own bookings | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
 
-| Endpoint | Auth | Contract | Negative | E2E |
-|----------|------|----------|----------|-----|
-| `POST /login` | N/A | ✅ | ✅ | ✅ |
-| `POST /logout` | ✅ | ✅ | ✅ | ✅ |
-| `GET /session` | ✅ | ✅ | ✅ | ✅ |
-| `POST /refresh` | ✅ | ⚠️ | ⚠️ | ⚠️ |
-
-### Rental Objects (`/api/rental-objects`)
-
-| Endpoint | Auth | Contract | Negative | E2E |
-|----------|------|----------|----------|-----|
-| `GET /` | ✅ | ⚠️ | ⚠️ | ✅ |
-| `GET /:id` | ✅ | ⚠️ | ⚠️ | ✅ |
-| `POST /` | ✅ | ❌ | ❌ | ⚠️ |
-| `PUT /:id` | ✅ | ❌ | ❌ | ⚠️ |
-| `DELETE /:id` | ✅ | ❌ | ❌ | ❌ |
-
-### Bookings (`/api/bookings`)
-
-| Endpoint | Auth | Contract | Negative | E2E |
-|----------|------|----------|----------|-----|
-| `GET /` | ✅ | ❌ | ❌ | ⚠️ |
-| `POST /` | ✅ | ❌ | ❌ | ❌ |
-| `PUT /:id` | ✅ | ❌ | ❌ | ❌ |
-| `DELETE /:id` | ✅ | ❌ | ❌ | ❌ |
-
-### Pricing (`/api/pricing`)
-
-| Endpoint | Auth | Contract | Negative | E2E |
-|----------|------|----------|----------|-----|
-| `POST /preview` | ⚠️ | ❌ | ❌ | ❌ |
-| `GET /rules/:id` | ✅ | ❌ | ❌ | ❌ |
+*Limited to granted rental objects
 
 ---
 
-## Database Table Coverage
+## Gap Analysis
 
-### Platform Schema
+### ❌ Missing Tests (Priority High)
+1. Billing webhook signature verification
+2. Custody subdelegation E2E flow
+3. Web booking modes (IN_GAME, RECURRING)
+4. Calendar DST handling
+5. Incident pipeline ingestion
 
-| Table | Constraints | CRUD | Isolation | Audit |
-|-------|-------------|------|-----------|-------|
-| tenants | ✅ | ⚠️ | N/A | ⚠️ |
-| users | ✅ | ⚠️ | ✅ | ⚠️ |
-| sessions | ✅ | ✅ | ✅ | ✅ |
-| organizations | ✅ | ⚠️ | ✅ | ⚠️ |
-
-### Domain Schema
-
-| Table | Constraints | CRUD | Isolation | Audit |
-|-------|-------------|------|-----------|-------|
-| rental_objects | ✅ | ⚠️ | ⚠️ | ⚠️ |
-| bookings | ✅ | ❌ | ⚠️ | ⚠️ |
-| calendar_blocks | ⚠️ | ❌ | ⚠️ | ❌ |
-| pricing_rules | ⚠️ | ❌ | ⚠️ | ❌ |
+### ⚠️ Partial Coverage
+1. Norwegian eID integration (unit only, no E2E)
+2. GDPR DSAR workflow
+3. Load testing for hot paths
+4. Mutation testing for booking rules
 
 ---
 
-## Role-Based Coverage (RBAC Matrix)
+## Next Steps
 
-| Role | Read | Create | Update | Delete | Admin |
-|------|------|--------|--------|--------|-------|
-| Public | ✅ | ❌ | ❌ | ❌ | ❌ |
-| User | ✅ | ⚠️ | ⚠️ | ❌ | ❌ |
-| OrgMember | ✅ | ⚠️ | ⚠️ | ❌ | ❌ |
-| Saksbehandler | ✅ | ✅ | ✅ | ⚠️ | ❌ |
-| Admin | ✅ | ✅ | ✅ | ✅ | ✅ |
-| TenantAdmin | ✅ | ✅ | ✅ | ✅ | ✅ |
-
----
-
-## Legend
-
-- ✅ Covered
-- ⚠️ Partial
-- ❌ Missing
-
----
-
-## Next Actions
-
-1. Create missing booking E2E tests
-2. Add WCAG/Axe automation
-3. Implement GDPR DSAR tests
-4. Add integration mock tests
-5. Complete API contract snapshots
-
----
-
-*Generated: 2026-01-17*
+1. Create `schema-coverage.json`
+2. Create `rbac-entitlements-matrix.md`
+3. Implement missing custody E2E tests
+4. Wire CI pipelines (PR + Nightly)

@@ -1,0 +1,303 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Schema Coverage Map",
+  "description": "Maps database tables, columns, and constraints to test files that cover them",
+  "generatedAt": "2026-01-18T09:00:00Z",
+  "schemas": {
+    "platform": {
+      "tenants": {
+        "table": "platform.tenants",
+        "columns": ["id", "name", "slug", "domain", "settings", "status", "subscriptionPlanId", "licenseKeyHash", "seatLimits", "featureFlags", "enabledRentalObjectCategories", "createdAt", "updatedAt"],
+        "indexes": ["tenants_slug_idx", "tenants_status_idx", "tenants_subscription_plan_idx"],
+        "tests": [
+          "tests/integration/saas/tenant-isolation.test.ts",
+          "tests/unit/saas/license-key.test.ts",
+          "apps/api/tests/integration/tenant.api.test.ts"
+        ],
+        "coverage": "HIGH"
+      },
+      "organizations": {
+        "table": "platform.organizations",
+        "columns": ["id", "tenantId", "name", "slug", "type", "settings", "status", "externalOrgId", "source", "lastSyncedAt"],
+        "indexes": ["orgs_tenant_idx", "orgs_slug_idx", "orgs_external_org_idx"],
+        "tests": [
+          "tests/e2e/backoffice/crud/organizations.spec.ts",
+          "tests/e2e/organization-creation-wizard.spec.ts",
+          "tests/integration/api/org-admin-flow.test.ts"
+        ],
+        "coverage": "HIGH"
+      },
+      "users": {
+        "table": "platform.users",
+        "columns": ["id", "tenantId", "organizationId", "email", "name", "nationalId", "role", "status", "demoToken", "metadata", "createdAt", "lastLoginAt"],
+        "indexes": ["users_tenant_email_idx", "users_tenant_idx", "users_national_id_idx", "users_demo_token_idx"],
+        "tests": [
+          "tests/e2e/backoffice/crud/users.spec.ts",
+          "tests/integration/rbac-flow.test.ts",
+          "apps/api/tests/integration/user.api.test.ts"
+        ],
+        "coverage": "HIGH"
+      },
+      "sessions": {
+        "table": "platform.sessions",
+        "columns": ["id", "userId", "tenantId", "refreshTokenHash", "accessTokenJti", "userAgent", "ipAddress", "createdAt", "lastRefreshedAt", "expiresAt", "revokedAt", "revokedReason"],
+        "indexes": ["sessions_user_idx", "sessions_tenant_idx", "sessions_refresh_token_hash_idx", "sessions_expires_at_idx", "sessions_user_tenant_idx"],
+        "tests": [
+          "tests/integration/rbac-flow.test.ts",
+          "apps/api/src/__tests__/auth/session-endpoint.test.ts"
+        ],
+        "coverage": "HIGH"
+      },
+      "org_memberships": {
+        "table": "platform.org_memberships",
+        "columns": ["id", "userId", "orgId", "orgRole", "status", "metadata", "createdAt", "updatedAt"],
+        "indexes": ["org_memberships_user_idx", "org_memberships_org_idx", "org_memberships_user_org_idx"],
+        "tests": [
+          "tests/e2e/backoffice/org-admin-flow.spec.ts",
+          "tests/e2e/backoffice/org-member-flow.spec.ts"
+        ],
+        "coverage": "MEDIUM"
+      },
+      "permission_assignments": {
+        "table": "platform.permission_assignments",
+        "columns": ["id", "orgId", "userId", "rentalObjectId", "permissions", "assignedBy", "status", "metadata", "createdAt", "updatedAt"],
+        "indexes": ["permission_assignments_org_idx", "permission_assignments_user_idx", "permission_assignments_rental_object_idx"],
+        "tests": [
+          "tests/unit/custody-evaluator.test.ts",
+          "tests/e2e/backoffice/rbac/subdelegation.spec.ts"
+        ],
+        "coverage": "MEDIUM"
+      },
+      "case_handler_scopes": {
+        "table": "platform.case_handler_scopes",
+        "columns": ["id", "tenantId", "userId", "scopeType", "rentalObjectId", "assignedBy", "status", "metadata", "createdAt", "updatedAt"],
+        "tests": [
+          "apps/api/tests/e2e/case-handler-scope-enforcement.spec.ts"
+        ],
+        "coverage": "MEDIUM"
+      },
+      "branding_tokens": {
+        "table": "platform.branding_tokens",
+        "columns": ["id", "tenantId", "name", "logoUrl", "faviconUrl", "primaryColor", "secondaryColor", "accentColor", "tokens", "typography", "activeVersionId", "previewVersionId", "previewMode"],
+        "tests": [],
+        "coverage": "LOW"
+      },
+      "branding_versions": {
+        "table": "platform.branding_versions",
+        "columns": ["id", "tenantId", "brandingTokensId", "version", "name", "description", "snapshot", "status", "publishedAt", "publishedBy", "createdBy"],
+        "tests": [],
+        "coverage": "LOW"
+      }
+    },
+    "domain": {
+      "rental_objects": {
+        "table": "domain.rental_objects",
+        "columns": ["id", "tenantId", "organizationId", "name", "slug", "description", "categoryKey", "timeMode", "features", "ruleSetKey", "status", "requiresApproval", "capacity", "inventoryTotal", "images", "pricing", "metadata", "createdAt", "updatedAt"],
+        "indexes": ["rental_objects_tenant_idx", "rental_objects_category_key_idx", "rental_objects_time_mode_idx", "rental_objects_status_idx", "rental_objects_slug_idx"],
+        "tests": [
+          "tests/unit/rental-objects/rental-object.service.test.ts",
+          "tests/unit/rental-objects/rental-object.integration.test.ts",
+          "tests/e2e/backoffice/crud/rental-objects.spec.ts",
+          "tests/e2e/backoffice/crud/rental-object-wizard.spec.ts",
+          "tests/e2e/web/listings.spec.ts"
+        ],
+        "coverage": "HIGH"
+      },
+      "bookings": {
+        "table": "domain.bookings",
+        "columns": ["id", "tenantId", "rentalObjectId", "userId", "status", "startTime", "endTime", "totalPrice", "currency", "notes", "metadata", "createdAt", "updatedAt"],
+        "indexes": ["bookings_tenant_idx", "bookings_rental_object_idx", "bookings_user_idx", "bookings_status_idx"],
+        "tests": [
+          "tests/e2e/booking/booking-flow.spec.ts",
+          "tests/e2e/backoffice/crud/bookings.spec.ts",
+          "apps/api/tests/e2e/booking-flow.spec.ts",
+          "apps/api/tests/integration/booking-receipt.test.ts"
+        ],
+        "coverage": "HIGH"
+      },
+      "blocks": {
+        "table": "domain.blocks",
+        "columns": ["id", "tenantId", "rentalObjectId", "title", "reason", "startDate", "endDate", "allDay", "recurring", "recurrenceRule", "visibility", "status", "createdBy"],
+        "indexes": ["blocks_tenant_idx", "blocks_rental_object_idx", "blocks_time_range_idx", "blocks_status_idx"],
+        "tests": [
+          "tests/e2e/backoffice/blur-eye/blocks.spec.ts"
+        ],
+        "coverage": "MEDIUM"
+      },
+      "allocations": {
+        "table": "domain.allocations",
+        "columns": ["id", "tenantId", "rentalObjectId", "title", "startTime", "endTime", "status", "bookingId", "userId", "notes", "recurring", "metadata"],
+        "tests": [
+          "tests/e2e/backoffice/crud/calendar.spec.ts"
+        ],
+        "coverage": "MEDIUM"
+      },
+      "seasonal_leases": {
+        "table": "domain.seasonal_leases",
+        "columns": ["id", "tenantId", "rentalObjectId", "organizationId", "startDate", "endDate", "weekdays", "startTime", "endTime", "status", "totalPrice", "currency", "notes", "metadata"],
+        "tests": [
+          "tests/e2e/seasonal-application-workflow.test.ts"
+        ],
+        "coverage": "MEDIUM"
+      },
+      "conversations": {
+        "table": "domain.conversations",
+        "columns": ["id", "tenantId", "userId", "bookingId", "subject", "status", "unreadCount", "lastMessageAt"],
+        "tests": [
+          "tests/e2e/backoffice/blur-eye/messages.spec.ts"
+        ],
+        "coverage": "MEDIUM"
+      },
+      "messages": {
+        "table": "domain.messages",
+        "columns": ["id", "conversationId", "senderType", "senderId", "content", "attachments", "readAt", "createdAt"],
+        "tests": [
+          "tests/e2e/backoffice/blur-eye/messages.spec.ts"
+        ],
+        "coverage": "MEDIUM"
+      },
+      "favorites": {
+        "table": "domain.favorites",
+        "columns": ["id", "userId", "tenantId", "rentalObjectId", "notes", "tags", "createdAt", "updatedAt"],
+        "tests": [],
+        "coverage": "LOW"
+      },
+      "rental_object_categories": {
+        "table": "domain.rental_object_categories",
+        "columns": ["id", "tenantId", "parentId", "code", "key", "name", "description", "sortOrder", "isActive"],
+        "tests": [
+          "tests/unit/metadata/metadata-service.test.ts"
+        ],
+        "coverage": "MEDIUM"
+      },
+      "amenities": {
+        "table": "domain.amenities",
+        "columns": ["id", "tenantId", "groupId", "code", "name", "description", "iconKey", "isActive", "sortOrder"],
+        "tests": [],
+        "coverage": "LOW"
+      },
+      "addons": {
+        "table": "domain.addons",
+        "columns": ["id", "tenantId", "code", "name", "description", "pricingModel", "basePriceCents", "currency", "isRequired", "maxUnits", "isActive"],
+        "tests": [],
+        "coverage": "LOW"
+      },
+      "access_grants": {
+        "table": "domain.access_grants",
+        "columns": ["id", "tenantId", "orgId", "rentalObjectId", "grantedBy", "status", "validFrom", "validUntil", "metadata"],
+        "tests": [
+          "tests/integration/acl-flow.test.ts",
+          "tests/unit/custody-evaluator.test.ts"
+        ],
+        "coverage": "HIGH"
+      },
+      "rental_object_custody_grants": {
+        "table": "domain.rental_object_custody_grants",
+        "columns": ["id", "tenantId", "rentalObjectId", "granteeType", "granteeId", "scopes", "canSubdelegate", "effectiveFrom", "effectiveTo", "reason", "status", "createdByUserId", "revokedAt", "revokedByUserId"],
+        "tests": [
+          "tests/unit/custody-evaluator.test.ts"
+        ],
+        "coverage": "MEDIUM"
+      },
+      "rental_object_custody_subgrants": {
+        "table": "domain.rental_object_custody_subgrants",
+        "columns": ["id", "tenantId", "parentGrantId", "orgId", "memberUserId", "scopes", "effectiveFrom", "effectiveTo", "status", "createdByUserId", "revokedAt", "revokedByUserId"],
+        "tests": [
+          "tests/unit/custody-evaluator.test.ts"
+        ],
+        "coverage": "MEDIUM"
+      }
+    },
+    "saas": {
+      "plans": {
+        "table": "saas.plans",
+        "columns": ["id", "name", "slug", "description", "displayOrder", "basePrice", "currency", "billingPeriod", "seatLimits", "entitlements", "trialDays", "isPublic", "status", "metadata"],
+        "tests": [
+          "tests/e2e/saas-admin-flow.spec.ts",
+          "tests/integration/saas/saas-api.test.ts"
+        ],
+        "coverage": "HIGH"
+      },
+      "subscriptions": {
+        "table": "saas.subscriptions",
+        "columns": ["id", "tenantId", "planId", "stripeCustomerId", "stripeSubscriptionId", "plan", "status", "currentPeriodEnd", "cancelAtPeriodEnd", "trialEndsAt"],
+        "tests": [
+          "tests/integration/saas/saas-api.test.ts"
+        ],
+        "coverage": "MEDIUM"
+      },
+      "feature_flags_catalog": {
+        "table": "saas.feature_flags_catalog",
+        "columns": ["id", "key", "name", "description", "type", "defaultValue", "category", "status", "metadata"],
+        "tests": [
+          "tests/unit/saas/feature-flag-evaluation.test.ts",
+          "tests/e2e/backoffice/blur-eye/feature-flags.spec.ts"
+        ],
+        "coverage": "HIGH"
+      },
+      "tenant_feature_flags": {
+        "table": "saas.tenant_feature_flags",
+        "columns": ["id", "tenantId", "featureFlagId", "value", "enabled", "reason", "createdBy"],
+        "tests": [
+          "tests/unit/saas/feature-flag-evaluation.test.ts"
+        ],
+        "coverage": "HIGH"
+      },
+      "org_feature_flags": {
+        "table": "saas.org_feature_flags",
+        "columns": ["id", "organizationId", "featureFlagId", "value", "enabled", "reason", "createdBy"],
+        "tests": [
+          "tests/unit/saas/feature-flag-evaluation.test.ts"
+        ],
+        "coverage": "MEDIUM"
+      },
+      "category_entitlements": {
+        "table": "saas.category_entitlements",
+        "columns": ["id", "tenantId", "organizationId", "category", "enabled", "restrictions", "reason", "createdBy"],
+        "tests": [],
+        "coverage": "LOW"
+      },
+      "usage": {
+        "table": "saas.usage",
+        "columns": ["id", "tenantId", "metric", "value", "period", "timestamp"],
+        "tests": [],
+        "coverage": "LOW"
+      }
+    },
+    "compliance": {
+      "audit_logs": {
+        "table": "compliance.audit_logs",
+        "columns": ["id", "tenantId", "userId", "action", "resource", "resourceId", "severity", "metadata", "ipAddress", "userAgent", "timestamp"],
+        "tests": [
+          "tests/e2e/backoffice/blur-eye/audit-timeline.spec.ts",
+          "tests/integration/gdpr/dsar.test.ts"
+        ],
+        "coverage": "HIGH"
+      },
+      "gdpr_requests": {
+        "table": "compliance.gdpr_requests",
+        "columns": ["id", "tenantId", "userId", "requestType", "status", "processedAt", "expiresAt", "metadata"],
+        "tests": [
+          "tests/integration/gdpr/dsar.test.ts",
+          "apps/api/src/modules/gdpr/gdpr.spec.ts"
+        ],
+        "coverage": "HIGH"
+      }
+    },
+    "monitoring": {
+      "incidents": {
+        "table": "monitoring.incidents",
+        "columns": ["id", "alertId", "title", "description", "status", "severity", "affectedServices", "assignee", "timeline", "resolvedAt"],
+        "tests": [],
+        "coverage": "LOW"
+      }
+    }
+  },
+  "summary": {
+    "totalTables": 35,
+    "highCoverage": 14,
+    "mediumCoverage": 13,
+    "lowCoverage": 8,
+    "percentHighMedium": 77
+  }
+}

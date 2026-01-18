@@ -667,6 +667,16 @@ export {
   useBulkRemoveScopes,
 } from './use-scope-assignment';
 
+// Custody hooks (Resource-scoped delegation hierarchy)
+export {
+  useRentalObjectCustody,
+  useOrgCustody,
+  useCanCustody,
+  useCreateCustodyGrant,
+  useRevokeCustodyGrant,
+  useCreateCustodySubgrant,
+} from './use-custody';
+
 // RBAC hooks (Role-Based Access Control)
 export {
   // Capabilities

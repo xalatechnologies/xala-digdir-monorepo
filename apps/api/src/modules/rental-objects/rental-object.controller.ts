@@ -4,6 +4,8 @@
  */
 import { Controller, Get, Post, Put, Delete } from '../../core/decorators';
 import { Inject } from '../../core/decorators';
+import { RequireCustody } from '../../core/decorators/require-custody';
+import { CustodyScope } from '../custody/types';
 import { RentalObjectService } from './rental-object.service';
 import { toDetailsProjection } from './rental-object.projections';
 import { validate } from '../../core/validation/zod-pipe';
@@ -26,7 +28,7 @@ export class RentalObjectController {
    * Returns { data, meta } format for SDK compatibility
    */
   @Get()
-  async findAll(request: TenantRequest, reply: FastifyReply) {
+  async findAll(request: TenantRequest, _reply: FastifyReply) {
     const tenantId = getOptionalTenantId(request);
     const params = validate(RentalObjectQuerySchema, request.query);
     const result = await this.service.findAll(tenantId, { 
@@ -52,7 +54,7 @@ export class RentalObjectController {
    * GET /api/rental-objects/:id - Get rental object by ID
    */
   @Get('/:id')
-  async findById(request: FastifyRequest<{ Params: { id: string } }>, reply: FastifyReply) {
+  async findById(request: FastifyRequest<{ Params: { id: string } }>, _reply: FastifyReply) {
     const rentalObject = await this.service.findByIdOrFail(request.params.id);
     return { data: rentalObject };
   }
@@ -72,7 +74,8 @@ export class RentalObjectController {
    * PUT /api/rental-objects/:id - Update rental object
    */
   @Put('/:id')
-  async update(request: FastifyRequest<{ Params: { id: string } }>, reply: FastifyReply) {
+  @RequireCustody(CustodyScope.RO_EDIT)
+  async update(request: FastifyRequest<{ Params: { id: string } }>, _reply: FastifyReply) {
     const data = validate(UpdateRentalObjectSchema, request.body);
     const rentalObject = await this.service.update(request.params.id, data as Parameters<typeof this.service.update>[1]);
     return { data: rentalObject };
@@ -82,7 +85,8 @@ export class RentalObjectController {
    * PUT /api/rental-objects/:id/publish - Publish rental object
    */
   @Put('/:id/publish')
-  async publish(request: FastifyRequest<{ Params: { id: string } }>, reply: FastifyReply) {
+  @RequireCustody(CustodyScope.RO_EDIT)
+  async publish(request: FastifyRequest<{ Params: { id: string } }>, _reply: FastifyReply) {
     const rentalObject = await this.service.publish(request.params.id);
     return { data: rentalObject };
   }
@@ -91,7 +95,8 @@ export class RentalObjectController {
    * PUT /api/rental-objects/:id/unpublish - Unpublish rental object (set to draft)
    */
   @Put('/:id/unpublish')
-  async unpublish(request: FastifyRequest<{ Params: { id: string } }>, reply: FastifyReply) {
+  @RequireCustody(CustodyScope.RO_EDIT)
+  async unpublish(request: FastifyRequest<{ Params: { id: string } }>, _reply: FastifyReply) {
     const rentalObject = await this.service.unpublish(request.params.id);
     return { data: rentalObject };
   }
@@ -110,7 +115,8 @@ export class RentalObjectController {
    * PUT /api/rental-objects/:id/archive - Archive rental object
    */
   @Put('/:id/archive')
-  async archive(request: FastifyRequest<{ Params: { id: string } }>, reply: FastifyReply) {
+  @RequireCustody(CustodyScope.RO_EDIT)
+  async archive(request: FastifyRequest<{ Params: { id: string } }>, _reply: FastifyReply) {
     const rentalObject = await this.service.archive(request.params.id);
     return { data: rentalObject };
   }
@@ -119,7 +125,7 @@ export class RentalObjectController {
    * PUT /api/rental-objects/:id/restore - Restore archived rental object
    */
   @Put('/:id/restore')
-  async restore(request: FastifyRequest<{ Params: { id: string } }>, reply: FastifyReply) {
+  async restore(request: FastifyRequest<{ Params: { id: string } }>, _reply: FastifyReply) {
     const rentalObject = await this.service.restore(request.params.id);
     return { data: rentalObject };
   }
@@ -128,7 +134,8 @@ export class RentalObjectController {
    * DELETE /api/rental-objects/:id - Delete rental object
    */
   @Delete('/:id')
-  async delete(request: FastifyRequest<{ Params: { id: string } }>, reply: FastifyReply) {
+  @RequireCustody(CustodyScope.RO_EDIT)
+  async delete(request: FastifyRequest<{ Params: { id: string } }>, _reply: FastifyReply) {
     await this.service.delete(request.params.id);
     return { success: true };
   }
@@ -165,6 +172,7 @@ export class RentalObjectController {
    * POST /api/rental-objects/:id/media - Upload media
    */
   @Post('/:id/media')
+  @RequireCustody(CustodyScope.RO_MEDIA)
   async uploadMedia(request: FastifyRequest<{ Params: { id: string } }>, reply: FastifyReply) {
     const body = request.body as any;
     const rentalObject = await this.service.addMedia(request.params.id, body.url, body.type || 'image');
@@ -176,7 +184,8 @@ export class RentalObjectController {
    * DELETE /api/rental-objects/:id/media/:mediaId - Delete media
    */
   @Delete('/:id/media/:mediaId')
-  async deleteMedia(request: FastifyRequest<{ Params: { id: string; mediaId: string } }>, reply: FastifyReply) {
+  @RequireCustody(CustodyScope.RO_MEDIA)
+  async deleteMedia(request: FastifyRequest<{ Params: { id: string; mediaId: string } }>, _reply: FastifyReply) {
     await this.service.removeMedia(request.params.id, request.params.mediaId);
     return { success: true };
   }
@@ -185,7 +194,8 @@ export class RentalObjectController {
    * GET /api/rental-objects/:id/stats - Get rental object statistics
    */
   @Get('/:id/stats')
-  async getStats(request: FastifyRequest<{ Params: { id: string } }>, reply: FastifyReply) {
+  @RequireCustody(CustodyScope.RO_REPORTING)
+  async getStats(request: FastifyRequest<{ Params: { id: string } }>, _reply: FastifyReply) {
     const stats = await this.service.getStats(request.params.id);
     return { data: stats };
   }
@@ -195,7 +205,7 @@ export class RentalObjectController {
    * Returns booking modes, constraints, and calendar display settings.
    */
   @Get('/:id/calendar-config')
-  async getCalendarConfig(request: FastifyRequest<{ Params: { id: string } }>, reply: FastifyReply) {
+  async getCalendarConfig(request: FastifyRequest<{ Params: { id: string } }>, _reply: FastifyReply) {
     const config = await this.service.getCalendarConfig(request.params.id);
     return { data: config };
   }
@@ -206,7 +216,7 @@ export class RentalObjectController {
    * Reference: packages/client-sdk/src/types/booking-contracts.ts
    */
   @Get('/:id/booking-policy')
-  async getBookingPolicy(request: FastifyRequest<{ Params: { id: string } }>, reply: FastifyReply) {
+  async getBookingPolicy(request: FastifyRequest<{ Params: { id: string } }>, _reply: FastifyReply) {
     const policy = await this.service.getBookingPolicy(request.params.id);
     return { data: policy };
   }
@@ -217,7 +227,7 @@ export class RentalObjectController {
    * Reference: packages/client-sdk/src/types/booking-contracts.ts
    */
   @Get('/:id/payment-policy')
-  async getPaymentPolicy(request: FastifyRequest<{ Params: { id: string } }>, reply: FastifyReply) {
+  async getPaymentPolicy(request: FastifyRequest<{ Params: { id: string } }>, _reply: FastifyReply) {
     const policy = await this.service.getPaymentPolicy(request.params.id);
     return { data: policy };
   }
@@ -228,7 +238,7 @@ export class RentalObjectController {
    * Reference: packages/client-sdk/src/types/booking-contracts.ts
    */
   @Get('/:id/tabs')
-  async getTabs(request: FastifyRequest<{ Params: { id: string } }>, reply: FastifyReply) {
+  async getTabs(request: FastifyRequest<{ Params: { id: string } }>, _reply: FastifyReply) {
     const tabs = await this.service.getTabs(request.params.id);
     return { data: tabs };
   }
@@ -244,7 +254,7 @@ export class CategoriesController {
    * GET /api/categories - Get all rental object categories
    */
   @Get()
-  async getCategories(request: FastifyRequest, reply: FastifyReply) {
+  async getCategories(_request: FastifyRequest, _reply: FastifyReply) {
     const categories = [
       {
         id: 'LOKALER_OG_BANER',
@@ -302,7 +312,7 @@ export class CategoriesController {
    * GET /api/categories/time-modes - Get all booking time modes
    */
   @Get('/time-modes')
-  async getTimeModes(request: FastifyRequest, reply: FastifyReply) {
+  async getTimeModes(_request: FastifyRequest, _reply: FastifyReply) {
     const timeModes = [
       {
         id: 'PERIOD',
@@ -339,7 +349,7 @@ export class CategoriesController {
    * GET /api/categories/features - Get all booking features
    */
   @Get('/features')
-  async getFeatures(request: FastifyRequest, reply: FastifyReply) {
+  async getFeatures(_request: FastifyRequest, _reply: FastifyReply) {
     const features = [
       {
         id: 'INVENTORY',

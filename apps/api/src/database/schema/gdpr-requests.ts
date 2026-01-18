@@ -10,8 +10,7 @@ import {
   jsonb,
   index,
 } from 'drizzle-orm/pg-core';
-import { tenants } from './index';
-import { users } from './index';
+import { tenants, users } from './base-tables';
 
 export const gdprRequests = pgTable('gdpr_requests', {
   id: uuid('id').primaryKey().defaultRandom(),

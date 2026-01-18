@@ -1,0 +1,212 @@
+[
+  {
+    "planName": "Free",
+    "keyType": "module",
+    "key": "BOOKING",
+    "defaultEnabled": true
+  },
+  {
+    "planName": "Free",
+    "keyType": "module",
+    "key": "USERS",
+    "defaultEnabled": true
+  },
+  {
+    "planName": "Free",
+    "keyType": "module",
+    "key": "SETTINGS",
+    "defaultEnabled": true
+  },
+  {
+    "planName": "Pro",
+    "keyType": "module",
+    "key": "BOOKING",
+    "defaultEnabled": true
+  },
+  {
+    "planName": "Pro",
+    "keyType": "module",
+    "key": "APPROVALS",
+    "defaultEnabled": true
+  },
+  {
+    "planName": "Pro",
+    "keyType": "module",
+    "key": "REPORTING",
+    "defaultEnabled": true
+  },
+  {
+    "planName": "Pro",
+    "keyType": "module",
+    "key": "USERS",
+    "defaultEnabled": true
+  },
+  {
+    "planName": "Pro",
+    "keyType": "module",
+    "key": "ORGANIZATIONS",
+    "defaultEnabled": true
+  },
+  {
+    "planName": "Pro",
+    "keyType": "module",
+    "key": "SETTINGS",
+    "defaultEnabled": true
+  },
+  {
+    "planName": "Pro",
+    "keyType": "feature",
+    "key": "BOOKING_RECURRING",
+    "defaultEnabled": true
+  },
+  {
+    "planName": "Pro",
+    "keyType": "feature",
+    "key": "ADVANCED_SEARCH",
+    "defaultEnabled": true
+  },
+  {
+    "planName": "Pro",
+    "keyType": "integration",
+    "key": "VIPPS_PAYMENT",
+    "defaultEnabled": true
+  },
+  {
+    "planName": "Enterprise",
+    "keyType": "module",
+    "key": "BOOKING",
+    "defaultEnabled": true
+  },
+  {
+    "planName": "Enterprise",
+    "keyType": "module",
+    "key": "APPROVALS",
+    "defaultEnabled": true
+  },
+  {
+    "planName": "Enterprise",
+    "keyType": "module",
+    "key": "REPORTING",
+    "defaultEnabled": true
+  },
+  {
+    "planName": "Enterprise",
+    "keyType": "module",
+    "key": "INVOICING",
+    "defaultEnabled": true
+  },
+  {
+    "planName": "Enterprise",
+    "keyType": "module",
+    "key": "AUDIT",
+    "defaultEnabled": true
+  },
+  {
+    "planName": "Enterprise",
+    "keyType": "module",
+    "key": "INTEGRATIONS",
+    "defaultEnabled": true
+  },
+  {
+    "planName": "Enterprise",
+    "keyType": "module",
+    "key": "ANALYTICS",
+    "defaultEnabled": true
+  },
+  {
+    "planName": "Enterprise",
+    "keyType": "module",
+    "key": "USERS",
+    "defaultEnabled": true
+  },
+  {
+    "planName": "Enterprise",
+    "keyType": "module",
+    "key": "ORGANIZATIONS",
+    "defaultEnabled": true
+  },
+  {
+    "planName": "Enterprise",
+    "keyType": "module",
+    "key": "SETTINGS",
+    "defaultEnabled": true
+  },
+  {
+    "planName": "Enterprise",
+    "keyType": "feature",
+    "key": "BOOKING_RECURRING",
+    "defaultEnabled": true
+  },
+  {
+    "planName": "Enterprise",
+    "keyType": "feature",
+    "key": "ADVANCED_SEARCH",
+    "defaultEnabled": true
+  },
+  {
+    "planName": "Enterprise",
+    "keyType": "feature",
+    "key": "BULK_OPERATIONS",
+    "defaultEnabled": true
+  },
+  {
+    "planName": "Enterprise",
+    "keyType": "feature",
+    "key": "CUSTOM_FIELDS",
+    "defaultEnabled": true
+  },
+  {
+    "planName": "Enterprise",
+    "keyType": "feature",
+    "key": "API_ACCESS",
+    "defaultEnabled": true
+  },
+  {
+    "planName": "Enterprise",
+    "keyType": "feature",
+    "key": "WEBHOOKS",
+    "defaultEnabled": true
+  },
+  {
+    "planName": "Enterprise",
+    "keyType": "feature",
+    "key": "SSO",
+    "defaultEnabled": true
+  },
+  {
+    "planName": "Enterprise",
+    "keyType": "feature",
+    "key": "WHITE_LABEL",
+    "defaultEnabled": true
+  },
+  {
+    "planName": "Enterprise",
+    "keyType": "feature",
+    "key": "PRIORITY_SUPPORT",
+    "defaultEnabled": true
+  },
+  {
+    "planName": "Enterprise",
+    "keyType": "integration",
+    "key": "RCO_LOCKS",
+    "defaultEnabled": true
+  },
+  {
+    "planName": "Enterprise",
+    "keyType": "integration",
+    "key": "ACOS_ARCHIVE",
+    "defaultEnabled": true
+  },
+  {
+    "planName": "Enterprise",
+    "keyType": "integration",
+    "key": "VIPPS_PAYMENT",
+    "defaultEnabled": true
+  },
+  {
+    "planName": "Enterprise",
+    "keyType": "integration",
+    "key": "STRIPE_PAYMENT",
+    "defaultEnabled": true
+  }
+]

@@ -15,7 +15,7 @@ import {
   jsonb,
   index,
 } from 'drizzle-orm/pg-core';
-import { tenants, organizations, users } from './index';
+import { tenants, organizations, users } from './base-tables';
 
 // Use platform schema (where data is stored)
 const platformSchema = pgSchema('platform');

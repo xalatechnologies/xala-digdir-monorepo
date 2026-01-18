@@ -11,6 +11,7 @@
   },
   "dependencies": {
     "@digilist/client-sdk": "workspace:*",
+    "@xala/contracts": "workspace:*",
     "@sentry/react": "^8.42.0",
     "@tanstack/react-query": "^5.0.0",
     "@xala/auth": "workspace:*",

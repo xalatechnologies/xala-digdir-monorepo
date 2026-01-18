@@ -3,8 +3,6 @@
  * Consolidated from all existing APIs
  */
 import {
-  pgTable,
-  pgSchema,
   uuid,
   varchar,
   text,
@@ -17,95 +15,21 @@ import {
   unique,
 } from 'drizzle-orm/pg-core';
 
-// Define schemas
-export const platformSchema = pgSchema('platform');
-export const domainSchema = pgSchema('domain');
-export const complianceSchema = pgSchema('compliance');
-export const monitoringSchema = pgSchema('monitoring');
-export const saasSchema = pgSchema('saas');
+// Import schema definitions (centralized to avoid circular dependencies)
+import { platformSchema, domainSchema, complianceSchema, monitoringSchema, saasSchema } from './schemas';
 
-// ============================================================================
-// Tenants & Organizations
-// ============================================================================
+// Re-export schemas
+export { platformSchema, domainSchema, complianceSchema, monitoringSchema, saasSchema };
 
-export const tenants = platformSchema.table('tenants', {
-  id: uuid('id').primaryKey().defaultRandom(),
-  name: varchar('name', { length: 255 }).notNull(),
-  slug: varchar('slug', { length: 100 }).notNull().unique(),
-  domain: varchar('domain', { length: 255 }),
-  settings: jsonb('settings').default({}),
-  status: varchar('status', { length: 50 }).notNull().default('active'),
-  // Subscription & Plan references
-  subscriptionPlanId: uuid('subscription_plan_id'),
-  // License key (stored as hash only, never plaintext)
-  licenseKeyHash: text('license_key_hash'),
-  licenseKeyRotatedAt: timestamp('license_key_rotated_at'),
-  // Seat limits (overrides plan defaults when set)
-  seatLimits: jsonb('seat_limits').default({
-    maxUsers: 5,
-    maxOrganizations: 1,
-    maxListings: 10,
-    maxBookingsPerMonth: 100,
-    maxStorageMb: 500,
-  }),
-  // Branding reference (active branding version ID)
-  brandingVersionId: uuid('branding_version_id'),
-  
-  // Feature flags and category controls
-  featureFlags: jsonb('feature_flags').notNull().default({}),
-  enabledRentalObjectCategories: text('enabled_rental_object_categories').array().notNull().default(['LOCALE', 'ARRANGEMENT']),
-  
-  createdAt: timestamp('created_at').notNull().defaultNow(),
-  updatedAt: timestamp('updated_at').notNull().defaultNow(),
-}, (table) => ({
-  slugIdx: index('tenants_slug_idx').on(table.slug),
-  statusIdx: index('tenants_status_idx').on(table.status),
-  subscriptionPlanIdx: index('tenants_subscription_plan_idx').on(table.subscriptionPlanId),
-}));
+// Import base tables to use in references
+import { tenants, users, organizations, rentalObjects, listings } from './base-tables';
 
-export const organizations = platformSchema.table('organizations', {
-  id: uuid('id').primaryKey().defaultRandom(),
-  tenantId: uuid('tenant_id').notNull().references(() => tenants.id, { onDelete: 'cascade' }),
-  name: varchar('name', { length: 255 }).notNull(),
-  slug: varchar('slug', { length: 100 }).notNull(),
-  type: varchar('type', { length: 50 }).notNull().default('other'),
-  settings: jsonb('settings').default({}),
-  status: varchar('status', { length: 50 }).notNull().default('active'),
-  // Brønnøysund sync fields
-  externalOrgId: varchar('external_org_id', { length: 50 }),
-  source: varchar('source', { length: 50 }).default('manual'),
-  lastSyncedAt: timestamp('last_synced_at'),
-  createdAt: timestamp('created_at').notNull().defaultNow(),
-  updatedAt: timestamp('updated_at').notNull().defaultNow(),
-}, (table) => ({
-  tenantIdx: index('orgs_tenant_idx').on(table.tenantId),
-  slugIdx: index('orgs_slug_idx').on(table.tenantId, table.slug),
-  externalOrgIdx: index('orgs_external_org_idx').on(table.externalOrgId),
-}));
+// Re-export all base tables and types
+export * from './base-tables';
 
-// ============================================================================
-// Users & RBAC
-// ============================================================================
+// NOTE: tenants, organizations, users, rentalObjects are now exported from base-tables.ts
+// to break circular dependencies with gdpr-requests.ts, custody.ts, policy.ts, etc.
 
-export const users = platformSchema.table('users', {
-  id: uuid('id').primaryKey().defaultRandom(),
-  tenantId: uuid('tenant_id').notNull().references(() => tenants.id, { onDelete: 'cascade' }),
-  organizationId: uuid('organization_id').references(() => organizations.id, { onDelete: 'set null' }),
-  email: varchar('email', { length: 255 }).notNull(),
-  name: varchar('name', { length: 255 }).notNull(),
-  nationalId: varchar('national_id', { length: 11 }), // Norwegian national identity number (fødselsnummer)
-  role: varchar('role', { length: 50 }).notNull().default('member'),
-  status: varchar('status', { length: 50 }).notNull().default('active'),
-  demoToken: varchar('demo_token', { length: 100 }), // Demo login token for testing
-  metadata: jsonb('metadata').default({}),
-  createdAt: timestamp('created_at').notNull().defaultNow(),
-  lastLoginAt: timestamp('last_login_at'),
-}, (table) => ({
-  tenantEmailIdx: index('users_tenant_email_idx').on(table.tenantId, table.email),
-  tenantIdx: index('users_tenant_idx').on(table.tenantId),
-  nationalIdIdx: index('users_national_id_idx').on(table.nationalId),
-  demoTokenIdx: index('users_demo_token_idx').on(table.demoToken),
-}));
 
 // ============================================================================
 // Sessions & Authentication
@@ -356,46 +280,8 @@ export const categoryEntitlements = saasSchema.table('category_entitlements', {
 // ============================================================================
 // Rental Objects (V3 Model)
 // ============================================================================
-
-export const rentalObjects = domainSchema.table('rental_objects', {
-  id: uuid('id').primaryKey().defaultRandom(),
-  tenantId: uuid('tenant_id').notNull().references(() => tenants.id, { onDelete: 'cascade' }),
-  organizationId: uuid('organization_id').references(() => organizations.id, { onDelete: 'set null' }),
-  
-  // Core
-  name: varchar('name', { length: 255 }).notNull(),
-  slug: varchar('slug', { length: 255 }).notNull(),
-  description: text('description'),
-  
-  // V3 Model: Category + Time Mode + Features
-  categoryKey: varchar('category_key', { length: 50 }).notNull().default('LOKALER_OG_BANER'),
-  timeMode: varchar('time_mode', { length: 20 }).notNull().default('PERIOD'),
-  features: jsonb('features').notNull().default([]),
-  ruleSetKey: varchar('rule_set_key', { length: 50 }),
-  
-  // Status & workflow
-  status: varchar('status', { length: 50 }).notNull().default('draft'),
-  requiresApproval: boolean('requires_approval').notNull().default(false),
-  
-  // Capacity & inventory
-  capacity: integer('capacity'),
-  inventoryTotal: integer('inventory_total'),
-  
-  // Content
-  images: jsonb('images').default([]),
-  pricing: jsonb('pricing').default({}),
-  metadata: jsonb('metadata').default({}),
-  
-  // Timestamps
-  createdAt: timestamp('created_at').notNull().defaultNow(),
-  updatedAt: timestamp('updated_at').notNull().defaultNow(),
-}, (table) => ({
-  tenantIdx: index('rental_objects_tenant_idx').on(table.tenantId),
-  categoryIdx: index('rental_objects_category_key_idx').on(table.categoryKey),
-  timeModeIdx: index('rental_objects_time_mode_idx').on(table.timeMode),
-  statusIdx: index('rental_objects_status_idx').on(table.status),
-  slugIdx: index('rental_objects_slug_idx').on(table.tenantId, table.slug),
-}));
+// NOTE: rentalObjects table is now exported from base-tables.ts
+// to avoid circular dependencies
 
 // ============================================================================
 // Bookings
@@ -878,20 +764,28 @@ export type BrandingVersion = typeof brandingVersions.$inferSelect;
 export type NewBrandingVersion = typeof brandingVersions.$inferInsert;
 export type { GdprRequest, NewGdprRequest } from './gdpr-requests';
 
+// ============================================================================
+// Custody & Delegation
+// ============================================================================
+
+export * from './entitlements';
+export { 
+  rentalObjectCustodyGrants,
+  rentalObjectCustodySubgrants,
+  rentalObjectCustodyGrantsRelations,
+  rentalObjectCustodySubgrantsRelations,
+  type RentalObjectCustodyGrant,
+  type NewRentalObjectCustodyGrant,
+  type RentalObjectCustodySubgrant,
+  type NewRentalObjectCustodySubgrant,
+} from './custody';
+
 // =============================================================================
 // LEGACY ALIASES (for backwards compatibility)
 // =============================================================================
 // These exports maintain compatibility with code still using "listing" terminology.
 // All new code should use "rentalObject" terminology.
-
-/** @deprecated Use rentalObjects instead */
-export const listings = rentalObjects;
-
-/** @deprecated Use RentalObject instead */
-export type Listing = RentalObject;
-
-/** @deprecated Use NewRentalObject instead */
-export type NewListing = NewRentalObject;
+// NOTE: listings is already exported from base-tables.ts
 
 // Stub exports for seasons module (pending implementation)
 export const seasons = domainSchema.table('seasons', {

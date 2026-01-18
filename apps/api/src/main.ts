@@ -67,6 +67,7 @@ import { ReviewsController } from './modules/reviews/reviews.controller';
 import { SaasController } from './modules/saas';
 import { TenantAdminController } from './modules/tenant-admin';
 import { TenantAdminUserController } from './modules/user-management';
+import { CustodyModule, CustodyController, CustodyService, CustodyEvaluator } from './modules/custody';
 // Feature Flags
 import { featuresRoutes } from './routes/features.routes';
 // Amenities, Addons, Favorites (refactored with DI)
@@ -153,6 +154,10 @@ async function bootstrap() {
   container.registerFactory('AlertRepository', () => new AlertRepository(db));
   container.registerFactory('IncidentRepository', () => new IncidentRepository(db));
 
+  // Register Custody services
+  container.registerFactory('CustodyService', () => new CustodyService(db, adapters));
+  container.registerFactory('CustodyEvaluator', () => new CustodyEvaluator(db));
+
   // Register services
   container.registerFactory('TenantService', () => 
     new TenantService(container.resolve('TenantRepository'), adapters)
@@ -218,6 +223,9 @@ async function bootstrap() {
   container.registerFactory('MonitoringController', () =>
     new MonitoringController(container.resolve('MonitoringService'))
   );
+  container.registerFactory('CustodyController', () =>
+    new CustodyController(container.resolve('CustodyService'))
+  );
   // TODO: Notifications controller (disabled until NotificationService is ready)
   // container.registerFactory('NotificationsController', () =>
   //   new NotificationsController(container.resolve('NotificationService'))
@@ -230,6 +238,7 @@ async function bootstrap() {
   await moduleLoader.load(BookingModule);
   await moduleLoader.load(UserModule);
   await moduleLoader.load(MonitoringModule);
+  await moduleLoader.load(CustodyModule);
   console.log('✓ Modules loaded');
 
   // Get controllers (core + backoffice modules)
@@ -290,6 +299,7 @@ async function bootstrap() {
     // Phase 8: SaaS Admin & Tenant Admin
     SaasController,
     TenantAdminController,
+    CustodyController,
     // Storage
     StorageController,
   ];

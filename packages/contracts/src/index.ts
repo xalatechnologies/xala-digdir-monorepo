@@ -112,6 +112,15 @@ export type {
   CapabilitiesResponse,
   CapabilityKey,
 
+  // Custody
+  CustodyScope,
+  GranteeType,
+  CustodyGrant,
+  CustodySubgrant,
+  CreateCustodyGrantDTO,
+  BulkAssignCustodyGrantDTO,
+  CreateCustodySubgrantDTO,
+
   // Projections
   RentalObjectCardProjection,
   RentalObjectDetailsProjection,

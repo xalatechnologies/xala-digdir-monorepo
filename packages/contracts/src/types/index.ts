@@ -102,6 +102,16 @@ export type {
   CapabilityKey,
 } from '../schemas/capabilities.schema';
 
+export type {
+  CustodyScope,
+  GranteeType,
+  CustodyGrant,
+  CustodySubgrant,
+  CreateCustodyGrantDTO,
+  BulkAssignCustodyGrantDTO,
+  CreateCustodySubgrantDTO,
+} from '../schemas/custody.schema';
+
 // =============================================================================
 // Projection Types
 // =============================================================================

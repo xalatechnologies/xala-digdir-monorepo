@@ -27,6 +27,7 @@ import { useRentalObjects } from '@digilist/client-sdk';
 import type { RentalObjectStatus } from '@digilist/client-sdk';
 import { RentalObjectsGrid } from './list/RentalObjectsGrid';
 import { RentalObjectsTable } from './list/RentalObjectsTable';
+import { BulkCustodyModal } from './BulkCustodyModal';
 import { useRentalObjectFilters, STATUS_OPTIONS, SORT_OPTIONS } from '../hooks/useRentalObjectFilters';
 import { useRentalObjectPermissions } from '../hooks/useRentalObjectPermissions';
 import { useT } from '@xala/i18n';
@@ -58,6 +59,7 @@ export function RentalObjectsListView() {
 
   // Right drawer state
   const [isFilterOpen, setIsFilterOpen] = useState(false);
+  const [isBulkCustodyOpen, setIsBulkCustodyOpen] = useState(false);
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
   const [searchValue, setSearchValue] = useState(filters.search || '');
 
@@ -452,7 +454,18 @@ export function RentalObjectsListView() {
             <Button type="button" variant="secondary" data-size="sm" onClick={() => setSelectedIds([])}>
               Fjern valg
             </Button>
+            <Button type="button" variant="primary" data-size="sm" onClick={() => setIsBulkCustodyOpen(true)}>
+              Tildel ansvar
+            </Button>
           </div>
+        )}
+
+        {isBulkCustodyOpen && (
+          <BulkCustodyModal 
+            selectedIds={selectedIds} 
+            onClose={() => setIsBulkCustodyOpen(false)} 
+            onSuccess={handleRefresh} 
+          />
         )}
 
         {/* Content - Grid or Table View */}

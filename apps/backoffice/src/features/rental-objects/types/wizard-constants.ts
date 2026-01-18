@@ -61,6 +61,7 @@ export const ALL_WIZARD_STEPS: WizardStepId[] = [
   'schedule',
   'booking',
   'content',
+  'custody',
   'review',
 ];
 
@@ -78,6 +79,7 @@ export const WIZARD_STEPS_BY_CATEGORY: Record<RentalObjectCategory, WizardStepId
     'opening-hours',
     'booking',
     'content',
+    'custody',
     'review',
   ],
   UTSTYR_OG_INVENTAR: [
@@ -88,6 +90,7 @@ export const WIZARD_STEPS_BY_CATEGORY: Record<RentalObjectCategory, WizardStepId
     'pickup',
     'booking',
     'content',
+    'custody',
     'review',
   ],
   KJORETOY_OG_TRANSPORT: [
@@ -99,6 +102,7 @@ export const WIZARD_STEPS_BY_CATEGORY: Record<RentalObjectCategory, WizardStepId
     'requirements',
     'booking',
     'content',
+    'custody',
     'review',
   ],
   OPPLEVELSER_OG_ARRANGEMENT: [
@@ -111,6 +115,7 @@ export const WIZARD_STEPS_BY_CATEGORY: Record<RentalObjectCategory, WizardStepId
     'schedule',
     'booking',
     'content',
+    'custody',
     'review',
   ],
 };

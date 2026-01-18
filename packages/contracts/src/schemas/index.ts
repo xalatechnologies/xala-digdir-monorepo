@@ -13,3 +13,4 @@ export * from './booking.schema';
 export * from './organization.schema';
 export * from './user.schema';
 export * from './capabilities.schema';
+export * from './custody.schema';

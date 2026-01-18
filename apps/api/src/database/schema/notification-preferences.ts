@@ -14,7 +14,8 @@ import {
   index,
   unique,
 } from 'drizzle-orm/pg-core';
-import { domainSchema, users, tenants } from './index';
+import { users, tenants } from './base-tables';
+import { domainSchema } from './schemas';
 
 // ============================================================================
 // Notification Preferences

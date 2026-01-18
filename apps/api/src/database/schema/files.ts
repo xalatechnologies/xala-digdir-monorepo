@@ -1,5 +1,5 @@
 import { pgTable, uuid, text, timestamp, jsonb, integer } from 'drizzle-orm/pg-core';
-import { platformSchema } from './index';
+import { platformSchema } from './schemas';
 
 /**
  * Files Table

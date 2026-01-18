@@ -21,6 +21,7 @@ import { PackagesStep } from './steps/PackagesStep';
 import { ScheduleStep } from './steps/ScheduleStep';
 import { BookingStep } from './steps/BookingStep';
 import { ContentStep } from './steps/ContentStep';
+import { CustodyStep } from './steps/CustodyStep';
 import { ReviewStep } from './steps/ReviewStep';
 import type { WizardStep } from '../../types';
 
@@ -267,6 +268,8 @@ function renderStep(step: WizardStep, wizard: ReturnType<typeof useRentalObjectW
       return <BookingStep wizard={wizard} />;
     case 'content':
       return <ContentStep wizard={wizard} />;
+    case 'custody':
+      return <CustodyStep wizard={wizard} />;
     case 'review':
       return <ReviewStep wizard={wizard} />;
     default:

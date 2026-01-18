@@ -27,6 +27,7 @@ export type WizardStepId =
   | 'schedule'
   | 'booking'
   | 'content'
+  | 'custody'
   | 'review';
 
 /**

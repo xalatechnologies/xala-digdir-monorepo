@@ -1,0 +1,182 @@
+[
+  {
+    "app": "backoffice",
+    "routeKey": "backoffice.dashboard",
+    "requiredRoles": [],
+    "requiredModules": [],
+    "requiredFeatures": [],
+    "isPublic": false,
+    "description": "Main dashboard for backoffice users"
+  },
+  {
+    "app": "backoffice",
+    "routeKey": "backoffice.bookings",
+    "requiredRoles": ["TENANT_ADMIN", "MANAGER", "STAFF"],
+    "requiredModules": ["BOOKING"],
+    "requiredFeatures": [],
+    "isPublic": false,
+    "description": "View and manage bookings"
+  },
+  {
+    "app": "backoffice",
+    "routeKey": "backoffice.bookings.create",
+    "requiredRoles": ["TENANT_ADMIN", "MANAGER", "STAFF"],
+    "requiredModules": ["BOOKING"],
+    "requiredFeatures": [],
+    "isPublic": false,
+    "description": "Create new bookings"
+  },
+  {
+    "app": "backoffice",
+    "routeKey": "backoffice.listings",
+    "requiredRoles": ["TENANT_ADMIN", "MANAGER"],
+    "requiredModules": [],
+    "requiredFeatures": [],
+    "isPublic": false,
+    "description": "View and manage rental listings"
+  },
+  {
+    "app": "backoffice",
+    "routeKey": "backoffice.listings.create",
+    "requiredRoles": ["TENANT_ADMIN", "MANAGER"],
+    "requiredModules": [],
+    "requiredFeatures": [],
+    "isPublic": false,
+    "description": "Create new rental listings"
+  },
+  {
+    "app": "backoffice",
+    "routeKey": "backoffice.approvals",
+    "requiredRoles": ["TENANT_ADMIN", "MANAGER"],
+    "requiredModules": ["APPROVALS"],
+    "requiredFeatures": [],
+    "isPublic": false,
+    "description": "Manage booking approvals"
+  },
+  {
+    "app": "backoffice",
+    "routeKey": "backoffice.reports",
+    "requiredRoles": ["TENANT_ADMIN", "MANAGER"],
+    "requiredModules": ["REPORTING"],
+    "requiredFeatures": [],
+    "isPublic": false,
+    "description": "View reports and analytics"
+  },
+  {
+    "app": "backoffice",
+    "routeKey": "backoffice.users",
+    "requiredRoles": ["TENANT_ADMIN"],
+    "requiredModules": ["USERS"],
+    "requiredFeatures": [],
+    "isPublic": false,
+    "description": "Manage users"
+  },
+  {
+    "app": "backoffice",
+    "routeKey": "backoffice.organizations",
+    "requiredRoles": ["TENANT_ADMIN"],
+    "requiredModules": ["ORGANIZATIONS"],
+    "requiredFeatures": [],
+    "isPublic": false,
+    "description": "Manage organizations"
+  },
+  {
+    "app": "backoffice",
+    "routeKey": "backoffice.settings",
+    "requiredRoles": ["TENANT_ADMIN"],
+    "requiredModules": ["SETTINGS"],
+    "requiredFeatures": [],
+    "isPublic": false,
+    "description": "System settings"
+  },
+  {
+    "app": "backoffice",
+    "routeKey": "backoffice.integrations",
+    "requiredRoles": ["TENANT_ADMIN"],
+    "requiredModules": ["INTEGRATIONS"],
+    "requiredFeatures": [],
+    "isPublic": false,
+    "description": "Manage integrations"
+  },
+  {
+    "app": "backoffice",
+    "routeKey": "backoffice.audit",
+    "requiredRoles": ["TENANT_ADMIN"],
+    "requiredModules": ["AUDIT"],
+    "requiredFeatures": [],
+    "isPublic": false,
+    "description": "Audit log viewer"
+  },
+  {
+    "app": "minside",
+    "routeKey": "minside.dashboard",
+    "requiredRoles": [],
+    "requiredModules": [],
+    "requiredFeatures": [],
+    "isPublic": false,
+    "description": "User dashboard"
+  },
+  {
+    "app": "minside",
+    "routeKey": "minside.bookings",
+    "requiredRoles": [],
+    "requiredModules": ["BOOKING"],
+    "requiredFeatures": [],
+    "isPublic": false,
+    "description": "View my bookings"
+  },
+  {
+    "app": "minside",
+    "routeKey": "minside.bookings.create",
+    "requiredRoles": [],
+    "requiredModules": ["BOOKING"],
+    "requiredFeatures": [],
+    "isPublic": false,
+    "description": "Create new booking"
+  },
+  {
+    "app": "minside",
+    "routeKey": "minside.profile",
+    "requiredRoles": [],
+    "requiredModules": [],
+    "requiredFeatures": [],
+    "isPublic": false,
+    "description": "User profile"
+  },
+  {
+    "app": "web",
+    "routeKey": "web.home",
+    "requiredRoles": [],
+    "requiredModules": [],
+    "requiredFeatures": [],
+    "isPublic": true,
+    "description": "Public home page"
+  },
+  {
+    "app": "web",
+    "routeKey": "web.listings",
+    "requiredRoles": [],
+    "requiredModules": [],
+    "requiredFeatures": [],
+    "isPublic": true,
+    "description": "Browse listings"
+  },
+  {
+    "app": "web",
+    "routeKey": "web.listing.details",
+    "requiredRoles": [],
+    "requiredModules": [],
+    "requiredFeatures": [],
+    "isPublic": true,
+    "description": "View listing details"
+  },
+  {
+    "app": "web",
+    "routeKey": "web.booking",
+    "requiredRoles": [],
+    "requiredModules": ["BOOKING"],
+    "requiredFeatures": [],
+    "isPublic": false,
+    "description": "Create booking"
+  }
+]

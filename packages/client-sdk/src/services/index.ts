@@ -195,6 +195,13 @@ export {
   ScopeAssignmentService,
   scopeAssignmentService
 } from './scope-assignment.service';
+
+// Custody - Resource-scoped delegation hierarchy
+export {
+  CustodyService,
+  custodyService
+} from './custody.service';
+export type { CustodyGrant } from './custody.service';
 export type {
   ScopeType,
   ScopeStatus,

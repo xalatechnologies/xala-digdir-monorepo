@@ -23,6 +23,7 @@ import { RentalObjectOverviewTab } from './RentalObjectOverviewTab';
 import { RentalObjectBookingsTab } from './RentalObjectBookingsTab';
 import { RentalObjectAvailabilityTab } from './RentalObjectAvailabilityTab';
 import { RentalObjectAuditTab } from './RentalObjectAuditTab';
+import { RentalObjectCustodyTab } from './RentalObjectCustodyTab';
 import { useT } from '@xala/i18n';
 
 /**
@@ -272,6 +273,7 @@ export function RentalObjectDetailView({ slug }: RentalObjectDetailViewProps) {
               { id: 'overview', label: t("ui.overview") },
               { id: 'bookings', label: 'Bookinger' },
               { id: 'availability', label: 'Tilgjengelighet' },
+              { id: 'custody', label: 'Ansvar' },
               { id: 'audit', label: 'Endringslogg' },
             ].map((tab) => (
               <button
@@ -313,6 +315,7 @@ export function RentalObjectDetailView({ slug }: RentalObjectDetailViewProps) {
                 rentalObjectName={rentalObject.name}
               />
             )}
+            {activeTab === 'custody' && <RentalObjectCustodyTab rentalObjectId={rentalObject.id} />}
             {activeTab === 'audit' && <RentalObjectAuditTab rentalObjectId={rentalObject.id} />}
           </Card>
         </div>

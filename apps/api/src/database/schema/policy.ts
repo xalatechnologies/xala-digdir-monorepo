@@ -15,7 +15,8 @@ import {
   index,
   unique,
 } from 'drizzle-orm/pg-core';
-import { saasSchema, tenants, users, rentalObjects } from './index';
+import { tenants, users, rentalObjects } from './base-tables';
+import { saasSchema } from './schemas';
 
 // ============================================================================
 // Policy Sets (Versioned, Published)

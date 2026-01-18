@@ -4,7 +4,6 @@
  */
 
 import {
-  pgTable,
   uuid,
   varchar,
   text,
@@ -14,7 +13,7 @@ import {
   index,
   primaryKey,
 } from 'drizzle-orm/pg-core';
-import { platformSchema, tenants, users, organizations } from './index';
+import { platformSchema } from './schemas';
 
 // ============================================================================
 // Modules & Feature Flags
@@ -44,12 +43,12 @@ export const modules = platformSchema.table('modules', {
  * Controls which modules are enabled/disabled per tenant
  */
 export const tenantModules = platformSchema.table('tenant_modules', {
-  tenantId: uuid('tenant_id').notNull().references(() => tenants.id, { onDelete: 'cascade' }),
-  moduleKey: varchar('module_key', { length: 50 }).notNull().references(() => modules.key, { onDelete: 'cascade' }),
+  tenantId: uuid('tenant_id').notNull(), // FK to platform.tenants(id)
+  moduleKey: varchar('module_key', { length: 50 }).notNull(), // FK to platform.modules(key)
   isEnabled: boolean('is_enabled').notNull().default(false),
   config: jsonb('config').default({}),
   updatedAt: timestamp('updated_at').notNull().defaultNow(),
-  updatedBy: uuid('updated_by').references(() => users.id, { onDelete: 'set null' }),
+  updatedBy: uuid('updated_by'), // FK to platform.users(id)
 }, (table) => ({
   pk: primaryKey({ columns: [table.tenantId, table.moduleKey] }),
   tenantIdx: index('tenant_modules_tenant_idx').on(table.tenantId),
@@ -62,13 +61,13 @@ export const tenantModules = platformSchema.table('tenant_modules', {
  * Optional - allows orgs within a tenant to have different settings
  */
 export const orgModules = platformSchema.table('org_modules', {
-  tenantId: uuid('tenant_id').notNull().references(() => tenants.id, { onDelete: 'cascade' }),
-  orgId: uuid('org_id').notNull().references(() => organizations.id, { onDelete: 'cascade' }),
-  moduleKey: varchar('module_key', { length: 50 }).notNull().references(() => modules.key, { onDelete: 'cascade' }),
+  tenantId: uuid('tenant_id').notNull(), // FK to platform.tenants(id)
+  orgId: uuid('org_id').notNull(), // FK to platform.organizations(id)
+  moduleKey: varchar('module_key', { length: 50 }).notNull(), // FK to platform.modules(key)
   isEnabled: boolean('is_enabled').notNull().default(false),
   config: jsonb('config').default({}),
   updatedAt: timestamp('updated_at').notNull().defaultNow(),
-  updatedBy: uuid('updated_by').references(() => users.id, { onDelete: 'set null' }),
+  updatedBy: uuid('updated_by'), // FK to platform.users(id)
 }, (table) => ({
   pk: primaryKey({ columns: [table.orgId, table.moduleKey] }),
   tenantIdx: index('org_modules_tenant_idx').on(table.tenantId),
@@ -82,10 +81,10 @@ export const orgModules = platformSchema.table('org_modules', {
  */
 export const moduleAudit = platformSchema.table('module_audit', {
   id: uuid('id').primaryKey().defaultRandom(),
-  tenantId: uuid('tenant_id').notNull().references(() => tenants.id, { onDelete: 'cascade' }),
-  orgId: uuid('org_id').references(() => organizations.id, { onDelete: 'set null' }),
+  tenantId: uuid('tenant_id').notNull(), // FK to platform.tenants(id)
+  orgId: uuid('org_id'), // FK to platform.organizations(id)
   moduleKey: varchar('module_key', { length: 50 }).notNull(),
-  actorUserId: uuid('actor_user_id').references(() => users.id, { onDelete: 'set null' }),
+  actorUserId: uuid('actor_user_id'), // FK to platform.users(id)
   action: varchar('action', { length: 20 }).notNull(), // 'enable', 'disable', 'config_update'
   oldState: jsonb('old_state'), // { enabled: boolean, config: {} }
   newState: jsonb('new_state').notNull(),

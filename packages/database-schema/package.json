@@ -1,0 +1,46 @@
+{
+  "name": "@digilist/database-schema",
+  "version": "1.0.0",
+  "description": "Drizzle ORM schemas for Digilist platform - modular schema definitions",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./entitlements": {
+      "types": "./dist/entitlements.d.ts",
+      "import": "./dist/entitlements.js"
+    }
+  },
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsup --watch",
+    "typecheck": "tsc --noEmit",
+    "db:generate": "drizzle-kit generate",
+    "db:push": "drizzle-kit push",
+    "seed": "tsx seeds/import.ts",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:migration": "vitest run tests/migration.test.ts",
+    "test:seeds": "vitest run tests/seeds.test.ts",
+    "test:integration": "vitest run tests/integration.test.ts"
+  },
+  "dependencies": {
+    "drizzle-orm": "0.36.4",
+    "postgres": "^3.4.5"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.2",
+    "drizzle-kit": "0.24.2",
+    "tsup": "^8.3.5",
+    "tsx": "^4.19.2",
+    "typescript": "^5.7.2",
+    "vitest": "^2.1.9"
+  },
+  "files": [
+    "dist"
+  ]
+}
