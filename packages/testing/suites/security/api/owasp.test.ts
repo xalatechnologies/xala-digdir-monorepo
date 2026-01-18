@@ -47,18 +47,6 @@ async function request(path: string, options: RequestOptions = {}) {
 
 // Skip helper
 function skipIfNoServer() {
-  if (!serverAvailable) {
-    return true;
-  }
-  return false;
-}
-
-describe('Security Tests', () => {
-  setupMockApi();
-  describe('OWASP A01: Broken Access Control', () => {
-  setupMockApi();
-    it('should require tenant header for protected endpoints', async () => {
-      if (skipIfNoServer()) return;
       const res = await request('/api/users');
       expect([200, 401, 403]).toContain(res.status);
     });

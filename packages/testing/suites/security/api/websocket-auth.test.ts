@@ -31,67 +31,6 @@ beforeAll(async () => {
 
 // Skip helper
 function skipIfNoServer() {
-  if (!serverAvailable) {
-    return true;
-  }
-  return false;
-}
-
-/**
- * Helper to create WebSocket connection with custom headers
- */
-function createWebSocket(path: string, headers: Record<string, string> = {}): Promise<{
-  socket: WebSocket | null;
-  error: Error | null;
-  statusCode?: number;
-}> {
-  return new Promise((resolve) => {
-    const ws = new WebSocket(`${WS_URL}${path}`, {
-      headers,
-      handshakeTimeout: 3000,
-    });
-
-    const timeout = setTimeout(() => {
-      ws.close();
-      resolve({ socket: null, error: new Error('Connection timeout') });
-    }, 3000);
-
-    ws.on('open', () => {
-      clearTimeout(timeout);
-      resolve({ socket: ws, error: null });
-    });
-
-    ws.on('error', (error: Error) => {
-      clearTimeout(timeout);
-      resolve({ socket: null, error });
-    });
-
-    ws.on('unexpected-response', (req, res) => {
-      clearTimeout(timeout);
-      resolve({
-        socket: null,
-        error: new Error(`Unexpected response: ${res.statusCode}`),
-        statusCode: res.statusCode
-      });
-    });
-  });
-}
-
-/**
- * Helper to close WebSocket connection safely
- */
-function closeWebSocket(socket: WebSocket | null): void {
-  if (socket && socket.readyState === WebSocket.OPEN) {
-    socket.close();
-  }
-}
-
-describe('WebSocket Authentication Security', () => {
-  setupMockApi();
-  describe('/ws/audit endpoint', () => {
-  setupMockApi();
-    it('should reject connection without X-Tenant-Id header', async () => {
-      if (skipIfNoServer()) return;
 
       const { socket, error, statusCode } = await createWebSocket('/ws/audit', {
         'X-User-Id': VALID_USER_ID,

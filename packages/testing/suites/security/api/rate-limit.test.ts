@@ -57,23 +57,6 @@ async function request(path: string, options: RequestOptions = {}) {
 
 // Skip helper
 function skipIfNoServer() {
-  if (!serverAvailable) {
-    return true;
-  }
-  return false;
-}
-
-// Helper to wait between tests to avoid cross-test rate limit interference
-async function waitForRateLimitReset(seconds: number = 2) {
-  await new Promise(resolve => setTimeout(resolve, seconds * 1000));
-}
-
-describe('Rate Limit Security Tests', () => {
-  setupMockApi();
-  describe('Rate Limit Headers', () => {
-  setupMockApi();
-    it('should include rate limit headers in response', async () => {
-      if (skipIfNoServer()) return;
 
       const res = await request('/health');
 

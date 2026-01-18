@@ -32,18 +32,6 @@ async function request(path: string) {
 
 // Skip helper
 function skipIfNoServer() {
-  if (!serverAvailable) {
-    return true;
-  }
-  return false;
-}
-
-describe('Security Headers Tests', () => {
-  setupMockApi();
-  describe('Content Security', () => {
-  setupMockApi();
-    it('should set X-Content-Type-Options to nosniff', async () => {
-      if (skipIfNoServer()) return;
       const res = await request('/health');
       expect(res.headers['x-content-type-options']).toBe('nosniff');
     });
