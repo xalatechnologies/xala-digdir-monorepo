@@ -4,7 +4,6 @@
  */
 
 import type {
-import { useT } from '@xala/i18n';
   RentalObject,
   RentalObjectCategory,
   WizardStep,
@@ -22,16 +21,15 @@ export function validateStep(
   data: Partial<RentalObject>,
   category: RentalObjectCategory
 ): StepValidationResult {
-  const t = useT();
   const errors: ValidationError[] = [];
 
   switch (stepId) {
     case 'basics':
       if (!data.name?.trim()) {
-        errors.push({ field: 'name', message: t('common.navn_er_paakrevd') });
+        errors.push({ field: 'name', message: 'Navn er påkrevd' });
       }
       if (!data.category) {
-        errors.push({ field: 'category', message: t('common.kategori_er_paakrevd') });
+        errors.push({ field: 'category', message: 'Kategori er påkrevd' });
       }
       break;
 
@@ -39,14 +37,14 @@ export function validateStep(
       // Location is required for LOKALER_OG_BANER and optional for OPPLEVELSER
       if (category === 'LOKALER_OG_BANER') {
         if (!data.location?.address) {
-          errors.push({ field: 'location.address', message: t('common.adresse_er_paakrevd_for') });
+          errors.push({ field: 'location.address', message: 'Adresse er påkrevd for denne kategori' });
         }
       }
       break;
 
     case 'capacity':
       if (data.capacity !== undefined && data.capacity < 0) {
-        errors.push({ field: 'capacity', message: t('common.kapasitet_kan_ikke_vaere') });
+        errors.push({ field: 'capacity', message: 'Kapasitet kan ikke være negativ' });
       }
       break;
 
@@ -57,7 +55,7 @@ export function validateStep(
           (day) => day !== null && day !== undefined
         );
         if (!hasOpeningHours) {
-          errors.push({ field: 'openingHours', message: t('common.minst_n_dag_med') });
+          errors.push({ field: 'openingHours', message: 'Minst én dag med åpningstider er påkrevd' });
         }
       }
       break;
@@ -66,7 +64,7 @@ export function validateStep(
       // Inventory is required for UTSTYR_OG_INVENTAR
       if (category === 'UTSTYR_OG_INVENTAR') {
         if (!data.inventory?.totalQuantity || data.inventory.totalQuantity <= 0) {
-          errors.push({ field: 'inventory.totalQuantity', message: t('common.antall_enheter_er_paakrevd') });
+          errors.push({ field: 'inventory.totalQuantity', message: 'Antall enheter er påkrevd' });
         }
       }
       break;
@@ -75,7 +73,7 @@ export function validateStep(
       // Pickup validation for UTSTYR_OG_INVENTAR and KJORETOY_OG_TRANSPORT
       if (category === 'UTSTYR_OG_INVENTAR' || category === 'KJORETOY_OG_TRANSPORT') {
         if (data.pickup?.enabled && !data.pickup?.pickupLocation?.address) {
-          errors.push({ field: 'pickup.pickupLocation', message: t('common.hentelokasjon_er_paakrevd') });
+          errors.push({ field: 'pickup.pickupLocation', message: 'Hentelokasjon er påkrevd' });
         }
       }
       break;
@@ -84,7 +82,7 @@ export function validateStep(
       // Requirements validation for KJORETOY_OG_TRANSPORT
       if (category === 'KJORETOY_OG_TRANSPORT') {
         if (data.requirements?.licenseRequired && (!data.requirements?.licenseTypes || data.requirements.licenseTypes.length === 0)) {
-          errors.push({ field: 'requirements.licenseTypes', message: t('common.forerkorttype_er_paakrevd_naar') });
+          errors.push({ field: 'requirements.licenseTypes', message: 'Førerkorttype er påkrevd når førerkort kreves' });
         }
       }
       break;
@@ -95,7 +93,10 @@ export function validateStep(
         if (data.packages) {
           data.packages.forEach((pkg: { name?: string; price: number }, index: number) => {
             if (!pkg.name?.trim()) {
-              errors.push({ field: `packages[${index}].name`, message: `Pakke ${index + 1}: Navn er påkrevd` t('common.if_pkgprice_0_errorspush') `packages[${index}].price`, message: `Pakke ${index + 1}: Pris kan ikke være negativ` });
+              errors.push({ field: `packages[${index}].name`, message: `Pakke ${index + 1}: Navn er påkrevd` });
+            }
+            if (pkg.price < 0) {
+              errors.push({ field: `packages[${index}].price`, message: `Pakke ${index + 1}: Pris kan ikke være negativ` });
             }
           });
         }
@@ -106,7 +107,7 @@ export function validateStep(
       // Schedule validation for OPPLEVELSER_OG_ARRANGEMENT
       if (category === 'OPPLEVELSER_OG_ARRANGEMENT') {
         if (!data.schedule?.sessions || data.schedule.sessions.length === 0) {
-          errors.push({ field: 'schedule.sessions', message: t('common.minst_n_okt_er') });
+          errors.push({ field: 'schedule.sessions', message: 'Minst én økt er påkrevd' });
         }
       }
       break;
@@ -114,7 +115,7 @@ export function validateStep(
     case 'content':
       // Content is optional but should have reasonable limits
       if (data.content?.fullDescription && data.content.fullDescription.length > 10000) {
-        errors.push({ field: 'content.fullDescription', message: t('common.beskrivelse_er_for_lang') });
+        errors.push({ field: 'content.fullDescription', message: 'Beskrivelse er for lang (maks 10000 tegn)' });
       }
       break;
 
@@ -122,13 +123,13 @@ export function validateStep(
       // Booking configuration validation
       if (data.bookingConfig) {
         if (data.bookingConfig.slotDurationMinutes !== undefined && data.bookingConfig.slotDurationMinutes <= 0) {
-          errors.push({ field: 'bookingConfig.slotDurationMinutes', message: t('common.tidslukevarighet_maa_vaere_positiv') });
+          errors.push({ field: 'bookingConfig.slotDurationMinutes', message: 'Tidsluke-varighet må være positiv' });
         }
         if (data.bookingConfig.minLeadTimeHours !== undefined && data.bookingConfig.minLeadTimeHours < 0) {
-          errors.push({ field: 'bookingConfig.minLeadTimeHours', message: t('common.minimum_ledetid_kan_ikke') });
+          errors.push({ field: 'bookingConfig.minLeadTimeHours', message: 'Minimum ledetid kan ikke være negativ' });
         }
         if (data.bookingConfig.maxAdvanceDays !== undefined && data.bookingConfig.maxAdvanceDays <= 0) {
-          errors.push({ field: 'bookingConfig.maxAdvanceDays', message: t('common.maks_forhaandsbestilling_maa_vaere') });
+          errors.push({ field: 'bookingConfig.maxAdvanceDays', message: 'Maks forhåndsbestilling må være positiv' });
         }
       }
       break;
@@ -141,10 +142,10 @@ export function validateStep(
     case 'review':
       // Final review step - comprehensive validation
       if (!data.name?.trim()) {
-        errors.push({ field: 'name', message: t('common.navn_er_paakrevd') });
+        errors.push({ field: 'name', message: 'Navn er påkrevd' });
       }
       if (!data.description?.trim()) {
-        errors.push({ field: 'description', message: t('common.beskrivelse_anbefales_for_publisering') });
+        errors.push({ field: 'description', message: 'Beskrivelse anbefales for publisering' });
       }
       break;
   }

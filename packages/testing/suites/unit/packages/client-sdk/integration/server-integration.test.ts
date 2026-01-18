@@ -6,6 +6,7 @@
  */
 
 import { describe, it, expect, beforeAll } from 'vitest';
+import { setupMockApi } from '../../../../mocks/api-server.mock';
 
 // ==============================================================================
 // Test Configuration
@@ -59,21 +60,20 @@ async function waitForServer(maxAttempts = 10): Promise<boolean> {
 // ==============================================================================
 
 describe('API Integration Tests', () => {
+  // Setup mock API server for all tests
+  setupMockApi();
+
   let serverAvailable = false;
 
   beforeAll(async () => {
     serverAvailable = await waitForServer(3); // Quick check
     if (!serverAvailable) {
-      console.warn('⚠️ API server not running at localhost:3000 - skipping integration tests');
+      console.log('ℹ️  Using mock API server (real API not available)');
     }
   });
 
   describe('Health Endpoint', () => {
     it('should return healthy status', async () => {
-      if (!serverAvailable) {
-        console.log('Skipping - API server not available');
-        return;
-      }
       const { data, status } = await apiRequest<{ status: string }>('/health');
       
       expect(status).toBe(200);
