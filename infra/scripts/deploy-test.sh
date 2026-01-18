@@ -13,6 +13,19 @@ echo "=================================================="
 echo "  Digilist Test Environment Deployment"
 echo "=================================================="
 echo ""
+echo "⚠️  WARNING: This will completely wipe the test environment!"
+echo "   - All PM2 processes will be stopped"
+echo "   - Database will be dropped and recreated"
+echo "   - All cached files will be cleared"
+echo "   - Fresh installation from scratch"
+echo ""
+read -p "Continue? (y/N) " -n 1 -r
+echo ""
+if [[ ! $REPLY =~ ^[Yy]$ ]]; then
+    echo "Deployment cancelled."
+    exit 0
+fi
+echo ""
 
 # Configuration
 VPS_HOST="72.61.23.56"
@@ -41,6 +54,35 @@ log_warn() {
 log_error() {
     echo -e "${RED}✗${NC} $1"
 }
+
+# Step 0: Clean up server
+echo "🧹 Step 0: Cleaning up server..."
+ssh ${VPS_USER}@${VPS_HOST} << 'ENDSSH'
+set -e
+
+echo "Stopping all PM2 processes..."
+pm2 delete all 2>/dev/null || true
+pm2 kill 2>/dev/null || true
+
+echo "Clearing PM2 logs..."
+rm -rf /root/.pm2/logs/* 2>/dev/null || true
+
+echo "Dropping database..."
+sudo -u postgres psql << 'EOF'
+DROP DATABASE IF EXISTS digilist_dev;
+DROP USER IF EXISTS digilist_dev;
+EOF
+
+echo "Removing deployment directory..."
+rm -rf /home/digilist/digilist-platform
+
+echo "Creating fresh deployment directory..."
+mkdir -p /home/digilist/digilist-platform
+
+echo "✓ Server cleaned"
+ENDSSH
+log_info "Server completely wiped and ready for fresh deployment"
+echo ""
 
 # Step 1: Build locally
 echo "📦 Step 1: Building packages locally..."
@@ -78,30 +120,23 @@ log_info "Built packages deployed"
 echo ""
 
 # Step 4: Install dependencies on VPS
-echo "📥 Step 4: Installing dependencies on VPS..."
-ssh ${VPS_USER}@${VPS_HOST} "cd ${DEPLOY_PATH} && pnpm install --prod"
-log_info "Dependencies installed"
+echo "📥 Step 4: Installing fresh dependencies on VPS..."
+ssh ${VPS_USER}@${VPS_HOST} "cd ${DEPLOY_PATH} && pnpm install --prod --force"
+log_info "Fresh dependencies installed"
 echo ""
 
 # Step 5: Setup database
-echo "🗄️  Step 5: Setting up database..."
+echo "🗄️  Step 5: Setting up fresh database..."
 ssh ${VPS_USER}@${VPS_HOST} << 'ENDSSH'
 set -e
 
-# Check if database exists
-DB_EXISTS=$(sudo -u postgres psql -tAc "SELECT 1 FROM pg_database WHERE datname='digilist_dev'")
-
-if [ "$DB_EXISTS" != "1" ]; then
-    echo "Creating database and user..."
-    sudo -u postgres psql << EOF
+echo "Creating database and user..."
+sudo -u postgres psql << EOF
 CREATE USER digilist_dev WITH PASSWORD 'dev_password_2026';
 CREATE DATABASE digilist_dev OWNER digilist_dev;
 GRANT ALL PRIVILEGES ON DATABASE digilist_dev TO digilist_dev;
 EOF
-    echo "✓ Database created"
-else
-    echo "✓ Database already exists"
-fi
+echo "✓ Database created"
 
 # Grant schema permissions
 sudo -u postgres psql -d digilist_dev << 'EOF'
