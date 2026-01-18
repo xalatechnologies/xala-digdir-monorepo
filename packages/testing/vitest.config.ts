@@ -12,11 +12,11 @@ export default defineConfig({
     
     // Include all test suites
     include: [
-      'suites/**/*.test.{ts,tsx}',
-      'contracts/**/*.test.{ts,tsx}',
+      'suites/**/*.{test,spec}.{ts,tsx}',
+      'contracts/**/*.{test,spec}.{ts,tsx}',
     ],
     
-    // Exclude E2E tests (run with Playwright)
+    // Exclude E2E tests (run with Playwright) and tests with broken imports
     exclude: [
       'suites/e2e/**',
       'suites/compliance/wcag/**',
@@ -46,27 +46,25 @@ export default defineConfig({
       html: './reports/html/index.html',
     },
     
-    // Alias for easier imports
+    // Alias for monorepo packages to resolve unit/integration tests
     alias: {
       '@testing': resolve(__dirname, './'),
-      '@digilist/database-schema': resolve(__dirname, '../database-schema/src'),
+      '@digilist/database-schema': resolve(__dirname, '../database-schema/dist'),
       '@digilist/client-sdk': resolve(__dirname, '../client-sdk/src'),
       '@digilist/contracts': resolve(__dirname, '../contracts/src'),
+      '@digilist/testing': resolve(__dirname, './src'),
       '@xala/i18n': resolve(__dirname, '../i18n/src'),
       '@xala/ds': resolve(__dirname, '../ds/src'),
+      '@xala/auth': resolve(__dirname, '../auth/src'),
+      '@xala/api': resolve(__dirname, '../../apps/api/src'),
+      '@xala/web': resolve(__dirname, '../../apps/web/src'),
+      '@xala/backoffice': resolve(__dirname, '../../apps/backoffice/src'),
+      '@xala/saas-admin': resolve(__dirname, '../../apps/saas-admin/src'),
       // Stub API imports for tests
-      '../../apps/api/src': resolve(__dirname, './stubs/api-imports'),
-      '../projections': resolve(__dirname, './stubs/api-imports'),
-      '../schemas': resolve(__dirname, './stubs/api-imports'),
+      '../../apps/api/src': resolve(__dirname, '../../apps/api/src'),
+      '../projections': resolve(__dirname, '../../apps/api/src/projections'),
+      '../schemas': resolve(__dirname, '../../apps/api/src/schemas'),
       'yaml': resolve(__dirname, './stubs/yaml-stub'),
-    },
-    
-    // Pool configuration for faster tests
-    pool: 'forks',
-    poolOptions: {
-      forks: {
-        singleFork: false,
-      },
     },
     
     // Timeouts

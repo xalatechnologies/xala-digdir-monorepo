@@ -23,18 +23,18 @@ import { useLocale, useT } from '@xala/i18n';
 
 const MOBILE_BREAKPOINT = 768;
 
-// Mock seasons
+// Mock seasons - use plain strings since t() is not available at module level
 const mockSeasons = [
-  { id: 'season-001', name: t('common.vaar_2026'), startDate: '2026-02-01', endDate: '2026-06-30', status: 'open' },
-  { id: 'season-002', name: t('common.host_2026'), startDate: '2026-08-01', endDate: '2026-12-31', status: 'upcoming' },
+  { id: 'season-001', name: 'Vår 2026', startDate: '2026-02-01', endDate: '2026-06-30', status: 'open' },
+  { id: 'season-002', name: 'Høst 2026', startDate: '2026-08-01', endDate: '2026-12-31', status: 'upcoming' },
 ];
 
-// Mock resources
+// Mock resources - use plain strings since t() is not available at module level
 const resources = [
-  { id: 'res-001', name: t('common.idrettshall_a'), category: 'Idrettshall' },
-  { id: 'res-002', name: t('common.idrettshall_b'), category: 'Idrettshall' },
-  { id: 'res-003', name: t('common.fotballbane_1'), category: 'Utendørs' },
-  { id: 'res-004', name: t('common.fotballbane_2'), category: 'Utendørs' },
+  { id: 'res-001', name: 'Idrettshall A', category: 'Idrettshall' },
+  { id: 'res-002', name: 'Idrettshall B', category: 'Idrettshall' },
+  { id: 'res-003', name: 'Fotballbane 1', category: 'Utendørs' },
+  { id: 'res-004', name: 'Fotballbane 2', category: 'Utendørs' },
 ];
 
 type WizardStep = 'season' | 'slots' | 'details' | 'review';

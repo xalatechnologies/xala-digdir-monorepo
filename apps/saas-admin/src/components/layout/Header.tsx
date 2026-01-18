@@ -96,7 +96,7 @@ export function Header({ title: _title }: HeaderProps) {
                 <Button
                   type="button"
                   variant="tertiary"
-                  data-size="md"
+                  size="md"
                   onClick={() => setIsUserMenuOpen(!isUserMenuOpen)}
                   aria-label={user ? `${user.name || 'User'} menu` : 'User menu'}
                   style={{
@@ -208,7 +208,7 @@ export function Header({ title: _title }: HeaderProps) {
                 <Button
                   type="button"
                   variant="tertiary"
-                  data-size="md"
+                  size="md"
                   onClick={logout}
                   aria-label={t('auth.logout')}
                   className={styles.logoutButton}

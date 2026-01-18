@@ -4,8 +4,8 @@
  */
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { renderHook, cleanup } from '@testing-library/react';
-import { useRealtimeMonitoring } from '../use-realtime';
-import type { RealtimeEvent, RealtimeEventHandler } from '../../realtime';
+import { useRealtimeMonitoring } from '@xala/api/use-realtime';
+import type { RealtimeEvent, RealtimeEventHandler } from '@xala/api/realtime';
 
 // Mock the realtimeClient module
 vi.mock('../../realtime', () => ({
@@ -18,7 +18,7 @@ vi.mock('../../realtime', () => ({
 }));
 
 // Import the mocked module after mocking
-import { realtimeClient } from '../../realtime';
+import { realtimeClient } from '@xala/api/realtime';
 
 describe('useRealtimeMonitoring', () => {
   beforeEach(() => {

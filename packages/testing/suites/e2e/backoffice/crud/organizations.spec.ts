@@ -1,6 +1,6 @@
 // Skip E2E tests if not explicitly enabled
-import { setupMockApi } from '../../../../mocks/api-server.mock';
-import { test, expect } from '../fixtures/evidence.fixture';
+import { setupMockApi } from '@xala/api/../mocks/api-server.mock';
+import { test, expect } from '@xala/api/fixtures/evidence.fixture';
 
 /**
  * Organizations CRUD Tests

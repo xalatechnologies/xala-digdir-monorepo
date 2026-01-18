@@ -1,4 +1,4 @@
-import { setupMockApi } from '../../mocks/api-server.mock';
+import { setupMockApi } from '@xala/api/mocks/api-server.mock';
 /**
  * Performance Tests: Data Page Components
  * 

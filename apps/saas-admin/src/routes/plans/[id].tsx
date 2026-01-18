@@ -72,7 +72,7 @@ export function PlanDetailPage() {
   if (isLoading) {
     return (
       <div style={{ display: 'flex', justifyContent: 'center', padding: 'var(--ds-spacing-8)' }}>
-        <Spinner data-size="lg" aria-label={t('common.loading')} />
+        <Spinner size="lg" aria-label={t('common.loading')} />
       </div>
     );
   }
@@ -80,7 +80,7 @@ export function PlanDetailPage() {
   if (error || !plan) {
     return (
       <div style={{ maxWidth: '800px', margin: '0 auto', padding: 'var(--ds-spacing-8)' }}>
-        <Heading level={3} data-size="sm">
+        <Heading level={3} size="sm">
           {t('saasAdmin.planDetail.notFound', { defaultValue: 'Plan ikke funnet' })}
         </Heading>
         <Link to="/plans">
@@ -97,7 +97,7 @@ export function PlanDetailPage() {
     <div style={{ maxWidth: '1000px', margin: '0 auto', padding: 'var(--ds-spacing-8)' }}>
       {/* Back navigation */}
       <Link to="/plans">
-        <Button variant="tertiary" data-size="sm" style={{ marginBottom: 'var(--ds-spacing-4)' }} type="button">
+        <Button variant="tertiary" size="sm" style={{ marginBottom: 'var(--ds-spacing-4)' }} type="button">
           <ArrowLeftIcon />
           {t('common.back')}
         </Button>
@@ -106,7 +106,7 @@ export function PlanDetailPage() {
       {/* Header */}
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 'var(--ds-spacing-6)' }}>
         <div>
-          <Heading level={1} data-size="lg" style={{ marginBottom: 'var(--ds-spacing-2)' }}>
+          <Heading level={1} size="lg" style={{ marginBottom: 'var(--ds-spacing-2)' }}>
             {plan.name}
           </Heading>
           <div style={{ display: 'flex', gap: 'var(--ds-spacing-2)', alignItems: 'center' }}>
@@ -129,40 +129,40 @@ export function PlanDetailPage() {
 
       {/* Pricing Card */}
       <Card style={{ padding: 'var(--ds-spacing-6)', marginBottom: 'var(--ds-spacing-4)' }}>
-        <Heading level={2} data-size="sm" style={{ marginBottom: 'var(--ds-spacing-4)' }}>
+        <Heading level={2} size="sm" style={{ marginBottom: 'var(--ds-spacing-4)' }}>
           {t('saasAdmin.planCreate.pricing', { defaultValue: 'Prising' })}
         </Heading>
 
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))', gap: 'var(--ds-spacing-4)' }}>
           <div>
-            <Paragraph data-size="xs" style={{ color: 'var(--ds-color-neutral-text-subtle)', marginBottom: 'var(--ds-spacing-1)' }}>
+            <Paragraph size="xs" style={{ color: 'var(--ds-color-neutral-text-subtle)', marginBottom: 'var(--ds-spacing-1)' }}>
               {t('saasAdmin.plans.price')}
             </Paragraph>
-            <Heading level={3} data-size="md">
+            <Heading level={3} size="md">
               {formatPrice(plan.basePrice, plan.currency)}
             </Heading>
           </div>
           <div>
-            <Paragraph data-size="xs" style={{ color: 'var(--ds-color-neutral-text-subtle)', marginBottom: 'var(--ds-spacing-1)' }}>
+            <Paragraph size="xs" style={{ color: 'var(--ds-color-neutral-text-subtle)', marginBottom: 'var(--ds-spacing-1)' }}>
               {t('saasAdmin.plans.interval')}
             </Paragraph>
-            <Paragraph data-size="md" style={{ fontWeight: 'var(--ds-font-weight-medium)' }}>
+            <Paragraph size="md" style={{ fontWeight: 'var(--ds-font-weight-medium)' }}>
               {billingPeriodLabels[plan.billingPeriod]}
             </Paragraph>
           </div>
           <div>
-            <Paragraph data-size="xs" style={{ color: 'var(--ds-color-neutral-text-subtle)', marginBottom: 'var(--ds-spacing-1)' }}>
+            <Paragraph size="xs" style={{ color: 'var(--ds-color-neutral-text-subtle)', marginBottom: 'var(--ds-spacing-1)' }}>
               {t('saasAdmin.plans.trialPeriod')}
             </Paragraph>
-            <Paragraph data-size="md" style={{ fontWeight: 'var(--ds-font-weight-medium)' }}>
+            <Paragraph size="md" style={{ fontWeight: 'var(--ds-font-weight-medium)' }}>
               {plan.trialDays > 0 ? `${plan.trialDays} ${t('saasAdmin.plans.days')}` : '—'}
             </Paragraph>
           </div>
           <div>
-            <Paragraph data-size="xs" style={{ color: 'var(--ds-color-neutral-text-subtle)', marginBottom: 'var(--ds-spacing-1)' }}>
+            <Paragraph size="xs" style={{ color: 'var(--ds-color-neutral-text-subtle)', marginBottom: 'var(--ds-spacing-1)' }}>
               {t('saasAdmin.tenants.createdAt')}
             </Paragraph>
-            <Paragraph data-size="md" style={{ fontWeight: 'var(--ds-font-weight-medium)' }}>
+            <Paragraph size="md" style={{ fontWeight: 'var(--ds-font-weight-medium)' }}>
               {formatDate(plan.createdAt)}
             </Paragraph>
           </div>
@@ -177,54 +177,54 @@ export function PlanDetailPage() {
 
       {/* Seat Limits */}
       <Card style={{ padding: 'var(--ds-spacing-6)', marginBottom: 'var(--ds-spacing-4)' }}>
-        <Heading level={2} data-size="sm" style={{ marginBottom: 'var(--ds-spacing-4)' }}>
+        <Heading level={2} size="sm" style={{ marginBottom: 'var(--ds-spacing-4)' }}>
           {t('saasAdmin.tenantCreate.seatLimits', { defaultValue: 'Grenser' })}
         </Heading>
 
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))', gap: 'var(--ds-spacing-4)' }}>
           <div style={{ padding: 'var(--ds-spacing-3)', backgroundColor: 'var(--ds-color-neutral-surface-subtle)', borderRadius: 'var(--ds-border-radius-md)' }}>
-            <Paragraph data-size="xs" style={{ color: 'var(--ds-color-neutral-text-subtle)' }}>
+            <Paragraph size="xs" style={{ color: 'var(--ds-color-neutral-text-subtle)' }}>
               {t('saasAdmin.tenantCreate.maxUsers', { defaultValue: 'Brukere' })}
             </Paragraph>
-            <Heading level={4} data-size="sm">{plan.seatLimits.maxUsers}</Heading>
+            <Heading level={4} size="sm">{plan.seatLimits.maxUsers}</Heading>
           </div>
           <div style={{ padding: 'var(--ds-spacing-3)', backgroundColor: 'var(--ds-color-neutral-surface-subtle)', borderRadius: 'var(--ds-border-radius-md)' }}>
-            <Paragraph data-size="xs" style={{ color: 'var(--ds-color-neutral-text-subtle)' }}>
+            <Paragraph size="xs" style={{ color: 'var(--ds-color-neutral-text-subtle)' }}>
               {t('saasAdmin.tenantCreate.maxOrganizations', { defaultValue: 'Organisasjoner' })}
             </Paragraph>
-            <Heading level={4} data-size="sm">{plan.seatLimits.maxOrganizations}</Heading>
+            <Heading level={4} size="sm">{plan.seatLimits.maxOrganizations}</Heading>
           </div>
           <div style={{ padding: 'var(--ds-spacing-3)', backgroundColor: 'var(--ds-color-neutral-surface-subtle)', borderRadius: 'var(--ds-border-radius-md)' }}>
-            <Paragraph data-size="xs" style={{ color: 'var(--ds-color-neutral-text-subtle)' }}>
+            <Paragraph size="xs" style={{ color: 'var(--ds-color-neutral-text-subtle)' }}>
               {t('saasAdmin.tenantCreate.maxListings', { defaultValue: 'Leieobjekter' })}
             </Paragraph>
-            <Heading level={4} data-size="sm">{plan.seatLimits.maxListings}</Heading>
+            <Heading level={4} size="sm">{plan.seatLimits.maxListings}</Heading>
           </div>
           <div style={{ padding: 'var(--ds-spacing-3)', backgroundColor: 'var(--ds-color-neutral-surface-subtle)', borderRadius: 'var(--ds-border-radius-md)' }}>
-            <Paragraph data-size="xs" style={{ color: 'var(--ds-color-neutral-text-subtle)' }}>
+            <Paragraph size="xs" style={{ color: 'var(--ds-color-neutral-text-subtle)' }}>
               {t('saasAdmin.tenantCreate.maxBookings', { defaultValue: 'Bookinger/mnd' })}
             </Paragraph>
-            <Heading level={4} data-size="sm">{plan.seatLimits.maxBookingsPerMonth}</Heading>
+            <Heading level={4} size="sm">{plan.seatLimits.maxBookingsPerMonth}</Heading>
           </div>
           <div style={{ padding: 'var(--ds-spacing-3)', backgroundColor: 'var(--ds-color-neutral-surface-subtle)', borderRadius: 'var(--ds-border-radius-md)' }}>
-            <Paragraph data-size="xs" style={{ color: 'var(--ds-color-neutral-text-subtle)' }}>
+            <Paragraph size="xs" style={{ color: 'var(--ds-color-neutral-text-subtle)' }}>
               {t('saasAdmin.tenantCreate.maxStorage', { defaultValue: 'Lagring' })}
             </Paragraph>
-            <Heading level={4} data-size="sm">{plan.seatLimits.maxStorageMb} MB</Heading>
+            <Heading level={4} size="sm">{plan.seatLimits.maxStorageMb} MB</Heading>
           </div>
         </div>
       </Card>
 
       {/* Entitlements */}
       <Card style={{ padding: 'var(--ds-spacing-6)', marginBottom: 'var(--ds-spacing-4)' }}>
-        <Heading level={2} data-size="sm" style={{ marginBottom: 'var(--ds-spacing-4)' }}>
+        <Heading level={2} size="sm" style={{ marginBottom: 'var(--ds-spacing-4)' }}>
           {t('saasAdmin.planCreate.entitlements', { defaultValue: 'Berettigelser' })}
         </Heading>
 
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 'var(--ds-spacing-6)' }}>
           {/* Modules */}
           <div>
-            <Heading level={3} data-size="xs" style={{ marginBottom: 'var(--ds-spacing-3)' }}>
+            <Heading level={3} size="xs" style={{ marginBottom: 'var(--ds-spacing-3)' }}>
               {t('saasAdmin.planCreate.modules', { defaultValue: 'Moduler' })}
             </Heading>
             <Stack direction="column" gap={4}>
@@ -235,7 +235,7 @@ export function PlanDetailPage() {
                   ) : (
                     <XCircleIcon style={{ color: 'var(--ds-color-neutral-text-subtle)' }} />
                   )}
-                  <Paragraph data-size="sm" style={{ color: enabled ? undefined : 'var(--ds-color-neutral-text-subtle)' }}>
+                  <Paragraph size="sm" style={{ color: enabled ? undefined : 'var(--ds-color-neutral-text-subtle)' }}>
                     {key}
                   </Paragraph>
                 </div>
@@ -245,7 +245,7 @@ export function PlanDetailPage() {
 
           {/* Integrations */}
           <div>
-            <Heading level={3} data-size="xs" style={{ marginBottom: 'var(--ds-spacing-3)' }}>
+            <Heading level={3} size="xs" style={{ marginBottom: 'var(--ds-spacing-3)' }}>
               {t('saasAdmin.planCreate.integrations', { defaultValue: 'Integrasjoner' })}
             </Heading>
             <Stack direction="column" gap={4}>
@@ -256,7 +256,7 @@ export function PlanDetailPage() {
                   ) : (
                     <XCircleIcon style={{ color: 'var(--ds-color-neutral-text-subtle)' }} />
                   )}
-                  <Paragraph data-size="sm" style={{ color: enabled ? undefined : 'var(--ds-color-neutral-text-subtle)' }}>
+                  <Paragraph size="sm" style={{ color: enabled ? undefined : 'var(--ds-color-neutral-text-subtle)' }}>
                     {key}
                   </Paragraph>
                 </div>
@@ -266,7 +266,7 @@ export function PlanDetailPage() {
 
           {/* Features */}
           <div>
-            <Heading level={3} data-size="xs" style={{ marginBottom: 'var(--ds-spacing-3)' }}>
+            <Heading level={3} size="xs" style={{ marginBottom: 'var(--ds-spacing-3)' }}>
               {t('saasAdmin.planCreate.features', { defaultValue: 'Funksjoner' })}
             </Heading>
             <Stack direction="column" gap={4}>
@@ -277,7 +277,7 @@ export function PlanDetailPage() {
                   ) : (
                     <XCircleIcon style={{ color: 'var(--ds-color-neutral-text-subtle)' }} />
                   )}
-                  <Paragraph data-size="sm" style={{ color: enabled ? undefined : 'var(--ds-color-neutral-text-subtle)' }}>
+                  <Paragraph size="sm" style={{ color: enabled ? undefined : 'var(--ds-color-neutral-text-subtle)' }}>
                     {key}
                   </Paragraph>
                 </div>
@@ -289,7 +289,7 @@ export function PlanDetailPage() {
 
       {/* Tenants Using This Plan */}
       <Card style={{ padding: 'var(--ds-spacing-6)' }}>
-        <Heading level={2} data-size="sm" style={{ marginBottom: 'var(--ds-spacing-4)' }}>
+        <Heading level={2} size="sm" style={{ marginBottom: 'var(--ds-spacing-4)' }}>
           {t('saasAdmin.planDetail.tenantsUsingPlan', { defaultValue: 'Tenanter med denne planen' })} ({tenants.length})
         </Heading>
 

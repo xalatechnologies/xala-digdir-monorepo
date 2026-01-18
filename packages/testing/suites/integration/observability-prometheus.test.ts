@@ -4,7 +4,7 @@
  */
 
 import { describe, it, expect } from 'vitest';
-import { setupMockApi } from '../../mocks/api-server.mock';
+import { setupMockApi } from '@xala/api/mocks/api-server.mock';
 import { readFileSync } from 'fs';
 import { resolve } from 'path';
 import { parse } from 'yaml';

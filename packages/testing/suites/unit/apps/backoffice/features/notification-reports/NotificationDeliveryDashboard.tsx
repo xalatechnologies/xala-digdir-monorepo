@@ -21,7 +21,7 @@ import {
   type DeliveryReportQueryParams,
   type DeliveryReport,
 } from '@digilist/client-sdk';
-import { useToast } from '../../providers/ToastProvider';
+import { useToast } from '@xala/api/providers/ToastProvider';
 import { useT } from '@xala/i18n';
 
 // Status badge color mapping

@@ -20,12 +20,12 @@
     "tenant_id": "f47ac10b-58cc-4372-a567-0e02b2c3d479",
     "email": "case-handler@digilist.no",
     "name": "Saksbehandler",
-    "national_id": "15052200413",
+    "national_id": "15055200413",
     "role": "case_handler",
     "status": "active",
     "demo_token": "demo-case-handler-token",
     "metadata": {
-      "vipps_phone": "48637228",
+      "vipps_phone": "46637228",
       "bankid_national_id": "06881271913",
       "bankid_otp": "otp",
       "bankid_password": "qwer1234"
@@ -52,7 +52,7 @@
     "tenant_id": "f47ac10b-58cc-4372-a567-0e02b2c3d479",
     "email": "organisasjon@digilist.no",
     "name": "Organisasjon",
-    "national_id": "25055995475",
+    "national_id": "25059995475",
     "role": "member",
     "status": "active",
     "demo_token": "demo-org-token",
@@ -107,6 +107,99 @@
     "metadata": {
       "vipps_phone": "47030508",
       "bankid_national_id": "16837147593",
+      "bankid_otp": "otp",
+      "bankid_password": "qwer1234"
+    }
+  },
+  {
+    "id": "aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa",
+    "tenant_id": "f47ac10b-58cc-4372-a567-0e02b2c3d479",
+    "email": "saas-admin@digilist.no",
+    "name": "SaaS Administrator",
+    "national_id": "00000000001",
+    "role": "super_admin",
+    "status": "active",
+    "demo_token": "demo-saas-admin",
+    "metadata": {
+      "vipps_phone": "00000001",
+      "bankid_national_id": "00000000001",
+      "bankid_otp": "otp",
+      "bankid_password": "qwer1234"
+    }
+  },
+  {
+    "id": "bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb",
+    "tenant_id": "f47ac10b-58cc-4372-a567-0e02b2c3d479",
+    "email": "monitoring@digilist.no",
+    "name": "Monitoring User",
+    "national_id": "00000000002",
+    "role": "admin",
+    "status": "active",
+    "demo_token": "demo-monitoring",
+    "metadata": {
+      "vipps_phone": "00000002",
+      "bankid_national_id": "00000000002",
+      "bankid_otp": "otp",
+      "bankid_password": "qwer1234"
+    }
+  },
+  {
+    "id": "00000000-0000-0000-0000-000000000010",
+    "tenant_id": "f47ac10b-58cc-4372-a567-0e02b2c3d479",
+    "email": "admin@skien.kommune.no",
+    "name": "Admin Skien",
+    "national_id": "19075716691",
+    "role": "admin",
+    "status": "active",
+    "demo_token": "skien-admin-001",
+    "metadata": {
+      "vipps_phone": "93279034",
+      "bankid_national_id": "30916326773",
+      "bankid_otp": "otp",
+      "bankid_password": "qwer1234"
+    }
+  },
+  {
+    "id": "00000000-0000-0000-0000-000000000011",
+    "tenant_id": "f47ac10b-58cc-4372-a567-0e02b2c3d479",
+    "email": "demo@xala.no",
+    "name": "Demo Xala",
+    "national_id": "19075716691",
+    "role": "admin",
+    "status": "active",
+    "demo_token": "xala-demo-001",
+    "metadata": {
+      "vipps_phone": "93279034",
+      "bankid_national_id": "30916326773",
+      "bankid_otp": "otp",
+      "bankid_password": "qwer1234"
+    }
+  },
+  {
+    "id": "00000000-0000-0000-0000-000000000012",
+    "tenant_id": "f47ac10b-58cc-4372-a567-0e02b2c3d479",
+    "email": "leder@porsgrunn-il.no",
+    "name": "Leder Porsgrunn IL",
+    "role": "admin",
+    "status": "active",
+    "demo_token": "porsgrunn-admin-001",
+    "metadata": {
+      "bankid_otp": "otp",
+      "bankid_password": "qwer1234"
+    }
+  },
+  {
+    "id": "00000000-0000-0000-0000-000000000013",
+    "tenant_id": "f47ac10b-58cc-4372-a567-0e02b2c3d479",
+    "email": "ola.hansen@kommune.no",
+    "name": "Ola Hansen",
+    "national_id": "24014005907",
+    "role": "member",
+    "status": "active",
+    "demo_token": "skien-citizen-001",
+    "metadata": {
+      "vipps_phone": "95303914",
+      "bankid_national_id": "15860771346",
       "bankid_otp": "otp",
       "bankid_password": "qwer1234"
     }

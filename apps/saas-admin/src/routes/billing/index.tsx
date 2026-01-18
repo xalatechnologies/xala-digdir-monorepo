@@ -36,7 +36,7 @@ export function BillingPage() {
   if (isLoading) {
     return (
       <Stack direction="horizontal" justify="center" align="center" style={{ padding: 'var(--ds-spacing-8)' }}>
-        <Spinner data-size="lg" aria-label={t('common.loading')} />
+        <Spinner size="lg" aria-label={t('common.loading')} />
       </Stack>
     );
   }
@@ -45,10 +45,10 @@ export function BillingPage() {
     <Stack direction="column" gap={20}>
       {/* Header */}
       <Stack direction="column" gap={1}>
-        <Heading level={2} data-size="md">
+        <Heading level={2} size="md">
           {t('saasAdmin.billing')}
         </Heading>
-        <Paragraph data-size="sm" data-color="subtle">
+        <Paragraph size="sm" color="subtle">
           {t('saasAdmin.billingSubtitle')}
         </Paragraph>
       </Stack>
@@ -61,40 +61,40 @@ export function BillingPage() {
         >
           <Card style={{ padding: 'var(--ds-spacing-4)' }}>
             <Stack direction="column" gap={2}>
-              <Paragraph data-size="sm" data-color="subtle" style={{ margin: 0 }}>
+              <Paragraph size="sm" color="subtle" style={{ margin: 0 }}>
                 {t('saasAdmin.totalRevenue')}
               </Paragraph>
-              <Heading level={3} data-size="lg" style={{ margin: 0 }}>
+              <Heading level={3} size="lg" style={{ margin: 0 }}>
                 {formatCurrency(billing.totalRevenue, billing.currency)}
               </Heading>
             </Stack>
           </Card>
           <Card style={{ padding: 'var(--ds-spacing-4)' }}>
             <Stack direction="column" gap={2}>
-              <Paragraph data-size="sm" data-color="subtle" style={{ margin: 0 }}>
+              <Paragraph size="sm" color="subtle" style={{ margin: 0 }}>
                 {t('saasAdmin.monthlyRevenue')}
               </Paragraph>
-              <Heading level={3} data-size="lg" style={{ margin: 0 }}>
+              <Heading level={3} size="lg" style={{ margin: 0 }}>
                 {formatCurrency(billing.monthlyRecurring, billing.currency)}
               </Heading>
             </Stack>
           </Card>
           <Card style={{ padding: 'var(--ds-spacing-4)' }}>
             <Stack direction="column" gap={2}>
-              <Paragraph data-size="sm" data-color="subtle" style={{ margin: 0 }}>
+              <Paragraph size="sm" color="subtle" style={{ margin: 0 }}>
                 {t('saasAdmin.billing.activeSubscriptions', { defaultValue: 'Active Subscriptions' })}
               </Paragraph>
-              <Heading level={3} data-size="lg" style={{ margin: 0 }}>
+              <Heading level={3} size="lg" style={{ margin: 0 }}>
                 {billing.activeSubscriptions}
               </Heading>
             </Stack>
           </Card>
           <Card style={{ padding: 'var(--ds-spacing-4)' }}>
             <Stack direction="column" gap={2}>
-              <Paragraph data-size="sm" data-color="subtle" style={{ margin: 0 }}>
+              <Paragraph size="sm" color="subtle" style={{ margin: 0 }}>
                 {t('saasAdmin.billing.overdueInvoices', { defaultValue: 'Overdue Invoices' })}
               </Paragraph>
-              <Heading level={3} data-size="lg" data-color="danger" style={{ margin: 0 }}>
+              <Heading level={3} size="lg" color="danger" style={{ margin: 0 }}>
                 {billing.overdueCount}
               </Heading>
             </Stack>
@@ -105,10 +105,10 @@ export function BillingPage() {
       {/* Invoices Section */}
       <Card>
         <Stack direction="column" gap={4}>
-          <Heading level={3} data-size="sm" style={{ margin: 0 }}>
+          <Heading level={3} size="sm" style={{ margin: 0 }}>
             {t('saasAdmin.invoices')}
           </Heading>
-          <Paragraph data-size="sm" data-color="subtle">
+          <Paragraph size="sm" color="subtle">
             {t('saasAdmin.billing.invoicesDescription', { defaultValue: 'Invoice management will be available soon.' })}
           </Paragraph>
         </Stack>

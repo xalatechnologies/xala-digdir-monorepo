@@ -3,8 +3,8 @@
  * Tests for Listing, Booking, Calendar, User, Organization controllers
  */
 import { describe, it, expect, beforeAll, afterAll } from 'vitest';
-import { setupMockApi } from '../../../mocks/api-server.mock';
-import { createTestApp, TestContext, TEST_IDS } from '../test-utils';
+import { setupMockApi } from '@xala/api/mocks/api-server.mock';
+import { createTestApp, TestContext, TEST_IDS } from '@xala/api/test-utils';
 
 describe('Comprehensive Controller Tests - Part 2', () => {
   setupMockApi();

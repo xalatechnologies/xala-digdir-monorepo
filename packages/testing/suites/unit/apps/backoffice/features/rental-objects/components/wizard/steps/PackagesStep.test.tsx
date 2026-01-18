@@ -6,7 +6,7 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { render, screen, fireEvent } from '@testing-library/react';
 import { PackagesStep } from './PackagesStep';
-import type { UseRentalObjectWizardReturn } from '../../../hooks/useRentalObjectWizard';
+import type { UseRentalObjectWizardReturn } from '@xala/backoffice/hooks/useRentalObjectWizard';
 
 // Mock @xala/i18n
 vi.mock('@xala/i18n', () => ({

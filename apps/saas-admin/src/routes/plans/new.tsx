@@ -224,17 +224,17 @@ export function PlanCreatePage() {
     <div style={{ maxWidth: '900px', margin: '0 auto', padding: 'var(--ds-spacing-8)' }}>
       {/* Back navigation */}
       <Link to="/plans">
-        <Button variant="tertiary" data-size="sm" style={{ marginBottom: 'var(--ds-spacing-4)' }} type="button">
+        <Button variant="tertiary" size="sm" style={{ marginBottom: 'var(--ds-spacing-4)' }} type="button">
           <ArrowLeftIcon />
           {t('common.back')}
         </Button>
       </Link>
 
       {/* Header */}
-      <Heading level={1} data-size="lg" style={{ marginBottom: 'var(--ds-spacing-2)' }}>
+      <Heading level={1} size="lg" style={{ marginBottom: 'var(--ds-spacing-2)' }}>
         {t('saasAdmin.plans.createPlan')}
       </Heading>
-      <Paragraph data-size="sm" style={{ color: 'var(--ds-color-neutral-text-subtle)', marginBottom: 'var(--ds-spacing-6)' }}>
+      <Paragraph size="sm" style={{ color: 'var(--ds-color-neutral-text-subtle)', marginBottom: 'var(--ds-spacing-6)' }}>
         {t('saasAdmin.planCreate.description', { defaultValue: 'Opprett en ny abonnementsplan.' })}
       </Paragraph>
 
@@ -248,7 +248,7 @@ export function PlanCreatePage() {
       <form onSubmit={handleSubmit}>
         {/* Basic Information */}
         <Card style={{ padding: 'var(--ds-spacing-6)', marginBottom: 'var(--ds-spacing-4)' }}>
-          <Heading level={2} data-size="sm" style={{ marginBottom: 'var(--ds-spacing-4)' }}>
+          <Heading level={2} size="sm" style={{ marginBottom: 'var(--ds-spacing-4)' }}>
             {t('saasAdmin.tenantCreate.basicInfo', { defaultValue: 'Grunnleggende informasjon' })}
           </Heading>
 
@@ -284,7 +284,7 @@ export function PlanCreatePage() {
 
         {/* Pricing */}
         <Card style={{ padding: 'var(--ds-spacing-6)', marginBottom: 'var(--ds-spacing-4)' }}>
-          <Heading level={2} data-size="sm" style={{ marginBottom: 'var(--ds-spacing-4)' }}>
+          <Heading level={2} size="sm" style={{ marginBottom: 'var(--ds-spacing-4)' }}>
             {t('saasAdmin.planCreate.pricing', { defaultValue: 'Prising' })}
           </Heading>
 
@@ -341,7 +341,7 @@ export function PlanCreatePage() {
 
         {/* Seat Limits */}
         <Card style={{ padding: 'var(--ds-spacing-6)', marginBottom: 'var(--ds-spacing-4)' }}>
-          <Heading level={2} data-size="sm" style={{ marginBottom: 'var(--ds-spacing-4)' }}>
+          <Heading level={2} size="sm" style={{ marginBottom: 'var(--ds-spacing-4)' }}>
             {t('saasAdmin.tenantCreate.seatLimits', { defaultValue: 'Grenser' })}
           </Heading>
 
@@ -386,14 +386,14 @@ export function PlanCreatePage() {
 
         {/* Entitlements */}
         <Card style={{ padding: 'var(--ds-spacing-6)', marginBottom: 'var(--ds-spacing-6)' }}>
-          <Heading level={2} data-size="sm" style={{ marginBottom: 'var(--ds-spacing-4)' }}>
+          <Heading level={2} size="sm" style={{ marginBottom: 'var(--ds-spacing-4)' }}>
             {t('saasAdmin.planCreate.entitlements', { defaultValue: 'Berettigelser' })}
           </Heading>
 
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 'var(--ds-spacing-6)' }}>
             {/* Modules */}
             <div>
-              <Heading level={3} data-size="xs" style={{ marginBottom: 'var(--ds-spacing-3)' }}>
+              <Heading level={3} size="xs" style={{ marginBottom: 'var(--ds-spacing-3)' }}>
                 {t('saasAdmin.planCreate.modules', { defaultValue: 'Moduler' })}
               </Heading>
               <Stack direction="column" gap={8}>
@@ -411,7 +411,7 @@ export function PlanCreatePage() {
 
             {/* Integrations */}
             <div>
-              <Heading level={3} data-size="xs" style={{ marginBottom: 'var(--ds-spacing-3)' }}>
+              <Heading level={3} size="xs" style={{ marginBottom: 'var(--ds-spacing-3)' }}>
                 {t('saasAdmin.planCreate.integrations', { defaultValue: 'Integrasjoner' })}
               </Heading>
               <Stack direction="column" gap={8}>
@@ -429,7 +429,7 @@ export function PlanCreatePage() {
 
             {/* Features */}
             <div>
-              <Heading level={3} data-size="xs" style={{ marginBottom: 'var(--ds-spacing-3)' }}>
+              <Heading level={3} size="xs" style={{ marginBottom: 'var(--ds-spacing-3)' }}>
                 {t('saasAdmin.planCreate.features', { defaultValue: 'Funksjoner' })}
               </Heading>
               <Stack direction="column" gap={8}>
@@ -456,7 +456,7 @@ export function PlanCreatePage() {
           </Link>
           <Button type="submit" disabled={createMutation.isPending}>
             {createMutation.isPending ? (
-              <Spinner data-size="sm" aria-label={t('common.saving')} />
+              <Spinner size="sm" aria-label={t('common.saving')} />
             ) : (
               <>
                 <SaveIcon />

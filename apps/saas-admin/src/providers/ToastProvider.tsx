@@ -98,11 +98,11 @@ export function ToastProvider({ children }: ToastProviderProps): React.ReactElem
           {toasts.map((toast) => (
             <Alert
               key={toast.id}
-              data-color={toast.type}
+              color={toast.type}
               className={styles.toast}
             >
               <strong>{toast.title}</strong>
-              {toast.message && <Paragraph data-size="sm" className={styles.toastMessage}>{toast.message}</Paragraph>}
+              {toast.message && <Paragraph size="sm" className={styles.toastMessage}>{toast.message}</Paragraph>}
             </Alert>
           ))}
         </div>

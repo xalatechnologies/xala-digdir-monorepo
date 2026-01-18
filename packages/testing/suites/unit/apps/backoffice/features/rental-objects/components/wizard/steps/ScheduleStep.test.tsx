@@ -6,7 +6,7 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { render, screen, fireEvent } from '@testing-library/react';
 import { ScheduleStep } from './ScheduleStep';
-import type { UseRentalObjectWizardReturn } from '../../../hooks/useRentalObjectWizard';
+import type { UseRentalObjectWizardReturn } from '@xala/backoffice/hooks/useRentalObjectWizard';
 
 // Mock @xala/i18n
 vi.mock('@xala/i18n', () => ({
@@ -279,7 +279,7 @@ describe('ScheduleStep', () => {
     it('should show on-demand message', () => {
       render(<ScheduleStep wizard={mockWizard} />);
 
-      const onDemandOption = screen.getByText('form.schedule.onDemandDescription');
+      const onDemandOption = screen.getByText('form.schedule.on-demandDescription');
       expect(onDemandOption).toBeInTheDocument();
     });
   });

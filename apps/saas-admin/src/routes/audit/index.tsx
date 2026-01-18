@@ -46,7 +46,7 @@ export function AuditLogPage() {
   if (isLoading) {
     return (
       <Stack direction="horizontal" justify="center" align="center" style={{ padding: 'var(--ds-spacing-8)' }}>
-        <Spinner data-size="lg" aria-label={t('common.loading')} />
+        <Spinner size="lg" aria-label={t('common.loading')} />
       </Stack>
     );
   }
@@ -55,10 +55,10 @@ export function AuditLogPage() {
     <Stack direction="column" gap={20}>
       {/* Header */}
       <Stack direction="column" gap={1}>
-        <Heading level={2} data-size="md">
+        <Heading level={2} size="md">
           {t('saasAdmin.auditLog')}
         </Heading>
-        <Paragraph data-size="sm" data-color="subtle">
+        <Paragraph size="sm" color="subtle">
           {t('saasAdmin.auditSubtitle')}
         </Paragraph>
       </Stack>
@@ -71,20 +71,20 @@ export function AuditLogPage() {
         >
           <Card style={{ padding: 'var(--ds-spacing-4)' }}>
             <Stack direction="column" gap={2}>
-              <Paragraph data-size="sm" data-color="subtle" style={{ margin: 0 }}>
+              <Paragraph size="sm" color="subtle" style={{ margin: 0 }}>
                 {t('saasAdmin.auditLog.totalEvents', { defaultValue: 'Total Events' })}
               </Paragraph>
-              <Heading level={3} data-size="lg" style={{ margin: 0 }}>
+              <Heading level={3} size="lg" style={{ margin: 0 }}>
                 {stats.totalEvents || 0}
               </Heading>
             </Stack>
           </Card>
           <Card style={{ padding: 'var(--ds-spacing-4)' }}>
             <Stack direction="column" gap={2}>
-              <Paragraph data-size="sm" data-color="subtle" style={{ margin: 0 }}>
+              <Paragraph size="sm" color="subtle" style={{ margin: 0 }}>
                 {t('saasAdmin.auditLog.todayEvents', { defaultValue: 'Today' })}
               </Paragraph>
-              <Heading level={3} data-size="lg" style={{ margin: 0 }}>
+              <Heading level={3} size="lg" style={{ margin: 0 }}>
                 {stats.todayEvents || 0}
               </Heading>
             </Stack>
@@ -105,7 +105,7 @@ export function AuditLogPage() {
       <Card>
         {auditLogs.length === 0 ? (
           <Stack direction="horizontal" justify="center" align="center" style={{ padding: 'var(--ds-spacing-8)' }}>
-            <Paragraph data-size="sm" data-color="subtle">
+            <Paragraph size="sm" color="subtle">
               {t('saasAdmin.auditLog.noLogs')}
             </Paragraph>
           </Stack>
@@ -124,16 +124,16 @@ export function AuditLogPage() {
               {auditLogs.map((log) => (
                 <Table.Row key={log.id}>
                   <Table.Cell>
-                    <Text data-size="sm">{formatDate(log.timestamp)}</Text>
+                    <Text size="sm">{formatDate(log.timestamp)}</Text>
                   </Table.Cell>
                   <Table.Cell>
                     <Badge color="info">{log.action}</Badge>
                   </Table.Cell>
                   <Table.Cell>
-                    <Text data-size="sm">{log.actorId || '—'}</Text>
+                    <Text size="sm">{log.actorId || '—'}</Text>
                   </Table.Cell>
                   <Table.Cell>
-                    <Text data-size="sm">{log.resourceType || '—'}</Text>
+                    <Text size="sm">{log.resourceType || '—'}</Text>
                   </Table.Cell>
                   <Table.Cell>
                     <Text size="sm" color="var(--ds-color-neutral-text-subtle)">

@@ -16,7 +16,7 @@ import type {
   RecurringPreviewProjectionDTO,
   CreateRecurringBookingDTO,
   RecurringBookingResultProjectionDTO
-} from '../../types/booking';
+} from '@xala/api/types/booking';
 
 // Mock React Query
 const mockUseQuery = vi.fn();
@@ -71,8 +71,8 @@ vi.mock('../../services/listing.service', () => ({
 }));
 
 // Import hooks after mocking
-import { useRecurringPreview, useCreateRecurringBooking } from '../use-bookings';
-import { queryKeys } from '../query-keys';
+import { useRecurringPreview, useCreateRecurringBooking } from '@xala/api/use-bookings';
+import { queryKeys } from '@xala/api/query-keys';
 
 // ============================================================================
 // Test Data Factories

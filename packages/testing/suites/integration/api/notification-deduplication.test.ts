@@ -7,7 +7,7 @@
  * Run with: pnpm dev (in separate terminal), then pnpm test:integration
  */
 import { describe, it, expect, beforeAll } from 'vitest';
-import { setupMockApi } from '../../../mocks/api-server.mock';
+import { setupMockApi } from '@xala/api/mocks/api-server.mock';
 
 const API_URL = process.env.API_URL || 'http://localhost:3002';
 const TENANT_ID = 'f47ac10b-58cc-4372-a567-0e02b2c3d479';

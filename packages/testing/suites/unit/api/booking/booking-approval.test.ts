@@ -4,8 +4,8 @@
  */
 
 import { describe, it, expect, beforeEach, vi } from 'vitest';
-import { BookingService } from '../booking.service';
-import type { BookingRepository } from '../booking.repository';
+import { BookingService } from '@xala/api/booking.service';
+import type { BookingRepository } from '@xala/api/booking.repository';
 
 describe('BookingService - Approve/Reject', () => {
   let service: BookingService;

@@ -3,7 +3,7 @@
  * Target: 95%+ coverage
  */
 import { describe, it, expect, beforeAll, afterAll } from 'vitest';
-import { createTestApp, TestContext } from '../test-utils';
+import { createTestApp, TestContext } from '@xala/api/test-utils';
 
 describe('PublicController', () => {
   let ctx: TestContext;

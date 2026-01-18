@@ -19,7 +19,7 @@ import {
   isValidReturnToUrl,
   addAllowedPathPattern,
   addAllowedOrigin,
-} from '../../core/validation/return-to';
+} from '@xala/api/../core/validation/return-to';
 
 describe('Return-To URL Validation', () => {
   // Store original env

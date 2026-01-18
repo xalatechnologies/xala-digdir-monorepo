@@ -170,17 +170,17 @@ export function TenantCreatePage() {
     <div style={{ maxWidth: '800px', margin: '0 auto', padding: 'var(--ds-spacing-8)' }}>
       {/* Back navigation */}
       <Link to="/tenants">
-        <Button variant="tertiary" data-size="sm" style={{ marginBottom: 'var(--ds-spacing-4)' }} type="button">
+        <Button variant="tertiary" size="sm" style={{ marginBottom: 'var(--ds-spacing-4)' }} type="button">
           <ArrowLeftIcon />
           {t('common.back')}
         </Button>
       </Link>
 
       {/* Header */}
-      <Heading level={1} data-size="lg" style={{ marginBottom: 'var(--ds-spacing-2)' }}>
+      <Heading level={1} size="lg" style={{ marginBottom: 'var(--ds-spacing-2)' }}>
         {t('saasAdmin.tenants.createTenant')}
       </Heading>
-      <Paragraph data-size="sm" style={{ color: 'var(--ds-color-neutral-text-subtle)', marginBottom: 'var(--ds-spacing-6)' }}>
+      <Paragraph size="sm" style={{ color: 'var(--ds-color-neutral-text-subtle)', marginBottom: 'var(--ds-spacing-6)' }}>
         {t('saasAdmin.tenants.createDescription', { defaultValue: 'Opprett en ny tenant i plattformen.' })}
       </Paragraph>
 
@@ -194,7 +194,7 @@ export function TenantCreatePage() {
       <form onSubmit={handleSubmit}>
         {/* Basic Information */}
         <Card style={{ padding: 'var(--ds-spacing-6)', marginBottom: 'var(--ds-spacing-4)' }}>
-          <Heading level={2} data-size="sm" style={{ marginBottom: 'var(--ds-spacing-4)' }}>
+          <Heading level={2} size="sm" style={{ marginBottom: 'var(--ds-spacing-4)' }}>
             {t('saasAdmin.tenantCreate.basicInfo', { defaultValue: 'Grunnleggende informasjon' })}
           </Heading>
 
@@ -231,7 +231,7 @@ export function TenantCreatePage() {
 
         {/* Subscription Plan */}
         <Card style={{ padding: 'var(--ds-spacing-6)', marginBottom: 'var(--ds-spacing-4)' }}>
-          <Heading level={2} data-size="sm" style={{ marginBottom: 'var(--ds-spacing-4)' }}>
+          <Heading level={2} size="sm" style={{ marginBottom: 'var(--ds-spacing-4)' }}>
             {t('saasAdmin.tenantCreate.subscription', { defaultValue: 'Abonnement' })}
           </Heading>
 
@@ -257,10 +257,10 @@ export function TenantCreatePage() {
         <Card style={{ padding: 'var(--ds-spacing-6)', marginBottom: 'var(--ds-spacing-6)' }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 'var(--ds-spacing-4)' }}>
             <div>
-              <Heading level={2} data-size="sm" style={{ marginBottom: 'var(--ds-spacing-1)' }}>
+              <Heading level={2} size="sm" style={{ marginBottom: 'var(--ds-spacing-1)' }}>
                 {t('saasAdmin.tenantCreate.seatLimits', { defaultValue: 'Grenser' })}
               </Heading>
-              <Paragraph data-size="xs" style={{ color: 'var(--ds-color-neutral-text-subtle)' }}>
+              <Paragraph size="xs" style={{ color: 'var(--ds-color-neutral-text-subtle)' }}>
                 {t('saasAdmin.tenantCreate.seatLimitsDescription', { defaultValue: 'Overstyr standardgrenser fra valgt plan' })}
               </Paragraph>
             </div>
@@ -322,7 +322,7 @@ export function TenantCreatePage() {
           </Link>
           <Button type="submit" disabled={createMutation.isPending}>
             {createMutation.isPending ? (
-              <Spinner data-size="sm" aria-label={t('common.saving')} />
+              <Spinner size="sm" aria-label={t('common.saving')} />
             ) : (
               <>
                 <SaveIcon />

@@ -15,7 +15,7 @@ import {
   Table,
   Tag,
   Dialog,
-} from '@digdir/designsystemet-react';
+} from '@xala/ds';
 import { useT } from '@xala/i18n';
 
 // Namespace definitions
@@ -111,10 +111,10 @@ export function TranslationsPage(): React.ReactElement {
       <div style={{ marginBottom: 'var(--ds-spacing-6)' }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 'var(--ds-spacing-4)' }}>
           <div>
-            <Heading level={1} data-size="lg">
+            <Heading level={1} size="lg">
               {t('saasAdmin.translations.title')}
             </Heading>
-            <Paragraph data-size="md" style={{ color: 'var(--ds-color-neutral-text-subtle)' }}>
+            <Paragraph size="md" style={{ color: 'var(--ds-color-neutral-text-subtle)' }}>
               {t('saasAdmin.translations.description')}
             </Paragraph>
           </div>
@@ -131,22 +131,22 @@ export function TranslationsPage(): React.ReactElement {
         {/* Summary Cards */}
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 'var(--ds-spacing-4)', marginTop: 'var(--ds-spacing-4)' }}>
           <Card style={{ padding: 'var(--ds-spacing-4)', textAlign: 'center' }}>
-            <Paragraph data-size="sm" style={{ color: 'var(--ds-color-neutral-text-subtle)' }}>
+            <Paragraph size="sm" style={{ color: 'var(--ds-color-neutral-text-subtle)' }}>
               {t('saasAdmin.translations.totalKeys')}
             </Paragraph>
-            <Heading level={2} data-size="lg">{totalKeys.toLocaleString()}</Heading>
+            <Heading level={2} size="lg">{totalKeys.toLocaleString()}</Heading>
           </Card>
           <Card style={{ padding: 'var(--ds-spacing-4)', textAlign: 'center' }}>
-            <Paragraph data-size="sm" style={{ color: 'var(--ds-color-neutral-text-subtle)' }}>
+            <Paragraph size="sm" style={{ color: 'var(--ds-color-neutral-text-subtle)' }}>
               {t('saasAdmin.translations.namespaces')}
             </Paragraph>
-            <Heading level={2} data-size="lg">{NAMESPACES.length}</Heading>
+            <Heading level={2} size="lg">{NAMESPACES.length}</Heading>
           </Card>
           <Card style={{ padding: 'var(--ds-spacing-4)', textAlign: 'center' }}>
-            <Paragraph data-size="sm" style={{ color: 'var(--ds-color-neutral-text-subtle)' }}>
+            <Paragraph size="sm" style={{ color: 'var(--ds-color-neutral-text-subtle)' }}>
               {t('saasAdmin.translations.languages')}
             </Paragraph>
-            <Heading level={2} data-size="lg">{LANGUAGES.length}</Heading>
+            <Heading level={2} size="lg">{LANGUAGES.length}</Heading>
           </Card>
         </div>
         
@@ -224,7 +224,7 @@ export function TranslationsPage(): React.ReactElement {
                   <Table.Cell>
                     <Tag 
                       color={translation.isSystemDefault ? 'neutral' : 'info'}
-                      data-size="sm"
+                      size="sm"
                     >
                       {translation.isSystemDefault 
                         ? t('saasAdmin.translations.systemDefault')
@@ -233,7 +233,7 @@ export function TranslationsPage(): React.ReactElement {
                     </Tag>
                   </Table.Cell>
                   <Table.Cell>
-                    <Button variant="tertiary" data-size="sm">
+                    <Button variant="tertiary" size="sm">
                       {t('common.edit')}
                     </Button>
                   </Table.Cell>

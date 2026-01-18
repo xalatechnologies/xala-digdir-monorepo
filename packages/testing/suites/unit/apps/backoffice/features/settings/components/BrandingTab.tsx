@@ -13,7 +13,7 @@ import {
   Textfield,
   SaveIcon,
 } from '@xala/ds';
-import { useBrandingSettings } from '../hooks/useBrandingSettings';
+import { useBrandingSettings } from '@xala/api/hooks/useBrandingSettings';
 import { useT } from '@xala/i18n';
 
 export function BrandingTab() {

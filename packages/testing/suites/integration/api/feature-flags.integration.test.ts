@@ -4,8 +4,8 @@
  */
 
 import { describe, it, expect, beforeAll, afterAll } from 'vitest';
-import { setupMockApi } from '../../../mocks/api-server.mock';
-import { FeatureFlagsService } from '../services/feature-flags.service';
+import { setupMockApi } from '@xala/api/mocks/api-server.mock';
+import { FeatureFlagsService } from '@xala/api/services/feature-flags.service';
 import type { NodePgDatabase } from 'drizzle-orm/node-postgres';
 
 describe('Feature Flags Integration Tests', () => {

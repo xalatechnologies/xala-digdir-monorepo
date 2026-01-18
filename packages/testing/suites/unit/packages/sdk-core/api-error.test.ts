@@ -2,8 +2,8 @@
  * ApiError Tests
  */
 import { describe, it, expect } from 'vitest';
-import { ApiError } from '../errors/api-error';
-import type { ProblemDetails } from '../errors/problem-details';
+import { ApiError } from '@xala/api/errors/api-error';
+import type { ProblemDetails } from '@xala/api/errors/problem-details';
 
 describe('ApiError', () => {
   describe('constructor', () => {

@@ -153,7 +153,7 @@ export function TenantEditPage() {
   if (isLoading) {
     return (
       <div style={{ display: 'flex', justifyContent: 'center', padding: 'var(--ds-spacing-8)' }}>
-        <Spinner data-size="lg" aria-label={t('common.loading')} />
+        <Spinner size="lg" aria-label={t('common.loading')} />
       </div>
     );
   }
@@ -185,17 +185,17 @@ export function TenantEditPage() {
     <div style={{ maxWidth: '800px', margin: '0 auto', padding: 'var(--ds-spacing-8)' }}>
       {/* Back navigation */}
       <Link to={`/tenants/${id}`}>
-        <Button variant="tertiary" data-size="sm" style={{ marginBottom: 'var(--ds-spacing-4)' }} type="button">
+        <Button variant="tertiary" size="sm" style={{ marginBottom: 'var(--ds-spacing-4)' }} type="button">
           <ArrowLeftIcon />
           {t('common.back')}
         </Button>
       </Link>
 
       {/* Header */}
-      <Heading level={1} data-size="lg" style={{ marginBottom: 'var(--ds-spacing-2)' }}>
+      <Heading level={1} size="lg" style={{ marginBottom: 'var(--ds-spacing-2)' }}>
         {t('saasAdmin.tenantEdit.title', { defaultValue: 'Rediger tenant' })}
       </Heading>
-      <Paragraph data-size="sm" style={{ color: 'var(--ds-color-neutral-text-subtle)', marginBottom: 'var(--ds-spacing-6)' }}>
+      <Paragraph size="sm" style={{ color: 'var(--ds-color-neutral-text-subtle)', marginBottom: 'var(--ds-spacing-6)' }}>
         {tenant.name}
       </Paragraph>
 
@@ -216,7 +216,7 @@ export function TenantEditPage() {
       <form onSubmit={handleSubmit}>
         {/* Basic Information */}
         <Card style={{ padding: 'var(--ds-spacing-6)', marginBottom: 'var(--ds-spacing-4)' }}>
-          <Heading level={2} data-size="sm" style={{ marginBottom: 'var(--ds-spacing-4)' }}>
+          <Heading level={2} size="sm" style={{ marginBottom: 'var(--ds-spacing-4)' }}>
             {t('saasAdmin.tenantCreate.basicInfo', { defaultValue: 'Grunnleggende informasjon' })}
           </Heading>
 
@@ -262,7 +262,7 @@ export function TenantEditPage() {
 
         {/* Subscription Plan */}
         <Card style={{ padding: 'var(--ds-spacing-6)', marginBottom: 'var(--ds-spacing-6)' }}>
-          <Heading level={2} data-size="sm" style={{ marginBottom: 'var(--ds-spacing-4)' }}>
+          <Heading level={2} size="sm" style={{ marginBottom: 'var(--ds-spacing-4)' }}>
             {t('saasAdmin.tenantCreate.subscription', { defaultValue: 'Abonnement' })}
           </Heading>
 
@@ -293,7 +293,7 @@ export function TenantEditPage() {
           </Link>
           <Button type="submit" disabled={updateMutation.isPending || !isDirty}>
             {updateMutation.isPending ? (
-              <Spinner data-size="sm" aria-label={t('common.saving')} />
+              <Spinner size="sm" aria-label={t('common.saving')} />
             ) : (
               <>
                 <SaveIcon />

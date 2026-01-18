@@ -8,7 +8,7 @@
  */
 import { describe, it, expect, beforeAll, afterAll, vi } from 'vitest';
 import Fastify, { FastifyInstance } from 'fastify';
-import { TEST_IDS } from '../../../__tests__/test-utils';
+import { TEST_IDS } from '@xala/api/../../__tests__/test-utils';
 
 /**
  * Test context interface for recurring booking tests

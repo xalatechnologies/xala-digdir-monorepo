@@ -9,9 +9,9 @@ import userEvent from '@testing-library/user-event';
 import { BrowserRouter } from 'react-router-dom';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { RentalObjectWizard } from './RentalObjectWizard';
-import { useRentalObjectWizard } from '../../hooks/useRentalObjectWizard';
+import { useRentalObjectWizard } from '@xala/api/hooks/useRentalObjectWizard';
 import { useRentalObjectBySlug, useCreateRentalObject, useUpdateRentalObject } from '@digilist/client-sdk';
-import { ToastProvider } from '../../../../providers/ToastProvider';
+import { ToastProvider } from '@xala/backoffice/providers/ToastProvider';
 import { useT } from '@xala/i18n';
 
 // Mock dependencies

@@ -19,4 +19,4 @@ export * from './wizard-types';
 export * from './wizard-constants';
 
 // Export wizard component props
-export type { RentalObjectWizardProps } from '../components/wizard/RentalObjectWizard';
+export type { RentalObjectWizardProps } from '@xala/api/components/wizard/RentalObjectWizard';

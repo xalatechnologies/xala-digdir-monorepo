@@ -1,5 +1,5 @@
 // Skip E2E tests if not explicitly enabled
-import { setupMockApi } from '../../../mocks/api-server.mock';
+import { setupMockApi } from '@xala/api/mocks/api-server.mock';
 /**
  * No CRUD Modals Gate Test
  * Verifies that all create/edit operations use dedicated pages, not modals

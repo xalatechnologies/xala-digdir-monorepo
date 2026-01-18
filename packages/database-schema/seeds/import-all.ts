@@ -81,11 +81,11 @@ async function importSeeds(): Promise<void> {
           ${user.tenant_id}, 
           ${user.email}, 
           ${user.name}, 
-          ${user.national_id},
-          ${user.role},
-          ${user.status},
-          ${user.demo_token},
-          ${JSON.stringify(user.metadata)}::jsonb
+          ${user.national_id || null},
+          ${user.role || 'member'},
+          ${user.status || 'active'},
+          ${user.demo_token || null},
+          ${JSON.stringify(user.metadata || {})}::jsonb
         )
         ON CONFLICT (id) DO UPDATE SET 
           email = EXCLUDED.email,

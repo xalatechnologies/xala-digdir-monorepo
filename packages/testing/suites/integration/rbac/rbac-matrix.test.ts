@@ -8,7 +8,7 @@
  */
 
 import { describe, it, expect, beforeAll } from 'vitest';
-import { setupMockApi } from '../../../mocks/api-server.mock';
+import { setupMockApi } from '@xala/api/mocks/api-server.mock';
 import * as fs from 'fs';
 
 const API_URL = process.env.API_URL || 'http://localhost:3000/api';

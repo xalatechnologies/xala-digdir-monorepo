@@ -113,10 +113,10 @@ export function FeatureFlagsCatalogPage() {
     <Stack direction="column" gap={20}>
       {/* Header */}
       <Stack direction="column" gap={1}>
-        <Heading level={2} data-size="md">
+        <Heading level={2} size="md">
           {t('saasAdmin.featureFlagsCatalog.title')}
         </Heading>
-        <Paragraph data-size="sm" style={{ color: 'var(--ds-color-neutral-text-subtle)' }}>
+        <Paragraph size="sm" style={{ color: 'var(--ds-color-neutral-text-subtle)' }}>
           {t('saasAdmin.featureFlagsCatalog.description')}
         </Paragraph>
       </Stack>
@@ -128,40 +128,40 @@ export function FeatureFlagsCatalogPage() {
       >
         <Card style={{ padding: 'var(--ds-spacing-4)' }}>
           <Stack direction="column" gap={2}>
-            <Paragraph data-size="sm" style={{ color: 'var(--ds-color-neutral-text-subtle)', margin: 0 }}>
+            <Paragraph size="sm" style={{ color: 'var(--ds-color-neutral-text-subtle)', margin: 0 }}>
               {t('saasAdmin.featureFlagsCatalog.total')}
             </Paragraph>
-            <Heading level={3} data-size="lg" style={{ margin: 0 }}>
+            <Heading level={3} size="lg" style={{ margin: 0 }}>
               {stats.total}
             </Heading>
           </Stack>
         </Card>
         <Card style={{ padding: 'var(--ds-spacing-4)' }}>
           <Stack direction="column" gap={2}>
-            <Paragraph data-size="sm" style={{ color: 'var(--ds-color-neutral-text-subtle)', margin: 0 }}>
+            <Paragraph size="sm" style={{ color: 'var(--ds-color-neutral-text-subtle)', margin: 0 }}>
               {t('saasAdmin.featureFlagsCatalog.modules')}
             </Paragraph>
-            <Heading level={3} data-size="lg" style={{ margin: 0 }}>
+            <Heading level={3} size="lg" style={{ margin: 0 }}>
               {stats.module}
             </Heading>
           </Stack>
         </Card>
         <Card style={{ padding: 'var(--ds-spacing-4)' }}>
           <Stack direction="column" gap={2}>
-            <Paragraph data-size="sm" style={{ color: 'var(--ds-color-neutral-text-subtle)', margin: 0 }}>
+            <Paragraph size="sm" style={{ color: 'var(--ds-color-neutral-text-subtle)', margin: 0 }}>
               {t('saasAdmin.featureFlagsCatalog.integrations')}
             </Paragraph>
-            <Heading level={3} data-size="lg" style={{ margin: 0 }}>
+            <Heading level={3} size="lg" style={{ margin: 0 }}>
               {stats.integration}
             </Heading>
           </Stack>
         </Card>
         <Card style={{ padding: 'var(--ds-spacing-4)' }}>
           <Stack direction="column" gap={2}>
-            <Paragraph data-size="sm" style={{ color: 'var(--ds-color-neutral-text-subtle)', margin: 0 }}>
+            <Paragraph size="sm" style={{ color: 'var(--ds-color-neutral-text-subtle)', margin: 0 }}>
               {t('saasAdmin.featureFlagsCatalog.policies')}
             </Paragraph>
-            <Heading level={3} data-size="lg" style={{ margin: 0 }}>
+            <Heading level={3} size="lg" style={{ margin: 0 }}>
               {stats.policy}
             </Heading>
           </Stack>
@@ -235,7 +235,7 @@ export function FeatureFlagsCatalogPage() {
       <Card>
         {isLoading ? (
           <div style={{ display: 'flex', justifyContent: 'center', padding: 'var(--ds-spacing-8)' }}>
-            <Spinner data-size="lg" aria-label={t('saasAdmin.featureFlagsCatalog.loading')} />
+            <Spinner size="lg" aria-label={t('saasAdmin.featureFlagsCatalog.loading')} />
           </div>
         ) : filteredFlags.length === 0 ? (
           <EmptyState

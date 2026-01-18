@@ -13,7 +13,7 @@ import {
   Textarea,
   Checkbox,
 } from '@xala/ds';
-import type { UseRentalObjectWizardReturn } from '../../../hooks/useRentalObjectWizard';
+import type { UseRentalObjectWizardReturn } from '@xala/backoffice/hooks/useRentalObjectWizard';
 
 export interface PickupStepProps {
   wizard: UseRentalObjectWizardReturn;

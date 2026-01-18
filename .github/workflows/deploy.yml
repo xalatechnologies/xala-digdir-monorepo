@@ -266,3 +266,14 @@ jobs:
           sleep 5
           curl -f https://api.digilist.no/health || exit 1
           echo "✅ API verified!"
+
+  # =============================================================================
+  # Post-Deployment Automated Tests
+  # =============================================================================
+  post-deployment-tests:
+    name: Run Post-Deployment Tests
+    needs: [deploy, deploy-api]
+    if: always() && (needs.deploy.result == 'success' || needs.deploy-api.result == 'success')
+    uses: ./.github/workflows/post-deployment-tests.yml
+    with:
+      environment: ${{ github.ref == 'refs/heads/main' && 'production' || github.ref == 'refs/heads/staging' && 'staging' || 'test' }}

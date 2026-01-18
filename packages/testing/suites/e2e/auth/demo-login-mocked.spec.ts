@@ -1,5 +1,5 @@
 // Skip E2E tests if not explicitly enabled
-import { setupMockApi } from '../../../mocks/api-server.mock';
+import { setupMockApi } from '@xala/api/mocks/api-server.mock';
 /**
  * Demo Login E2E Test with Mocked API
  *
@@ -7,8 +7,8 @@ import { setupMockApi } from '../../../mocks/api-server.mock';
  * allowing E2E tests to run without requiring the backend API server.
  */
 import { test, expect } from '@playwright/test';
-import { LoginPage } from '../../helpers/pages/LoginPage';
-import { TEST_CREDENTIALS } from '../../fixtures/auth/auth.fixture';
+import { LoginPage } from '@xala/api/helpers/pages/LoginPage';
+import { TEST_CREDENTIALS } from '@xala/api/fixtures/auth/auth.fixture';
 
 test.describe('Demo Login (Mocked API)', () => {
   setupMockApi();

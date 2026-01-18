@@ -49,7 +49,7 @@ export function ProtectedRoute({ children, requiredRole }: ProtectedRouteProps) 
   if (isLoading) {
     return (
       <div className={styles.loadingContainer}>
-        <Spinner aria-label="Laster..." data-size="lg" />
+        <Spinner aria-label="Laster..." size="lg" />
       </div>
     );
   }

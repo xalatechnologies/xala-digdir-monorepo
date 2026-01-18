@@ -15,15 +15,15 @@ else
 fi
 echo ""
 
-# Set environment variables
+# Override database URLs for local host (apps run on host, not in Docker)
 export DATABASE_URL="postgresql://digilist_dev:dev_password_2026@localhost:5433/digilist_dev"
 export REDIS_URL="redis://localhost:6380"
 export NODE_ENV="development"
 export API_PORT="4000"
 
-echo "� Environment configured"
-echo "  DATABASE_URL: $DATABASE_URL"
-echo "  REDIS_URL: $REDIS_URL"
+echo "🔧 Environment configured for host execution:"
+echo "  DATABASE_URL: postgresql://localhost:5433/digilist_dev"
+echo "  REDIS_URL: redis://localhost:6380"
 echo ""
 
 # Start Docker services (PostgreSQL & Redis)
@@ -58,9 +58,9 @@ pnpm --filter @xala/minside exec vite --port 6002 &
 echo "  Backoffice: http://localhost:6003"
 pnpm --filter @xala/backoffice exec vite --port 6003 &
 
-# Tenant Admin on port 6004
-echo "  Tenant Admin: http://localhost:6004"
-pnpm --filter @xala/tenant-admin exec vite --port 6004 &
+# Docs Learning on port 6004
+echo "  Docs:       http://localhost:6004"
+pnpm --filter @xala/docs-learning exec vite --port 6004 &
 
 # SaaS Admin on port 6005
 echo "  SaaS Admin: http://localhost:6005"

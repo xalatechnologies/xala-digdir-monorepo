@@ -12,7 +12,7 @@ import {
   hasRole,
   hasAnyRole,
   UserRole 
-} from '../rbac';
+} from '@xala/api/rbac';
 import type { FastifyRequest, FastifyReply } from 'fastify';
 
 describe('RBAC Middleware', () => {

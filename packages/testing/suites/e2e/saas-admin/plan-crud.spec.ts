@@ -1,5 +1,5 @@
 // Skip E2E tests if not explicitly enabled
-import { setupMockApi } from '../../../mocks/api-server.mock';
+import { setupMockApi } from '@xala/api/mocks/api-server.mock';
 /**
  * SaaS Admin - Plan CRUD E2E Tests
  * Tests for subscription plan creation, viewing, and management

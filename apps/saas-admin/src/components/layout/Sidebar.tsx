@@ -62,12 +62,12 @@ function SidebarNavItem({ item }: { item: NavItem }) {
       {/* Text content */}
       <div className={styles.navContent}>
         <Paragraph
-          data-size="sm"
+          size="sm"
           className={`${styles.navName} ${isActive ? styles.navNameActive : ''}`}
         >
           {item.name}
         </Paragraph>
-        <Paragraph data-size="xs" className={styles.navDescription}>
+        <Paragraph size="xs" className={styles.navDescription}>
           {item.description}
         </Paragraph>
       </div>
@@ -249,7 +249,7 @@ export function Sidebar() {
         {filteredSections.map((section, sectionIndex) => (
           <div key={sectionIndex} className={styles.navSection}>
             {section.title && (
-              <Paragraph data-size="xs" className={styles.sectionTitle}>
+              <Paragraph size="xs" className={styles.sectionTitle}>
                 {section.title}
               </Paragraph>
             )}
@@ -272,10 +272,10 @@ export function Sidebar() {
               {user.name.charAt(0).toUpperCase()}
             </div>
             <div className={styles.userInfo}>
-              <Paragraph data-size="sm" className={styles.userName}>
+              <Paragraph size="sm" className={styles.userName}>
                 {user.name}
               </Paragraph>
-              <Paragraph data-size="xs" className={styles.userRole}>
+              <Paragraph size="xs" className={styles.userRole}>
                 {getRoleDisplayName(user.role)}
               </Paragraph>
             </div>

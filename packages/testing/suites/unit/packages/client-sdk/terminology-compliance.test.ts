@@ -6,10 +6,10 @@
  * "listing" and "facility" are deprecated and should not appear in new code
  */
 import { describe, it, expect } from 'vitest';
-import * as services from '../services';
-import * as hooks from '../hooks';
-import * as types from '../types';
-import * as sdk from '../index';
+import * as services from '@xala/api/services';
+import * as hooks from '@xala/api/hooks';
+import * as types from '@xala/api/types';
+import * as sdk from '@xala/api/index';
 
 describe('Terminology Compliance: No Listing/Facility', () => {
   describe('Service Exports', () => {

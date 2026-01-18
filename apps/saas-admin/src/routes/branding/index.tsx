@@ -45,7 +45,7 @@ export function BrandingListPage() {
   if (isLoading) {
     return (
       <div style={{ display: 'flex', justifyContent: 'center', padding: 'var(--ds-spacing-8)' }}>
-        <Spinner data-size="lg" aria-label={t('common.loading')} />
+        <Spinner size="lg" aria-label={t('common.loading')} />
       </div>
     );
   }
@@ -57,11 +57,11 @@ export function BrandingListPage() {
         <div>
           <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--ds-spacing-3)', marginBottom: 'var(--ds-spacing-2)' }}>
             <SparklesIcon style={{ color: 'var(--ds-color-accent-text-default)', width: 32, height: 32 }} />
-            <Heading level={1} data-size="lg">
+            <Heading level={1} size="lg">
               {t('saasAdmin.branding.title', { defaultValue: 'Branding & Tema' })}
             </Heading>
           </div>
-          <Paragraph data-size="sm" style={{ color: 'var(--ds-color-neutral-text-subtle)' }}>
+          <Paragraph size="sm" style={{ color: 'var(--ds-color-neutral-text-subtle)' }}>
             {t('saasAdmin.branding.description', { defaultValue: 'Administrer farger, logoer og visuelle innstillinger for hver tenant' })}
           </Paragraph>
         </div>
@@ -70,26 +70,26 @@ export function BrandingListPage() {
       {/* Statistics */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 'var(--ds-spacing-4)', marginBottom: 'var(--ds-spacing-6)' }}>
         <Card style={{ padding: 'var(--ds-spacing-4)', textAlign: 'center' }}>
-          <Heading level={3} data-size="xl" style={{ marginBottom: 'var(--ds-spacing-1)' }}>
+          <Heading level={3} size="xl" style={{ marginBottom: 'var(--ds-spacing-1)' }}>
             {tenants.length}
           </Heading>
-          <Paragraph data-size="sm" style={{ color: 'var(--ds-color-neutral-text-subtle)' }}>
+          <Paragraph size="sm" style={{ color: 'var(--ds-color-neutral-text-subtle)' }}>
             Totalt tenanter
           </Paragraph>
         </Card>
         <Card style={{ padding: 'var(--ds-spacing-4)', textAlign: 'center' }}>
-          <Heading level={3} data-size="xl" style={{ marginBottom: 'var(--ds-spacing-1)', color: 'var(--ds-color-success-text-default)' }}>
+          <Heading level={3} size="xl" style={{ marginBottom: 'var(--ds-spacing-1)', color: 'var(--ds-color-success-text-default)' }}>
             {tenants.filter((t) => getBrandingStatus(t.id).hasCustomBranding).length}
           </Heading>
-          <Paragraph data-size="sm" style={{ color: 'var(--ds-color-neutral-text-subtle)' }}>
+          <Paragraph size="sm" style={{ color: 'var(--ds-color-neutral-text-subtle)' }}>
             Med egendefinert tema
           </Paragraph>
         </Card>
         <Card style={{ padding: 'var(--ds-spacing-4)', textAlign: 'center' }}>
-          <Heading level={3} data-size="xl" style={{ marginBottom: 'var(--ds-spacing-1)', color: 'var(--ds-color-warning-text-default)' }}>
+          <Heading level={3} size="xl" style={{ marginBottom: 'var(--ds-spacing-1)', color: 'var(--ds-color-warning-text-default)' }}>
             {tenants.filter((t) => !getBrandingStatus(t.id).hasCustomBranding).length}
           </Heading>
-          <Paragraph data-size="sm" style={{ color: 'var(--ds-color-neutral-text-subtle)' }}>
+          <Paragraph size="sm" style={{ color: 'var(--ds-color-neutral-text-subtle)' }}>
             Bruker standard tema
           </Paragraph>
         </Card>
@@ -162,7 +162,7 @@ export function BrandingListPage() {
                   </Table.Cell>
                   <Table.Cell>
                     <Link to={`/branding/${tenant.id}`}>
-                      <Button variant="tertiary" data-size="sm" type="button">
+                      <Button variant="tertiary" size="sm" type="button">
                         <EditIcon />
                         Rediger
                       </Button>

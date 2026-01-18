@@ -6,8 +6,8 @@
 import { useMemo } from 'react';
 import { Paragraph, Spinner } from '@xala/ds';
 import type { CalendarEvent } from '@digilist/client-sdk';
-import { useDragAndDrop } from '../hooks/useDragAndDrop';
-import { useConflictDetection } from '../hooks/useConflictDetection';
+import { useDragAndDrop } from '@xala/api/hooks/useDragAndDrop';
+import { useConflictDetection } from '@xala/api/hooks/useConflictDetection';
 import { ConflictIndicator, getConflictColors } from './ConflictIndicator';
 
 interface TimelineViewProps {

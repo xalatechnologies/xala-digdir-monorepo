@@ -30,8 +30,8 @@ import {
   DEFAULT_BLOCK_FORM,
   DEFAULT_RECURRENCE_FORM,
   WEEKDAY_LABELS,
-} from '../types';
-import { useCalendarPermissions } from '../hooks/useCalendarPermissions';
+} from '@xala/api/types';
+import { useCalendarPermissions } from '@xala/api/hooks/useCalendarPermissions';
 import { useT } from '@xala/i18n';
 
 interface CreateBlockModalProps {

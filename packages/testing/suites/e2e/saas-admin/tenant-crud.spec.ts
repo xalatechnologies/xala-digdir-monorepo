@@ -1,5 +1,5 @@
 // Skip E2E tests if not explicitly enabled
-import { setupMockApi } from '../../../mocks/api-server.mock';
+import { setupMockApi } from '@xala/api/mocks/api-server.mock';
 /**
  * SaaS Admin - Tenant CRUD E2E Tests
  * Tests for tenant creation, editing, and management flows

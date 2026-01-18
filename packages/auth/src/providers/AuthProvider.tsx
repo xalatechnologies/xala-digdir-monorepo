@@ -259,16 +259,8 @@ export function AuthProvider({ children, config }: AuthProviderProps) {
       // - MODE is explicitly 'development'
       // - VITE_ENABLE_DEV_MODE is set to 'true'
       if (isDevMode) {
-        // REMOVED: Dev mode mock authentication
-        // Use real authentication flow with /api/auth/demo-token instead
         debug('⚠️  Dev mode enabled but mock auth removed - use demo token login');
-        setIsLoading(false);
-
-        // Cleanup event listener
-        if (typeof window !== 'undefined') {
-          window.removeEventListener('auth:expired', handleAuthExpired);
-        }
-        return;
+        // REMOVED early return - proceed to normal session validation 
       }
 
       debug('Checking authentication status...');

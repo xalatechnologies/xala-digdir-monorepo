@@ -33,12 +33,12 @@ const DS_TOKENS = {
 
 // Font options
 const FONT_OPTIONS = [
-  { value: 'Inter', label: t('common.inter_standard') },
+  { value: 'Inter', label: 'Inter (Standard)' },
   { value: 'Roboto', label: 'Roboto' },
-  { value: 'Open Sans', label: t('common.open_sans') },
+  { value: 'Open Sans', label: 'Open Sans' },
   { value: 'Lato', label: 'Lato' },
   { value: 'Poppins', label: 'Poppins' },
-  { value: 'Source Sans Pro', label: t('common.source_sans_pro') },
+  { value: 'Source Sans Pro', label: 'Source Sans Pro' },
 ];
 
 // Default branding values
@@ -114,7 +114,7 @@ export function BrandingEditorPage() {
   if (isLoading) {
     return (
       <div style={{ display: 'flex', justifyContent: 'center', padding: 'var(--ds-spacing-8)' }}>
-        <Spinner data-size="lg" aria-label={t('common.loading')} />
+        <Spinner size="lg" aria-label={t('common.loading')} />
       </div>
     );
   }
@@ -122,7 +122,7 @@ export function BrandingEditorPage() {
   if (!tenant) {
     return (
       <div style={{ maxWidth: '800px', margin: '0 auto', padding: 'var(--ds-spacing-8)' }}>
-        <Heading level={3} data-size="sm">
+        <Heading level={3} size="sm">
           Tenant ikke funnet
         </Heading>
         <Link to="/branding">
@@ -139,7 +139,7 @@ export function BrandingEditorPage() {
     <div style={{ maxWidth: '1200px', margin: '0 auto', padding: 'var(--ds-spacing-8)' }}>
       {/* Header */}
       <Link to="/branding">
-        <Button variant="tertiary" data-size="sm" style={{ marginBottom: 'var(--ds-spacing-4)' }} type="button">
+        <Button variant="tertiary" size="sm" style={{ marginBottom: 'var(--ds-spacing-4)' }} type="button">
           <ArrowLeftIcon />
           Tilbake til oversikt
         </Button>
@@ -147,11 +147,11 @@ export function BrandingEditorPage() {
 
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 'var(--ds-spacing-6)' }}>
         <div>
-          <Heading level={1} data-size="lg" style={{ marginBottom: 'var(--ds-spacing-2)' }}>
+          <Heading level={1} size="lg" style={{ marginBottom: 'var(--ds-spacing-2)' }}>
             Rediger branding
           </Heading>
           <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--ds-spacing-2)' }}>
-            <Paragraph data-size="sm" style={{ color: 'var(--ds-color-neutral-text-subtle)' }}>
+            <Paragraph size="sm" style={{ color: 'var(--ds-color-neutral-text-subtle)' }}>
               {tenant.name}
             </Paragraph>
             <Badge color="info">{tenant.slug}</Badge>
@@ -165,7 +165,7 @@ export function BrandingEditorPage() {
           </Button>
           <Button onClick={handleSave} disabled={isSaving || !hasChanges}>
             {isSaving ? (
-              <Spinner data-size="sm" aria-label="Lagrer..." />
+              <Spinner size="sm" aria-label="Lagrer..." />
             ) : (
               <>
                 <SaveIcon />
@@ -181,7 +181,7 @@ export function BrandingEditorPage() {
         <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--ds-spacing-4)' }}>
           {/* Colors */}
           <Card style={{ padding: 'var(--ds-spacing-6)' }}>
-            <Heading level={2} data-size="sm" style={{ marginBottom: 'var(--ds-spacing-4)' }}>
+            <Heading level={2} size="sm" style={{ marginBottom: 'var(--ds-spacing-4)' }}>
               Farger
             </Heading>
 
@@ -203,7 +203,7 @@ export function BrandingEditorPage() {
                     style={{ flex: 1 }}
                   />
                 </div>
-                <Paragraph data-size="xs" style={{ marginTop: 'var(--ds-spacing-1)', color: 'var(--ds-color-neutral-text-subtle)' }}>
+                <Paragraph size="xs" style={{ marginTop: 'var(--ds-spacing-1)', color: 'var(--ds-color-neutral-text-subtle)' }}>
                   {DS_TOKENS.primaryColor}
                 </Paragraph>
               </div>
@@ -225,7 +225,7 @@ export function BrandingEditorPage() {
                     style={{ flex: 1 }}
                   />
                 </div>
-                <Paragraph data-size="xs" style={{ marginTop: 'var(--ds-spacing-1)', color: 'var(--ds-color-neutral-text-subtle)' }}>
+                <Paragraph size="xs" style={{ marginTop: 'var(--ds-spacing-1)', color: 'var(--ds-color-neutral-text-subtle)' }}>
                   {DS_TOKENS.secondaryColor}
                 </Paragraph>
               </div>
@@ -247,7 +247,7 @@ export function BrandingEditorPage() {
                     style={{ flex: 1 }}
                   />
                 </div>
-                <Paragraph data-size="xs" style={{ marginTop: 'var(--ds-spacing-1)', color: 'var(--ds-color-neutral-text-subtle)' }}>
+                <Paragraph size="xs" style={{ marginTop: 'var(--ds-spacing-1)', color: 'var(--ds-color-neutral-text-subtle)' }}>
                   {DS_TOKENS.accentColor}
                 </Paragraph>
               </div>
@@ -256,7 +256,7 @@ export function BrandingEditorPage() {
 
           {/* Logo & Favicon */}
           <Card style={{ padding: 'var(--ds-spacing-6)' }}>
-            <Heading level={2} data-size="sm" style={{ marginBottom: 'var(--ds-spacing-4)' }}>
+            <Heading level={2} size="sm" style={{ marginBottom: 'var(--ds-spacing-4)' }}>
               Logo og ikon
             </Heading>
 
@@ -270,7 +270,7 @@ export function BrandingEditorPage() {
                   onChange={(e) => handleColorChange('logoUrl', e.target.value)}
                   placeholder="https://example.com/logo.svg"
                 />
-                <Paragraph data-size="xs" style={{ marginTop: 'var(--ds-spacing-1)', color: 'var(--ds-color-neutral-text-subtle)' }}>
+                <Paragraph size="xs" style={{ marginTop: 'var(--ds-spacing-1)', color: 'var(--ds-color-neutral-text-subtle)' }}>
                   Anbefalt: SVG eller PNG med gjennomsiktig bakgrunn
                 </Paragraph>
               </div>
@@ -290,7 +290,7 @@ export function BrandingEditorPage() {
 
           {/* Typography */}
           <Card style={{ padding: 'var(--ds-spacing-6)' }}>
-            <Heading level={2} data-size="sm" style={{ marginBottom: 'var(--ds-spacing-4)' }}>
+            <Heading level={2} size="sm" style={{ marginBottom: 'var(--ds-spacing-4)' }}>
               Typografi
             </Heading>
 
@@ -333,7 +333,7 @@ export function BrandingEditorPage() {
         {/* Live Preview */}
         <div>
           <Card style={{ padding: 'var(--ds-spacing-4)', position: 'sticky', top: 'var(--ds-spacing-4)' }}>
-            <Heading level={3} data-size="xs" style={{ marginBottom: 'var(--ds-spacing-4)' }}>
+            <Heading level={3} size="xs" style={{ marginBottom: 'var(--ds-spacing-4)' }}>
               Forhåndsvisning
             </Heading>
 
@@ -423,7 +423,7 @@ export function BrandingEditorPage() {
 
             {/* Color Swatches */}
             <div style={{ marginTop: 'var(--ds-spacing-4)' }}>
-              <Paragraph data-size="xs" style={{ marginBottom: 'var(--ds-spacing-2)', fontWeight: 'var(--ds-font-weight-medium)' }}>
+              <Paragraph size="xs" style={{ marginBottom: 'var(--ds-spacing-2)', fontWeight: 'var(--ds-font-weight-medium)' }}>
                 Fargepalett
               </Paragraph>
               <div style={{ display: 'flex', gap: 'var(--ds-spacing-1)' }}>

@@ -4,7 +4,7 @@
 
 import { describe, it, expect } from 'vitest';
 import { renderHook } from '@testing-library/react';
-import { useAuth } from '../useAuth';
+import { useAuth } from '@xala/api/useAuth';
 
 describe('useAuth', () => {
   it('should throw error when used outside AuthProvider', () => {

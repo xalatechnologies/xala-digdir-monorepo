@@ -10,7 +10,7 @@ import type {
   WizardStepId,
   ValidationError,
   StepValidationResult,
-} from '../types';
+} from '@xala/api/types';
 
 /**
  * Validates a single wizard step

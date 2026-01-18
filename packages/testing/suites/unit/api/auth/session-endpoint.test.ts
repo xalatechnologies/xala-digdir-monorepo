@@ -11,9 +11,9 @@
  */
 import { describe, it, expect, beforeAll, afterAll, vi } from 'vitest';
 import { FastifyInstance } from 'fastify';
-import { container } from '../../core/container';
-import { JwtService } from '../../core/auth/jwt.service';
-import { COOKIE_CONFIG } from '../../config/cookies';
+import { container } from '@xala/api/../core/container';
+import { JwtService } from '@xala/api/../core/auth/jwt.service';
+import { COOKIE_CONFIG } from '@xala/api/../config/cookies';
 
 // Mock Fastify app for testing
 let app: FastifyInstance;

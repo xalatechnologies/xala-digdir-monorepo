@@ -8,7 +8,7 @@ import {
   filterNavItemsByCapabilities,
   annotateNavItems,
   type NavItem,
-} from '../use-navigation';
+} from '@xala/api/use-navigation';
 
 describe('filterNavItemsByCapabilities', () => {
   const testItems: NavItem[] = [

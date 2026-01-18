@@ -176,7 +176,7 @@ export function PlansListPage() {
         }
       />
       {t('saasAdmin.plans.subtitle') && (
-        <Paragraph data-size="sm" style={{ marginTop: 'var(--ds-spacing-2)', marginBottom: 'var(--ds-spacing-4)' }}>
+        <Paragraph size="sm" style={{ marginTop: 'var(--ds-spacing-2)', marginBottom: 'var(--ds-spacing-4)' }}>
           {t('saasAdmin.plans.subtitle')}
         </Paragraph>
       )}
@@ -217,7 +217,7 @@ export function PlansListPage() {
       <Card>
         {isLoading ? (
           <div className={styles.loadingContainer}>
-            <Spinner data-size="lg" aria-label={t('common.loading')} />
+            <Spinner size="lg" aria-label={t('common.loading')} />
           </div>
         ) : filteredPlans.length === 0 ? (
           <EmptyState
@@ -309,7 +309,7 @@ export function PlansListPage() {
                   </Table.Cell>
                   <Table.Cell onClick={(e) => e.stopPropagation()}>
                     <Dropdown.TriggerContext>
-                      <Dropdown.Trigger variant="tertiary" data-size="sm">
+                      <Dropdown.Trigger variant="tertiary" size="sm">
                         <MoreVerticalIcon />
                       </Dropdown.Trigger>
                       <Dropdown>
@@ -330,7 +330,7 @@ export function PlansListPage() {
                             <Dropdown.Item>
                               <Dropdown.Button
                                 onClick={() => handleStatusChange(plan, 'inactive')}
-                                data-color="warning"
+                                color="warning"
                               >
                                 <XCircleIcon />
                                 {t('saasAdmin.plans.deactivate')}
@@ -348,7 +348,7 @@ export function PlansListPage() {
                               <Dropdown.Item>
                                 <Dropdown.Button
                                   onClick={() => handleStatusChange(plan, 'deprecated')}
-                                  data-color="danger"
+                                  color="danger"
                                 >
                                   <XCircleIcon />
                                   {t('saasAdmin.plans.markDeprecated')}

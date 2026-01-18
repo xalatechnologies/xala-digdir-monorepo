@@ -14,7 +14,7 @@
  */
 
 import { describe, it, expect, beforeEach } from 'vitest';
-import { setupMockApi } from '../../mocks/api-server.mock';
+import { setupMockApi } from '@xala/api/mocks/api-server.mock';
 import {
   toDomain,
   toCardProjection,

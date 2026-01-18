@@ -14,7 +14,7 @@ import {
   Switch,
   SaveIcon,
 } from '@xala/ds';
-import { useNotificationSettings } from '../hooks/useNotificationSettings';
+import { useNotificationSettings } from '@xala/api/hooks/useNotificationSettings';
 import { useT } from '@xala/i18n';
 
 export function NotificationsTab() {

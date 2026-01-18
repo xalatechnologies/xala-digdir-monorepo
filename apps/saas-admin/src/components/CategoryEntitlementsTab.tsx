@@ -20,14 +20,14 @@ import type { CategoryEntitlement } from '@digilist/client-sdk/types';
 
 // Well-known rental object categories from the platform
 const RENTAL_OBJECT_CATEGORIES = [
-  { key: 'LOKALER_OG_BANER', name: t('common.lokaler_og_baner'), description: t('common.idrettshaller_gymsaler_moterom') },
-  { key: 'UTSTYR', name: 'Utstyr', description: t('common.sportsutstyr_lydlys_avutstyr') },
-  { key: 'ARRANGEMENT', name: 'Arrangement', description: t('common.festivaler_messer_konferanser') },
-  { key: 'PARKERING', name: 'Parkering', description: t('common.parkeringsplasser_garasjer') },
-  { key: 'UTLEIE_BOLIG', name: t('common.utleie_bolig'), description: t('common.leiligheter_hytter_boliger') },
-  { key: 'KJØRETØY', name: t('common.kjoretoy'), description: t('common.biler_baater_sykler') },
-  { key: 'KONTOR', name: 'Kontor', description: t('common.kontorplasser_coworking') },
-  { key: 'LAGER', name: 'Lager', description: t('common.lagerlokaler_boder') },
+  { key: 'LOKALER_OG_BANER', name: 'Lokaler og baner', description: 'Idrettshaller, gymsaler, møterom' },
+  { key: 'UTSTYR', name: 'Utstyr', description: 'Sportsutstyr, lyd/lys, AV-utstyr' },
+  { key: 'ARRANGEMENT', name: 'Arrangement', description: 'Festivaler, messer, konferanser' },
+  { key: 'PARKERING', name: 'Parkering', description: 'Parkeringsplasser, garasjer' },
+  { key: 'UTLEIE_BOLIG', name: 'Utleiebolig', description: 'Leiligheter, hytter, boliger' },
+  { key: 'KJØRETØY', name: 'Kjøretøy', description: 'Biler, båter, sykler' },
+  { key: 'KONTOR', name: 'Kontor', description: 'Kontorplasser, coworking' },
+  { key: 'LAGER', name: 'Lager', description: 'Lagerlokaler, boder' },
 ] as const;
 
 interface CategoryEntitlementsTabProps {
@@ -124,10 +124,10 @@ export function CategoryEntitlementsTab({ tenantId }: CategoryEntitlementsTabPro
       {/* Header */}
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 'var(--ds-spacing-4)' }}>
         <div>
-          <Heading level={3} data-size="sm" style={{ marginBottom: 'var(--ds-spacing-1)' }}>
+          <Heading level={3} size="sm" style={{ marginBottom: 'var(--ds-spacing-1)' }}>
             Kategorier for leieobjekter
           </Heading>
-          <Paragraph data-size="sm" style={{ color: 'var(--ds-color-neutral-text-subtle)' }}>
+          <Paragraph size="sm" style={{ color: 'var(--ds-color-neutral-text-subtle)' }}>
             Velg hvilke kategorier av leieobjekter denne tenanten kan opprette
           </Paragraph>
         </div>
@@ -138,10 +138,10 @@ export function CategoryEntitlementsTab({ tenantId }: CategoryEntitlementsTabPro
 
       {/* Bulk actions */}
       <div style={{ display: 'flex', gap: 'var(--ds-spacing-2)', marginBottom: 'var(--ds-spacing-4)' }}>
-        <Button variant="tertiary" data-size="sm" onClick={handleSelectAll} type="button">
+        <Button variant="tertiary" size="sm" onClick={handleSelectAll} type="button">
           Velg alle
         </Button>
-        <Button variant="tertiary" data-size="sm" onClick={handleDeselectAll} type="button">
+        <Button variant="tertiary" size="sm" onClick={handleDeselectAll} type="button">
           Fjern alle
         </Button>
       </div>
@@ -167,10 +167,10 @@ export function CategoryEntitlementsTab({ tenantId }: CategoryEntitlementsTabPro
             >
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
                 <div style={{ flex: 1 }}>
-                  <Paragraph data-size="sm" style={{ margin: 0, fontWeight: 'var(--ds-font-weight-medium)' }}>
+                  <Paragraph size="sm" style={{ margin: 0, fontWeight: 'var(--ds-font-weight-medium)' }}>
                     {category.name}
                   </Paragraph>
-                  <Paragraph data-size="xs" style={{ margin: 0, marginTop: 'var(--ds-spacing-1)', color: 'var(--ds-color-neutral-text-subtle)' }}>
+                  <Paragraph size="xs" style={{ margin: 0, marginTop: 'var(--ds-spacing-1)', color: 'var(--ds-color-neutral-text-subtle)' }}>
                     {category.description}
                   </Paragraph>
                   <code style={{ fontSize: 'var(--ds-font-size-xs)', color: 'var(--ds-color-neutral-text-subtle)' }}>
@@ -184,7 +184,7 @@ export function CategoryEntitlementsTab({ tenantId }: CategoryEntitlementsTabPro
                 />
               </div>
               {entitlement?.reason && (
-                <Paragraph data-size="xs" style={{ margin: 0, marginTop: 'var(--ds-spacing-2)', color: 'var(--ds-color-info-text-default)' }}>
+                <Paragraph size="xs" style={{ margin: 0, marginTop: 'var(--ds-spacing-2)', color: 'var(--ds-color-info-text-default)' }}>
                   {entitlement.reason}
                 </Paragraph>
               )}
@@ -198,7 +198,7 @@ export function CategoryEntitlementsTab({ tenantId }: CategoryEntitlementsTabPro
         <div style={{ marginTop: 'var(--ds-spacing-4)', display: 'flex', justifyContent: 'flex-end' }}>
           <Button onClick={handleSave} disabled={updateMutation.isPending}>
             {updateMutation.isPending ? (
-              <Spinner data-size="sm" aria-label="Lagrer..." />
+              <Spinner size="sm" aria-label="Lagrer..." />
             ) : (
               <>
                 <SaveIcon />

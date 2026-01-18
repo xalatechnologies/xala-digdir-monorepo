@@ -2,8 +2,8 @@
  * Unit Tests for Core HTTP Client
  */
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
-import { FetchHttpClient } from '../../core/fetch-client';
-import { ApiError } from '../../core/http-client.interface';
+import { FetchHttpClient } from '@xala/api/core/fetch-client';
+import { ApiError } from '@xala/api/core/http-client.interface';
 
 // Mock global fetch
 const mockFetch = vi.fn();

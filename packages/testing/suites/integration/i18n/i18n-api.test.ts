@@ -16,7 +16,7 @@
  */
 
 import { describe, it, expect, beforeAll, afterAll } from 'vitest';
-import { setupMockApi } from '../../../mocks/api-server.mock';
+import { setupMockApi } from '@xala/api/mocks/api-server.mock';
 import { z } from 'zod';
 
 // =============================================================================

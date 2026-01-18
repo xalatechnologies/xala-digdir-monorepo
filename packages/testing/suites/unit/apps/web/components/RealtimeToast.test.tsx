@@ -7,7 +7,7 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { screen, waitFor } from '@testing-library/react';
 import { RealtimeToast } from './RealtimeToast';
-import { testAccessibility, testScreenReaderAnnouncements } from '../test-utils/accessibility';
+import { testAccessibility, testScreenReaderAnnouncements } from '@xala/api/test-utils/accessibility';
 import { useT } from '@xala/i18n';
 
 // Mock the realtime providers

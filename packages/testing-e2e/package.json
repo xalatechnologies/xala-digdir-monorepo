@@ -18,9 +18,14 @@
     "test:scenarios": "playwright test suites/scenarios",
     "report": "playwright show-report"
   },
+  "dependencies": {
+    "@digilist/api": "workspace:*"
+  },
   "devDependencies": {
     "@playwright/test": "^1.40.0",
     "@types/node": "^20.19.30",
-    "axe-core": "^4.8.0"
+    "axe-core": "^4.8.0",
+    "msw": "^2.12.7",
+    "typescript": "^5.7.2"
   }
 }

@@ -30,7 +30,7 @@ function DashboardPage() {
   const t = useT();
   return (
     <div>
-      <Heading level={1} data-size="lg">{t('saasAdmin.dashboard.title')}</Heading>
+      <Heading level={1} size="lg">{t('saasAdmin.dashboard.title')}</Heading>
       <Paragraph>{t('saasAdmin.dashboard.welcome')}</Paragraph>
       <Paragraph>{t('saasAdmin.dashboard.description')}</Paragraph>
     </div>

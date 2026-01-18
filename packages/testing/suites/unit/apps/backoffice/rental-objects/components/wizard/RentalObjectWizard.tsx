@@ -6,7 +6,7 @@
 
 import { useT } from '@xala/i18n';
 import { Heading, Paragraph, Badge, Spinner } from '@xala/ds';
-import { useRentalObjectWizard } from '../../hooks/useRentalObjectWizard';
+import { useRentalObjectWizard } from '@xala/api/hooks/useRentalObjectWizard';
 import { WizardFooter } from './WizardFooter';
 import { CategorySelector } from './steps/CategorySelector';
 import { BasicsStep } from './steps/BasicsStep';
@@ -23,7 +23,7 @@ import { BookingStep } from './steps/BookingStep';
 import { ContentStep } from './steps/ContentStep';
 import { CustodyStep } from './steps/CustodyStep';
 import { ReviewStep } from './steps/ReviewStep';
-import type { WizardStep } from '../../types';
+import type { WizardStep } from '@xala/api/types';
 
 export interface RentalObjectWizardProps {
   /** Rental object slug for edit mode */

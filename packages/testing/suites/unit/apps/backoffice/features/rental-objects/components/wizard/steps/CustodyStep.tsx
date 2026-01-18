@@ -11,7 +11,7 @@ import {
   useCreateCustodyGrant,
   useRevokeCustodyGrant 
 } from '@digilist/client-sdk';
-import type { useRentalObjectWizard } from '../../../hooks/useRentalObjectWizard';
+import type { useRentalObjectWizard } from '@xala/backoffice/hooks/useRentalObjectWizard';
 
 export interface CustodyStepProps {
   wizard: ReturnType<typeof useRentalObjectWizard>;

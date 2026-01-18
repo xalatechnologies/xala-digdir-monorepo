@@ -138,7 +138,7 @@ export function SeedDataManagementPage() {
     <div style={{ maxWidth: '1200px', margin: '0 auto', padding: 'var(--ds-spacing-8)' }}>
       {/* Header */}
       <div style={{ marginBottom: 'var(--ds-spacing-6)' }}>
-        <Heading level={1} data-size="lg" style={{ marginBottom: 'var(--ds-spacing-2)' }}>
+        <Heading level={1} size="lg" style={{ marginBottom: 'var(--ds-spacing-2)' }}>
           {t('saasAdmin.seedData.title')}
         </Heading>
         <Paragraph style={{ color: 'var(--ds-color-neutral-text-subtle)' }}>
@@ -149,7 +149,7 @@ export function SeedDataManagementPage() {
       {/* Upload Step */}
       {step === 'upload' && (
         <Card style={{ padding: 'var(--ds-spacing-6)' }}>
-          <Heading level={2} data-size="md" style={{ marginBottom: 'var(--ds-spacing-4)' }}>
+          <Heading level={2} size="md" style={{ marginBottom: 'var(--ds-spacing-4)' }}>
             Upload Seed Data
           </Heading>
 
@@ -170,7 +170,7 @@ export function SeedDataManagementPage() {
             }}
           >
             <div style={{ fontSize: '48px', marginBottom: 'var(--ds-spacing-4)' }}>📁</div>
-            <Heading level={3} data-size="sm" style={{ marginBottom: 'var(--ds-spacing-2)' }}>
+            <Heading level={3} size="sm" style={{ marginBottom: 'var(--ds-spacing-2)' }}>
               Drag & Drop JSON File
             </Heading>
             <Paragraph style={{ marginBottom: 'var(--ds-spacing-4)', color: 'var(--ds-color-neutral-text-subtle)' }}>
@@ -193,7 +193,7 @@ export function SeedDataManagementPage() {
           {/* Validation Errors */}
           {validationErrors.length > 0 && (
             <Alert severity="error" style={{ marginTop: 'var(--ds-spacing-4)' }}>
-              <Heading level={3} data-size="sm" style={{ marginBottom: 'var(--ds-spacing-2)' }}>
+              <Heading level={3} size="sm" style={{ marginBottom: 'var(--ds-spacing-2)' }}>
                 Validation Errors
               </Heading>
               <ul style={{ margin: 0, paddingLeft: 'var(--ds-spacing-4)' }}>
@@ -227,25 +227,25 @@ export function SeedDataManagementPage() {
               <Paragraph style={{ fontWeight: 600, marginBottom: 'var(--ds-spacing-1)' }}>
                 Total Objects
               </Paragraph>
-              <Heading level={2} data-size="lg">{stats.total_objects}</Heading>
+              <Heading level={2} size="lg">{stats.total_objects}</Heading>
             </Card>
             <Card style={{ padding: 'var(--ds-spacing-4)' }}>
               <Paragraph style={{ fontWeight: 600, marginBottom: 'var(--ds-spacing-1)' }}>
                 Users
               </Paragraph>
-              <Heading level={2} data-size="lg">{stats.total_users}</Heading>
+              <Heading level={2} size="lg">{stats.total_users}</Heading>
             </Card>
             <Card style={{ padding: 'var(--ds-spacing-4)' }}>
               <Paragraph style={{ fontWeight: 600, marginBottom: 'var(--ds-spacing-1)' }}>
                 Images
               </Paragraph>
-              <Heading level={2} data-size="lg">{stats.total_images}</Heading>
+              <Heading level={2} size="lg">{stats.total_images}</Heading>
             </Card>
             <Card style={{ padding: 'var(--ds-spacing-4)' }}>
               <Paragraph style={{ fontWeight: 600, marginBottom: 'var(--ds-spacing-1)' }}>
                 With Pricing
               </Paragraph>
-              <Heading level={2} data-size="lg">{stats.objects_with_pricing}</Heading>
+              <Heading level={2} size="lg">{stats.objects_with_pricing}</Heading>
             </Card>
           </div>
 
@@ -275,7 +275,7 @@ export function SeedDataManagementPage() {
 
           {/* Objects Preview */}
           <Card style={{ padding: 'var(--ds-spacing-6)', marginBottom: 'var(--ds-spacing-4)' }}>
-            <Heading level={2} data-size="md" style={{ marginBottom: 'var(--ds-spacing-4)' }}>
+            <Heading level={2} size="md" style={{ marginBottom: 'var(--ds-spacing-4)' }}>
               Preview ({filteredObjects.length} objects)
             </Heading>
             <div style={{ 
@@ -349,7 +349,7 @@ export function SeedDataManagementPage() {
       {/* Importing Step */}
       {step === 'importing' && progress && (
         <Card style={{ padding: 'var(--ds-spacing-6)' }}>
-          <Heading level={2} data-size="md" style={{ marginBottom: 'var(--ds-spacing-4)' }}>
+          <Heading level={2} size="md" style={{ marginBottom: 'var(--ds-spacing-4)' }}>
             Importing Seed Data...
           </Heading>
           
@@ -372,7 +372,7 @@ export function SeedDataManagementPage() {
       {/* Complete Step */}
       {step === 'complete' && result && (
         <Card style={{ padding: 'var(--ds-spacing-6)' }}>
-          <Heading level={2} data-size="md" style={{ marginBottom: 'var(--ds-spacing-4)' }}>
+          <Heading level={2} size="md" style={{ marginBottom: 'var(--ds-spacing-4)' }}>
             {result.success ? '✅ Import Complete!' : '⚠️ Import Completed with Errors'}
           </Heading>
 
@@ -387,32 +387,32 @@ export function SeedDataManagementPage() {
               <Paragraph style={{ color: 'var(--ds-color-neutral-text-subtle)', fontSize: 'var(--ds-font-size-sm)' }}>
                 Tenants
               </Paragraph>
-              <Heading level={3} data-size="md">{result.imported.tenants}</Heading>
+              <Heading level={3} size="md">{result.imported.tenants}</Heading>
             </div>
             <div style={{ textAlign: 'center', padding: 'var(--ds-spacing-3)' }}>
               <Paragraph style={{ color: 'var(--ds-color-neutral-text-subtle)', fontSize: 'var(--ds-font-size-sm)' }}>
                 Organizations
               </Paragraph>
-              <Heading level={3} data-size="md">{result.imported.organizations}</Heading>
+              <Heading level={3} size="md">{result.imported.organizations}</Heading>
             </div>
             <div style={{ textAlign: 'center', padding: 'var(--ds-spacing-3)' }}>
               <Paragraph style={{ color: 'var(--ds-color-neutral-text-subtle)', fontSize: 'var(--ds-font-size-sm)' }}>
                 Users
               </Paragraph>
-              <Heading level={3} data-size="md">{result.imported.users}</Heading>
+              <Heading level={3} size="md">{result.imported.users}</Heading>
             </div>
             <div style={{ textAlign: 'center', padding: 'var(--ds-spacing-3)' }}>
               <Paragraph style={{ color: 'var(--ds-color-neutral-text-subtle)', fontSize: 'var(--ds-font-size-sm)' }}>
                 Rental Objects
               </Paragraph>
-              <Heading level={3} data-size="md">{result.imported.rental_objects}</Heading>
+              <Heading level={3} size="md">{result.imported.rental_objects}</Heading>
             </div>
           </div>
 
           {/* Errors */}
           {result.errors.length > 0 && (
             <Alert severity="warning" style={{ marginBottom: 'var(--ds-spacing-4)' }}>
-              <Heading level={3} data-size="sm" style={{ marginBottom: 'var(--ds-spacing-2)' }}>
+              <Heading level={3} size="sm" style={{ marginBottom: 'var(--ds-spacing-2)' }}>
                 {result.errors.length} Errors
               </Heading>
               <ul style={{ margin: 0, paddingLeft: 'var(--ds-spacing-4)', maxHeight: '200px', overflowY: 'auto' }}>

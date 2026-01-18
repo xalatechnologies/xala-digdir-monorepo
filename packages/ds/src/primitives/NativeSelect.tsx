@@ -3,7 +3,7 @@
  * Simple wrapper around native HTML select element with DS styling
  */
 
-import React from 'react';
+import React, { useId } from 'react';
 
 export interface NativeSelectProps extends React.SelectHTMLAttributes<HTMLSelectElement> {
   /** Label for the select */
@@ -20,13 +20,17 @@ export function NativeSelect({
   description,
   children,
   className,
+  id: providedId,
   ...props
 }: NativeSelectProps) {
+  const generatedId = useId();
+  const id = providedId || generatedId;
+
   return (
     <div className={className} style={{ display: 'flex', flexDirection: 'column', gap: 'var(--ds-spacing-2)' }}>
       {label && (
         <label
-          htmlFor={props.id}
+          htmlFor={id}
           style={{
             fontSize: 'var(--ds-font-size-sm)',
             fontWeight: '500',
@@ -52,6 +56,7 @@ export function NativeSelect({
 
       <select
         {...props}
+        id={id}
         style={{
           width: '100%',
           padding: 'var(--ds-spacing-3)',

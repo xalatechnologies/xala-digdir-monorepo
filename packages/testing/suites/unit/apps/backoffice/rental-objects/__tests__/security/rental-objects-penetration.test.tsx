@@ -5,15 +5,15 @@
 
 import React from 'react';
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { setupMockApi } from '../../../../../../../mocks/api-server.mock';
+import { setupMockApi } from '@xala/backoffice/../../../mocks/api-server.mock';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { BrowserRouter } from 'react-router-dom';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { ToastProvider } from '../../../../providers/ToastProvider';
-import { RentalObjectsListView } from '../../components/RentalObjectsListView';
-import { RentalObjectDetailView } from '../../components/detail/RentalObjectDetailView';
-import { RentalObjectWizard } from '../../components/wizard/RentalObjectWizard';
+import { ToastProvider } from '@xala/backoffice/providers/ToastProvider';
+import { RentalObjectsListView } from '@xala/api/components/RentalObjectsListView';
+import { RentalObjectDetailView } from '@xala/api/components/detail/RentalObjectDetailView';
+import { RentalObjectWizard } from '@xala/api/components/wizard/RentalObjectWizard';
 import { useT } from '@xala/i18n';
 
 // Mock dependencies

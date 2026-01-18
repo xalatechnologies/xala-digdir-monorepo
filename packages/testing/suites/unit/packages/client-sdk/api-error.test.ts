@@ -3,7 +3,7 @@
  * Full coverage of the RFC7807 Problem Details implementation
  */
 import { describe, it, expect } from 'vitest';
-import { ApiError, type ProblemDetails } from '../core/http-client.interface';
+import { ApiError, type ProblemDetails } from '@xala/api/core/http-client.interface';
 
 describe('ApiError - RFC7807 Compliance', () => {
   describe('Constructor - ProblemDetails object', () => {

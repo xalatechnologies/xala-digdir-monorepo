@@ -16,7 +16,7 @@
  * - POST /api/bookings/:id/deny (requires case handler scope)
  */
 import { describe, it, expect, beforeAll } from 'vitest';
-import { setupMockApi } from '../../../mocks/api-server.mock';
+import { setupMockApi } from '@xala/api/mocks/api-server.mock';
 import { request, skipIfNoServer } from './setup';
 
 /**

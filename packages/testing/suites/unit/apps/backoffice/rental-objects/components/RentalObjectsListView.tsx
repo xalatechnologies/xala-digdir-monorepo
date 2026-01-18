@@ -28,8 +28,8 @@ import type { RentalObjectStatus } from '@digilist/client-sdk';
 import { RentalObjectsGrid } from './list/RentalObjectsGrid';
 import { RentalObjectsTable } from './list/RentalObjectsTable';
 import { BulkCustodyModal } from './BulkCustodyModal';
-import { useRentalObjectFilters, STATUS_OPTIONS, SORT_OPTIONS } from '../hooks/useRentalObjectFilters';
-import { useRentalObjectPermissions } from '../hooks/useRentalObjectPermissions';
+import { useRentalObjectFilters, STATUS_OPTIONS, SORT_OPTIONS } from '@xala/api/hooks/useRentalObjectFilters';
+import { useRentalObjectPermissions } from '@xala/api/hooks/useRentalObjectPermissions';
 import { useT } from '@xala/i18n';
 
 // Capacity filter options for rental objects

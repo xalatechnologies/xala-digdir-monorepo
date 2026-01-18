@@ -9,9 +9,9 @@
  */
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import type { FastifyRequest, FastifyReply } from 'fastify';
-import { AuthController } from '../auth.controller';
-import { container } from '../../../core/container';
-import { getAuditService } from '../../../core/audit/audit.service';
+import { AuthController } from '@xala/api/auth.controller';
+import { container } from '@xala/api/../../core/container';
+import { getAuditService } from '@xala/api/../../core/audit/audit.service';
 
 // Mock dependencies
 vi.mock('../../../core/container');

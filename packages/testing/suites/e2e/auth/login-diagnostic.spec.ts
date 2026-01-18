@@ -1,8 +1,8 @@
 // Skip E2E tests if not explicitly enabled
-import { setupMockApi } from '../../../mocks/api-server.mock';
+import { setupMockApi } from '@xala/api/mocks/api-server.mock';
 import { test } from '@playwright/test';
-import { LoginPage } from '../../helpers/pages/LoginPage';
-import { TEST_CREDENTIALS } from '../../fixtures/auth/auth.fixture';
+import { LoginPage } from '@xala/api/helpers/pages/LoginPage';
+import { TEST_CREDENTIALS } from '@xala/api/fixtures/auth/auth.fixture';
 
 test('Login diagnostic - capture full flow', async ({ page }) => {
   const errors: string[] = [];

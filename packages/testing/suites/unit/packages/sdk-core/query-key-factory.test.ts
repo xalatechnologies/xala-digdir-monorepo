@@ -8,7 +8,7 @@ import {
   createScopedQueryKey,
   matchQueryKey,
   serializeQueryParams,
-} from '../query/query-key-factory';
+} from '@xala/api/query/query-key-factory';
 
 describe('QueryKeyFactory', () => {
   describe('createQueryKeyFactory', () => {

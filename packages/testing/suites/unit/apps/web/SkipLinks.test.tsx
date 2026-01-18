@@ -7,7 +7,7 @@
 import { describe, it, expect, beforeEach } from 'vitest';
 import { screen } from '@testing-library/react';
 import { SkipLinks } from './SkipLinks';
-import { testAccessibility, testKeyboardNavigation } from '../test-utils/accessibility';
+import { testAccessibility, testKeyboardNavigation } from '@xala/api/test-utils/accessibility';
 import { useT } from '@xala/i18n';
 
 describe('SkipLinks', () => {

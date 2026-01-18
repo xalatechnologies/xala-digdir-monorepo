@@ -1,8 +1,8 @@
 // Skip E2E tests if not explicitly enabled
-import { setupMockApi } from '../../../../mocks/api-server.mock';
-import { test, expect } from '../fixtures/evidence.fixture';
-import { config } from '../config/backoffice.config';
-import { FEATURE_FLAGS, getItemsForFlag, type FeatureFlagId } from '../config/expected-menu';
+import { setupMockApi } from '@xala/api/../mocks/api-server.mock';
+import { test, expect } from '@xala/api/fixtures/evidence.fixture';
+import { config } from '@xala/api/config/backoffice.config';
+import { FEATURE_FLAGS, getItemsForFlag, type FeatureFlagId } from '@xala/api/config/expected-menu';
 
 /**
  * Feature Flags Tests

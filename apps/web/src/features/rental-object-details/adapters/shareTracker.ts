@@ -175,7 +175,7 @@ export async function shareWithAudit(
       result = shareLinkedIn(data);
       break;
     default:
-      result = { success: false, medium, error: t('errors.unknown_share_medium') };
+      result = { success: false, medium, error: 'errors.unknown_share_medium' };
   }
 
   // Log audit event (even for anonymous users)

@@ -17,8 +17,8 @@ import {
   useDeleteBlock,
   type CalendarEvent,
 } from '@digilist/client-sdk';
-import { useCalendarPermissions } from '../hooks/useCalendarPermissions';
-import { BLOCK_TYPE_CONFIG } from '../types';
+import { useCalendarPermissions } from '@xala/api/hooks/useCalendarPermissions';
+import { BLOCK_TYPE_CONFIG } from '@xala/api/types';
 import type { BlockType } from '@digilist/client-sdk';
 import { useT } from '@xala/i18n';
 

@@ -4,6 +4,7 @@
  */
 
 import { beforeAll, afterAll, vi } from 'vitest';
+import '@testing-library/jest-dom/vitest';
 import { mockApiServer, isApiAvailable } from './mocks/api-server.mock';
 
 // Helper to get translation value - returns key for predictable testing
@@ -90,7 +91,8 @@ console.error = (...args: any[]) => {
   if (
     msg.includes('Not implemented: HTMLFormElement.prototype.submit') ||
     msg.includes('Not implemented: navigation') ||
-    msg.includes('Could not parse CSS stylesheet')
+    msg.includes('Could not parse CSS stylesheet') ||
+    msg.includes('Error: Not implemented: window.scrollTo')
   ) {
     return;
   }

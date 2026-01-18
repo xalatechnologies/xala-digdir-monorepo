@@ -11,7 +11,7 @@ import {
   recordBookingCancellation,
   withBookingMetrics,
 } from './booking';
-import { prometheusExporter } from '../exporters/prometheus';
+import { prometheusExporter } from '@xala/api/exporters/prometheus';
 
 describe('Booking Metrics', () => {
   beforeEach(() => {

@@ -1,5 +1,5 @@
 // Skip E2E tests if not explicitly enabled
-import { setupMockApi } from '../../../mocks/api-server.mock';
+import { setupMockApi } from '@xala/api/mocks/api-server.mock';
 /**
  * Tenant Onboarding Journey E2E Test
  * Full flow: Create tenant → Invite users → Assign roles → Verify

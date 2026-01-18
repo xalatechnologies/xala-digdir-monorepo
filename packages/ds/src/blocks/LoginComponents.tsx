@@ -110,7 +110,7 @@ export function FeatureItem({
     ? 'var(--digilist-login-overlay-text, var(--ds-color-neutral-text-on-inverted))'
     : 'var(--ds-color-neutral-text-default)';
   const subtleColor = variant === 'light'
-    ? 'var(--digilist-login-overlay-text-muted, var(--ds-color-neutral-text-subtle))'
+    ? 'var(--digilist-login-overlay-text-muted, rgba(255, 255, 255, 0.85))'
     : 'var(--ds-color-neutral-text-subtle)';
   const iconBg = variant === 'light'
     ? 'var(--ds-color-neutral-surface-hover)'
@@ -378,7 +378,7 @@ export function LoginLayout({
                   <div
                     style={{
                       fontSize: 'var(--ds-font-size-sm)',
-                      color: 'var(--ds-color-neutral-text-subtle)',
+                      color: 'var(--ds-color-neutral-text-default)',
                       letterSpacing: '0.1em',
                       marginTop: 'var(--ds-spacing-1)',
                     }}
@@ -414,7 +414,7 @@ export function LoginLayout({
                   <div
                     style={{
                       fontSize: 'var(--ds-font-size-sm)',
-                      color: 'var(--ds-color-neutral-text-subtle)',
+                      color: 'var(--ds-color-neutral-text-default)',
                       letterSpacing: '0.1em',
                       marginTop: 'var(--ds-spacing-1)',
                     }}
@@ -433,7 +433,7 @@ export function LoginLayout({
             </Heading>
             <Paragraph
               data-size="md"
-              style={{ color: 'var(--ds-color-neutral-text-subtle)', marginBottom: 'var(--ds-spacing-8)' }}
+              style={{ color: 'var(--ds-color-neutral-text-default)', marginBottom: 'var(--ds-spacing-8)' }}
             >
               {subtitle}
             </Paragraph>
@@ -473,7 +473,7 @@ export function LoginLayout({
               </div>
             )}
             {copyright && (
-              <Paragraph data-size="xs" style={{ color: 'var(--ds-color-neutral-text-subtle)', margin: 0 }}>
+              <Paragraph data-size="xs" style={{ color: 'var(--ds-color-neutral-text-default)', margin: 0 }}>
                 {copyright}
               </Paragraph>
             )}
@@ -498,7 +498,7 @@ export function LoginLayout({
             <Paragraph
               data-size="xs"
               style={{
-                color: 'var(--ds-color-neutral-text-subtle)',
+                color: 'var(--digilist-login-overlay-text-muted, rgba(255, 255, 255, 0.85))',
                 textTransform: 'uppercase',
                 letterSpacing: 'var(--ds-letter-spacing-wider, 0.1em)',
                 fontWeight: 'var(--ds-font-weight-medium)',
@@ -522,7 +522,7 @@ export function LoginLayout({
               <Paragraph
                 data-size="md"
                 style={{
-                  color: 'var(--digilist-login-overlay-text-muted, var(--ds-color-neutral-text-subtle))',
+                  color: 'var(--digilist-login-overlay-text-muted, rgba(255, 255, 255, 0.85))',
                   lineHeight: 1.6,
                 }}
               >
@@ -559,7 +559,7 @@ export function LoginLayout({
               <Paragraph
                 data-size="xs"
                 style={{
-                  color: 'var(--ds-color-neutral-text-subtle)',
+                  color: 'var(--digilist-login-overlay-text-muted, rgba(255, 255, 255, 0.85))',
                   marginBottom: 'var(--ds-spacing-3)',
                   textTransform: 'uppercase',
                   letterSpacing: 'var(--ds-letter-spacing-wide, 0.05em)',

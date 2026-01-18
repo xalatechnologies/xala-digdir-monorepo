@@ -6,7 +6,7 @@
  * @note Tests skipped - MSW server setup requires additional configuration
  */
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
-import { setupMockApi } from '../../../../../mocks/api-server.mock';
+import { setupMockApi } from '@xala/api/../../mocks/api-server.mock';
 import { http, HttpResponse } from 'msw';
 import { setupServer } from 'msw/node';
 
@@ -221,12 +221,12 @@ const handlers = [
 const server = setupServer(...handlers);
 
 // Import services after handlers are defined
-import { initializeClient, resetClient } from '../../core/client-factory';
-import { rentalObjectService } from '../../services/rental-object.service';
-import { bookingService } from '../../services/booking.service';
-// import { authService } from '../../services/auth.service'; // Skipped tests
-import { authzService } from '../../services/authz.service';
-import { ApiError } from '../../core/http-client.interface';
+import { initializeClient, resetClient } from '@xala/api/core/client-factory';
+import { rentalObjectService } from '@xala/api/services/rental-object.service';
+import { bookingService } from '@xala/api/services/booking.service';
+// import { authService } from '@xala/api/services/auth.service'; // Skipped tests
+import { authzService } from '@xala/api/services/authz.service';
+import { ApiError } from '@xala/api/core/http-client.interface';
 
 describeSkip('API-SDK Integration Tests', () => {
   beforeEach(() => {

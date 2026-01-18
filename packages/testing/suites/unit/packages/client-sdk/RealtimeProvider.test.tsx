@@ -2,7 +2,7 @@ import React from 'react';
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import '@testing-library/jest-dom/vitest';
-import { RealtimeProvider, useRealtimeStatus } from '../../../../packages/client-sdk/src/providers/RealtimeProvider';
+import { RealtimeProvider, useRealtimeStatus } from '@xala/api/../packages/client-sdk/src/providers/RealtimeProvider';
 
 // Mock the SDK hooks
 vi.mock('../../../../packages/client-sdk/src/hooks', () => ({
@@ -20,7 +20,7 @@ import {
   useRealtimeRentalObjects,
   useRealtimeMessages,
   useRealtimeNotifications,
-} from '../../../../packages/client-sdk/src/hooks';
+} from '@xala/api/../packages/client-sdk/src/hooks';
 
 // Test component that displays connection status
 function StatusConsumer(): React.ReactElement {

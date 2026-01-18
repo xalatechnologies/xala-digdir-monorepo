@@ -603,6 +603,86 @@
     {
       "tenantId": null,
       "namespace": "auth",
+      "key": "saasAdmin",
+      "language": "nb",
+      "value": "SaaS Admin",
+      "isSystemDefault": true
+    },
+    {
+      "tenantId": null,
+      "namespace": "auth",
+      "key": "saasAdminDesc",
+      "language": "nb",
+      "value": "Administrasjon av tenants, lisenser og fakturering",
+      "isSystemDefault": true
+    },
+    {
+      "tenantId": null,
+      "namespace": "auth",
+      "key": "platformAdmin",
+      "language": "nb",
+      "value": "Plattform Admin",
+      "isSystemDefault": true
+    },
+    {
+      "tenantId": null,
+      "namespace": "auth",
+      "key": "platformAdminDesc",
+      "language": "nb",
+      "value": "Teknisk drift, overvåking og systemoppsett",
+      "isSystemDefault": true
+    },
+    {
+      "tenantId": null,
+      "namespace": "auth",
+      "key": "tenantManagement",
+      "language": "nb",
+      "value": "Tenant Administrasjon",
+      "isSystemDefault": true
+    },
+    {
+      "tenantId": null,
+      "namespace": "auth",
+      "key": "tenantManagementDesc",
+      "language": "nb",
+      "value": "Opprett og administrer kommuner og organisasjoner",
+      "isSystemDefault": true
+    },
+    {
+      "tenantId": null,
+      "namespace": "auth",
+      "key": "featureFlags",
+      "language": "nb",
+      "value": "Funksjonsstyring",
+      "isSystemDefault": true
+    },
+    {
+      "tenantId": null,
+      "namespace": "auth",
+      "key": "featureFlagsDesc",
+      "language": "nb",
+      "value": "Administrer feature toggles og utrulling",
+      "isSystemDefault": true
+    },
+    {
+      "tenantId": null,
+      "namespace": "auth",
+      "key": "platformMetrics",
+      "language": "nb",
+      "value": "Plattformstatistikk",
+      "isSystemDefault": true
+    },
+    {
+      "tenantId": null,
+      "namespace": "auth",
+      "key": "platformMetricsDesc",
+      "language": "nb",
+      "value": "Systemytelse og bruksstatistikk",
+      "isSystemDefault": true
+    },
+    {
+      "tenantId": null,
+      "namespace": "auth",
       "key": "completePlatform",
       "language": "nb",
       "value": "Komplett plattform",

@@ -15,7 +15,7 @@ import {
   integrationConfigs,
   globalKillSwitches,
   entitlementAuditLog,
-} from '../src/entitlements.js';
+} from '@xala/api/src/entitlements.js';
 
 const DATABASE_URL = process.env.DATABASE_URL;
 

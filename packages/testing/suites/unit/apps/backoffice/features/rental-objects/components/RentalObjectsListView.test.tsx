@@ -9,8 +9,8 @@ import { BrowserRouter } from 'react-router-dom';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { RentalObjectsListView } from './RentalObjectsListView';
 import { useRentalObjects } from '@digilist/client-sdk';
-import { useListingPermissions } from '../../rental-objects/hooks/useListingPermissions';
-import { useListingFilters } from '../../rental-objects/hooks/useListingFilters';
+import { useListingPermissions } from '@xala/api/rental-objects/hooks/useListingPermissions';
+import { useListingFilters } from '@xala/api/rental-objects/hooks/useListingFilters';
 
 // Mock dependencies
 vi.mock('@digilist/client-sdk', async () => {
@@ -148,7 +148,7 @@ const mockRentalObjects = [
   },
 ];
 
-import { ToastProvider } from '../../../providers/ToastProvider';
+import { ToastProvider } from '@xala/backoffice/providers/ToastProvider';
 import { useT } from '@xala/i18n';
 
 const createTestWrapper = () => {

@@ -10,7 +10,7 @@
  * Run with: pnpm dev & pnpm test:security
  */
 import { describe, it, expect, beforeAll, beforeEach } from 'vitest';
-import { setupMockApi } from '../../../mocks/api-server.mock';
+import { setupMockApi } from '@xala/api/mocks/api-server.mock';
 
 const API_URL = 'http://localhost:4000';
 let serverAvailable = false;

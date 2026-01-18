@@ -15,7 +15,7 @@ import {
   type ListingAddress,
   type GeocodeResult,
   type GeocodeConfig,
-} from '../../utils/geocode';
+} from '@xala/api/utils/geocode';
 
 // Mock fetch globally
 global.fetch = vi.fn();

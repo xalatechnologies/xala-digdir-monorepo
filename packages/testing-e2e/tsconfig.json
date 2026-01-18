@@ -9,7 +9,25 @@
     "resolveJsonModule": true,
     "declaration": false,
     "noEmit": true,
-    "types": ["node"]
+    "types": ["node"],
+    "baseUrl": ".",
+    "paths": {
+      "@digilist/testing": ["./src"],
+      "@digilist/database-schema": ["../database-schema/dist"],
+      "@digilist/client-sdk": ["../client-sdk/src"],
+      "@digilist/contracts": ["../contracts/src"],
+      "@xala/api": ["../../apps/api/src"],
+      "@xala/api/*": ["../../apps/api/src/*"],
+      "@xala/web": ["../../apps/web/src"],
+      "@xala/web/*": ["../../apps/web/src/*"],
+      "@xala/backoffice": ["../../apps/backoffice/src"],
+      "@xala/backoffice/*": ["../../apps/backoffice/src/*"],
+      "@xala/saas-admin": ["../../apps/saas-admin/src"],
+      "@xala/saas-admin/*": ["../../apps/saas-admin/src/*"],
+      "@xala/i18n": ["../i18n/src"],
+      "@xala/ds": ["../ds/src"],
+      "@xala/auth": ["../auth/src"]
+    }
   },
   "include": ["suites/**/*.ts", "playwright.config.ts"],
   "exclude": ["node_modules"]

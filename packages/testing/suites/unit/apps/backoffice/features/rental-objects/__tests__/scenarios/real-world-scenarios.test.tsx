@@ -9,10 +9,10 @@ import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { BrowserRouter } from 'react-router-dom';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { ToastProvider } from '../../../../providers/ToastProvider';
-import { RentalObjectsListView } from '../../components/RentalObjectsListView';
-import { RentalObjectWizard } from '../../components/wizard/RentalObjectWizard';
-import { RentalObjectDetailView } from '../../components/detail/RentalObjectDetailView';
+import { ToastProvider } from '@xala/backoffice/providers/ToastProvider';
+import { RentalObjectsListView } from '@xala/api/components/RentalObjectsListView';
+import { RentalObjectWizard } from '@xala/api/components/wizard/RentalObjectWizard';
+import { RentalObjectDetailView } from '@xala/api/components/detail/RentalObjectDetailView';
 import { useT } from '@xala/i18n';
 
 // Mock all dependencies

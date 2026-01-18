@@ -3,10 +3,10 @@
  * Verifies that all required exports are present and properly typed
  */
 import { describe, it, expect } from 'vitest';
-import * as sdk from '../index';
-import * as services from '../services';
-import * as hooks from '../hooks';
-import * as types from '../types';
+import * as sdk from '@xala/api/index';
+import * as services from '@xala/api/services';
+import * as hooks from '@xala/api/hooks';
+import * as types from '@xala/api/types';
 
 describe('SDK Main Exports', () => {
   describe('Core Client Management', () => {

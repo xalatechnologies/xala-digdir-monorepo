@@ -43,7 +43,7 @@ export function UsersPage() {
   if (isLoading) {
     return (
       <Stack direction="horizontal" justify="center" align="center" style={{ padding: 'var(--ds-spacing-8)' }}>
-        <Spinner data-size="lg" aria-label={t('common.loading')} />
+        <Spinner size="lg" aria-label={t('common.loading')} />
       </Stack>
     );
   }
@@ -52,10 +52,10 @@ export function UsersPage() {
     <Stack direction="column" gap={20}>
       {/* Header */}
       <Stack direction="column" gap={1}>
-        <Heading level={2} data-size="md">
+        <Heading level={2} size="md">
           {t('saasAdmin.nav.users')}
         </Heading>
-        <Paragraph data-size="sm" data-color="subtle">
+        <Paragraph size="sm" color="subtle">
           {t('saasAdmin.nav.usersDesc')}
         </Paragraph>
       </Stack>
@@ -73,7 +73,7 @@ export function UsersPage() {
       <Card>
         {filteredUsers.length === 0 ? (
           <Stack direction="horizontal" justify="center" align="center" style={{ padding: 'var(--ds-spacing-8)' }}>
-            <Paragraph data-size="sm" data-color="subtle">
+            <Paragraph size="sm" color="subtle">
               {t('common.noResults')}
             </Paragraph>
           </Stack>
@@ -96,10 +96,10 @@ export function UsersPage() {
                     </Text>
                   </Table.Cell>
                   <Table.Cell>
-                    <Text data-size="sm">{user.email || '—'}</Text>
+                    <Text size="sm">{user.email || '—'}</Text>
                   </Table.Cell>
                   <Table.Cell>
-                    <Text data-size="sm">{user.tenantId || '—'}</Text>
+                    <Text size="sm">{user.tenantId || '—'}</Text>
                   </Table.Cell>
                   <Table.Cell>
                     <Badge color={user.active ? 'success' : 'neutral'}>

@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeAll, afterAll } from 'vitest';
-import { setupMockApi } from '../../../mocks/api-server.mock';
+import { setupMockApi } from '@xala/api/mocks/api-server.mock';
 import type { RBACMatrixRule } from './types';
 
 /**
@@ -13,7 +13,7 @@ import type { RBACMatrixRule } from './types';
  */
 
 // Load RBAC matrix
-import orgAdminMatrix from '../rbac/rbac-matrix.org-admin.json';
+import orgAdminMatrix from '@xala/api/rbac/rbac-matrix.org-admin.json';
 
 // Test configuration
 const API_BASE = process.env.API_URL || 'http://localhost:3000';

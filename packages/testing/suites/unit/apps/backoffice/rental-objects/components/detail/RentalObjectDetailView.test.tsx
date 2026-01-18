@@ -110,7 +110,7 @@ const mockRentalObject = {
   updatedAt: '2024-01-01T00:00:00Z',
 };
 
-import { ToastProvider } from '../../../../providers/ToastProvider';
+import { ToastProvider } from '@xala/backoffice/providers/ToastProvider';
 import { useT } from '@xala/i18n';
 
 const createTestWrapper = () => {

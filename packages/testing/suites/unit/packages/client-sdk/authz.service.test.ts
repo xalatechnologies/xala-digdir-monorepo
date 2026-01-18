@@ -3,8 +3,8 @@
  * Comprehensive test coverage for authorization service
  */
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
-import { AuthzService, authzService } from '../services/authz.service';
-import type { AuthzResource, AuthzAction } from '../services/authz.service';
+import { AuthzService, authzService } from '@xala/api/services/authz.service';
+import type { AuthzResource, AuthzAction } from '@xala/api/services/authz.service';
 
 // Mock the client factory
 vi.mock('../core/client-factory', () => ({

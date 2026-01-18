@@ -3,8 +3,8 @@
  */
 
 import { describe, it, expect, beforeAll, afterAll } from 'vitest';
-import { setupMockApi } from '../../../mocks/api-server.mock';
-import { createFastifyApp } from '../../adapters/fastify.adapter';
+import { setupMockApi } from '@xala/api/mocks/api-server.mock';
+import { createFastifyApp } from '@xala/api/adapters/fastify.adapter';
 import type { FastifyInstance } from 'fastify';
 
 describe('Rental Objects API Integration Tests', () => {

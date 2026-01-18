@@ -7,7 +7,7 @@ import type { Meta, StoryObj } from '@storybook/react';
 import { RentalObjectsListView } from './RentalObjectsListView';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { BrowserRouter } from 'react-router-dom';
-import { ToastProvider } from '../../../providers/ToastProvider';
+import { ToastProvider } from '@xala/backoffice/providers/ToastProvider';
 
 // Note: This file requires Storybook to be configured in the project
 // Install: pnpm add -D @storybook/react @storybook/react-vite

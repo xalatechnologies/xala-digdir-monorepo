@@ -30,13 +30,13 @@ import {
   useHasAnyPermission,
   useHasAllPermissions,
   authzKeys,
-} from '../hooks/use-authz';
+} from '@xala/api/hooks/use-authz';
 
 import {
   useProfile,
   useUpdateProfile,
   profileKeys,
-} from '../hooks/use-profile';
+} from '@xala/api/hooks/use-profile';
 
 // Create wrapper with QueryClient
 function createWrapper() {

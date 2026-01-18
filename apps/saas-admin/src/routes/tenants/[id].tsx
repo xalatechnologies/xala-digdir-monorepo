@@ -196,7 +196,7 @@ export function TenantDetailPage() {
   if (isLoading) {
     return (
       <div className={styles.loadingContainer}>
-        <Spinner data-size="lg" aria-label="Laster..." />
+        <Spinner size="lg" aria-label="Laster..." />
       </div>
     );
   }
@@ -204,14 +204,14 @@ export function TenantDetailPage() {
   if (!tenant) {
     return (
       <div className={styles.notFoundContainer}>
-        <Heading level={3} data-size="sm">
+        <Heading level={3} size="sm">
           Tenant ikke funnet
         </Heading>
-        <Paragraph data-size="sm" style={{ color: 'var(--ds-color-neutral-text-subtle)', marginTop: 'var(--ds-spacing-2)' }}>
+        <Paragraph size="sm" style={{ color: 'var(--ds-color-neutral-text-subtle)', marginTop: 'var(--ds-spacing-2)' }}>
           Tenant eksisterer ikke eller er slettet.
         </Paragraph>
         <Link to="/tenants">
-          <Button variant="secondary" data-size="sm" style={{ marginTop: 'var(--ds-spacing-4)' }} type="button">
+          <Button variant="secondary" size="sm" style={{ marginTop: 'var(--ds-spacing-4)' }} type="button">
             <ArrowLeftIcon />
             Tilbake til oversikt
           </Button>
@@ -225,7 +225,7 @@ export function TenantDetailPage() {
       {/* Header */}
       <div className={styles.header}>
         <Link to="/tenants">
-          <Button variant="tertiary" data-size="sm" style={{ marginBottom: 'var(--ds-spacing-3)' }} type="button">
+          <Button variant="tertiary" size="sm" style={{ marginBottom: 'var(--ds-spacing-3)' }} type="button">
             <ArrowLeftIcon />
             Tilbake til oversikt
           </Button>
@@ -233,7 +233,7 @@ export function TenantDetailPage() {
 
         <div className={styles.headerTop}>
           <div className={styles.headerLeft}>
-            <Heading level={2} data-size="lg" style={{ marginBottom: 'var(--ds-spacing-2)' }}>
+            <Heading level={2} size="lg" style={{ marginBottom: 'var(--ds-spacing-2)' }}>
               {tenant.name}
             </Heading>
             <div className={styles.badges}>
@@ -260,19 +260,19 @@ export function TenantDetailPage() {
 
           <div className={styles.headerActions}>
             <Link to={`/tenants/${id}/edit`}>
-              <Button variant="secondary" data-size="sm" type="button">
+              <Button variant="secondary" size="sm" type="button">
                 <EditIcon />
                 Rediger
               </Button>
             </Link>
             {tenant.status === 'active' && (
-              <Button variant="danger" data-size="sm" onClick={handleSuspend} type="button">
+              <Button variant="danger" size="sm" onClick={handleSuspend} type="button">
                 <PauseIcon />
                 Suspender
               </Button>
             )}
             {tenant.status === 'suspended' && (
-              <Button variant="primary" data-size="sm" onClick={handleReactivate} type="button">
+              <Button variant="primary" size="sm" onClick={handleReactivate} type="button">
                 <PlayIcon />
                 Reaktiver
               </Button>
@@ -325,10 +325,10 @@ export function TenantDetailPage() {
         <Card className={styles.licenseKeyCard}>
           <div className={styles.licenseKeyContent}>
             <div>
-              <Heading level={4} data-size="xs" style={{ marginBottom: 'var(--ds-spacing-1)' }}>
+              <Heading level={4} size="xs" style={{ marginBottom: 'var(--ds-spacing-1)' }}>
                 Ny lisensnøkkel generert
               </Heading>
-              <Paragraph data-size="sm" style={{ color: 'var(--ds-color-success-text-default)', marginBottom: 'var(--ds-spacing-2)' }}>
+              <Paragraph size="sm" style={{ color: 'var(--ds-color-success-text-default)', marginBottom: 'var(--ds-spacing-2)' }}>
                 Kopier denne nøkkelen nå. Den vil ikke vises igjen.
               </Paragraph>
               <code className={styles.licenseKeyCode}>
@@ -337,7 +337,7 @@ export function TenantDetailPage() {
             </div>
             <Button
               variant="secondary"
-              data-size="sm"
+              size="sm"
               onClick={() => setNewLicenseKey(null)}
               type="button"
             >
@@ -380,7 +380,7 @@ export function TenantDetailPage() {
         <Tabs.Panel value="overview">
           <div className={styles.overviewGrid}>
             <Card>
-              <Heading level={3} data-size="sm" style={{ marginBottom: 'var(--ds-spacing-4)' }}>
+              <Heading level={3} size="sm" style={{ marginBottom: 'var(--ds-spacing-4)' }}>
                 Grunnleggende informasjon
               </Heading>
               <Stack spacing={3}>
@@ -426,7 +426,7 @@ export function TenantDetailPage() {
             </Card>
 
             <Card>
-              <Heading level={3} data-size="sm" style={{ marginBottom: 'var(--ds-spacing-4)' }}>
+              <Heading level={3} size="sm" style={{ marginBottom: 'var(--ds-spacing-4)' }}>
                 Grenser (Seat Limits)
               </Heading>
               <Stack spacing={3}>
@@ -453,7 +453,7 @@ export function TenantDetailPage() {
               </Stack>
               <div style={{ marginTop: 'var(--ds-spacing-4)' }}>
                 <Link to={`/tenants/${id}/limits`}>
-                  <Button variant="secondary" data-size="sm" type="button">
+                  <Button variant="secondary" size="sm" type="button">
                     Endre grenser
                   </Button>
                 </Link>
@@ -466,10 +466,10 @@ export function TenantDetailPage() {
         <Tabs.Panel value="flags">
           <Card>
             <div className={styles.flagsHeader}>
-              <Heading level={3} data-size="sm" style={{ marginBottom: 'var(--ds-spacing-1)' }}>
+              <Heading level={3} size="sm" style={{ marginBottom: 'var(--ds-spacing-1)' }}>
                 Feature Flags
               </Heading>
-              <Paragraph data-size="sm" style={{ color: 'var(--ds-color-neutral-text-subtle)' }}>
+              <Paragraph size="sm" style={{ color: 'var(--ds-color-neutral-text-subtle)' }}>
                 Aktiver eller deaktiver funksjoner for denne tenanten
               </Paragraph>
             </div>
@@ -483,10 +483,10 @@ export function TenantDetailPage() {
                 {(Object.keys(flagsByCategory) as FeatureFlagCategory[]).map((category) => (
                   <div key={category}>
                     <div className={styles.categoryHeader}>
-                      <Heading level={4} data-size="xs" style={{ margin: 0 }}>
+                      <Heading level={4} size="xs" style={{ margin: 0 }}>
                         {categoryLabels[category]}
                       </Heading>
-                      <Badge color={categoryColors[category]} data-size="sm">
+                      <Badge color={categoryColors[category]} size="sm">
                         {flagsByCategory[category].length}
                       </Badge>
                     </div>
@@ -499,25 +499,25 @@ export function TenantDetailPage() {
                         >
                           <div className={styles.flagContent}>
                             <div className={styles.flagHeader}>
-                              <Paragraph data-size="sm" style={{ margin: 0, fontWeight: 'var(--ds-font-weight-medium)' }}>
+                              <Paragraph size="sm" style={{ margin: 0, fontWeight: 'var(--ds-font-weight-medium)' }}>
                                 {flag.name}
                               </Paragraph>
                               <code className={styles.flagKey}>
                                 {flag.key}
                               </code>
                               {flag.overridden && (
-                                <Badge color="info" data-size="sm">
+                                <Badge color="info" size="sm">
                                   Overstyrt
                                 </Badge>
                               )}
                             </div>
                             {flag.description && (
-                              <Paragraph data-size="xs" style={{ margin: 0, marginTop: 'var(--ds-spacing-1)', color: 'var(--ds-color-neutral-text-subtle)' }}>
+                              <Paragraph size="xs" style={{ margin: 0, marginTop: 'var(--ds-spacing-1)', color: 'var(--ds-color-neutral-text-subtle)' }}>
                                 {flag.description}
                               </Paragraph>
                             )}
                             {flag.updatedAt && (
-                              <Paragraph data-size="xs" style={{ margin: 0, marginTop: 'var(--ds-spacing-1)', color: 'var(--ds-color-neutral-text-subtle)' }}>
+                              <Paragraph size="xs" style={{ margin: 0, marginTop: 'var(--ds-spacing-1)', color: 'var(--ds-color-neutral-text-subtle)' }}>
                                 Oppdatert: {formatTimeAgo(flag.updatedAt)}
                                 {flag.updatedBy && ` av ${flag.updatedBy}`}
                               </Paragraph>
@@ -573,14 +573,14 @@ export function TenantDetailPage() {
                 </div>
 
                 {billing.nextBillingDate && (
-                  <Paragraph data-size="sm" style={{ color: 'var(--ds-color-neutral-text-subtle)' }}>
+                  <Paragraph size="sm" style={{ color: 'var(--ds-color-neutral-text-subtle)' }}>
                     Neste fakturering: {formatDate(billing.nextBillingDate)}
                   </Paragraph>
                 )}
 
                 {billing.invoices.length > 0 && (
                   <div className={styles.invoicesSection}>
-                    <Heading level={4} data-size="xs" style={{ marginBottom: 'var(--ds-spacing-3)' }}>
+                    <Heading level={4} size="xs" style={{ marginBottom: 'var(--ds-spacing-3)' }}>
                       Fakturaer
                     </Heading>
                     <Table>
@@ -626,10 +626,10 @@ export function TenantDetailPage() {
         <Tabs.Panel value="secrets">
           <Card>
             <div className={styles.secretsHeader}>
-              <Heading level={3} data-size="sm" style={{ marginBottom: 'var(--ds-spacing-1)' }}>
+              <Heading level={3} size="sm" style={{ marginBottom: 'var(--ds-spacing-1)' }}>
                 Integrasjons-secrets
               </Heading>
-              <Paragraph data-size="sm" style={{ color: 'var(--ds-color-neutral-text-subtle)' }}>
+              <Paragraph size="sm" style={{ color: 'var(--ds-color-neutral-text-subtle)' }}>
                 Konfigurerte API-nøkler og integrasjonshemmeligheter (maskert for sikkerhet)
               </Paragraph>
             </div>
@@ -641,10 +641,10 @@ export function TenantDetailPage() {
             ) : secrets.length === 0 ? (
               <div className={styles.secretsEmpty}>
                 <LockIcon className={styles.secretsEmptyIcon} />
-                <Heading level={4} data-size="xs" style={{ marginBottom: 'var(--ds-spacing-2)' }}>
+                <Heading level={4} size="xs" style={{ marginBottom: 'var(--ds-spacing-2)' }}>
                   Ingen secrets konfigurert
                 </Heading>
-                <Paragraph data-size="sm" style={{ color: 'var(--ds-color-neutral-text-subtle)' }}>
+                <Paragraph size="sm" style={{ color: 'var(--ds-color-neutral-text-subtle)' }}>
                   Integrasjonsnøkler vil vises her når de er konfigurert.
                 </Paragraph>
               </div>
@@ -690,7 +690,7 @@ export function TenantDetailPage() {
         {/* License Tab */}
         <Tabs.Panel value="license">
           <Card>
-            <Heading level={3} data-size="sm" style={{ marginBottom: 'var(--ds-spacing-4)' }}>
+            <Heading level={3} size="sm" style={{ marginBottom: 'var(--ds-spacing-4)' }}>
               Lisensnøkkel
             </Heading>
 
@@ -711,7 +711,7 @@ export function TenantDetailPage() {
               </div>
 
               {tenant.licenseKeyRotatedAt && (
-                <Paragraph data-size="sm" style={{ color: 'var(--ds-color-neutral-text-subtle)', display: 'flex', alignItems: 'center', gap: 'var(--ds-spacing-1)' }}>
+                <Paragraph size="sm" style={{ color: 'var(--ds-color-neutral-text-subtle)', display: 'flex', alignItems: 'center', gap: 'var(--ds-spacing-1)' }}>
                   <ClockIcon />
                   t('table.sist_rotert'): {formatDate(tenant.licenseKeyRotatedAt)} ({formatTimeAgo(tenant.licenseKeyRotatedAt)})
                 </Paragraph>
@@ -720,7 +720,7 @@ export function TenantDetailPage() {
               <div>
                 <Button
                   variant="secondary"
-                  data-size="sm"
+                  size="sm"
                   onClick={handleRotateLicense}
                   disabled={rotateLicenseMutation.isPending}
                   type="button"
@@ -731,7 +731,7 @@ export function TenantDetailPage() {
               </div>
 
               <div className={styles.licenseWarning}>
-                <Paragraph data-size="sm" className={styles.licenseWarningText}>
+                <Paragraph size="sm" className={styles.licenseWarningText}>
                   <strong>{t('common.advarsel')}</strong> Når du roterer lisensnøkkelen vil den gamle nøkkelen bli ugyldig umiddelbart.
                   Alle systemer som bruker den gamle nøkkelen må oppdateres med den nye.
                 </Paragraph>

@@ -1,10 +1,10 @@
 // Skip E2E tests if not explicitly enabled
-import { setupMockApi } from '../../../../mocks/api-server.mock';
-import { test, expect } from '../fixtures/qa-expert.fixture';
-import { config } from '../config/backoffice.config';
+import { setupMockApi } from '@xala/api/../mocks/api-server.mock';
+import { test, expect } from '@xala/api/fixtures/qa-expert.fixture';
+import { config } from '@xala/api/config/backoffice.config';
 import {
   assertNoForbiddenTerminology,
-} from '../fixtures/blur-eye.helpers';
+} from '@xala/api/fixtures/blur-eye.helpers';
 
 /**
  * Economy/Invoices Module Blur-Eye E2E Tests

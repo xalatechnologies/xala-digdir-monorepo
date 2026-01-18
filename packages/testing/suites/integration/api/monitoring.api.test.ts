@@ -2,7 +2,7 @@
  * Monitoring API Integration Tests
  */
 import { describe, it, expect } from 'vitest';
-import { setupMockApi } from '../../../mocks/api-server.mock';
+import { setupMockApi } from '@xala/api/mocks/api-server.mock';
 import { request, skipIfNoServer } from './setup';
 
 describe('Monitoring API', () => {

@@ -146,7 +146,7 @@ export function MonitoringPage() {
   if (isLoading) {
     return (
       <div style={{ display: 'flex', justifyContent: 'center', padding: 'var(--ds-spacing-8)' }}>
-        <Spinner data-size="lg" aria-label={t('common.loading')} />
+        <Spinner size="lg" aria-label={t('common.loading')} />
       </div>
     );
   }
@@ -163,11 +163,11 @@ export function MonitoringPage() {
         <div>
           <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--ds-spacing-3)', marginBottom: 'var(--ds-spacing-2)' }}>
             <SparklesIcon style={{ color: 'var(--ds-color-accent-text-default)', width: 32, height: 32 }} />
-            <Heading level={1} data-size="lg">
+            <Heading level={1} size="lg">
               {t('saasAdmin.monitoring.title', { defaultValue: 'Plattformovervåking' })}
             </Heading>
           </div>
-          <Paragraph data-size="sm" style={{ color: 'var(--ds-color-neutral-text-subtle)' }}>
+          <Paragraph size="sm" style={{ color: 'var(--ds-color-neutral-text-subtle)' }}>
             {t('saasAdmin.monitoring.description', { defaultValue: 'Sanntids helse- og bruksmetrikker for plattformen' })}
           </Paragraph>
         </div>
@@ -211,7 +211,7 @@ export function MonitoringPage() {
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 400px', gap: 'var(--ds-spacing-6)' }}>
         {/* System Status */}
         <Card style={{ padding: 'var(--ds-spacing-6)' }}>
-          <Heading level={2} data-size="sm" style={{ marginBottom: 'var(--ds-spacing-4)' }}>
+          <Heading level={2} size="sm" style={{ marginBottom: 'var(--ds-spacing-4)' }}>
             Systemstatus
           </Heading>
 
@@ -219,7 +219,7 @@ export function MonitoringPage() {
             {/* API Status */}
             <div style={{ padding: 'var(--ds-spacing-4)', border: '1px solid var(--ds-color-neutral-border-subtle)', borderRadius: 'var(--ds-border-radius-md)' }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 'var(--ds-spacing-2)' }}>
-                <Paragraph data-size="sm" style={{ margin: 0, fontWeight: 'var(--ds-font-weight-medium)' }}>API</Paragraph>
+                <Paragraph size="sm" style={{ margin: 0, fontWeight: 'var(--ds-font-weight-medium)' }}>API</Paragraph>
                 <Badge color={getStatusColor(MOCK_SYSTEM_STATUS.api.status)}>
                   {MOCK_SYSTEM_STATUS.api.status === 'healthy' ? <CheckCircleIcon /> : <AlertTriangleIcon />}
                   {MOCK_SYSTEM_STATUS.api.status}
@@ -238,7 +238,7 @@ export function MonitoringPage() {
             {/* Database Status */}
             <div style={{ padding: 'var(--ds-spacing-4)', border: '1px solid var(--ds-color-neutral-border-subtle)', borderRadius: 'var(--ds-border-radius-md)' }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 'var(--ds-spacing-2)' }}>
-                <Paragraph data-size="sm" style={{ margin: 0, fontWeight: 'var(--ds-font-weight-medium)' }}>Database</Paragraph>
+                <Paragraph size="sm" style={{ margin: 0, fontWeight: 'var(--ds-font-weight-medium)' }}>Database</Paragraph>
                 <Badge color={getStatusColor(MOCK_SYSTEM_STATUS.database.status)}>
                   {MOCK_SYSTEM_STATUS.database.status === 'healthy' ? <CheckCircleIcon /> : <AlertTriangleIcon />}
                   {MOCK_SYSTEM_STATUS.database.status}
@@ -253,7 +253,7 @@ export function MonitoringPage() {
             {/* Storage Status */}
             <div style={{ padding: 'var(--ds-spacing-4)', border: '1px solid var(--ds-color-neutral-border-subtle)', borderRadius: 'var(--ds-border-radius-md)' }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 'var(--ds-spacing-2)' }}>
-                <Paragraph data-size="sm" style={{ margin: 0, fontWeight: 'var(--ds-font-weight-medium)' }}>Storage</Paragraph>
+                <Paragraph size="sm" style={{ margin: 0, fontWeight: 'var(--ds-font-weight-medium)' }}>Storage</Paragraph>
                 <Badge color={getStatusColor(MOCK_SYSTEM_STATUS.storage.status)}>
                   {MOCK_SYSTEM_STATUS.storage.status === 'healthy' ? <CheckCircleIcon /> : <AlertTriangleIcon />}
                   {MOCK_SYSTEM_STATUS.storage.status}
@@ -280,7 +280,7 @@ export function MonitoringPage() {
             {/* Redis Status */}
             <div style={{ padding: 'var(--ds-spacing-4)', border: '1px solid var(--ds-color-neutral-border-subtle)', borderRadius: 'var(--ds-border-radius-md)' }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 'var(--ds-spacing-2)' }}>
-                <Paragraph data-size="sm" style={{ margin: 0, fontWeight: 'var(--ds-font-weight-medium)' }}>Redis</Paragraph>
+                <Paragraph size="sm" style={{ margin: 0, fontWeight: 'var(--ds-font-weight-medium)' }}>Redis</Paragraph>
                 <Badge color={getStatusColor(MOCK_SYSTEM_STATUS.redis.status)}>
                   {MOCK_SYSTEM_STATUS.redis.status === 'healthy' ? <CheckCircleIcon /> : <AlertTriangleIcon />}
                   {MOCK_SYSTEM_STATUS.redis.status}
@@ -296,7 +296,7 @@ export function MonitoringPage() {
 
         {/* Recent Activity */}
         <Card style={{ padding: 'var(--ds-spacing-6)' }}>
-          <Heading level={2} data-size="sm" style={{ marginBottom: 'var(--ds-spacing-4)' }}>
+          <Heading level={2} size="sm" style={{ marginBottom: 'var(--ds-spacing-4)' }}>
             Nylig aktivitet
           </Heading>
 
@@ -310,7 +310,7 @@ export function MonitoringPage() {
                   borderRadius: 'var(--ds-border-radius-md)',
                 }}
               >
-                <Paragraph data-size="sm" style={{ margin: 0, fontWeight: 'var(--ds-font-weight-medium)' }}>
+                <Paragraph size="sm" style={{ margin: 0, fontWeight: 'var(--ds-font-weight-medium)' }}>
                   {activity.action}
                 </Paragraph>
                 <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: 'var(--ds-spacing-1)' }}>
@@ -330,7 +330,7 @@ export function MonitoringPage() {
       {/* Compliance Scanners */}
       <Card style={{ marginTop: 'var(--ds-spacing-6)', padding: 'var(--ds-spacing-6)' }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 'var(--ds-spacing-4)' }}>
-          <Heading level={2} data-size="sm">
+          <Heading level={2} size="sm">
             {t('saasAdmin.monitoring.scanners.title', { defaultValue: 'Kodekvalitet og samsvar' })}
           </Heading>
         </div>
@@ -339,7 +339,7 @@ export function MonitoringPage() {
           {/* i18n Scanner */}
           <div style={{ padding: 'var(--ds-spacing-4)', border: '1px solid var(--ds-color-neutral-border-subtle)', borderRadius: 'var(--ds-border-radius-md)' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 'var(--ds-spacing-3)' }}>
-              <Paragraph data-size="sm" style={{ margin: 0, fontWeight: 'var(--ds-font-weight-medium)' }}>i18n Scanner</Paragraph>
+              <Paragraph size="sm" style={{ margin: 0, fontWeight: 'var(--ds-font-weight-medium)' }}>i18n Scanner</Paragraph>
               <Badge color={MOCK_SCANNER_RESULTS.i18n.status === 'success' ? 'success' : 'warning'}>
                 {MOCK_SCANNER_RESULTS.i18n.status === 'success' ? <CheckCircleIcon /> : <AlertTriangleIcon />}
                 {MOCK_SCANNER_RESULTS.i18n.status}
@@ -380,7 +380,7 @@ export function MonitoringPage() {
           {/* Design System Scanner */}
           <div style={{ padding: 'var(--ds-spacing-4)', border: '1px solid var(--ds-color-neutral-border-subtle)', borderRadius: 'var(--ds-border-radius-md)' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 'var(--ds-spacing-3)' }}>
-              <Paragraph data-size="sm" style={{ margin: 0, fontWeight: 'var(--ds-font-weight-medium)' }}>Design System</Paragraph>
+              <Paragraph size="sm" style={{ margin: 0, fontWeight: 'var(--ds-font-weight-medium)' }}>Design System</Paragraph>
               <Badge color={MOCK_SCANNER_RESULTS.designSystem.status === 'success' ? 'success' : 'warning'}>
                 {MOCK_SCANNER_RESULTS.designSystem.status === 'success' ? <CheckCircleIcon /> : <AlertTriangleIcon />}
                 {MOCK_SCANNER_RESULTS.designSystem.status}
@@ -421,7 +421,7 @@ export function MonitoringPage() {
           {/* Compliance Scanner */}
           <div style={{ padding: 'var(--ds-spacing-4)', border: '1px solid var(--ds-color-neutral-border-subtle)', borderRadius: 'var(--ds-border-radius-md)' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 'var(--ds-spacing-3)' }}>
-              <Paragraph data-size="sm" style={{ margin: 0, fontWeight: 'var(--ds-font-weight-medium)' }}>WCAG / Compliance</Paragraph>
+              <Paragraph size="sm" style={{ margin: 0, fontWeight: 'var(--ds-font-weight-medium)' }}>WCAG / Compliance</Paragraph>
               <Badge color={MOCK_SCANNER_RESULTS.compliance.status === 'success' ? 'success' : 'warning'}>
                 {MOCK_SCANNER_RESULTS.compliance.status === 'success' ? <CheckCircleIcon /> : <AlertTriangleIcon />}
                 {MOCK_SCANNER_RESULTS.compliance.status}
@@ -463,7 +463,7 @@ export function MonitoringPage() {
 
       {/* Tenants by Usage */}
       <Card style={{ marginTop: 'var(--ds-spacing-6)', padding: 'var(--ds-spacing-6)' }}>
-        <Heading level={2} data-size="sm" style={{ marginBottom: 'var(--ds-spacing-4)' }}>
+        <Heading level={2} size="sm" style={{ marginBottom: 'var(--ds-spacing-4)' }}>
           Tenanter etter bruk
         </Heading>
 

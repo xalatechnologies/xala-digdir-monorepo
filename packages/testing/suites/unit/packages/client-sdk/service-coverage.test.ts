@@ -7,7 +7,7 @@
  */
  
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import * as services from '../services';
+import * as services from '@xala/api/services';
 
 // Mock the client factory
 vi.mock('../core/client-factory', () => ({

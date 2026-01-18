@@ -112,10 +112,10 @@ vi.mock('../services/calendar.service', () => ({
 // Import after mocks
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { useEffect, useRef } from 'react';
-import { useListingCalendarConfig, useAvailabilityMatrix, useCalendarRealtime } from '../hooks/use-calendar';
-import { queryKeys } from '../hooks/query-keys';
-import { rentalObjectCalendarService, availabilityMatrixService } from '../services/calendar.service';
-import { realtimeClient } from '../realtime';
+import { useListingCalendarConfig, useAvailabilityMatrix, useCalendarRealtime } from '@xala/api/hooks/use-calendar';
+import { queryKeys } from '@xala/api/hooks/query-keys';
+import { rentalObjectCalendarService, availabilityMatrixService } from '@xala/api/services/calendar.service';
+import { realtimeClient } from '@xala/api/realtime';
 
 describe('Calendar Hooks', () => {
   beforeEach(() => {

@@ -144,18 +144,18 @@ export function AISeedGeneratorPage() {
       {/* Header */}
       <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--ds-spacing-3)', marginBottom: 'var(--ds-spacing-2)' }}>
         <SparklesIcon style={{ color: 'var(--ds-color-accent-text-default)', width: 32, height: 32 }} />
-        <Heading level={1} data-size="lg">
+        <Heading level={1} size="lg">
           {t('saasAdmin.aiSeed.title', { defaultValue: 'AI Seed Generator' })}
         </Heading>
       </div>
-      <Paragraph data-size="sm" style={{ color: 'var(--ds-color-neutral-text-subtle)', marginBottom: 'var(--ds-spacing-6)' }}>
+      <Paragraph size="sm" style={{ color: 'var(--ds-color-neutral-text-subtle)', marginBottom: 'var(--ds-spacing-6)' }}>
         {t('saasAdmin.aiSeed.description', { defaultValue: 'Generer realistiske demo-data for tenanter ved hjelp av AI' })}
       </Paragraph>
 
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 400px', gap: 'var(--ds-spacing-4)' }}>
         {/* Configuration Form */}
         <Card style={{ padding: 'var(--ds-spacing-6)' }}>
-          <Heading level={2} data-size="sm" style={{ marginBottom: 'var(--ds-spacing-4)' }}>
+          <Heading level={2} size="sm" style={{ marginBottom: 'var(--ds-spacing-4)' }}>
             Konfigurasjon
           </Heading>
 
@@ -198,7 +198,7 @@ export function AISeedGeneratorPage() {
                 ))}
               </Select>
               {selectedEntityInfo && (
-                <Paragraph data-size="xs" style={{ marginTop: 'var(--ds-spacing-1)', color: 'var(--ds-color-neutral-text-subtle)' }}>
+                <Paragraph size="xs" style={{ marginTop: 'var(--ds-spacing-1)', color: 'var(--ds-color-neutral-text-subtle)' }}>
                   {t(selectedEntityInfo.descriptionKey)} • Anbefalt: {selectedEntityInfo.count}
                 </Paragraph>
               )}
@@ -228,7 +228,7 @@ export function AISeedGeneratorPage() {
                   <Button
                     key={preset.nameKey}
                     variant="tertiary"
-                    data-size="sm"
+                    size="sm"
                     onClick={() => handlePresetSelect(preset.nameKey)}
                     type="button"
                   >
@@ -247,7 +247,7 @@ export function AISeedGeneratorPage() {
               >
                 {isGenerating ? (
                   <>
-                    <Spinner data-size="sm" aria-label="Genererer..." />
+                    <Spinner size="sm" aria-label="Genererer..." />
                     Genererer...
                   </>
                 ) : (
@@ -265,7 +265,7 @@ export function AISeedGeneratorPage() {
         <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--ds-spacing-4)' }}>
           {/* Preview Card */}
           <Card style={{ padding: 'var(--ds-spacing-4)' }}>
-            <Heading level={3} data-size="xs" style={{ marginBottom: 'var(--ds-spacing-3)' }}>
+            <Heading level={3} size="xs" style={{ marginBottom: 'var(--ds-spacing-3)' }}>
               Forhåndsvisning
             </Heading>
             <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--ds-spacing-2)' }}>
@@ -298,13 +298,13 @@ export function AISeedGeneratorPage() {
                 ) : (
                   <XCircleIcon style={{ color: 'var(--ds-color-danger-text-default)' }} />
                 )}
-                <Heading level={3} data-size="xs">
+                <Heading level={3} size="xs">
                   {result.success ? t('common.fullfort') : 'Feilet'}
                 </Heading>
               </div>
-              <Paragraph data-size="sm">{result.message}</Paragraph>
+              <Paragraph size="sm">{result.message}</Paragraph>
               {result.duration && (
-                <Paragraph data-size="xs" style={{ marginTop: 'var(--ds-spacing-1)', color: 'var(--ds-color-neutral-text-subtle)' }}>
+                <Paragraph size="xs" style={{ marginTop: 'var(--ds-spacing-1)', color: 'var(--ds-color-neutral-text-subtle)' }}>
                   Tid: {(result.duration / 1000).toFixed(1)}s
                 </Paragraph>
               )}
@@ -314,7 +314,7 @@ export function AISeedGeneratorPage() {
           {/* Generation Log */}
           {generationLog.length > 0 && (
             <Card style={{ padding: 'var(--ds-spacing-4)' }}>
-              <Heading level={3} data-size="xs" style={{ marginBottom: 'var(--ds-spacing-2)' }}>
+              <Heading level={3} size="xs" style={{ marginBottom: 'var(--ds-spacing-2)' }}>
                 Logg
               </Heading>
               <div
@@ -341,10 +341,10 @@ export function AISeedGeneratorPage() {
 
       {/* API Docs */}
       <Card style={{ marginTop: 'var(--ds-spacing-6)', padding: 'var(--ds-spacing-4)' }}>
-        <Heading level={3} data-size="xs" style={{ marginBottom: 'var(--ds-spacing-2)' }}>
+        <Heading level={3} size="xs" style={{ marginBottom: 'var(--ds-spacing-2)' }}>
           API-tilgang
         </Heading>
-        <Paragraph data-size="sm" style={{ marginBottom: 'var(--ds-spacing-2)' }}>
+        <Paragraph size="sm" style={{ marginBottom: 'var(--ds-spacing-2)' }}>
           Du kan også bruke API-et direkte:
         </Paragraph>
         <pre

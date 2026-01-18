@@ -1,5 +1,5 @@
 import { test as base, expect, Page, BrowserContext } from '@playwright/test';
-import { config } from '../config/backoffice.config';
+import { config } from '@xala/api/config/backoffice.config';
 
 /**
  * Evidence Collector

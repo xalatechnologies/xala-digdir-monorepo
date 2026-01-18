@@ -6,8 +6,8 @@
  * These tests verify the hook is properly exported and has correct TypeScript signatures.
  */
 import { describe, it, expect } from 'vitest';
-import { useDebounced } from '../useDebounced';
-import * as hooksIndex from '../index';
+import { useDebounced } from '@xala/api/useDebounced';
+import * as hooksIndex from '@xala/api/index';
 
 describe('useDebounced', () => {
   it('should be defined and exported', () => {
