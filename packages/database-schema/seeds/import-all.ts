@@ -42,37 +42,7 @@ async function importSeeds(): Promise<void> {
     console.log('📦 Phase 1: Platform Seeds');
     console.log('----------------------------------------');
 
-    // Import demo users
-    console.log('   └─ Demo Users...');
-    const demoUsersData = JSON.parse(
-      readFileSync(join(__dirname, 'platform/demo-users.json'), 'utf-8')
-    );
-    for (const user of demoUsersData) {
-      await sql`
-        INSERT INTO platform.users (id, tenant_id, email, name, national_id, role, status, demo_token, metadata)
-        VALUES (
-          ${user.id}, 
-          ${user.tenant_id}, 
-          ${user.email}, 
-          ${user.name}, 
-          ${user.national_id},
-          ${user.role},
-          ${user.status},
-          ${user.demo_token},
-          ${JSON.stringify(user.metadata)}::jsonb
-        )
-        ON CONFLICT (id) DO UPDATE SET 
-          email = EXCLUDED.email,
-          name = EXCLUDED.name,
-          national_id = EXCLUDED.national_id,
-          demo_token = EXCLUDED.demo_token,
-          metadata = EXCLUDED.metadata
-      `;
-      users++;
-    }
-    console.log(`      ✅ ${demoUsersData.length} demo users`);
-
-    // Tenants
+    // Tenants FIRST (required for users foreign key)
     console.log('   └─ Tenants...');
     for (const t of rentalData.tenants || []) {
       await sql`
