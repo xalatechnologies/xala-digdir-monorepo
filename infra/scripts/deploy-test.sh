@@ -121,7 +121,7 @@ echo ""
 
 # Step 4: Install dependencies on VPS
 echo "📥 Step 4: Installing fresh dependencies on VPS..."
-ssh ${VPS_USER}@${VPS_HOST} "cd ${DEPLOY_PATH} && pnpm install --prod --force"
+ssh ${VPS_USER}@${VPS_HOST} "cd ${DEPLOY_PATH} && pnpm install --force"
 log_info "Fresh dependencies installed"
 echo ""
 
