@@ -21,9 +21,9 @@ import {
   toCardProjection,
   toDetailsProjection,
   type DbRentalObject,
-} from '../../../apps/api/src/acl/rental-objects/rental-object.mapper';
-import type { RentalObject } from '../../../apps/api/src/domain/rental-objects';
-import { RentalObjectRules } from '../../../apps/api/src/domain/rental-objects';
+} from '@testing/stubs/api-importsacl/rental-objects/rental-object.mapper';
+import type { RentalObject } from '@testing/stubs/api-importsdomain/rental-objects';
+import { RentalObjectRules } from '@testing/stubs/api-importsdomain/rental-objects';
 
 // =============================================================================
 // TEST FIXTURES

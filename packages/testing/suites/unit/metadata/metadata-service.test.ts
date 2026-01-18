@@ -11,7 +11,7 @@
  */
 
 import { describe, it, expect, beforeEach } from 'vitest';
-import { MetadataService } from '../../../apps/api/src/modules/metadata/metadata.service';
+import { MetadataService } from '@testing/stubs/api-importsmodules/metadata/metadata.service';
 
 describe('MetadataService - Categories', () => {
   let service: MetadataService;

@@ -7,8 +7,8 @@ import { describe, it, expect } from 'vitest';
 import {
   RentalObjectCardProjectionSchema,
   RentalObjectDetailsProjectionSchema,
-} from '@testing/stubs/api-importsrental-object.projection';
-import { CapabilitiesProjectionSchema } from '@testing/stubs/api-importscapabilities.projection';
+} from '@digilist/contracts';
+import { CapabilitiesProjectionSchema } from '@digilist/contracts';
 
 describe('Rental Object Projections', () => {
   describe('RentalObjectCardProjectionSchema', () => {
