@@ -42,6 +42,7 @@ async function mockSaasAdminAuth(page: Page) {
     localStorage.setItem('auth_token', JSON.stringify(mockToken));
     localStorage.setItem('isAuthenticated', 'true');
   });
+}
 
 async function waitForPageReady(page: Page) {
   await page.waitForLoadState('networkidle');
@@ -339,7 +340,4 @@ test.describe('SaaS Admin - Screen Reader Support', () => {
 
     expect(results.violations).toEqual([]);
   });
-});
-
-});
 });

@@ -36,6 +36,7 @@ async function loginAsRole(page: any, role: string) {
       ]);
     }
   }
+}
 
 // =============================================================================
 // Recurring Booking Preview Tests
@@ -348,6 +349,4 @@ test.describe('Timezone Handling', () => {
 
     // Should not crash
   });
-});
-
 });

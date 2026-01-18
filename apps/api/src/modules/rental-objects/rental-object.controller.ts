@@ -7,7 +7,7 @@ import { Inject } from '../../core/decorators';
 import { RequireCustody } from '../../core/decorators/require-custody';
 import { CustodyScope } from '../custody/types';
 import { RentalObjectService } from './rental-object.service';
-import { toDetailsProjection } from './rental-object.projections';
+import { toDetailsProjection, toCardProjection } from './rental-object.projections';
 import { validate } from '../../core/validation/zod-pipe';
 import { getOptionalTenantId, getTenantId, TenantRequest } from '../../core/validation/tenant';
 import {
@@ -39,8 +39,11 @@ export class RentalObjectController {
       sortOrder: params.sortOrder ?? 'desc',
     });
     
+    // Transform raw database records to card projections with primaryImageUrl
+    const projectedData = result.data.map(obj => toCardProjection(obj as any));
+    
     return {
-      data: result.data,
+      data: projectedData,
       meta: {
         total: result.pagination.total,
         page: result.pagination.page,
