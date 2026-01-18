@@ -7,7 +7,7 @@ import { http, HttpResponse } from 'msw';
 import { setupServer } from 'msw/node';
 import { beforeAll, afterEach, afterAll } from 'vitest';
 
-const API_BASE_URL = process.env.API_URL || 'http://localhost:3000';
+const API_BASE_URL = process.env.API_URL || 'http://localhost:4000';
 const WS_BASE_URL = process.env.WS_URL || 'http://localhost:3002';
 
 // Mock handlers for common API endpoints
