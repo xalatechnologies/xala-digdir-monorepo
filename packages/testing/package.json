@@ -38,17 +38,14 @@
     "test:integration": "vitest run suites/integration",
     "test:integration:api": "vitest run suites/integration/api",
     "test:integration:rbac": "vitest run suites/integration/rbac",
-    "test:e2e": "playwright test suites/e2e",
-    "test:e2e:backoffice": "playwright test suites/e2e/backoffice",
-    "test:e2e:web": "playwright test suites/e2e/web",
-    "test:e2e:minside": "playwright test suites/e2e/minside",
+
     "test:security": "vitest run suites/security",
     "test:security:auth": "vitest run suites/security/auth",
     "test:security:penetration": "vitest run suites/security/penetration",
     "test:security:rbac": "vitest run suites/security/rbac",
     "test:compliance": "vitest run suites/compliance",
     "test:compliance:gdpr": "vitest run suites/compliance/gdpr",
-    "test:compliance:wcag": "playwright test suites/compliance/wcag",
+    "test:compliance:wcag": "echo 'WCAG E2E tests moved to @digilist/testing-e2e'",
     "test:compliance:soc2": "vitest run suites/compliance/soc2",
     "test:compliance:i18n": "vitest run suites/compliance/i18n",
     "test:performance": "vitest run suites/performance",
@@ -59,7 +56,7 @@
     "report:html": "vitest run --reporter=html --outputFile=reports/html/index.html"
   },
   "devDependencies": {
-    "@playwright/test": "^1.40.0",
+
     "@tanstack/react-query": "^5.0.0",
     "@testing-library/jest-dom": "^6.4.0",
     "@testing-library/react": "^14.2.0",

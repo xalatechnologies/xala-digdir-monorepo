@@ -1,0 +1,26 @@
+{
+  "name": "@digilist/testing-e2e",
+  "version": "1.0.0",
+  "description": "End-to-end testing with Playwright for Digilist Platform",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "test": "playwright test",
+    "test:headed": "playwright test --headed",
+    "test:ui": "playwright test --ui",
+    "test:debug": "playwright test --debug",
+    "test:backoffice": "playwright test suites/backoffice",
+    "test:web": "playwright test suites/web",
+    "test:minside": "playwright test suites/minside",
+    "test:saas-admin": "playwright test suites/saas-admin",
+    "test:auth": "playwright test suites/auth",
+    "test:accessibility": "playwright test suites/accessibility",
+    "test:scenarios": "playwright test suites/scenarios",
+    "report": "playwright show-report"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.40.0",
+    "@types/node": "^20.19.30",
+    "axe-core": "^4.8.0"
+  }
+}

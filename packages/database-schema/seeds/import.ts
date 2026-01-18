@@ -8,7 +8,7 @@ import postgres from 'postgres';
 import { readFileSync } from 'fs';
 import { join, dirname } from 'path';
 import { fileURLToPath } from 'url';
-import { plans, routePolicies, navPolicies, planEntitlements } from '../src/saas/entitlements.ts';
+import { plans, routePolicies, navPolicies, planEntitlements } from '../src/saas/entitlements';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
