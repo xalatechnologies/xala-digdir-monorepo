@@ -84,7 +84,7 @@ const CONFIG = {
   ],
 
   // Files to skip
-  skipFiles: ['.test.', '.spec.', '.stories.', 'fixtures', 'mock', '.mock.'],
+  skipFiles: ['.test.', '.spec.', '.stories.', 'fixtures', 'mock', '.mock.', 'SentryTestComponent'],
 
   // Minimum string length to report
   minStringLength: 2,
