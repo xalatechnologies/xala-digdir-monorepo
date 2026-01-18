@@ -96,13 +96,13 @@ test.describe('A. Backoffice Shell Blur-Eye', () => {
           // Fill email
           const emailInput = dialog.locator('input[type="email"], input[name="email"], input[placeholder*="e-post" i]').first();
           if (await emailInput.isVisible().catch(() => false)) {
-            await emailInput.fill(config.adminCredentials.email);
+            await emailInput.fill(config.credentials.admin.email);
           }
           
           // Fill token
           const tokenInput = dialog.locator('input[placeholder*="token" i], input[name="token"]').first();
           if (await tokenInput.isVisible().catch(() => false)) {
-            await tokenInput.fill(config.adminCredentials.token);
+            await tokenInput.fill(config.credentials.admin.password); // password field stores demo token
           }
           
           // Submit
@@ -134,8 +134,7 @@ test.describe('A. Backoffice Shell Blur-Eye', () => {
     });
 
     test('A1.4 Session persists after reload', async ({ page }) => {
-      // Use existing auth state
-      test.use({ storageState: 'tests/e2e/backoffice/.auth/admin.json' });
+      // Already using auth state from describe block
       
       await page.goto('/', { waitUntil: 'domcontentloaded' });
       await page.waitForTimeout(3000);
@@ -163,7 +162,7 @@ test.describe('A. Backoffice Shell Blur-Eye', () => {
     });
 
     test('A1.5 Logout flow works correctly', async ({ page }) => {
-      test.use({ storageState: 'tests/e2e/backoffice/.auth/admin.json' });
+      // Already using auth state from describe block
       
       await page.goto('/', { waitUntil: 'domcontentloaded' });
       await page.waitForTimeout(3000);
