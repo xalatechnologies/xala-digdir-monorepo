@@ -2,62 +2,241 @@
 
 ```yaml
 - generic [ref=e4]:
-  - generic [ref=e5]:
-    - generic [ref=e6]:
-      - link "name name tagline" [ref=e8] [cursor=pointer]:
-        - /url: /
-        - img "name" [ref=e9]
-        - generic [ref=e10]:
-          - generic [ref=e11]: name
-          - generic [ref=e12]: tagline
+  - complementary [ref=e5]:
+    - generic [ref=e7]:
+      - img "name" [ref=e8]
+      - generic [ref=e9]:
+        - generic [ref=e10]: NAME
+        - generic [ref=e11]: backoffice
+    - navigation [ref=e12]:
       - generic [ref=e13]:
-        - heading "Logg inn" [level=1] [ref=e14]
-        - paragraph [ref=e15]: Velg innloggingsmetode for å fortsette.
-        - generic [ref=e16]:
-          - button "ID-porten Personlig innlogging med BankID eller MinID" [ref=e17] [cursor=pointer]:
-            - generic [ref=e18]:
-              - generic [ref=e19]: ID-porten
-              - generic [ref=e20]: Personlig innlogging med BankID eller MinID
-          - button "Demo Innlogging Logg inn med demo-token (kun for testing)" [ref=e21] [cursor=pointer]:
-            - generic [ref=e22]:
-              - generic [ref=e23]: Demo Innlogging
-              - generic [ref=e24]: Logg inn med demo-token (kun for testing)
-    - generic [ref=e25]:
-      - generic [ref=e26]:
-        - link "Personvern" [ref=e27] [cursor=pointer]:
-          - /url: https://digilist.no/personvern
-        - generic [ref=e28]: ·
-        - link "Vilkår for bruk" [ref=e29] [cursor=pointer]:
-          - /url: https://digilist.no/cookies
-        - generic [ref=e30]: ·
-        - link "Kontakt support" [ref=e31] [cursor=pointer]:
-          - /url: https://digilist.no/#book-demo
-      - paragraph [ref=e32]: © 2026 Digilist. Alle rettigheter reservert.
-  - generic [ref=e34]:
-    - generic [ref=e35]:
-      - paragraph [ref=e36]: Backoffice
-      - heading "Administrasjonsportal" [level=2] [ref=e37]
-      - paragraph [ref=e38]: Komplett verktøy for administrasjon av bookinger, brukere og rapporter
-    - generic [ref=e39]:
-      - generic [ref=e40]:
-        - img [ref=e42]
-        - generic [ref=e47]:
-          - paragraph [ref=e48]: Booking Administrasjon
-          - paragraph [ref=e49]: Administrer bookinger, godkjenninger og kalender
-      - generic [ref=e50]:
-        - img [ref=e52]
-        - generic [ref=e58]:
-          - paragraph [ref=e59]: Brukeradministrasjon
-          - paragraph [ref=e60]: Administrer brukere, roller og tilganger
-      - generic [ref=e61]:
-        - img [ref=e63]
-        - generic [ref=e66]:
-          - paragraph [ref=e67]: Rapporter & Statistikk
-          - paragraph [ref=e68]: Innsikt i bookinger, inntekter og bruksmønstre
-    - generic [ref=e69]:
-      - paragraph [ref=e70]: Integrasjoner & Sertifiseringer
-      - generic [ref=e71]:
-        - generic [ref=e72]: BankID
-        - generic [ref=e73]: Microsoft AD
-        - generic [ref=e74]: Visma
+        - paragraph [ref=e14]: Administrasjon
+        - list [ref=e15]:
+          - listitem [ref=e16]:
+            - link "Utleieobjekter Lokaler, utstyr, kjøretøy og opplevelser" [ref=e17] [cursor=pointer]:
+              - /url: /rental-objects
+              - img [ref=e19]
+              - generic [ref=e22]:
+                - paragraph [ref=e23]: Utleieobjekter
+                - paragraph [ref=e24]: Lokaler, utstyr, kjøretøy og opplevelser
+              - img [ref=e27]
+          - listitem [ref=e29]:
+            - link "Sesonger Faste avtaler" [ref=e30] [cursor=pointer]:
+              - /url: /seasons
+              - img [ref=e32]
+              - generic [ref=e37]:
+                - paragraph [ref=e38]: Sesonger
+                - paragraph [ref=e39]: Faste avtaler
+              - img [ref=e42]
+      - generic [ref=e44]:
+        - paragraph [ref=e45]: Brukere & Org
+        - list [ref=e46]:
+          - listitem [ref=e47]:
+            - link "Organisasjoner Administrer organisasjoner" [ref=e48] [cursor=pointer]:
+              - /url: /organizations
+              - img [ref=e50]
+              - generic [ref=e55]:
+                - paragraph [ref=e56]: Organisasjoner
+                - paragraph [ref=e57]: Administrer organisasjoner
+              - img [ref=e60]
+          - listitem [ref=e62]:
+            - link "Brukere Administrer brukere" [ref=e63] [cursor=pointer]:
+              - /url: /users
+              - img [ref=e65]
+              - generic [ref=e70]:
+                - paragraph [ref=e71]: Brukere
+                - paragraph [ref=e72]: Administrer brukere
+              - img [ref=e75]
+      - generic [ref=e77]:
+        - paragraph [ref=e78]: Saksbehandler
+        - list [ref=e79]:
+          - listitem [ref=e80]:
+            - link "Arbeidskø Ventende forespørsler" [ref=e81] [cursor=pointer]:
+              - /url: /work-queue
+              - img [ref=e83]
+              - generic [ref=e86]:
+                - paragraph [ref=e87]: Arbeidskø
+                - paragraph [ref=e88]: Ventende forespørsler
+              - img [ref=e91]
+          - listitem [ref=e93]:
+            - link "Sesongsøknader Behandle søknader" [ref=e94] [cursor=pointer]:
+              - /url: /season-applications
+              - img [ref=e96]
+              - generic [ref=e101]:
+                - paragraph [ref=e102]: Sesongsøknader
+                - paragraph [ref=e103]: Behandle søknader
+              - img [ref=e106]
+          - listitem [ref=e108]:
+            - link "Allokeringsplan Fordele faste tider" [ref=e109] [cursor=pointer]:
+              - /url: /allocation-planner
+              - img [ref=e111]
+              - generic [ref=e113]:
+                - paragraph [ref=e114]: Allokeringsplan
+                - paragraph [ref=e115]: Fordele faste tider
+              - img [ref=e118]
+          - listitem [ref=e120]:
+            - link "Vedtaksskjema Fatt formelle vedtak" [ref=e121] [cursor=pointer]:
+              - /url: /decision-forms
+              - img [ref=e123]
+              - generic [ref=e126]:
+                - paragraph [ref=e127]: Vedtaksskjema
+                - paragraph [ref=e128]: Fatt formelle vedtak
+              - img [ref=e131]
+          - listitem [ref=e133]:
+            - link "Revisjonslogg Vedtakshistorikk" [ref=e134] [cursor=pointer]:
+              - /url: /audit-timeline
+              - img [ref=e136]
+              - generic [ref=e139]:
+                - paragraph [ref=e140]: Revisjonslogg
+                - paragraph [ref=e141]: Vedtakshistorikk
+              - img [ref=e144]
+      - generic [ref=e146]:
+        - paragraph [ref=e147]: Admin
+        - list [ref=e148]:
+          - listitem [ref=e149]:
+            - link "Prisregler Administrer priser" [ref=e150] [cursor=pointer]:
+              - /url: /pricing-rules
+              - img [ref=e152]
+              - generic [ref=e155]:
+                - paragraph [ref=e156]: Prisregler
+                - paragraph [ref=e157]: Administrer priser
+              - img [ref=e160]
+      - generic [ref=e162]:
+        - paragraph [ref=e163]: Tenant
+        - list [ref=e164]:
+          - listitem [ref=e165]:
+            - link "Funksjoner Aktiver/deaktiver moduler" [ref=e166] [cursor=pointer]:
+              - /url: /tenant/features
+              - img [ref=e168]
+              - generic [ref=e171]:
+                - paragraph [ref=e172]: Funksjoner
+                - paragraph [ref=e173]: Aktiver/deaktiver moduler
+              - img [ref=e176]
+          - listitem [ref=e178]:
+            - link "Plattforminnstillinger Konfigurer tenant" [ref=e179] [cursor=pointer]:
+              - /url: /tenant/settings
+              - img [ref=e181]
+              - generic [ref=e184]:
+                - paragraph [ref=e185]: Plattforminnstillinger
+                - paragraph [ref=e186]: Konfigurer tenant
+              - img [ref=e189]
+          - listitem [ref=e191]:
+            - link "Merkevare Logo og farger" [ref=e192] [cursor=pointer]:
+              - /url: /tenant/branding
+              - img [ref=e194]
+              - generic [ref=e197]:
+                - paragraph [ref=e198]: Merkevare
+                - paragraph [ref=e199]: Logo og farger
+              - img [ref=e202]
+          - listitem [ref=e204]:
+            - link "Systemlogg Alle plattformhendelser" [ref=e205] [cursor=pointer]:
+              - /url: /tenant/audit-log
+              - img [ref=e207]
+              - generic [ref=e210]:
+                - paragraph [ref=e211]: Systemlogg
+                - paragraph [ref=e212]: Alle plattformhendelser
+              - img [ref=e215]
+      - generic [ref=e217]:
+        - paragraph [ref=e218]: System
+        - list [ref=e219]:
+          - listitem [ref=e220]:
+            - link "GDPR-forespørsler Behandle personvernforespørsler 0" [ref=e221] [cursor=pointer]:
+              - /url: /gdpr-requests
+              - img [ref=e223]
+              - generic [ref=e225]:
+                - paragraph [ref=e226]: GDPR-forespørsler
+                - paragraph [ref=e227]: Behandle personvernforespørsler
+              - generic [ref=e228]:
+                - text: "0"
+                - img [ref=e230]
+          - listitem [ref=e232]:
+            - link "Anmeldelser Moderer anmeldelser" [ref=e233] [cursor=pointer]:
+              - /url: /reviews/moderation
+              - img [ref=e235]
+              - generic [ref=e238]:
+                - paragraph [ref=e239]: Anmeldelser
+                - paragraph [ref=e240]: Moderer anmeldelser
+              - img [ref=e243]
+    - generic [ref=e246]:
+      - generic [ref=e247]: T
+      - generic [ref=e248]:
+        - paragraph [ref=e249]: Test User
+        - paragraph [ref=e250]: admin
+  - generic [ref=e251]:
+    - banner [ref=e252]:
+      - generic [ref=e253]:
+        - generic [ref=e257]:
+          - img [ref=e258]
+          - combobox "Søk i bookinger, lokaler, organisasjoner..." [ref=e261]
+          - generic [ref=e262]:
+            - generic [ref=e263]: ⌘
+            - generic [ref=e264]: K
+        - generic [ref=e266]:
+          - button "Bytt til mørkt tema" [ref=e267] [cursor=pointer]:
+            - img [ref=e269]
+          - button "Varsler" [ref=e271] [cursor=pointer]:
+            - img [ref=e273]
+          - button "settings" [ref=e276] [cursor=pointer]:
+            - img [ref=e278]
+          - button "Logg ut" [ref=e282] [cursor=pointer]:
+            - img [ref=e283]
+            - text: Logg ut
+    - main [ref=e286]:
+      - generic [ref=e288]:
+        - generic [ref=e290]:
+          - heading "Velkommen tilbake, Test" [level=1] [ref=e291]
+          - paragraph [ref=e292]: Du har full tilgang til alle funksjoner i systemet.
+        - generic [ref=e293]:
+          - generic [ref=e294]:
+            - generic [ref=e295]:
+              - paragraph [ref=e296]: Ventende bookinger
+              - img [ref=e298]
+            - heading "0" [level=3] [ref=e302]
+            - paragraph [ref=e303]: Krever din behandling
+          - generic [ref=e304]:
+            - generic [ref=e305]:
+              - paragraph [ref=e306]: Godkjente
+              - img [ref=e308]
+            - generic [ref=e311]:
+              - heading "0" [level=3] [ref=e312]
+              - generic [ref=e313]:
+                - img [ref=e314]
+                - text: 8%
+            - paragraph [ref=e317]: Denne måneden
+          - generic [ref=e318]:
+            - generic [ref=e319]:
+              - paragraph [ref=e320]: Avslått
+              - img [ref=e322]
+            - heading "0" [level=3] [ref=e327]
+            - paragraph [ref=e328]: Denne måneden
+          - generic [ref=e329]:
+            - generic [ref=e330]:
+              - paragraph [ref=e331]: Totalt
+              - img [ref=e333]
+            - generic [ref=e335]:
+              - heading "0" [level=3] [ref=e336]
+              - generic [ref=e337]:
+                - img [ref=e338]
+                - text: 15%
+            - paragraph [ref=e341]: Alle bookinger
+        - generic [ref=e342]:
+          - generic [ref=e344]:
+            - heading "Siste aktivitet" [level=2] [ref=e345]
+            - button "Se alle" [ref=e346] [cursor=pointer]
+          - generic [ref=e347]:
+            - generic [ref=e348]:
+              - heading "Hurtighandlinger" [level=2] [ref=e349]
+              - generic [ref=e350]:
+                - button "Behandle ventende" [ref=e351] [cursor=pointer]:
+                  - img [ref=e352]
+                  - text: Behandle ventende
+                - button "Se alle bookinger" [ref=e355] [cursor=pointer]:
+                  - img [ref=e356]
+                  - text: Se alle bookinger
+                - button "Brukere" [ref=e358] [cursor=pointer]:
+                  - img [ref=e359]
+                  - text: Administrer brukere
+            - generic [ref=e364]:
+              - paragraph [ref=e367]: Alle systemer operative
+              - paragraph [ref=e368]: "Sist oppdatert: 20:04"
 ```

@@ -166,7 +166,7 @@ function getWeekdayName(date: Date, t: (key: string) => string): string {
     'weekday.friday',
     'weekday.saturday',
   ];
-  return t(`common.${weekdays[date.getDay()]}`);
+  return t(weekdays[date.getDay()] ?? 'weekday.sunday');
 }
 
 /**

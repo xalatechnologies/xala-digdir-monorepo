@@ -139,13 +139,13 @@ export function BookingConfirmationStep({
   const t = useT();
   const monthNames = ['januar', 'februar', 'mars', 'april', 'mai', 'juni', 'juli', 'august', 'september', 'oktober', 'november', 'desember'];
   const dayNames = [
-    t('common.weekday.sunday'),
-    t('common.weekday.monday'),
-    t('common.weekday.tuesday'),
-    t('common.weekday.wednesday'),
-    t('common.weekday.thursday'),
-    t('common.weekday.friday'),
-    t('common.weekday.saturday'),
+    t('weekday.sunday'),
+    t('weekday.monday'),
+    t('weekday.tuesday'),
+    t('weekday.wednesday'),
+    t('weekday.thursday'),
+    t('weekday.friday'),
+    t('weekday.saturday'),
   ];
 
   /**
@@ -258,10 +258,10 @@ export function BookingConfirmationStep({
     return (
       <div style={{ padding: 'var(--ds-spacing-6)' }}>
         <Heading level={3} data-size="md" style={{ margin: 0, marginBottom: 'var(--ds-spacing-2)', color: 'var(--ds-color-neutral-text-default)' }}>
-          {t('common.logg.inn.for.aa.fullfoere')}
+          {t('logg.inn.for.aa.fullfoere')}
         </Heading>
         <Paragraph data-size="sm" style={{ margin: 0, marginBottom: 'var(--ds-spacing-5)', color: 'var(--ds-color-neutral-text-subtle)' }}>
-          {t('common.for.aa.sende.bookingforespoersel')}
+          {t('for.aa.sende.bookingforespoersel')}
         </Paragraph>
 
         {/* Simple Login Buttons */}
@@ -287,7 +287,7 @@ export function BookingConfirmationStep({
               color: 'var(--ds-color-warning-base-contrast-default)',
             }}
           >
-            {isLoggingIn ? t('common.logger_inn') : t('common.logg.inn.med.vipps')}
+            {isLoggingIn ? t('common.logger_inn') : t('logg.inn.med.vipps')}
           </Button>
 
           <Button
@@ -300,7 +300,7 @@ export function BookingConfirmationStep({
               width: '100%',
             }}
           >
-            {isLoggingIn ? t('common.logger_inn') : t('common.logg.inn.med.bank.id')}
+            {isLoggingIn ? t('common.logger_inn') : t('logg.inn.med.bank.id')}
           </Button>
         </div>
 
@@ -322,7 +322,7 @@ export function BookingConfirmationStep({
             <CheckCircleIcon size={10} />
           </div>
           <Paragraph data-size="xs" style={{ margin: 0, color: 'var(--ds-color-neutral-text-subtle)' }}>
-            {t('common.informasjon.behandles.sikkert')}
+            {t('informasjon.behandles.sikkert')}
           </Paragraph>
         </div>
       </div>
@@ -336,10 +336,10 @@ export function BookingConfirmationStep({
         /* Account Selection - Choose Private or Organization */
         <>
           <Heading level={3} data-size="md" style={{ margin: 0, marginBottom: 'var(--ds-spacing-2)' }}>
-            {t('common.hvordan.vil.du.booke')}
+            {t('hvordan.vil.du.booke')}
           </Heading>
           <Paragraph data-size="sm" style={{ margin: 0, marginBottom: 'var(--ds-spacing-6)', color: 'var(--ds-color-neutral-text-subtle)' }}>
-            {t('common.velg.privatperson.eller.organisasjon')}
+            {t('velg.privatperson.eller.organisasjon')}
           </Paragraph>
 
           {/* Account Type Selection */}
@@ -393,10 +393,10 @@ export function BookingConfirmationStep({
                 </div>
                 <div style={{ flex: 1 }}>
                   <Paragraph data-size="md" style={{ margin: 0, fontWeight: 'var(--ds-font-weight-semibold)', color: 'var(--ds-color-neutral-text-default)' }}>
-                    {t('common.som.privatperson')}
+                    {t('som.privatperson')}
                   </Paragraph>
                   <Paragraph data-size="sm" style={{ margin: 0, marginTop: 'var(--ds-spacing-1)', color: 'var(--ds-color-neutral-text-subtle)' }}>
-                    {t('common.booke.for.deg.selv')}
+                    {t('booke.for.deg.selv')}
                   </Paragraph>
                 </div>
               </div>
@@ -445,10 +445,10 @@ export function BookingConfirmationStep({
                 </div>
                 <div style={{ flex: 1 }}>
                   <Paragraph data-size="md" style={{ margin: 0, fontWeight: 'var(--ds-font-weight-semibold)', color: 'var(--ds-color-neutral-text-default)' }}>
-                    {t('common.paa.vegne.av.organisasjon')}
+                    {t('paa.vegne.av.organisasjon')}
                   </Paragraph>
                   <Paragraph data-size="sm" style={{ margin: 0, marginTop: 'var(--ds-spacing-1)', color: 'var(--ds-color-neutral-text-subtle)' }}>
-                    {t('common.booke.for.organisasjon.du.representerer')}
+                    {t('booke.for.organisasjon.du.representerer')}
                   </Paragraph>
                 </div>
               </div>
@@ -471,7 +471,7 @@ export function BookingConfirmationStep({
                   }}
                 >
                   <Paragraph data-size="sm" style={{ margin: 0, color: 'var(--ds-color-info-text-default)' }}>
-                    {t('common.du.ikke.tilknyttet.organisasjoner')}
+                    {t('du.ikke.tilknyttet.organisasjoner')}
                   </Paragraph>
                 </div>
               ) : (

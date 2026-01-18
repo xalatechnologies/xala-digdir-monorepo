@@ -4,6 +4,7 @@ import { useSeasonApplications } from '@digilist/client-sdk/hooks';
 import type { SeasonApplicationStatus } from '@digilist/client-sdk/types';
 import { useAccountContext } from '../providers/AccountContextProvider';
 import { useNavigate } from 'react-router-dom';
+import { useT } from '@xala/i18n';
 
 // Local type for season application status
 type SeasonApplicationStatus = 'pending' | 'approved' | 'rejected';
@@ -26,7 +27,6 @@ function BuildingIcon() {
 }
 
 function FileTextIcon() {
-  const t = useT();
   return (
     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
       <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />

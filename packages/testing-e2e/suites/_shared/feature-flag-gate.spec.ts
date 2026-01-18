@@ -30,6 +30,7 @@ async function setupCommonMocks(page: Page) {
   // Capture Browser Console
   page.on('console', msg => console.log(`BROWSER LOG: ${msg.text()}`));
   page.on('pageerror', err => console.log(`BROWSER ERROR: ${err.toString()}`));
+  page.on('request', request => console.log(`>> ${request.method()} ${request.url()}`));
 
   // Catch-all to prevent 401s on unmocked endpoints
   await page.route('**/api/**', async route => {
@@ -50,14 +51,29 @@ async function setupCommonMocks(page: Page) {
             id: 'test-user',
             name: 'Test User',
             email: 'test@digilist.no',
-            role: 'org_admin',
-            grantedRoles: [],
+            role: 'admin',
+            grantedRoles: ['admin'],
             tenantId: 'test-tenant'
           },
           expiresAt: new Date(Date.now() + 3600 * 1000).toISOString()
         }
       }
     });
+  });
+
+  // Mock Dashboard - Activity (Must be array)
+  await page.route('**/api/dashboard/activity*', async route => {
+    await route.fulfill({ json: [] });
+  });
+
+  // Mock Dashboard - Stats
+  await page.route('**/api/dashboard/stats', async route => {
+    await route.fulfill({ json: { total: 0, byStatus: {} } }); 
+  });
+
+  // Mock Dashboard - Pending
+  await page.route('**/api/dashboard/pending', async route => {
+    await route.fulfill({ json: { bookings: 0 } });
   });
 
   // Mock User Me (Specific - added AFTER so it wins)
@@ -68,7 +84,7 @@ async function setupCommonMocks(page: Page) {
           id: 'test-user',
           name: 'Test User',
           email: 'test@digilist.no',
-          roles: ['org_admin'],
+          roles: ['admin'],
         }
       }
     });
@@ -95,12 +111,13 @@ test.describe('GATE-G3: Feature Flag Gate Enforcement', () => {
         await route.fulfill({
           json: {
             data: {
-              role: 'org_admin',
-              capabilities: [
-                'CAP_NAV_SEASONS', 'CAP_SEASONS', 
-                'CAP_NAV_MESSAGES', 'CAP_MESSAGES', 
-                'CAP_NAV_RATINGS', 'CAP_RATINGS'
-              ],
+              role: 'admin',
+            capabilities: [
+              'CAP_NAV_SEASONS', 'CAP_SEASONS', 'CAP_BOOKING_MANAGE', // Seasons
+              'CAP_NAV_MESSAGES', 'CAP_MESSAGES', // Messages
+              'CAP_NAV_RATINGS', 'CAP_RATINGS', 'CAP_SETTINGS_ADMIN', // Reviews
+              'CAP_LISTING_EDIT', 'CAP_ORG_ADMIN' // Other common ones
+            ],
               uiHints: {
                 showSeasons: true,
                 showMessages: true,
@@ -118,7 +135,7 @@ test.describe('GATE-G3: Feature Flag Gate Enforcement', () => {
       console.log('Current URL:', page.url());
       
       try {
-        const navLink = page.getByRole('link', { name: /sesong|seasons/i });
+        const navLink = page.locator('a[href="/seasons"]');
         await expect(navLink).toBeVisible({ timeout: 5000 });
         
         await navLink.click();
@@ -135,14 +152,21 @@ test.describe('GATE-G3: Feature Flag Gate Enforcement', () => {
 
     test('RATINGS module shows when enabled', async ({ page }) => {
       await page.goto('/');
-      const navLink = page.getByRole('link', { name: /anmeldelser|reviews|ratings/i });
+      const navLink = page.locator('a[href="/reviews/moderation"]');
       await expect(navLink).toBeVisible();
     });
 
     test('MESSAGING module shows when enabled', async ({ page }) => {
       await page.goto('/');
-      const navLink = page.getByRole('link', { name: /meldinger|messages/i });
-      await expect(navLink).toBeVisible();
+      try {
+        const navLink = page.locator('a[href="/messages"]');
+        await expect(navLink).toBeVisible({ timeout: 5000 });
+      } catch (e) {
+        console.log('Test Failed: Messaging Link Not Found');
+        console.log('Current URL:', page.url());
+        console.log('Body Text:', await page.locator('body').innerText());
+        throw e;
+      }
     });
   });
 
