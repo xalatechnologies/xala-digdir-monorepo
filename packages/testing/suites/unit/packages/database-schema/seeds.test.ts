@@ -5,7 +5,7 @@
 
 import { describe, it, expect } from 'vitest';
 import { readFileSync } from 'fs';
-import { resolve } from 'path';
+import { resolve, join } from 'path';
 
 describe('Seed Data Validation', () => {
   // Use path alias to access database-schema seeds
@@ -13,7 +13,7 @@ describe('Seed Data Validation', () => {
 
   describe('Route Policies', () => {
     it('should have valid JSON structure', () => {
-      const content = readFileSync(resolve(seedsDir, 'route-policies.json'), 'utf-8');
+      const content = readFileSync(join(seedsDir, 'route-policies.json'), 'utf-8');
       const data = JSON.parse(content);
       
       expect(Array.isArray(data)).toBe(true);
@@ -21,7 +21,7 @@ describe('Seed Data Validation', () => {
     });
 
     it('should have required fields', () => {
-      const content = readFileSync(resolve(seedsDir, 'route-policies.json'), 'utf-8');
+      const content = readFileSync(join(seedsDir, 'route-policies.json'), 'utf-8');
       const data = JSON.parse(content);
 
       data.forEach((policy: any, index: number) => {
@@ -43,7 +43,7 @@ describe('Seed Data Validation', () => {
     });
 
     it('should have unique route keys', () => {
-      const content = readFileSync(resolve(seedsDir, 'route-policies.json'), 'utf-8');
+      const content = readFileSync(join(seedsDir, 'route-policies.json'), 'utf-8');
       const data = JSON.parse(content);
 
       const routeKeys = data.map((p: any) => p.routeKey);
@@ -53,7 +53,7 @@ describe('Seed Data Validation', () => {
     });
 
     it('should have valid app names', () => {
-      const content = readFileSync(resolve(seedsDir, 'route-policies.json'), 'utf-8');
+      const content = readFileSync(join(seedsDir, 'route-policies.json'), 'utf-8');
       const data = JSON.parse(content);
 
       const validApps = ['backoffice', 'minside', 'web', 'saas-admin', 'tenant-admin'];
@@ -64,7 +64,7 @@ describe('Seed Data Validation', () => {
     });
 
     it('should have consistent route key naming', () => {
-      const content = readFileSync(resolve(seedsDir, 'route-policies.json'), 'utf-8');
+      const content = readFileSync(join(seedsDir, 'route-policies.json'), 'utf-8');
       const data = JSON.parse(content);
 
       data.forEach((policy: any) => {
@@ -79,7 +79,7 @@ describe('Seed Data Validation', () => {
 
   describe('Navigation Policies', () => {
     it('should have valid JSON structure', () => {
-      const content = readFileSync(resolve(seedsDir, 'nav-policies.json'), 'utf-8');
+      const content = readFileSync(join(seedsDir, 'nav-policies.json'), 'utf-8');
       const data = JSON.parse(content);
       
       expect(Array.isArray(data)).toBe(true);
@@ -87,7 +87,7 @@ describe('Seed Data Validation', () => {
     });
 
     it('should have required fields', () => {
-      const content = readFileSync(resolve(seedsDir, 'nav-policies.json'), 'utf-8');
+      const content = readFileSync(join(seedsDir, 'nav-policies.json'), 'utf-8');
       const data = JSON.parse(content);
 
       data.forEach((policy: any) => {
@@ -111,7 +111,7 @@ describe('Seed Data Validation', () => {
     });
 
     it('should have unique nav item keys per app', () => {
-      const content = readFileSync(resolve(seedsDir, 'nav-policies.json'), 'utf-8');
+      const content = readFileSync(join(seedsDir, 'nav-policies.json'), 'utf-8');
       const data = JSON.parse(content);
 
       const byApp = data.reduce((acc: any, item: any) => {
@@ -127,7 +127,7 @@ describe('Seed Data Validation', () => {
     });
 
     it('should have valid parent references', () => {
-      const content = readFileSync(resolve(seedsDir, 'nav-policies.json'), 'utf-8');
+      const content = readFileSync(join(seedsDir, 'nav-policies.json'), 'utf-8');
       const data = JSON.parse(content);
 
       const allKeys = new Set(data.map((p: any) => p.navItemKey));
@@ -144,7 +144,7 @@ describe('Seed Data Validation', () => {
     });
 
     it('should have sequential ordering', () => {
-      const content = readFileSync(resolve(seedsDir, 'nav-policies.json'), 'utf-8');
+      const content = readFileSync(join(seedsDir, 'nav-policies.json'), 'utf-8');
       const data = JSON.parse(content);
 
       const byApp = data.reduce((acc: any, item: any) => {
@@ -165,7 +165,7 @@ describe('Seed Data Validation', () => {
 
   describe('Plan Entitlements', () => {
     it('should have valid JSON structure', () => {
-      const content = readFileSync(resolve(seedsDir, 'plan-entitlements.json'), 'utf-8');
+      const content = readFileSync(join(seedsDir, 'plan-entitlements.json'), 'utf-8');
       const data = JSON.parse(content);
       
       expect(Array.isArray(data)).toBe(true);
@@ -173,7 +173,7 @@ describe('Seed Data Validation', () => {
     });
 
     it('should have required fields', () => {
-      const content = readFileSync(resolve(seedsDir, 'plan-entitlements.json'), 'utf-8');
+      const content = readFileSync(join(seedsDir, 'plan-entitlements.json'), 'utf-8');
       const data = JSON.parse(content);
 
       data.forEach((entitlement: any) => {
@@ -191,7 +191,7 @@ describe('Seed Data Validation', () => {
     });
 
     it('should have valid plan names', () => {
-      const content = readFileSync(resolve(seedsDir, 'plan-entitlements.json'), 'utf-8');
+      const content = readFileSync(join(seedsDir, 'plan-entitlements.json'), 'utf-8');
       const data = JSON.parse(content);
 
       const validPlans = ['Free', 'Pro', 'Enterprise'];
@@ -202,7 +202,7 @@ describe('Seed Data Validation', () => {
     });
 
     it('should have valid key types', () => {
-      const content = readFileSync(resolve(seedsDir, 'plan-entitlements.json'), 'utf-8');
+      const content = readFileSync(join(seedsDir, 'plan-entitlements.json'), 'utf-8');
       const data = JSON.parse(content);
 
       const validKeyTypes = ['module', 'feature', 'integration'];
@@ -213,7 +213,7 @@ describe('Seed Data Validation', () => {
     });
 
     it('should have unique combinations per plan', () => {
-      const content = readFileSync(resolve(seedsDir, 'plan-entitlements.json'), 'utf-8');
+      const content = readFileSync(join(seedsDir, 'plan-entitlements.json'), 'utf-8');
       const data = JSON.parse(content);
 
       const combinations = data.map((e: any) => `${e.planName}:${e.keyType}:${e.key}`);
@@ -223,7 +223,7 @@ describe('Seed Data Validation', () => {
     });
 
     it('should have all plans represented', () => {
-      const content = readFileSync(resolve(seedsDir, 'plan-entitlements.json'), 'utf-8');
+      const content = readFileSync(join(seedsDir, 'plan-entitlements.json'), 'utf-8');
       const data = JSON.parse(content);
 
       const plans = new Set(data.map((e: any) => e.planName));
@@ -234,7 +234,7 @@ describe('Seed Data Validation', () => {
     });
 
     it('should have Enterprise plan with most entitlements', () => {
-      const content = readFileSync(resolve(seedsDir, 'plan-entitlements.json'), 'utf-8');
+      const content = readFileSync(join(seedsDir, 'plan-entitlements.json'), 'utf-8');
       const data = JSON.parse(content);
 
       const byPlan = data.reduce((acc: any, item: any) => {
@@ -250,8 +250,8 @@ describe('Seed Data Validation', () => {
 
   describe('Cross-File Consistency', () => {
     it('should have matching route keys between routes and nav', () => {
-      const routesContent = readFileSync(resolve(seedsDir, 'route-policies.json'), 'utf-8');
-      const navContent = readFileSync(resolve(seedsDir, 'nav-policies.json'), 'utf-8');
+      const routesContent = readFileSync(join(seedsDir, 'route-policies.json'), 'utf-8');
+      const navContent = readFileSync(join(seedsDir, 'nav-policies.json'), 'utf-8');
       
       const routes = JSON.parse(routesContent);
       const navItems = JSON.parse(navContent);
@@ -266,8 +266,8 @@ describe('Seed Data Validation', () => {
     });
 
     it('should have consistent app names across files', () => {
-      const routesContent = readFileSync(resolve(seedsDir, 'route-policies.json'), 'utf-8');
-      const navContent = readFileSync(resolve(seedsDir, 'nav-policies.json'), 'utf-8');
+      const routesContent = readFileSync(join(seedsDir, 'route-policies.json'), 'utf-8');
+      const navContent = readFileSync(join(seedsDir, 'nav-policies.json'), 'utf-8');
       
       const routes = JSON.parse(routesContent);
       const navItems = JSON.parse(navContent);

@@ -79,7 +79,6 @@ function getDefaultFormData(category?: RentalObjectCategory): Partial<RentalObje
   const config = CATEGORY_CONFIGS[cat];
   
   return {
-  const t = useT();
     category: cat,
     status: 'draft',
     name: '',

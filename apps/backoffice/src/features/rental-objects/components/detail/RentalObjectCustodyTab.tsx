@@ -25,9 +25,9 @@ import {
 } from '@digilist/client-sdk';
 
 export function RentalObjectCustodyTab({ rentalObjectId }: { rentalObjectId: string }) {
+  const t = useT();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [newGrant, setNewGrant] = useState<{
-  const t = useT();
     granteeType: 'USER' | 'ORG';
     granteeId: string;
     scopes: string[];
