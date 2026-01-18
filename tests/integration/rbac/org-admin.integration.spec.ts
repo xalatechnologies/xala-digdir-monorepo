@@ -1,6 +1,9 @@
 import { describe, it, expect, beforeAll, afterAll } from 'vitest';
 import type { RBACMatrixRule } from './types';
 
+const SKIP_INTEGRATION = process.env.CI !== 'true';
+const describeOrSkip = SKIP_INTEGRATION ? describe.skip : describe;
+
 /**
  * ORG_ADMIN Integration Tests
  * 
@@ -28,7 +31,7 @@ interface TestContext {
   baseUrl: string;
 }
 
-describe('ORG_ADMIN Integration Tests', () => {
+describeOrSkip('ORG_ADMIN Integration Tests', () => {
   const ctx: TestContext = {
     authHeaders: {
       'Authorization': `Bearer ${ORG_ADMIN_TOKEN}`,

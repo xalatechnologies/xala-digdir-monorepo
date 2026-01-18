@@ -51,6 +51,7 @@ const SEND_TYPE_LABELS: Record<CalendarSend['type'], string> = {
 function formatTimestamp(timestamp: string): string {
   const date = new Date(timestamp);
   return date.toLocaleDateString('nb-NO', { 
+  const t = useT();
     day: 'numeric', 
     month: 'short', 
     year: 'numeric',
@@ -107,7 +108,7 @@ export function CalendarIntegrationPage(): React.ReactElement {
       bookingTitle: 'Booking #12338 - Gymsal',
       status: 'failed',
       timestamp: new Date(Date.now() - 7200000).toISOString(),
-      errorMessage: 'Ugyldig e-postadresse',
+      errorMessage: 't('errors.ugyldig_epostadresse')',
     },
     {
       id: '4',
@@ -151,7 +152,7 @@ export function CalendarIntegrationPage(): React.ReactElement {
                 {isConnected ? (
                   <Badge color="success">Tilkoblet</Badge>
                 ) : (
-                  <Badge color="neutral">Ikke tilkoblet</Badge>
+                  <Badge color="neutral">{t('common.ikke_tilkoblet')}</Badge>
                 )}
               </div>
               <Paragraph style={{ color: 'var(--ds-color-neutral-text-subtle)' }}>
@@ -194,7 +195,7 @@ export function CalendarIntegrationPage(): React.ReactElement {
                 <Switch
                   checked={icsEnabled}
                   onChange={() => setIcsEnabled(!icsEnabled)}
-                  aria-label="Aktiver kalenderinvitasjoner"
+                  aria-label={t('common.aktiver_kalenderinvitasjoner')}
                 />
               </div>
               {icsEnabled && (
@@ -227,7 +228,7 @@ export function CalendarIntegrationPage(): React.ReactElement {
                 <Switch
                   checked={resourceCalendarEnabled}
                   onChange={() => setResourceCalendarEnabled(!resourceCalendarEnabled)}
-                  aria-label="Aktiver ressurskalender"
+                  aria-label={t('common.aktiver_ressurskalender')}
                 />
               </div>
               {resourceCalendarEnabled && (

@@ -9,6 +9,9 @@
 
 import { describe, it, expect, beforeAll, afterAll } from 'vitest';
 
+const SKIP_INTEGRATION = process.env.SKIP_INTEGRATION_TESTS === 'true' || process.env.CI !== 'true';
+const describeOrSkip = SKIP_INTEGRATION ? describe.skip : describe;
+
 const API_URL = process.env.API_URL || 'http://localhost:3000/api';
 
 // =============================================================================
@@ -35,7 +38,7 @@ async function getAuthCookie(): Promise<string | null> {
 // Right to Access (Data Export)
 // =============================================================================
 
-describe('Right to Access (Data Export)', () => {
+describeOrSkip('Right to Access (Data Export)', () => {
   beforeAll(async () => {
     authToken = await getAuthCookie();
   });

@@ -463,7 +463,7 @@ export function Sidebar() {
           overlay={true}
           closeOnOverlayClick={true}
           closeOnEscape={true}
-          aria-label="Navigation menu"
+          aria-label={t('common.navigation_menu')}
         >
           <div
             style={{

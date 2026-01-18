@@ -6,6 +6,7 @@
  */
 import { useState } from 'react';
 import {
+import { useT } from '@xala/i18n';
   Button,
   Heading,
   Paragraph,
@@ -26,6 +27,7 @@ import {
 export function RentalObjectCustodyTab({ rentalObjectId }: { rentalObjectId: string }) {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [newGrant, setNewGrant] = useState<{
+  const t = useT();
     granteeType: 'USER' | 'ORG';
     granteeId: string;
     scopes: string[];
@@ -67,7 +69,7 @@ export function RentalObjectCustodyTab({ rentalObjectId }: { rentalObjectId: str
   };
 
   const handleRevoke = async (grantId: string) => {
-    if (window.confirm('Er du sikker på at du vil trekke tilbake denne tilgangen?')) {
+    if (window.confirm('t('common.er_du_sikker_paa')')) {
       await revokeGrant.mutateAsync({ grantId, _rentalObjectId: rentalObjectId });
     }
   };
@@ -103,7 +105,7 @@ export function RentalObjectCustodyTab({ rentalObjectId }: { rentalObjectId: str
             <tr style={{ textAlign: 'left', borderBottom: '1px solid var(--ds-color-neutral-border-subtle)', backgroundColor: 'var(--ds-color-neutral-surface-subtle)' }}>
               <th style={{ padding: 'var(--ds-spacing-3) var(--ds-spacing-4)' }}>Mottaker</th>
               <th style={{ padding: 'var(--ds-spacing-3) var(--ds-spacing-4)' }}>Type</th>
-              <th style={{ padding: 'var(--ds-spacing-3) var(--ds-spacing-4)' }}>Omfang (Scopes)</th>
+              <th style={{ padding: 'var(--ds-spacing-3) var(--ds-spacing-4)' }}>{t('common.omfang_scopes')}</th>
               <th style={{ padding: 'var(--ds-spacing-3) var(--ds-spacing-4)' }}>Periode</th>
               <th style={{ padding: 'var(--ds-spacing-3) var(--ds-spacing-4)' }}>Status</th>
               <th style={{ padding: 'var(--ds-spacing-3) var(--ds-spacing-4)', textAlign: 'right' }}>Handlinger</th>
@@ -192,7 +194,7 @@ export function RentalObjectCustodyTab({ rentalObjectId }: { rentalObjectId: str
             ) : (
               <tr>
                 <td colSpan={5} style={{ padding: 'var(--ds-spacing-8)', textAlign: 'center', color: 'var(--ds-color-neutral-text-subtle)' }}>
-                  Ingen delegasjoner registrert for dette objektet.
+                  t('common.ingen_delegasjoner_registrert_for')
                 </td>
               </tr>
             )}
@@ -210,12 +212,12 @@ export function RentalObjectCustodyTab({ rentalObjectId }: { rentalObjectId: str
           zIndex: 1000 
         }}>
           <Card style={{ width: '500px', padding: 'var(--ds-spacing-6)' }}>
-            <Heading level={3}>Tildel nytt ansvar</Heading>
-            <Paragraph>Dette vil gi en organisasjon eller bruker spesifikke rettigheter til dette objektet.</Paragraph>
+            <Heading level={3}>{t('common.tildel_nytt_ansvar')}</Heading>
+            <Paragraph>{t('common.dette_vil_gi_en')}</Paragraph>
             
             <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--ds-spacing-4)', marginTop: 'var(--ds-spacing-4)' }}>
               <div>
-                <label style={{ display: 'block', marginBottom: 'var(--ds-spacing-1)', fontSize: 'var(--ds-font-size-sm)' }}>Type mottaker</label>
+                <label style={{ display: 'block', marginBottom: 'var(--ds-spacing-1)', fontSize: 'var(--ds-font-size-sm)' }}>{t('common.type_mottaker')}</label>
                 <select 
                   value={newGrant.granteeType} 
                   onChange={(e) => setNewGrant({...newGrant, granteeType: e.target.value as 'USER' | 'ORG', granteeId: ''})}
@@ -227,13 +229,13 @@ export function RentalObjectCustodyTab({ rentalObjectId }: { rentalObjectId: str
               </div>
 
               <div>
-                <label style={{ display: 'block', marginBottom: 'var(--ds-spacing-1)', fontSize: 'var(--ds-font-size-sm)' }}>Velg mottaker</label>
+                <label style={{ display: 'block', marginBottom: 'var(--ds-spacing-1)', fontSize: 'var(--ds-font-size-sm)' }}>{t('common.velg_mottaker')}</label>
                 <select 
                   value={newGrant.granteeId} 
                   onChange={(e) => setNewGrant({...newGrant, granteeId: e.target.value})}
                   style={{ width: '100%', padding: 'var(--ds-spacing-2)', borderRadius: 'var(--ds-border-radius-md)', border: '1px solid var(--ds-color-neutral-border-default)' }}
                 >
-                  <option value="">Velg...</option>
+                  <option value="">{t('common.velg')}</option>
                   {newGrant.granteeType === 'ORG' 
                     ? (orgs as any)?.data?.map((o: any) => <option key={o.id} value={o.id}>{o.name}</option>)
                     : (usersData as any)?.data?.map((u: any) => <option key={u.id} value={u.id}>{u.fullName}</option>)
@@ -242,7 +244,7 @@ export function RentalObjectCustodyTab({ rentalObjectId }: { rentalObjectId: str
               </div>
 
               <div>
-                <label style={{ display: 'block', marginBottom: 'var(--ds-spacing-1)', fontSize: 'var(--ds-font-size-sm)' }}>Rettigheter (Scopes)</label>
+                <label style={{ display: 'block', marginBottom: 'var(--ds-spacing-1)', fontSize: 'var(--ds-font-size-sm)' }}>{t('common.rettigheter_scopes')}</label>
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 'var(--ds-spacing-2)' }}>
                   {['RO_VIEW', 'RO_EDIT', 'RO_BOOKING_MANAGE', 'RO_MAINTENANCE', 'RO_MEDIA', 'RO_PRICING', 'RO_REPORTING', 'RO_DELEGATE'].map(scope => (
                     <label key={scope} style={{ display: 'flex', alignItems: 'center', gap: 'var(--ds-spacing-2)', fontSize: 'var(--ds-font-size-sm)' }}>
@@ -264,7 +266,7 @@ export function RentalObjectCustodyTab({ rentalObjectId }: { rentalObjectId: str
 
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 'var(--ds-spacing-4)' }}>
                 <div>
-                  <label style={{ display: 'block', marginBottom: 'var(--ds-spacing-1)', fontSize: 'var(--ds-font-size-sm)' }}>Gyldig fra</label>
+                  <label style={{ display: 'block', marginBottom: 'var(--ds-spacing-1)', fontSize: 'var(--ds-font-size-sm)' }}>{t('common.gyldig_fra')}</label>
                   <input 
                     type="datetime-local" 
                     value={newGrant.effectiveFrom || ''} 
@@ -273,7 +275,7 @@ export function RentalObjectCustodyTab({ rentalObjectId }: { rentalObjectId: str
                   />
                 </div>
                 <div>
-                  <label style={{ display: 'block', marginBottom: 'var(--ds-spacing-1)', fontSize: 'var(--ds-font-size-sm)' }}>Gyldig til</label>
+                  <label style={{ display: 'block', marginBottom: 'var(--ds-spacing-1)', fontSize: 'var(--ds-font-size-sm)' }}>{t('common.gyldig_til')}</label>
                   <input 
                     type="datetime-local" 
                     value={newGrant.effectiveTo || ''} 
@@ -288,7 +290,7 @@ export function RentalObjectCustodyTab({ rentalObjectId }: { rentalObjectId: str
                 <textarea 
                   value={newGrant.reason || ''} 
                   onChange={(e) => setNewGrant({...newGrant, reason: e.target.value})}
-                  placeholder="Valgfri begrunnelse for delegasjonen..."
+                  placeholder={t('common.valgfri_begrunnelse_for_delegasjonen')}
                   style={{ width: '100%', padding: 'var(--ds-spacing-2)', borderRadius: 'var(--ds-border-radius-md)', border: '1px solid var(--ds-color-neutral-border-default)', minHeight: '80px' }}
                 />
               </div>
@@ -301,7 +303,7 @@ export function RentalObjectCustodyTab({ rentalObjectId }: { rentalObjectId: str
                   onClick={handleCreate}
                   disabled={createGrant.isPending}
                 >
-                  {createGrant.isPending ? 'Tildeler...' : 'Tildel'}
+                  {createGrant.isPending ? 't('common.tildeler')' : 'Tildel'}
                 </Button>
               </div>
             </div>

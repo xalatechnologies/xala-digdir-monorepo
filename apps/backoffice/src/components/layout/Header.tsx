@@ -136,7 +136,7 @@ export function Header({ title: _title }: HeaderProps) {
               }}
             >
               <GlobalSearch
-                placeholder="Søk i bookinger, lokaler, organisasjoner..."
+                placeholder={t('common.sok_i_bookinger_lokaler')}
                 showShortcut
                 enableGlobalShortcut
               />
@@ -276,7 +276,7 @@ export function Header({ title: _title }: HeaderProps) {
                     variant="tertiary"
                     data-size="md"
                     onClick={logout}
-                    aria-label="Logg ut"
+                    aria-label={t('common.logg_ut')}
                     style={{ whiteSpace: 'nowrap' }}
                   >
                     <LogOutIcon size={20} />

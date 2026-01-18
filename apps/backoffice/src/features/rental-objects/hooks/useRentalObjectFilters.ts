@@ -5,6 +5,7 @@
 
 import { useState, useCallback, useMemo } from 'react';
 import type { RentalObjectStatus } from '@digilist/client-sdk';
+import { useT } from '@xala/i18n';
 
 export const STATUS_OPTIONS = [
   { id: 'all', label: 'Alle', value: 'all' },
@@ -14,27 +15,27 @@ export const STATUS_OPTIONS = [
 ];
 
 export const CATEGORY_OPTIONS = [
-  { id: 'all', label: 'Alle kategorier', value: 'all' },
-  { id: 'LOKALER_OG_BANER', label: 'Lokaler og baner', value: 'LOKALER_OG_BANER' },
-  { id: 'UTSTYR_OG_INVENTAR', label: 'Utstyr og inventar', value: 'UTSTYR_OG_INVENTAR' },
-  { id: 'KJORETOY_OG_TRANSPORT', label: 'Kjøretøy og transport', value: 'KJORETOY_OG_TRANSPORT' },
-  { id: 'OPPLEVELSER_OG_ARRANGEMENT', label: 'Opplevelser og arrangement', value: 'OPPLEVELSER_OG_ARRANGEMENT' },
+  { id: 'all', label: t('common.alle_kategorier'), value: 'all' },
+  { id: 'LOKALER_OG_BANER', label: t('common.lokaler_og_baner'), value: 'LOKALER_OG_BANER' },
+  { id: 'UTSTYR_OG_INVENTAR', label: t('common.utstyr_og_inventar'), value: 'UTSTYR_OG_INVENTAR' },
+  { id: 'KJORETOY_OG_TRANSPORT', label: t('common.kjoretoy_og_transport'), value: 'KJORETOY_OG_TRANSPORT' },
+  { id: 'OPPLEVELSER_OG_ARRANGEMENT', label: t('common.opplevelser_og_arrangement'), value: 'OPPLEVELSER_OG_ARRANGEMENT' },
 ];
 
 export const TIME_MODE_OPTIONS = [
-  { id: 'all', label: 'Alle bookingtyper', value: 'all' },
+  { id: 'all', label: t('common.alle_bookingtyper'), value: 'all' },
   { id: 'PERIOD', label: 'Tidsperiode', value: 'PERIOD' },
   { id: 'SLOT', label: 'Tidsluke', value: 'SLOT' },
   { id: 'ALL_DAY', label: 'Heldags', value: 'ALL_DAY' },
 ];
 
 export const SORT_OPTIONS = [
-  { id: 'updated-desc', label: 'Sist oppdatert', value: 'updated-desc', field: 'updatedAt', order: 'desc' },
-  { id: 'updated-asc', label: 'Eldste oppdatering', value: 'updated-asc', field: 'updatedAt', order: 'asc' },
-  { id: 'name-asc', label: 'Navn (A-Å)', value: 'name-asc', field: 'name', order: 'asc' },
-  { id: 'name-desc', label: 'Navn (Å-A)', value: 'name-desc', field: 'name', order: 'desc' },
-  { id: 'created-desc', label: 'Nyeste først', value: 'created-desc', field: 'createdAt', order: 'desc' },
-  { id: 'created-asc', label: 'Eldste først', value: 'created-asc', field: 'createdAt', order: 'asc' },
+  { id: 'updated-desc', label: t('common.sist_oppdatert'), value: 'updated-desc', field: 'updatedAt', order: 'desc' },
+  { id: 'updated-asc', label: t('common.eldste_oppdatering'), value: 'updated-asc', field: 'updatedAt', order: 'asc' },
+  { id: 'name-asc', label: t('common.navn_aaa'), value: 'name-asc', field: 'name', order: 'asc' },
+  { id: 'name-desc', label: t('common.navn_aaa'), value: 'name-desc', field: 'name', order: 'desc' },
+  { id: 'created-desc', label: t('common.nyeste_forst'), value: 'created-desc', field: 'createdAt', order: 'desc' },
+  { id: 'created-asc', label: t('common.eldste_forst'), value: 'created-asc', field: 'createdAt', order: 'asc' },
 ];
 
 export interface RentalObjectFiltersState {
@@ -56,6 +57,7 @@ export type ViewMode = 'grid' | 'table';
 export function useRentalObjectFilters() {
   // Filter state object
   const [filters, setFilters] = useState<RentalObjectFiltersState>({});
+  const t = useT();
   
   // View mode state
   const [viewMode, setViewMode] = useState<ViewMode>('grid');

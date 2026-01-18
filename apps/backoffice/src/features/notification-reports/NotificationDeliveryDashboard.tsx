@@ -80,13 +80,13 @@ export function NotificationDeliveryDashboard() {
       const result = await retryFailed.mutateAsync();
       const retriedCount = result?.retried || 0;
       toast.success(
-        'Prøver feilede på nytt',
+        t('messages.prover_feilede_paa_nytt'),
         retriedCount > 0
           ? `${retriedCount} varsling${retriedCount === 1 ? '' : 'er'} blir prøvd på nytt`
           : 'Ingen feilede varsler å prøve på nytt'
       );
     } catch (error) {
-      toast.error('Kunne ikke prøve på nytt', error instanceof Error ? error.message : 'En uventet feil oppstod');
+      toast.error(t('messages.kunne_ikke_prove_paa'), error instanceof Error ? error.message : 'En uventet feil oppstod');
     }
   };
 
@@ -173,7 +173,7 @@ export function NotificationDeliveryDashboard() {
       {/* Toolbar Row */}
       <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--ds-spacing-3)' }}>
         <HeaderSearch
-          placeholder="Søk etter mottaker eller emne..."
+          placeholder={t('common.sok_etter_mottaker_eller')}
           value={searchValue}
           onSearchChange={handleSearchChange}
           onSearch={handleSearch}
@@ -190,7 +190,7 @@ export function NotificationDeliveryDashboard() {
             onClick={handleRetryFailed}
             disabled={retryFailed.isPending}
           >
-            {retryFailed.isPending ? 'Prøver igjen...' : 'Prøv feilede på nytt'}
+            {retryFailed.isPending ? 't('common.prover_igjen')' : 'Prøv feilede på nytt'}
           </Button>
         )}
       </div>
@@ -218,7 +218,7 @@ export function NotificationDeliveryDashboard() {
               Ingen varsler funnet
             </Paragraph>
             <Paragraph data-size="sm" style={{ margin: 0, marginTop: 'var(--ds-spacing-2)', color: 'var(--ds-color-neutral-text-subtle)' }}>
-              {searchQuery ? 'Prøv å endre søkekriteriene' : 'Det finnes ingen varsler ennå'}
+              {searchQuery ? 't('common.prov_aa_endre_sokekriteriene')' : 'Det finnes ingen varsler ennå'}
             </Paragraph>
           </div>
         ) : (
@@ -235,8 +235,8 @@ export function NotificationDeliveryDashboard() {
                   <Table.HeaderCell>Mottaker</Table.HeaderCell>
                   <Table.HeaderCell>Emne</Table.HeaderCell>
                   <Table.HeaderCell style={{ width: '120px' }}>Status</Table.HeaderCell>
-                  <Table.HeaderCell style={{ width: '100px' }}>Forsøk</Table.HeaderCell>
-                  <Table.HeaderCell style={{ width: '180px' }}>Siste forsøk</Table.HeaderCell>
+                  <Table.HeaderCell style={{ width: '100px' }}>{t('common.forsok')}</Table.HeaderCell>
+                  <Table.HeaderCell style={{ width: '180px' }}>{t('common.siste_forsok')}</Table.HeaderCell>
                 </Table.Row>
               </Table.Head>
               <Table.Body>

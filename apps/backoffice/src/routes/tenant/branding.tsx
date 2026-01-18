@@ -24,8 +24,8 @@ import { useT } from '@xala/i18n';
 const MOBILE_BREAKPOINT = 768;
 
 const COLOR_PRESETS = [
-  { name: 'Blå', primary: '#2563eb', accent: '#3b82f6' },
-  { name: 'Grønn', primary: '#16a34a', accent: '#22c55e' },
+  { name: t('common.blaa'), primary: '#2563eb', accent: '#3b82f6' },
+  { name: t('common.gronn'), primary: '#16a34a', accent: '#22c55e' },
   { name: 'Lilla', primary: '#7c3aed', accent: '#8b5cf6' },
   { name: 'Oransje', primary: '#ea580c', accent: '#f97316' },
 ];
@@ -40,6 +40,7 @@ export function TenantBrandingPage() {
 
   // Branding state
   const [branding, setBranding] = useState({
+  const t = useT();
     primaryColor: '#2563eb',
     accentColor: '#3b82f6',
     logoUrl: '',
@@ -98,7 +99,7 @@ export function TenantBrandingPage() {
           disabled={isSaving}
           style={{ minHeight: '44px' }}
         >
-          {isSaving ? 'Lagrer...' : 'Lagre endringer'}
+          {isSaving ? 't('common.lagrer')' : 'Lagre endringer'}
         </Button>
       </div>
 
@@ -145,7 +146,7 @@ export function TenantBrandingPage() {
         {/* Custom colors */}
         <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr', gap: 'var(--ds-spacing-4)' }}>
           <div>
-            <Label style={{ display: 'block', marginBottom: 'var(--ds-spacing-2)', fontWeight: 'var(--ds-font-weight-medium)' }}>Primærfarge</Label>
+            <Label style={{ display: 'block', marginBottom: 'var(--ds-spacing-2)', fontWeight: 'var(--ds-font-weight-medium)' }}>{t('common.primaerfarge')}</Label>
             <div style={{ display: 'flex', gap: 'var(--ds-spacing-2)' }}>
               <input
                 type="color"
@@ -233,7 +234,7 @@ export function TenantBrandingPage() {
         </Heading>
         <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--ds-spacing-4)' }}>
           <div>
-            <Label style={{ display: 'block', marginBottom: 'var(--ds-spacing-2)', fontWeight: 'var(--ds-font-weight-medium)' }}>Header-tekst</Label>
+            <Label style={{ display: 'block', marginBottom: 'var(--ds-spacing-2)', fontWeight: 'var(--ds-font-weight-medium)' }}>{t('common.headertekst')}</Label>
             <Input
               value={branding.headerText}
               onChange={(e) => updateBranding('headerText', e.target.value)}
@@ -241,7 +242,7 @@ export function TenantBrandingPage() {
             />
           </div>
           <div>
-            <Label style={{ display: 'block', marginBottom: 'var(--ds-spacing-2)', fontWeight: 'var(--ds-font-weight-medium)' }}>Footer-tekst</Label>
+            <Label style={{ display: 'block', marginBottom: 'var(--ds-spacing-2)', fontWeight: 'var(--ds-font-weight-medium)' }}>{t('common.footertekst')}</Label>
             <Input
               value={branding.footerText}
               onChange={(e) => updateBranding('footerText', e.target.value)}

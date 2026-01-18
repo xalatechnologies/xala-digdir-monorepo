@@ -6,6 +6,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
+import { useT } from '@xala/i18n';
   Card,
   Heading,
   Paragraph,
@@ -34,6 +35,7 @@ interface ConsentSettings {
 export function PrivacyTab() {
   const navigate = useNavigate();
   const { logout } = useAuth();
+  const t = useT();
   const [isExporting, setIsExporting] = useState(false);
 
   // Queries
@@ -81,7 +83,7 @@ export function PrivacyTab() {
   };
 
   const handleDeleteAccount = async () => {
-    if (confirm('Er du sikker på at du vil slette kontoen din? Dette kan ikke angres.')) {
+    if (confirm('t('common.er_du_sikker_paa')')) {
       try {
         await deleteAccountMutation.mutateAsync();
         logout();
@@ -128,10 +130,10 @@ export function PrivacyTab() {
             onClick={handleExportData}
             disabled={isExporting}
             type="button"
-            aria-label="Eksporter mine data"
+            aria-label={t('common.eksporter_mine_data')}
           >
             <DownloadIcon />
-            {isExporting ? 'Eksporterer...' : 'Last ned mine data'}
+            {isExporting ? 't('common.eksporterer')' : 'Last ned mine data'}
           </Button>
         </Stack>
       </Card>
@@ -168,7 +170,7 @@ export function PrivacyTab() {
               <Switch
                 checked={consentSettings.marketing}
                 onChange={(e) => handleUpdateConsents('marketing', e.target.checked)}
-                aria-label="Markedsføring"
+                aria-label={t('common.markedsforing')}
               />
             </div>
 
@@ -214,7 +216,7 @@ export function PrivacyTab() {
               <Switch
                 checked={consentSettings.thirdPartySharing}
                 onChange={(e) => handleUpdateConsents('thirdPartySharing', e.target.checked)}
-                aria-label="Deling med tredjeparter"
+                aria-label={t('common.deling_med_tredjeparter')}
               />
             </div>
           </Stack>

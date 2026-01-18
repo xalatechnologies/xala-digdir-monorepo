@@ -243,7 +243,7 @@ export function TenantEditPage() {
               value={formData.domain}
               onChange={(e) => handleFieldChange('domain', e.target.value)}
               error={errors.domain}
-              placeholder="booking.eksempel.no"
+              placeholder={t('common.bookingeksempelno')}
             />
 
             <Select

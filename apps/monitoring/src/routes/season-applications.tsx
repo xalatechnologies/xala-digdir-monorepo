@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { useSeasonApplications } from '@digilist/client-sdk/hooks';
 import { useAccountContext } from '../providers/AccountContextProvider';
 import { ApplicationCard } from '../features/seasons/components/ApplicationCard';
+import { useT } from '@xala/i18n';
 
 // Local type for season application status
 type SeasonApplicationStatus = 'pending' | 'approved' | 'rejected';
@@ -26,6 +27,7 @@ function BuildingIcon() {
 }
 
 function FileTextIcon() {
+  const t = useT();
   return (
     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
       <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
@@ -67,10 +69,10 @@ function ClockIcon() {
 
 // Filter options
 const APPLICATION_FILTER_OPTIONS = [
-  { value: 'all' as const, label: 'Alle søknader' },
-  { value: 'pending' as SeasonApplicationStatus, label: 'Til behandling' },
+  { value: 'all' as const, label: t('common.alle_soknader') },
+  { value: 'pending' as SeasonApplicationStatus, label: t('common.til_behandling') },
   { value: 'approved' as SeasonApplicationStatus, label: 'Godkjent' },
-  { value: 'rejected' as SeasonApplicationStatus, label: 'Avslått' },
+  { value: 'rejected' as SeasonApplicationStatus, label: t('common.avslaatt') },
 ];
 
 export function SeasonApplicationsPage() {
@@ -318,7 +320,7 @@ export function SeasonApplicationsPage() {
       {/* Applications List */}
       {isLoading ? (
         <div style={{ display: 'flex', justifyContent: 'center', padding: 'var(--ds-spacing-10)' }}>
-          <Spinner aria-label="Laster søknader..." />
+          <Spinner aria-label={t('common.laster_soknader')} />
         </div>
       ) : error ? (
         <Card style={{ padding: 'var(--ds-spacing-6)', textAlign: 'center' }}>
@@ -329,12 +331,12 @@ export function SeasonApplicationsPage() {
       ) : filteredApplications.length === 0 ? (
         <Card style={{ padding: 'var(--ds-spacing-8)', textAlign: 'center' }}>
           <Heading level={3} data-size="sm" style={{ margin: 0, marginBottom: 'var(--ds-spacing-2)' }}>
-            {statusFilter === 'all' ? 'Ingen søknader ennå' : 'Ingen søknader funnet'}
+            {statusFilter === 'all' ? 't('common.ingen_soknader_ennaa')' : 'Ingen søknader funnet'}
           </Heading>
           <Paragraph style={{ margin: 0, color: 'var(--ds-color-neutral-text-subtle)', marginBottom: 'var(--ds-spacing-4)' }}>
             {statusFilter === 'all'
-              ? 'Du har ikke sendt inn noen søknader om sesongbooking ennå.'
-              : `Du har ingen søknader med status "${APPLICATION_FILTER_OPTIONS.find((o) => o.value === statusFilter)?.label}".`}
+              ? 't('common.du_har_ikke_sendt')'
+              : `t('common.du_har_ingen_soknader')`}
           </Paragraph>
           {statusFilter === 'all' && (
             <Button

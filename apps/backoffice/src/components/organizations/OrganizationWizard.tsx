@@ -60,7 +60,7 @@ export interface OrganizationWizardProps {
 
 const WIZARD_STEPS: OrganizationWizardStep[] = [
   { id: 'basics', label: 'Grunnleggende', required: true },
-  { id: 'branding', label: 'Visuell identitet', required: false },
+  { id: 'branding', label: t('common.visuell_identitet'), required: false },
   { id: 'roles', label: 'Roller', required: false },
 ];
 
@@ -157,7 +157,7 @@ export function OrganizationWizard({
       setSaveStatus('success');
       setTimeout(() => setSaveStatus('idle'), 3000);
     } catch (error) {
-      console.error('Failed to save draft:', error);
+      console.error('t('validation.failed_to_save_draft')', error);
       setSaveStatus('error');
     } finally {
       setIsSaving(false);
@@ -169,7 +169,7 @@ export function OrganizationWizard({
     try {
       await onComplete?.(formData);
     } catch (error) {
-      console.error('Failed to complete wizard:', error);
+      console.error('t('validation.failed_to_complete_wizard')', error);
       setSaveStatus('error');
     } finally {
       setIsSaving(false);
@@ -240,11 +240,11 @@ export function OrganizationWizard({
       {/* Page header */}
       <div style={{ marginBottom: 'var(--ds-spacing-6)' }}>
         <Heading level={1} data-size="lg" style={{ marginBottom: 'var(--ds-spacing-2)' }}>
-          {isEditMode ? 'Rediger organisasjon' : 'Opprett ny organisasjon'}
+          {isEditMode ? 't('common.rediger_organisasjon')' : 'Opprett ny organisasjon'}
         </Heading>
         <Paragraph data-size="sm" style={{ color: 'var(--ds-color-neutral-text-subtle)' }}>
           {isEditMode
-            ? 'Gjør endringer i organisasjonen og lagre'
+            ? 't('common.gjor_endringer_i_organisasjonen')'
             : 'Fyll ut informasjon om organisasjonen. Du kan lagre som utkast og fortsette senere.'}
         </Paragraph>
       </div>
@@ -270,7 +270,7 @@ export function OrganizationWizard({
             }}
           >
             <Heading level={2} data-size="sm">
-              {isEditMode ? 'Rediger organisasjon' : 'Opprett organisasjon'}
+              {isEditMode ? 't('common.rediger_organisasjon')' : 'Opprett organisasjon'}
             </Heading>
             <Paragraph data-size="sm" style={{ color: 'var(--ds-color-neutral-text-subtle)' }}>
               Steg {currentStep + 1} av {steps.length}
@@ -420,11 +420,7 @@ export function OrganizationWizard({
               saveStatus === 'success'
                 ? 'var(--ds-color-success-surface-default)'
                 : 'var(--ds-color-danger-surface-default)',
-            border: `1px solid ${
-              saveStatus === 'success'
-                ? 'var(--ds-color-success-border-default)'
-                : 'var(--ds-color-danger-border-default)'
-            }`,
+            border: `t('common.1px_solid_savestatus_success')`,
             display: 'flex',
             alignItems: 'center',
             gap: 'var(--ds-spacing-2)',
@@ -443,7 +439,7 @@ export function OrganizationWizard({
                   : 'var(--ds-color-danger-text-default)',
             }}
           >
-            {saveStatus === 'success' ? 'Endringene er lagret' : 'Kunne ikke lagre. Prøv igjen.'}
+            {saveStatus === 'success' ? 't('common.endringene_er_lagret')' : 'Kunne ikke lagre. Prøv igjen.'}
           </Paragraph>
         </div>
       )}
@@ -473,9 +469,9 @@ export function OrganizationWizard({
             variant="secondary"
             onClick={handleSaveDraft}
             disabled={isSaving}
-            aria-label="Lagre utkast"
+            aria-label={t('common.lagre_utkast')}
           >
-            {isSaving ? <Spinner aria-label="Lagrer..." /> : 'Lagre utkast'}
+            {isSaving ? <Spinner aria-label={t('common.lagrer')} /> : 'Lagre utkast'}
           </Button>
         </div>
 
@@ -486,7 +482,7 @@ export function OrganizationWizard({
               variant="secondary"
               onClick={prevStep}
               disabled={isSaving}
-              aria-label="Forrige steg"
+              aria-label={t('common.forrige_steg')}
             >
               ← Forrige
             </Button>
@@ -497,9 +493,9 @@ export function OrganizationWizard({
               variant="primary"
               onClick={nextStep}
               disabled={isSaving}
-              aria-label="Neste steg"
+              aria-label={t('common.neste_steg')}
             >
-              Neste →
+              t('actions.neste')
             </Button>
           ) : (
             <Button
@@ -507,9 +503,9 @@ export function OrganizationWizard({
               variant="primary"
               onClick={handleComplete}
               disabled={isSaving}
-              aria-label="Fullfør"
+              aria-label={t('common.fullfor')}
             >
-              {isSaving ? <Spinner aria-label="Lagrer..." /> : 'Fullfør'}
+              {isSaving ? <Spinner aria-label={t('common.lagrer')} /> : 'Fullfør'}
             </Button>
           )}
         </div>

@@ -52,6 +52,7 @@ export function BookingPricingStep({
   selectedPriceGroups,
   onPriceGroupsChange,
 }: BookingPricingStepProps): React.ReactElement {
+  const t = useT();
   const [internalSelectedGroups, setInternalSelectedGroups] = React.useState<Set<string>>(
     selectedPriceGroups ?? new Set(selectedPriceGroup ? [selectedPriceGroup] : [])
   );
@@ -349,7 +350,7 @@ export function BookingPricingStep({
                 textDecoration: 'underline',
               }}
             >
-              Les fullstendige vilkår
+              t('common.les_fullstendige_vilkaar')
             </a>
             <a
               href="#"
@@ -359,7 +360,7 @@ export function BookingPricingStep({
                 textDecoration: 'underline',
               }}
             >
-              Personvernerklæring
+              t('common.personvernerklaering')
             </a>
           </div>
         </div>

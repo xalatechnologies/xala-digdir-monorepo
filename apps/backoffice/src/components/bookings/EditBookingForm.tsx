@@ -29,6 +29,7 @@ export function EditBookingForm({ booking, onSubmit, onCancel }: EditBookingForm
   // Translation function available for future localization
   const _t = useT(); // eslint-disable-line @typescript-eslint/no-unused-vars
   const [formData, setFormData] = useState({
+  const t = useT();
     listingId: booking.listingId,
     startTime: '',
     endTime: '',
@@ -159,7 +160,7 @@ export function EditBookingForm({ booking, onSubmit, onCancel }: EditBookingForm
       <Stack spacing={5}>
         {/* Warning Alert */}
         <Alert>
-          Endringer i booking vil påvirke brukerens reservasjon. Sørg for at brukeren er informert om endringene.
+          t('common.endringer_i_booking_vil')
         </Alert>
 
         {/* Booking Details */}
@@ -169,14 +170,14 @@ export function EditBookingForm({ booking, onSubmit, onCancel }: EditBookingForm
               label="Lokale"
               required
               
-              description="Hvilket lokale skal bookes?"
+              description={t('common.hvilket_lokale_skal_bookes')}
             >
               <Select
                 value={formData.listingId}
                 onChange={(e) => handleChange('listingId')(e.target.value)}
                 
               >
-                <option value="">Velg lokale...</option>
+                <option value="">{t('common.velg_lokale')}</option>
                 {listings.map(listing => (
                   <option key={listing.id} value={listing.id}>
                     {listing.name}
@@ -225,17 +226,17 @@ export function EditBookingForm({ booking, onSubmit, onCancel }: EditBookingForm
         {/* Pricing */}
         <FormSection title="Prissetting">
           <FormField
-            label="Total pris"
+            label={t('common.total_pris')}
             required
             error={errors.totalPrice || undefined}
-            description="Pris i NOK (inkl. mva)"
+            description={t('common.pris_i_nok_inkl')}
           >
             <Textfield
               type="number"
               value={formData.totalPrice.toString()}
               onChange={(e) => handleChange('totalPrice')(parseFloat(e.target.value) || 0)}
               placeholder="0"
-              aria-label="Total pris"
+              aria-label={t('common.total_pris')}
               min="0"
               step="0.01"
             />
@@ -245,14 +246,14 @@ export function EditBookingForm({ booking, onSubmit, onCancel }: EditBookingForm
         {/* Notes */}
         <FormSection title="Notater">
           <FormField
-            label="Interne notater"
-            description="Notater synlige for saksbehandler"
+            label={t('common.interne_notater')}
+            description={t('common.notater_synlige_for_saksbehandler')}
           >
             <Textfield
               value={formData.notes}
               onChange={(e) => handleChange('notes')(e.target.value)}
-              placeholder="Legg til eventuelle notater..."
-              aria-label="Interne notater"
+              placeholder={t('common.legg_til_eventuelle_notater')}
+              aria-label={t('common.interne_notater')}
               multiline
               rows={4}
             />
@@ -261,7 +262,7 @@ export function EditBookingForm({ booking, onSubmit, onCancel }: EditBookingForm
 
         {/* Actions */}
         <FormActions
-          submitText="Lagre endringer"
+          submitText={t('common.lagre_endringer')}
           onCancel={onCancel}
           isSubmitting={isSubmitting}
         />

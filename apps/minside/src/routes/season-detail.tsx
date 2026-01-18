@@ -5,6 +5,7 @@ import { useSeasons } from '@digilist/client-sdk/hooks';
 import { useAccountContext } from '../providers/AccountContextProvider';
 import { SeasonStatusBadge } from '../features/seasons/components/SeasonStatusBadge';
 import { SeasonApplicationDrawer, type SeasonApplicationFormData } from '../features/seasons/components/SeasonApplicationDrawer';
+import { useT } from '@xala/i18n';
 
 /**
  * Season Detail Page
@@ -26,6 +27,7 @@ function ChevronRightIcon() {
 }
 
 function CalendarIcon() {
+  const t = useT();
   return (
     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
       <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
@@ -149,7 +151,7 @@ export function SeasonDetailPage() {
     return (
       <Container style={{ padding: 'var(--ds-spacing-8)' }}>
         <div style={{ display: 'flex', justifyContent: 'center', padding: 'var(--ds-spacing-10)' }}>
-          <Spinner aria-label="Laster..." />
+          <Spinner aria-label={t('common.laster')} />
         </div>
       </Container>
     );
@@ -179,9 +181,9 @@ export function SeasonDetailPage() {
   const isOpen = season.status === 'open';
   const tabs = [
     { id: 'overview' as TabId, label: 'Oversikt', icon: <InfoIcon /> },
-    { id: 'venues' as TabId, label: 'Tilgjengelige lokaler', icon: <MapPinIcon /> },
-    { id: 'applications' as TabId, label: 'Mine søknader', icon: <FileTextIcon /> },
-    { id: 'rules' as TabId, label: 'Regler og vilkår', icon: <CheckCircleIcon /> },
+    { id: 'venues' as TabId, label: t('common.tilgjengelige_lokaler'), icon: <MapPinIcon /> },
+    { id: 'applications' as TabId, label: t('common.mine_soknader'), icon: <FileTextIcon /> },
+    { id: 'rules' as TabId, label: t('common.regler_og_vilkaar'), icon: <CheckCircleIcon /> },
   ];
 
   return (
@@ -259,7 +261,7 @@ export function SeasonDetailPage() {
           </div>
           {isOpen && (
             <Button type="button" variant="primary" onClick={handleApply}>
-              Søk nå
+              t('actions.sok_naa')
             </Button>
           )}
         </div>
@@ -498,7 +500,7 @@ export function SeasonDetailPage() {
                     data-size="sm"
                     onClick={handleApply}
                   >
-                    Send søknad
+                    t('actions.send_soknad')
                   </Button>
                 )}
               </Card>
@@ -578,7 +580,7 @@ export function SeasonDetailPage() {
               boxShadow: 'var(--ds-shadow-large)',
             }}
           >
-            Søk nå
+            t('actions.sok_naa')
           </Button>
         </div>
       )}

@@ -13,26 +13,26 @@ import { DocsRightTOC } from '../components/toc';
 import type { TocItem } from '../types';
 import styles from './DocsArticlePage.module.css';
 
-// Mock article content for MVP
-const MOCK_ARTICLE = {
-  title: 'Opprett en booking',
-  description: 'Steg-for-steg guide til opprettelse av booking',
-  updatedAt: '2026-01-15',
-  toc: [
-    { id: 'introduksjon', text: 'Introduksjon', level: 2 as const },
-    { id: 'trinn-1', text: 'Trinn 1: Velg lokale', level: 2 as const },
-    { id: 'trinn-2', text: 'Trinn 2: Velg dato og tid', level: 2 as const },
-    { id: 'ekstra-alternativer', text: 'Ekstra alternativer', level: 3 as const },
-    { id: 'trinn-3', text: 'Trinn 3: Bekreft booking', level: 2 as const },
-    { id: 'ofte-stilte-sporsmal', text: 'Ofte stilte spørsmål', level: 2 as const },
-  ] as TocItem[],
-};
-
 export function DocsArticlePage() {
   const { section } = useParams<{ section: string; articleSlug: string }>();
   const t = useT();
   const flags = useFeatureFlags();
   const activeFlags = Object.keys(flags).length > 0 ? flags : { ...DOCS_FEATURE_FLAGS, 'docs.enabled': true };
+
+  // Mock article content for MVP (using t() inside component)
+  const MOCK_ARTICLE = {
+    title: t('common.opprett_en_booking'),
+    description: t('common.stegforsteg_guide_til_opprettelse'),
+    updatedAt: '2026-01-15',
+    toc: [
+      { id: 'introduksjon', text: 'Introduksjon', level: 2 as const },
+      { id: 'trinn-1', text: t('common.trinn_1_velg_lokale'), level: 2 as const },
+      { id: 'trinn-2', text: t('common.trinn_2_velg_dato'), level: 2 as const },
+      { id: 'ekstra-alternativer', text: t('common.ekstra_alternativer'), level: 3 as const },
+      { id: 'trinn-3', text: t('common.trinn_3_bekreft_booking'), level: 2 as const },
+      { id: 'ofte-stilte-sporsmal', text: t('common.ofte_stilte_sporsmaal'), level: 2 as const },
+    ] as TocItem[],
+  };
 
   // Redirect if section is disabled
   if (section && !isSectionEnabled(section, activeFlags)) {
@@ -68,16 +68,14 @@ export function DocsArticlePage() {
             <section>
               <Heading level={2} id="introduksjon">Introduksjon</Heading>
               <Paragraph>
-                Denne guiden viser deg hvordan du oppretter en booking i Digilist. 
-                Prosessen er enkel og tar bare noen minutter.
+                {t('common.denne_guiden_viser_deg')}
               </Paragraph>
             </section>
 
             <section>
               <Heading level={2} id="trinn-1">Trinn 1: Velg lokale</Heading>
               <Paragraph>
-                Start med å logge inn på plattformen og naviger til "Lokaler". 
-                Her finner du en oversikt over alle tilgjengelige lokaler og fasiliteter.
+                {t('common.start_med_aa_logge')}
               </Paragraph>
               
               {/* Placeholder for image */}
@@ -89,14 +87,12 @@ export function DocsArticlePage() {
             <section>
               <Heading level={2} id="trinn-2">Trinn 2: Velg dato og tid</Heading>
               <Paragraph>
-                Når du har valgt et lokale, vil du se en kalender med tilgjengelige tider.
-                Grønne felt indikerer ledige tider, mens røde felt er opptatt.
+                {t('common.naar_du_har_valgt')}
               </Paragraph>
 
               <Heading level={3} id="ekstra-alternativer">Ekstra alternativer</Heading>
               <Paragraph>
-                Du kan også legge til tilleggstjenester som catering, AV-utstyr, 
-                eller ekstra renholdskrav.
+                {t('common.du_kan_ogsaa_legge')}
               </Paragraph>
 
               {/* Placeholder for video */}
@@ -108,8 +104,7 @@ export function DocsArticlePage() {
             <section>
               <Heading level={2} id="trinn-3">Trinn 3: Bekreft booking</Heading>
               <Paragraph>
-                Sjekk at alle detaljer er korrekte og klikk "Bekreft booking". 
-                Du vil motta en bekreftelse på e-post.
+                {t('common.sjekk_at_alle_detaljer')}
               </Paragraph>
               
               {/* Callout */}

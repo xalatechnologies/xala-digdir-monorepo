@@ -18,8 +18,11 @@ import { describe, it, expect, beforeAll } from 'vitest';
 
 const API_URL = process.env.API_URL || 'http://localhost:4000';
 const TEST_TENANT_ID = 'test-tenant';
+const SKIP_INTEGRATION = process.env.SKIP_INTEGRATION_TESTS === 'true' || process.env.CI !== 'true';
 
-describe('Authentication Security & Penetration Tests', () => {
+const describeOrSkip = SKIP_INTEGRATION ? describe.skip : describe;
+
+describeOrSkip('Authentication Security & Penetration Tests', () => {
   describe('Session Security', () => {
     it('should prevent session fixation attacks', async () => {
       // Attempt to set custom session ID before authentication

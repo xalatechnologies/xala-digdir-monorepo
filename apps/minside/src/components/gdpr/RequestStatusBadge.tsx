@@ -9,6 +9,7 @@
 
 import * as React from 'react';
 import type { GdprRequestStatus } from '@digilist/client-sdk/types';
+import { useT } from '@xala/i18n';
 
 // =============================================================================
 // Types
@@ -83,6 +84,7 @@ function StatusTag({
   size = 'sm',
   className,
 }: StatusTagProps): React.ReactElement {
+  const t = useT();
   const colorStyle = colorStyles[color];
   const sizeStyle = sizeStyles[size];
 
@@ -114,8 +116,8 @@ function StatusTag({
 const gdprRequestStatusConfig: Record<GdprRequestStatus, StatusBadgeConfig> = {
   pending: { color: 'warning', label: 'Venter' },
   processing: { color: 'info', label: 'Behandles' },
-  completed: { color: 'success', label: 'Fullført' },
-  rejected: { color: 'danger', label: 'Avslått' },
+  completed: { color: 'success', label: t('common.fullfort') },
+  rejected: { color: 'danger', label: t('common.avslaatt') },
 };
 
 export interface RequestStatusBadgeProps {

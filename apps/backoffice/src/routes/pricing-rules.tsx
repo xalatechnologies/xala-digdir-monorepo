@@ -27,7 +27,7 @@ const MOBILE_BREAKPOINT = 768;
 const mockRules = [
   {
     id: 'rule-001',
-    name: 'Standard timepris',
+    name: t('common.standard_timepris'),
     type: 'hourly',
     amount: 500,
     currency: 'NOK',
@@ -79,8 +79,8 @@ export function PricingRulesPage() {
 
   const handleDelete = async (id: string, name: string) => {
     const confirmed = await confirm({
-      title: 'Slett prisregel',
-      description: `Er du sikker på at du vil slette "${name}"?`,
+      title: t('common.slett_prisregel'),
+      description: `t('common.er_du_sikker_paa')`,
       confirmText: t("ui.delete"),
       cancelText: t("ui.cancel"),
       variant: 'danger',
@@ -162,7 +162,7 @@ export function PricingRulesPage() {
               <Table.Row>
                 <Table.HeaderCell>Navn</Table.HeaderCell>
                 <Table.HeaderCell>Type</Table.HeaderCell>
-                <Table.HeaderCell>Beløp</Table.HeaderCell>
+                <Table.HeaderCell>{t('common.belop')}</Table.HeaderCell>
                 <Table.HeaderCell>Betingelser</Table.HeaderCell>
                 <Table.HeaderCell>Status</Table.HeaderCell>
                 <Table.HeaderCell style={{ width: '140px' }}>Handlinger</Table.HeaderCell>

@@ -28,7 +28,7 @@ const mockQueue = [
   {
     id: 'req-001',
     type: 'booking',
-    title: 'Idrettshall A - 2 timer',
+    title: t('common.idrettshall_a_2_timer'),
     requester: 'Erik Hansen',
     organization: null,
     requestedDate: '2026-01-20',
@@ -39,7 +39,7 @@ const mockQueue = [
   {
     id: 'req-002',
     type: 'season-application',
-    title: 'Sesongbooking Vår 2026',
+    title: t('common.sesongbooking_vaar_2026'),
     requester: 'Skien IL',
     organization: 'Skien IL',
     requestedDate: '2026-02-01 - 2026-06-30',
@@ -50,7 +50,7 @@ const mockQueue = [
   {
     id: 'req-003',
     type: 'booking',
-    title: 'Fotballbane 1 - 4 timer',
+    title: t('common.fotballbane_1_4_timer'),
     requester: 'Kari Olsen',
     organization: 'Telemark FK',
     requestedDate: '2026-01-25',

@@ -100,7 +100,7 @@ export function AuditTimelinePage() {
   const getOutcomeLabel = (outcome: DecisionOutcome) => {
     switch (outcome) {
       case 'approved': return 'Godkjent';
-      case 'rejected': return 'Avslått';
+      case 'rejected': return 't('common.avslaatt')';
       case 'returned': return 'Returnert';
     }
   };
@@ -151,14 +151,14 @@ export function AuditTimelinePage() {
               onChange={(e) => setOutcomeFilter(e.target.value as DecisionOutcome | 'all')}
               style={{ width: '100%' }}
             >
-              <option value="all">Alle vedtak</option>
+              <option value="all">{t('common.alle_vedtak')}</option>
               <option value="approved">Godkjent</option>
-              <option value="rejected">Avslått</option>
+              <option value="rejected">{t('common.avslaatt')}</option>
               <option value="returned">Returnert</option>
             </Select>
           </div>
           <div style={{ flex: 1 }}>
-            <label style={{ display: 'block', marginBottom: 'var(--ds-spacing-2)', fontSize: 'var(--ds-font-size-sm)', fontWeight: 'var(--ds-font-weight-medium)' }}>Fra dato</label>
+            <label style={{ display: 'block', marginBottom: 'var(--ds-spacing-2)', fontSize: 'var(--ds-font-size-sm)', fontWeight: 'var(--ds-font-weight-medium)' }}>{t('common.fra_dato')}</label>
             <Input
               type="date"
               value={dateFrom}
@@ -167,7 +167,7 @@ export function AuditTimelinePage() {
             />
           </div>
           <div style={{ flex: 1 }}>
-            <label style={{ display: 'block', marginBottom: 'var(--ds-spacing-2)', fontSize: 'var(--ds-font-size-sm)', fontWeight: 'var(--ds-font-weight-medium)' }}>Til dato</label>
+            <label style={{ display: 'block', marginBottom: 'var(--ds-spacing-2)', fontSize: 'var(--ds-font-size-sm)', fontWeight: 'var(--ds-font-weight-medium)' }}>{t('common.til_dato')}</label>
             <Input
               type="date"
               value={dateTo}

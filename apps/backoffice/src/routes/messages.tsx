@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useRef, useMemo, type ChangeEvent, type KeyboardEvent } from 'react';
 import {
+import { useT } from '@xala/i18n';
   Card,
   Heading,
   Paragraph,
@@ -44,6 +45,7 @@ function formatTimeAgo(dateStr: string): string {
   
   if (diffMins < 1) return 'Nå';
   if (diffMins < 60) return `${diffMins}m`;
+  const t = useT();
   if (diffHours < 24) return `${diffHours}t`;
   if (diffDays < 7) return `${diffDays}d`;
   return date.toLocaleDateString('nb-NO', { day: 'numeric', month: 'short' });
@@ -268,7 +270,7 @@ export function MessagesPage() {
             <div style={{ position: 'relative', marginBottom: 'var(--ds-spacing-3)' }}>
               <input
                 type="text"
-                placeholder="Søk etter samtaler..."
+                placeholder={t('common.sok_etter_samtaler')}
                 value={searchQuery}
                 onChange={(e: ChangeEvent<HTMLInputElement>) => setSearchQuery(e.target.value)}
                 style={{
@@ -298,7 +300,7 @@ export function MessagesPage() {
                 { key: 'all' as FilterType, label: 'Alle' },
                 { key: 'unread' as FilterType, label: 'Uleste' },
                 { key: 'active' as FilterType, label: 'Aktive' },
-                { key: 'resolved' as FilterType, label: 'Løst' },
+                { key: 'resolved' as FilterType, label: t('common.lost') },
               ].map((tab) => (
                 <Button
                   key={tab.key}
@@ -329,7 +331,7 @@ export function MessagesPage() {
           <div style={{ flex: 1, overflow: 'auto' }}>
             {isLoadingConversations ? (
               <div style={{ padding: 'var(--ds-spacing-8)', display: 'flex', justifyContent: 'center' }}>
-                <Spinner aria-label="Laster samtaler..." data-data-size="md" />
+                <Spinner aria-label="t('common.laster_samtaler')" data-data-size="md" />
               </div>
             ) : filteredConversations.length === 0 ? (
               <div style={{ padding: 'var(--ds-spacing-8)', textAlign: 'center' }}>
@@ -347,7 +349,7 @@ export function MessagesPage() {
                   <MessageSquareIcon />
                 </div>
                 <Paragraph style={{ color: 'var(--ds-color-neutral-text-subtle)', margin: 0 }}>
-                  {searchQuery ? 'Ingen samtaler funnet' : 'Ingen samtaler ennå'}
+                  {searchQuery ? 't('common.ingen_samtaler_funnet')' : 'Ingen samtaler ennå'}
                 </Paragraph>
               </div>
             ) : (
@@ -502,7 +504,7 @@ export function MessagesPage() {
                       {String(selectedConversation.userName || selectedConversation.subject || 'Ukjent bruker')}
                     </Heading>
                     <Paragraph data-size="xs" style={{ margin: 0, color: selectedConversation.status === 'active' ? 'var(--ds-color-success-text-default)' : 'var(--ds-color-neutral-text-subtle)' }}>
-                      {selectedConversation.status === 'active' ? 'Aktiv samtale' : 'Løst'}
+                      {selectedConversation.status === 'active' ? 't('common.aktiv_samtale')' : 'Løst'}
                     </Paragraph>
                   </div>
                 </div>
@@ -688,7 +690,7 @@ export function MessagesPage() {
                           variant="tertiary"
                           data-size="sm"
                           onClick={() => handleRemoveFile(index)}
-                          aria-label="Fjern vedlegg"
+                          aria-label={t('common.fjern_vedlegg')}
                           style={{
                             padding: '2px',
                           }}
@@ -720,8 +722,8 @@ export function MessagesPage() {
                     type="button"
                     variant="tertiary"
                     onClick={() => fileInputRef.current?.click()}
-                    aria-label="Legg til vedlegg"
-                    title="Legg til vedlegg"
+                    aria-label={t('common.legg_til_vedlegg')}
+                    title={t('common.legg_til_vedlegg')}
                     style={{
                       padding: 'var(--ds-spacing-1)',
                       color: 'var(--ds-color-neutral-text-subtle)',
@@ -732,7 +734,7 @@ export function MessagesPage() {
                   <input
                     ref={inputRef}
                     type="text"
-                    placeholder="Skriv et svar..."
+                    placeholder={t('common.skriv_et_svar')}
                     value={messageInput}
                     onChange={(e: ChangeEvent<HTMLInputElement>) => setMessageInput(e.target.value)}
                     onKeyDown={handleKeyPress}
@@ -753,7 +755,7 @@ export function MessagesPage() {
                     disabled={!messageInput.trim() || sendMessage.isPending}
                   >
                     <SendIcon />
-                    {sendMessage.isPending ? 'Sender...' : 'Send'}
+                    {sendMessage.isPending ? 't('common.sender')' : 'Send'}
                   </Button>
                 </div>
               </div>
@@ -813,7 +815,7 @@ export function MessagesPage() {
                 data-size="sm"
                 style={{ marginTop: 'var(--ds-spacing-2)' }}
               >
-                {selectedConversation.status === 'active' ? 'Aktiv bruker' : 'Inaktiv'}
+                {selectedConversation.status === 'active' ? 't('common.aktiv_bruker')' : 'Inaktiv'}
               </Badge>
             </div>
 
@@ -899,7 +901,7 @@ export function MessagesPage() {
                   onChange={(e) => handleAssign(e.target.value)}
                   style={{ width: '100%' }}
                 >
-                  <option value="">Ikke tildelt</option>
+                  <option value="">{t('common.ikke_tildelt')}</option>
                   {saksbehandlere.map(user => (
                     <option key={user.id} value={user.id}>
                       {user.name}
@@ -934,7 +936,7 @@ export function MessagesPage() {
                     disabled={resolveConversation.isPending || reopenConversation.isPending}
                   >
                     <CheckCircleIcon />
-                    {selectedConversation.status === 'active' ? 'Marker som løst' : 'Gjenåpne'}
+                    {selectedConversation.status === 'active' ? 't('common.marker_som_lost')' : 'Gjenåpne'}
                   </Button>
                 </div>
               </div>

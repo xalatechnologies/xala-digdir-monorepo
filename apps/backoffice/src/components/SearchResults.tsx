@@ -134,7 +134,7 @@ export function SearchResults({
     return (
       <Stack spacing="lg" align="center" style={{ padding: 'var(--ds-spacing-12)', ...style }} className={className}>
         <Spinner data-size="lg" aria-label={t("ui.loading")} />
-        <Text color="secondary">Søker...</Text>
+        <Text color="secondary">{t('common.soker')}</Text>
       </Stack>
     );
   }
@@ -143,7 +143,7 @@ export function SearchResults({
   if (error) {
     return (
       <Stack spacing="md" style={{ padding: 'var(--ds-spacing-8)', ...style }} className={className}>
-        <Heading level={3}>Søket feilet</Heading>
+        <Heading level={3}>{t('common.soket_feilet')}</Heading>
         <Paragraph color="danger">
           {error instanceof Error ? error.message : 'En ukjent feil oppstod'}
         </Paragraph>
@@ -282,7 +282,7 @@ export function SearchResults({
                           variant="tertiary"
                           size="sm"
                           onClick={() => handleResultClick(result)}
-                          aria-label="Åpne booking" type="button"
+                          aria-label={t('common.aapne_booking')} type="button"
                         >
                           <ExternalLinkIcon size={16} />
                         </Button>
@@ -357,7 +357,7 @@ export function SearchResults({
                           variant="tertiary"
                           size="sm"
                           onClick={() => handleResultClick(result)}
-                          aria-label="Åpne lokale" type="button"
+                          aria-label={t('common.aapne_lokale')} type="button"
                         >
                           <ExternalLinkIcon size={16} />
                         </Button>
@@ -384,9 +384,9 @@ export function SearchResults({
                 <tr>
                   <th>ID</th>
                   <th>Navn</th>
-                  <th>Org.nr</th>
+                  <th>{t('common.orgnr')}</th>
                   <th>Type</th>
-                  <th>E-post</th>
+                  <th>{t('common.epost')}</th>
                   <th>Telefon</th>
                   <th></th>
                 </tr>
@@ -430,7 +430,7 @@ export function SearchResults({
                           variant="tertiary"
                           size="sm"
                           onClick={() => handleResultClick(result)}
-                          aria-label="Åpne organisasjon" type="button"
+                          aria-label={t('common.aapne_organisasjon')} type="button"
                         >
                           <ExternalLinkIcon size={16} />
                         </Button>

@@ -158,7 +158,7 @@ export function SearchPage() {
     <Stack spacing="lg" style={{ padding: 'var(--ds-spacing-6)' }}>
       {/* Page header with filters and actions */}
       <Stack direction="horizontal" justify="space-between" align="center">
-        <Heading level={1}>Søkeresultater</Heading>
+        <Heading level={1}>{t('common.sokeresultater')}</Heading>
 
         <Stack direction="horizontal" spacing="sm">
           {/* Saved Filters */}
@@ -187,7 +187,7 @@ export function SearchPage() {
             disabled={exportResults.isPending || !query} type="button"
           >
             <DownloadIcon size={16} />
-            {exportResults.isPending ? 'Eksporterer...' : 'Eksporter'}
+            {exportResults.isPending ? 't('common.eksporterer')' : 'Eksporter'}
           </Button>
         </Stack>
       </Stack>
@@ -275,7 +275,7 @@ export function SearchPage() {
                     borderRadius: 'var(--ds-radius-md)',
                   }}
                 >
-                  <option value="">Alle statuser</option>
+                  <option value="">{t('common.alle_statuser')}</option>
                   <option value="pending">Ventende</option>
                   <option value="confirmed">{t("status.confirmed")}</option>
                   <option value="completed">{t("status.completed")}</option>
@@ -292,7 +292,7 @@ export function SearchPage() {
               onClick={handleCloseFilters}
               style={{ width: '100%' }} type="button"
             >
-              Bruk filtre
+              t('actions.bruk_filtre')
             </Button>
           </div>
         </DrawerSection>

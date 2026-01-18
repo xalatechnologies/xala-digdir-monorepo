@@ -99,7 +99,7 @@ export function SeasonAllocationManagement({
   };
 
   const handleAllocateAll = async () => {
-    if (confirm(`Tildel alle ${approvedApplications.length} godkjente søknader og generer bookinger?`)) {
+    if (confirm(`t('common.tildel_alle_approvedapplicationslength_godkjente')`)) {
       for (const app of approvedApplications) {
         await handleAllocate(app.id);
       }
@@ -107,7 +107,7 @@ export function SeasonAllocationManagement({
   };
 
   const handleFinalize = async () => {
-    if (confirm('Fullfør sesongtildelingen? Sesongen vil bli markert som "Tildelt" og kan ikke endres.')) {
+    if (confirm('t('common.fullfor_sesongtildelingen_sesongen_vil') "Tildelt" og kan ikke endres.')) {
       await finalizeMutation.mutateAsync(seasonId);
       onAllocationComplete();
     }

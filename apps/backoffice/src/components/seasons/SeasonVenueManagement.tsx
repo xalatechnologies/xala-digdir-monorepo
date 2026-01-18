@@ -62,7 +62,7 @@ export function SeasonVenueManagement({ seasonId, canEdit }: SeasonVenueManageme
   };
 
   const handleRemoveVenue = async (listingId: string) => {
-    if (confirm('Er du sikker på at du vil fjerne dette lokalet fra sesongen?')) {
+    if (confirm('t('common.er_du_sikker_paa')')) {
       await removeVenueMutation.mutateAsync({ seasonId, listingId });
     }
   };

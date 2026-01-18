@@ -22,27 +22,27 @@ const periodLabels: Record<ReportPeriod, string> = {
   week: 'Uke',
   month: 'Måned',
   quarter: 'Kvartal',
-  year: 'År',
+  year: 't('table.aar')',
 };
 
 // Filter options
 const FACILITY_OPTIONS = [
-  { id: 'all', label: 'Alle lokaler' },
-  { id: 'facility-1', label: 'Møterom A' },
-  { id: 'facility-2', label: 'Konferansesal B' },
-  { id: 'facility-3', label: 'Fellesareal C' },
+  { id: 'all', label: t('common.alle_lokaler') },
+  { id: 'facility-1', label: t('common.moterom_a') },
+  { id: 'facility-2', label: t('common.konferansesal_b') },
+  { id: 'facility-3', label: t('common.fellesareal_c') },
 ];
 
 const ORGANIZATION_OPTIONS = [
-  { id: 'all', label: 'Alle organisasjoner' },
+  { id: 'all', label: t('common.alle_organisasjoner') },
   { id: 'org-1', label: 'Kulturhuset' },
   { id: 'org-2', label: 'Idrettslaget' },
   { id: 'org-3', label: 'Frivilligsentralen' },
 ];
 
 const BOOKING_TYPE_OPTIONS = [
-  { id: 'all', label: 'Alle typer' },
-  { id: 'meeting', label: 'Møte' },
+  { id: 'all', label: t('common.alle_typer') },
+  { id: 'meeting', label: t('common.mote') },
   { id: 'event', label: 'Arrangement' },
   { id: 'training', label: 'Trening' },
   { id: 'other', label: 'Annet' },
@@ -269,7 +269,7 @@ export function ReportsPage() {
           <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--ds-spacing-4)' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--ds-spacing-2)' }}>
               <CalendarIcon />
-              <span style={{ fontSize: 'var(--ds-font-size-sm)', fontWeight: 'var(--ds-font-weight-medium)' }}>Periode:</span>
+              <span style={{ fontSize: 'var(--ds-font-size-sm)', fontWeight: 'var(--ds-font-weight-medium)' }}>{t('common.periode')}</span>
             </div>
             <input
               type="date"
@@ -282,7 +282,7 @@ export function ReportsPage() {
                 fontSize: 'var(--ds-font-size-sm)',
               }}
             />
-            <span style={{ color: 'var(--ds-color-neutral-text-subtle)' }}>til</span>
+            <span style={{ color: 'var(--ds-color-neutral-text-subtle)' }}>{t('common.til')}</span>
             <input
               type="date"
               value={dateRange.endDate}
@@ -352,7 +352,7 @@ export function ReportsPage() {
 
       {isLoading ? (
         <Card style={{ padding: 'var(--ds-spacing-12)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-          <Spinner aria-label="Laster rapporter..." />
+          <Spinner aria-label={t('common.laster_rapporter')} />
         </Card>
       ) : (
         <>
@@ -661,7 +661,7 @@ export function ReportsPage() {
                         data-color={yearOverYearData.change >= 0 ? 'success' : 'danger'}
                         data-size="sm"
                       >
-                        {yearOverYearData.change >= 0 ? 'Økning' : 'Nedgang'}
+                        {yearOverYearData.change >= 0 ? 't('common.okning')' : 'Nedgang'}
                       </Badge>
                     </div>
                   </Card>

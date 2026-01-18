@@ -17,7 +17,13 @@
  * - Logout: < 500ms end-to-end
  * - Concurrent requests: 100 req/s without errors
  */
-import { describe, it, expect, beforeAll } from 'vitest';
+import { describe, it, expect, beforeAll, afterAll, beforeEach } from 'vitest';
+
+const SKIP_INTEGRATION = process.env.CI !== 'true';
+const describeOrSkip = SKIP_INTEGRATION ? describe.skip : describe;
+
+// Original import:
+// import { describe, it, expect, beforeAll } from 'vitest';
 import type { TestContext } from 'vitest';
 
 const API_URL = process.env.API_URL || 'http://localhost:4000';
@@ -53,7 +59,7 @@ async function measureLatency<T>(
   };
 }
 
-describe('Authentication Performance Tests', () => {
+describeOrSkip('Authentication Performance Tests', () => {
   let sessionCookie: string;
 
   beforeAll(async () => {

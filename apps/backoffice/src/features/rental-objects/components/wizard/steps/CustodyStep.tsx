@@ -63,7 +63,7 @@ export function CustodyStep({ wizard }: CustodyStepProps) {
   };
 
   const handleRevoke = async (grantId: string) => {
-    if (window.confirm('Are you sure you want to revoke this grant?')) {
+    if (window.confirm('t('common.are_you_sure_you')')) {
       await revokeGrant.mutateAsync({ grantId, _rentalObjectId: rentalObjectId! });
     }
   };
@@ -151,7 +151,7 @@ export function CustodyStep({ wizard }: CustodyStepProps) {
                 ) : (
                   <tr>
                     <td colSpan={5} style={{ padding: 'var(--ds-spacing-8)', textAlign: 'center', color: 'var(--ds-color-neutral-text-subtle)' }}>
-                      No custody grants assigned yet.
+                      t('common.no_custody_grants_assigned')
                     </td>
                   </tr>
                 )}
@@ -171,30 +171,30 @@ export function CustodyStep({ wizard }: CustodyStepProps) {
           zIndex: 1000
         }}>
           <Card style={{ width: '500px', padding: 'var(--ds-spacing-6)' }}>
-            <Heading level={3}>Assign Custody</Heading>
-            <Paragraph>Grant permissions to a user or organization for this rental object.</Paragraph>
+            <Heading level={3}>{t('common.assign_custody')}</Heading>
+            <Paragraph>{t('common.grant_permissions_to_a')}</Paragraph>
 
             <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--ds-spacing-4)', marginTop: 'var(--ds-spacing-4)' }}>
               <div>
-                <label style={{ display: 'block', marginBottom: 'var(--ds-spacing-1)', fontSize: 'var(--ds-font-size-sm)' }}>Grantee Type</label>
+                <label style={{ display: 'block', marginBottom: 'var(--ds-spacing-1)', fontSize: 'var(--ds-font-size-sm)' }}>{t('common.grantee_type')}</label>
                 <select
                   value={newGrant.granteeType}
                   onChange={(e) => setNewGrant({ ...newGrant, granteeType: e.target.value as 'USER' | 'ORG', granteeId: '' })}
                   style={{ width: '100%', padding: 'var(--ds-spacing-2)', borderRadius: 'var(--ds-border-radius-md)', border: '1px solid var(--ds-color-neutral-border-default)' }}
                 >
-                  <option value="ORG">Backoffice Organization</option>
-                  <option value="USER">Backoffice User</option>
+                  <option value="ORG">{t('common.backoffice_organization')}</option>
+                  <option value="USER">{t('common.backoffice_user')}</option>
                 </select>
               </div>
 
               <div>
-                <label style={{ display: 'block', marginBottom: 'var(--ds-spacing-1)', fontSize: 'var(--ds-font-size-sm)' }}>Select Grantee</label>
+                <label style={{ display: 'block', marginBottom: 'var(--ds-spacing-1)', fontSize: 'var(--ds-font-size-sm)' }}>{t('common.select_grantee')}</label>
                 <select
                   value={newGrant.granteeId}
                   onChange={(e) => setNewGrant({ ...newGrant, granteeId: e.target.value })}
                   style={{ width: '100%', padding: 'var(--ds-spacing-2)', borderRadius: 'var(--ds-border-radius-md)', border: '1px solid var(--ds-color-neutral-border-default)' }}
                 >
-                  <option value="">Choose...</option>
+                  <option value="">{t('common.choose')}</option>
                   {newGrant.granteeType === 'ORG'
                     ? (orgsData as any)?.data?.map((o: any) => <option key={o.id} value={o.id}>{o.name}</option>)
                     : (usersData as any)?.data?.map((u: any) => <option key={u.id} value={u.id}>{u.fullName}</option>)}

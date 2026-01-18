@@ -64,37 +64,7 @@ function StarRatingSelector({ value, onChange, disabled = false }: StarRatingSel
             type="button"
             role="radio"
             aria-checked={isSelected}
-            aria-label={`${star} ${star === 1 ? 'stjerne' : 'stjerner'}`}
-            onClick={() => onChange(star)}
-            onMouseEnter={() => !disabled && setHoveredRating(star)}
-            onMouseLeave={() => !disabled && setHoveredRating(null)}
-            disabled={disabled}
-            style={{
-              background: 'none',
-              border: 'none',
-              padding: '4px',
-              cursor: disabled ? 'not-allowed' : 'pointer',
-              opacity: disabled ? 0.5 : 1,
-              transition: 'transform 0.2s ease',
-              color: isActive
-                ? 'var(--ds-color-warning-base-default)'
-                : 'var(--ds-color-neutral-border-default)',
-              transform: hoveredRating === star ? 'scale(1.2)' : 'scale(1)',
-            }}
-          >
-            <StarIcon style={{ width: '32px', height: '32px' }} />
-          </button>
-        );
-      })}
-      <span
-        style={{
-          marginLeft: '12px',
-          fontSize: '16px',
-          fontWeight: 600,
-          color: 'var(--ds-color-neutral-text-default)',
-        }}
-      >
-        {value > 0 ? `${value}/5` : 'Velg vurdering'}
+            aria-label={`${star} ${star === 1 ? 'stjerne' : 'stjerner'}`t('common.onclick_onchangestar_onmouseenter_disabled') `${value}/5` : 'Velg vurdering'}
       </span>
     </div>
   );
@@ -108,14 +78,7 @@ function StarRatingSelector({ value, onChange, disabled = false }: StarRatingSel
  * Form for submitting a review with star rating and optional text comment.
  *
  * @example
- * ```tsx
- * <ReviewForm
- *   rentalObjectId="listing-123"
- *   bookingId="booking-456"
- *   onSuccess={handleSuccess}
- *   onCancel={handleCancel}
- * />
- * ```
+ * ```t('common.tsx_reviewform_rentalobjectidlisting123_bookingidbooking456') ```
  */
 export function ReviewForm({
   rentalObjectId,
@@ -346,7 +309,7 @@ export function ReviewForm({
             variant="primary"
             disabled={isSubmitting || rating === 0}
           >
-            {isSubmitting ? 'Sender inn...' : 'Send inn anmeldelse'}
+            {isSubmitting ? 't('common.sender_inn')' : 'Send inn anmeldelse'}
           </Button>
         </div>
       </Stack>

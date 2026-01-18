@@ -33,7 +33,7 @@ const STATUS_TABS = [
   { id: 'pending', label: 'Ventende', icon: '⏳', color: 'warning' },
   { id: 'processing', label: 'Behandles', icon: '⚙️', color: 'info' },
   { id: 'completed', label: t("status.completed"), icon: '✓', color: 'success' },
-  { id: 'rejected', label: 'Avslått', icon: '✕', color: 'danger' },
+  { id: 'rejected', label: t('common.avslaatt'), icon: '✕', color: 'danger' },
   { id: 'all', label: 'Alle', icon: '📋', color: 'neutral' },
 ] as const;
 
@@ -201,7 +201,7 @@ export function GdprRequestsPage() {
                 gap: 'var(--ds-spacing-4)',
               }}
             >
-              <Spinner aria-label="Laster forespørsler..." />
+              <Spinner aria-label={t('common.laster_foresporsler')} />
               <Text style={{ color: 'var(--ds-color-neutral-text-subtle)' }}>
                 Laster forespørsler...
               </Text>
@@ -222,7 +222,7 @@ export function GdprRequestsPage() {
             >
               <Paragraph style={{ color: 'var(--ds-color-neutral-text-subtle)' }}>
                 {activeTab === 'all'
-                  ? 'Ingen forespørsler ennå'
+                  ? 't('common.ingen_foresporsler_ennaa')'
                   : `Ingen ${STATUS_TABS.find((t) => t.id === activeTab)?.label.toLowerCase()} forespørsler`}
               </Paragraph>
             </div>

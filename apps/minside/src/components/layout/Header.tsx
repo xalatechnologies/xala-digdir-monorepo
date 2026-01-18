@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
+import { useT } from '@xala/i18n';
   HeaderSearch,
   HeaderActions,
   HeaderIconButton,
@@ -42,7 +43,7 @@ const getNavigationResults = (query: string): SearchResultGroup[] => {
     navItems.push({
       id: 'nav-dashboard',
       label: 'Dashboard',
-      description: 'Gå til oversikt',
+      description: t('common.gaa_til_oversikt'),
       icon: <SearchIcon size={18} />,
       href: '/',
     });
@@ -53,7 +54,7 @@ const getNavigationResults = (query: string): SearchResultGroup[] => {
     navItems.push({
       id: 'nav-bookings',
       label: 'Bookinger',
-      description: 'Se alle dine bookinger',
+      description: t('common.se_alle_dine_bookinger'),
       icon: <CalendarIcon size={18} />,
       href: '/bookings',
     });
@@ -64,7 +65,7 @@ const getNavigationResults = (query: string): SearchResultGroup[] => {
     navItems.push({
       id: 'nav-calendar',
       label: 'Kalender',
-      description: 'Se bookinger i kalendervisning',
+      description: t('common.se_bookinger_i_kalendervisning'),
       icon: <CalendarIcon size={18} />,
       href: '/calendar',
     });
@@ -75,7 +76,7 @@ const getNavigationResults = (query: string): SearchResultGroup[] => {
     navItems.push({
       id: 'nav-messages',
       label: 'Meldinger',
-      description: 'Se samtaler og meldinger',
+      description: t('common.se_samtaler_og_meldinger'),
       icon: <PeopleIcon size={18} />,
       href: '/messages',
     });
@@ -99,6 +100,7 @@ const getNavigationResults = (query: string): SearchResultGroup[] => {
 
 export function Header({ title: _title }: HeaderProps) {
   const { user, logout } = useAuth();
+  const t = useT();
   const { isDark, toggleTheme } = useTheme();
   const navigate = useNavigate();
   const { openNotificationCenter } = useNotificationCenter();
@@ -218,14 +220,14 @@ export function Header({ title: _title }: HeaderProps) {
           {!isMobile && (
             <div className="minside-header-search-container" style={{ flex: '0 1 auto' }}>
               <HeaderSearch
-                placeholder="Søk i bookinger, brukere..."
+                placeholder={t('common.sok_i_bookinger_brukere')}
                 value={searchQuery}
                 onSearchChange={handleSearchChange}
                 onResultSelect={handleResultSelect}
                 results={searchResults}
                 showShortcut
                 enableGlobalShortcut
-                noResultsText="Ingen resultater funnet"
+                noResultsText={t('common.ingen_resultater_funnet')}
               />
             </div>
           )}
@@ -366,7 +368,7 @@ export function Header({ title: _title }: HeaderProps) {
                     variant="tertiary"
                     data-size="md"
                     onClick={logout}
-                    aria-label="Logg ut"
+                    aria-label={t('common.logg_ut')}
                     style={{ whiteSpace: 'nowrap' }}
                   >
                     <LogOutIcon size={20} />

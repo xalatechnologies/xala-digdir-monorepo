@@ -2,6 +2,7 @@ import React, { createContext, useContext, useMemo, useCallback } from 'react';
 import { useCapabilities } from '@digilist/client-sdk/hooks';
 import { useBackofficeRole } from '../hooks/useBackofficeRole';
 import {
+import { useT } from '@xala/i18n';
   type Capability,
   type EffectiveBackofficeRole,
   getCapabilitiesForRole,
@@ -199,6 +200,7 @@ export const CapabilityProvider: React.FC<CapabilityProviderProps> = ({
 export function useCapabilityContext(): CapabilityContextValue {
   const context = useContext(CapabilityContext);
   if (context === undefined) {
+  const t = useT();
     throw new Error('useCapabilityContext must be used within a CapabilityProvider');
   }
   return context;
@@ -238,14 +240,7 @@ export function useHasCapability(capability: Capability): boolean {
  * @returns Whether the user has any of the capabilities
  *
  * @example
- * ```tsx
- * function ListingActions() {
- *   const canEditOrCreate = useHasAnyCapability(['CAP_LISTING_CREATE', 'CAP_LISTING_EDIT']);
- *
- *   if (!canEditOrCreate) return null;
- *   return <ListingActionsMenu />;
- * }
- * ```
+ * ```t('common.tsx_function_listingactions_const') ```
  */
 export function useHasAnyCapability(capabilities: Capability[]): boolean {
   const { hasAnyCapability } = useCapabilityContext();

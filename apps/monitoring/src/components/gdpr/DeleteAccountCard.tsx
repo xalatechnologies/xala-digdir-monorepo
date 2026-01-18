@@ -12,6 +12,7 @@ import { useState } from 'react';
 import { Card, Heading, Paragraph, Button } from '@xala/ds';
 import { useMyGdprRequests, useCreateGdprRequest, useCancelGdprRequest } from '@digilist/client-sdk/hooks';
 import type { GdprRequest } from '@digilist/client-sdk/types';
+import { useT } from '@xala/i18n';
 
 export function DeleteAccountCard() {
   const [showConfirmation, setShowConfirmation] = useState(false);
@@ -19,6 +20,7 @@ export function DeleteAccountCard() {
 
   // Fetch user's deletion requests
   const { data: requestsData, isLoading } = useMyGdprRequests({
+  const t = useT();
     requestType: 'deletion',
     limit: 1
   });
@@ -44,7 +46,7 @@ export function DeleteAccountCard() {
       await createRequest.mutateAsync({ requestType: 'deletion' });
       setShowConfirmation(false);
     } catch (error) {
-      console.error('Failed to create deletion request:', error);
+      console.error('t('validation.failed_to_create_deletion')', error);
     } finally {
       setIsDeleting(false);
     }
@@ -56,7 +58,7 @@ export function DeleteAccountCard() {
     try {
       await cancelRequest.mutateAsync(deletionRequest.id);
     } catch (error) {
-      console.error('Failed to cancel deletion request:', error);
+      console.error('t('validation.failed_to_cancel_deletion')', error);
     }
   };
 
@@ -134,7 +136,7 @@ export function DeleteAccountCard() {
                 borderColor: 'var(--ds-color-danger-border)',
               }}
             >
-              Slett min konto
+              t('actions.slett_min_konto')
             </Button>
           </>
         )}
@@ -166,7 +168,7 @@ export function DeleteAccountCard() {
                   borderColor: 'var(--ds-color-danger-base)',
                 }}
               >
-                {isDeleting || createRequest.isPending ? 'Sender forespørsel...' : 'Ja, slett kontoen min'}
+                {isDeleting || createRequest.isPending ? 't('common.sender_foresporsel')' : 'Ja, slett kontoen min'}
               </Button>
               <Button
                 type="button"
@@ -236,7 +238,7 @@ export function DeleteAccountCard() {
                     disabled={cancelRequest.isPending}
                     style={{ minHeight: '40px' }}
                   >
-                    {cancelRequest.isPending ? 'Kansellerer...' : 'Angre forespørsel'}
+                    {cancelRequest.isPending ? 't('common.kansellerer')' : 'Angre forespørsel'}
                   </Button>
                 </div>
               )}
@@ -258,7 +260,7 @@ export function DeleteAccountCard() {
           backgroundColor: 'var(--ds-color-neutral-surface-hover)',
         }}>
           <Paragraph data-size="xs" style={{ margin: 0, color: 'var(--ds-color-neutral-text-subtle)' }}>
-            <strong>GDPR-rettigheter:</strong> I henhold til GDPR har du rett til å bli glemt. Forespørselen din vil bli behandlet innen 30 dager. Du kan angre forespørselen før den er behandlet.
+            <strong>{t('common.gdprrettigheter')}</strong> I henhold til GDPR har du rett til å bli glemt. Forespørselen din vil bli behandlet innen 30 dager. Du kan angre forespørselen før den er behandlet.
           </Paragraph>
         </div>
       </div>

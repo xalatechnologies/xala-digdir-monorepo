@@ -220,7 +220,7 @@ export function CreateBlockModal({
                 fontSize: 'var(--ds-font-size-sm)',
               }}
             >
-              <option value="">Velg lokale...</option>
+              <option value="">{t('common.velg_lokale')}</option>
               {rentalObjects.map((rentalObject: RentalObject) => (
                 <option key={rentalObject.id} value={rentalObject.id}>
                   {rentalObject.name}
@@ -299,7 +299,7 @@ export function CreateBlockModal({
               type="text"
               value={formData.title}
               onChange={(e) => updateField('title', e.target.value)}
-              placeholder="F.eks. Vedlikehold av varmeanlegg"
+              placeholder={t('common.feks_vedlikehold_av_varmeanlegg')}
               style={{
                 width: '100%',
                 padding: 'var(--ds-spacing-2) var(--ds-spacing-3)',
@@ -442,9 +442,9 @@ export function CreateBlockModal({
                 <Checkbox
                   checked={showRecurrence}
                   onChange={(e) => setShowRecurrence(e.target.checked)}
-                  aria-label="Gjenta blokkering"
+                  aria-label={t('common.gjenta_blokkering')}
                 />
-                <span style={{ fontSize: 'var(--ds-font-size-sm)' }}>Gjenta blokkering</span>
+                <span style={{ fontSize: 'var(--ds-font-size-sm)' }}>{t('common.gjenta_blokkering')}</span>
               </div>
 
               {showRecurrence && (
@@ -488,7 +488,7 @@ export function CreateBlockModal({
                       >
                         <option value="daily">Daglig</option>
                         <option value="weekly">Ukentlig</option>
-                        <option value="monthly">Månedlig</option>
+                        <option value="monthly">{t('common.maanedlig')}</option>
                       </select>
                     </div>
                     <div style={{ flex: 1 }}>
@@ -582,7 +582,7 @@ export function CreateBlockModal({
               id="block-notes"
               value={formData.notes}
               onChange={(e) => updateField('notes', e.target.value)}
-              placeholder="Valgfritt notat..."
+              placeholder={t('common.valgfritt_notat')}
               rows={3}
               style={{
                 width: '100%',
@@ -600,9 +600,9 @@ export function CreateBlockModal({
             <Checkbox
               checked={formData.notifyAffectedUsers}
               onChange={(e) => updateField('notifyAffectedUsers', e.target.checked)}
-              aria-label="Varsle berørte brukere"
+              aria-label={t('common.varsle_berorte_brukere')}
             />
-            <span style={{ fontSize: 'var(--ds-font-size-sm)' }}>Varsle berørte brukere</span>
+            <span style={{ fontSize: 'var(--ds-font-size-sm)' }}>{t('common.varsle_berorte_brukere')}</span>
           </div>
 
           {/* Conflict warning */}

@@ -883,7 +883,7 @@ export function BookingDialog({
                   cursor: isFormValid ? 'pointer' : 'not-allowed',
                 }}
               >
-                Bekreft booking
+                t('actions.bekreft_booking')
               </Button>
             </div>
           </div>

@@ -7,3 +7,4 @@ export * from './definitions';
 export * from './api';
 export * from './database';
 export * from './booking';
+export * from './testing';

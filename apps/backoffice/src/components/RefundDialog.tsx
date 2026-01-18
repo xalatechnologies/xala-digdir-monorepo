@@ -137,7 +137,7 @@ function DialogBase({ open, onClose, children }: DialogBaseProps) {
  *   open={showRefund}
  *   onClose={() => setShowRefund(false)}
  *   onSuccess={() => {
- *     toast.success('Refund processed');
+ *     toast.success(t('messages.refund_processed'));
  *     refetchPayments();
  *   }}
  *   orderId="vipps_123456"

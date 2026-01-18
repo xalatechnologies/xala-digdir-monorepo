@@ -46,7 +46,7 @@ function getStatusBadge(status: string) {
     case 'confirmed':
       return { color: 'success', label: t("status.confirmed") };
     case 'pending':
-      return { color: 'warning', label: 'Venter godkjenning' };
+      return { color: 'warning', label: t('common.venter_godkjenning') };
     case 'blocked':
     case 'maintenance':
       return { color: 'neutral', label: 'Sperret' };
@@ -80,14 +80,14 @@ export function EventDrawer({ isOpen, event, onClose, onEdit }: EventDrawerProps
 
   const handleReject = async () => {
     if (!event.bookingId) return;
-    if (window.confirm('Er du sikker på at du vil avslå denne forespørselen?')) {
+    if (window.confirm('t('common.er_du_sikker_paa')')) {
       await cancelBooking.mutateAsync({ id: event.bookingId });
       onClose();
     }
   };
 
   const handleDeleteBlock = async () => {
-    if (window.confirm('Er du sikker på at du vil slette denne blokkeringen?')) {
+    if (window.confirm('t('common.er_du_sikker_paa')')) {
       await deleteBlock.mutateAsync(event.id);
       onClose();
     }

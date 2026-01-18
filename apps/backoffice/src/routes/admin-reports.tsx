@@ -40,10 +40,10 @@ const mockReports = {
     avgBookingValue: 715,
   },
   topListings: [
-    { name: 'Idrettshall A', bookings: 312, revenue: 223000, utilization: 78 },
-    { name: 'Fotballbane 1', bookings: 289, revenue: 145000, utilization: 65 },
+    { name: t('common.idrettshall_a'), bookings: 312, revenue: 223000, utilization: 78 },
+    { name: t('common.fotballbane_1'), bookings: 289, revenue: 145000, utilization: 65 },
     { name: t("category.swimmingPool"), bookings: 198, revenue: 178500, utilization: 82 },
-    { name: 'Idrettshall B', bookings: 176, revenue: 126000, utilization: 54 },
+    { name: t('common.idrettshall_b'), bookings: 176, revenue: 126000, utilization: 54 },
   ],
 };
 
@@ -129,11 +129,11 @@ export function AdminReportsPage() {
             </Select>
           </div>
           <div style={{ flex: 1 }}>
-            <label style={{ display: 'block', marginBottom: 'var(--ds-spacing-2)', fontSize: 'var(--ds-font-size-sm)', fontWeight: 'var(--ds-font-weight-medium)' }}>Fra dato</label>
+            <label style={{ display: 'block', marginBottom: 'var(--ds-spacing-2)', fontSize: 'var(--ds-font-size-sm)', fontWeight: 'var(--ds-font-weight-medium)' }}>{t('common.fra_dato')}</label>
             <Input type="date" value={dateFrom} onChange={(e) => setDateFrom(e.target.value)} style={{ width: '100%' }} />
           </div>
           <div style={{ flex: 1 }}>
-            <label style={{ display: 'block', marginBottom: 'var(--ds-spacing-2)', fontSize: 'var(--ds-font-size-sm)', fontWeight: 'var(--ds-font-weight-medium)' }}>Til dato</label>
+            <label style={{ display: 'block', marginBottom: 'var(--ds-spacing-2)', fontSize: 'var(--ds-font-size-sm)', fontWeight: 'var(--ds-font-weight-medium)' }}>{t('common.til_dato')}</label>
             <Input type="date" value={dateTo} onChange={(e) => setDateTo(e.target.value)} style={{ width: '100%' }} />
           </div>
           <Button type="button" variant="primary" data-size="md" style={{ minHeight: '44px' }}>

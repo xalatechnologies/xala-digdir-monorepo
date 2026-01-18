@@ -33,6 +33,7 @@ function AdminIcon() {
 }
 
 function CaseHandlerIcon() {
+  const t = useT();
   return (
     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
       <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
@@ -67,11 +68,11 @@ function CheckIcon() {
 const ROLE_DISPLAY: Record<EffectiveBackofficeRole, { name: string; description: string }> = {
   admin: {
     name: 'Administrator',
-    description: 'Full tilgang til alle funksjoner',
+    description: t('common.full_tilgang_til_alle'),
   },
   case_handler: {
     name: 'Saksbehandler',
-    description: 'Behandle søknader og vedtak',
+    description: t('common.behandle_soknader_og_vedtak'),
   },
 };
 

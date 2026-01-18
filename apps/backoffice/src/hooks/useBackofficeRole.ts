@@ -88,23 +88,10 @@ export type {
  *     // Navigate to role selection
  *   };
  *
- *   return <button onClick={handleSwitch}>Switch Role</button>;
+ *   return <button onClick={handleSwitch}>{t('common.switch_role')}</button>;
  * }
  * ```
- */
-export function useBackofficeRole() {
-  const t = useT();
-  return useBackofficeRoleContext();
-}
-
-/**
- * Helper hook to check if role selection is required.
- * Returns true if the user has multiple roles but hasn't selected one yet.
- *
- * @returns {boolean} Whether the user needs to select a role
- *
- * @example
- * ```tsx
+ t('common.export_function_usebackofficerole_const') ```tsx
  * function App() {
  *   const needsRoleSelection = useNeedsRoleSelection();
  *

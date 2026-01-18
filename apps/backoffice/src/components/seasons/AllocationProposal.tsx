@@ -36,6 +36,7 @@ function WarningIcon() {
 
 // TODO: Replace with actual SDK hooks when implemented
 // import { useAllocationProposal, useApplyAllocationProposal } from '@digilist/client-sdk';
+  const t = useT();
 import { useT } from '@xala/i18n';
 
 // Placeholder types matching backend interfaces
@@ -150,9 +151,9 @@ export function AllocationProposal({ seasonId, onApplyComplete }: AllocationProp
 
     const confirmMessage = [
       'Anvend forslag til tildeling?',
-      applyOptions.autoApproveNoConflicts && `- Godkjenn ${proposal.approvedCount} søknader uten konflikter`,
-      applyOptions.autoAdjustTimes && `- Juster ${proposal.adjustedCount} søknader til alternative tidspunkt`,
-      applyOptions.rejectUnresolvable && `- Avslå ${proposal.rejectedCount} uløselige søknader`,
+      applyOptions.autoApproveNoConflicts && `t('common.godkjenn_proposalapprovedcount_soknader_uten')`,
+      applyOptions.autoAdjustTimes && `t('common.juster_proposaladjustedcount_soknader_til')`,
+      applyOptions.rejectUnresolvable && `- t('status.avslaa') ${proposal.rejectedCount} uløselige søknader`,
     ].filter(Boolean).join('\n');
 
     if (confirm(confirmMessage)) {
@@ -178,7 +179,7 @@ export function AllocationProposal({ seasonId, onApplyComplete }: AllocationProp
       case 'approve':
         return <Badge variant="success">Godkjenn</Badge>;
       case 'reject':
-        return <Badge variant="danger">Avslå</Badge>;
+        return <Badge variant="danger">{t('common.avslaa')}</Badge>;
       case 'adjust':
         return <Badge variant="warning">Juster</Badge>;
     }
@@ -411,8 +412,8 @@ export function AllocationProposal({ seasonId, onApplyComplete }: AllocationProp
                   <Table.HeaderCell>Organisasjon</Table.HeaderCell>
                   <Table.HeaderCell>Lokale</Table.HeaderCell>
                   <Table.HeaderCell>Dag</Table.HeaderCell>
-                  <Table.HeaderCell>Opprinnelig tidspunkt</Table.HeaderCell>
-                  <Table.HeaderCell>Foreslått tidspunkt</Table.HeaderCell>
+                  <Table.HeaderCell>{t('common.opprinnelig_tidspunkt')}</Table.HeaderCell>
+                  <Table.HeaderCell>{t('common.foreslaatt_tidspunkt')}</Table.HeaderCell>
                   <Table.HeaderCell>Prioritet</Table.HeaderCell>
                   <Table.HeaderCell>Status</Table.HeaderCell>
                   <Table.HeaderCell>Begrunnelse</Table.HeaderCell>

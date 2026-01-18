@@ -37,6 +37,7 @@ export function OrganizationForm({ organization, onSubmit, onCancel }: Organizat
   // Translation function available for future localization
   const _t = useT(); // eslint-disable-line @typescript-eslint/no-unused-vars
   const [formData, setFormData] = useState<CreateOrganizationDTO>({
+  const t = useT();
     name: '',
     actorType: 'business',
     organizationNumber: '',
@@ -133,26 +134,26 @@ export function OrganizationForm({ organization, onSubmit, onCancel }: Organizat
     <form onSubmit={handleSubmit}>
       <Stack spacing={5}>
         {/* Basic Information */}
-        <FormSection title="Grunnleggende informasjon">
+        <FormSection title={t('common.grunnleggende_informasjon')}>
           <Stack spacing={4}>
             <FormField
               label="Navn"
               required
               
-              description="Organisasjonens fulle navn"
+              description={t('common.organisasjonens_fulle_navn')}
             >
               <Textfield
                 value={formData.name}
                 onChange={(e) => handleChange('name')(e.target.value)}
-                placeholder="F.eks. Oslo Idrettslag"
+                placeholder={t('common.feks_oslo_idrettslag')}
                 aria-label="Navn"
               />
             </FormField>
 
             <FormField
-              label="Type organisasjon"
+              label={t('common.type_organisasjon')}
               required
-              description="Organisasjonstype påvirker prisregler og rabatter"
+              description={t('common.organisasjonstype_paavirker_prisregler_og')}
             >
               <Select
                 value={formData.actorType}
@@ -169,7 +170,7 @@ export function OrganizationForm({ organization, onSubmit, onCancel }: Organizat
             <FormField
               label="Organisasjonsnummer"
               error={errors.organizationNumber || undefined}
-              description="9 siffer (valgfritt)"
+              description={t('common.9_siffer_valgfritt')}
             >
               <Textfield
                 value={formData.organizationNumber || ''}
@@ -186,16 +187,16 @@ export function OrganizationForm({ organization, onSubmit, onCancel }: Organizat
         <FormSection title="Kontaktinformasjon">
           <Stack spacing={4}>
             <FormField
-              label="E-post"
+              label={t('common.epost')}
               error={errors.email || undefined}
-              description="Primær e-postadresse"
+              description={t('common.primaer_epostadresse')}
             >
               <Textfield
                 type="email"
                 value={formData.email || ''}
                 onChange={(e) => handleChange('email')(e.target.value)}
                 placeholder="kontakt@organisasjon.no"
-                aria-label="E-post"
+                aria-label={t('common.epost')}
               />
             </FormField>
 
@@ -219,7 +220,7 @@ export function OrganizationForm({ organization, onSubmit, onCancel }: Organizat
           <Stack spacing={4}>
             <FormField
               label="Gateadresse"
-              description="F.eks. Storgata 1"
+              description={t('common.feks_storgata_1')}
             >
               <Textfield
                 value={formData.address || ''}
@@ -257,7 +258,7 @@ export function OrganizationForm({ organization, onSubmit, onCancel }: Organizat
 
         {/* Actions */}
         <FormActions
-          submitText={organization ? 'Lagre endringer' : 'Opprett organisasjon'}
+          submitText={organization ? 't('common.lagre_endringer')' : 'Opprett organisasjon'}
           onCancel={onCancel}
           isSubmitting={isSubmitting}
         />

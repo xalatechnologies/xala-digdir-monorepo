@@ -103,7 +103,7 @@ export function SeedDataManagementPage() {
       stage: 'validating',
       current: 0,
       total: 100,
-      message: 'Starting import...'
+      message: t('common.starting_import')
     });
 
     const importResult = await importSeedData(seedData, (progress) => {
@@ -185,7 +185,7 @@ export function SeedDataManagementPage() {
             />
             <label htmlFor="file-upload">
               <Button as="span">
-                Choose File
+                t('actions.choose_file')
               </Button>
             </label>
           </div>
@@ -428,7 +428,7 @@ export function SeedDataManagementPage() {
           {/* Actions */}
           <div style={{ display: 'flex', gap: 'var(--ds-spacing-3)', justifyContent: 'center' }}>
             <Button onClick={handleReset}>
-              Import More Data
+              t('actions.import_more_data')
             </Button>
             <Button variant="secondary" onClick={() => window.location.reload()}>
               Refresh Page

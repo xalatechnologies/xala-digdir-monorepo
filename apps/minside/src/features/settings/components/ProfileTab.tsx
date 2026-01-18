@@ -7,6 +7,7 @@
 
 import { useRef, useState, useEffect } from 'react';
 import {
+import { useT } from '@xala/i18n';
   Card,
   Heading,
   Paragraph,
@@ -42,6 +43,7 @@ export function ProfileTab() {
 
   // Queries
   const { data: currentUserData } = useCurrentUser();
+  const t = useT();
   const currentUser = currentUserData?.data;
 
   // Mutations
@@ -176,10 +178,10 @@ export function ProfileTab() {
                 onClick={() => fileInputRef.current?.click()}
                 disabled={isUploadingAvatar}
                 type="button"
-                aria-label="Endre profilbilde"
+                aria-label={t('common.endre_profilbilde')}
               >
                 <CameraIcon />
-                {isUploadingAvatar ? 'Laster opp...' : 'Endre bilde'}
+                {isUploadingAvatar ? 't('common.laster_opp')' : 'Endre bilde'}
               </Button>
               <Paragraph data-size="xs" style={{ color: 'var(--ds-color-neutral-text-subtle)' }}>
                 JPG, PNG eller GIF (maks 5MB)
@@ -202,22 +204,22 @@ export function ProfileTab() {
           </div>
 
           <Stack spacing={4}>
-            <FormField label="Fullt navn" required>
+            <FormField label={t('common.fullt_navn')} required>
               <Textfield
                 value={profileData.name}
                 onChange={(e) => setProfileData(prev => ({ ...prev, name: e.target.value }))}
-                placeholder="Ola Nordmann"
-                aria-label="Fullt navn"
+                placeholder={t('common.ola_nordmann')}
+                aria-label={t('common.fullt_navn')}
               />
             </FormField>
 
-            <FormField label="E-postadresse" required>
+            <FormField label={t('common.epostadresse')} required>
               <Textfield
                 type="email"
                 value={profileData.email}
                 onChange={(e) => setProfileData(prev => ({ ...prev, email: e.target.value }))}
                 placeholder="ola.nordmann@example.com"
-                aria-label="E-postadresse"
+                aria-label={t('common.epostadresse')}
               />
             </FormField>
 
@@ -232,31 +234,31 @@ export function ProfileTab() {
             </FormField>
 
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 'var(--ds-spacing-3)' }}>
-              <FormField label="Fødselsdato">
+              <FormField label={t('common.fodselsdato')}>
                 <Textfield
                   type="date"
                   value={profileData.dateOfBirth}
                   onChange={(e) => setProfileData(prev => ({ ...prev, dateOfBirth: e.target.value }))}
-                  aria-label="Fødselsdato"
+                  aria-label={t('common.fodselsdato')}
                 />
               </FormField>
 
-              <FormField label="Fødselsnummer">
+              <FormField label={t('common.fodselsnummer')}>
                 <Textfield
                   value={profileData.nationalId}
                   onChange={(e) => setProfileData(prev => ({ ...prev, nationalId: e.target.value }))}
-                  placeholder="11 siffer"
+                  placeholder={t('common.11_siffer')}
                   maxLength={11}
-                  aria-label="Fødselsnummer"
+                  aria-label={t('common.fodselsnummer')}
                 />
               </FormField>
             </div>
           </Stack>
 
           <div style={{ paddingTop: 'var(--ds-spacing-4)', borderTop: '1px solid var(--ds-color-neutral-border-subtle)' }}>
-            <Button onClick={handleSaveProfile} disabled={isSaving} type="button" aria-label="Lagre profilinnstillinger">
+            <Button onClick={handleSaveProfile} disabled={isSaving} type="button" aria-label={t('common.lagre_profilinnstillinger')}>
               <SaveIcon />
-              {isSaving ? 'Lagrer...' : 'Lagre endringer'}
+              {isSaving ? 't('common.lagrer')' : 'Lagre endringer'}
             </Button>
           </div>
         </Stack>

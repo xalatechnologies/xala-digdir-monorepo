@@ -2,6 +2,17 @@ import '@testing-library/jest-dom/vitest';
 import { cleanup } from '@testing-library/react';
 import { afterEach, vi } from 'vitest';
 
+// Global i18n mock - returns the key as the translation text
+// This allows tests to use translation keys for label lookup
+vi.mock('@xala/i18n', () => ({
+  useT: () => (key: string) => key,
+  useLocale: () => 'nb',
+  t: (key: string) => key,
+  T: ({ id }: { id: string }) => id,
+  translations: {},
+  interpolate: (text: string) => text,
+}));
+
 // Cleanup after each test
 afterEach(() => {
   cleanup();

@@ -29,15 +29,14 @@ vi.mock('@digilist/client-sdk', async () => {
 vi.mock('@xala/i18n', () => ({
   useT: () => (key: string) => {
     const translations: Record<string, string> = {
-      'common.loading': t("ui.loading"),
+      'common.loading': 'Laster...',
       'rentalObjects.loading': 'Laster utleieobjekt...',
-      'common.save': t("ui.save"),
-      'common.cancel': t("ui.cancel"),
-      'common.next': t("ui.next"),
-      'common.previous': t("ui.previous"),
+      'common.save': 'Lagre',
+      'common.cancel': 'Avbryt',
+      'common.next': 'Neste',
+      'common.previous': 'Forrige',
       'common.publish': 'Publiser',
       'common.saveDraft': 'Lagre utkast',
-      'common.loading': t("ui.loading"),
       'rentalObjects.saveDraft': 'Lagre utkast',
       'rentalObjects.complete': 'Fullfør',
     };
@@ -149,7 +148,7 @@ const mockWizardReturn = {
   steps: [
     { id: 'basics', label: 'Grunnleggende', order: 0 },
     { id: 'location', label: 'Lokasjon', order: 1 },
-    { id: 'review', label: t("ui.review"), order: 2 },
+    { id: 'review', label: "Se over", order: 2 },
   ],
   formData: {
     name: '',
@@ -230,7 +229,7 @@ describe('RentalObjectWizard', () => {
       // Check for the loading text: t('rentalObjects.loading') = 'Laster utleieobjekt...'
       const loadingText = screen.queryByText('Laster utleieobjekt...');
       // Also check for spinner by aria-label
-      const spinner = screen.queryByLabelText(t("ui.loading"));
+      const spinner = screen.queryByLabelText("Laster...");
       expect(loadingText || spinner).toBeTruthy();
     });
 
@@ -258,9 +257,9 @@ describe('RentalObjectWizard', () => {
 
       render(<RentalObjectWizard slug="test" />, { wrapper: createTestWrapper() });
       // Component shows Paragraph with t('rentalObjects.loading') = 'Laster utleieobjekt...'
-      // Also has Spinner with aria-label t('common.loading') = t("ui.loading")
+      // Also has Spinner with aria-label t('common.loading') = "Laster..."
       const loadingText = screen.queryByText('Laster utleieobjekt...');
-      const spinner = screen.queryByLabelText(t("ui.loading"));
+      const spinner = screen.queryByLabelText("Laster...");
       expect(loadingText || spinner).toBeTruthy();
     });
   });
@@ -276,7 +275,7 @@ describe('RentalObjectWizard', () => {
       const user = userEvent.setup();
       render(<RentalObjectWizard />, { wrapper: createTestWrapper() });
 
-      const nextButton = screen.getByText(t("ui.next"));
+      const nextButton = screen.getByText("Neste");
       await user.click(nextButton);
 
       expect(nextStep).toHaveBeenCalled();
@@ -295,7 +294,7 @@ describe('RentalObjectWizard', () => {
       const user = userEvent.setup();
       render(<RentalObjectWizard />, { wrapper: createTestWrapper() });
 
-      const prevButton = screen.getByText(t("ui.previous"));
+      const prevButton = screen.getByText("Forrige");
       await user.click(prevButton);
 
       expect(prevStep).toHaveBeenCalled();
@@ -309,7 +308,7 @@ describe('RentalObjectWizard', () => {
       });
 
       render(<RentalObjectWizard />, { wrapper: createTestWrapper() });
-      const prevButton = screen.queryByText(t("ui.previous"));
+      const prevButton = screen.queryByText("Forrige");
       if (prevButton) {
         expect(prevButton).toBeDisabled();
       } else {
@@ -457,7 +456,7 @@ describe('RentalObjectWizard', () => {
       const user = userEvent.setup();
       render(<RentalObjectWizard />, { wrapper: createTestWrapper() });
 
-      const saveButton = screen.queryByText(t("ui.save")) || screen.queryByText('Lagre utkast');
+      const saveButton = screen.queryByText("Lagre") || screen.queryByText('Lagre utkast');
       if (saveButton) {
         await user.click(saveButton);
         await waitFor(() => {

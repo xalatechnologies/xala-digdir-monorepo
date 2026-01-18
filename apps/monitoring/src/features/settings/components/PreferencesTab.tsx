@@ -4,6 +4,7 @@
  */
 
 import {
+import { useT } from '@xala/i18n';
   Card,
   Heading,
   Paragraph,
@@ -17,6 +18,7 @@ import { useAuth } from '@xala/auth';
 
 export function PreferencesTab() {
   const { locale, setLocale } = useLocale();
+  const t = useT();
   const { logout } = useAuth();
 
   return (
@@ -33,10 +35,10 @@ export function PreferencesTab() {
             </Paragraph>
           </div>
 
-          <FormField label="Foretrukket språk">
+          <FormField label={t('common.foretrukket_spraak')}>
             <Select value={locale} onChange={(e) => setLocale(e.target.value as 'nb' | 'en')}>
-              <option value="nb">Norsk (Bokmål)</option>
-              <option value="nn">Norsk (Nynorsk)</option>
+              <option value="nb">{t('common.norsk_bokmaal')}</option>
+              <option value="nn">{t('common.norsk_nynorsk')}</option>
               <option value="en">English</option>
             </Select>
           </FormField>

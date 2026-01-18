@@ -34,14 +34,15 @@ const weekdayOptions = [
   { value: 3, label: 'Onsdag' },
   { value: 4, label: 'Torsdag' },
   { value: 5, label: 'Fredag' },
-  { value: 6, label: 'Lørdag' },
-  { value: 0, label: 'Søndag' },
+  { value: 6, label: t('common.lordag') },
+  { value: 0, label: t('common.sondag') },
 ];
 
 export function SeasonalLeaseForm({ lease, onSubmit, onCancel }: SeasonalLeaseFormProps) {
   // Translation function available for future localization
   const _t = useT(); // eslint-disable-line @typescript-eslint/no-unused-vars
   const [formData, setFormData] = useState<CreateSeasonalLeaseDTO>({
+  const t = useT();
     listingId: '',
     organizationId: '',
     startDate: '',
@@ -198,17 +199,17 @@ export function SeasonalLeaseForm({ lease, onSubmit, onCancel }: SeasonalLeaseFo
       <Stack spacing={5}>
         {/* Info Alert */}
         <Alert>
-          Sesongleie låser lokalet for den valgte perioden. Kalenderblokker kan genereres automatisk etter godkjenning.
+          t('common.sesongleie_laaser_lokalet_for')
         </Alert>
 
         {/* Basic Information */}
-        <FormSection title="Grunnleggende informasjon">
+        <FormSection title={t('common.grunnleggende_informasjon')}>
           <Stack spacing={4}>
             <FormField
               label="Organisasjon"
               required
               
-              description="Hvem leier lokalet?"
+              description={t('common.hvem_leier_lokalet')}
             >
               <Select
                 value={formData.organizationId}
@@ -216,7 +217,7 @@ export function SeasonalLeaseForm({ lease, onSubmit, onCancel }: SeasonalLeaseFo
                 
                 disabled={!!lease} // Can't change org when editing
               >
-                <option value="">Velg organisasjon...</option>
+                <option value="">{t('common.velg_organisasjon')}</option>
                 {organizations.map(org => (
                   <option key={org.id} value={org.id}>
                     {org.name}
@@ -229,14 +230,14 @@ export function SeasonalLeaseForm({ lease, onSubmit, onCancel }: SeasonalLeaseFo
               label="Lokale"
               required
               
-              description="Hvilket lokale skal leies?"
+              description={t('common.hvilket_lokale_skal_leies')}
             >
               <Select
                 value={formData.listingId}
                 onChange={(e) => handleChange('listingId')(e.target.value)}
                 
               >
-                <option value="">Velg lokale...</option>
+                <option value="">{t('common.velg_lokale')}</option>
                 {listings.map(listing => (
                   <option key={listing.id} value={listing.id}>
                     {listing.name}
@@ -349,17 +350,17 @@ export function SeasonalLeaseForm({ lease, onSubmit, onCancel }: SeasonalLeaseFo
         <FormSection title="Prissetting">
           <Stack spacing={4}>
             <FormField
-              label="Total pris"
+              label={t('common.total_pris')}
               required
               error={errors.totalPrice || undefined}
-              description="Totalpris for hele leieperioden (NOK)"
+              description={t('common.totalpris_for_hele_leieperioden')}
             >
               <Textfield
                 type="number"
                 value={formData.totalPrice?.toString() || '0'}
                 onChange={(e) => handleChange('totalPrice')(parseFloat(e.target.value) || 0)}
                 placeholder="0"
-                aria-label="Total pris"
+                aria-label={t('common.total_pris')}
                 min="0"
                 step="0.01"
               />
@@ -367,12 +368,12 @@ export function SeasonalLeaseForm({ lease, onSubmit, onCancel }: SeasonalLeaseFo
 
             <FormField
               label="Notater"
-              description="Interne notater om avtalen"
+              description={t('common.interne_notater_om_avtalen')}
             >
               <Textfield
                 value={formData.notes || ''}
                 onChange={(e) => handleChange('notes')(e.target.value)}
-                placeholder="F.eks. spesielle avtaler eller betingelser"
+                placeholder={t('common.feks_spesielle_avtaler_eller')}
                 aria-label="Notater"
                 multiline
                 rows={3}
@@ -383,7 +384,7 @@ export function SeasonalLeaseForm({ lease, onSubmit, onCancel }: SeasonalLeaseFo
 
         {/* Actions */}
         <FormActions
-          submitText={lease ? 'Lagre endringer' : 'Opprett sesongleie'}
+          submitText={lease ? 't('common.lagre_endringer')' : 'Opprett sesongleie'}
           onCancel={onCancel}
           isSubmitting={isSubmitting}
         />

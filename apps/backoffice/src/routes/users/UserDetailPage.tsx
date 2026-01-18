@@ -75,7 +75,7 @@ export function UserDetailPage() {
   };
 
   const handleDeactivate = async () => {
-    if (user && confirm('Er du sikker på at du vil deaktivere denne brukeren?')) {
+    if (user && confirm('t('common.er_du_sikker_paa')')) {
       await deactivateUserMutation.mutateAsync(user.id);
     }
   };
@@ -202,7 +202,7 @@ export function UserDetailPage() {
                       variant="tertiary"
                       data-size="sm"
                       onClick={() => handleCopyToClipboard(user.email, 'email')}
-                      aria-label="Kopier e-post" type="button"
+                      aria-label={t('common.kopier_epost')} type="button"
                     >
                       {copiedField === 'email' ? <CheckCircleIcon /> : <CopyIcon />}
                     </Button>
@@ -225,7 +225,7 @@ export function UserDetailPage() {
                         variant="tertiary"
                         data-size="sm"
                         onClick={() => handleCopyToClipboard(user.phone!, 'phone')}
-                        aria-label="Kopier telefon" type="button"
+                        aria-label={t('common.kopier_telefon')} type="button"
                       >
                         {copiedField === 'phone' ? <CheckCircleIcon /> : <CopyIcon />}
                       </Button>

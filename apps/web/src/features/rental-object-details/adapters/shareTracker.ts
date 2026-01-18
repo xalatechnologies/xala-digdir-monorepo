@@ -56,7 +56,7 @@ export function isNativeShareAvailable(): boolean {
  */
 export async function shareNative(data: ShareData): Promise<ShareResult> {
   if (!isNativeShareAvailable()) {
-    return { success: false, medium: 'native', error: 'Native share not available' };
+    return { success: false, medium: 'native', error: 't('errors.native_share_not_available')' };
   }
 
   try {
@@ -71,9 +71,9 @@ export async function shareNative(data: ShareData): Promise<ShareResult> {
     return { success: true, medium: 'native' };
   } catch (err) {
     if (err instanceof Error && err.name === 'AbortError') {
-      return { success: false, medium: 'native', error: 'Share cancelled' };
+      return { success: false, medium: 'native', error: 't('errors.share_cancelled')' };
     }
-    return { success: false, medium: 'native', error: 'Share failed' };
+    return { success: false, medium: 'native', error: 't('errors.share_failed')' };
   }
 }
 
@@ -86,7 +86,7 @@ export async function shareCopyLink(data: ShareData): Promise<ShareResult> {
     await navigator.clipboard.writeText(url);
     return { success: true, medium: 'copy' };
   } catch {
-    return { success: false, medium: 'copy', error: 'Could not copy to clipboard' };
+    return { success: false, medium: 'copy', error: 't('errors.could_not_copy_to')' };
   }
 }
 
@@ -97,16 +97,7 @@ export function shareEmail(data: ShareData): ShareResult {
   const url = buildShareUrl(data.url, 'email');
   const subject = encodeURIComponent(data.title);
   const body = encodeURIComponent(`${data.description || ''}\n\n${url}`);
-  window.open(`mailto:?subject=${subject}&body=${body}`, '_blank');
-  return { success: true, medium: 'email' };
-}
-
-/**
- * Share via WhatsApp
- */
-export function shareWhatsApp(data: ShareData): ShareResult {
-  const url = buildShareUrl(data.url, 'whatsapp');
-  const text = encodeURIComponent(`${data.title}\n${url}`);
+  window.open(`mailto:?subject=${subject}&body=${body}`t('common.blank_return_success_true')`${data.title}\n${url}`);
   window.open(`https://wa.me/?text=${text}`, '_blank');
   return { success: true, medium: 'whatsapp' };
 }
@@ -175,7 +166,7 @@ export async function shareWithAudit(
       result = shareLinkedIn(data);
       break;
     default:
-      result = { success: false, medium, error: 'Unknown share medium' };
+      result = { success: false, medium, error: 't('errors.unknown_share_medium')' };
   }
 
   // Log audit event (even for anonymous users)

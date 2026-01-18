@@ -28,6 +28,7 @@ export function BasicStep({ data, onChange, errors = [] }: BasicStepProps) {
   // Translation function available for future localization
   const _t = useT(); // eslint-disable-line @typescript-eslint/no-unused-vars
   const handleChange = (field: keyof BasicData, value: string) => {
+  const t = useT();
     onChange({ ...data, [field]: value });
   };
 
@@ -75,7 +76,7 @@ export function BasicStep({ data, onChange, errors = [] }: BasicStepProps) {
             id="org-name"
             value={data.name || ''}
             onChange={(e) => handleChange('name', e.target.value)}
-            placeholder="Skriv inn organisasjonsnavn"
+            placeholder={t('common.skriv_inn_organisasjonsnavn')}
             required
           />
         </FormField>
@@ -102,7 +103,7 @@ export function BasicStep({ data, onChange, errors = [] }: BasicStepProps) {
             id="org-number"
             value={data.organizationNumber || ''}
             onChange={(e) => handleChange('organizationNumber', e.target.value)}
-            placeholder="9 siffer"
+            placeholder={t('common.9_siffer')}
           />
         </FormField>
 
@@ -113,7 +114,7 @@ export function BasicStep({ data, onChange, errors = [] }: BasicStepProps) {
           </Heading>
 
           <Stack gap="3">
-            <FormField label="E-post" htmlFor="email">
+            <FormField label={t('common.epost')} htmlFor="email">
               <Textfield
                 id="email"
                 type="email"

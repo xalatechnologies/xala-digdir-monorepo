@@ -100,14 +100,14 @@ export function useIntegrationSettings(options: UseIntegrationSettingsOptions = 
       };
 
       const integrationNames: Record<IntegrationType, { name: string; description: string }> = {
-        bankid: { name: 'BankID', description: 'Norsk e-ID for sikker pålogging' },
-        idporten: { name: 'ID-porten', description: 'Offentlig påloggingsløsning' },
-        vipps: { name: 'Vipps', description: 'Mobilbetaling med Vipps' },
-        rco: { name: 'RCO', description: 'Digital låssystem' },
-        googleCalendar: { name: 'Google Calendar', description: 'Synkroniser med Google Calendar' },
-        outlook: { name: 'Outlook', description: 'Synkroniser med Outlook/Exchange' },
-        visma: { name: 'Visma', description: 'Fakturering via Visma' },
-        brreg: { name: 'Brønnøysundregistrene', description: 'Verifiser organisasjoner' },
+        bankid: { name: 'BankID', description: t('common.norsk_eid_for_sikker') },
+        idporten: { name: 'ID-porten', description: t('common.offentlig_paaloggingslosning') },
+        vipps: { name: 'Vipps', description: t('common.mobilbetaling_med_vipps') },
+        rco: { name: 'RCO', description: t('common.digital_laassystem') },
+        googleCalendar: { name: t('common.google_calendar'), description: t('common.synkroniser_med_google_calendar') },
+        outlook: { name: 'Outlook', description: t('common.synkroniser_med_outlookexchange') },
+        visma: { name: 'Visma', description: t('common.fakturering_via_visma') },
+        brreg: { name: t('common.bronnoysundregistrene'), description: t('common.verifiser_organisasjoner') },
       };
 
       const providers = categoryMap[category] || [];

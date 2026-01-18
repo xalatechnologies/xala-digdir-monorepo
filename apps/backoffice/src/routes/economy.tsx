@@ -42,7 +42,7 @@ export function EconomyPage() {
         <Tabs.Panel value="invoice-basis">
           <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--ds-spacing-4)' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-              <Paragraph>Generer og administrer fakturagrunnlag fra godkjente bookinger</Paragraph>
+              <Paragraph>{t('common.generer_og_administrer_fakturagrunnlag')}</Paragraph>
               <Button variant="primary" type="button">
                 <PlusIcon />
                 Generer fra bookinger
@@ -70,7 +70,7 @@ export function EconomyPage() {
         {/* Sales Documents Tab */}
         <Tabs.Panel value="sales-documents">
           <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--ds-spacing-4)' }}>
-            <Paragraph>Administrer salgsbilag og fakturaer</Paragraph>
+            <Paragraph>{t('common.administrer_salgsbilag_og_fakturaer')}</Paragraph>
 
             <div
               style={{
@@ -94,7 +94,7 @@ export function EconomyPage() {
         <Tabs.Panel value="credit-notes">
           <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--ds-spacing-4)' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-              <Paragraph>Opprett og administrer kreditnotar</Paragraph>
+              <Paragraph>{t('common.opprett_og_administrer_kreditnotar')}</Paragraph>
               <Button variant="primary" type="button">
                 <PlusIcon />
                 Opprett kreditnota
@@ -119,7 +119,7 @@ export function EconomyPage() {
         {/* Export Tab */}
         <Tabs.Panel value="export">
           <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--ds-spacing-4)' }}>
-            <Paragraph>Eksporter økonomiske data til CSV, Excel eller PDF</Paragraph>
+            <Paragraph>{t('common.eksporter_okonomiske_data_til')}</Paragraph>
 
             <div
               style={{

@@ -7,6 +7,7 @@
 import * as React from 'react';
 import { Heading, Paragraph, Card } from '@xala/ds';
 import { useAuth } from '@xala/auth';
+import { useT } from '@xala/i18n';
 
 // =============================================================================
 // Types
@@ -39,6 +40,7 @@ export function HelpSection({
   card = false,
   children,
 }: HelpSectionProps): React.ReactElement | null {
+  const t = useT();
   const { data: session } = useAuth();
   const userRole = session?.user?.role ?? 'org_member';
 
@@ -178,7 +180,7 @@ export interface RoleBadgeProps {
 export function RoleBadge({ role }: RoleBadgeProps): React.ReactElement {
   const roleLabels: Record<string, { label: string; color: string }> = {
     admin: { label: 'Admin', color: 'var(--ds-color-danger-base-default)' },
-    tenant_admin: { label: 'Leietaker Admin', color: 'var(--ds-color-warning-base-default)' },
+    tenant_admin: { label: t('common.leietaker_admin'), color: 'var(--ds-color-warning-base-default)' },
     org_admin: { label: 'Org Admin', color: 'var(--ds-color-info-base-default)' },
     org_member: { label: 'Medlem', color: 'var(--ds-color-success-base-default)' },
   };

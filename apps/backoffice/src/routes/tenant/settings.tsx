@@ -93,7 +93,7 @@ export function TenantSettingsPage() {
           disabled={isSaving}
           style={{ minHeight: '44px' }}
         >
-          {isSaving ? 'Lagrer...' : 'Lagre endringer'}
+          {isSaving ? 't('common.lagrer')' : 'Lagre endringer'}
         </Button>
       </div>
 
@@ -105,7 +105,7 @@ export function TenantSettingsPage() {
         <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--ds-spacing-4)' }}>
           <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr', gap: 'var(--ds-spacing-4)' }}>
             <div>
-              <label style={{ display: 'block', marginBottom: 'var(--ds-spacing-2)', fontWeight: 'var(--ds-font-weight-medium)' }}>Tenant-navn</label>
+              <label style={{ display: 'block', marginBottom: 'var(--ds-spacing-2)', fontWeight: 'var(--ds-font-weight-medium)' }}>{t('common.tenantnavn')}</label>
               <Input
                 value={settings.tenantName}
                 onChange={(e) => updateSetting('tenantName', e.target.value)}
@@ -123,14 +123,14 @@ export function TenantSettingsPage() {
           </div>
           <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : 'repeat(3, 1fr)', gap: 'var(--ds-spacing-4)' }}>
             <div>
-              <label style={{ display: 'block', marginBottom: 'var(--ds-spacing-2)', fontWeight: 'var(--ds-font-weight-medium)' }}>Språk</label>
+              <label style={{ display: 'block', marginBottom: 'var(--ds-spacing-2)', fontWeight: 'var(--ds-font-weight-medium)' }}>{t('common.spraak')}</label>
               <Select
                 value={settings.defaultLanguage}
                 onChange={(e) => updateSetting('defaultLanguage', e.target.value)}
                 style={{ width: '100%' }}
               >
-                <option value="nb">Norsk (bokmål)</option>
-                <option value="nn">Norsk (nynorsk)</option>
+                <option value="nb">{t('common.norsk_bokmaal')}</option>
+                <option value="nn">{t('common.norsk_nynorsk')}</option>
                 <option value="en">English</option>
               </Select>
             </div>
@@ -168,11 +168,11 @@ export function TenantSettingsPage() {
         </Heading>
         <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--ds-spacing-4)' }}>
           {[
-            { key: 'bookingEnabled', label: 'Booking aktivert', description: 'Tillat brukere å booke lokaler' },
-            { key: 'seasonalLeaseEnabled', label: 'Sesongbooking aktivert', description: 'Tillat organisasjoner å søke om faste tider' },
-            { key: 'organizationPortalEnabled', label: 'Organisasjonsportal', description: 'Aktiver portal for organisasjoner' },
-            { key: 'publicListingsEnabled', label: 'Offentlig visnting', description: 'Vis lokaler offentlig' },
-            { key: 'reviewsEnabled', label: 'Anmeldelser', description: 'Tillat brukere å legge igjen anmeldelser' },
+            { key: 'bookingEnabled', label: t('common.booking_aktivert'), description: t('common.tillat_brukere_aa_booke') },
+            { key: 'seasonalLeaseEnabled', label: t('common.sesongbooking_aktivert'), description: t('common.tillat_organisasjoner_aa_soke') },
+            { key: 'organizationPortalEnabled', label: 'Organisasjonsportal', description: t('common.aktiver_portal_for_organisasjoner') },
+            { key: 'publicListingsEnabled', label: t('common.offentlig_visnting'), description: t('common.vis_lokaler_offentlig') },
+            { key: 'reviewsEnabled', label: 'Anmeldelser', description: t('common.tillat_brukere_aa_legge') },
           ].map(feature => (
             <div key={feature.key} style={{
               display: 'flex',
@@ -205,9 +205,9 @@ export function TenantSettingsPage() {
         <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--ds-spacing-4)' }}>
           {[
             { key: 'paymentEnabled', label: t("rule.payment"), description: 'Aktiver online betaling' },
-            { key: 'vippsIntegration', label: 'Vipps', description: 'Integrasjon med Vipps for betaling' },
-            { key: 'emailNotifications', label: 'E-postvarsler', description: 'Send varsler via e-post' },
-            { key: 'smsNotifications', label: 'SMS-varsler', description: 'Send varsler via SMS' },
+            { key: 'vippsIntegration', label: 'Vipps', description: t('common.integrasjon_med_vipps_for') },
+            { key: 'emailNotifications', label: t('common.epostvarsler'), description: t('common.send_varsler_via_epost') },
+            { key: 'smsNotifications', label: t('common.smsvarsler'), description: t('common.send_varsler_via_sms') },
           ].map(integration => (
             <div key={integration.key} style={{
               display: 'flex',

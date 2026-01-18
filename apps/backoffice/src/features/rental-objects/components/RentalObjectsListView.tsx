@@ -34,12 +34,12 @@ import { useT } from '@xala/i18n';
 
 // Capacity filter options for rental objects
 const CAPACITY_OPTIONS = [
-  { id: 'all', label: 'Alle størrelser', min: 0, max: 999999 },
-  { id: '1-10', label: '1-10 personer', min: 1, max: 10 },
-  { id: '11-25', label: '11-25 personer', min: 11, max: 25 },
-  { id: '26-50', label: '26-50 personer', min: 26, max: 50 },
-  { id: '51-100', label: '51-100 personer', min: 51, max: 100 },
-  { id: '100+', label: 'Over 100 personer', min: 101, max: 999999 },
+  { id: 'all', label: t('common.alle_storrelser'), min: 0, max: 999999 },
+  { id: '1-10', label: t('common.110_personer'), min: 1, max: 10 },
+  { id: '11-25', label: t('common.1125_personer'), min: 11, max: 25 },
+  { id: '26-50', label: t('common.2650_personer'), min: 26, max: 50 },
+  { id: '51-100', label: t('common.51100_personer'), min: 51, max: 100 },
+  { id: '100+', label: t('common.over_100_personer'), min: 101, max: 999999 },
 ];
 
 export function RentalObjectsListView() {
@@ -47,6 +47,7 @@ export function RentalObjectsListView() {
   const _t = useT(); // eslint-disable-line @typescript-eslint/no-unused-vars
   const navigate = useNavigate();
   const { permissions } = useRentalObjectPermissions();
+  const t = useT();
 
   const {
     filters,
@@ -174,7 +175,7 @@ export function RentalObjectsListView() {
       <Drawer
         isOpen={isFilterOpen}
         onClose={() => setIsFilterOpen(false)}
-        title="Filter og sortering"
+        title={t('common.filter_og_sortering')}
         icon={<FilterIcon size={20} />}
         position="right"
         size="sm"
@@ -206,7 +207,7 @@ export function RentalObjectsListView() {
                 style={{ flex: 1 }}
                 onClick={applyFilters}
               >
-                Bruk filter
+                t('actions.bruk_filter')
               </Button>
             </div>
           </Stack>
@@ -356,7 +357,7 @@ export function RentalObjectsListView() {
         >
           {/* Search on left */}
           <HeaderSearch
-            placeholder="Søk etter utleieobjekter..."
+            placeholder={t('common.sok_etter_utleieobjekter')}
             value={searchValue}
             onSearchChange={handleSearchChange}
             onSearch={handleSearch}
@@ -511,7 +512,7 @@ export function RentalObjectsListView() {
               data-size="sm"
               onClick={() => handlePageChange(currentPage - 1)}
               disabled={currentPage <= 1}
-              aria-label="Forrige side"
+              aria-label={t('common.forrige_side')}
             >
               <ChevronLeftIcon />
             </Button>
@@ -526,7 +527,7 @@ export function RentalObjectsListView() {
               data-size="sm"
               onClick={() => handlePageChange(currentPage + 1)}
               disabled={currentPage >= totalPages}
-              aria-label="Neste side"
+              aria-label={t('common.neste_side')}
             >
               <ChevronRightIcon />
             </Button>

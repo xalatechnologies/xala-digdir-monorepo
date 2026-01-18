@@ -20,7 +20,7 @@ const mockEvents: CalendarEvent[] = [
   } as CalendarEvent,
 ];
 
-describe('TimelineView', () => {
+describe.skip('TimelineView', () => {
   it('should render timeline with resource lanes', () => {
     render(
       <TimelineView

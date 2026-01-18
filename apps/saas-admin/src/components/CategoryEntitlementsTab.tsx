@@ -5,6 +5,7 @@
 
 import { useState, useMemo } from 'react';
 import {
+import { useT } from '@xala/i18n';
   Card,
   Heading,
   Paragraph,
@@ -19,14 +20,14 @@ import type { CategoryEntitlement } from '@digilist/client-sdk/types';
 
 // Well-known rental object categories from the platform
 const RENTAL_OBJECT_CATEGORIES = [
-  { key: 'LOKALER_OG_BANER', name: 'Lokaler og baner', description: 'Idrettshaller, gymsaler, møterom' },
-  { key: 'UTSTYR', name: 'Utstyr', description: 'Sportsutstyr, lyd/lys, AV-utstyr' },
-  { key: 'ARRANGEMENT', name: 'Arrangement', description: 'Festivaler, messer, konferanser' },
-  { key: 'PARKERING', name: 'Parkering', description: 'Parkeringsplasser, garasjer' },
-  { key: 'UTLEIE_BOLIG', name: 'Utleie bolig', description: 'Leiligheter, hytter, boliger' },
-  { key: 'KJØRETØY', name: 'Kjøretøy', description: 'Biler, båter, sykler' },
-  { key: 'KONTOR', name: 'Kontor', description: 'Kontorplasser, coworking' },
-  { key: 'LAGER', name: 'Lager', description: 'Lagerlokaler, boder' },
+  { key: 'LOKALER_OG_BANER', name: t('common.lokaler_og_baner'), description: t('common.idrettshaller_gymsaler_moterom') },
+  { key: 'UTSTYR', name: 'Utstyr', description: t('common.sportsutstyr_lydlys_avutstyr') },
+  { key: 'ARRANGEMENT', name: 'Arrangement', description: t('common.festivaler_messer_konferanser') },
+  { key: 'PARKERING', name: 'Parkering', description: t('common.parkeringsplasser_garasjer') },
+  { key: 'UTLEIE_BOLIG', name: t('common.utleie_bolig'), description: t('common.leiligheter_hytter_boliger') },
+  { key: 'KJØRETØY', name: t('common.kjoretoy'), description: t('common.biler_baater_sykler') },
+  { key: 'KONTOR', name: 'Kontor', description: t('common.kontorplasser_coworking') },
+  { key: 'LAGER', name: 'Lager', description: t('common.lagerlokaler_boder') },
 ] as const;
 
 interface CategoryEntitlementsTabProps {
@@ -39,6 +40,7 @@ export function CategoryEntitlementsTab({ tenantId }: CategoryEntitlementsTabPro
 
   // Queries
   const { data: categoriesData, isLoading } = useSaasTenantCategories(tenantId);
+  const t = useT();
   const categories = categoriesData?.data ?? [];
 
   // Mutations
@@ -101,7 +103,7 @@ export function CategoryEntitlementsTab({ tenantId }: CategoryEntitlementsTabPro
       });
       setHasChanges(false);
     } catch (error) {
-      console.error('Failed to update categories:', error);
+      console.error('t('validation.failed_to_update_categories')', error);
     }
   };
 
@@ -109,7 +111,7 @@ export function CategoryEntitlementsTab({ tenantId }: CategoryEntitlementsTabPro
     return (
       <Card style={{ padding: 'var(--ds-spacing-6)' }}>
         <div style={{ display: 'flex', justifyContent: 'center', padding: 'var(--ds-spacing-8)' }}>
-          <Spinner aria-label="Laster kategorier..." />
+          <Spinner aria-label={t('common.laster_kategorier')} />
         </div>
       </Card>
     );

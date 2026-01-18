@@ -89,36 +89,7 @@ export async function testAccessibility(
  *   await testWCAGCompliance(<MyComponent />, 'AAA');
  * });
  * ```
- */
-export async function testWCAGCompliance(
-  ui: ReactElement,
-  wcagLevel: 'A' | 'AA' | 'AAA' = 'AAA',
-  options?: RenderOptions
-) {
-  const config: JestAxeConfigureOptions = {
-    ...defaultAxeConfig,
-    runOnly: {
-      type: 'tag',
-      values: [
-        'wcag2a',
-        ...(wcagLevel === 'AA' || wcagLevel === 'AAA' ? ['wcag2aa'] : []),
-        ...(wcagLevel === 'AAA' ? ['wcag2aaa'] : []),
-      ],
-    },
-  };
-
-  return testAccessibility(ui, options, config);
-}
-
-/**
- * Test keyboard navigation for a component
- *
- * @param ui - React component to test
- * @param options - Render options
- * @returns Helper functions for keyboard testing
- *
- * @example
- * ```tsx
+ t('common.export_async_function_testwcagcompliance') ```tsx
  * it('should be keyboard navigable', async () => {
  *   const { tabForward, pressEnter } = await testKeyboardNavigation(<MyComponent />);
  *
@@ -172,36 +143,7 @@ export function testScreenReaderAnnouncements(container: HTMLElement) {
      * Find aria-live region by politeness level
      */
     findLiveRegion: (politeness: 'polite' | 'assertive' | 'off') => {
-      return container.querySelector(`[aria-live="${politeness}"]`);
-    },
-    /**
-     * Find all aria-live regions
-     */
-    findAllLiveRegions: () => {
-      return container.querySelectorAll('[aria-live]');
-    },
-    /**
-     * Find alert regions (role="alert")
-     */
-    findAlerts: () => {
-      return container.querySelectorAll('[role="alert"]');
-    },
-    /**
-     * Find status regions (role="status")
-     */
-    findStatuses: () => {
-      return container.querySelectorAll('[role="status"]');
-    },
-  };
-}
-
-/**
- * Test focus management
- *
- * @returns Helper functions for focus testing
- *
- * @example
- * ```tsx
+      return container.querySelector(`[aria-live="${politeness}"]`t('common.find_all_arialive_regions') ```tsx
  * it('should have visible focus indicators', () => {
  *   const { hasFocusIndicator } = testFocusManagement();
  *   const button = screen.getByRole('button');

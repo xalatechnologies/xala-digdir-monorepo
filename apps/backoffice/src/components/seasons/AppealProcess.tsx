@@ -111,10 +111,10 @@ interface AppealProcessProps {
 }
 
 const appealStatusLabels: Record<AppealStatus, string> = {
-  no_appeal: 'Ingen klage',
-  appeal_pending: 'Klage venter',
-  appeal_approved: 'Klage godkjent',
-  appeal_rejected: 'Klage avslått',
+  no_appeal: 't('common.ingen_klage')',
+  appeal_pending: 't('common.klage_venter')',
+  appeal_approved: 't('common.klage_godkjent')',
+  appeal_rejected: 't('common.klage_avslaatt')',
 };
 
 const appealStatusVariants: Record<AppealStatus, 'neutral' | 'warning' | 'success' | 'danger'> = {
@@ -190,7 +190,7 @@ export function AppealProcess({ seasonId, canProcess }: AppealProcessProps) {
   };
 
   const handleApproveAppeal = async (applicationId: string) => {
-    if (confirm('Godkjenn denne klagen? Søknaden vil bli godkjent.')) {
+    if (confirm('t('common.godkjenn_denne_klagen_soknaden')')) {
       await approveAppealMutation.mutateAsync(applicationId);
     }
   };
@@ -297,10 +297,10 @@ export function AppealProcess({ seasonId, canProcess }: AppealProcessProps) {
             }}
           >
             <option value="all">Alle</option>
-            <option value="no_appeal">Ingen klage</option>
-            <option value="appeal_pending">Klage venter</option>
-            <option value="appeal_approved">Klage godkjent</option>
-            <option value="appeal_rejected">Klage avslått</option>
+            <option value="no_appeal">{t('common.ingen_klage')}</option>
+            <option value="appeal_pending">{t('common.klage_venter')}</option>
+            <option value="appeal_approved">{t('common.klage_godkjent')}</option>
+            <option value="appeal_rejected">{t('common.klage_avslaatt')}</option>
           </select>
         </div>
       </div>
@@ -310,11 +310,11 @@ export function AppealProcess({ seasonId, canProcess }: AppealProcessProps) {
         <div style={{ textAlign: 'center', padding: 'var(--ds-spacing-8)' }}>
           <CheckCircleIcon style={{ fontSize: 'var(--ds-font-size-heading-lg)', color: 'var(--ds-color-success-text-default)', marginBottom: 'var(--ds-spacing-3)' }} />
           <Heading level={4} data-size="xs" style={{ marginBottom: 'var(--ds-spacing-2)' }}>
-            {rejectedApplications.length === 0 ? 'Ingen avslåtte søknader' : 'Ingen søknader funnet'}
+            {rejectedApplications.length === 0 ? 't('common.ingen_avslaatte_soknader')' : 'Ingen søknader funnet'}
           </Heading>
           <Paragraph data-size="sm" style={{ color: 'var(--ds-color-neutral-text-subtle)' }}>
             {rejectedApplications.length === 0
-              ? 'Det er ingen avslåtte søknader for denne sesongen'
+              ? 't('common.det_er_ingen_avslaatte')'
               : 'Ingen søknader matcher valgte filter'}
           </Paragraph>
         </div>
@@ -410,7 +410,7 @@ export function AppealProcess({ seasonId, canProcess }: AppealProcessProps) {
                           data-size="sm"
                           type="button"
                           onClick={() => handleOpenAppealModal(application)}
-                          title="Send klage"
+                          title={t('common.send_klage')}
                         >
                           <SendIcon />
                         </Button>
@@ -422,7 +422,7 @@ export function AppealProcess({ seasonId, canProcess }: AppealProcessProps) {
                             data-size="sm"
                             type="button"
                             onClick={() => handleApproveAppeal(application.id)}
-                            title="Godkjenn klage"
+                            title={t('common.godkjenn_klage')}
                           >
                             <CheckCircleIcon />
                           </Button>
@@ -431,7 +431,7 @@ export function AppealProcess({ seasonId, canProcess }: AppealProcessProps) {
                             data-size="sm"
                             type="button"
                             onClick={() => handleRejectAppeal(application.id)}
-                            title="Avslå klage"
+                            title={t('common.avslaa_klage')}
                           >
                             <XCircleIcon />
                           </Button>
@@ -442,7 +442,7 @@ export function AppealProcess({ seasonId, canProcess }: AppealProcessProps) {
                         data-size="sm"
                         type="button"
                         onClick={() => setSelectedApplication(application)}
-                        title="Se detaljer"
+                        title={t('common.se_detaljer')}
                       >
                         <MessageSquareIcon />
                       </Button>
@@ -510,7 +510,7 @@ export function AppealProcess({ seasonId, canProcess }: AppealProcessProps) {
                 <Card style={{ padding: 'var(--ds-spacing-3)', backgroundColor: 'var(--ds-color-neutral-surface-subtle)' }}>
                   <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--ds-spacing-2)' }}>
                     <div>
-                      <span style={{ fontWeight: 'var(--ds-font-weight-semibold)' }}>Organisasjon:</span>{' '}
+                      <span style={{ fontWeight: 'var(--ds-font-weight-semibold)' }}>{t('common.organisasjon')}</span>{' '}
                       {selectedApplication.organizationName}
                     </div>
                     <div>
@@ -518,12 +518,12 @@ export function AppealProcess({ seasonId, canProcess }: AppealProcessProps) {
                       {selectedApplication.listingName}
                     </div>
                     <div>
-                      <span style={{ fontWeight: 'var(--ds-font-weight-semibold)' }}>Tid:</span>{' '}
+                      <span style={{ fontWeight: 'var(--ds-font-weight-semibold)' }}>{t('common.tid')}</span>{' '}
                       {weekdayLabels[selectedApplication.weekday]} {formatTime(selectedApplication.startTime)} – {formatTime(selectedApplication.endTime)}
                     </div>
                     {selectedApplication.rejectionReason && (
                       <div>
-                        <span style={{ fontWeight: 'var(--ds-font-weight-semibold)' }}>Avslagsgrunn:</span>
+                        <span style={{ fontWeight: 'var(--ds-font-weight-semibold)' }}>{t('common.avslagsgrunn')}</span>
                         <div style={{
                           marginTop: 'var(--ds-spacing-1)',
                           padding: 'var(--ds-spacing-2)',
@@ -549,7 +549,7 @@ export function AppealProcess({ seasonId, canProcess }: AppealProcessProps) {
                     id="appeal-reason"
                     value={appealReason}
                     onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => setAppealReason(e.target.value)}
-                    placeholder="Beskriv hvorfor du ønsker å klage på avslaget..."
+                    placeholder={t('common.beskriv_hvorfor_du_onsker')}
                     rows={6}
                     required
                     style={{

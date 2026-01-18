@@ -182,7 +182,7 @@ export function TenantAuditLogPage() {
           <div style={{ flex: 1 }}>
             <Label style={{ display: 'block', marginBottom: 'var(--ds-spacing-2)', fontSize: 'var(--ds-font-size-sm)', fontWeight: 'var(--ds-font-weight-medium)' }}>Type</Label>
             <Select value={typeFilter} onChange={(e) => setTypeFilter(e.target.value as EventType | 'all')} style={{ width: '100%' }}>
-              <option value="all">Alle typer</option>
+              <option value="all">{t('common.alle_typer')}</option>
               <option value="user">Bruker</option>
               <option value="booking">Booking</option>
               <option value="system">System</option>
@@ -199,11 +199,11 @@ export function TenantAuditLogPage() {
             </Select>
           </div>
           <div style={{ flex: 1 }}>
-            <Label style={{ display: 'block', marginBottom: 'var(--ds-spacing-2)', fontSize: 'var(--ds-font-size-sm)', fontWeight: 'var(--ds-font-weight-medium)' }}>Fra dato</Label>
+            <Label style={{ display: 'block', marginBottom: 'var(--ds-spacing-2)', fontSize: 'var(--ds-font-size-sm)', fontWeight: 'var(--ds-font-weight-medium)' }}>{t('common.fra_dato')}</Label>
             <Input type="date" value={dateFrom} onChange={(e) => setDateFrom(e.target.value)} style={{ width: '100%' }} />
           </div>
           <div style={{ flex: 1 }}>
-            <Label style={{ display: 'block', marginBottom: 'var(--ds-spacing-2)', fontSize: 'var(--ds-font-size-sm)', fontWeight: 'var(--ds-font-weight-medium)' }}>Til dato</Label>
+            <Label style={{ display: 'block', marginBottom: 'var(--ds-spacing-2)', fontSize: 'var(--ds-font-size-sm)', fontWeight: 'var(--ds-font-weight-medium)' }}>{t('common.til_dato')}</Label>
             <Input type="date" value={dateTo} onChange={(e) => setDateTo(e.target.value)} style={{ width: '100%' }} />
           </div>
           <Button type="button" variant="primary" data-size="md" style={{ minHeight: '44px' }}>

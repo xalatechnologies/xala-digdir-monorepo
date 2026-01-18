@@ -164,8 +164,8 @@ export function SavedFilters({
   const handleDeleteFilter = useCallback(
     async (filter: SavedFilter) => {
       const confirmed = await confirm({
-        title: 'Slett lagret filter',
-        description: `Er du sikker på at du vil slette "${filter.name}"?`,
+        title: t('common.slett_lagret_filter'),
+        description: `t('common.er_du_sikker_paa')`,
         confirmText: t("ui.delete"),
         cancelText: t("ui.cancel"),
         variant: 'danger',
@@ -422,7 +422,7 @@ export function SavedFilters({
                 </Text>
                 <input
                   type="text"
-                  placeholder="Filternavn (f.eks. 'Ventende bookinger denne uken')"
+                  placeholder={t('common.filternavn_feks')}Ventende bookinger denne uken')"
                   value={newFilterName}
                   onChange={(e) => setNewFilterName(e.target.value)}
                   onKeyDown={(e) => {

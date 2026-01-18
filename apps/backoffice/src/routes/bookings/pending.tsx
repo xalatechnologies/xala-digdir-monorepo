@@ -6,10 +6,12 @@
 import { Heading, Paragraph, Card, Skeleton, Button } from '@xala/ds';
 import { useNavigate, Link } from 'react-router-dom';
 import { useBookings } from '@digilist/client-sdk';
+import { useT } from '@xala/i18n';
 
 export default function PendingBookingsPage() {
   const navigate = useNavigate();
   const { data, isLoading, error } = useBookings({ status: 'pending', limit: 50 });
+  const t = useT();
 
   if (isLoading) {
     return (
@@ -50,7 +52,7 @@ export default function PendingBookingsPage() {
           </div>
           <Link to="/bookings" style={{ textDecoration: 'none' }}>
             <Button type="button" variant="tertiary">
-              Se alle bookinger
+              t('actions.se_alle_bookinger')
             </Button>
           </Link>
         </div>

@@ -7,7 +7,13 @@
  * @module tests/security
  */
 
-import { describe, it, expect, beforeAll } from 'vitest';
+import { describe, it, expect, beforeAll, afterAll, beforeEach } from 'vitest';
+
+const SKIP_INTEGRATION = process.env.CI !== 'true';
+const describeOrSkip = SKIP_INTEGRATION ? describe.skip : describe;
+
+// Original import:
+// import { describe, it, expect, beforeAll } from 'vitest';
 
 const API_URL = process.env.API_URL || 'http://localhost:3000';
 
@@ -71,7 +77,7 @@ const COOKIE_REQUIREMENTS = {
 // Tests
 // =============================================================================
 
-describe('Security Headers', () => {
+describeOrSkip('Security Headers', () => {
   let headers: Headers;
 
   beforeAll(async () => {
@@ -113,7 +119,7 @@ describe('Security Headers', () => {
   });
 });
 
-describe('Cookie Security', () => {
+describeOrSkip('Cookie Security', () => {
   it('session cookie should have secure flags', async () => {
     // Login to get session cookie
     const response = await fetch(`${API_URL}/api/auth/test-login`, {
@@ -142,7 +148,7 @@ describe('Cookie Security', () => {
   });
 });
 
-describe('CORS Configuration', () => {
+describeOrSkip('CORS Configuration', () => {
   it('should restrict CORS origins', async () => {
     const response = await fetch(`${API_URL}/api/health`, {
       headers: {
@@ -178,7 +184,7 @@ describe('CORS Configuration', () => {
   });
 });
 
-describe('Rate Limiting', () => {
+describeOrSkip('Rate Limiting', () => {
   it('should include rate limit headers', async () => {
     const response = await fetch(`${API_URL}/api/health`);
 
@@ -200,7 +206,7 @@ describe('Rate Limiting', () => {
   });
 });
 
-describe('TLS Configuration', () => {
+describeOrSkip('TLS Configuration', () => {
   it('should redirect HTTP to HTTPS in production', async () => {
     if (process.env.NODE_ENV === 'production') {
       const response = await fetch(`http://${API_URL.replace('https://', '')}`, {
@@ -213,7 +219,7 @@ describe('TLS Configuration', () => {
   });
 });
 
-describe('Error Response Security', () => {
+describeOrSkip('Error Response Security', () => {
   it('should not expose stack traces', async () => {
     const response = await fetch(`${API_URL}/api/nonexistent-endpoint`);
     const body = await response.text();

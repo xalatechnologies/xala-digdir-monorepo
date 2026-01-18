@@ -389,7 +389,7 @@ function ConflictCard({
               onClick={onSkip}
               style={{ width: '100%' }}
             >
-              Hopp over denne datoen
+              t('actions.hopp_over_denne_datoen')
             </Button>
           </div>
         </div>
@@ -404,7 +404,7 @@ function ConflictCard({
           onClick={onSkip} // We reuse onSkip to reset, will be handled in parent
           style={{ width: '100%' }}
         >
-          Angre valg
+          t('actions.angre_valg')
         </Button>
       )}
     </Card>

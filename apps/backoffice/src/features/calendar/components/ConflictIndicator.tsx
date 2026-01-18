@@ -36,6 +36,7 @@ export function ConflictIndicator({
   bufferTimeMinutes,
   isBufferConflict = false,
 }: ConflictIndicatorProps) {
+  const t = useT();
   // Translation function available for future localization
   const _t = useT(); // eslint-disable-line @typescript-eslint/no-unused-vars
   if (!conflicts || conflicts.length === 0) {
@@ -57,7 +58,7 @@ export function ConflictIndicator({
   // Different tooltip based on conflict type
   let tooltipContent: string;
   if (isBufferConflict && bufferTimeMinutes) {
-    tooltipContent = `Buffertid konflikt: Krever ${bufferTimeMinutes} min mellomrom. Overlapper med ${conflictNames}${extraCount}`;
+    tooltipContent = `t('common.buffertid_konflikt'): Krever ${bufferTimeMinutes} min mellomrom. Overlapper med ${conflictNames}${extraCount}`;
   } else {
     tooltipContent = `Konflikt: Overlapper med ${conflictNames}${extraCount}`;
   }
@@ -108,7 +109,7 @@ export function ConflictIndicator({
             cursor: 'help',
           }}
           aria-label={isBufferConflict ? 'Buffertid konflikt' : 'Konflikt'}
-          title={isBufferConflict ? 'Booking har buffertid konflikt' : 'Booking har konflikter'}
+          title={isBufferConflict ? 't('common.booking_har_buffertid_konflikt')' : 'Booking har konflikter'}
         >
           <XCircleIcon
             style={{

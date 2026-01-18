@@ -158,8 +158,8 @@ export function RequestsPage() {
 
   const handleApprove = async (id: string) => {
     const confirmed = await confirm({
-      title: 'Godkjenn forespørsel',
-      description: 'Er du sikker på at du vil godkjenne denne forespørselen?',
+      title: t('common.godkjenn_foresporsel'),
+      description: t('common.er_du_sikker_paa'),
       confirmText: 'Godkjenn',
       cancelText: t("ui.cancel"),
       variant: 'primary',
@@ -171,8 +171,8 @@ export function RequestsPage() {
 
   const handleReject = async (id: string) => {
     const confirmed = await confirm({
-      title: 'Avslå forespørsel',
-      description: 'Er du sikker på at du vil avslå denne forespørselen?',
+      title: t('common.avslaa_foresporsel'),
+      description: t('common.er_du_sikker_paa'),
       confirmText: 'Avslå',
       cancelText: t("ui.cancel"),
       variant: 'danger',
@@ -264,7 +264,7 @@ export function RequestsPage() {
             </div>
             <div>
               <Paragraph data-size="sm" style={{ margin: 0, fontWeight: 'var(--ds-font-weight-medium)' }}>
-                Trenger info
+                t('common.trenger_info')
               </Paragraph>
               <Paragraph data-size="xs" style={{ margin: 0, color: 'var(--ds-color-neutral-text-subtle)' }}>
                 Venter på svar
@@ -315,7 +315,7 @@ export function RequestsPage() {
         <div style={{ display: 'flex', gap: 'var(--ds-spacing-3)', alignItems: 'center' }}>
           <div style={{ flex: '1 1 300px', minWidth: '200px' }}>
             <HeaderSearch
-              placeholder="Søk etter søker, organisasjon, lokale..."
+              placeholder={t('common.sok_etter_soker_organisasjon')}
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               onClear={() => setSearchQuery('')}
@@ -342,7 +342,7 @@ export function RequestsPage() {
             </Heading>
             <Paragraph data-size="sm" style={{ color: 'var(--ds-color-neutral-text-subtle)' }}>
               {searchQuery || filter !== 'all'
-                ? 'Prøv å endre søkekriteriene'
+                ? 't('common.prov_aa_endre_sokekriteriene')'
                 : 'Ingen ventende forespørsler å behandle'}
             </Paragraph>
           </div>
@@ -351,7 +351,7 @@ export function RequestsPage() {
             <Table.Head>
               <Table.Row>
                 <Table.HeaderCell style={{ width: '80px' }}>Prioritet</Table.HeaderCell>
-                <Table.HeaderCell>Søker</Table.HeaderCell>
+                <Table.HeaderCell>{t('common.soker')}</Table.HeaderCell>
                 <Table.HeaderCell>Lokale</Table.HeaderCell>
                 <Table.HeaderCell>Tidsrom</Table.HeaderCell>
                 <Table.HeaderCell>Opprettet</Table.HeaderCell>
@@ -429,7 +429,7 @@ export function RequestsPage() {
                         variant="secondary"
                        
                         onClick={() => handleReject(request.id)}
-                        title="Avslå" type="button"
+                        title={t('common.avslaa')} type="button"
                       >
                         <XCircleIcon />
                       </Button>

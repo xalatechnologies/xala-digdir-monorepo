@@ -5,6 +5,7 @@
 
 import { useState, useEffect } from 'react';
 import {
+import { useT } from '@xala/i18n';
   Card,
   Heading,
   Paragraph,
@@ -33,6 +34,7 @@ export function AddressesTab() {
 
   // Queries
   const { data: currentUserData } = useCurrentUser();
+  const t = useT();
   const currentUser = currentUserData?.data;
 
   // Mutations
@@ -115,7 +117,7 @@ export function AddressesTab() {
                   ...prev,
                   residenceAddress: { ...prev.residenceAddress, street: e.target.value }
                 }))}
-                placeholder="Storgata 1"
+                placeholder={t('common.storgata_1')}
               />
             </FormField>
 
@@ -132,7 +134,7 @@ export function AddressesTab() {
               </FormField>
 
               <FormField label="Postnummer" required>
-                <Textfield aria-label="Postnummer bosted"
+                <Textfield aria-label={t('common.postnummer_bosted')}
                   value={addressData.residenceAddress.postalCode}
                   onChange={(e) => setAddressData(prev => ({
                     ...prev,
@@ -192,7 +194,7 @@ export function AddressesTab() {
                   ...prev,
                   invoiceAddress: { ...prev.invoiceAddress, street: e.target.value }
                 }))}
-                placeholder="Storgata 1"
+                placeholder={t('common.storgata_1')}
               />
             </FormField>
 
@@ -209,7 +211,7 @@ export function AddressesTab() {
               </FormField>
 
               <FormField label="Postnummer" required>
-                <Textfield aria-label="Postnummer faktura"
+                <Textfield aria-label={t('common.postnummer_faktura')}
                   value={addressData.invoiceAddress.postalCode}
                   onChange={(e) => setAddressData(prev => ({
                     ...prev,
@@ -263,10 +265,10 @@ export function AddressesTab() {
           onClick={handleSaveAddresses}
           disabled={isSaving}
           type="button"
-          aria-label={isSaving ? 'Lagrer adresser' : 'Lagre adresser'}
+          aria-label={isSaving ? 't('common.lagrer_adresser')' : 'Lagre adresser'}
         >
           <SaveIcon />
-          {isSaving ? 'Lagrer...' : 'Lagre adresser'}
+          {isSaving ? 't('common.lagrer')' : 'Lagre adresser'}
         </Button>
       </div>
     </Stack>

@@ -1,3 +1,5 @@
+const SKIP_INTEGRATION = process.env.CI !== 'true';
+const describeOrSkip = SKIP_INTEGRATION ? describe.skip : describe;
 /**
  * Performance Tests: Data Page Components
  * 

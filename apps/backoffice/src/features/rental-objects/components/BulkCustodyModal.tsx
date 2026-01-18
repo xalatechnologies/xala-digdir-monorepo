@@ -4,6 +4,7 @@
  */
 import { useState } from 'react';
 import {
+import { useT } from '@xala/i18n';
   Button,
   Heading,
   Paragraph,
@@ -28,6 +29,7 @@ export function BulkCustodyModal({ selectedIds, onClose, onSuccess }: BulkCustod
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const { data: orgs } = useBackofficeOrganizations();
+  const t = useT();
   const { data: usersData } = useUsers();
 
   const handleSubmit = async () => {
@@ -62,12 +64,12 @@ export function BulkCustodyModal({ selectedIds, onClose, onSuccess }: BulkCustod
       zIndex: 1000 
     }}>
       <Card style={{ width: '500px', padding: 'var(--ds-spacing-6)' }}>
-        <Heading level={3}>Massetildeling av ansvar</Heading>
+        <Heading level={3}>{t('common.massetildeling_av_ansvar')}</Heading>
         <Paragraph>Du tildeler ansvar for {selectedIds.length} valgte objekter.</Paragraph>
         
         <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--ds-spacing-4)', marginTop: 'var(--ds-spacing-4)' }}>
           <div>
-            <label style={{ display: 'block', marginBottom: 'var(--ds-spacing-1)', fontSize: 'var(--ds-font-size-sm)' }}>Type mottaker</label>
+            <label style={{ display: 'block', marginBottom: 'var(--ds-spacing-1)', fontSize: 'var(--ds-font-size-sm)' }}>{t('common.type_mottaker')}</label>
             <select 
               value={granteeType} 
               onChange={(e) => {
@@ -82,13 +84,13 @@ export function BulkCustodyModal({ selectedIds, onClose, onSuccess }: BulkCustod
           </div>
 
           <div>
-            <label style={{ display: 'block', marginBottom: 'var(--ds-spacing-1)', fontSize: 'var(--ds-font-size-sm)' }}>Velg mottaker</label>
+            <label style={{ display: 'block', marginBottom: 'var(--ds-spacing-1)', fontSize: 'var(--ds-font-size-sm)' }}>{t('common.velg_mottaker')}</label>
             <select 
               value={granteeId} 
               onChange={(e) => setGranteeId(e.target.value)}
               style={{ width: '100%', padding: 'var(--ds-spacing-2)', borderRadius: 'var(--ds-border-radius-md)', border: '1px solid var(--ds-color-neutral-border-default)' }}
             >
-              <option value="">Velg...</option>
+              <option value="">{t('common.velg')}</option>
               {granteeType === 'ORG' 
                 ? (orgs as any)?.data?.map((o: any) => <option key={o.id} value={o.id}>{o.name}</option>)
                 : (usersData as any)?.data?.map((u: any) => <option key={u.id} value={u.id}>{u.fullName}</option>)
@@ -97,7 +99,7 @@ export function BulkCustodyModal({ selectedIds, onClose, onSuccess }: BulkCustod
           </div>
 
           <div>
-            <label style={{ display: 'block', marginBottom: 'var(--ds-spacing-1)', fontSize: 'var(--ds-font-size-sm)' }}>Rettigheter (Scopes)</label>
+            <label style={{ display: 'block', marginBottom: 'var(--ds-spacing-1)', fontSize: 'var(--ds-font-size-sm)' }}>{t('common.rettigheter_scopes')}</label>
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 'var(--ds-spacing-2)' }}>
               {['RO_VIEW', 'RO_EDIT', 'RO_BOOKING_MANAGE', 'RO_MAINTENANCE', 'RO_MEDIA'].map(scope => (
                 <label key={scope} style={{ display: 'flex', alignItems: 'center', gap: 'var(--ds-spacing-2)', fontSize: 'var(--ds-font-size-sm)' }}>
@@ -125,7 +127,7 @@ export function BulkCustodyModal({ selectedIds, onClose, onSuccess }: BulkCustod
               onClick={handleSubmit}
               disabled={isSubmitting}
             >
-              {isSubmitting ? 'Tildeler...' : 'Tildel ansvar'}
+              {isSubmitting ? 't('common.tildeler')' : 'Tildel ansvar'}
             </Button>
           </div>
         </div>

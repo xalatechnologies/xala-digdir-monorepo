@@ -21,6 +21,7 @@ export function BookingTab() {
   // Translation function available for future localization
   const _t = useT(); // eslint-disable-line @typescript-eslint/no-unused-vars
   const {
+  const t = useT();
     bookingData,
     updateField,
     saveBookingSettings,
@@ -42,7 +43,7 @@ export function BookingTab() {
         </div>
 
         <Stack spacing={4}>
-          <FormField label="Automatisk bekreftelse">
+          <FormField label={t('common.automatisk_bekreftelse')}>
             <Switch
               checked={bookingData.autoConfirm}
               onChange={(checked) => updateField('autoConfirm', checked)}
@@ -52,7 +53,7 @@ export function BookingTab() {
           </FormField>
 
           {shouldShowApprovalField && (
-            <FormField label="Krev godkjenning">
+            <FormField label={t('common.krev_godkjenning')}>
               <Switch
                 checked={bookingData.requireApproval}
                 onChange={(checked) => updateField('requireApproval', checked)}
@@ -62,7 +63,7 @@ export function BookingTab() {
             </FormField>
           )}
 
-          <FormField label="Tillat kansellering">
+          <FormField label={t('common.tillat_kansellering')}>
             <Switch
               checked={bookingData.allowCancellation}
               onChange={(checked) => updateField('allowCancellation', checked)}
@@ -74,7 +75,7 @@ export function BookingTab() {
           {shouldShowCancellationDeadline && (
             <FormField
               label="Kanselleringsfrist"
-              description="Antall timer før bookingstart kansellering er tillatt"
+              description={t('common.antall_timer_for_bookingstart')}
             >
               <Textfield
                 aria-label="Kanselleringsfrist"
@@ -88,11 +89,11 @@ export function BookingTab() {
           )}
 
           <FormField
-            label="Maksimal forhåndsbooking"
-            description="Hvor langt frem i tid kan man booke?"
+            label={t('common.maksimal_forhaandsbooking')}
+            description={t('common.hvor_langt_frem_i')}
           >
             <Textfield
-              aria-label="Maksimal forhåndsbooking"
+              aria-label={t('common.maksimal_forhaandsbooking')}
               value={bookingData.maxAdvanceBookingDays.toString()}
               onChange={(e) => updateField('maxAdvanceBookingDays', parseInt(e.target.value) || 0)}
               type="number"
@@ -102,11 +103,11 @@ export function BookingTab() {
           </FormField>
 
           <FormField
-            label="Minimum forhåndstid"
-            description="Hvor kort tid før kan man booke?"
+            label={t('common.minimum_forhaandstid')}
+            description={t('common.hvor_kort_tid_for')}
           >
             <Textfield
-              aria-label="Minimum forhåndstid"
+              aria-label={t('common.minimum_forhaandstid')}
               value={bookingData.minAdvanceBookingHours.toString()}
               onChange={(e) => updateField('minAdvanceBookingHours', parseInt(e.target.value) || 0)}
               type="number"
@@ -116,11 +117,11 @@ export function BookingTab() {
           </FormField>
 
           <FormField
-            label="Buffertid mellom bookinger"
-            description="Automatisk pause mellom påfølgende bookinger"
+            label={t('common.buffertid_mellom_bookinger')}
+            description={t('common.automatisk_pause_mellom_paafolgende')}
           >
             <Textfield
-              aria-label="Buffertid mellom bookinger"
+              aria-label={t('common.buffertid_mellom_bookinger')}
               value={bookingData.bufferTimeMinutes.toString()}
               onChange={(e) => updateField('bufferTimeMinutes', parseInt(e.target.value) || 0)}
               type="number"
@@ -131,9 +132,9 @@ export function BookingTab() {
         </Stack>
 
         <div style={{ paddingTop: 'var(--ds-spacing-3)', borderTop: '1px solid var(--ds-color-neutral-border-subtle)' }}>
-          <Button onClick={saveBookingSettings} disabled={isSaving} type="button" aria-label="Lagre endringer">
+          <Button onClick={saveBookingSettings} disabled={isSaving} type="button" aria-label={t('common.lagre_endringer')}>
             <SaveIcon />
-            {isSaving ? 'Lagrer...' : 'Lagre endringer'}
+            {isSaving ? 't('common.lagrer')' : 'Lagre endringer'}
           </Button>
         </div>
       </Stack>

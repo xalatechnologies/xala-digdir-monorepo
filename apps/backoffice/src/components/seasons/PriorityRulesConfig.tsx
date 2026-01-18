@@ -100,9 +100,9 @@ interface PriorityRulesConfigProps {
 const ruleTypeLabels: Record<RuleType, string> = {
   youth_priority: 'Ungdomsprioritet',
   senior_priority: 'Seniorprioritet',
-  local_priority: 'Lokal prioritet',
-  regional_priority: 'Regional prioritet',
-  custom: 'Tilpasset regel',
+  local_priority: 't('common.lokal_prioritet')',
+  regional_priority: 't('common.regional_prioritet')',
+  custom: 't('common.tilpasset_regel')',
 };
 
 const ruleTypeDescriptions: Record<RuleType, string> = {
@@ -234,7 +234,7 @@ export function PriorityRulesConfig({ seasonId, canEdit }: PriorityRulesConfigPr
   };
 
   const handleDelete = async (ruleId: string) => {
-    if (confirm('Er du sikker på at du vil slette denne prioriteringsregelen?')) {
+    if (confirm('t('common.er_du_sikker_paa')')) {
       await deleteMutation.mutateAsync(ruleId);
     }
   };
@@ -374,7 +374,7 @@ export function PriorityRulesConfig({ seasonId, canEdit }: PriorityRulesConfigPr
                           <button
                             type="button"
                             onClick={() => handleChangePriority(rule, 'up')}
-                            aria-label="Øk prioritet"
+                            aria-label={t('common.ok_prioritet')}
                             style={{ background: 'none', border: 'none', cursor: 'pointer', padding: '2px', display: 'flex' }}
                           >
                             <ChevronUpIcon />
@@ -383,7 +383,7 @@ export function PriorityRulesConfig({ seasonId, canEdit }: PriorityRulesConfigPr
                           <button
                             type="button"
                             onClick={() => handleChangePriority(rule, 'down')}
-                            aria-label="Senk prioritet"
+                            aria-label={t('common.senk_prioritet')}
                             style={{ background: 'none', border: 'none', cursor: 'pointer', padding: '2px', display: 'flex' }}
                           >
                             <ChevronDownIcon />
@@ -467,7 +467,7 @@ export function PriorityRulesConfig({ seasonId, canEdit }: PriorityRulesConfigPr
           >
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 'var(--ds-spacing-4)' }}>
               <Heading level={2} data-size="sm">
-                {editingRule ? 'Rediger prioriteringsregel' : 'Ny prioriteringsregel'}
+                {editingRule ? 't('common.rediger_prioriteringsregel')' : 'Ny prioriteringsregel'}
               </Heading>
               {/* eslint-disable-next-line digdir/prefer-ds-components -- Close icon button for dialog */}
               <button
@@ -485,7 +485,7 @@ export function PriorityRulesConfig({ seasonId, canEdit }: PriorityRulesConfigPr
                 label="Navn"
                 value={formData.name}
                 onChange={(e: ChangeEvent<HTMLInputElement>) => setFormData({ ...formData, name: e.target.value })}
-                placeholder="F.eks. 'Ungdomsprioritet 2024'"
+                placeholder={t('common.feks')}Ungdomsprioritet 2024'"
               />
 
               {!editingRule && (
@@ -516,9 +516,9 @@ export function PriorityRulesConfig({ seasonId, canEdit }: PriorityRulesConfigPr
                   >
                     <option value="youth_priority">Ungdomsprioritet</option>
                     <option value="senior_priority">Seniorprioritet</option>
-                    <option value="local_priority">Lokal prioritet</option>
-                    <option value="regional_priority">Regional prioritet</option>
-                    <option value="custom">Tilpasset regel</option>
+                    <option value="local_priority">{t('common.lokal_prioritet')}</option>
+                    <option value="regional_priority">{t('common.regional_prioritet')}</option>
+                    <option value="custom">{t('common.tilpasset_regel')}</option>
                   </select>
                 </div>
               )}
@@ -528,7 +528,7 @@ export function PriorityRulesConfig({ seasonId, canEdit }: PriorityRulesConfigPr
                 type="number"
                 value={String(formData.priority)}
                 onChange={(e: ChangeEvent<HTMLInputElement>) => setFormData({ ...formData, priority: parseInt(e.target.value) || 0 })}
-                description="Høyere verdi gir høyere prioritet"
+                description={t('common.hoyere_verdi_gir_hoyere')}
               />
 
               {(formData.ruleType === 'youth_priority' || formData.ruleType === 'senior_priority') && (
@@ -549,7 +549,7 @@ export function PriorityRulesConfig({ seasonId, canEdit }: PriorityRulesConfigPr
                       fontSize: 'var(--ds-font-size-md)',
                     }}
                   >
-                    <option value="">Velg aldersgruppe</option>
+                    <option value="">{t('common.velg_aldersgruppe')}</option>
                     <option value="youth">Ungdom</option>
                     <option value="senior">Senior</option>
                     <option value="adult">Voksen</option>
@@ -575,7 +575,7 @@ export function PriorityRulesConfig({ seasonId, canEdit }: PriorityRulesConfigPr
                       fontSize: 'var(--ds-font-size-md)',
                     }}
                   >
-                    <option value="">Velg lokalitet</option>
+                    <option value="">{t('common.velg_lokalitet')}</option>
                     <option value="local">Lokal</option>
                     <option value="regional">Regional</option>
                     <option value="national">Nasjonal</option>
@@ -598,7 +598,7 @@ export function PriorityRulesConfig({ seasonId, canEdit }: PriorityRulesConfigPr
                 disabled={!formData.name || formData.priority < 0}
                 type="button"
               >
-                {editingRule ? 'Lagre endringer' : 'Opprett regel'}
+                {editingRule ? 't('common.lagre_endringer')' : 'Opprett regel'}
               </Button>
             </div>
           </Card>

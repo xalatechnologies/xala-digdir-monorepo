@@ -214,7 +214,7 @@ export function TenantCreatePage() {
               onChange={(e) => handleSlugChange(e.target.value)}
               error={errors.slug}
               required
-              placeholder="eksempel-kommune"
+              placeholder={t('common.eksempelkommune')}
               description={t('saasAdmin.tenantCreate.slugDescription', { defaultValue: 'Unik identifikator (kun små bokstaver, tall og bindestrek)' })}
             />
 
@@ -223,7 +223,7 @@ export function TenantCreatePage() {
               value={formData.domain}
               onChange={(e) => handleDomainChange(e.target.value)}
               error={errors.domain}
-              placeholder="booking.eksempel.no"
+              placeholder={t('common.bookingeksempelno')}
               description={t('saasAdmin.tenantCreate.domainDescription', { defaultValue: 'Valgfritt egendefinert domene' })}
             />
           </Stack>

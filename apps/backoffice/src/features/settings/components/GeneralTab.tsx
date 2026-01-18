@@ -21,6 +21,7 @@ export function GeneralTab() {
   // Translation function available for future localization
   const _t = useT(); // eslint-disable-line @typescript-eslint/no-unused-vars
   const {
+  const t = useT();
     generalData,
     updateField,
     saveGeneralSettings,
@@ -40,22 +41,22 @@ export function GeneralTab() {
         </div>
 
         <Stack spacing={4}>
-          <FormField label="Systemnavn" description="Navn på systemet som vises til brukere">
+          <FormField label="Systemnavn" description={t('common.navn_paa_systemet_som')}>
             <Textfield
               aria-label="Systemnavn"
               value={generalData.name}
               onChange={(e) => updateField('name', e.target.value)}
-              placeholder="Digilist Booking"
+              placeholder={t('common.digilist_booking')}
             />
           </FormField>
 
-          <FormField label="Språk">
+          <FormField label={t('common.spraak')}>
             <Select
               value={generalData.locale}
               onChange={(e) => updateField('locale', e.target.value as 'nb' | 'nn' | 'en')}
             >
-              <option value="nb">Norsk bokmål</option>
-              <option value="nn">Norsk nynorsk</option>
+              <option value="nb">{t('common.norsk_bokmaal')}</option>
+              <option value="nn">{t('common.norsk_nynorsk')}</option>
               <option value="en">English</option>
             </Select>
           </FormField>
@@ -76,9 +77,9 @@ export function GeneralTab() {
               value={generalData.currency}
               onChange={(e) => updateField('currency', e.target.value as 'NOK' | 'EUR' | 'USD')}
             >
-              <option value="NOK">Norske kroner (NOK)</option>
-              <option value="EUR">Euro (EUR)</option>
-              <option value="USD">US Dollar (USD)</option>
+              <option value="NOK">{t('common.norske_kroner_nok')}</option>
+              <option value="EUR">{t('common.euro_eur')}</option>
+              <option value="USD">{t('common.us_dollar_usd')}</option>
             </Select>
           </FormField>
 
@@ -99,17 +100,17 @@ export function GeneralTab() {
                 value={generalData.timeFormat}
                 onChange={(e) => updateField('timeFormat', e.target.value as '24h' | '12h')}
               >
-                <option value="24h">24-timers (13:00)</option>
-                <option value="12h">12-timers (1:00 PM)</option>
+                <option value="24h">{t('common.24timers_1300')}</option>
+                <option value="12h">{t('common.12timers_100_pm')}</option>
               </Select>
             </FormField>
           </div>
         </Stack>
 
         <div style={{ paddingTop: 'var(--ds-spacing-3)', borderTop: '1px solid var(--ds-color-neutral-border-subtle)' }}>
-          <Button onClick={saveGeneralSettings} disabled={isSaving} type="button" aria-label="Lagre endringer">
+          <Button onClick={saveGeneralSettings} disabled={isSaving} type="button" aria-label={t('common.lagre_endringer')}>
             <SaveIcon />
-            {isSaving ? 'Lagrer...' : 'Lagre endringer'}
+            {isSaving ? 't('common.lagrer')' : 'Lagre endringer'}
           </Button>
         </div>
       </Stack>

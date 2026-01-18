@@ -3,6 +3,7 @@
  * Displays audit history for a specific rental object.
  */
 import { 
+import { useT } from '@xala/i18n';
   Heading, 
   Paragraph, 
   Card, 
@@ -15,6 +16,7 @@ import { useAuditLog } from '@digilist/client-sdk';
 
 export function RentalObjectAuditTab({ rentalObjectId }: { rentalObjectId: string }) {
   const { data: auditLogs, isLoading } = useAuditLog({ 
+  const t = useT();
     resourceId: rentalObjectId,
     limit: 50 
   });
@@ -65,7 +67,7 @@ export function RentalObjectAuditTab({ rentalObjectId }: { rentalObjectId: strin
             ) : (
               <tr>
                 <td colSpan={4} style={{ padding: 'var(--ds-spacing-8)', textAlign: 'center', color: 'var(--ds-color-neutral-text-subtle)' }}>
-                  Ingen loggføringer funnet for dette objektet.
+                  t('common.ingen_loggforinger_funnet_for')
                 </td>
               </tr>
             )}

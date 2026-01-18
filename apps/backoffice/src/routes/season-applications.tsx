@@ -73,7 +73,7 @@ function StatusBadge({ status }: { status: ApplicationStatus }) {
   };
   const labels: Record<ApplicationStatus, string> = {
     pending: t("status.pending"),
-    under_review: 'Under behandling',
+    under_review: 't('common.under_behandling')',
     approved: 'Godkjent',
     rejected: 'Avslått',
     waitlist: 'Venteliste',
@@ -109,8 +109,8 @@ export function SeasonApplicationsReviewPage() {
 
   const handleApprove = async (_id: string) => {
     const confirmed = await confirm({
-      title: 'Godkjenn søknad',
-      description: 'Er du sikker på at du vil godkjenne denne sesongsøknaden?',
+      title: t('common.godkjenn_soknad'),
+      description: t('common.er_du_sikker_paa'),
       confirmText: 'Godkjenn',
       cancelText: t("ui.cancel"),
       variant: 'success',
@@ -123,8 +123,8 @@ export function SeasonApplicationsReviewPage() {
 
   const handleReject = async (_id: string) => {
     const confirmed = await confirm({
-      title: 'Avslå søknad',
-      description: 'Er du sikker på at du vil avslå denne sesongsøknaden?',
+      title: t('common.avslaa_soknad'),
+      description: t('common.er_du_sikker_paa'),
       confirmText: 'Avslå',
       cancelText: t("ui.cancel"),
       variant: 'danger',
@@ -277,7 +277,7 @@ export function SeasonApplicationsReviewPage() {
         onClose={() => setSelectedApp(null)}
         position="right"
         size="lg"
-        aria-label="Søknadsdetaljer"
+        aria-label={t('common.soknadsdetaljer')}
       >
         {selectedApp && (
           <div style={{ padding: 'var(--ds-spacing-6)', display: 'flex', flexDirection: 'column', gap: 'var(--ds-spacing-5)' }}>

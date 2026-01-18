@@ -11,6 +11,7 @@
 import { useState, useMemo, useCallback } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import {
+import { useT } from '@xala/i18n';
   Card,
   Heading,
   Paragraph,
@@ -64,7 +65,7 @@ const permissionLabels: Record<RentalObjectPermission, string> = {
   [RentalObjectPermission.RO_BOOK_CANCEL]: 'Kanseller',
   [RentalObjectPermission.RO_ASSIGN_CASE_HANDLERS]: 'Tildel saksbehandlere',
   [RentalObjectPermission.RO_ASSIGN_PERMISSIONS]: 'Tildel rettigheter',
-  [RentalObjectPermission.RO_MANAGE_MEMBERS]: 'Administrer medlemmer',
+  [RentalObjectPermission.RO_MANAGE_MEMBERS]: 't('actions.administrer_medlemmer')',
 };
 
 // Permissions that can be assigned to regular members
@@ -77,6 +78,7 @@ const memberPermissions: RentalObjectPermission[] = [
 
 export function PermissionAssignmentPage() {
   const { id } = useParams<{ id: string }>();
+  const t = useT();
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedRentalObject, setSelectedRentalObject] = useState<string | null>(null);
 
@@ -400,7 +402,7 @@ export function PermissionAssignmentPage() {
         >
           <div style={{ flex: '1 1 300px', minWidth: '200px' }}>
             <HeaderSearch
-              placeholder="Søk etter medlem..."
+              placeholder={t('common.sok_etter_medlem')}
               value={searchQuery}
               onSearchChange={(value) => setSearchQuery(value)}
             />
@@ -461,7 +463,7 @@ export function PermissionAssignmentPage() {
                 style={{ marginTop: 'var(--ds-spacing-4)' }}
                 type="button"
               >
-                Gå til tilgangstildelinger
+                t('actions.gaa_til_tilgangstildelinger')
               </Button>
             </Link>
           </div>

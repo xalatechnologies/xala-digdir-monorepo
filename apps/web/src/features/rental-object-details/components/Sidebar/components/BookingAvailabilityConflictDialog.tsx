@@ -331,7 +331,7 @@ export function BookingAvailabilityConflictDialog({
             onClick={onChangeTime}
             style={{ flex: 1 }}
           >
-            Endre tidspunkt
+            t('actions.endre_tidspunkt')
           </Button>
           <Button
             type="button"
@@ -342,7 +342,7 @@ export function BookingAvailabilityConflictDialog({
             disabled={availableSlots.length === 0}
             style={{ flex: 1 }}
           >
-            Book valgte tidspunkt
+            t('actions.book_valgte_tidspunkt')
           </Button>
         </div>
       </div>

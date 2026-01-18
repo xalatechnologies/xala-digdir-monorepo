@@ -7,6 +7,7 @@
 
 import { realtimeClient } from '@digilist/client-sdk/realtime';
 import type { RealtimeEvent } from '@digilist/client-sdk/realtime';
+import { useT } from '@xala/i18n';
 
 export interface SimulateNotificationOptions {
   type?: 'booking_confirmed' | 'booking_reminder_24h' | 'booking_reminder_1h' | 'booking_cancelled' | 'booking_modified';
@@ -23,9 +24,10 @@ export interface SimulateNotificationOptions {
  */
 export function simulateNotificationEvent(options: SimulateNotificationOptions = {}) {
   const {
+  const t = useT();
     type = 'booking_confirmed',
     title = 'Test Notification',
-    message = 'This is a test notification',
+    message={t('common.this_is_a_test')},
     priority = 'medium',
     bookingId = 'test-booking-123',
     listingId = 'test-listing-456',
@@ -68,8 +70,8 @@ export function simulateNotificationEvent(options: SimulateNotificationOptions =
 export function simulateBookingConfirmation() {
   return simulateNotificationEvent({
     type: 'booking_confirmed',
-    title: 'Booking bekreftet',
-    message: 'Din booking er bekreftet for møterom Alpha, 15. januar kl. 10:00',
+    title: t('common.booking_bekreftet'),
+    message: t('common.din_booking_er_bekreftet'),
     priority: 'high',
   });
 }
@@ -80,8 +82,8 @@ export function simulateBookingConfirmation() {
 export function simulateBookingReminder24h() {
   return simulateNotificationEvent({
     type: 'booking_reminder_24h',
-    title: 'Påminnelse: Booking i morgen',
-    message: 'Du har en booking i morgen kl. 10:00',
+    title: t('common.paaminnelse_booking_i_morgen'),
+    message: t('common.du_har_en_booking'),
     priority: 'medium',
   });
 }
@@ -92,8 +94,8 @@ export function simulateBookingReminder24h() {
 export function simulateBookingReminder1h() {
   return simulateNotificationEvent({
     type: 'booking_reminder_1h',
-    title: 'Påminnelse: Booking om 1 time',
-    message: 'Du har en booking om 1 time',
+    title: t('common.paaminnelse_booking_om_1'),
+    message: t('common.du_har_en_booking'),
     priority: 'urgent',
   });
 }
@@ -104,8 +106,8 @@ export function simulateBookingReminder1h() {
 export function simulateBookingCancellation() {
   return simulateNotificationEvent({
     type: 'booking_cancelled',
-    title: 'Booking kansellert',
-    message: 'Din booking for møterom Alpha er kansellert',
+    title: t('common.booking_kansellert'),
+    message: t('common.din_booking_for_moterom'),
     priority: 'high',
   });
 }
@@ -116,8 +118,8 @@ export function simulateBookingCancellation() {
 export function simulateBookingModification() {
   return simulateNotificationEvent({
     type: 'booking_modified',
-    title: 'Booking endret',
-    message: 'Din booking har blitt endret. Sjekk detaljene.',
+    title: t('common.booking_endret'),
+    message: t('common.din_booking_har_blitt'),
     priority: 'medium',
   });
 }

@@ -21,6 +21,7 @@ export function NotificationsTab() {
   // Translation function available for future localization
   const _t = useT(); // eslint-disable-line @typescript-eslint/no-unused-vars
   const {
+  const t = useT();
     notificationData,
     updateField,
     saveNotificationSettings,
@@ -41,7 +42,7 @@ export function NotificationsTab() {
         </div>
 
         <Stack spacing={4}>
-          <FormField label="E-postvarsler">
+          <FormField label={t('common.epostvarsler')}>
             <Switch
               checked={notificationData.emailEnabled}
               onChange={(checked) => updateField('emailEnabled', checked)}
@@ -50,7 +51,7 @@ export function NotificationsTab() {
             </Switch>
           </FormField>
 
-          <FormField label="SMS-varsler">
+          <FormField label={t('common.smsvarsler')}>
             <Switch
               checked={notificationData.smsEnabled}
               onChange={(checked) => updateField('smsEnabled', checked)}
@@ -59,7 +60,7 @@ export function NotificationsTab() {
             </Switch>
           </FormField>
 
-          <FormField label="Push-varsler">
+          <FormField label={t('common.pushvarsler')}>
             <Switch
               checked={notificationData.pushEnabled}
               onChange={(checked) => updateField('pushEnabled', checked)}
@@ -88,7 +89,7 @@ export function NotificationsTab() {
                 </Switch>
               </FormField>
 
-              <FormField label="Booking-påminnelse">
+              <FormField label={t('common.bookingpaaminnelse')}>
                 <Switch
                   checked={notificationData.bookingReminder}
                   onChange={(checked) => updateField('bookingReminder', checked)}
@@ -99,11 +100,11 @@ export function NotificationsTab() {
 
               {shouldShowReminderHours && (
                 <FormField
-                  label="Påminnelsestidspunkt"
-                  description="Hvor lenge før booking skal påminnelse sendes?"
+                  label={t('common.paaminnelsestidspunkt')}
+                  description={t('common.hvor_lenge_for_booking')}
                 >
                   <Textfield
-                    aria-label="Påminnelsestidspunkt"
+                    aria-label={t('common.paaminnelsestidspunkt')}
                     value={notificationData.reminderHoursBefore.toString()}
                     onChange={(e) => updateField('reminderHoursBefore', parseInt(e.target.value) || 24)}
                     type="number"
@@ -117,9 +118,9 @@ export function NotificationsTab() {
         </Stack>
 
         <div style={{ paddingTop: 'var(--ds-spacing-3)', borderTop: '1px solid var(--ds-color-neutral-border-subtle)' }}>
-          <Button onClick={saveNotificationSettings} disabled={isSaving} type="button" aria-label="Lagre endringer">
+          <Button onClick={saveNotificationSettings} disabled={isSaving} type="button" aria-label={t('common.lagre_endringer')}>
             <SaveIcon />
-            {isSaving ? 'Lagrer...' : 'Lagre endringer'}
+            {isSaving ? 't('common.lagrer')' : 'Lagre endringer'}
           </Button>
         </div>
       </Stack>

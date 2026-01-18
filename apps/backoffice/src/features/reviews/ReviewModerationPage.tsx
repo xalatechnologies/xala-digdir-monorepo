@@ -21,7 +21,7 @@ const STATUS_OPTIONS = [
   { id: 'all', label: 'Alle' },
   { id: 'pending', label: t("status.pending") },
   { id: 'approved', label: 'Godkjent' },
-  { id: 'rejected', label: 'Avslått' },
+  { id: 'rejected', label: t('common.avslaatt') },
 ] as const;
 
 export function ReviewModerationPage() {
@@ -34,6 +34,7 @@ export function ReviewModerationPage() {
 
   // Build query params based on status filter
   const reviewParams = useMemo(() => {
+  const t = useT();
     const params: { status?: ReviewStatus } = {};
     if (statusFilter !== 'all') {
       params.status = statusFilter as ReviewStatus;
@@ -159,7 +160,7 @@ export function ReviewModerationPage() {
       <div style={{ display: 'flex', gap: 'var(--ds-spacing-3)', flexWrap: 'wrap', alignItems: 'center' }}>
         <div style={{ flex: '1 1 300px', minWidth: '200px' }}>
           <HeaderSearch
-            placeholder="Søk etter anmeldelse, objekt, bruker..."
+            placeholder={t('common.sok_etter_anmeldelse_objekt')}
             value={searchQuery}
             onChange={(e: React.ChangeEvent<HTMLInputElement>) => setSearchQuery(e.target.value)}
             onClear={() => setSearchQuery('')}
@@ -185,7 +186,7 @@ export function ReviewModerationPage() {
               padding: 'var(--ds-spacing-10)',
             }}
           >
-            <Spinner aria-label="Laster anmeldelser..." />
+            <Spinner aria-label={t('common.laster_anmeldelser')} />
           </div>
         ) : (
           <ReviewModerationTable

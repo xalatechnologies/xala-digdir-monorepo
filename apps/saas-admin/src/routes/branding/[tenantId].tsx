@@ -33,12 +33,12 @@ const DS_TOKENS = {
 
 // Font options
 const FONT_OPTIONS = [
-  { value: 'Inter', label: 'Inter (Standard)' },
+  { value: 'Inter', label: t('common.inter_standard') },
   { value: 'Roboto', label: 'Roboto' },
-  { value: 'Open Sans', label: 'Open Sans' },
+  { value: 'Open Sans', label: t('common.open_sans') },
   { value: 'Lato', label: 'Lato' },
   { value: 'Poppins', label: 'Poppins' },
-  { value: 'Source Sans Pro', label: 'Source Sans Pro' },
+  { value: 'Source Sans Pro', label: t('common.source_sans_pro') },
 ];
 
 // Default branding values
@@ -105,7 +105,7 @@ export function BrandingEditorPage() {
       setHasChanges(false);
       // Show success toast
     } catch (error) {
-      console.error('Failed to save branding:', error);
+      console.error('t('validation.failed_to_save_branding')', error);
     } finally {
       setIsSaving(false);
     }

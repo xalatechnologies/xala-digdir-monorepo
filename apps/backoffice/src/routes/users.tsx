@@ -85,7 +85,7 @@ export function UsersPage() {
   };
 
   const handleDeactivate = async (id: string) => {
-    if (confirm('Er du sikker på at du vil deaktivere denne brukeren?')) {
+    if (confirm('t('common.er_du_sikker_paa')')) {
       await deactivateUserMutation.mutateAsync(id);
     }
   };
@@ -124,7 +124,7 @@ export function UsersPage() {
         <div style={{ display: 'flex', gap: 'var(--ds-spacing-3)', flexWrap: 'wrap', alignItems: 'center' }}>
           <div style={{ flex: '1 1 300px', minWidth: '200px' }}>
             <HeaderSearch
-              placeholder="Søk etter bruker..."
+              placeholder={t('common.sok_etter_bruker')}
               value={searchQuery}
               onSearchChange={(value) => setSearchQuery(value)}
             />
@@ -189,7 +189,7 @@ export function UsersPage() {
             </Heading>
             <Paragraph data-size="sm" style={{ color: 'var(--ds-color-neutral-text-subtle)' }}>
               {searchQuery || roleFilter !== 'all' || statusFilter !== 'all'
-                ? 'Prøv å endre søkekriteriene'
+                ? 't('common.prov_aa_endre_sokekriteriene')'
                 : 'Inviter din første bruker for å komme i gang'}
             </Paragraph>
           </div>
@@ -202,7 +202,7 @@ export function UsersPage() {
                 <Table.HeaderCell>Telefon</Table.HeaderCell>
                 <Table.HeaderCell>Rolle</Table.HeaderCell>
                 <Table.HeaderCell>Status</Table.HeaderCell>
-                <Table.HeaderCell>Sist innlogget</Table.HeaderCell>
+                <Table.HeaderCell>{t('common.sist_innlogget')}</Table.HeaderCell>
                 <Table.HeaderCell style={{ width: '80px' }}>Handlinger</Table.HeaderCell>
               </Table.Row>
             </Table.Head>

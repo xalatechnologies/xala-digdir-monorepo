@@ -141,36 +141,9 @@ export function validateSeedData(data: any): { valid: boolean; errors: string[] 
 
   // Validate rental objects structure
   if (data.rental_objects && Array.isArray(data.rental_objects)) {
+  const t = useT();
     data.rental_objects.forEach((obj: any, index: number) => {
-      if (!obj.id) errors.push(`Rental object ${index}: Missing ID`);
-      if (!obj.name) errors.push(`Rental object ${index}: Missing name`);
-      if (!obj.category_key) errors.push(`Rental object ${index}: Missing category_key`);
-      if (!obj.images || !Array.isArray(obj.images)) errors.push(`Rental object ${index}: Missing or invalid images`);
-      if (!obj.pricing) errors.push(`Rental object ${index}: Missing pricing`);
-      if (!obj.metadata) errors.push(`Rental object ${index}: Missing metadata`);
-    });
-  }
-
-  return {
-    valid: errors.length === 0,
-    errors
-  };
-}
-
-/**
- * Parse and load seed data from JSON file
- */
-export async function loadSeedDataFromFile(file: File): Promise<SeedData> {
-  return new Promise((resolve, reject) => {
-    const reader = new FileReader();
-    
-    reader.onload = (e) => {
-      try {
-        const data = JSON.parse(e.target?.result as string);
-        const validation = validateSeedData(data);
-        
-        if (!validation.valid) {
-          reject(new Error(`Invalid seed data: ${validation.errors.join(', ')}`));
+      if (!obj.id) errors.push(`Rental object ${index}: Missing ID`t('common.if_objname_errorspush')`Rental object ${index}: Missing name`t('common.if_objcategorykey_errorspush')`Rental object ${index}: Missing category_key`t('common.if_objimages_arrayisarrayobjimages_errorspush')`Rental object ${index}: Missing or invalid images`t('common.if_objpricing_errorspush')`Rental object ${index}: Missing pricing`t('common.if_objmetadata_errorspush')`Rental object ${index}: Missing metadata`t('common.return_valid_errorslength_0')`Invalid seed data: ${validation.errors.join(', ')}`));
           return;
         }
         
@@ -209,7 +182,7 @@ export async function importSeedData(
       stage: 'validating',
       current: 0,
       total: 100,
-      message: 'Validating seed data...'
+      message: t('common.validating_seed_data')
     });
 
     const validation = validateSeedData(data);
@@ -222,7 +195,7 @@ export async function importSeedData(
       stage: 'importing',
       current: 0,
       total: data.rental_objects.length + data.users.length + data.organizations.length + data.tenants.length,
-      message: 'Starting import...'
+      message: t('common.starting_import')
     });
 
     let imported = 0;
@@ -333,7 +306,7 @@ export async function importSeedData(
       stage: 'complete',
       current: total,
       total,
-      message: 'Import complete!'
+      message: t('common.import_complete')
     });
 
     result.success = result.errors.length === 0;

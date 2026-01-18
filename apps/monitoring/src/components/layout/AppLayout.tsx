@@ -58,7 +58,7 @@ const getNavigationResults = (query: string, t: (key: string) => string): Search
     navItems.push({
       id: 'nav-dashboard',
       label: 'Dashboard',
-      description: 'Gå til oversikt',
+      description: t('common.gaa_til_oversikt'),
       icon: <SearchIcon size={18} />,
       href: '/',
     });
@@ -69,7 +69,7 @@ const getNavigationResults = (query: string, t: (key: string) => string): Search
     navItems.push({
       id: 'nav-bookings',
       label: 'Bookinger',
-      description: 'Se alle dine bookinger',
+      description: t('common.se_alle_dine_bookinger'),
       icon: <CalendarIcon size={18} />,
       href: '/bookings',
     });
@@ -80,7 +80,7 @@ const getNavigationResults = (query: string, t: (key: string) => string): Search
     navItems.push({
       id: 'nav-calendar',
       label: 'Kalender',
-      description: 'Se bookinger i kalendervisning',
+      description: t('common.se_bookinger_i_kalendervisning'),
       icon: <CalendarIcon size={18} />,
       href: '/calendar',
     });
@@ -91,7 +91,7 @@ const getNavigationResults = (query: string, t: (key: string) => string): Search
     navItems.push({
       id: 'nav-messages',
       label: 'Meldinger',
-      description: 'Se samtaler og meldinger',
+      description: t('common.se_samtaler_og_meldinger'),
       icon: <MessageIcon size={18} />,
       href: '/messages',
     });
@@ -243,14 +243,14 @@ export function AppLayout() {
         {isMobile && (
           <div style={{ padding: 'var(--ds-spacing-4) var(--ds-spacing-6)', borderBottom: '1px solid var(--ds-color-neutral-border-subtle)' }}>
             <HeaderSearch
-              placeholder="Søk i bookinger, brukere..."
+              placeholder={t('common.sok_i_bookinger_brukere')}
               value={searchQuery}
               onSearchChange={handleSearchChange}
               onResultSelect={handleResultSelect}
               results={searchResults}
               showShortcut={false}
               enableGlobalShortcut={false}
-              noResultsText="Ingen resultater funnet"
+              noResultsText={t('common.ingen_resultater_funnet')}
             />
           </div>
         )}

@@ -5,21 +5,7 @@
  * Use this hook instead of direct role comparisons for cleaner, more maintainable code.
  *
  * @example
- * ```tsx
- * function ListingActions() {
- *   const { hasCapability, hasAllCapabilities } = useCapabilities();
- *
- *   return (
- *     <div>
- *       <Button disabled={!hasCapability('CAP_LISTING_READ')}>View</Button>
- *       <Button disabled={!hasCapability('CAP_LISTING_CREATE')}>Create</Button>
- *       {hasAllCapabilities(['CAP_LISTING_CREATE', 'CAP_LISTING_EDIT']) && (
- *         <AdminTools />
- *       )}
- *     </div>
- *   );
- * }
- * ```
+ * ```t('common.tsx_function_listingactions_const') ```
  */
 
 import { useMemo } from 'react';
@@ -109,7 +95,7 @@ export interface UseCapabilitiesReturn {
  *     return null;
  *   }
  *
- *   return <Button>Edit Listing</Button>;
+ *   return <Button>{t('common.edit_listing')}</Button>;
  * }
  *
  * // Multiple capability check
@@ -142,6 +128,7 @@ export interface UseCapabilitiesReturn {
  */
 export function useCapabilities(): UseCapabilitiesReturn {
   const { effectiveRole } = useBackofficeRole();
+  const t = useT();
 
   // Memoize capabilities array to avoid unnecessary recalculations
   const capabilities = useMemo(
@@ -163,52 +150,16 @@ export function useCapabilities(): UseCapabilitiesReturn {
 
   const requireCapability = (capability: Capability): void => {
     if (!hasCapability(capability)) {
-      throw new Error(`Capability denied: ${capability}`);
-    }
-  };
-
-  return {
-    hasCapability,
-    hasAnyCapability,
-    hasAllCapabilities,
-    requireCapability,
-    capabilities,
-    effectiveRole,
-  };
-}
-
-/**
- * Helper hook to check a single capability.
- * Convenience wrapper for simple capability checks.
- *
- * @param capability - The capability to check
- * @returns true if the current role has the capability, false otherwise
- *
- * @example
- * ```tsx
+      throw new Error(`Capability denied: ${capability}`t('common.return_hascapability_hasanycapability_hasallcapabilities') ```tsx
  * function CreateButton() {
  *   const canCreate = useHasCapability('CAP_LISTING_CREATE');
  *
  *   if (!canCreate) return null;
  *
- *   return <Button>Create Listing</Button>;
+ *   return <Button>{t('common.create_listing')}</Button>;
  * }
  * ```
- */
-export function useHasCapability(capability: Capability): boolean {
-  const { hasCapability } = useCapabilities();
-  return hasCapability(capability);
-}
-
-/**
- * Helper hook to check multiple capabilities (all required).
- * Convenience wrapper for checking if all capabilities are granted.
- *
- * @param capabilities - Array of capabilities that must all be present
- * @returns true if the current role has all capabilities, false otherwise
- *
- * @example
- * ```tsx
+ t('common.export_function_usehascapabilitycapability_capability') ```tsx
  * function FullAdminPanel() {
  *   const hasFullAdmin = useHasAllCapabilities([
  *     'CAP_USER_ADMIN',
@@ -221,32 +172,7 @@ export function useHasCapability(capability: Capability): boolean {
  *   return <FullAdminPanel />;
  * }
  * ```
- */
-export function useHasAllCapabilities(capabilities: Capability[]): boolean {
-  const { hasAllCapabilities } = useCapabilities();
-  return hasAllCapabilities(capabilities);
-}
-
-/**
- * Helper hook to check multiple capabilities (any required).
- * Convenience wrapper for checking if at least one capability is granted.
- *
- * @param capabilities - Array of capabilities where at least one must be present
- * @returns true if the current role has any of the capabilities, false otherwise
- *
- * @example
- * ```tsx
- * function ListingActions() {
- *   const canModify = useHasAnyCapability([
- *     'CAP_LISTING_CREATE',
- *     'CAP_LISTING_EDIT',
- *   ]);
- *
- *   if (!canModify) return <ReadOnlyView />;
- *
- *   return <EditableView />;
- * }
- * ```
+ t('common.export_function_usehasallcapabilitiescapabilities_capability') ```t('common.tsx_function_listingactions_const') ```
  */
 export function useHasAnyCapability(capabilities: Capability[]): boolean {
   const { hasAnyCapability } = useCapabilities();

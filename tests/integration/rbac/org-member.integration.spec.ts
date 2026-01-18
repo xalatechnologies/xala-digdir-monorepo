@@ -1,5 +1,8 @@
 import { describe, it, expect } from 'vitest';
 
+const SKIP_INTEGRATION = process.env.CI !== 'true';
+const describeOrSkip = SKIP_INTEGRATION ? describe.skip : describe;
+
 /**
  * ORG_MEMBER Integration Tests
  * 
@@ -17,7 +20,7 @@ const ORG_ID = process.env.TEST_ORG_ID || 'test-org-id';
 const OTHER_ORG_ID = process.env.OTHER_ORG_ID || 'other-org-id';
 const TENANT_ID = process.env.TEST_TENANT_ID || 'test-tenant-id';
 
-describe('ORG_MEMBER Integration Tests', () => {
+describeOrSkip('ORG_MEMBER Integration Tests', () => {
   const authHeaders = {
     'Authorization': `Bearer ${ORG_MEMBER_TOKEN}`,
     'X-Organization-Id': ORG_ID,

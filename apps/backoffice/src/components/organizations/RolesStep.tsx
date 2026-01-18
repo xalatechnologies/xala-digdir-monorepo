@@ -38,7 +38,7 @@ const DEFAULT_ROLES: Record<string, RoleDefinition[]> = {
     {
       id: 'admin',
       name: 'Administrator',
-      description: 'Full tilgang til alle organisasjonsfunksjoner og innstillinger',
+      description: t('common.full_tilgang_til_alle'),
       permissions: [
         'organization:manage',
         'users:manage',
@@ -52,7 +52,7 @@ const DEFAULT_ROLES: Record<string, RoleDefinition[]> = {
     {
       id: 'manager',
       name: 'Manager',
-      description: 'Administrer anlegg og bookinger, se rapporter',
+      description: t('common.administrer_anlegg_og_bookinger'),
       permissions: [
         'listings:manage',
         'bookings:manage',
@@ -62,7 +62,7 @@ const DEFAULT_ROLES: Record<string, RoleDefinition[]> = {
     {
       id: 'member',
       name: 'Medlem',
-      description: 'Grunnleggende medlem med visnings- og bookingtillatelser',
+      description: t('common.grunnleggende_medlem_med_visnings'),
       permissions: [
         'listings:view',
         'bookings:create',
@@ -75,7 +75,7 @@ const DEFAULT_ROLES: Record<string, RoleDefinition[]> = {
     {
       id: 'admin',
       name: 'Administrator',
-      description: 'Full tilgang til organisasjonsfunksjoner',
+      description: t('common.full_tilgang_til_organisasjonsfunksjoner'),
       permissions: [
         'organization:manage',
         'users:manage',
@@ -86,7 +86,7 @@ const DEFAULT_ROLES: Record<string, RoleDefinition[]> = {
     {
       id: 'member',
       name: 'Medlem',
-      description: 'Standard medlem med bookingtilgang',
+      description: t('common.standard_medlem_med_bookingtilgang'),
       permissions: [
         'listings:view',
         'bookings:create',
@@ -110,6 +110,7 @@ export function RolesStep({ actorType = 'municipality', selectedRoles = ['admin'
   // Handle role toggle
   const handleRoleToggle = useCallback(
     (roleId: string) => {
+  const t = useT();
       // Admin role is always required
       if (roleId === 'admin') {
         return;

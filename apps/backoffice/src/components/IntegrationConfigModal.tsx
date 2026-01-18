@@ -42,7 +42,7 @@ const INTEGRATION_FIELDS: Record<string, Array<{ key: string; label: string; typ
   idporten: [
     { key: 'baseUrl', label: 'Base URL', placeholder: 'https://digilist.sandbox.signicat.com' },
     { key: 'clientId', label: 'Client ID', sensitive: true },
-    { key: 'clientSecret', label: 'Client Secret', type: 'password', sensitive: true },
+    { key: 'clientSecret', label: t('common.client_secret'), type: 'password', sensitive: true },
     { key: 'redirectUri', label: 'Redirect URI', placeholder: 'https://api.digilist.no/api/auth/idporten/callback' },
     { key: 'scopes', label: 'Scopes', placeholder: 'signicat-api' },
     { key: 'acrValues', label: 'ACR Values', placeholder: 'idp:nbid' },
@@ -50,15 +50,15 @@ const INTEGRATION_FIELDS: Record<string, Array<{ key: string; label: string; typ
   vipps: [
     { key: 'baseUrl', label: 'Base URL', placeholder: 'https://apitest.vipps.no' },
     { key: 'clientId', label: 'Client ID', sensitive: true },
-    { key: 'clientSecret', label: 'Client Secret', type: 'password', sensitive: true },
-    { key: 'merchantSerialNumber', label: 'Merchant Serial Number', sensitive: true },
-    { key: 'subscriptionKey', label: 'Subscription Key (Ocp-Apim-Subscription-Key)', type: 'password', sensitive: true },
-    { key: 'webhookSecret', label: 'Webhook Secret', type: 'password', sensitive: true },
+    { key: 'clientSecret', label: t('common.client_secret'), type: 'password', sensitive: true },
+    { key: 'merchantSerialNumber', label: t('common.merchant_serial_number'), sensitive: true },
+    { key: 'subscriptionKey', label: t('common.subscription_key_ocpapimsubscriptionkey'), type: 'password', sensitive: true },
+    { key: 'webhookSecret', label: t('common.webhook_secret'), type: 'password', sensitive: true },
   ],
   visma: [
     { key: 'baseUrl', label: 'Base URL', placeholder: 'https://api.visma.com' },
     { key: 'apiKey', label: 'API Key', type: 'password', sensitive: true },
-    { key: 'companyId', label: 'Company ID' },
+    { key: 'companyId', label: t('common.company_id') },
   ],
   rco: [
     { key: 'baseUrl', label: 'Base URL' },
@@ -150,7 +150,7 @@ export function IntegrationConfigModal({
             </div>
 
             {/* Status Field */}
-            <FormField label="Status" description="Aktivering/deaktivering av integrasjonen">
+            <FormField label="Status" description={t('common.aktiveringdeaktivering_av_integrasjonen')}>
               <Select
                 value={formData.status || status}
                 onChange={(e) => onFieldChange('status', e.target.value)}
@@ -167,7 +167,7 @@ export function IntegrationConfigModal({
                 <FormField
                   key={field.key}
                   label={field.label}
-                  description={field.sensitive ? 'Sensitiv informasjon - vises maskert' : undefined}
+                  description={field.sensitive ? 't('common.sensitiv_informasjon_vises_maskert')' : undefined}
                 >
                   <Textfield
                     aria-label={field.label}
@@ -199,7 +199,7 @@ export function IntegrationConfigModal({
                   )}
                   <div>
                     <Paragraph data-size="sm" style={{ fontWeight: 'var(--ds-font-weight-semibold)', margin: 0 }}>
-                      {testResult.success ? 'Tilkobling vellykket' : 'Tilkobling feilet'}
+                      {testResult.success ? 't('common.tilkobling_vellykket')' : 'Tilkobling feilet'}
                     </Paragraph>
                     <Paragraph data-size="sm" style={{ margin: 0, marginTop: 'var(--ds-spacing-1)' }}>
                       {testResult.message}

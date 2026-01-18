@@ -174,7 +174,7 @@ export function RealtimeToast(): React.ReactElement {
       addToast({
         type: 'error',
         title: t('tilkobling.tapt'),
-        message: 'Sanntidsoppdateringer er utilgjengelig',
+        message: t('common.sanntidsoppdateringer_er_utilgjengelig'),
       });
     }
   }, [status, addToast]);

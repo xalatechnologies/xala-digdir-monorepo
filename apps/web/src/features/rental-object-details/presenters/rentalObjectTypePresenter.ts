@@ -7,6 +7,7 @@
  */
 
 import type { RentalObjectType, KeyFacts, BookingMode } from '../types';
+import { useT } from '@xala/i18n';
 
 // =============================================================================
 // Presenter Configuration Types
@@ -76,7 +77,7 @@ const formatDuration = (value: unknown): string => {
 };
 
 const formatAccessibility = (value: unknown): string => {
-  return value ? 'Universell utforming' : '';
+  return value ? 't('common.universell_utforming')' : '';
 };
 
 // =============================================================================
@@ -448,6 +449,7 @@ export function createPresenter(rentalObjectType: RentalObjectType): RentalObjec
  * Get localized rental object type label
  */
 export function getRentalObjectTypeLabel(type: RentalObjectType): string {
+  const t = useT();
   const labels: Record<RentalObjectType, string> = {
     FACILITY: 'Lokale',
     EQUIPMENT: 'Utstyr',

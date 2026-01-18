@@ -919,7 +919,7 @@ export function RecurringResultSummary({
               onClick={onViewAllBookings}
               style={{ flex: 1 }}
             >
-              Se alle bookinger
+              t('actions.se_alle_bookinger')
             </Button>
           )}
           {onNewBooking && (

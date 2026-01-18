@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import './PermissionManagement.css';
+import { useT } from '@xala/i18n';
 
 /**
  * Permission Management Dashboard
@@ -159,7 +160,7 @@ export const PermissionManagement: React.FC = () => {
       {/* Header */}
       <div className="permission-header">
         <h1>Tillatelsesstyring</h1>
-        <p>Detaljert tilgangskontroll for utleieobjekter</p>
+        <p>{t('common.detaljert_tilgangskontroll_for_utleieobjekter')}</p>
         <button onClick={() => setShowForm(true)} className="btn-primary" type="button">
           + Gi tillatelse
         </button>
@@ -169,14 +170,14 @@ export const PermissionManagement: React.FC = () => {
       <div className="permission-filters">
         <input
           type="text"
-          placeholder="Filtrer etter objekt..."
+          placeholder={t('common.filtrer_etter_objekt')}
           value={filterObjectId}
           onChange={(e) => setFilterObjectId(e.target.value)}
           className="filter-input"
         />
         <input
           type="text"
-          placeholder="Filtrer etter bruker/organisasjon..."
+          placeholder={t('common.filtrer_etter_brukerorganisasjon')}
           value={filterGrantee}
           onChange={(e) => setFilterGrantee(e.target.value)}
           className="filter-input"
@@ -187,7 +188,7 @@ export const PermissionManagement: React.FC = () => {
       <div className="permissions-list">
         {permissions.length === 0 ? (
           <div className="empty-state">
-            <p>Ingen tillatelser funnet</p>
+            <p>{t('common.ingen_tillatelser_funnet')}</p>
             <button onClick={() => setShowForm(true)} className="btn-secondary" type="button">
               Opprett første tillatelse
             </button>
@@ -197,9 +198,9 @@ export const PermissionManagement: React.FC = () => {
             <thead>
               <tr>
                 <th>Utleieobjekt</th>
-                <th>Gitt til</th>
+                <th>{t('common.gitt_til')}</th>
                 <th>Tillatelser</th>
-                <th>Gyldig periode</th>
+                <th>{t('common.gyldig_periode')}</th>
                 <th>Status</th>
                 <th>Handlinger</th>
               </tr>
@@ -267,7 +268,7 @@ export const PermissionManagement: React.FC = () => {
       {showForm && (
         <div className="modal-overlay" onClick={() => setShowForm(false)}>
           <div className="modal-content" onClick={(e) => e.stopPropagation()}>
-            <h2>Gi tillatelse</h2>
+            <h2>{t('common.gi_tillatelse')}</h2>
             <form
               onSubmit={(e) => {
                 e.preventDefault();
@@ -305,7 +306,7 @@ export const PermissionManagement: React.FC = () => {
               </div>
 
               <div className="form-group">
-                <label>Gi til</label>
+                <label>{t('common.gi_til')}</label>
                 <select name="grantTo" className="form-select">
                   <option value="USER">Bruker</option>
                   <option value="ORGANIZATION">Organisasjon</option>
@@ -356,7 +357,7 @@ export const PermissionManagement: React.FC = () => {
               </div>
 
               <div className="form-section">
-                <h3>Gyldig periode (valgfritt)</h3>
+                <h3>{t('common.gyldig_periode_valgfritt')}</h3>
                 <div className="form-row">
                   <div className="form-group">
                     <label>Fra</label>

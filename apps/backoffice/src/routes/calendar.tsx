@@ -91,7 +91,7 @@ export function CalendarPage() {
     enabled: true,
     onBookingEvent: () => {
       // Show subtle notification when calendar updates
-      toast.info('Kalender oppdatert', 'Nye bookinger eller endringer er synkronisert');
+      toast.info(t('messages.kalender_oppdatert'), 'Nye bookinger eller endringer er synkronisert');
     },
     trackUpdates: true,
   });
@@ -730,7 +730,7 @@ export function CalendarPage() {
                 minWidth: '180px',
               }}
             >
-              <option value="">Alle lokaler</option>
+              <option value="">{t('common.alle_lokaler')}</option>
               {listings.map((listing: RentalObject) => (
                 <option key={listing.id} value={listing.id}>
                   {listing.name}
@@ -749,7 +749,7 @@ export function CalendarPage() {
                   onClick={() => setView(v)}
                   style={{ borderRadius: 'var(--ds-border-radius-sm)' }}
                 >
-                  {v === 'day' ? 'Dag' : v === 'week' ? 'Uke' : v === 'month' ? 'Måned' : 'Tidslinje'}
+                  {v === 'day' ? 'Dag' : v === 'week' ? 'Uke' : v === 'month' ? 't('common.maaned')' : 'Tidslinje'}
                 </Button>
               ))}
             </div>
@@ -777,7 +777,7 @@ export function CalendarPage() {
       <Card style={{ flex: 1, padding: 0, overflow: 'hidden', display: 'flex', flexDirection: 'column' }}>
         {isLoading ? (
           <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-            <Spinner aria-label="Laster kalender..." />
+            <Spinner aria-label={t('common.laster_kalender')} />
           </div>
         ) : (
           <>

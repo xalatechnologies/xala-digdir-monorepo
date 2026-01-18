@@ -19,6 +19,7 @@ const API_URL = process.env.API_URL || 'http://localhost:4000';
 const TEST_TENANT_ID = 'test-tenant';
 const TEST_ORG_ID = 'test-org';
 const IS_PRODUCTION = API_URL.includes('api.digilist.no') || API_URL.includes('production');
+const SKIP_INTEGRATION = process.env.SKIP_INTEGRATION_TESTS === 'true' || process.env.CI !== 'true';
 
 // Mock user data
 const mockOrgAdmin = {
@@ -30,7 +31,7 @@ const mockOrgAdmin = {
 };
 
 // Skip all tests if running against production (no test-login endpoint)
-const describeOrSkip = IS_PRODUCTION ? describe.skip : describe;
+const describeOrSkip = IS_PRODUCTION || SKIP_INTEGRATION ? describe.skip : describe;
 
 describeOrSkip('Organization Admin Flow Integration Tests', () => {
   let sessionCookie: string | null = null;

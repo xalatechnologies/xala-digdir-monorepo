@@ -183,7 +183,7 @@ export function NotificationSettingsPage() {
                 checked={hasActiveSubscription && preferences.pushEnabled}
                 onChange={(e) => handlePushToggle(e.target.checked)}
                 disabled={isSubscribing || permission === 'denied'}
-                aria-label="Aktiver push-varsler"
+                aria-label={t('common.aktiver_pushvarsler')}
               />
             </div>
           </div>
@@ -216,7 +216,7 @@ export function NotificationSettingsPage() {
             <Switch
               checked={preferences.emailEnabled}
               onChange={(e) => handlePreferenceChange('emailEnabled', e.target.checked)}
-              aria-label="E-postvarsler"
+              aria-label={t('common.epostvarsler')}
             />
           </div>
 
@@ -239,7 +239,7 @@ export function NotificationSettingsPage() {
             <Switch
               checked={preferences.inAppEnabled}
               onChange={(e) => handlePreferenceChange('inAppEnabled', e.target.checked)}
-              aria-label="Varsler i appen"
+              aria-label={t('common.varsler_i_appen')}
             />
           </div>
 
@@ -261,7 +261,7 @@ export function NotificationSettingsPage() {
               checked={preferences.smsEnabled}
               onChange={(e) => handlePreferenceChange('smsEnabled', e.target.checked)}
               disabled={true}
-              aria-label="SMS-varsler"
+              aria-label={t('common.smsvarsler')}
             />
           </div>
         </div>
@@ -316,7 +316,7 @@ export function NotificationSettingsPage() {
             <Switch
               checked={preferences.bookingReminderEnabled}
               onChange={(e) => handlePreferenceChange('bookingReminderEnabled', e.target.checked)}
-              aria-label="Påminnelser"
+              aria-label={t('common.paaminnelser')}
             />
           </div>
 
@@ -342,7 +342,7 @@ export function NotificationSettingsPage() {
                 <Switch
                   checked={preferences.reminderTiming.enabled24h}
                   onChange={(e) => handleReminderTimingChange('enabled24h', e.target.checked)}
-                  aria-label="24 timer før"
+                  aria-label={t('common.24_timer_for')}
                 />
               </div>
 
@@ -358,7 +358,7 @@ export function NotificationSettingsPage() {
                 <Switch
                   checked={preferences.reminderTiming.enabled1h}
                   onChange={(e) => handleReminderTimingChange('enabled1h', e.target.checked)}
-                  aria-label="1 time før"
+                  aria-label={t('common.1_time_for')}
                 />
               </div>
             </div>

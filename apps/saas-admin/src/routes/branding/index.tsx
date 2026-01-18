@@ -120,7 +120,7 @@ export function BrandingListPage() {
               <Table.HeaderCell>Tenant</Table.HeaderCell>
               <Table.HeaderCell>Slug</Table.HeaderCell>
               <Table.HeaderCell>Branding</Table.HeaderCell>
-              <Table.HeaderCell>Primærfarge</Table.HeaderCell>
+              <Table.HeaderCell>{t('common.primaerfarge')}</Table.HeaderCell>
               <Table.HeaderCell>Handlinger</Table.HeaderCell>
             </Table.Row>
           </Table.Head>

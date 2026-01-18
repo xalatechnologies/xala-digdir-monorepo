@@ -10,6 +10,9 @@
 import { describe, it, expect, beforeAll } from 'vitest';
 import * as fs from 'fs';
 
+const SKIP_INTEGRATION = process.env.SKIP_INTEGRATION_TESTS === 'true' || process.env.CI !== 'true';
+const describeOrSkip = SKIP_INTEGRATION ? describe.skip : describe;
+
 const API_URL = process.env.API_URL || 'http://localhost:3000/api';
 
 // =============================================================================
@@ -171,7 +174,7 @@ async function getSessionCookie(role: string): Promise<string | null> {
 // Auto-Generated RBAC Tests
 // =============================================================================
 
-describe('RBAC Matrix Tests', () => {
+describeOrSkip('RBAC Matrix Tests', () => {
   const results: { rule: RBACRule; passed: boolean; actual: number }[] = [];
 
   describe('Public Role Access', () => {

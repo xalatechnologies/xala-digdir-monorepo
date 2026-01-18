@@ -64,6 +64,7 @@ export function CredentialsManager({
   integrationName,
   onClose: _onClose,
 }: CredentialsManagerProps): React.ReactElement {
+  const t = useT();
   // Translation function available for future localization
   const _t = useT(); // eslint-disable-line @typescript-eslint/no-unused-vars
   const [showAddModal, setShowAddModal] = useState(false);
@@ -97,7 +98,7 @@ export function CredentialsManager({
   if (isLoading) {
     return (
       <div className="flex items-center justify-center p-8">
-        <Spinner aria-label="Laster legitimasjoner..." />
+        <Spinner aria-label={t('common.laster_legitimasjoner')} />
       </div>
     );
   }
@@ -106,7 +107,7 @@ export function CredentialsManager({
     return (
       <Alert data-color="danger">
         <Heading level={4} data-size="xs">Feil ved lasting av legitimasjoner</Heading>
-        <Paragraph>Kunne ikke hente legitimasjoner. Prøv igjen senere.</Paragraph>
+        <Paragraph>{t('common.kunne_ikke_hente_legitimasjoner')}</Paragraph>
       </Alert>
     );
   }
@@ -274,7 +275,7 @@ function CredentialCard({
 
           <div className="flex items-center gap-4 text-sm text-gray-600">
             <div className="flex items-center gap-1">
-              <span>Verdi:</span>
+              <span>{t('common.verdi')}</span>
               {isLoadingValue ? (
                 <Spinner aria-label={t("ui.loading")} data-size="sm" />
               ) : isRevealed && revealedValue ? (
@@ -427,7 +428,7 @@ function AddCredentialModal({
 
         <Textfield
           label="Navn"
-          placeholder="f.eks. Production API Key"
+          placeholder={t('common.feks_production_api_key')}
           value={formData.name}
           onChange={(e) => setFormData({ ...formData, name: e.target.value })}
           required
@@ -435,7 +436,7 @@ function AddCredentialModal({
 
         <Textfield
           label="Verdi"
-          placeholder="API-nøkkel eller hemmelighet"
+          placeholder={t('common.apinokkel_eller_hemmelighet')}
           value={formData.value}
           onChange={(e) => setFormData({ ...formData, value: e.target.value })}
           type="password"
@@ -455,7 +456,7 @@ function AddCredentialModal({
             type="submit"
             disabled={createCredential.isPending}
           >
-            {createCredential.isPending ? 'Lagrer...' : 'Legg til'}
+            {createCredential.isPending ? 't('common.lagrer')' : 'Legg til'}
           </Button>
         </div>
       </form>
@@ -517,8 +518,8 @@ function RotateCredentialModal({
 
       <form onSubmit={handleSubmit} className="space-y-4">
         <Textfield
-          label="Ny verdi"
-          placeholder="Ny API-nøkkel eller hemmelighet"
+          label={t('common.ny_verdi')}
+          placeholder={t('common.ny_apinokkel_eller_hemmelighet')}
           value={newValue}
           onChange={(e) => setNewValue(e.target.value)}
           type="password"
@@ -538,7 +539,7 @@ function RotateCredentialModal({
             type="submit"
             disabled={rotateCredential.isPending}
           >
-            {rotateCredential.isPending ? 'Roterer...' : 'Roter'}
+            {rotateCredential.isPending ? 't('common.roterer')' : 'Roter'}
           </Button>
         </div>
       </form>

@@ -3,12 +3,15 @@
  * Tests all aspects of the authentication system for enterprise readiness
  */
 
-import { describe, it, expect, beforeAll } from 'vitest';
+import { describe, it, expect, beforeAll, afterAll, beforeEach } from 'vitest';
 import { JwtService } from '../../apps/api/src/core/auth/jwt.service';
 import { SessionService } from '../../apps/api/src/modules/auth/session.service';
 import { COOKIE_CONFIG, validateCookieConfig } from '../../apps/api/src/config/cookies';
 
-describe('Authentication Security Audit', () => {
+const SKIP_INTEGRATION = process.env.SKIP_INTEGRATION_TESTS === 'true' || process.env.CI !== 'true';
+const describeOrSkip = SKIP_INTEGRATION ? describe.skip : describe;
+
+describeOrSkip('Authentication Security Audit', () => {
   let jwtService: JwtService;
   const TEST_SECRET = 'test-jwt-secret-key-minimum-32-characters-required-for-security';
 

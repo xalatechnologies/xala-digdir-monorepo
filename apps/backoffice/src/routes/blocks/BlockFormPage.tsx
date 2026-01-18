@@ -172,26 +172,7 @@ export function BlockFormPage(): React.ReactElement {
 
     const endDateTime = formData.allDay
       ? new Date(`${formData.endDate}T23:59:59`)
-      : new Date(`${formData.endDate}T${formData.endTime}`);
-
-    const blockPayload = {
-      title: formData.title.trim(),
-      reason: formData.reason.trim() || undefined,
-      rentalObjectId: formData.rentalObjectId,
-      startDate: startDateTime.toISOString(),
-      endDate: endDateTime.toISOString(),
-      allDay: formData.allDay,
-      recurring: formData.recurring,
-      recurrenceRule: formData.recurring ? formData.recurrenceRule : undefined,
-      visibility: formData.visibility,
-    };
-
-    if (isEditing) {
-      updateBlockMutation.mutate(
-        { id: id!, data: blockPayload },
-        {
-          onSuccess: () => {
-            navigate(`/blocks/${id}`);
+      : new Date(`${formData.endDate}T${formData.endTime}`t('common.const_blockpayload_title_formdatatitletrim')`/blocks/${id}`);
           },
         }
       );

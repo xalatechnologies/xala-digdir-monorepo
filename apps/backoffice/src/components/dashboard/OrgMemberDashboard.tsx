@@ -4,6 +4,7 @@
  * Per master-prompt.md: Pending Tasks, Calendar Preview, Messages, Finance Alerts
  */
 import {
+import { useT } from '@xala/i18n';
   Card,
   Heading,
   Paragraph,
@@ -46,6 +47,7 @@ interface CalendarEvent {
 function PendingTasksWidget() {
   const navigate = useNavigate();
   const { data: pendingData, isLoading } = usePendingItems();
+  const t = useT();
   
   const pendingCount = pendingData?.bookings ?? 0;
   
@@ -54,16 +56,16 @@ function PendingTasksWidget() {
     {
       id: '1',
       type: 'booking',
-      title: 'Ny bookingforespørsel',
-      description: 'Ønsker å leie 15. jan kl 10:00-14:00',
+      title: t('common.ny_bookingforesporsel'),
+      description: t('common.onsker_aa_leie_15'),
       createdAt: new Date(Date.now() - 3600000).toISOString(),
       rentalObjectName: 'Møterom A',
     },
     {
       id: '2', 
       type: 'booking',
-      title: 'Bookingforespørsel',
-      description: 'Arrangement 20. jan hele dagen',
+      title: t('common.bookingforesporsel'),
+      description: t('common.arrangement_20_jan_hele'),
       createdAt: new Date(Date.now() - 7200000).toISOString(),
       rentalObjectName: 'Kulturhuset',
     },
@@ -163,7 +165,7 @@ function CalendarPreviewWidget() {
   const todayEvents: CalendarEvent[] = [
     {
       id: '1',
-      title: 'Booking - Møterom A',
+      title: t('common.booking_moterom_a'),
       startTime: '10:00',
       endTime: '12:00',
       rentalObjectName: 'Møterom A',
@@ -171,7 +173,7 @@ function CalendarPreviewWidget() {
     },
     {
       id: '2',
-      title: 'Booking - Kulturhuset',
+      title: t('common.booking_kulturhuset'),
       startTime: '14:00',
       endTime: '18:00',
       rentalObjectName: 'Kulturhuset',

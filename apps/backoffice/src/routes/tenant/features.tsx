@@ -7,6 +7,7 @@
 
 import { useState, useEffect } from 'react';
 import {
+import { useT } from '@xala/i18n';
   Card,
   Heading,
   Paragraph,
@@ -22,13 +23,13 @@ const MOBILE_BREAKPOINT = 768;
 
 // Category display names and descriptions
 const categoryInfo: Record<string, { name: string; description: string }> = {
-  core: { name: 'Kjernefunksjoner', description: 'Nødvendige systemfunksjoner som ikke kan deaktiveres' },
-  booking: { name: 'Booking', description: 'Funksjoner relatert til booking og reservasjoner' },
-  communication: { name: 'Kommunikasjon', description: 'Meldinger, varsler og notifikasjoner' },
-  economy: { name: 'Økonomi', description: 'Betalinger, fakturering og priser' },
-  users: { name: 'Brukere', description: 'Brukeradministrasjon og RBAC' },
-  content: { name: 'Innhold', description: 'Anmeldelser, ratings og brukerinnhold' },
-  advanced: { name: 'Avansert', description: 'Avanserte funksjoner og integrasjoner' },
+  core: { name: 'Kjernefunksjoner', description: t('common.nodvendige_systemfunksjoner_som_ikke') },
+  booking: { name: 'Booking', description: t('common.funksjoner_relatert_til_booking') },
+  communication: { name: 'Kommunikasjon', description: t('common.meldinger_varsler_og_notifikasjoner') },
+  economy: { name: t('common.okonomi'), description: t('common.betalinger_fakturering_og_priser') },
+  users: { name: 'Brukere', description: t('common.brukeradministrasjon_og_rbac') },
+  content: { name: 'Innhold', description: t('common.anmeldelser_ratings_og_brukerinnhold') },
+  advanced: { name: 'Avansert', description: t('common.avanserte_funksjoner_og_integrasjoner') },
 };
 
 export function TenantFeaturesPage() {
@@ -39,6 +40,7 @@ export function TenantFeaturesPage() {
 
   // Use SDK hooks for module management
   const { catalog: _catalog, effective: _effective, isLoading, error, toggleModule, isToggling } = useModulesManager();
+  const t = useT();
   const { data: catalogData } = useModuleCatalog();
   const { data: effectiveData, refetch } = useEffectiveModules();
 

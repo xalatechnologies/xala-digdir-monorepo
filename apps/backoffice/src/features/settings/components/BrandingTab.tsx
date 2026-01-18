@@ -20,6 +20,7 @@ export function BrandingTab() {
   // Translation function available for future localization
   const _t = useT(); // eslint-disable-line @typescript-eslint/no-unused-vars
   const {
+  const t = useT();
     brandingData,
     updateField,
     saveBrandingSettings,
@@ -40,11 +41,11 @@ export function BrandingTab() {
 
         <Stack spacing={4}>
           <FormField
-            label="Logo URL"
-            description="URL til logo (vil vises i toppen av siden)"
+            label={t('common.logo_url')}
+            description={t('common.url_til_logo_vil')}
           >
             <Textfield
-              aria-label="Logo URL"
+              aria-label={t('common.logo_url')}
               value={brandingData.logo}
               onChange={(e) => updateField('logo', e.target.value)}
               placeholder="https://example.com/logo.png"
@@ -52,33 +53,33 @@ export function BrandingTab() {
           </FormField>
 
           <FormField
-            label="Primærfarge"
-            description="Hovedfarge for knapper og UI-elementer"
+            label={t('common.primaerfarge')}
+            description={t('common.hovedfarge_for_knapper_og')}
           >
             <Textfield
-              aria-label="Primærfarge"
+              aria-label={t('common.primaerfarge')}
               value={brandingData.primaryColor}
               onChange={(e) => updateField('primaryColor', e.target.value)}
             />
           </FormField>
 
           <FormField
-            label="Sekundærfarge"
-            description="Farge for mindre fremtredende elementer"
+            label={t('common.sekundaerfarge')}
+            description={t('common.farge_for_mindre_fremtredende')}
           >
             <Textfield
-              aria-label="Sekundærfarge"
+              aria-label={t('common.sekundaerfarge')}
               value={brandingData.secondaryColor}
               onChange={(e) => updateField('secondaryColor', e.target.value)}
             />
           </FormField>
 
           <FormField
-            label="Favicon URL"
-            description="URL til favicon (vises i nettleserens fane)"
+            label={t('common.favicon_url')}
+            description={t('common.url_til_favicon_vises')}
           >
             <Textfield
-              aria-label="Favicon URL"
+              aria-label={t('common.favicon_url')}
               value={brandingData.favicon}
               onChange={(e) => updateField('favicon', e.target.value)}
               placeholder="https://example.com/favicon.ico"
@@ -87,9 +88,9 @@ export function BrandingTab() {
         </Stack>
 
         <div style={{ paddingTop: 'var(--ds-spacing-3)', borderTop: '1px solid var(--ds-color-neutral-border-subtle)' }}>
-          <Button onClick={saveBrandingSettings} disabled={isSaving} type="button" aria-label="Lagre endringer">
+          <Button onClick={saveBrandingSettings} disabled={isSaving} type="button" aria-label={t('common.lagre_endringer')}>
             <SaveIcon />
-            {isSaving ? 'Lagrer...' : 'Lagre endringer'}
+            {isSaving ? 't('common.lagrer')' : 'Lagre endringer'}
           </Button>
         </div>
       </Stack>

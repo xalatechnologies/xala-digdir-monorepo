@@ -1,4 +1,4 @@
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, beforeAll, afterAll, beforeEach } from 'vitest';
 
 /**
  * Security Baseline Tests for Org Roles
@@ -22,7 +22,10 @@ const authHeaders = {
   'Content-Type': 'application/json',
 };
 
-describe('Org Roles Security Baseline', () => {
+const SKIP_INTEGRATION = process.env.SKIP_INTEGRATION_TESTS === 'true' || process.env.CI !== 'true';
+const describeOrSkip = SKIP_INTEGRATION ? describe.skip : describe;
+
+describeOrSkip('Org Roles Security Baseline', () => {
   describe('SEC-INJ: Injection String Handling', () => {
     const injectionPayloads = [
       { name: 'SQL Injection', value: "'; DROP TABLE users; --" },

@@ -52,6 +52,7 @@ type ConflictSummary = {
 
 const useSeasonConflicts = (_seasonId: string) => ({
   data: { data: { conflicts: [] as ApplicationConflict[], summary: null as ConflictSummary | null } },
+  const t = useT();
   isLoading: false,
 });
 
@@ -182,8 +183,8 @@ export function ConflictViewer({ seasonId }: ConflictViewerProps) {
               <Table>
                 <Table.Head>
                   <Table.Row>
-                    <Table.HeaderCell>Søknad 1</Table.HeaderCell>
-                    <Table.HeaderCell>Søknad 2</Table.HeaderCell>
+                    <Table.HeaderCell>{t('common.soknad_1')}</Table.HeaderCell>
+                    <Table.HeaderCell>{t('common.soknad_2')}</Table.HeaderCell>
                     <Table.HeaderCell>Ukedag</Table.HeaderCell>
                     <Table.HeaderCell>Tidspunkt</Table.HeaderCell>
                     <Table.HeaderCell>Type</Table.HeaderCell>

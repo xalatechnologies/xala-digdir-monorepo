@@ -4,6 +4,7 @@
  */
 import { useState } from 'react';
 import {
+import { useT } from '@xala/i18n';
   Heading,
   Paragraph,
   Card,
@@ -21,6 +22,7 @@ import { useParams } from 'react-router-dom';
 
 export function ManagedRentalObjectsPage() {
   const { orgId } = useParams<{ orgId: string }>();
+  const t = useT();
   
   // Fetch objects the organization has custody for
   const { data: grants, isLoading } = useOrgCustody(orgId!);
@@ -33,7 +35,7 @@ export function ManagedRentalObjectsPage() {
     <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--ds-spacing-6)' }}>
       <div>
         <Heading level={1} data-size="md">Administrer utleieobjekter</Heading>
-        <Paragraph>Objekter din organisasjon har fått tildelt ansvar for.</Paragraph>
+        <Paragraph>{t('common.objekter_din_organisasjon_har')}</Paragraph>
       </div>
 
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: 'var(--ds-spacing-4)' }}>
@@ -41,7 +43,7 @@ export function ManagedRentalObjectsPage() {
           <ManagedObjectCard key={grant.id} grant={grant} orgId={orgId!} />
         ))}
         {managedGrants.length === 0 && (
-          <Paragraph>Ingen utleieobjekter tildelt din organisasjon ennå.</Paragraph>
+          <Paragraph>{t('common.ingen_utleieobjekter_tildelt_din')}</Paragraph>
         )}
       </div>
     </div>
@@ -107,18 +109,18 @@ function ManagedObjectCard({ grant, orgId }: { grant: CustodyGrant, orgId: strin
           zIndex: 1000 
         }}>
           <Card style={{ width: '450px', padding: 'var(--ds-spacing-6)' }}>
-            <Heading level={3}>Deleger til medlem</Heading>
+            <Heading level={3}>{t('common.deleger_til_medlem')}</Heading>
             <Paragraph data-size="sm">Velg et medlem og hvilke rettigheter de skal ha for {rentalObject.name}.</Paragraph>
             
             <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--ds-spacing-4)', marginTop: 'var(--ds-spacing-4)' }}>
               <div>
-                <label style={{ display: 'block', marginBottom: 'var(--ds-spacing-1)', fontSize: 'var(--ds-font-size-sm)' }}>Velg medlem</label>
+                <label style={{ display: 'block', marginBottom: 'var(--ds-spacing-1)', fontSize: 'var(--ds-font-size-sm)' }}>{t('common.velg_medlem')}</label>
                 <select 
                   value={selectedMemberId}
                   onChange={(e) => setSelectedMemberId(e.target.value)}
                   style={{ width: '100%', padding: 'var(--ds-spacing-2)', borderRadius: 'var(--ds-border-radius-md)', border: '1px solid var(--ds-color-neutral-border-default)' }}
                 >
-                  <option value="">Velg...</option>
+                  <option value="">{t('common.velg')}</option>
                   {(members as any)?.data?.map((m: any) => (
                     <option key={m.userId} value={m.userId}>{m.name || m.userId}</option>
                   ))}
@@ -154,7 +156,7 @@ function ManagedObjectCard({ grant, orgId }: { grant: CustodyGrant, orgId: strin
                   onClick={handleCreateSubgrant}
                   disabled={createSubgrant.isPending || !selectedMemberId}
                 >
-                  {createSubgrant.isPending ? 'Lagrer...' : 'Gi tilgang'}
+                  {createSubgrant.isPending ? 't('common.lagrer')' : 'Gi tilgang'}
                 </Button>
               </div>
             </div>

@@ -102,28 +102,28 @@ export function MonitoringPage() {
           </Paragraph>
         </div>
         <Badge color={refreshing ? 'warning' : 'success'}>
-          {refreshing ? 'Oppdaterer...' : 'Live'}
+          {refreshing ? 't('common.oppdaterer')' : 'Live'}
         </Badge>
       </div>
 
       {/* Platform Stats */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 'var(--ds-spacing-4)', marginBottom: 'var(--ds-spacing-6)' }}>
         <StatCard
-          title="Aktive tenanter"
+          title={t('common.aktive_tenanter')}
           value={activeTenants.toString()}
           description={`${tenants.length} totalt`}
           color="var(--ds-color-success-text-default)"
           icon={<BuildingIcon />}
         />
         <StatCard
-          title="Totale brukere"
+          title={t('common.totale_brukere')}
           value={totalUsers.toLocaleString('nb-NO')}
-          description="På tvers av alle tenanter"
+          description={t('common.paa_tvers_av_alle')}
           color="var(--ds-color-info-text-default)"
           icon={<UsersIcon />}
         />
         <StatCard
-          title="Lagring brukt"
+          title={t('common.lagring_brukt')}
           value={`${(totalStorage / 1024).toFixed(1)} GB`}
           description={`Av ${MOCK_SYSTEM_STATUS.storage.totalGb} GB`}
           color="var(--ds-color-warning-text-default)"
@@ -132,7 +132,7 @@ export function MonitoringPage() {
         <StatCard
           title="MRR"
           value={billing?.monthlyRecurring ? `${billing.monthlyRecurring.toLocaleString('nb-NO')} NOK` : '—'}
-          description="Månedlig inntekt"
+          description={t('common.maanedlig_inntekt')}
           color="var(--ds-color-accent-text-default)"
           icon={<SparklesIcon />}
         />
@@ -271,7 +271,7 @@ export function MonitoringPage() {
               <Table.HeaderCell>Brukere</Table.HeaderCell>
               <Table.HeaderCell>Organisasjoner</Table.HeaderCell>
               <Table.HeaderCell>Leieobjekter</Table.HeaderCell>
-              <Table.HeaderCell>Lagring (MB)</Table.HeaderCell>
+              <Table.HeaderCell>{t('common.lagring_mb')}</Table.HeaderCell>
             </Table.Row>
           </Table.Head>
           <Table.Body>

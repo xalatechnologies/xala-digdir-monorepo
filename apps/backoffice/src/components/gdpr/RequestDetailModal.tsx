@@ -64,7 +64,7 @@ function getStatusLabel(status: GdprRequestStatus): string {
     pending: t("status.pending"),
     processing: 'Behandles',
     completed: t("status.completed"),
-    rejected: 'Avslått',
+    rejected: 't('actions.avslaa')tt',
   };
   return labelMap[status];
 }
@@ -507,7 +507,7 @@ export function RequestDetailModal({
                   onClick={handleApprove}
                   disabled={updateStatus.isPending}
                 >
-                  {updateStatus.isPending ? 'Godkjenner...' : 'Godkjenn'}
+                  {updateStatus.isPending ? 't('common.godkjenner')' : 'Godkjenn'}
                 </Button>
               </>
             )}
@@ -521,7 +521,7 @@ export function RequestDetailModal({
                 onClick={handleRejectSubmit}
                 disabled={updateStatus.isPending || !rejectionReason.trim()}
               >
-                {updateStatus.isPending ? 'Avslår...' : 'Bekreft avslag'}
+                {updateStatus.isPending ? 't('common.avslaar')' : 'Bekreft avslag'}
               </Button>
             )}
           </div>

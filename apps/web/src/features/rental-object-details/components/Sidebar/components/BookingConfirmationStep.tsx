@@ -279,7 +279,7 @@ export function BookingConfirmationStep({
               color: 'var(--ds-color-warning-base-contrast-default)',
             }}
           >
-            {isLoggingIn ? 'Logger inn...' : 'Logg inn med Vipps'}
+            {isLoggingIn ? 't('common.logger_inn')' : 'Logg inn med Vipps'}
           </Button>
 
           <Button
@@ -292,7 +292,7 @@ export function BookingConfirmationStep({
               width: '100%',
             }}
           >
-            {isLoggingIn ? 'Logger inn...' : 'Logg inn med Bank ID'}
+            {isLoggingIn ? 't('common.logger_inn')' : 'Logg inn med Bank ID'}
           </Button>
         </div>
 
@@ -385,10 +385,10 @@ export function BookingConfirmationStep({
                 </div>
                 <div style={{ flex: 1 }}>
                   <Paragraph data-size="md" style={{ margin: 0, fontWeight: 'var(--ds-font-weight-semibold)', color: 'var(--ds-color-neutral-text-default)' }}>
-                    Som privatperson
+                    t('common.som_privatperson')
                   </Paragraph>
                   <Paragraph data-size="sm" style={{ margin: 0, marginTop: 'var(--ds-spacing-1)', color: 'var(--ds-color-neutral-text-subtle)' }}>
-                    Booke for deg selv eller din familie
+                    t('common.booke_for_deg_selv')
                   </Paragraph>
                 </div>
               </div>
@@ -525,7 +525,7 @@ export function BookingConfirmationStep({
           </Heading>
           <Paragraph data-size="sm" style={{ margin: 0, marginBottom: 'var(--ds-spacing-6)', color: 'var(--ds-color-neutral-text-subtle)' }}>
             {bookingAccountType === 'private' 
-              ? 'Du har valgt å booke som privatperson.'
+              ? 't('common.du_har_valgt_aa')'
               : selectedOrganizationId && organizations.find(o => o.id === selectedOrganizationId)
                 ? `Du har valgt å booke på vegne av ${organizations.find(o => o.id === selectedOrganizationId)?.name}.`
                 : 'Du har valgt å booke på vegne av en organisasjon.'}
@@ -599,7 +599,7 @@ export function BookingConfirmationStep({
               onClick={onConfirmAccountType}
               style={{ minWidth: '120px' }}
             >
-              Bekreft og fortsett
+              t('actions.bekreft_og_fortsett')
             </Button>
           </div>
         </>
@@ -611,7 +611,7 @@ export function BookingConfirmationStep({
           </Heading>
           <Paragraph data-size="sm" style={{ margin: 0, marginBottom: 'var(--ds-spacing-4)', color: 'var(--ds-color-neutral-text-subtle)' }}>
             {bookingAccountType === 'private'
-              ? 'Du booker som privatperson.'
+              ? 't('common.du_booker_som_privatperson')'
               : selectedOrganizationId && organizations.find(o => o.id === selectedOrganizationId)
                 ? `Du booker på vegne av ${organizations.find(o => o.id === selectedOrganizationId)?.name}.`
                 : 'Du booker på vegne av en organisasjon.'}

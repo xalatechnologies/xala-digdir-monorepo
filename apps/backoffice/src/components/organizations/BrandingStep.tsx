@@ -38,6 +38,7 @@ export function BrandingStep({ data, onChange, errors = [] }: BrandingStepProps)
 
   // Logo upload handlers
   const handleLogoDragOver = useCallback((e: React.DragEvent) => {
+  const t = useT();
     e.preventDefault();
     setIsDraggingLogo(true);
   }, []);
@@ -264,7 +265,7 @@ export function BrandingStep({ data, onChange, errors = [] }: BrandingStepProps)
             >
               <img
                 src={data.logo}
-                alt="Logo preview"
+                alt={t('common.logo_preview')}
                 style={{ maxWidth: '200px', maxHeight: '100px', objectFit: 'contain' }}
               />
             </div>
@@ -275,7 +276,7 @@ export function BrandingStep({ data, onChange, errors = [] }: BrandingStepProps)
               onClick={handleRemoveLogo}
               style={{ alignSelf: 'flex-start' }}
             >
-              Fjern logo
+              t('actions.fjern_logo')
             </Button>
           </div>
         )}
@@ -308,8 +309,8 @@ export function BrandingStep({ data, onChange, errors = [] }: BrandingStepProps)
 
         <Stack spacing={4}>
           <FormField
-            label="Primærfarge"
-            description="Hovedfarge for organisasjonens profil"
+            label={t('common.primaerfarge')}
+            description={t('common.hovedfarge_for_organisasjonens_profil')}
           >
             <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--ds-spacing-3)' }}>
               <input
@@ -342,8 +343,8 @@ export function BrandingStep({ data, onChange, errors = [] }: BrandingStepProps)
           </FormField>
 
           <FormField
-            label="Sekundærfarge"
-            description="Komplementær farge til primærfargen"
+            label={t('common.sekundaerfarge')}
+            description={t('common.komplementaer_farge_til_primaerfargen')}
           >
             <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--ds-spacing-3)' }}>
               <input
@@ -453,7 +454,7 @@ export function BrandingStep({ data, onChange, errors = [] }: BrandingStepProps)
             >
               <img
                 src={data.favicon}
-                alt="Favicon preview"
+                alt={t('common.favicon_preview')}
                 style={{ width: '32px', height: '32px', objectFit: 'contain' }}
               />
             </div>
@@ -464,7 +465,7 @@ export function BrandingStep({ data, onChange, errors = [] }: BrandingStepProps)
               onClick={handleRemoveFavicon}
               style={{ alignSelf: 'flex-start' }}
             >
-              Fjern favicon
+              t('actions.fjern_favicon')
             </Button>
           </div>
         )}

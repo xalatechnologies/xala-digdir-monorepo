@@ -12,6 +12,7 @@ import * as React from 'react';
 import { Heading, Paragraph, Button } from '@xala/ds';
 import { Link, useLocation } from 'react-router-dom';
 import { useAuth } from '@xala/auth';
+import { useT } from '@xala/i18n';
 
 // =============================================================================
 // Types
@@ -59,6 +60,7 @@ function ChevronLeftIcon(): React.ReactElement {
 }
 
 function ListIcon(): React.ReactElement {
+  const t = useT();
   return (
     <svg
       width="16"
@@ -288,11 +290,7 @@ export function HelpLayout({
 
           {/* Inject CSS for responsive TOC */}
           <style>{`
-            @media (min-width: 1024px) {
-              .help-toc {
-                display: block !important;
-              }
-            }
+            t('common.media_minwidth_1024px_helptoc')
           `}</style>
         </aside>
       )}

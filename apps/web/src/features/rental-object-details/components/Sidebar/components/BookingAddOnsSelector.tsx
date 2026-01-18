@@ -315,7 +315,7 @@ export function BookingAddOnsSelector({
                             data-size="xs"
                             style={{ marginLeft: 'var(--ds-spacing-2)' }}
                           >
-                            Påkrevd
+                            t('status.paakrevd')
                           </Badge>
                         )}
                         {addOn.requiresApproval && (

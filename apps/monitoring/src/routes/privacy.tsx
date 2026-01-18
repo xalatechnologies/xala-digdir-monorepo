@@ -10,6 +10,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
+import { useT } from '@xala/i18n';
   Card,
   Heading,
   Paragraph,
@@ -33,6 +34,7 @@ const MOBILE_BREAKPOINT = 768;
 export function PrivacyPage() {
   const navigate = useNavigate();
   const { logout } = useAuth();
+  const t = useT();
   const [isMobile, setIsMobile] = useState(
     typeof window !== 'undefined' ? window.innerWidth < MOBILE_BREAKPOINT : false
   );
@@ -82,7 +84,7 @@ export function PrivacyPage() {
       setExportSuccess(true);
       setTimeout(() => setExportSuccess(false), 5000);
     } catch (error) {
-      console.error('Failed to request data export:', error);
+      console.error('t('validation.failed_to_request_data')', error);
     } finally {
       setIsExporting(false);
     }
@@ -91,7 +93,7 @@ export function PrivacyPage() {
   const handleDeleteAccount = async () => {
     if (
       window.confirm(
-        'Er du sikker på at du vil slette kontoen din? Dette kan ikke angres. All din data vil bli permanent slettet.'
+        't('common.er_du_sikker_paa')'
       )
     ) {
       try {
@@ -105,7 +107,7 @@ export function PrivacyPage() {
         await logout();
         navigate('/');
       } catch (error) {
-        console.error('Failed to request account deletion:', error);
+        console.error('t('validation.failed_to_request_account')', error);
       }
     }
   };
@@ -116,7 +118,7 @@ export function PrivacyPage() {
     try {
       await updateConsentsMutation.mutateAsync(newConsents);
     } catch (error) {
-      console.error('Failed to update consents:', error);
+      console.error('t('validation.failed_to_update_consents')', error);
       setConsentSettings(consentSettings);
     }
   };
@@ -149,7 +151,7 @@ export function PrivacyPage() {
         </div>
         {exportSuccess && (
           <Alert style={{ maxWidth: isMobile ? '100%' : '400px' }}>
-            Din eksportforespørsel er mottatt og vil bli behandlet innen 30 dager
+            t('common.din_eksportforesporsel_er_mottatt')
           </Alert>
         )}
       </div>
@@ -184,7 +186,7 @@ export function PrivacyPage() {
               style={{ minHeight: '44px' }}
             >
               <DownloadIcon />
-              {isExporting ? 'Behandler forespørsel...' : 'Be om dataeksport'}
+              {isExporting ? 't('common.behandler_foresporsel')' : 'Be om dataeksport'}
             </Button>
             <Paragraph data-size="xs" style={{ marginTop: 'var(--ds-spacing-2)', marginBottom: 0, color: 'var(--ds-color-neutral-text-subtle)' }}>
               Du vil motta en e-post med en nedlastingslenke når eksporten er klar (innen 30 dager)
@@ -217,14 +219,14 @@ export function PrivacyPage() {
             }}>
               <div style={{ flex: 1 }}>
                 <Paragraph data-size="sm" style={{ margin: 0, fontWeight: 500 }}>
-                  Markedsføring
+                  t('common.markedsforing')
                 </Paragraph>
                 <Paragraph data-size="xs" style={{ margin: 0, marginTop: 'var(--ds-spacing-1)', color: 'var(--ds-color-neutral-text-subtle)' }}>
                   Motta tips, tilbud og nyheter på e-post
                 </Paragraph>
               </div>
               <Switch
-                aria-label="Markedsføring"
+                aria-label={t('common.markedsforing')}
                 checked={consentSettings.marketing}
                 onChange={(e) => handleUpdateConsent('marketing', e.target.checked)}
               />
@@ -265,14 +267,14 @@ export function PrivacyPage() {
             }}>
               <div style={{ flex: 1 }}>
                 <Paragraph data-size="sm" style={{ margin: 0, fontWeight: 500 }}>
-                  Deling med tredjeparter
+                  t('common.deling_med_tredjeparter')
                 </Paragraph>
                 <Paragraph data-size="xs" style={{ margin: 0, marginTop: 'var(--ds-spacing-1)', color: 'var(--ds-color-neutral-text-subtle)' }}>
                   Tillat deling av data med samarbeidspartnere
                 </Paragraph>
               </div>
               <Switch
-                aria-label="Deling med tredjeparter"
+                aria-label={t('common.deling_med_tredjeparter')}
                 checked={consentSettings.thirdPartySharing}
                 onChange={(e) => handleUpdateConsent('thirdPartySharing', e.target.checked)}
               />
@@ -347,22 +349,22 @@ export function PrivacyPage() {
           <ul style={{ margin: 0, paddingLeft: 'var(--ds-spacing-5)' }}>
             <li>
               <Paragraph data-size="sm" style={{ margin: 0 }}>
-                <strong>Rett til innsyn:</strong> Du kan be om en kopi av dine personopplysninger
+                <strong>{t('common.rett_til_innsyn')}</strong> Du kan be om en kopi av dine personopplysninger
               </Paragraph>
             </li>
             <li>
               <Paragraph data-size="sm" style={{ margin: 0 }}>
-                <strong>Rett til retting:</strong> Du kan korrigere feil i dine personopplysninger
+                <strong>{t('common.rett_til_retting')}</strong> Du kan korrigere feil i dine personopplysninger
               </Paragraph>
             </li>
             <li>
               <Paragraph data-size="sm" style={{ margin: 0 }}>
-                <strong>Rett til sletting:</strong> Du kan be om at dine personopplysninger slettes
+                <strong>{t('common.rett_til_sletting')}</strong> Du kan be om at dine personopplysninger slettes
               </Paragraph>
             </li>
             <li>
               <Paragraph data-size="sm" style={{ margin: 0 }}>
-                <strong>Rett til dataportabilitet:</strong> Du kan få dine data i et maskinlesbart format
+                <strong>{t('common.rett_til_dataportabilitet')}</strong> Du kan få dine data i et maskinlesbart format
               </Paragraph>
             </li>
           </ul>

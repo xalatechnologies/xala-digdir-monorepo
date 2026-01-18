@@ -27,16 +27,16 @@ import { useT, useLocale } from '@xala/i18n';
 
 // Payment status filter options
 const PAYMENT_STATUS_OPTIONS = [
-  { id: 'all', label: 'Alle betalinger' },
+  { id: 'all', label: t('common.alle_betalinger') },
   { id: 'paid', label: 'Betalt' },
-  { id: 'unpaid', label: 'Ikke betalt' },
-  { id: 'partial', label: 'Delvis betalt' },
+  { id: 'unpaid', label: t('common.ikke_betalt') },
+  { id: 'partial', label: t('common.delvis_betalt') },
   { id: 'refunded', label: 'Refundert' },
 ];
 
 // Payment provider filter options
 const PROVIDER_OPTIONS = [
-  { id: 'all', label: 'Alle betalingsleverandører' },
+  { id: 'all', label: t('common.alle_betalingsleverandorer') },
   { id: 'vipps', label: 'Vipps' },
   { id: 'stripe', label: 'Stripe' },
   { id: 'manual', label: 'Manuell' },

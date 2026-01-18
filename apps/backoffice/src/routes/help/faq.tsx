@@ -8,6 +8,7 @@ import * as React from 'react';
 import { Paragraph, Button, Heading, Link } from '@xala/ds';
 import { useAuth } from '@xala/auth';
 import { HelpLayout, HelpFAQItem, type TocItem } from './components';
+import { useT } from '@xala/i18n';
 
 // =============================================================================
 // FAQ Data
@@ -90,7 +91,7 @@ const allFAQCategories: FAQCategory[] = [
   // === Admin FAQs ===
   {
     id: 'users',
-    title: 'Brukere og tilgang',
+    title: t('common.brukere_og_tilgang'),
     roles: ['admin', 'tenant_admin', 'org_admin'],
     faqs: [
       {
@@ -153,7 +154,7 @@ const allFAQCategories: FAQCategory[] = [
   // === System FAQs (tenant_admin and above) ===
   {
     id: 'settings',
-    title: 'Innstillinger og system',
+    title: t('common.innstillinger_og_system'),
     roles: ['admin', 'tenant_admin'],
     faqs: [
       {
@@ -176,7 +177,7 @@ const allFAQCategories: FAQCategory[] = [
   // === Security FAQs ===
   {
     id: 'security',
-    title: 'Sikkerhet og innlogging',
+    title: t('common.sikkerhet_og_innlogging'),
     faqs: [
       {
         question: 'Jeg har glemt passordet mitt. Hva gjør jeg?',
@@ -203,6 +204,7 @@ const allFAQCategories: FAQCategory[] = [
 
 export default function FAQPage(): React.ReactElement {
   const { data: session } = useAuth();
+  const t = useT();
   const userRole = session?.user?.role ?? 'org_member';
 
   // Filter categories based on user role
@@ -234,8 +236,8 @@ export default function FAQPage(): React.ReactElement {
 
   return (
     <HelpLayout
-      title="Vanlige spørsmål (FAQ)"
-      description="Svar på ofte stilte spørsmål"
+      title={t('common.vanlige_sporsmaal_faq')}
+      description={t('common.svar_paa_ofte_stilte')}
       tocItems={tocItems}
       showBackButton
     >

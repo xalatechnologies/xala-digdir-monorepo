@@ -22,14 +22,15 @@ interface UserFormProps {
 }
 
 const roleOptions = [
-  { value: 'admin', label: 'Administrator', description: 'Full tilgang til alle funksjoner' },
-  { value: 'saksbehandler', label: 'Saksbehandler', description: 'Behandle bookinger og forespørsler' },
+  { value: 'admin', label: 'Administrator', description: 't('common.full_tilgang_til_alle')' },
+  { value: 'saksbehandler', label: 'Saksbehandler', description: 't('common.behandle_bookinger_og_foresporsler')' },
 ];
 
 export function UserForm({ user, onSubmit, onCancel }: UserFormProps) {
   // Translation function available for future localization
   const _t = useT(); // eslint-disable-line @typescript-eslint/no-unused-vars
   const [formData, setFormData] = useState<CreateUserDTO>({
+  const t = useT();
     name: '',
     email: '',
     phone: '',
@@ -115,7 +116,7 @@ export function UserForm({ user, onSubmit, onCancel }: UserFormProps) {
         {/* Info Alert */}
         {!user && (
           <Alert severity="info">
-            Brukeren vil motta en e-postinvitasjon til den angitte e-postadressen for å opprette passord og få tilgang til backoffice.
+            t('common.brukeren_vil_motta_en')
           </Alert>
         )}
 
@@ -123,24 +124,24 @@ export function UserForm({ user, onSubmit, onCancel }: UserFormProps) {
         <FormSection title="Brukerinformasjon">
           <Stack spacing={4}>
             <FormField
-              label="Fullt navn"
+              label={t('common.fullt_navn')}
               required
               
-              description="Brukerens fulle navn"
+              description={t('common.brukerens_fulle_navn')}
             >
               <Textfield
                 value={formData.name}
                 onChange={(e) => handleChange('name')(e.target.value)}
-                placeholder="F.eks. Ola Nordmann"
+                placeholder={t('common.feks_ola_nordmann')}
                 
               />
             </FormField>
 
             <FormField
-              label="E-post"
+              label={t('common.epost')}
               required
               error={errors.email || undefined}
-              description={user ? 'Brukerens e-postadresse' : 'Invitasjonen sendes til denne adressen'}
+              description={user ? 't('common.brukerens_epostadresse')' : 'Invitasjonen sendes til denne adressen'}
             >
               <Textfield
                 type="email"
@@ -154,7 +155,7 @@ export function UserForm({ user, onSubmit, onCancel }: UserFormProps) {
 
             <FormField
               label="Telefon"
-              description="Valgfri kontaktinformasjon"
+              description={t('common.valgfri_kontaktinformasjon')}
             >
               <Textfield
                 type="tel"
@@ -167,13 +168,13 @@ export function UserForm({ user, onSubmit, onCancel }: UserFormProps) {
         </FormSection>
 
         {/* Role Assignment */}
-        <FormSection title="Tilgangsnivå">
+        <FormSection title={t('common.tilgangsnivaa')}>
           <Stack spacing={4}>
             <FormField
               label="Rolle"
               required
               error={errors.role || undefined}
-              description="Velg brukerens rolle og tilgangsnivå"
+              description={t('common.velg_brukerens_rolle_og')}
             >
               <Select
                 value={formData.role}
@@ -202,32 +203,32 @@ export function UserForm({ user, onSubmit, onCancel }: UserFormProps) {
           <div style={{ fontSize: 'var(--ds-font-size-sm)', color: 'var(--ds-color-neutral-text-subtle)' }}>
             {formData.role === 'admin' ? (
               <ul style={{ margin: 0, paddingLeft: 'var(--ds-spacing-5)' }}>
-                <li>Full tilgang til alle funksjoner</li>
-                <li>Behandle bookinger og forespørsler</li>
-                <li>Administrere organisasjoner og medlemmer</li>
-                <li>Administrere brukere og roller</li>
-                <li>Konfigurere systeminnstillinger</li>
-                <li>Se rapporter og statistikk</li>
-                <li>Se revisjonslogger</li>
+                <li>{t('common.full_tilgang_til_alle')}</li>
+                <li>{t('common.behandle_bookinger_og_foresporsler')}</li>
+                <li>{t('common.administrere_organisasjoner_og_medlemmer')}</li>
+                <li>{t('common.administrere_brukere_og_roller')}</li>
+                <li>{t('common.konfigurere_systeminnstillinger')}</li>
+                <li>{t('common.se_rapporter_og_statistikk')}</li>
+                <li>{t('common.se_revisjonslogger')}</li>
               </ul>
             ) : formData.role === 'saksbehandler' ? (
               <ul style={{ margin: 0, paddingLeft: 'var(--ds-spacing-5)' }}>
-                <li>Behandle bookinger og forespørsler</li>
-                <li>Administrere lokaler og ressurser</li>
-                <li>Administrere sesongleie</li>
-                <li>Behandle meldinger fra brukere</li>
-                <li>Se kalender og rapporter</li>
-                <li>Kan ikke administrere brukere eller innstillinger</li>
+                <li>{t('common.behandle_bookinger_og_foresporsler')}</li>
+                <li>{t('common.administrere_lokaler_og_ressurser')}</li>
+                <li>{t('common.administrere_sesongleie')}</li>
+                <li>{t('common.behandle_meldinger_fra_brukere')}</li>
+                <li>{t('common.se_kalender_og_rapporter')}</li>
+                <li>{t('common.kan_ikke_administrere_brukere')}</li>
               </ul>
             ) : (
-              <div style={{ fontSize: 'var(--ds-font-size-sm)' }}>Ingen tilganger</div>
+              <div style={{ fontSize: 'var(--ds-font-size-sm)' }}>{t('common.ingen_tilganger')}</div>
             )}
           </div>
         </FormSection>
 
         {/* Actions */}
         <FormActions
-          submitText={user ? 'Lagre endringer' : 'Send invitasjon'}
+          submitText={user ? 't('common.lagre_endringer')' : 'Send invitasjon'}
           onCancel={onCancel}
           isSubmitting={isSubmitting}
         />

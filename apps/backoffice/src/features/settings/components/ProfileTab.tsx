@@ -45,6 +45,7 @@ export function ProfileTab() {
 
   // Queries
   const { data: currentUserData } = useCurrentUser();
+  const t = useT();
   const currentUser = currentUserData?.data;
 
   // Mutations
@@ -180,7 +181,7 @@ export function ProfileTab() {
                 disabled={isUploadingAvatar} type="button"
               >
                 <CameraIcon />
-                {isUploadingAvatar ? 'Laster opp...' : 'Endre bilde'}
+                {isUploadingAvatar ? 't('common.laster_opp')' : 'Endre bilde'}
               </Button>
               <Paragraph data-size="xs" style={{ color: 'var(--ds-color-neutral-text-subtle)' }}>
                 JPG, PNG eller GIF (maks 5MB)
@@ -203,16 +204,16 @@ export function ProfileTab() {
           </div>
 
           <Stack spacing={4}>
-            <FormField label="Fullt navn" required>
-              <Textfield aria-label="Fullt navn"
+            <FormField label={t('common.fullt_navn')} required>
+              <Textfield aria-label={t('common.fullt_navn')}
                 value={profileData.name}
                 onChange={(e) => setProfileData(prev => ({ ...prev, name: e.target.value }))}
-                placeholder="Ola Nordmann"
+                placeholder={t('common.ola_nordmann')}
               />
             </FormField>
 
-            <FormField label="E-postadresse" required>
-              <Textfield aria-label="E-postadresse"
+            <FormField label={t('common.epostadresse')} required>
+              <Textfield aria-label={t('common.epostadresse')}
                 value={profileData.email}
                 onChange={(e) => setProfileData(prev => ({ ...prev, email: e.target.value }))}
                 placeholder="ola.nordmann@example.com"
@@ -228,19 +229,19 @@ export function ProfileTab() {
             </FormField>
 
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 'var(--ds-spacing-3)' }}>
-              <FormField label="Fødselsdato">
-                <Textfield aria-label="Fødselsdato"
+              <FormField label={t('common.fodselsdato')}>
+                <Textfield aria-label={t('common.fodselsdato')}
                   type="date"
                   value={profileData.dateOfBirth}
                   onChange={(e) => setProfileData(prev => ({ ...prev, dateOfBirth: e.target.value }))}
                 />
               </FormField>
 
-              <FormField label="Fødselsnummer">
-                <Textfield aria-label="Fødselsnummer"
+              <FormField label={t('common.fodselsnummer')}>
+                <Textfield aria-label={t('common.fodselsnummer')}
                   value={profileData.nationalId}
                   onChange={(e) => setProfileData(prev => ({ ...prev, nationalId: e.target.value }))}
-                  placeholder="11 siffer"
+                  placeholder={t('common.11_siffer')}
                   maxLength={11}
                 />
               </FormField>
@@ -250,7 +251,7 @@ export function ProfileTab() {
           <div style={{ paddingTop: 'var(--ds-spacing-3)', borderTop: '1px solid var(--ds-color-neutral-border-subtle)' }}>
             <Button onClick={handleSaveProfile} disabled={isSaving} type="button">
               <SaveIcon />
-              {isSaving ? 'Lagrer...' : 'Lagre endringer'}
+              {isSaving ? 't('common.lagrer')' : 'Lagre endringer'}
             </Button>
           </div>
         </Stack>

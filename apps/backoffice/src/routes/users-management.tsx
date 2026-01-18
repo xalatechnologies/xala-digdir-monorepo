@@ -37,7 +37,7 @@ const ROLES = [
 const mockUsers = [
   {
     id: 'user-001',
-    name: 'Ola Nordmann',
+    name: t('common.ola_nordmann'),
     email: 'ola@kommune.no',
     role: 'admin',
     status: 'active',
@@ -45,7 +45,7 @@ const mockUsers = [
   },
   {
     id: 'user-002',
-    name: 'Kari Hansen',
+    name: t('common.kari_hansen'),
     email: 'kari@kommune.no',
     role: 'saksbehandler',
     status: 'active',
@@ -53,7 +53,7 @@ const mockUsers = [
   },
   {
     id: 'user-003',
-    name: 'Per Olsen',
+    name: t('common.per_olsen'),
     email: 'per@kommune.no',
     role: 'viewer',
     status: 'inactive',
@@ -80,7 +80,7 @@ export function UsersManagementPage() {
 
   const handleDeactivate = async (id: string, name: string) => {
     const confirmed = await confirm({
-      title: 'Deaktiver bruker',
+      title: t('common.deaktiver_bruker'),
       description: `Er du sikker på at du vil deaktivere "${name}"?`,
       confirmText: 'Deaktiver',
       cancelText: t("ui.cancel"),
@@ -175,7 +175,7 @@ export function UsersManagementPage() {
               disabled={!inviteEmail.trim()}
               style={{ minHeight: '44px' }}
             >
-              Send invitasjon
+              t('actions.send_invitasjon')
             </Button>
           </div>
         </Card>
@@ -218,7 +218,7 @@ export function UsersManagementPage() {
                 <Table.HeaderCell>Bruker</Table.HeaderCell>
                 <Table.HeaderCell>Rolle</Table.HeaderCell>
                 <Table.HeaderCell>Status</Table.HeaderCell>
-                <Table.HeaderCell>Sist innlogget</Table.HeaderCell>
+                <Table.HeaderCell>{t('common.sist_innlogget')}</Table.HeaderCell>
                 <Table.HeaderCell style={{ width: '160px' }}>Handlinger</Table.HeaderCell>
               </Table.Row>
             </Table.Head>

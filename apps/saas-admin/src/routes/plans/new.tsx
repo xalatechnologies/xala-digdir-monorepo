@@ -269,7 +269,7 @@ export function PlanCreatePage() {
                 onChange={(e) => handleSlugChange(e.target.value)}
                 error={errors.slug}
                 required
-                placeholder="professional"
+                placeholder={t('common.professional')}
               />
             </div>
 

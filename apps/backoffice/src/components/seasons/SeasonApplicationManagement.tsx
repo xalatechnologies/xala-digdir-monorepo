@@ -97,7 +97,7 @@ export function SeasonApplicationManagement({ seasonId, canProcess }: SeasonAppl
 
   // Handlers
   const handleApprove = async (applicationId: string) => {
-    if (confirm('Godkjenn denne søknaden?')) {
+    if (confirm('t('common.godkjenn_denne_soknaden')')) {
       await approveMutation.mutateAsync(applicationId);
     }
   };
@@ -175,7 +175,7 @@ export function SeasonApplicationManagement({ seasonId, canProcess }: SeasonAppl
             <Dropdown.Item onClick={() => setFilterStatus('all')}>Alle</Dropdown.Item>
             <Dropdown.Item onClick={() => setFilterStatus('pending')}>Venter</Dropdown.Item>
             <Dropdown.Item onClick={() => setFilterStatus('approved')}>Godkjent</Dropdown.Item>
-            <Dropdown.Item onClick={() => setFilterStatus('rejected')}>Avslått</Dropdown.Item>
+            <Dropdown.Item onClick={() => setFilterStatus('rejected')}>{t('common.avslaatt')}</Dropdown.Item>
           </Dropdown.Content>
         </Dropdown>
 
@@ -187,7 +187,7 @@ export function SeasonApplicationManagement({ seasonId, canProcess }: SeasonAppl
             </Button>
           </Dropdown.Trigger>
           <Dropdown.Content>
-            <Dropdown.Item onClick={() => setFilterVenue('all')}>Alle lokaler</Dropdown.Item>
+            <Dropdown.Item onClick={() => setFilterVenue('all')}>{t('common.alle_lokaler')}</Dropdown.Item>
             {venues.map(([id, name]) => (
               <Dropdown.Item key={id} onClick={() => setFilterVenue(id)}>
                 {name}
@@ -206,7 +206,7 @@ export function SeasonApplicationManagement({ seasonId, canProcess }: SeasonAppl
           </Heading>
           <Paragraph data-size="sm" style={{ color: 'var(--ds-color-neutral-text-subtle)' }}>
             {applications.length === 0
-              ? 'Ingen søknader er mottatt ennå'
+              ? 't('common.ingen_soknader_er_mottatt')'
               : 'Ingen søknader matcher valgte filtre'}
           </Paragraph>
         </div>

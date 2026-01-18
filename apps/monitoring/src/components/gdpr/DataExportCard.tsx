@@ -11,12 +11,14 @@ import { useState } from 'react';
 import { Card, Heading, Paragraph, Button } from '@xala/ds';
 import { useMyGdprRequests, useCreateGdprRequest } from '@digilist/client-sdk/hooks';
 import type { GdprRequest } from '@digilist/client-sdk/types';
+import { useT } from '@xala/i18n';
 
 export function DataExportCard() {
   const [isRequesting, setIsRequesting] = useState(false);
 
   // Fetch user's GDPR requests
   const { data: requestsData, isLoading } = useMyGdprRequests({
+  const t = useT();
     requestType: 'export',
     limit: 1
   });
@@ -32,7 +34,7 @@ export function DataExportCard() {
     try {
       await createRequest.mutateAsync({ requestType: 'export' });
     } catch (error) {
-      console.error('Failed to create export request:', error);
+      console.error('t('validation.failed_to_create_export')', error);
     } finally {
       setIsRequesting(false);
     }
@@ -102,7 +104,7 @@ export function DataExportCard() {
             disabled={isRequesting || createRequest.isPending}
             style={{ minHeight: '44px', alignSelf: 'flex-start' }}
           >
-            {isRequesting || createRequest.isPending ? 'Oppretter forespørsel...' : 'Eksporter mine data'}
+            {isRequesting || createRequest.isPending ? 't('common.oppretter_foresporsel')' : 'Eksporter mine data'}
           </Button>
         )}
 
@@ -157,7 +159,7 @@ export function DataExportCard() {
                   onClick={handleDownload}
                   style={{ minHeight: '40px', alignSelf: 'flex-start' }}
                 >
-                  Last ned mine data (JSON)
+                  t('actions.last_ned_mine_data')
                 </Button>
               </div>
             )}

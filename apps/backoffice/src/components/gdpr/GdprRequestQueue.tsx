@@ -43,6 +43,7 @@ function calculateDaysRemaining(requestedAt: string): number {
 
 // Helper to get urgency color based on days remaining
 function getUrgencyColor(daysRemaining: number): string {
+  const t = useT();
   if (daysRemaining <= 3) return 'var(--ds-color-danger-base)';
   if (daysRemaining <= 7) return 'var(--ds-color-warning-base)';
   return 'var(--ds-color-neutral-text-default)';
@@ -89,10 +90,10 @@ const CopyIcon = ({ size = 14, style }: { size?: number; style?: React.CSSProper
 
 // Sort options
 const SORT_OPTIONS = [
-  { id: 'urgency-asc', label: 'Mest haster først', field: 'daysRemaining', order: 'asc' },
-  { id: 'urgency-desc', label: 'Minst haster først', field: 'daysRemaining', order: 'desc' },
-  { id: 'date-desc', label: 'Nyeste først', field: 'requestedAt', order: 'desc' },
-  { id: 'date-asc', label: 'Eldste først', field: 'requestedAt', order: 'asc' },
+  { id: 'urgency-asc', label: t('common.mest_haster_forst'), field: 'daysRemaining', order: 'asc' },
+  { id: 'urgency-desc', label: t('common.minst_haster_forst'), field: 'daysRemaining', order: 'desc' },
+  { id: 'date-desc', label: t('common.nyeste_forst'), field: 'requestedAt', order: 'desc' },
+  { id: 'date-asc', label: t('common.eldste_forst'), field: 'requestedAt', order: 'asc' },
 ];
 
 interface GdprRequestQueueProps {
@@ -232,7 +233,7 @@ export function GdprRequestQueue({ onRequestClick }: GdprRequestQueueProps) {
           gap: 'var(--ds-spacing-4)',
         }}
       >
-        <Spinner aria-label="Laster forespørsler..." />
+        <Spinner aria-label={t('common.laster_foresporsler')} />
         <Text style={{ color: 'var(--ds-color-neutral-text-subtle)' }}>
           Laster forespørsler...
         </Text>
@@ -254,7 +255,7 @@ export function GdprRequestQueue({ onRequestClick }: GdprRequestQueueProps) {
         }}
       >
         <Paragraph style={{ color: 'var(--ds-color-neutral-text-subtle)' }}>
-          {searchQuery ? 'Ingen forespørsler funnet' : 'Ingen ventende forespørsler'}
+          {searchQuery ? 't('common.ingen_foresporsler_funnet')' : 'Ingen ventende forespørsler'}
         </Paragraph>
         {searchQuery && (
           <Button
@@ -290,7 +291,7 @@ export function GdprRequestQueue({ onRequestClick }: GdprRequestQueueProps) {
             value={searchValue}
             onSearchChange={handleSearchChange}
             onSearch={handleSearchSubmit}
-            placeholder="Søk etter bruker, type eller ID..."
+            placeholder={t('common.sok_etter_bruker_type')}
           />
         </div>
 
@@ -336,7 +337,7 @@ export function GdprRequestQueue({ onRequestClick }: GdprRequestQueueProps) {
               <Table.HeaderCell>Type</Table.HeaderCell>
               <Table.HeaderCell>Status</Table.HeaderCell>
               <Table.HeaderCell>Forespurt</Table.HeaderCell>
-              <Table.HeaderCell>Dager igjen</Table.HeaderCell>
+              <Table.HeaderCell>{t('common.dager_igjen')}</Table.HeaderCell>
               <Table.HeaderCell>ID</Table.HeaderCell>
               <Table.HeaderCell style={{ width: '60px' }}></Table.HeaderCell>
             </Table.Row>
@@ -405,8 +406,8 @@ export function GdprRequestQueue({ onRequestClick }: GdprRequestQueueProps) {
                         e.stopPropagation();
                         handleCopyId(request.id);
                       }}
-                      aria-label="Kopier ID"
-                      title="Kopier ID"
+                      aria-label={t('common.kopier_id')}
+                      title={t('common.kopier_id')}
                       style={{
                         display: 'flex',
                         alignItems: 'center',

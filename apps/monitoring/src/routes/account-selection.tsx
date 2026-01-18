@@ -85,7 +85,7 @@ export function AccountSelectionPage(): React.ReactElement {
   return (
     <LoginLayout
       brandName="DIGILIST"
-      brandTagline="ENKEL BOOKING"
+      brandTagline={t('common.enkel_booking')}
       title={t('minside.accountSelection.title') || 'Velg konto'}
       subtitle={t('minside.accountSelection.subtitle') || 'Hvordan vil du bruke tjenesten?'}
       panelTitle="MIN SIDE"

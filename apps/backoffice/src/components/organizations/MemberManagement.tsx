@@ -39,6 +39,7 @@ export function MemberManagement({ organizationId, members }: MemberManagementPr
 
   // Fetch users for the add member dropdown
   const { data: usersData } = useUsers();
+  const t = useT();
   const allUsers = usersData?.data ?? [];
 
   // Filter out users who are already members
@@ -71,7 +72,7 @@ export function MemberManagement({ organizationId, members }: MemberManagementPr
   };
 
   const handleRemoveMember = async (memberId: string) => {
-    if (!confirm('Er du sikker på at du vil fjerne dette medlemmet?')) {
+    if (!confirm('t('common.er_du_sikker_paa')')) {
       return;
     }
 
@@ -115,13 +116,13 @@ export function MemberManagement({ organizationId, members }: MemberManagementPr
                 Legg til nytt medlem
               </Paragraph>
 
-              <FormField label="Velg bruker" required>
+              <FormField label={t('common.velg_bruker')} required>
                 <Select
                   value={selectedUserId}
                   onChange={(e) => setSelectedUserId(e.target.value)}
                   disabled={isSubmitting}
                 >
-                  <option value="">Velg en bruker...</option>
+                  <option value="">{t('common.velg_en_bruker')}</option>
                   {availableUsers.map(user => (
                     <option key={user.id} value={user.id}>
                       {user.name} ({user.email})
@@ -146,7 +147,7 @@ export function MemberManagement({ organizationId, members }: MemberManagementPr
                   onClick={handleAddMember}
                   disabled={!selectedUserId || isSubmitting} type="button"
                 >
-                  {isSubmitting ? 'Legger til...' : 'Legg til'}
+                  {isSubmitting ? 't('common.legger_til')' : 'Legg til'}
                 </Button>
                 <Button
                   variant="secondary"
@@ -193,7 +194,7 @@ export function MemberManagement({ organizationId, members }: MemberManagementPr
               <Table.HeaderCell>Navn</Table.HeaderCell>
               <Table.HeaderCell>E-post</Table.HeaderCell>
               <Table.HeaderCell>Rolle</Table.HeaderCell>
-              <Table.HeaderCell>Medlem siden</Table.HeaderCell>
+              <Table.HeaderCell>{t('common.medlem_siden')}</Table.HeaderCell>
               <Table.HeaderCell style={{ width: '80px' }}>Handlinger</Table.HeaderCell>
             </Table.Row>
           </Table.Head>
@@ -233,7 +234,7 @@ export function MemberManagement({ organizationId, members }: MemberManagementPr
                         <Dropdown.Item>
                           <Dropdown.Button onClick={() => handleUpdateRole(member.id, member.role === 'admin' ? 'member' : 'admin')}>
                             <EditIcon />
-                            {member.role === 'admin' ? 'Gjør til medlem' : 'Gjør til admin'}
+                            {member.role === 'admin' ? 't('common.gjor_til_medlem')' : 'Gjør til admin'}
                           </Dropdown.Button>
                         </Dropdown.Item>
                         <Dropdown.Item>

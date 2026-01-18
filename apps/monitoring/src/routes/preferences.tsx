@@ -63,17 +63,17 @@ export function UserPreferencesPage() {
   };
 
   const notificationSettings = [
-    { key: 'emailBooking', label: 'Bookingbekreftelser', description: 'Motta e-post ved nye bookinger' },
-    { key: 'emailReminder', label: 'E-post påminnelser', description: 'Påminnelse 24 timer før booking' },
-    { key: 'emailNewsletter', label: 'Nyhetsbrev', description: 'Motta nyheter og tilbud' },
-    { key: 'smsReminder', label: 'SMS-påminnelser', description: 'Motta påminnelse via SMS' },
-    { key: 'pushNotifications', label: 'Push-varsler', description: 'Sanntidsvarsler i nettleseren' },
+    { key: 'emailBooking', label: 'Bookingbekreftelser', description: t('common.motta_epost_ved_nye') },
+    { key: 'emailReminder', label: t('common.epost_paaminnelser'), description: t('common.paaminnelse_24_timer_for') },
+    { key: 'emailNewsletter', label: 'Nyhetsbrev', description: t('common.motta_nyheter_og_tilbud') },
+    { key: 'smsReminder', label: t('common.smspaaminnelser'), description: t('common.motta_paaminnelse_via_sms') },
+    { key: 'pushNotifications', label: t('common.pushvarsler'), description: t('common.sanntidsvarsler_i_nettleseren') },
   ];
 
   const privacySettings = [
-    { key: 'showProfile', label: 'Vis profil', description: 'La andre brukere se profilen din' },
-    { key: 'shareActivity', label: 'Del aktivitet', description: 'Del bookinghistorikk med organisasjonen' },
-    { key: 'allowAnalytics', label: 'Anonyme analyser', description: 'Hjelp oss forbedre tjenesten' },
+    { key: 'showProfile', label: 'Vis profil', description: t('common.la_andre_brukere_se') },
+    { key: 'shareActivity', label: t('common.del_aktivitet'), description: t('common.del_bookinghistorikk_med_organisasjonen') },
+    { key: 'allowAnalytics', label: t('common.anonyme_analyser'), description: t('common.hjelp_oss_forbedre_tjenesten') },
   ];
 
   return (
@@ -191,13 +191,13 @@ export function UserPreferencesPage() {
               onChange={(e) => updatePref('theme', e.target.value)}
               style={{ width: '100%' }}
             >
-              <option value="system">Følg system</option>
+              <option value="system">{t('common.folg_system')}</option>
               <option value="light">Lyst</option>
-              <option value="dark">Mørkt</option>
+              <option value="dark">{t('common.morkt')}</option>
             </Select>
           </div>
           <div>
-            <label style={{ display: 'block', marginBottom: 'var(--ds-spacing-2)', fontWeight: 500 }}>Språk</label>
+            <label style={{ display: 'block', marginBottom: 'var(--ds-spacing-2)', fontWeight: 500 }}>{t('common.spraak')}</label>
             <Select
               value={prefs.language}
               onChange={(e) => updatePref('language', e.target.value)}

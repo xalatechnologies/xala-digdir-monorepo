@@ -2,6 +2,7 @@ import { Card, Heading, Paragraph, Button, Badge } from '@xala/ds';
 import { useNavigate } from 'react-router-dom';
 import type { SeasonApplication } from '@digilist/client-sdk/types';
 import { WEEKDAY_LABELS } from '../constants';
+import { useT } from '@xala/i18n';
 
 /**
  * Application Card Component
@@ -22,6 +23,7 @@ function CalendarIcon() {
 }
 
 function ClockIcon() {
+  const t = useT();
   return (
     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
       <circle cx="12" cy="12" r="10" />
@@ -42,7 +44,7 @@ function MapPinIcon() {
 // Status configuration
 const APPLICATION_STATUS_CONFIG = {
   pending: {
-    label: 'Til behandling',
+    label: t('common.til_behandling'),
     color: 'var(--ds-color-warning-text-default)',
     bgColor: 'var(--ds-color-warning-surface-default)',
   },
@@ -52,7 +54,7 @@ const APPLICATION_STATUS_CONFIG = {
     bgColor: 'var(--ds-color-success-surface-default)',
   },
   rejected: {
-    label: 'Avslått',
+    label: t('common.avslaatt'),
     color: 'var(--ds-color-danger-text-default)',
     bgColor: 'var(--ds-color-danger-surface-default)',
   },
@@ -279,7 +281,7 @@ export function ApplicationCard({ application, showActions = true }: Application
             data-size="sm"
             onClick={handleViewSeason}
           >
-            Se sesong
+            t('actions.se_sesong')
           </Button>
           {application.status === 'approved' && (
             <Button
@@ -288,7 +290,7 @@ export function ApplicationCard({ application, showActions = true }: Application
               data-size="sm"
               onClick={handleViewListing}
             >
-              Se lokale
+              t('actions.se_lokale')
             </Button>
           )}
         </div>

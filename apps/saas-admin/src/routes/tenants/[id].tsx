@@ -6,6 +6,7 @@
 import { useState, useMemo } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import {
+import { useT } from '@xala/i18n';
   Card,
   Heading,
   Paragraph,
@@ -85,6 +86,7 @@ const categoryColors: Record<FeatureFlagCategory, 'info' | 'success' | 'warning'
 
 export function TenantDetailPage() {
   const { id } = useParams<{ id: string }>();
+  const t = useT();
   const navigate = useNavigate();
 
   // State for license key display (only shown once after rotation)
@@ -177,7 +179,7 @@ export function TenantDetailPage() {
   };
 
   const handleRotateLicense = async () => {
-    if (confirm('Er du sikker på at du vil rotere lisensnøkkelen? Den gamle nøkkelen vil bli ugyldig umiddelbart.')) {
+    if (confirm('t('common.er_du_sikker_paa')')) {
       const result = await rotateLicenseMutation.mutateAsync(id!);
       setNewLicenseKey(result.data.licenseKey);
     }
@@ -291,19 +293,13 @@ export function TenantDetailPage() {
         <StatCard
           title="Organisasjoner"
           value={`${tenant.usage.organizationsCount} / ${tenant.seatLimits.maxOrganizations}`}
-          description={`${Math.round((tenant.usage.organizationsCount / tenant.seatLimits.maxOrganizations) * 100)}% brukt`}
-          color="var(--ds-color-success-text-default)"
-          icon={<BuildingIcon />}
-        />
-        <StatCard
-          title="Leieobjekter"
-          value={`${tenant.usage.listingsCount} / ${tenant.seatLimits.maxListings}`}
+          description={`${Math.round((tenant.usage.organizationsCount / tenant.seatLimits.maxOrganizations) * 100)}% brukt`t('common.colorvardscolorsuccesstextdefault_iconbuildingicon_statcard_titleleieobjekter')`${tenant.usage.listingsCount} / ${tenant.seatLimits.maxListings}`}
           description={`${Math.round((tenant.usage.listingsCount / tenant.seatLimits.maxListings) * 100)}% brukt`}
           color="var(--ds-color-warning-text-default)"
           icon={<CalendarIcon />}
         />
         <StatCard
-          title="Bookinger denne mnd"
+          title={t('common.bookinger_denne_mnd')}
           value={`${tenant.usage.bookingsThisMonth} / ${tenant.seatLimits.maxBookingsPerMonth}`}
           description={`${Math.round((tenant.usage.bookingsThisMonth / tenant.seatLimits.maxBookingsPerMonth) * 100)}% brukt`}
           color="var(--ds-color-accent-text-default)"
@@ -429,23 +425,23 @@ export function TenantDetailPage() {
               </Heading>
               <Stack spacing={3}>
                 <div className={styles.limitsRow}>
-                  <span>Maks brukere</span>
+                  <span>{t('common.maks_brukere')}</span>
                   <strong>{tenant.seatLimits.maxUsers}</strong>
                 </div>
                 <div className={styles.limitsRow}>
-                  <span>Maks organisasjoner</span>
+                  <span>{t('common.maks_organisasjoner')}</span>
                   <strong>{tenant.seatLimits.maxOrganizations}</strong>
                 </div>
                 <div className={styles.limitsRow}>
-                  <span>Maks leieobjekter</span>
+                  <span>{t('common.maks_leieobjekter')}</span>
                   <strong>{tenant.seatLimits.maxListings}</strong>
                 </div>
                 <div className={styles.limitsRow}>
-                  <span>Maks bookinger per mnd</span>
+                  <span>{t('common.maks_bookinger_per_mnd')}</span>
                   <strong>{tenant.seatLimits.maxBookingsPerMonth}</strong>
                 </div>
                 <div className={styles.limitsRow}>
-                  <span>Maks lagring</span>
+                  <span>{t('common.maks_lagring')}</span>
                   <strong>{tenant.seatLimits.maxStorageMb} MB</strong>
                 </div>
               </Stack>
@@ -474,7 +470,7 @@ export function TenantDetailPage() {
 
             {loadingFlags ? (
               <div className={styles.flagsLoading}>
-                <Spinner aria-label="Laster flags..." />
+                <Spinner aria-label={t('common.laster_flags')} />
               </div>
             ) : (
               <div className={styles.flagsList}>
@@ -541,7 +537,7 @@ export function TenantDetailPage() {
           <Card>
             {loadingBilling ? (
               <div className={styles.billingLoading}>
-                <Spinner aria-label="Laster fakturering..." />
+                <Spinner aria-label={t('common.laster_fakturering')} />
               </div>
             ) : billing ? (
               <div className={styles.billingContent}>
@@ -585,7 +581,7 @@ export function TenantDetailPage() {
                       <Table.Head>
                         <Table.Row>
                           <Table.HeaderCell>Nummer</Table.HeaderCell>
-                          <Table.HeaderCell>Beløp</Table.HeaderCell>
+                          <Table.HeaderCell>{t('common.belop')}</Table.HeaderCell>
                           <Table.HeaderCell>Status</Table.HeaderCell>
                           <Table.HeaderCell>Forfallsdato</Table.HeaderCell>
                         </Table.Row>
@@ -634,7 +630,7 @@ export function TenantDetailPage() {
 
             {loadingSecrets ? (
               <div className={styles.secretsLoading}>
-                <Spinner aria-label="Laster secrets..." />
+                <Spinner aria-label={t('common.laster_secrets')} />
               </div>
             ) : secrets.length === 0 ? (
               <div className={styles.secretsEmpty}>
@@ -651,10 +647,10 @@ export function TenantDetailPage() {
                 <Table.Head>
                   <Table.Row>
                     <Table.HeaderCell>Provider</Table.HeaderCell>
-                    <Table.HeaderCell>Nøkkel</Table.HeaderCell>
+                    <Table.HeaderCell>{t('common.nokkel')}</Table.HeaderCell>
                     <Table.HeaderCell>Status</Table.HeaderCell>
                     <Table.HeaderCell>Fingerprint</Table.HeaderCell>
-                    <Table.HeaderCell>Sist rotert</Table.HeaderCell>
+                    <Table.HeaderCell>{t('common.sist_rotert')}</Table.HeaderCell>
                   </Table.Row>
                 </Table.Head>
                 <Table.Body>
@@ -704,14 +700,14 @@ export function TenantDetailPage() {
                     </div>
                   </>
                 ) : (
-                  <Badge color="warning">Ingen lisensnøkkel</Badge>
+                  <Badge color="warning">{t('common.ingen_lisensnokkel')}</Badge>
                 )}
               </div>
 
               {tenant.licenseKeyRotatedAt && (
                 <Paragraph data-size="sm" style={{ color: 'var(--ds-color-neutral-text-subtle)', display: 'flex', alignItems: 'center', gap: 'var(--ds-spacing-1)' }}>
                   <ClockIcon />
-                  Sist rotert: {formatDate(tenant.licenseKeyRotatedAt)} ({formatTimeAgo(tenant.licenseKeyRotatedAt)})
+                  t('table.sist_rotert'): {formatDate(tenant.licenseKeyRotatedAt)} ({formatTimeAgo(tenant.licenseKeyRotatedAt)})
                 </Paragraph>
               )}
 
@@ -724,13 +720,13 @@ export function TenantDetailPage() {
                   type="button"
                 >
                   <RefreshCwIcon />
-                  {tenant.licenseKeyFingerprint ? 'Roter lisensnøkkel' : 'Generer lisensnøkkel'}
+                  {tenant.licenseKeyFingerprint ? 't('common.roter_lisensnokkel')' : 'Generer lisensnøkkel'}
                 </Button>
               </div>
 
               <div className={styles.licenseWarning}>
                 <Paragraph data-size="sm" className={styles.licenseWarningText}>
-                  <strong>Advarsel:</strong> Når du roterer lisensnøkkelen vil den gamle nøkkelen bli ugyldig umiddelbart.
+                  <strong>{t('common.advarsel')}</strong> Når du roterer lisensnøkkelen vil den gamle nøkkelen bli ugyldig umiddelbart.
                   Alle systemer som bruker den gamle nøkkelen må oppdateres med den nye.
                 </Paragraph>
               </div>

@@ -119,9 +119,10 @@ const BookingDTOSchema = z.object({
 describe('API Contract Tests', () => {
   const API_BASE = process.env.API_URL || 'http://localhost:3000/api';
   const IS_PRODUCTION = API_BASE.includes('api.digilist.no');
+  const SKIP_INTEGRATION = process.env.SKIP_INTEGRATION_TESTS === 'true' || process.env.CI !== 'true';
 
-  // Use skip for API tests when running against production
-  const itOrSkip = IS_PRODUCTION ? it.skip : it;
+  // Use skip for API tests when running against production or API not running
+  const itOrSkip = IS_PRODUCTION || SKIP_INTEGRATION ? it.skip : it;
 
   describe('RFC 7807 Error Responses', () => {
     itOrSkip('401 should return valid problem details', async () => {

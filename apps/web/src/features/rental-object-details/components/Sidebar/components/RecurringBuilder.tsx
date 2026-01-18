@@ -292,9 +292,9 @@ export function RecurringBuilder({
                   }}
                   title={
                     isBaseDay
-                      ? 'Basisdag (kan ikke fjernes)'
+                      ? 't('common.basisdag_kan_ikke_fjernes')'
                       : !isAllowed
-                        ? 'Ikke tillatt for dette utleieobjektet'
+                        ? 't('common.ikke_tillatt_for_dette')'
                         : WEEKDAY_FULL_LABELS[weekday]
                   }
                 >

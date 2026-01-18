@@ -11,6 +11,7 @@
 import { useState, useEffect } from 'react';
 import { Card, Heading, Paragraph, Button, Switch } from '@xala/ds';
 import { useConsents, useUpdateConsents } from '@digilist/client-sdk/hooks';
+import { useT } from '@xala/i18n';
 
 const MOBILE_BREAKPOINT = 768;
 
@@ -21,6 +22,7 @@ export function ConsentManager() {
 
   // Fetch current consents
   const { data: consentsData, isLoading } = useConsents();
+  const t = useT();
 
   // Update consents mutation
   const updateConsents = useUpdateConsents();
@@ -62,7 +64,7 @@ export function ConsentManager() {
       await updateConsents.mutateAsync(consents);
       setHasChanges(false);
     } catch (error) {
-      console.error('Failed to update consents:', error);
+      console.error('t('validation.failed_to_update_consents')', error);
     }
   };
 
@@ -84,18 +86,18 @@ export function ConsentManager() {
   const consentSettings = [
     {
       key: 'marketing' as const,
-      label: 'Markedsføring',
-      description: 'Motta nyheter, tilbud og annen markedsføringsinformasjon fra oss',
+      label: t('common.markedsforing'),
+      description: t('common.motta_nyheter_tilbud_og'),
     },
     {
       key: 'analytics' as const,
-      label: 'Analyse og statistikk',
-      description: 'Tillat anonymisert analyse av din bruk av tjenesten for å forbedre opplevelsen',
+      label: t('common.analyse_og_statistikk'),
+      description: t('common.tillat_anonymisert_analyse_av'),
     },
     {
       key: 'thirdPartySharing' as const,
-      label: 'Deling med tredjeparter',
-      description: 'Tillat at dine data deles med tredjeparter for integrasjoner og tjenester',
+      label: t('common.deling_med_tredjeparter'),
+      description: t('common.tillat_at_dine_data'),
     },
   ];
 
@@ -127,7 +129,7 @@ export function ConsentManager() {
               disabled={updateConsents.isPending}
               style={{ minHeight: '44px', alignSelf: isMobile ? 'stretch' : 'flex-start' }}
             >
-              {updateConsents.isPending ? 'Lagrer...' : 'Lagre endringer'}
+              {updateConsents.isPending ? 't('common.lagrer')' : 'Lagre endringer'}
             </Button>
           )}
         </div>
@@ -153,14 +155,14 @@ export function ConsentManager() {
             }}>
               <div style={{ flex: 1 }}>
                 <Paragraph data-size="sm" style={{ margin: 0, fontWeight: 500 }}>
-                  Nødvendige samtykker
+                  t('common.nodvendige_samtykker')
                 </Paragraph>
                 <Paragraph data-size="xs" style={{ margin: 0, marginTop: 'var(--ds-spacing-1)', color: 'var(--ds-color-neutral-text-subtle)' }}>
                   Nødvendig for at tjenesten skal fungere. Kan ikke deaktiveres.
                 </Paragraph>
               </div>
               <Switch
-                aria-label="Nødvendige samtykker"
+                aria-label={t('common.nodvendige_samtykker')}
                 checked={true}
                 disabled={true}
                 style={{ pointerEvents: 'none' }}
@@ -237,7 +239,7 @@ export function ConsentManager() {
           backgroundColor: 'var(--ds-color-neutral-surface-hover)',
         }}>
           <Paragraph data-size="xs" style={{ margin: 0, color: 'var(--ds-color-neutral-text-subtle)' }}>
-            <strong>Om samtykker:</strong> Du kan når som helst endre eller trekke tilbake dine samtykker. Nødvendige samtykker kreves for at tjenesten skal fungere og kan ikke deaktiveres. Alle endringer i samtykker logges i henhold til GDPR-krav.
+            <strong>{t('common.om_samtykker')}</strong> Du kan når som helst endre eller trekke tilbake dine samtykker. Nødvendige samtykker kreves for at tjenesten skal fungere og kan ikke deaktiveres. Alle endringer i samtykker logges i henhold til GDPR-krav.
           </Paragraph>
         </div>
       </div>

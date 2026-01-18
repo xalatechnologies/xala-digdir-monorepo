@@ -79,6 +79,7 @@ function getDefaultFormData(category?: RentalObjectCategory): Partial<RentalObje
   const config = CATEGORY_CONFIGS[cat];
   
   return {
+  const t = useT();
     category: cat,
     status: 'draft',
     name: '',
@@ -366,7 +367,7 @@ export function useRentalObjectWizard(
       }
       setIsDirty(false);
     } catch (error) {
-      console.error('Failed to save draft:', error);
+      console.error('t('validation.failed_to_save_draft')', error);
       throw error;
     }
   }, [formData.id, toCreateDTO, createMutation, updateMutation, navigate]);
@@ -378,7 +379,7 @@ export function useRentalObjectWizard(
       onComplete?.(formData as RentalObject);
       navigate('/rental-objects');
     } catch (error) {
-      console.error('Failed to publish:', error);
+      console.error('t('validation.failed_to_publish')', error);
       throw error;
     }
   }, [saveDraft, formData, onComplete, navigate]);
