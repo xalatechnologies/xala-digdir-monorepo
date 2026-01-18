@@ -13,7 +13,6 @@ import type {
   DocsLocale,
   TocItem,
   DocsSectionMeta,
-  DOCS_SECTIONS,
 } from './types';
 
 // Section metadata configuration

@@ -3,7 +3,7 @@
  * Tests API metric recording functions
  */
 
-import { describe, it, expect, beforeEach, vi } from 'vitest';
+import { describe, it, expect, beforeEach } from 'vitest';
 import { recordHttpRequest, recordHttpRequestSize, recordHttpResponseSize } from './api';
 import { prometheusExporter } from '../exporters/prometheus';
 
@@ -78,8 +78,8 @@ describe('API Metrics', () => {
   });
 
   describe('Middleware Integration', () => {
-    it('should create middleware function', () => {
-      const { createApiMetricsMiddleware } = require('./api');
+    it('should create middleware function', async () => {
+      const { createApiMetricsMiddleware } = await import('./api');
       const middleware = createApiMetricsMiddleware();
 
       expect(typeof middleware).toBe('function');
