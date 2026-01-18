@@ -34,10 +34,8 @@ const actorTypeOptions = [
 ];
 
 export function OrganizationForm({ organization, onSubmit, onCancel }: OrganizationFormProps) {
-  // Translation function available for future localization
-  const _t = useT(); // eslint-disable-line @typescript-eslint/no-unused-vars
-  const [formData, setFormData] = useState<CreateOrganizationDTO>({
   const t = useT();
+  const [formData, setFormData] = useState<CreateOrganizationDTO>({
     name: '',
     actorType: 'business',
     organizationNumber: '',

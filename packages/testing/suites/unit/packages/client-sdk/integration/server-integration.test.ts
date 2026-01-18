@@ -58,16 +58,22 @@ async function waitForServer(maxAttempts = 10): Promise<boolean> {
 // Integration Tests
 // ==============================================================================
 
-describe.skip('API Integration Tests', () => {
+describe('API Integration Tests', () => {
+  let serverAvailable = false;
+
   beforeAll(async () => {
-    const serverReady = await waitForServer(3); // Quick check
-    if (!serverReady) {
-      console.warn('⚠️ API server not running - tests will use mocked responses');
+    serverAvailable = await waitForServer(3); // Quick check
+    if (!serverAvailable) {
+      console.warn('⚠️ API server not running at localhost:3000 - skipping integration tests');
     }
   });
 
   describe('Health Endpoint', () => {
     it('should return healthy status', async () => {
+      if (!serverAvailable) {
+        console.log('Skipping - API server not available');
+        return;
+      }
       const { data, status } = await apiRequest<{ status: string }>('/health');
       
       expect(status).toBe(200);

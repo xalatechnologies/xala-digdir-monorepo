@@ -4,11 +4,12 @@
  */
 
 import { describe, it, expect } from 'vitest';
-import { readFileSync, readdirSync } from 'fs';
-import { join } from 'path';
+import { readdirSync, readFileSync } from 'fs';
+import { resolve } from 'path';
 
 describe('Migration Validation', () => {
-  const migrationsDir = join(process.cwd(), 'migrations');
+  // Use path alias to access database-schema migrations
+  const migrationsDir = resolve(process.cwd(), 'packages/database-schema/migrations');
   
   it('should have at least one migration file', () => {
     const files = readdirSync(migrationsDir).filter(f => f.endsWith('.sql'));
@@ -19,7 +20,7 @@ describe('Migration Validation', () => {
     const files = readdirSync(migrationsDir).filter(f => f.endsWith('.sql'));
     
     files.forEach(file => {
-      const content = readFileSync(join(migrationsDir, file), 'utf-8');
+      const content = readFileSync(resolve(migrationsDir, file), 'utf-8');
       
       // Check for required SQL statements
       expect(content).toContain('CREATE TABLE');
@@ -34,7 +35,7 @@ describe('Migration Validation', () => {
   it('should create all 7 entitlement tables', () => {
     const files = readdirSync(migrationsDir).filter(f => f.endsWith('.sql'));
     const latestMigration = files.sort().reverse()[0];
-    const content = readFileSync(join(migrationsDir, latestMigration), 'utf-8');
+    const content = readFileSync(resolve(migrationsDir, latestMigration), 'utf-8');
 
     const expectedTables = [
       'entitlement_audit_log',
@@ -54,7 +55,7 @@ describe('Migration Validation', () => {
   it('should have proper indexes', () => {
     const files = readdirSync(migrationsDir).filter(f => f.endsWith('.sql'));
     const latestMigration = files.sort().reverse()[0];
-    const content = readFileSync(join(migrationsDir, latestMigration), 'utf-8');
+    const content = readFileSync(resolve(migrationsDir, latestMigration), 'utf-8');
 
     // Check for index creation
     expect(content).toContain('CREATE INDEX');
@@ -79,7 +80,7 @@ describe('Migration Validation', () => {
   it('should have proper unique constraints', () => {
     const files = readdirSync(migrationsDir).filter(f => f.endsWith('.sql'));
     const latestMigration = files.sort().reverse()[0];
-    const content = readFileSync(join(migrationsDir, latestMigration), 'utf-8');
+    const content = readFileSync(resolve(migrationsDir, latestMigration), 'utf-8');
 
     const expectedConstraints = [
       'kill_switches_key_type_key_env_unique',
@@ -98,7 +99,7 @@ describe('Migration Validation', () => {
   it('should have proper column types', () => {
     const files = readdirSync(migrationsDir).filter(f => f.endsWith('.sql'));
     const latestMigration = files.sort().reverse()[0];
-    const content = readFileSync(join(migrationsDir, latestMigration), 'utf-8');
+    const content = readFileSync(resolve(migrationsDir, latestMigration), 'utf-8');
 
     // Check for UUID columns
     expect(content).toContain('uuid');
@@ -121,7 +122,7 @@ describe('Migration Validation', () => {
   it('should have default values', () => {
     const files = readdirSync(migrationsDir).filter(f => f.endsWith('.sql'));
     const latestMigration = files.sort().reverse()[0];
-    const content = readFileSync(join(migrationsDir, latestMigration), 'utf-8');
+    const content = readFileSync(resolve(migrationsDir, latestMigration), 'utf-8');
 
     // Check for default values
     expect(content).toContain('DEFAULT gen_random_uuid()');

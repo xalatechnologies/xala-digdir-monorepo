@@ -3,8 +3,8 @@
  * Manages user preferences: language, display settings, and session management
  */
 
-import {
 import { useT } from '@xala/i18n';
+import {
   Card,
   Heading,
   Paragraph,

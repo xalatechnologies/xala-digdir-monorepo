@@ -2,8 +2,8 @@
  * Rental Object Audit Tab
  * Displays audit history for a specific rental object.
  */
-import { 
 import { useT } from '@xala/i18n';
+import { 
   Heading, 
   Paragraph, 
   Card, 
@@ -15,8 +15,8 @@ import { useT } from '@xala/i18n';
 import { useAuditLog } from '@digilist/client-sdk';
 
 export function RentalObjectAuditTab({ rentalObjectId }: { rentalObjectId: string }) {
-  const { data: auditLogs, isLoading } = useAuditLog({ 
   const t = useT();
+  const { data: auditLogs, isLoading } = useAuditLog({ 
     resourceId: rentalObjectId,
     limit: 50 
   });

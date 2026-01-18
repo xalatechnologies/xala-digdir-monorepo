@@ -3,8 +3,8 @@
  * Allows assigning custody for multiple rental objects at once.
  */
 import { useState } from 'react';
-import {
 import { useT } from '@xala/i18n';
+import {
   Button,
   Heading,
   Paragraph,

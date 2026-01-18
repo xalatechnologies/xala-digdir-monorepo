@@ -5,8 +5,8 @@
 
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import {
 import { useT } from '@xala/i18n';
+import {
   Card,
   Heading,
   Paragraph,

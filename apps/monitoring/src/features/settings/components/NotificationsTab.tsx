@@ -3,8 +3,8 @@
  * Manages notification configuration: email, SMS, push notifications, and automatic alerts
  */
 
-import {
 import { useT } from '@xala/i18n';
+import {
   Card,
   Heading,
   Paragraph,

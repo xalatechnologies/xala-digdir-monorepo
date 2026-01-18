@@ -10,8 +10,8 @@
 
 import { useState, useMemo, useCallback } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import {
 import { useT } from '@xala/i18n';
+import {
   Card,
   Heading,
   Paragraph,

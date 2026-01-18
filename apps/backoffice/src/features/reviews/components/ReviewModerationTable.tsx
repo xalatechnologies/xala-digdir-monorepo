@@ -52,9 +52,9 @@ function getStatusBadgeConfig(status: ReviewStatus): {
   label: string;
 } {
   const configs: Record<ReviewStatus, { color: 'success' | 'warning' | 'danger' | 'info' | 'neutral'; label: string }> = {
-    pending: { color: 'warning', label: t("status.pending") },
+    pending: { color: 'warning', label: 'Venter' },
     approved: { color: 'success', label: 'Godkjent' },
-    rejected: { color: 'danger', label: 't('actions.avslaa')tt' },
+    rejected: { color: 'danger', label: 'Avslått' },
   };
   return configs[status] || { color: 'neutral', label: status };
 }

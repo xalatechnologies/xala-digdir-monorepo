@@ -6,8 +6,8 @@
 /* eslint-disable digdir/prefer-ds-components -- Hidden file input for avatar upload */
 
 import { useRef, useState, useEffect } from 'react';
-import {
 import { useT } from '@xala/i18n';
+import {
   Card,
   Heading,
   Paragraph,
