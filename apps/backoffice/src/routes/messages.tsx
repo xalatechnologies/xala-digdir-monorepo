@@ -66,6 +66,7 @@ function formatMessageDate(dateStr: string): string {
 type FilterType = 'all' | 'unread' | 'active' | 'resolved';
 
 export function MessagesPage() {
+  const t = useT();
   const [selectedConversationId, setSelectedConversationId] = useState<string | null>(null);
   const [messageInput, setMessageInput] = useState('');
   const [searchQuery, setSearchQuery] = useState('');
