@@ -1,0 +1,56 @@
+[
+  {
+    "id": "b0000001-0000-0000-0000-000000000001",
+    "tenantId": "f47ac10b-58cc-4372-a567-0e02b2c3d479",
+    "rentalObjectId": "d0000070-0000-0000-0000-000000000000",
+    "title": "Vedlikehold - Årlig service",
+    "reason": "Årlig vedlikehold av ventilasjonsanlegg og elektrisk utstyr",
+    "startDate": "2026-02-01T00:00:00.000Z",
+    "endDate": "2026-02-02T23:59:59.000Z",
+    "allDay": true,
+    "recurring": false,
+    "visibility": "public",
+    "status": "active"
+  },
+  {
+    "id": "b0000001-0000-0000-0000-000000000002",
+    "tenantId": "f47ac10b-58cc-4372-a567-0e02b2c3d479",
+    "rentalObjectId": "d0000001-0000-0000-0000-000000000000",
+    "title": "Stengt - Vinterferie",
+    "reason": "Stengt i vinterferien grunnet ferieavvikling",
+    "startDate": "2026-02-14T00:00:00.000Z",
+    "endDate": "2026-02-23T23:59:59.000Z",
+    "allDay": true,
+    "recurring": false,
+    "visibility": "public",
+    "status": "active"
+  },
+  {
+    "id": "b0000001-0000-0000-0000-000000000003",
+    "tenantId": "f47ac10b-58cc-4372-a567-0e02b2c3d479",
+    "rentalObjectId": "d0000070-0000-0000-0000-000000000000",
+    "title": "Stengt - Første juledag",
+    "reason": "Høytid - stengt for publikum",
+    "startDate": "2026-12-25T00:00:00.000Z",
+    "endDate": "2026-12-25T23:59:59.000Z",
+    "allDay": true,
+    "recurring": true,
+    "recurrenceRule": "FREQ=YEARLY;BYMONTH=12;BYMONTHDAY=25",
+    "visibility": "public",
+    "status": "active"
+  },
+  {
+    "id": "b0000001-0000-0000-0000-000000000004",
+    "tenantId": "f47ac10b-58cc-4372-a567-0e02b2c3d479",
+    "rentalObjectId": "d0000002-0000-0000-0000-000000000000",
+    "title": "Reservert for kommune-arrangement",
+    "reason": "Kommunalt arrangement - 17. mai feiring",
+    "startDate": "2026-05-17T08:00:00.000Z",
+    "endDate": "2026-05-17T22:00:00.000Z",
+    "allDay": false,
+    "recurring": true,
+    "recurrenceRule": "FREQ=YEARLY;BYMONTH=5;BYMONTHDAY=17",
+    "visibility": "public",
+    "status": "active"
+  }
+]

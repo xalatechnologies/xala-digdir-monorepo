@@ -1,0 +1,57 @@
+[
+  {
+    "id": "a0000001-0000-0000-0000-000000000001",
+    "tenantId": "f47ac10b-58cc-4372-a567-0e02b2c3d479",
+    "rentalObjectId": "d0000070-0000-0000-0000-000000000000",
+    "title": "Håndball trening - Bjørneklubb",
+    "startTime": "2026-01-20T18:00:00.000Z",
+    "endTime": "2026-01-20T20:00:00.000Z",
+    "status": "confirmed",
+    "notes": "Fast treningstid for juniorlag",
+    "metadata": { "type": "training", "sport": "handball" }
+  },
+  {
+    "id": "a0000001-0000-0000-0000-000000000002",
+    "tenantId": "f47ac10b-58cc-4372-a567-0e02b2c3d479",
+    "rentalObjectId": "d0000070-0000-0000-0000-000000000000",
+    "title": "Fotball trening - SK Fortuna",
+    "startTime": "2026-01-21T17:00:00.000Z",
+    "endTime": "2026-01-21T19:00:00.000Z",
+    "status": "confirmed",
+    "notes": "Ukentlig trening",
+    "metadata": { "type": "training", "sport": "football" }
+  },
+  {
+    "id": "a0000001-0000-0000-0000-000000000003",
+    "tenantId": "f47ac10b-58cc-4372-a567-0e02b2c3d479",
+    "rentalObjectId": "d0000070-0000-0000-0000-000000000000",
+    "title": "Vedlikehold - Gulvlakkering",
+    "startTime": "2026-01-25T08:00:00.000Z",
+    "endTime": "2026-01-25T16:00:00.000Z",
+    "status": "blocked",
+    "notes": "Gulvlakkering - ingen tilgang til hallen",
+    "metadata": { "type": "maintenance" }
+  },
+  {
+    "id": "a0000001-0000-0000-0000-000000000004",
+    "tenantId": "f47ac10b-58cc-4372-a567-0e02b2c3d479",
+    "rentalObjectId": "d0000001-0000-0000-0000-000000000000",
+    "title": "Møte - Styremøte",
+    "startTime": "2026-01-22T18:00:00.000Z",
+    "endTime": "2026-01-22T21:00:00.000Z",
+    "status": "confirmed",
+    "notes": "Årlig styremøte for idrettslaget",
+    "metadata": { "type": "meeting" }
+  },
+  {
+    "id": "a0000001-0000-0000-0000-000000000005",
+    "tenantId": "f47ac10b-58cc-4372-a567-0e02b2c3d479",
+    "rentalObjectId": "d0000002-0000-0000-0000-000000000000",
+    "title": "Bursdagsfest - Familie Hansen",
+    "startTime": "2026-01-26T14:00:00.000Z",
+    "endTime": "2026-01-26T22:00:00.000Z",
+    "status": "confirmed",
+    "notes": "Barnebursdagsfest med ca. 20 gjester",
+    "metadata": { "type": "private_event" }
+  }
+]

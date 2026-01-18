@@ -41,6 +41,24 @@ export async function createFastifyApp(
 
   // Security headers middleware
   app.addHook('onSend', async (request, reply) => {
+    // Relax CSP for Swagger UI documentation
+    if (request.url.startsWith('/docs')) {
+      reply.header('Content-Security-Policy', 
+        "default-src 'self'; " +
+        "base-uri 'self'; " +
+        "font-src 'self' https: data:; " +
+        "frame-ancestors 'self'; " +
+        "img-src 'self' data: validator.swagger.io; " +
+        "object-src 'none'; " +
+        "script-src 'self' 'unsafe-inline'; " +
+        "style-src 'self' 'unsafe-inline' https:; " +
+        "upgrade-insecure-requests"
+      );
+    } else {
+      // Strict CSP for all other routes
+      reply.header('Content-Security-Policy', "default-src 'self'");
+    }
+    
     // Prevent clickjacking attacks
     reply.header('X-Frame-Options', 'DENY');
     
@@ -52,9 +70,6 @@ export async function createFastifyApp(
     
     // Referrer policy
     reply.header('Referrer-Policy', 'strict-origin-when-cross-origin');
-    
-    // Content Security Policy (basic - can be enhanced)
-    reply.header('Content-Security-Policy', "default-src 'self'");
   });
 
   // Enable CORS with credentials support
@@ -104,6 +119,10 @@ export async function createFastifyApp(
         title: 'Digilist API',
         description: 'REST API for the Digilist platform - rental management, bookings, and administration',
         version: '1.0.0',
+        contact: {
+          name: 'Digilist Support',
+          email: 'support@digilist.no',
+        },
       },
       servers: [
         {
@@ -116,11 +135,22 @@ export async function createFastifyApp(
         },
       ],
       tags: [
-        { name: 'auth', description: 'Authentication endpoints' },
+        { name: 'auth', description: 'Authentication and authorization' },
         { name: 'rental-objects', description: 'Rental object management' },
-        { name: 'bookings', description: 'Booking management' },
+        { name: 'bookings', description: 'Booking and reservation management' },
+        { name: 'calendar', description: 'Calendar and availability' },
         { name: 'users', description: 'User management' },
-        { name: 'admin', description: 'Admin endpoints' },
+        { name: 'organizations', description: 'Organization management' },
+        { name: 'admin', description: 'Admin and backoffice endpoints' },
+        { name: 'messages', description: 'Messaging and templates' },
+        { name: 'notifications', description: 'Notification system' },
+        { name: 'integrations', description: 'External integrations' },
+        { name: 'billing', description: 'Billing and payments' },
+        { name: 'audit', description: 'Audit logs' },
+        { name: 'gdpr', description: 'GDPR and data privacy' },
+        { name: 'help', description: 'Help and support' },
+        { name: 'monitoring', description: 'System monitoring' },
+        { name: 'public', description: 'Public endpoints' },
       ],
       components: {
         securitySchemes: {
@@ -128,14 +158,34 @@ export async function createFastifyApp(
             type: 'apiKey',
             in: 'cookie',
             name: 'dl_at',
+            description: 'HTTP-only cookie containing JWT access token',
           },
           bearerAuth: {
             type: 'http',
             scheme: 'bearer',
             bearerFormat: 'JWT',
+            description: 'JWT token in Authorization header',
           },
         },
       },
+    },
+    transform: ({ schema, url }) => {
+      // Handle undefined schema gracefully
+      if (!schema) {
+        return { schema: {}, url };
+      }
+      
+      // Auto-generate tags from URL path
+      const pathParts = url.split('/').filter(Boolean);
+      const tag = pathParts[1] || 'general';
+      
+      return {
+        schema: {
+          ...schema,
+          tags: schema.tags || [tag],
+        },
+        url,
+      };
     },
   });
 

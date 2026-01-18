@@ -78,6 +78,8 @@ import { SaasController } from './modules/saas';
 import { TenantAdminController } from './modules/tenant-admin';
 import { TenantAdminUserController } from './modules/user-management';
 import { CustodyModule, CustodyController, CustodyService, CustodyEvaluator } from './modules/custody';
+// Calendar Service
+import { CalendarService } from './modules/calendar/calendar.service';
 // Feature Flags
 import { featuresRoutes } from './routes/features.routes';
 // Amenities, Addons, Favorites (refactored with DI)
@@ -220,7 +222,10 @@ async function bootstrap() {
 
   // Register GDPR Service
   const { GDPRService } = await import('./modules/gdpr/gdpr.service');
-  container.registerFactory('GDPRService', () => new GDPRService(db));
+  container.registerFactory('GDPRService', () => new GDPRService(db, adapters));
+
+  // Register Calendar Service
+  container.registerFactory('CalendarService', () => new CalendarService(adapters));
 
   console.log('✓ Services registered');
 
@@ -254,6 +259,11 @@ async function bootstrap() {
   // Register GDPR Controller
   container.registerFactory('GDPRController', () =>
     new GDPRController(container.resolve('GDPRService'))
+  );
+
+  // Register Availability Controller
+  container.registerFactory('AvailabilityController', () =>
+    new AvailabilityController(container.resolve('CalendarService'))
   );
   console.log('✓ Controllers registered');
 

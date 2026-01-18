@@ -586,7 +586,7 @@ export class CalendarService {
     allocationResults: any[],
     bookingResults: any[]
   ): Omit<AvailabilityCell, 'start' | 'end'> {
-    // Check allocations first (blocks, blackouts have priority)
+    // Check allocations first (blocks, blackouts, and confirmed allocations have priority)
     for (const allocation of allocationResults) {
       const allocStart = new Date(allocation.startTime);
       const allocEnd = new Date(allocation.endTime);
@@ -607,6 +607,16 @@ export class CalendarService {
             status: 'BLACKOUT',
             reasonKey: 'calendar.reason.blackout',
             blockId: allocation.id,
+          };
+        }
+
+        // Confirmed allocations should also mark the slot as booked
+        if (status === 'CONFIRMED') {
+          return {
+            status: 'BOOKED',
+            reasonKey: 'calendar.reason.booked',
+            blockId: allocation.id,
+            bookingId: allocation.bookingId,
           };
         }
       }

@@ -95,6 +95,60 @@ CREATE TABLE "domain"."bookings" (
 	"updated_at" timestamp DEFAULT now() NOT NULL
 );
 --> statement-breakpoint
+CREATE TABLE "domain"."allocations" (
+	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
+	"tenant_id" uuid NOT NULL,
+	"rental_object_id" uuid NOT NULL,
+	"title" varchar(255) NOT NULL,
+	"start_time" timestamp NOT NULL,
+	"end_time" timestamp NOT NULL,
+	"status" varchar(50) DEFAULT 'confirmed' NOT NULL,
+	"booking_id" uuid,
+	"user_id" uuid,
+	"notes" text,
+	"recurring" jsonb DEFAULT '{}'::jsonb,
+	"metadata" jsonb DEFAULT '{}'::jsonb,
+	"created_at" timestamp DEFAULT now() NOT NULL,
+	"updated_at" timestamp DEFAULT now() NOT NULL
+);
+--> statement-breakpoint
+CREATE TABLE "domain"."blocks" (
+	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
+	"tenant_id" uuid NOT NULL,
+	"rental_object_id" uuid NOT NULL,
+	"title" varchar(255) NOT NULL,
+	"reason" text,
+	"start_date" timestamp with time zone NOT NULL,
+	"end_date" timestamp with time zone NOT NULL,
+	"all_day" boolean DEFAULT false NOT NULL,
+	"recurring" boolean DEFAULT false NOT NULL,
+	"recurrence_rule" text,
+	"visibility" varchar(20) DEFAULT 'public' NOT NULL,
+	"status" varchar(50) DEFAULT 'active' NOT NULL,
+	"created_by" uuid,
+	"created_at" timestamp with time zone DEFAULT now() NOT NULL,
+	"updated_at" timestamp with time zone DEFAULT now() NOT NULL
+);
+--> statement-breakpoint
+CREATE TABLE "domain"."seasonal_leases" (
+	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
+	"tenant_id" uuid NOT NULL,
+	"rental_object_id" uuid NOT NULL,
+	"organization_id" uuid NOT NULL,
+	"start_date" timestamp NOT NULL,
+	"end_date" timestamp NOT NULL,
+	"weekdays" jsonb DEFAULT '[]'::jsonb,
+	"start_time" varchar(10) NOT NULL,
+	"end_time" varchar(10) NOT NULL,
+	"status" varchar(50) DEFAULT 'active' NOT NULL,
+	"total_price" numeric(10, 2) DEFAULT '0',
+	"currency" varchar(3) DEFAULT 'NOK' NOT NULL,
+	"notes" text,
+	"metadata" jsonb DEFAULT '{}'::jsonb,
+	"created_at" timestamp DEFAULT now() NOT NULL,
+	"updated_at" timestamp DEFAULT now() NOT NULL
+);
+--> statement-breakpoint
 CREATE TABLE "platform"."sessions" (
 	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
 	"user_id" uuid NOT NULL,
@@ -120,25 +174,6 @@ CREATE TABLE "domain"."access_grants" (
 	"status" varchar(50) DEFAULT 'active' NOT NULL,
 	"valid_from" timestamp,
 	"valid_until" timestamp,
-	"metadata" jsonb DEFAULT '{}'::jsonb,
-	"created_at" timestamp DEFAULT now() NOT NULL,
-	"updated_at" timestamp DEFAULT now() NOT NULL
-);
---> statement-breakpoint
-CREATE TABLE "domain"."seasonal_leases" (
-	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
-	"tenant_id" uuid NOT NULL,
-	"rental_object_id" uuid NOT NULL,
-	"organization_id" uuid NOT NULL,
-	"start_date" timestamp NOT NULL,
-	"end_date" timestamp NOT NULL,
-	"weekdays" jsonb DEFAULT '[]'::jsonb,
-	"start_time" varchar(10) NOT NULL,
-	"end_time" varchar(10) NOT NULL,
-	"status" varchar(50) DEFAULT 'active' NOT NULL,
-	"total_price" numeric(10, 2) DEFAULT '0',
-	"currency" varchar(3) DEFAULT 'NOK' NOT NULL,
-	"notes" text,
 	"metadata" jsonb DEFAULT '{}'::jsonb,
 	"created_at" timestamp DEFAULT now() NOT NULL,
 	"updated_at" timestamp DEFAULT now() NOT NULL
@@ -333,15 +368,22 @@ ALTER TABLE "domain"."rental_objects" ADD CONSTRAINT "rental_objects_organizatio
 ALTER TABLE "domain"."bookings" ADD CONSTRAINT "bookings_tenant_id_tenants_id_fk" FOREIGN KEY ("tenant_id") REFERENCES "platform"."tenants"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "domain"."bookings" ADD CONSTRAINT "bookings_rental_object_id_rental_objects_id_fk" FOREIGN KEY ("rental_object_id") REFERENCES "domain"."rental_objects"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "domain"."bookings" ADD CONSTRAINT "bookings_user_id_users_id_fk" FOREIGN KEY ("user_id") REFERENCES "platform"."users"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE "domain"."allocations" ADD CONSTRAINT "allocations_tenant_id_tenants_id_fk" FOREIGN KEY ("tenant_id") REFERENCES "platform"."tenants"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE "domain"."allocations" ADD CONSTRAINT "allocations_rental_object_id_rental_objects_id_fk" FOREIGN KEY ("rental_object_id") REFERENCES "domain"."rental_objects"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE "domain"."allocations" ADD CONSTRAINT "allocations_booking_id_bookings_id_fk" FOREIGN KEY ("booking_id") REFERENCES "domain"."bookings"("id") ON DELETE set null ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE "domain"."allocations" ADD CONSTRAINT "allocations_user_id_users_id_fk" FOREIGN KEY ("user_id") REFERENCES "platform"."users"("id") ON DELETE set null ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE "domain"."blocks" ADD CONSTRAINT "blocks_tenant_id_tenants_id_fk" FOREIGN KEY ("tenant_id") REFERENCES "platform"."tenants"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE "domain"."blocks" ADD CONSTRAINT "blocks_rental_object_id_rental_objects_id_fk" FOREIGN KEY ("rental_object_id") REFERENCES "domain"."rental_objects"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE "domain"."blocks" ADD CONSTRAINT "blocks_created_by_users_id_fk" FOREIGN KEY ("created_by") REFERENCES "platform"."users"("id") ON DELETE set null ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE "domain"."seasonal_leases" ADD CONSTRAINT "seasonal_leases_tenant_id_tenants_id_fk" FOREIGN KEY ("tenant_id") REFERENCES "platform"."tenants"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE "domain"."seasonal_leases" ADD CONSTRAINT "seasonal_leases_rental_object_id_rental_objects_id_fk" FOREIGN KEY ("rental_object_id") REFERENCES "domain"."rental_objects"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE "domain"."seasonal_leases" ADD CONSTRAINT "seasonal_leases_organization_id_organizations_id_fk" FOREIGN KEY ("organization_id") REFERENCES "platform"."organizations"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "platform"."sessions" ADD CONSTRAINT "sessions_user_id_users_id_fk" FOREIGN KEY ("user_id") REFERENCES "platform"."users"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "platform"."sessions" ADD CONSTRAINT "sessions_tenant_id_tenants_id_fk" FOREIGN KEY ("tenant_id") REFERENCES "platform"."tenants"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "domain"."access_grants" ADD CONSTRAINT "access_grants_tenant_id_tenants_id_fk" FOREIGN KEY ("tenant_id") REFERENCES "platform"."tenants"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "domain"."access_grants" ADD CONSTRAINT "access_grants_org_id_organizations_id_fk" FOREIGN KEY ("org_id") REFERENCES "platform"."organizations"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "domain"."access_grants" ADD CONSTRAINT "access_grants_rental_object_id_rental_objects_id_fk" FOREIGN KEY ("rental_object_id") REFERENCES "domain"."rental_objects"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "domain"."access_grants" ADD CONSTRAINT "access_grants_granted_by_users_id_fk" FOREIGN KEY ("granted_by") REFERENCES "platform"."users"("id") ON DELETE set null ON UPDATE no action;--> statement-breakpoint
-ALTER TABLE "domain"."seasonal_leases" ADD CONSTRAINT "seasonal_leases_tenant_id_tenants_id_fk" FOREIGN KEY ("tenant_id") REFERENCES "platform"."tenants"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
-ALTER TABLE "domain"."seasonal_leases" ADD CONSTRAINT "seasonal_leases_rental_object_id_rental_objects_id_fk" FOREIGN KEY ("rental_object_id") REFERENCES "domain"."rental_objects"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
-ALTER TABLE "domain"."seasonal_leases" ADD CONSTRAINT "seasonal_leases_organization_id_organizations_id_fk" FOREIGN KEY ("organization_id") REFERENCES "platform"."organizations"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "platform"."case_handler_scopes" ADD CONSTRAINT "case_handler_scopes_tenant_id_tenants_id_fk" FOREIGN KEY ("tenant_id") REFERENCES "platform"."tenants"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "platform"."case_handler_scopes" ADD CONSTRAINT "case_handler_scopes_user_id_users_id_fk" FOREIGN KEY ("user_id") REFERENCES "platform"."users"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "platform"."case_handler_scopes" ADD CONSTRAINT "case_handler_scopes_rental_object_id_rental_objects_id_fk" FOREIGN KEY ("rental_object_id") REFERENCES "domain"."rental_objects"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
@@ -375,6 +417,16 @@ CREATE INDEX "bookings_tenant_idx" ON "domain"."bookings" USING btree ("tenant_i
 CREATE INDEX "bookings_rental_object_idx" ON "domain"."bookings" USING btree ("rental_object_id");--> statement-breakpoint
 CREATE INDEX "bookings_user_idx" ON "domain"."bookings" USING btree ("user_id");--> statement-breakpoint
 CREATE INDEX "bookings_status_idx" ON "domain"."bookings" USING btree ("status");--> statement-breakpoint
+CREATE INDEX "allocations_tenant_idx" ON "domain"."allocations" USING btree ("tenant_id");--> statement-breakpoint
+CREATE INDEX "allocations_rental_object_idx" ON "domain"."allocations" USING btree ("rental_object_id");--> statement-breakpoint
+CREATE INDEX "allocations_time_idx" ON "domain"."allocations" USING btree ("start_time","end_time");--> statement-breakpoint
+CREATE INDEX "blocks_tenant_idx" ON "domain"."blocks" USING btree ("tenant_id");--> statement-breakpoint
+CREATE INDEX "blocks_rental_object_idx" ON "domain"."blocks" USING btree ("rental_object_id");--> statement-breakpoint
+CREATE INDEX "blocks_time_range_idx" ON "domain"."blocks" USING btree ("start_date","end_date");--> statement-breakpoint
+CREATE INDEX "blocks_status_idx" ON "domain"."blocks" USING btree ("status");--> statement-breakpoint
+CREATE INDEX "seasonal_leases_tenant_idx" ON "domain"."seasonal_leases" USING btree ("tenant_id");--> statement-breakpoint
+CREATE INDEX "seasonal_leases_rental_object_idx" ON "domain"."seasonal_leases" USING btree ("rental_object_id");--> statement-breakpoint
+CREATE INDEX "seasonal_leases_org_idx" ON "domain"."seasonal_leases" USING btree ("organization_id");--> statement-breakpoint
 CREATE INDEX "sessions_user_idx" ON "platform"."sessions" USING btree ("user_id");--> statement-breakpoint
 CREATE INDEX "sessions_tenant_idx" ON "platform"."sessions" USING btree ("tenant_id");--> statement-breakpoint
 CREATE INDEX "sessions_refresh_token_hash_idx" ON "platform"."sessions" USING btree ("refresh_token_hash");--> statement-breakpoint
@@ -384,9 +436,6 @@ CREATE INDEX "access_grants_tenant_idx" ON "domain"."access_grants" USING btree 
 CREATE INDEX "access_grants_org_idx" ON "domain"."access_grants" USING btree ("org_id");--> statement-breakpoint
 CREATE INDEX "access_grants_rental_object_idx" ON "domain"."access_grants" USING btree ("rental_object_id");--> statement-breakpoint
 CREATE INDEX "access_grants_org_rental_object_idx" ON "domain"."access_grants" USING btree ("org_id","rental_object_id");--> statement-breakpoint
-CREATE INDEX "seasonal_leases_tenant_idx" ON "domain"."seasonal_leases" USING btree ("tenant_id");--> statement-breakpoint
-CREATE INDEX "seasonal_leases_rental_object_idx" ON "domain"."seasonal_leases" USING btree ("rental_object_id");--> statement-breakpoint
-CREATE INDEX "seasonal_leases_org_idx" ON "domain"."seasonal_leases" USING btree ("organization_id");--> statement-breakpoint
 CREATE INDEX "case_handler_scopes_tenant_idx" ON "platform"."case_handler_scopes" USING btree ("tenant_id");--> statement-breakpoint
 CREATE INDEX "case_handler_scopes_user_idx" ON "platform"."case_handler_scopes" USING btree ("user_id");--> statement-breakpoint
 CREATE INDEX "case_handler_scopes_scope_type_idx" ON "platform"."case_handler_scopes" USING btree ("scope_type");--> statement-breakpoint

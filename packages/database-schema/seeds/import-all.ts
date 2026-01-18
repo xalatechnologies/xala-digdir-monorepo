@@ -168,7 +168,72 @@ async function importSeeds(): Promise<void> {
       `;
       bookings++;
     }
-    console.log(`      ✅ ${bookings} bookings\n`);
+    console.log(`      ✅ ${bookings} bookings`);
+
+    // Allocations (calendar blocks)
+    console.log('   └─ Allocations...');
+    let allocations = 0;
+    try {
+      const allocationsData = JSON.parse(
+        readFileSync(join(__dirname, 'domain/allocations.json'), 'utf-8')
+      );
+      for (const a of allocationsData) {
+        await sql`
+          INSERT INTO domain.allocations (
+            id, tenant_id, rental_object_id, title,
+            start_time, end_time, status, notes, metadata
+          )
+          VALUES (
+            ${a.id}, ${a.tenantId}, ${a.rentalObjectId}, ${a.title},
+            ${a.startTime}, ${a.endTime}, ${a.status || 'confirmed'},
+            ${a.notes || null}, ${JSON.stringify(a.metadata || {})}::jsonb
+          )
+          ON CONFLICT (id) DO UPDATE SET 
+            title = EXCLUDED.title,
+            start_time = EXCLUDED.start_time,
+            end_time = EXCLUDED.end_time,
+            status = EXCLUDED.status
+        `;
+        allocations++;
+      }
+      console.log(`      ✅ ${allocations} allocations`);
+    } catch (e) {
+      console.log(`      ⏭️ allocations.json not found, skipping`);
+    }
+
+    // Blocks (maintenance/blackout periods)
+    console.log('   └─ Blocks...');
+    let blocks = 0;
+    try {
+      const blocksData = JSON.parse(
+        readFileSync(join(__dirname, 'domain/blocks.json'), 'utf-8')
+      );
+      for (const b of blocksData) {
+        await sql`
+          INSERT INTO domain.blocks (
+            id, tenant_id, rental_object_id, title, reason,
+            start_date, end_date, all_day, recurring, recurrence_rule,
+            visibility, status
+          )
+          VALUES (
+            ${b.id}, ${b.tenantId}, ${b.rentalObjectId}, ${b.title}, ${b.reason || null},
+            ${b.startDate}, ${b.endDate}, ${b.allDay || false}, ${b.recurring || false},
+            ${b.recurrenceRule || null}, ${b.visibility || 'public'}, ${b.status || 'active'}
+          )
+          ON CONFLICT (id) DO UPDATE SET 
+            title = EXCLUDED.title,
+            start_date = EXCLUDED.start_date,
+            end_date = EXCLUDED.end_date,
+            status = EXCLUDED.status
+        `;
+        blocks++;
+      }
+      console.log(`      ✅ ${blocks} blocks`);
+    } catch (e) {
+      console.log(`      ⏭️ blocks.json not found, skipping`);
+    }
+
+    console.log('');
 
     // ========== SUMMARY ==========
     console.log('='.repeat(60));
