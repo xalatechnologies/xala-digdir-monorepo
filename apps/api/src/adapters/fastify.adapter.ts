@@ -37,6 +37,24 @@ export async function createFastifyApp(
     requestIdLogLabel: 'correlationId',
   });
 
+  // Security headers middleware
+  app.addHook('onSend', async (request, reply) => {
+    // Prevent clickjacking attacks
+    reply.header('X-Frame-Options', 'DENY');
+    
+    // Prevent MIME-sniffing
+    reply.header('X-Content-Type-Options', 'nosniff');
+    
+    // XSS Protection (legacy but still useful for older browsers)
+    reply.header('X-XSS-Protection', '1; mode=block');
+    
+    // Referrer policy
+    reply.header('Referrer-Policy', 'strict-origin-when-cross-origin');
+    
+    // Content Security Policy (basic - can be enhanced)
+    reply.header('Content-Security-Policy', "default-src 'self'");
+  });
+
   // Enable CORS with credentials support
   // When credentials: 'include' is used, we MUST reflect the specific origin
   // and cannot use wildcard '*'
