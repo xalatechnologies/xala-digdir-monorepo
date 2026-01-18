@@ -3,7 +3,32 @@
  * Runs before all tests
  */
 
-import { beforeAll, afterAll } from 'vitest';
+import { beforeAll, afterAll, vi } from 'vitest';
+
+// Mock @xala/i18n to return keys as-is (passthrough mode)
+vi.mock('@xala/i18n', () => ({
+  useT: () => (key: string, params?: Record<string, unknown>) => {
+    if (params) {
+      // Replace placeholders with params
+      let result = key;
+      Object.entries(params).forEach(([k, v]) => {
+        result = result.replace(`{${k}}`, String(v));
+      });
+      return result;
+    }
+    return key;
+  },
+  useI18n: () => ({
+    t: (key: string) => key,
+    locale: 'nb',
+    setLocale: vi.fn(),
+  }),
+  useLocale: () => 'nb',
+  useFormatRelativeTime: () => (date: Date) => date.toISOString(),
+  useFormatDuration: () => (ms: number) => `${ms}ms`,
+  I18nProvider: ({ children }: { children: React.ReactNode }) => children,
+  LocaleProvider: ({ children }: { children: React.ReactNode }) => children,
+}));
 import { mockApiServer, isApiAvailable } from './mocks/api-server.mock';
 
 // Check if real API is available and start mock server if needed
