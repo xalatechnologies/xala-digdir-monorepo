@@ -1,0 +1,55 @@
+# Booking Engine Recording and Alert Rules
+groups:
+  - name: booking_recording_rules
+    interval: 30s
+    rules:
+      # Booking creation rate
+      - record: booking:creation_rate:5m
+        expr: sum(rate(booking_created_total{status="success"}[5m])) by (mode, tenant_id)
+
+      # Conflict rate
+      - record: booking:conflict_rate:5m
+        expr: sum(rate(booking_conflicts_total[5m])) by (mode, tenant_id)
+
+      # Conflict percentage
+      - record: booking:conflict_percentage:5m
+        expr: (sum(rate(booking_conflicts_total[5m])) by (mode) / sum(rate(booking_created_total[5m])) by (mode)) * 100
+
+      # Average creation duration
+      - record: booking:creation_duration:avg
+        expr: rate(booking_creation_duration_seconds_sum[5m]) / rate(booking_creation_duration_seconds_count[5m])
+
+  - name: booking_alerts
+    rules:
+      # Critical: High conflict rate
+      - alert: HighBookingConflictRate
+        expr: booking:conflict_percentage:5m > 20
+        for: 5m
+        labels:
+          severity: critical
+          priority: P0
+        annotations:
+          summary: "High booking conflict rate"
+          description: "Booking conflict rate is {{ $value }}% for {{ $labels.mode }} mode"
+
+      # Warning: Slow booking creation
+      - alert: SlowBookingCreation
+        expr: booking:creation_duration:avg > 2
+        for: 10m
+        labels:
+          severity: warning
+          priority: P1
+        annotations:
+          summary: "Slow booking creation detected"
+          description: "Average booking creation time is {{ $value }}s"
+
+      # Info: Unusual booking pattern
+      - alert: UnusualBookingPattern
+        expr: abs(booking:creation_rate:5m - booking:creation_rate:5m offset 1h) / booking:creation_rate:5m offset 1h > 2
+        for: 15m
+        labels:
+          severity: info
+          priority: P2
+        annotations:
+          summary: "Unusual booking pattern detected"
+          description: "Booking rate changed by {{ $value | humanizePercentage }} compared to 1 hour ago"

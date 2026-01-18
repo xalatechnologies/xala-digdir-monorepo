@@ -1,0 +1,42 @@
+# Dependencies
+node_modules
+pnpm-lock.yaml
+
+# Build output
+dist
+*.tsbuildinfo
+
+# Environment
+.env
+.env.local
+.env.*.local
+
+# Logs
+logs
+*.log
+npm-debug.log*
+pnpm-debug.log*
+
+# Docker volumes
+prometheus-data
+grafana-data
+loki-data
+tempo-data
+alertmanager-data
+
+# Temporary files
+*.tmp
+.DS_Store
+
+# IDE
+.vscode
+.idea
+*.swp
+*.swo
+
+# Test coverage
+coverage
+.nyc_output
+
+# Grafana provisioning state
+grafana/provisioning/*.db

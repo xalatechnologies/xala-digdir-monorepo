@@ -1,0 +1,65 @@
+# Database Recording and Alert Rules
+groups:
+  - name: database_recording_rules
+    interval: 30s
+    rules:
+      # Query rate
+      - record: db:query_rate:5m
+        expr: sum(rate(db_query_total[5m])) by (operation, table)
+
+      # Query latency percentiles
+      - record: db:query_duration:p95
+        expr: histogram_quantile(0.95, sum(rate(db_query_duration_seconds_bucket[5m])) by (le, operation))
+
+      - record: db:query_duration:p99
+        expr: histogram_quantile(0.99, sum(rate(db_query_duration_seconds_bucket[5m])) by (le, operation))
+
+      # Error rate
+      - record: db:error_rate:5m
+        expr: sum(rate(db_query_errors_total[5m])) by (operation, error_type)
+
+  - name: database_alerts
+    rules:
+      # Critical: Connection pool exhausted
+      - alert: DatabaseConnectionPoolExhausted
+        expr: db_connection_pool_size{state="idle"} == 0 and db_connection_pool_size{state="waiting"} > 0
+        for: 2m
+        labels:
+          severity: critical
+          priority: P0
+        annotations:
+          summary: "Database connection pool exhausted"
+          description: "No idle connections available, {{ $value }} connections waiting"
+
+      # Critical: High error rate
+      - alert: HighDatabaseErrorRate
+        expr: (sum(rate(db_query_errors_total[5m])) / sum(rate(db_query_total[5m]))) > 0.01
+        for: 5m
+        labels:
+          severity: critical
+          priority: P0
+        annotations:
+          summary: "High database error rate"
+          description: "Database error rate is {{ $value | humanizePercentage }}"
+
+      # Warning: Slow queries
+      - alert: SlowDatabaseQueries
+        expr: histogram_quantile(0.95, sum(rate(db_query_duration_seconds_bucket[5m])) by (le, operation)) > 0.1
+        for: 10m
+        labels:
+          severity: warning
+          priority: P1
+        annotations:
+          summary: "Slow database queries detected"
+          description: "p95 query latency is {{ $value }}s for {{ $labels.operation }}"
+
+      # Warning: High connection pool usage
+      - alert: HighConnectionPoolUsage
+        expr: (db_connection_pool_size{state="active"} / (db_connection_pool_size{state="active"} + db_connection_pool_size{state="idle"})) > 0.8
+        for: 10m
+        labels:
+          severity: warning
+          priority: P1
+        annotations:
+          summary: "High database connection pool usage"
+          description: "Connection pool is {{ $value | humanizePercentage }} utilized"
