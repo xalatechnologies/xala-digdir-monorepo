@@ -181,14 +181,22 @@ ssh ${VPS_USER}@${VPS_HOST} "cd ${DEPLOY_PATH} && DATABASE_URL='postgresql://${D
 log_info "Migrations applied"
 echo ""
 
-# Step 7: Seed database
-echo "🌱 Step 7: Seeding database..."
+# Step 7: Deploy storage files (seed images)
+echo "📸 Step 7: Deploying storage files..."
+ssh ${VPS_USER}@${VPS_HOST} "mkdir -p /var/www/digilist-storage/uploads"
+rsync -avz packages/database-schema/seeds/storage/ ${VPS_USER}@${VPS_HOST}:/var/www/digilist-storage/uploads/
+ssh ${VPS_USER}@${VPS_HOST} "chown -R www-data:www-data /var/www/digilist-storage 2>/dev/null || chown -R root:root /var/www/digilist-storage"
+log_info "Storage files deployed to /var/www/digilist-storage/uploads"
+echo ""
+
+# Step 8: Seed database
+echo "🌱 Step 8: Seeding database..."
 ssh ${VPS_USER}@${VPS_HOST} "cd ${DEPLOY_PATH} && DATABASE_URL='postgresql://${DB_USER}:${DB_PASSWORD}@${DB_HOST}:${DB_PORT}/${DB_NAME}' pnpm --filter @digilist/database-schema seed"
 log_info "Database seeded"
 echo ""
 
-# Step 8: Deploy PM2 configuration
-echo "⚙️  Step 8: Configuring PM2..."
+# Step 9: Deploy PM2 configuration
+echo "⚙️  Step 9: Configuring PM2..."
 ssh ${VPS_USER}@${VPS_HOST} "cat > ${DEPLOY_PATH}/ecosystem.test.config.js" << 'EOF'
 module.exports = {
   apps: [
@@ -216,6 +224,8 @@ module.exports = {
         JWT_REFRESH_EXPIRES_IN: '7d',
         CORS_ORIGIN: 'https://web-test.digilist.no,https://backoffice-test.digilist.no,https://minside-test.digilist.no',
         VITE_TENANT_ID: 'f47ac10b-58cc-4372-a567-0e02b2c3d479',
+        STORAGE_PATH: '/var/www/digilist-storage/uploads',
+        STORAGE_BASE_URL: '/storage',
         LOG_LEVEL: 'info',
         LOG_FORMAT: 'json',
       },
@@ -230,20 +240,20 @@ EOF
 log_info "PM2 configuration deployed"
 echo ""
 
-# Step 9: Restart PM2
-echo "🔄 Step 9: Restarting services..."
+# Step 10: Restart PM2
+echo "🔄 Step 10: Restarting services..."
 ssh ${VPS_USER}@${VPS_HOST} "cd ${DEPLOY_PATH} && pm2 delete digilist-api-test 2>/dev/null || true && pm2 start ecosystem.test.config.js && pm2 save"
 log_info "Services restarted"
 echo ""
 
-# Step 10: Wait for API to start
-echo "⏳ Step 10: Waiting for API to start..."
+# Step 11: Wait for API to start
+echo "⏳ Step 11: Waiting for API to start..."
 sleep 5
 log_info "API should be ready"
 echo ""
 
-# Step 11: Run health checks
-echo "🏥 Step 11: Running health checks..."
+# Step 12: Run health checks
+echo "🏥 Step 12: Running health checks..."
 HEALTH_CHECK=$(curl -s https://api.digilist.no/health || echo "failed")
 if echo "$HEALTH_CHECK" | grep -q "ok"; then
     log_info "API health check passed"
@@ -254,8 +264,8 @@ else
 fi
 echo ""
 
-# Step 12: Test demo login
-echo "🔐 Step 12: Testing demo login..."
+# Step 13: Test demo login
+echo "🔐 Step 13: Testing demo login..."
 DEMO_LOGIN=$(curl -s -X POST https://api.digilist.no/api/auth/demo-token \
   -H "Content-Type: application/json" \
   -d '{"token":"demo-admin-token"}' || echo "failed")
@@ -269,8 +279,8 @@ else
 fi
 echo ""
 
-# Step 13: Run automated tests (if available)
-echo "🧪 Step 13: Running automated tests..."
+# Step 14: Run automated tests (if available)
+echo "🧪 Step 14: Running automated tests..."
 if ssh ${VPS_USER}@${VPS_HOST} "cd ${DEPLOY_PATH} && pnpm test 2>&1 | head -20"; then
     log_info "Tests passed"
 else
@@ -278,8 +288,8 @@ else
 fi
 echo ""
 
-# Step 14: Verify frontend deployments
-echo "🌐 Step 14: Verifying frontend deployments..."
+# Step 15: Verify frontend deployments
+echo "🌐 Step 15: Verifying frontend deployments..."
 for SUBDOMAIN in web-test minside-test backoffice-test; do
     HTTP_CODE=$(curl -s -o /dev/null -w "%{http_code}" https://${SUBDOMAIN}.digilist.no)
     if [ "$HTTP_CODE" = "200" ]; then
