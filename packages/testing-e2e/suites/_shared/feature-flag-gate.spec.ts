@@ -24,15 +24,24 @@ async function mockAuth(page: Page) {
   });
 }
 
-  });
-}
+
 
 async function setupCommonMocks(page: Page) {
   // Capture Browser Console
   page.on('console', msg => console.log(`BROWSER LOG: ${msg.text()}`));
   page.on('pageerror', err => console.log(`BROWSER ERROR: ${err.toString()}`));
 
-  // Mock User Me
+  // Catch-all to prevent 401s on unmocked endpoints
+  await page.route('**/api/**', async route => {
+    // Only fulfill if not already handled (Playwright handles last-added first? No, need to check docs logic)
+    // Actually, simply adding this at the START of setupCommonMocks might work if we rely on "last added wins" which is Playwright default.
+    // Wait, Playwright: "When a request is made, the handler of the matching route that was added LAST is called."
+    // So specific mocks should be added AFTER this one.
+    // So this should be the FIRST route added.
+    await route.fulfill({ status: 200, json: { data: [] } });
+  });
+
+  // Mock User Me (Specific - added AFTER so it wins)
   await page.route('**/api/users/me', async route => {
     await route.fulfill({
       json: {
@@ -55,6 +64,7 @@ async function setupCommonMocks(page: Page) {
 }
 
 test.describe('GATE-G3: Feature Flag Gate Enforcement', () => {
+  test.use({ baseURL: 'http://localhost:6003' });
   setupMockApi(test);
 
   test.describe('Module Visibility When Enabled', () => {
@@ -67,7 +77,11 @@ test.describe('GATE-G3: Feature Flag Gate Enforcement', () => {
           json: {
             data: {
               role: 'org_admin',
-              capabilities: ['CAP_NAV_SEASONS', 'CAP_NAV_MESSAGES', 'CAP_NAV_RATINGS'],
+              capabilities: [
+                'CAP_NAV_SEASONS', 'CAP_SEASONS', 
+                'CAP_NAV_MESSAGES', 'CAP_MESSAGES', 
+                'CAP_NAV_RATINGS', 'CAP_RATINGS'
+              ],
               uiHints: {
                 showSeasons: true,
                 showMessages: true,
@@ -80,7 +94,7 @@ test.describe('GATE-G3: Feature Flag Gate Enforcement', () => {
     });
 
     test('SEASONS module shows in navigation when enabled', async ({ page }) => {
-      await page.goto('/backoffice');
+      await page.goto('/');
       
       console.log('Current URL:', page.url());
       
@@ -101,13 +115,13 @@ test.describe('GATE-G3: Feature Flag Gate Enforcement', () => {
     });
 
     test('RATINGS module shows when enabled', async ({ page }) => {
-      await page.goto('/backoffice');
+      await page.goto('/');
       const navLink = page.getByRole('link', { name: /anmeldelser|reviews|ratings/i });
       await expect(navLink).toBeVisible();
     });
 
     test('MESSAGING module shows when enabled', async ({ page }) => {
-      await page.goto('/backoffice');
+      await page.goto('/');
       const navLink = page.getByRole('link', { name: /meldinger|messages/i });
       await expect(navLink).toBeVisible();
     });
@@ -142,19 +156,19 @@ test.describe('GATE-G3: Feature Flag Gate Enforcement', () => {
     });
     
     test('disabled module not in navigation', async ({ page }) => {
-      await page.goto('/backoffice');
+      await page.goto('/');
       const economyLink = page.getByRole('link', { name: /økonomi|economy|faktura/i });
       await expect(economyLink).not.toBeVisible();
     });
 
     test('direct URL access to disabled module returns 403', async ({ page }) => {
       // Navigate and wait for potential redirect or 403 state
-      const response = await page.goto('/backoffice/economy');
+      const response = await page.goto('/economy');
       const url = page.url();
       
       // Should verify we are NOT on economy page
       // Ideally should be redirected to dashboard or show 403 page
-      const isEconomyPage = url.includes('/backoffice/economy');
+      const isEconomyPage = url.includes('/economy');
       expect(isEconomyPage).toBe(false);
     });
 

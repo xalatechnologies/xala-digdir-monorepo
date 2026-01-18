@@ -154,9 +154,20 @@ interface StatusConfig {
 // =============================================================================
 
 /**
- * Norwegian weekday names
+ * Get weekday name from date using i18n
  */
-const WEEKDAY_NAMES = ['Søndag', 'Mandag', 'Tirsdag', 'Onsdag', 'Torsdag', 'Fredag', 'Lørdag'];
+function getWeekdayName(date: Date, t: (key: string) => string): string {
+  const weekdays = [
+    'weekday.sunday',
+    'weekday.monday',
+    'weekday.tuesday',
+    'weekday.wednesday',
+    'weekday.thursday',
+    'weekday.friday',
+    'weekday.saturday',
+  ];
+  return t(`common.${weekdays[date.getDay()]}`);
+}
 
 /**
  * Norwegian month names
@@ -222,11 +233,11 @@ const STATUS_KEYS: Record<OccurrenceStatus, string> = {
 // =============================================================================
 
 /**
- * Format date for display (Norwegian format)
+ * Format date for display
  */
-function formatDate(dateString: string): string {
+function formatDate(dateString: string, t: (key: string) => string): string {
   const date = new Date(dateString);
-  const weekday = WEEKDAY_NAMES[date.getDay()] ?? '';
+  const weekday = getWeekdayName(date, t);
   const day = date.getDate();
   const month = MONTH_NAMES[date.getMonth()] ?? '';
   return `${weekday} ${day}. ${month}`;
@@ -490,7 +501,7 @@ export function RecurringPreviewTable({
                       <Checkbox
                         checked={isSelected}
                         onChange={(e) => handleRowToggle(occurrence.index, e.target.checked)}
-                        aria-label={`Velg ${formatDate(occurrence.startTime)}`}
+                        aria-label={`Velg ${formatDate(occurrence.startTime, t)}`}
                       />
                     )}
                   </div>
@@ -508,7 +519,7 @@ export function RecurringPreviewTable({
                         : 'var(--ds-color-neutral-text-subtle)',
                     }}
                   >
-                    {formatDate(occurrence.startTime)}
+                    {formatDate(occurrence.startTime, t)}
                   </Paragraph>
                 </div>
 

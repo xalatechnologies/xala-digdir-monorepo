@@ -138,7 +138,15 @@ export function BookingConfirmationStep({
 }: BookingConfirmationStepProps): React.ReactElement {
   const t = useT();
   const monthNames = ['januar', 'februar', 'mars', 'april', 'mai', 'juni', 'juli', 'august', 'september', 'oktober', 'november', 'desember'];
-  const dayNames = ['Søndag', 'Mandag', 'Tirsdag', 'Onsdag', 'Torsdag', 'Fredag', 'Lørdag'];
+  const dayNames = [
+    t('common.weekday.sunday'),
+    t('common.weekday.monday'),
+    t('common.weekday.tuesday'),
+    t('common.weekday.wednesday'),
+    t('common.weekday.thursday'),
+    t('common.weekday.friday'),
+    t('common.weekday.saturday'),
+  ];
 
   /**
    * Convert internal slot format (Set<string> with "dayIndex-HH:MM" keys) to FlowSelectedSlot[]
@@ -250,10 +258,10 @@ export function BookingConfirmationStep({
     return (
       <div style={{ padding: 'var(--ds-spacing-6)' }}>
         <Heading level={3} data-size="md" style={{ margin: 0, marginBottom: 'var(--ds-spacing-2)', color: 'var(--ds-color-neutral-text-default)' }}>
-          Logg inn for å fullføre
+          {t('common.logg.inn.for.aa.fullfoere')}
         </Heading>
         <Paragraph data-size="sm" style={{ margin: 0, marginBottom: 'var(--ds-spacing-5)', color: 'var(--ds-color-neutral-text-subtle)' }}>
-          For å sende din bookingforespørsel må du være innlogget. Vi bruker sikker autentisering for å verifisere din identitet.
+          {t('common.for.aa.sende.bookingforespoersel')}
         </Paragraph>
 
         {/* Simple Login Buttons */}
@@ -279,7 +287,7 @@ export function BookingConfirmationStep({
               color: 'var(--ds-color-warning-base-contrast-default)',
             }}
           >
-            {isLoggingIn ? t('common.logger_inn') : 'Logg inn med Vipps'}
+            {isLoggingIn ? t('common.logger_inn') : t('common.logg.inn.med.vipps')}
           </Button>
 
           <Button
@@ -292,7 +300,7 @@ export function BookingConfirmationStep({
               width: '100%',
             }}
           >
-            {isLoggingIn ? t('common.logger_inn') : 'Logg inn med Bank ID'}
+            {isLoggingIn ? t('common.logger_inn') : t('common.logg.inn.med.bank.id')}
           </Button>
         </div>
 
@@ -314,7 +322,7 @@ export function BookingConfirmationStep({
             <CheckCircleIcon size={10} />
           </div>
           <Paragraph data-size="xs" style={{ margin: 0, color: 'var(--ds-color-neutral-text-subtle)' }}>
-            Din informasjon behandles sikkert og i henhold til personvernlovgivningen. Ved å logge inn godtar du at vi lagrer nødvendige opplysninger for å behandle din booking.
+            {t('common.informasjon.behandles.sikkert')}
           </Paragraph>
         </div>
       </div>
@@ -328,10 +336,10 @@ export function BookingConfirmationStep({
         /* Account Selection - Choose Private or Organization */
         <>
           <Heading level={3} data-size="md" style={{ margin: 0, marginBottom: 'var(--ds-spacing-2)' }}>
-            Hvordan vil du booke?
+            {t('common.hvordan.vil.du.booke')}
           </Heading>
           <Paragraph data-size="sm" style={{ margin: 0, marginBottom: 'var(--ds-spacing-6)', color: 'var(--ds-color-neutral-text-subtle)' }}>
-            Velg om du vil booke som privatperson eller på vegne av en organisasjon.
+            {t('common.velg.privatperson.eller.organisasjon')}
           </Paragraph>
 
           {/* Account Type Selection */}

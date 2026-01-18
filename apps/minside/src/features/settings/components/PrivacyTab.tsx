@@ -112,16 +112,16 @@ export function PrivacyTab() {
           <div>
             <Heading level={3} data-size="sm" style={{ marginBottom: 'var(--ds-spacing-2)' }}>
               <ShieldIcon style={{ verticalAlign: 'middle', marginRight: 'var(--ds-spacing-2)' }} />
-              Dataeksport
+              {t('common.dataeksport')}
             </Heading>
             <Paragraph data-size="sm" style={{ color: 'var(--ds-color-neutral-text-subtle)' }}>
-              Last ned en kopi av alle dine personopplysninger
+              {t('common.last.ned.kopi.av.personopplysninger')}
             </Paragraph>
           </div>
 
           <Alert>
             <Paragraph data-size="sm" style={{ margin: 0 }}>
-              I henhold til GDPR har du rett til å få en kopi av dine personopplysninger. Eksporten inkluderer profil, bookinger, meldinger og aktivitetslogg.
+              {t('common.gdpr.eksport.beskrivelse')}
             </Paragraph>
           </Alert>
 
@@ -133,7 +133,7 @@ export function PrivacyTab() {
             aria-label={t('common.eksporter_mine_data')}
           >
             <DownloadIcon />
-            {isExporting ? t('common.eksporterer') : 'Last ned mine data'}
+            {isExporting ? t('common.eksporterer') : t('common.last.ned.mine.data')}
           </Button>
         </Stack>
       </Card>
@@ -143,10 +143,10 @@ export function PrivacyTab() {
         <Stack spacing={4}>
           <div>
             <Heading level={3} data-size="sm" style={{ marginBottom: 'var(--ds-spacing-2)' }}>
-              Samtykker
+              {t('common.samtykker')}
             </Heading>
             <Paragraph data-size="sm" style={{ color: 'var(--ds-color-neutral-text-subtle)' }}>
-              Administrer hvordan vi bruker dine data
+              {t('common.administrer.hvordan.vi.bruker.data')}
             </Paragraph>
           </div>
 
@@ -161,10 +161,10 @@ export function PrivacyTab() {
             }}>
               <div>
                 <Paragraph data-size="sm" style={{ margin: 0, fontWeight: 'var(--ds-font-weight-medium)' }}>
-                  Markedsføring
+                  {t('common.markedsforing')}
                 </Paragraph>
                 <Paragraph data-size="xs" style={{ margin: 0, marginTop: 'var(--ds-spacing-1)', color: 'var(--ds-color-neutral-text-subtle)' }}>
-                  Motta tips, tilbud og nyheter på e-post
+                  {t('common.motta.tips.tilbud.nyheter')}
                 </Paragraph>
               </div>
               <Switch
@@ -184,16 +184,16 @@ export function PrivacyTab() {
             }}>
               <div>
                 <Paragraph data-size="sm" style={{ margin: 0, fontWeight: 'var(--ds-font-weight-medium)' }}>
-                  Analyse
+                  {t('common.analyse')}
                 </Paragraph>
                 <Paragraph data-size="xs" style={{ margin: 0, marginTop: 'var(--ds-spacing-1)', color: 'var(--ds-color-neutral-text-subtle)' }}>
-                  Hjelp oss forbedre tjenesten med anonymisert bruksdata
+                  {t('common.hjelp.oss.forbedre.tjenesten')}
                 </Paragraph>
               </div>
               <Switch
                 checked={consentSettings.analytics}
                 onChange={(e) => handleUpdateConsents('analytics', e.target.checked)}
-                aria-label="Analyse"
+                aria-label={t('common.analyse')}
               />
             </div>
 
@@ -207,10 +207,10 @@ export function PrivacyTab() {
             }}>
               <div>
                 <Paragraph data-size="sm" style={{ margin: 0, fontWeight: 'var(--ds-font-weight-medium)' }}>
-                  Deling med tredjeparter
+                  {t('common.deling.med.tredjeparter')}
                 </Paragraph>
                 <Paragraph data-size="xs" style={{ margin: 0, marginTop: 'var(--ds-spacing-1)', color: 'var(--ds-color-neutral-text-subtle)' }}>
-                  Tillat deling av data med samarbeidspartnere
+                  {t('common.tillat.deling.med.partnere')}
                 </Paragraph>
               </div>
               <Switch
@@ -228,20 +228,20 @@ export function PrivacyTab() {
         <Stack spacing={4}>
           <div>
             <Heading level={3} data-size="sm" style={{ marginBottom: 'var(--ds-spacing-2)', color: 'var(--ds-color-danger-text-default)' }}>
-              Slett konto
+              {t('common.slett.konto')}
             </Heading>
             <Paragraph data-size="sm" style={{ color: 'var(--ds-color-neutral-text-subtle)' }}>
-              Permanent sletting av din konto og alle tilknyttede data
+              {t('common.permanent.sletting.av.konto')}
             </Paragraph>
           </div>
 
           <Alert>
             <Stack spacing={2}>
               <Paragraph data-size="sm" style={{ margin: 0, fontWeight: 'var(--ds-font-weight-medium)' }}>
-                Dette kan ikke angres
+                {t('common.dette.kan.ikke.angres')}
               </Paragraph>
               <Paragraph data-size="sm" style={{ margin: 0 }}>
-                Ved sletting av kontoen vil alle dine personopplysninger, bookinger, meldinger og aktivitetshistorikk bli permanent fjernet. Denne handlingen kan ikke reverseres.
+                {t('common.sletting.advarsel')}
               </Paragraph>
             </Stack>
           </Alert>
@@ -256,7 +256,7 @@ export function PrivacyTab() {
             }} type="button"
           >
             <TrashIcon />
-            Slett min konto
+            {t('common.slett.min.konto')}
           </Button>
         </Stack>
       </Card>

@@ -1,10 +1,9 @@
 import { useState, useMemo } from 'react';
 import { Container, Heading, Paragraph, Card, Button, Spinner } from '@xala/ds';
-import { useNavigate } from 'react-router-dom';
 import { useSeasonApplications } from '@digilist/client-sdk/hooks';
+import type { SeasonApplicationStatus } from '@digilist/client-sdk/types';
 import { useAccountContext } from '../providers/AccountContextProvider';
-import { ApplicationCard } from '../features/seasons/components/ApplicationCard';
-import { useT } from '@xala/i18n';
+import { useNavigate } from 'react-router-dom';
 
 // Local type for season application status
 type SeasonApplicationStatus = 'pending' | 'approved' | 'rejected';
@@ -67,17 +66,19 @@ function ClockIcon() {
   );
 }
 
-// Filter options
-const APPLICATION_FILTER_OPTIONS = [
+// Filter options factory function
+const getApplicationFilterOptions = (t: ReturnType<typeof useT>) => [
   { value: 'all' as const, label: t('common.alle_soknader') },
   { value: 'pending' as SeasonApplicationStatus, label: t('common.til_behandling') },
   { value: 'approved' as SeasonApplicationStatus, label: 'Godkjent' },
-  { value: 'rejected' as SeasonApplicationStatus, label: t('common.avslaatt') },
+  { value: 'rejected' as SeasonApplicationStatus, label: 'Avslått' },
 ];
 
 export function SeasonApplicationsPage() {
   const navigate = useNavigate();
   const { accountType, selectedOrganization } = useAccountContext();
+  const t = useT();
+  const APPLICATION_FILTER_OPTIONS = getApplicationFilterOptions(t);
   const [statusFilter, setStatusFilter] = useState<SeasonApplicationStatus | 'all'>('all');
 
   // Fetch season applications from SDK

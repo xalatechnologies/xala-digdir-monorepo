@@ -6,7 +6,6 @@
 
 import type { SeasonStatus } from '@digilist/client-sdk/types';
 import type { StatusBadgeConfig } from '@xala/ds';
-import { useT } from '@xala/i18n';
 
 // =============================================================================
 // Season Status Configuration
@@ -18,7 +17,7 @@ export const SEASON_STATUS_CONFIG: Record<SeasonStatus, StatusBadgeConfig> = {
     color: 'neutral',
   },
   open: {
-    label: t('common.aapen_for_soknader'),
+    label: 'Åpen for søknader',
     color: 'success',
   },
   closed: {
@@ -37,7 +36,7 @@ export const SEASON_STATUS_CONFIG: Record<SeasonStatus, StatusBadgeConfig> = {
     label: 'Kansellert',
     color: 'danger',
   },
-};
+});
 
 // =============================================================================
 // Application Status Configuration
@@ -55,7 +54,7 @@ export const APPLICATION_STATUS_CONFIG = {
     bgColor: 'var(--ds-color-success-surface-default)',
   },
   rejected: {
-    label: t('common.avslaatt'),
+    label: 'Avslått',
     color: 'var(--ds-color-danger-text-default)',
     bgColor: 'var(--ds-color-danger-surface-default)',
   },
@@ -104,7 +103,7 @@ export const TIME_SLOT_CONFIG = {
 // Filter Options
 // =============================================================================
 
-export const SEASON_FILTER_OPTIONS: { label: string; value: SeasonStatus | 'all' }[] = [
+export const getSeasonFilterOptions = (t: any): { label: string; value: SeasonStatus | 'all' }[] => [
   { label: 'Alle', value: 'all' },
   { label: t('common.aapne'), value: 'open' },
   { label: 'Aktive', value: 'active' },

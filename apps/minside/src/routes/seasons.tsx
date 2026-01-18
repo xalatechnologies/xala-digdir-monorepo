@@ -4,7 +4,7 @@ import { useSeasons } from '@digilist/client-sdk/hooks';
 import type { SeasonStatus } from '@digilist/client-sdk/types';
 import { useAccountContext } from '../providers/AccountContextProvider';
 import { SeasonCard } from '../features/seasons/components/SeasonCard';
-import { SEASON_FILTER_OPTIONS } from '../features/seasons/constants';
+import { getSeasonFilterOptions } from '../features/seasons/constants';
 import { useT } from '@xala/i18n';
 
 /**
@@ -54,6 +54,7 @@ export function SeasonsPage() {
   const t = useT();
   const { accountType, selectedOrganization } = useAccountContext();
   const [statusFilter, setStatusFilter] = useState<SeasonStatus | 'all'>('all');
+  const SEASON_FILTER_OPTIONS = getSeasonFilterOptions(t);
 
   // Fetch seasons from SDK
   const { data: seasonsResponse, isLoading, error } = useSeasons(
