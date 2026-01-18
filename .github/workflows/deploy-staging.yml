@@ -1,0 +1,219 @@
+name: Deploy to Staging
+
+on:
+  push:
+    branches:
+      - develop
+  workflow_dispatch:
+
+env:
+  NODE_VERSION: '20'
+  PNPM_VERSION: '8'
+
+jobs:
+  deploy-staging:
+    name: Deploy to Staging Environment
+    runs-on: ubuntu-latest
+    environment: staging
+    
+    steps:
+      # ========================================================================
+      # Checkout Code
+      # ========================================================================
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      # ========================================================================
+      # Setup Tools
+      # ========================================================================
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: ${{ env.PNPM_VERSION }}
+
+      - name: Install age
+        run: |
+          wget https://github.com/FiloSottile/age/releases/download/v1.1.1/age-v1.1.1-linux-amd64.tar.gz
+          tar xzf age-v1.1.1-linux-amd64.tar.gz
+          sudo mv age/age age/age-keygen /usr/local/bin/
+          age --version
+
+      # ========================================================================
+      # Decrypt Secrets
+      # ========================================================================
+      - name: Decrypt secrets
+        env:
+          AGE_SECRET_KEY: ${{ secrets.AGE_SECRET_KEY }}
+        run: |
+          echo "$AGE_SECRET_KEY" > age.key
+          chmod 600 age.key
+          
+          mkdir -p /tmp/secrets
+          
+          # Decrypt all app secrets
+          for app in api web minside backoffice tenant-admin saas-admin monitoring docs-learning; do
+            if [ -f ".secrets/staging/${app}.enc.yaml" ]; then
+              echo "Decrypting ${app} secrets..."
+              age -d -i age.key ".secrets/staging/${app}.enc.yaml" > "/tmp/secrets/${app}.yaml"
+              
+              # Convert YAML to ENV format
+              sed 's/: /=/' "/tmp/secrets/${app}.yaml" | grep -v '^#' | grep -v '^$' > "/tmp/secrets/${app}.env"
+            fi
+          done
+          
+          rm age.key
+
+      # ========================================================================
+      # Build Applications
+      # ========================================================================
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build API
+        run: pnpm --filter @digilist/api build
+
+      - name: Build frontend apps
+        run: |
+          pnpm --filter @xala/web build
+          pnpm --filter @xala/minside build
+          pnpm --filter @xala/backoffice build
+          pnpm --filter @xala/tenant-admin build
+          pnpm --filter @xala/saas-admin build
+          pnpm --filter @xala/monitoring build
+          pnpm --filter @xala/docs-learning build
+
+      # ========================================================================
+      # Deploy to VPS
+      # ========================================================================
+      - name: Setup SSH
+        env:
+          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+        run: |
+          mkdir -p ~/.ssh
+          echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          ssh-keyscan -H ${{ secrets.VPS_HOST }} >> ~/.ssh/known_hosts
+
+      - name: Deploy API
+        run: |
+          # Create deployment package
+          tar -czf api-staging.tar.gz -C apps/api dist package.json
+          
+          # Upload to VPS
+          scp api-staging.tar.gz ${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }}:/tmp/
+          
+          # Extract and install
+          ssh ${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }} << 'EOF'
+            cd /var/www/digilist/api
+            tar -xzf /tmp/api-staging.tar.gz
+            pnpm install --prod --frozen-lockfile
+            rm /tmp/api-staging.tar.gz
+          EOF
+
+      - name: Deploy frontend apps
+        run: |
+          for app in web minside backoffice tenant-admin saas-admin monitoring docs-learning; do
+            echo "Deploying ${app}..."
+            
+            # Create deployment package
+            tar -czf "${app}-staging.tar.gz" -C "apps/${app}" dist
+            
+            # Upload to VPS
+            scp "${app}-staging.tar.gz" ${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }}:/tmp/
+            
+            # Extract
+            ssh ${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }} << EOF
+              cd /var/www/digilist/${app}
+              tar -xzf /tmp/${app}-staging.tar.gz
+              rm /tmp/${app}-staging.tar.gz
+          EOF
+          done
+
+      - name: Upload secrets
+        run: |
+          for app in api web minside backoffice tenant-admin saas-admin monitoring docs-learning; do
+            if [ -f "/tmp/secrets/${app}.env" ]; then
+              echo "Uploading ${app} secrets..."
+              
+              # Upload to temp location
+              scp "/tmp/secrets/${app}.env" ${{ secrets.VPS_ROOT_USER }}@${{ secrets.VPS_HOST }}:/tmp/${app}.staging.env
+              
+              # Move to final location with correct permissions (as root)
+              ssh ${{ secrets.VPS_ROOT_USER }}@${{ secrets.VPS_HOST }} << EOF
+                mv /tmp/${app}.staging.env /etc/digilist/${app}/staging.env
+                chmod 600 /etc/digilist/${app}/staging.env
+                chown root:root /etc/digilist/${app}/staging.env
+          EOF
+            fi
+          done
+
+      # ========================================================================
+      # Database Migrations
+      # ========================================================================
+      - name: Run database migrations
+        run: |
+          ssh ${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }} << 'EOF'
+            cd /var/www/digilist/api
+            pnpm --filter @digilist/database-schema db:push
+          EOF
+
+      # ========================================================================
+      # Restart Services
+      # ========================================================================
+      - name: Upload PM2 config
+        run: |
+          scp ecosystem.staging.config.js ${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }}:/home/digilist/
+
+      - name: Restart PM2 processes
+        run: |
+          ssh ${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }} << 'EOF'
+            pm2 reload /home/digilist/ecosystem.staging.config.js
+            pm2 save
+          EOF
+
+      # ========================================================================
+      # Verification
+      # ========================================================================
+      - name: Verify deployment
+        run: |
+          # Wait for services to start
+          sleep 10
+          
+          # Check API health
+          if curl -f -s "http://${{ secrets.VPS_HOST }}:4000/health"; then
+            echo "✓ API health check passed"
+          else
+            echo "✗ API health check failed"
+            exit 1
+          fi
+          
+          # Check PM2 status
+          ssh ${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }} "pm2 list"
+
+      # ========================================================================
+      # Cleanup
+      # ========================================================================
+      - name: Cleanup
+        if: always()
+        run: |
+          rm -rf /tmp/secrets
+          rm -f ~/.ssh/id_rsa
+
+      # ========================================================================
+      # Notification
+      # ========================================================================
+      - name: Notify deployment status
+        if: always()
+        run: |
+          if [ "${{ job.status }}" == "success" ]; then
+            echo "✅ Staging deployment successful"
+          else
+            echo "❌ Staging deployment failed"
+          fi
