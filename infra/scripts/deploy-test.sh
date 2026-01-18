@@ -177,7 +177,13 @@ echo ""
 
 # Step 6: Run migrations
 echo "🔄 Step 6: Running database migrations..."
-ssh ${VPS_USER}@${VPS_HOST} "cd ${DEPLOY_PATH}/packages/database-schema && DATABASE_URL='${DB_URL}' pnpm db:push"
+ssh ${VPS_USER}@${VPS_HOST} << ENDSSH
+set -e
+cd ${DEPLOY_PATH}/packages/database-schema
+echo "Applying migration file..."
+PGPASSWORD='${DB_PASSWORD}' psql -h ${DB_HOST} -p ${DB_PORT} -U ${DB_USER} -d ${DB_NAME} -f migrations/0000_fuzzy_dragon_lord.sql
+echo "✓ Migration applied successfully"
+ENDSSH
 log_info "Database migrations complete"
 echo ""
 
