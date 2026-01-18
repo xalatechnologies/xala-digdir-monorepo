@@ -68,27 +68,29 @@ echo "Step 5/8: Seeding database..."
 pnpm --filter @digilist/database-schema seed || echo -e "${YELLOW}⚠ Seeding skipped (no seed script)${NC}"
 echo ""
 
-echo "Step 6/8: Starting all application containers..."
-cd infra/docker/compose
-docker-compose -f docker-compose.dev.yml up -d
+echo "Step 6/8: Starting applications locally..."
+cd ../../..
+echo "Starting all apps in background..."
+pnpm dev > /tmp/digilist-dev.log 2>&1 &
+DEV_PID=$!
+echo $DEV_PID > /tmp/digilist-dev.pid
 echo "Waiting for applications to start..."
-sleep 10
-echo -e "${GREEN}✓ All containers started${NC}"
+sleep 15
+echo -e "${GREEN}✓ Applications started (PID: $DEV_PID)${NC}"
 echo ""
 
 echo "Step 7/8: Verifying services..."
-cd ../../..
 
 # Check PostgreSQL
 if docker-compose -f infra/docker/compose/docker-compose.dev.yml exec -T postgres pg_isready -U digilist_dev > /dev/null 2>&1; then
-  echo -e "${GREEN}✓ PostgreSQL: Running${NC}"
+  echo -e "${GREEN}✓ PostgreSQL: Running (Docker)${NC}"
 else
   echo -e "${RED}✗ PostgreSQL: Not responding${NC}"
 fi
 
 # Check Redis
 if docker-compose -f infra/docker/compose/docker-compose.dev.yml exec -T redis redis-cli ping > /dev/null 2>&1; then
-  echo -e "${GREEN}✓ Redis: Running${NC}"
+  echo -e "${GREEN}✓ Redis: Running (Docker)${NC}"
 else
   echo -e "${RED}✗ Redis: Not responding${NC}"
 fi
@@ -97,7 +99,14 @@ fi
 if curl -s http://localhost:4000/health > /dev/null 2>&1; then
   echo -e "${GREEN}✓ API: Running on http://localhost:4000${NC}"
 else
-  echo -e "${YELLOW}⚠ API: Starting... (check logs if not ready in 30s)${NC}"
+  echo -e "${YELLOW}⚠ API: Starting... (check logs: tail -f /tmp/digilist-dev.log)${NC}"
+fi
+
+# Check if dev process is running
+if ps -p $(cat /tmp/digilist-dev.pid 2>/dev/null) > /dev/null 2>&1; then
+  echo -e "${GREEN}✓ Dev server: Running${NC}"
+else
+  echo -e "${YELLOW}⚠ Dev server: Check logs at /tmp/digilist-dev.log${NC}"
 fi
 
 echo ""
@@ -129,8 +138,9 @@ echo "  Adminer (DB UI):   http://localhost:8080"
 echo "  Redis Commander:   http://localhost:8081"
 echo ""
 echo "Useful commands:"
-echo "  View logs:         docker-compose -f infra/docker/compose/docker-compose.dev.yml logs -f"
-echo "  Stop all:          docker-compose -f infra/docker/compose/docker-compose.dev.yml down"
+echo "  View app logs:     tail -f /tmp/digilist-dev.log"
+echo "  Stop apps:         kill \$(cat /tmp/digilist-dev.pid)"
+echo "  Stop Docker:       docker-compose -f infra/docker/compose/docker-compose.dev.yml down"
 echo "  Run E2E tests:     pnpm --filter @digilist/testing test:e2e"
 echo "  Database console:  docker-compose -f infra/docker/compose/docker-compose.dev.yml exec postgres psql -U digilist_dev -d digilist_dev"
 echo ""
