@@ -20,24 +20,16 @@ export default defineConfig({
     environment: 'jsdom',
     setupFiles: ['./vitest.setup.ts'],
     include: [
-      'tests/unit/**/*.{test,spec}.{ts,tsx}',
-      'tests/integration/**/*.{test,spec}.{ts,tsx}',
-      'tests/contracts/**/*.{test,spec}.{ts,tsx}',
-      'tests/security/**/*.{test,spec}.{ts,tsx}',
-      'tests/performance/**/*.{test,spec}.{ts,tsx}',
-      'packages/ds/src/**/*.{test,spec}.{ts,tsx}',
-      'packages/i18n/src/**/*.{test,spec}.{ts,tsx}',
-      'apps/web/src/**/*.{test,spec}.{ts,tsx}',
-      'apps/backoffice/src/**/*.{test,spec}.{ts,tsx}',
-      'apps/saas-admin/src/**/*.{test,spec}.{ts,tsx}',
-      'apps/tenant-admin/src/**/*.{test,spec}.{ts,tsx}',
+      // Only include tests from @digilist/testing package
+      'packages/testing/suites/**/*.{test,spec}.{ts,tsx}',
     ],
     exclude: [
       '**/node_modules/**',
       '**/dist/**',
       '**/.turbo/**',
-      'apps/api/**',
-      'tests/integration/schema/**', // Requires DATABASE_URL
+      // Exclude all app and package tests - they should be moved to @digilist/testing
+      'apps/**/*.{test,spec}.{ts,tsx}',
+      'packages/!(testing)/**/*.{test,spec}.{ts,tsx}',
     ],
     coverage: {
       provider: 'v8',
