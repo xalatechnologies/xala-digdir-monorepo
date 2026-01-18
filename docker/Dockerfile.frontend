@@ -1,0 +1,97 @@
+# ==============================================================================
+# DIGILIST FRONTEND APPS - MULTI-STAGE DOCKERFILE
+# ==============================================================================
+# Builds all frontend applications (Web, MinSide, Backoffice, etc.)
+# Supports both development (with hot reload) and production builds
+# ==============================================================================
+
+FROM node:20-alpine AS base
+
+# Install dependencies
+RUN apk add --no-cache libc6-compat
+
+WORKDIR /app
+
+# Install pnpm
+RUN corepack enable && corepack prepare pnpm@latest --activate
+
+# ==============================================================================
+# DEPENDENCIES STAGE
+# ==============================================================================
+FROM base AS deps
+
+# Copy package files
+COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
+COPY apps/*/package.json ./apps/
+COPY packages/*/package.json ./packages/
+
+# Install dependencies
+RUN pnpm install --frozen-lockfile
+
+# ==============================================================================
+# BUILDER STAGE
+# ==============================================================================
+FROM base AS builder
+
+ARG APP_NAME
+
+WORKDIR /app
+
+# Copy dependencies
+COPY --from=deps /app/node_modules ./node_modules
+COPY --from=deps /app/apps ./apps
+COPY --from=deps /app/packages ./packages
+
+# Copy source code
+COPY . .
+
+# Build the specific app
+RUN pnpm --filter "@xala/${APP_NAME}" build
+
+# ==============================================================================
+# DEVELOPMENT STAGE (with hot reload)
+# ==============================================================================
+FROM base AS development
+
+ARG APP_NAME
+ARG APP_PORT=5173
+
+WORKDIR /app
+
+# Copy dependencies
+COPY --from=deps /app/node_modules ./node_modules
+
+# Copy source code
+COPY . .
+
+# Expose port
+EXPOSE ${APP_PORT}
+
+# Set environment
+ENV NODE_ENV=development
+
+# Start development server
+CMD pnpm --filter "@xala/${APP_NAME}" dev
+
+# ==============================================================================
+# PRODUCTION STAGE (nginx)
+# ==============================================================================
+FROM nginx:alpine AS production
+
+ARG APP_NAME
+
+# Copy built files from builder
+COPY --from=builder /app/apps/${APP_NAME}/dist /usr/share/nginx/html
+
+# Copy nginx configuration
+COPY docker/nginx/${APP_NAME}.conf /etc/nginx/conf.d/default.conf
+
+# Expose port
+EXPOSE 80
+
+# Health check
+HEALTHCHECK --interval=30s --timeout=10s --retries=3 \
+  CMD wget --quiet --tries=1 --spider http://localhost/ || exit 1
+
+# Start nginx
+CMD ["nginx", "-g", "daemon off;"]

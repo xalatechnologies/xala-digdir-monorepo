@@ -67,6 +67,8 @@ const MOCK_SCANNER_RESULTS = {
 export function MonitoringPage() {
   const t = useT();
   const [refreshing, setRefreshing] = useState(false);
+  const [scannerResults, setScannerResults] = useState(MOCK_SCANNER_RESULTS);
+  const [runningScanner, setRunningScanner] = useState<string | null>(null);
 
   // Queries
   const { data: tenantsData, isLoading: loadingTenants } = useSaasTenants({ limit: 1000 });
@@ -81,6 +83,48 @@ export function MonitoringPage() {
     setRefreshing(false);
   };
   // Note: handleRefresh available for future refresh button
+
+  const handleRunScanner = async (scanner: 'i18n' | 'designSystem' | 'compliance') => {
+    const scannerMap = {
+      i18n: 'i18n',
+      designSystem: 'design-system',
+      compliance: 'wcag',
+    };
+    
+    setRunningScanner(scanner);
+    try {
+      const response = await fetch(`/api/scanners/${scannerMap[scanner]}`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+      });
+      
+      if (!response.ok) throw new Error('Scanner failed');
+      
+      const result = await response.json();
+      
+      setScannerResults((prev) => ({
+        ...prev,
+        [scanner]: {
+          lastRun: result.timestamp,
+          totalKeys: result.summary.total || 0,
+          missingKeys: scanner === 'i18n' ? result.summary.errors : undefined,
+          hardcodedStrings: scanner === 'i18n' ? result.summary.warnings : undefined,
+          totalComponents: scanner === 'designSystem' ? prev.designSystem.totalComponents : undefined,
+          violations: scanner === 'designSystem' ? result.summary.errors : undefined,
+          tokenCompliance: scanner === 'designSystem' ? (result.success ? 100 : 95) : undefined,
+          wcagErrors: scanner === 'compliance' ? result.summary.errors : undefined,
+          wcagWarnings: scanner === 'compliance' ? result.summary.warnings : undefined,
+          gdprCompliance: scanner === 'compliance' ? 100 : undefined,
+          status: result.success ? 'success' as const : 'warning' as const,
+        },
+      }));
+    } catch (error) {
+      console.error(`Scanner ${scanner} failed:`, error);
+      alert(`Scanner failed: ${error instanceof Error ? error.message : 'Unknown error'}`);
+    } finally {
+      setRunningScanner(null);
+    }
+  };
 
   const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleString('nb-NO', {
@@ -326,7 +370,8 @@ export function MonitoringPage() {
                 cursor: 'pointer',
                 fontSize: 'var(--ds-font-size-sm)',
               }}
-              onClick={() => alert('Running i18n scanner...')}
+              onClick={() => handleRunScanner('i18n')}
+              disabled={runningScanner !== null}
             >
               {t('saasAdmin.monitoring.scanners.runScan', { defaultValue: 'Kjør skanning' })}
             </button>
@@ -366,7 +411,8 @@ export function MonitoringPage() {
                 cursor: 'pointer',
                 fontSize: 'var(--ds-font-size-sm)',
               }}
-              onClick={() => alert('Running Design System scanner...')}
+              onClick={() => handleRunScanner('designSystem')}
+              disabled={runningScanner !== null}
             >
               {t('saasAdmin.monitoring.scanners.runScan', { defaultValue: 'Kjør skanning' })}
             </button>
@@ -406,7 +452,8 @@ export function MonitoringPage() {
                 cursor: 'pointer',
                 fontSize: 'var(--ds-font-size-sm)',
               }}
-              onClick={() => alert('Running Compliance scanner...')}
+              onClick={() => handleRunScanner('compliance')}
+              disabled={runningScanner !== null}
             >
               {t('saasAdmin.monitoring.scanners.runScan', { defaultValue: 'Kjør skanning' })}
             </button>

@@ -111,6 +111,188 @@ services:
       - digilist-dev
     command: pnpm --filter @digilist/api dev
 
+  # Web App (Public Website)
+  web:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile.frontend
+      target: development
+      args:
+        APP_NAME: web
+        APP_PORT: 5173
+    container_name: digilist-dev-web
+    restart: unless-stopped
+    env_file:
+      - .env.docker.dev
+    environment:
+      VITE_API_URL: http://localhost:4000
+      VITE_WS_URL: ws://localhost:4000/ws/events
+    ports:
+      - "5173:5173"
+    volumes:
+      - ../apps/web:/app/apps/web
+      - ../packages:/app/packages
+      - /app/node_modules
+    networks:
+      - digilist-dev
+    command: pnpm --filter @xala/web dev
+
+  # MinSide App (User Portal)
+  minside:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile.frontend
+      target: development
+      args:
+        APP_NAME: minside
+        APP_PORT: 5174
+    container_name: digilist-dev-minside
+    restart: unless-stopped
+    env_file:
+      - .env.docker.dev
+    environment:
+      VITE_API_URL: http://localhost:4000
+      VITE_WS_URL: ws://localhost:4000/ws/events
+    ports:
+      - "5174:5174"
+    volumes:
+      - ../apps/minside:/app/apps/minside
+      - ../packages:/app/packages
+      - /app/node_modules
+    networks:
+      - digilist-dev
+    command: pnpm --filter @xala/minside dev
+
+  # Backoffice App (Admin Portal)
+  backoffice:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile.frontend
+      target: development
+      args:
+        APP_NAME: backoffice
+        APP_PORT: 5175
+    container_name: digilist-dev-backoffice
+    restart: unless-stopped
+    env_file:
+      - .env.docker.dev
+    environment:
+      VITE_API_URL: http://localhost:4000
+      VITE_WS_URL: ws://localhost:4000/ws/events
+    ports:
+      - "5175:5175"
+    volumes:
+      - ../apps/backoffice:/app/apps/backoffice
+      - ../packages:/app/packages
+      - /app/node_modules
+    networks:
+      - digilist-dev
+    command: pnpm --filter @xala/backoffice dev
+
+  # Tenant Admin App
+  tenant-admin:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile.frontend
+      target: development
+      args:
+        APP_NAME: tenant-admin
+        APP_PORT: 5176
+    container_name: digilist-dev-tenant-admin
+    restart: unless-stopped
+    env_file:
+      - .env.docker.dev
+    environment:
+      VITE_API_URL: http://localhost:4000
+      VITE_WS_URL: ws://localhost:4000/ws/events
+    ports:
+      - "5176:5176"
+    volumes:
+      - ../apps/tenant-admin:/app/apps/tenant-admin
+      - ../packages:/app/packages
+      - /app/node_modules
+    networks:
+      - digilist-dev
+    command: pnpm --filter @xala/tenant-admin dev
+
+  # SaaS Admin App
+  saas-admin:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile.frontend
+      target: development
+      args:
+        APP_NAME: saas-admin
+        APP_PORT: 5177
+    container_name: digilist-dev-saas-admin
+    restart: unless-stopped
+    env_file:
+      - .env.docker.dev
+    environment:
+      VITE_API_URL: http://localhost:4000
+      VITE_WS_URL: ws://localhost:4000/ws/events
+    ports:
+      - "5177:5177"
+    volumes:
+      - ../apps/saas-admin:/app/apps/saas-admin
+      - ../packages:/app/packages
+      - /app/node_modules
+    networks:
+      - digilist-dev
+    command: pnpm --filter @xala/saas-admin dev
+
+  # Monitoring App
+  monitoring:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile.frontend
+      target: development
+      args:
+        APP_NAME: monitoring
+        APP_PORT: 5178
+    container_name: digilist-dev-monitoring
+    restart: unless-stopped
+    env_file:
+      - .env.docker.dev
+    environment:
+      VITE_API_URL: http://localhost:4000
+      VITE_WS_URL: ws://localhost:4000/ws/events
+    ports:
+      - "5178:5178"
+    volumes:
+      - ../apps/monitoring:/app/apps/monitoring
+      - ../packages:/app/packages
+      - /app/node_modules
+    networks:
+      - digilist-dev
+    command: pnpm --filter @xala/monitoring dev
+
+  # Docs & Learning App
+  docs-learning:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile.frontend
+      target: development
+      args:
+        APP_NAME: docs-learning
+        APP_PORT: 5179
+    container_name: digilist-dev-docs-learning
+    restart: unless-stopped
+    env_file:
+      - .env.docker.dev
+    environment:
+      VITE_API_URL: http://localhost:4000
+      VITE_WS_URL: ws://localhost:4000/ws/events
+    ports:
+      - "5179:5179"
+    volumes:
+      - ../apps/docs-learning:/app/apps/docs-learning
+      - ../packages:/app/packages
+      - /app/node_modules
+    networks:
+      - digilist-dev
+    command: pnpm --filter @xala/docs-learning dev
+
   # Adminer (Database GUI)
   adminer:
     image: adminer:latest
