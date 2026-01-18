@@ -19,7 +19,7 @@ import {
   CreateOrganizationSchema,
   ActionCodeSchema,
   CapabilitySchema,
-} from '@digilist/contracts';
+} from '../../../contracts/src';
 
 describe('Common Schemas', () => {
   describe('UUIDSchema', () => {
