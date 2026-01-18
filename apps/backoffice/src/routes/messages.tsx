@@ -217,7 +217,7 @@ export function MessagesPage() {
     if (!selectedConversationId) return;
     await assignConversation.mutateAsync({
       conversationId: selectedConversationId,
-      userId: userId || undefined,
+      assigneeId: userId || undefined,
     });
   };
 
@@ -898,14 +898,14 @@ export function MessagesPage() {
                   Tildeling
                 </Paragraph>
                 <Select
-                  value={selectedConversation.assignedTo || ''}
+                  value={selectedConversation.assigneeId || ''}
                   onChange={(e) => handleAssign(e.target.value)}
                   style={{ width: '100%' }}
                 >
                   <option value="">{t('common.ikke_tildelt')}</option>
                   {saksbehandlere.map(user => (
                     <option key={user.id} value={user.id}>
-                      {user.name}
+                      {user.displayName || user.email}
                     </option>
                   ))}
                 </Select>
