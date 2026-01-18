@@ -694,7 +694,7 @@ export class AuthController {
         { id: 'demo-token', name: 'Demo Token', enabled: true },
         { id: 'national-id', name: 'National ID (Test)', enabled: true },
         { id: 'email', name: 'Email', enabled: true },
-        { id: 'bankid', name: 'BankID', enabled: false },
+        { id: 'bankid', name: 'BankID', enabled: true },
         { id: 'idporten', name: 'ID-porten', enabled: false },
         { id: 'vipps', name: 'Vipps', enabled: false },
       ],
