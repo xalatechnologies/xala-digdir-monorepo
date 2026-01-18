@@ -7,13 +7,53 @@ import { setupMockApi } from '../../mocks/api-server.mock';
  * Test ID: GATE-G3
  * Requirement: When a module flag is OFF, the module should be completely hidden
  */
-import { test, expect } from '@playwright/test';
+import { test, expect, Page } from '@playwright/test';
+
+async function mockAuth(page: Page) {
+  await page.addInitScript(() => {
+    localStorage.setItem('isAuthenticated', 'true');
+    localStorage.setItem('auth_token', JSON.stringify({
+      accessToken: 'mock-test-token',
+      expiresAt: new Date(Date.now() + 3600 * 1000).toISOString(),
+    }));
+    localStorage.setItem('auth_user', JSON.stringify({
+      id: 'test-user',
+      name: 'Test User',
+      email: 'test@digilist.no',
+    }));
+  });
+}
+
+async function setupCommonMocks(page: Page) {
+  // Mock User Me
+  await page.route('**/api/users/me', async route => {
+    await route.fulfill({
+      json: {
+        data: {
+          id: 'test-user',
+          name: 'Test User',
+          email: 'test@digilist.no',
+          roles: ['org_admin'],
+        }
+      }
+    });
+  });
+
+  // Mock Feature Flags (Base)
+  await page.route('**/api/feature-flags', async route => {
+    await route.fulfill({
+      json: { data: [] }
+    });
+  });
+}
 
 test.describe('GATE-G3: Feature Flag Gate Enforcement', () => {
   setupMockApi(test);
 
   test.describe('Module Visibility When Enabled', () => {
     test.beforeEach(async ({ page }) => {
+      await mockAuth(page);
+      await setupCommonMocks(page);
       // Mock capabilities with enabled modules
       await page.route('**/api/capabilities/backoffice', async (route) => {
         await route.fulfill({
@@ -56,6 +96,8 @@ test.describe('GATE-G3: Feature Flag Gate Enforcement', () => {
 
   test.describe('Module Hidden When Disabled', () => {
     test.beforeEach(async ({ page }) => {
+      await mockAuth(page);
+      await setupCommonMocks(page);
       // Mock capabilities with ECONOMY disabled
       await page.route('**/api/capabilities/backoffice', async (route) => {
         await route.fulfill({
@@ -121,6 +163,8 @@ test.describe('GATE-G3: Feature Flag Gate Enforcement', () => {
 
   test.describe('Capability-Gated UI Elements', () => {
      test.beforeEach(async ({ page }) => {
+      await mockAuth(page);
+      await setupCommonMocks(page);
       // Mock READ ONLY capabilities
       await page.route('**/api/capabilities/backoffice', async (route) => {
         await route.fulfill({
