@@ -37,8 +37,14 @@ class RealtimeClient {
    * Connect to WebSocket endpoint
    */
   connect(config: RealtimeClientConfig): void {
-    if (this.socket?.readyState === WebSocket.OPEN) {
-      return; // Already connected
+    // Prevent multiple connections - check if already connected or connecting
+    if (this.socket?.readyState === WebSocket.OPEN || this.socket?.readyState === WebSocket.CONNECTING) {
+      return; // Already connected or connecting
+    }
+    
+    // Prevent duplicate connect calls
+    if (this.isConnecting) {
+      return; // Already attempting to connect
     }
 
     this.config = config;

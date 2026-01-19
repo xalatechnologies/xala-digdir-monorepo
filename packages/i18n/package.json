@@ -13,7 +13,7 @@
     }
   },
   "scripts": {
-    "build": "tsc",
+    "build": "tsc && cp -r src/locales dist/",
     "dev": "tsc --watch",
     "typecheck": "tsc --noEmit",
     "lint": "eslint .",

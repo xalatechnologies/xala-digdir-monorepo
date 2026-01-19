@@ -86,7 +86,7 @@ export function BookingsPage() {
     // Also check after a short delay to ensure content is rendered
     const timer = setTimeout(updateScrollIndicators, 100);
     return () => clearTimeout(timer);
-  }, [updateScrollIndicators, isMobile, stats]);
+  }, [updateScrollIndicators, isMobile]);
 
   // Fetch user's own bookings with offline support
   const { data: bookingsData, isLoading, isOffline, isCached } = useOfflineBookings(
