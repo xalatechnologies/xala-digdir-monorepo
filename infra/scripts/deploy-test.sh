@@ -218,11 +218,9 @@ fi
 echo ""
 
 # Step 8: Seed database
-# TEMPORARILY DISABLED - Uncomment when ready to seed
-# echo "🌱 Step 8: Seeding database..."
-# ssh ${VPS_USER}@${VPS_HOST} "cd ${DEPLOY_PATH} && DATABASE_URL='postgresql://${DB_USER}:${DB_PASSWORD}@${DB_HOST}:${DB_PORT}/${DB_NAME}' pnpm --filter @digilist/database-schema seed"
-# log_info "Database seeded"
-echo "⏭️  Step 8: Skipping database seeding (commented out)"
+echo "🌱 Step 8: Seeding database..."
+ssh ${VPS_USER}@${VPS_HOST} "cd ${DEPLOY_PATH} && DATABASE_URL='postgresql://${DB_USER}:${DB_PASSWORD}@${DB_HOST}:${DB_PORT}/${DB_NAME}' pnpm --filter @digilist/database-schema seed"
+log_info "Database seeded"
 echo ""
 
 # Step 9: Deploy PM2 configuration
