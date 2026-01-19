@@ -1037,7 +1037,7 @@ export function RentalObjectAvailabilityCalendar({
                     <div
                       key={dayIndex}
                       style={{
-                        padding: 'var(--ds-spacing-1)',
+                        padding: '2px',
                         display: 'flex',
                         alignItems: 'center',
                         justifyContent: 'center',
@@ -1066,7 +1066,7 @@ export function RentalObjectAvailabilityCalendar({
                   <div
                     key={dayIndex}
                     style={{
-                      padding: 'var(--ds-spacing-1)',
+                      padding: '2px',
                       display: 'flex',
                       alignItems: 'center',
                       justifyContent: 'center',
