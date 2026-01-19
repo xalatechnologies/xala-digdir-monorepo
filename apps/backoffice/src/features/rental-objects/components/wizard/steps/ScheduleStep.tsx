@@ -267,9 +267,8 @@ export function ScheduleStep({ wizard }: ScheduleStepProps) {
             borderRadius: 'var(--ds-border-radius-md)',
           }}
         >
-          <Paragraph data-size="sm" style={{ margin: 0, display: 'flex', alignItems: 'flex-start', gap: 'var(--ds-spacing-2)' }}>
-            <span style={{ fontSize: 'var(--ds-font-size-lg)', flexShrink: 0 }}>💡</span>
-            <span>{t('rentalObjects.scheduleInfo')}</span>
+          <Paragraph data-size="sm" style={{ margin: 0 }}>
+            {t('rentalObjects.scheduleInfo')}
           </Paragraph>
         </div>
       </div>

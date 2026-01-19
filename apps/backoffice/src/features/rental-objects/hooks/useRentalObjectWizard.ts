@@ -134,17 +134,17 @@ export function useRentalObjectWizard(
   const currentCategory = (formData.category || 'LOKALER_OG_BANER') as RentalObjectCategory;
   const categoryConfig = CATEGORY_CONFIGS[currentCategory] || CATEGORY_CONFIGS.LOKALER_OG_BANER;
 
-  // Load existing rental object data in edit mode
+  // Load existing rental object data in edit mode or clone mode
   useEffect(() => {
-    if (isEditMode && existingObject?.data) {
+    if ((isEditMode || isCloneMode) && existingObject?.data) {
       const obj = existingObject.data as any; // Cast to any to avoid type mismatches with outdated contracts
       setFormData({
-        id: obj.id,
-        name: obj.name,
-        slug: obj.slug,
+        // For clone mode, don't include id and slug (create new object)
+        ...(isEditMode && { id: obj.id, slug: obj.slug }),
+        name: isCloneMode ? `${obj.name} (Copy)` : obj.name,
         category: obj.category as RentalObjectCategory,
         subcategory: obj.subcategory,
-        status: obj.status,
+        status: 'draft', // Always start as draft for clones
         images: obj.images,
         pricing: obj.pricing,
         description: obj.description,
@@ -161,8 +161,9 @@ export function useRentalObjectWizard(
         content: obj.content,
         bookingConfig: obj.bookingConfig,
       });
+      setIsDirty(false);
     }
-  }, [isEditMode, existingObject]);
+  }, [isEditMode, isCloneMode, existingObject]);
 
   // Auto-save draft to localStorage (create mode only)
   useEffect(() => {

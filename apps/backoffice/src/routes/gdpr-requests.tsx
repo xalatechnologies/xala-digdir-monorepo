@@ -34,7 +34,7 @@ const STATUS_TABS = [
   { id: 'processing', label: 'Behandles', icon: '⚙️', color: 'info' },
   { id: 'completed', label: t("status.completed"), icon: '✓', color: 'success' },
   { id: 'rejected', label: t('common.avslaatt'), icon: '✕', color: 'danger' },
-  { id: 'all', label: 'Alle', icon: '📋', color: 'neutral' },
+  { id: 'all', label: 'Alle', icon: 'FileIcon', color: 'neutral' },
 ] as const;
 
 export function GdprRequestsPage() {

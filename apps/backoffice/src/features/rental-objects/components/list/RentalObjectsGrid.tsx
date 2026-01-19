@@ -14,6 +14,7 @@ import {
   EditIcon,
   TrashIcon,
   CopyIcon,
+  InboxIcon,
 } from '@xala/ds';
 import type { RentalObject } from '@digilist/client-sdk/types';
 
@@ -146,12 +147,12 @@ export function RentalObjectsGrid({
               </Heading>
               
               <Paragraph data-size="sm" style={{ color: 'var(--ds-color-neutral-text-subtle)', marginBottom: 'var(--ds-spacing-2)' }}>
-                📍 {locationFormatted}
+                {locationFormatted}
               </Paragraph>
 
               {item.capacity && (
                 <Paragraph data-size="sm" style={{ marginBottom: 'var(--ds-spacing-2)' }}>
-                  👥 {item.capacity} personer
+                  Kapasitet: {item.capacity} personer
                 </Paragraph>
               )}
 
@@ -193,7 +194,8 @@ export function RentalObjectsGrid({
                     handleArchive(item.id);
                   }}
                 >
-                  📦 {t('action.archive')}
+                  <InboxIcon aria-hidden style={{ width: '1rem', height: '1rem', marginRight: 'var(--ds-spacing-1)' }} />
+                  {t('action.archive')}
                 </Button>
                 <Button
                   variant="secondary"

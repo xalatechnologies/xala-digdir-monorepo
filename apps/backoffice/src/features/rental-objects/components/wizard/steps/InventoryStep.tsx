@@ -131,7 +131,7 @@ export function InventoryStep({ wizard }: InventoryStepProps) {
                       fontStyle: 'italic',
                     }}
                   >
-                    💡 {t(`form.inventory.policyExample.${policy.toLowerCase()}`)}
+                    {t(`form.inventory.policyExample.${policy.toLowerCase()}`)}
                   </div>
                 </div>
               </label>

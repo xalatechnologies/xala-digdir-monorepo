@@ -20,11 +20,11 @@ export interface RequirementsStepProps {
 }
 
 const LICENSE_TYPES = [
-  { value: 'B', label: 'Klasse B', icon: '🚗', description: 'Personbil' },
-  { value: 'BE', label: 'Klasse BE', icon: '🚗🔗', description: 'Personbil med tilhenger' },
-  { value: 'C', label: 'Klasse C', icon: '🚚', description: 'Lastebil' },
-  { value: 'D', label: 'Klasse D', icon: '🚌', description: 'Buss' },
-  { value: 'AM', label: 'Klasse AM', icon: '🛵', description: 'Moped' },
+  { value: 'B', label: 'Klasse B', description: 'Personbil' },
+  { value: 'BE', label: 'Klasse BE', description: 'Personbil med tilhenger' },
+  { value: 'C', label: 'Klasse C', description: 'Lastebil' },
+  { value: 'D', label: 'Klasse D', description: 'Buss' },
+  { value: 'AM', label: 'Klasse AM', description: 'Moped' },
 ] as const;
 
 export function RequirementsStep({ wizard }: RequirementsStepProps) {
@@ -173,7 +173,6 @@ export function RequirementsStep({ wizard }: RequirementsStepProps) {
               marginBottom: 'var(--ds-spacing-3)',
             }}
           >
-            <div style={{ fontSize: '1.5rem' }}>🎂</div>
             <Heading level={4} data-size="xs" style={{ margin: 0 }}>
               {t('form.requirements.ageRequirement')}
             </Heading>

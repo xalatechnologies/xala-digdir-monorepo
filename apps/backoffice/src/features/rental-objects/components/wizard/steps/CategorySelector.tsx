@@ -183,7 +183,7 @@ export function CategorySelector({ wizard }: CategorySelectorProps) {
             }}
           >
             <Paragraph data-size="sm" style={{ margin: 0 }}>
-              💡 {t('rentalObjects.categoryLockedInEditMode')}
+              {t('rentalObjects.categoryLockedInEditMode')}
             </Paragraph>
           </div>
         )}

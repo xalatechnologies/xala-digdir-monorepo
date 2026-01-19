@@ -20,11 +20,13 @@ import type { WizardStep } from '../../types';
 export interface RentalObjectWizardProps {
   /** Rental object slug for edit mode */
   slug?: string | undefined;
+  /** Rental object ID to clone from */
+  cloneFromId?: string | undefined;
 }
 
-export function RentalObjectWizard({ slug }: RentalObjectWizardProps) {
+export function RentalObjectWizard({ slug, cloneFromId }: RentalObjectWizardProps) {
   const t = useT();
-  const wizard = useRentalObjectWizard({ slug });
+  const wizard = useRentalObjectWizard({ slug, cloneFromId });
 
   if (wizard.isLoading) {
     return (

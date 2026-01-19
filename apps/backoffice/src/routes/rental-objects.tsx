@@ -6,7 +6,7 @@
  * These are equipment and resources that citizens can book.
  */
 
-import { useParams } from 'react-router-dom';
+import { useParams, useSearchParams } from 'react-router-dom';
 import { RentalObjectsListView } from '../features/rental-objects/components/RentalObjectsListView';
 import { RentalObjectWizard } from '../features/rental-objects/components/wizard/RentalObjectWizard';
 import { RentalObjectDetailView } from '../features/rental-objects/components/detail/RentalObjectDetailView';
@@ -23,8 +23,10 @@ export function RentalObjectsPage() {
  */
 export function RentalObjectEditPage() {
   const { slug } = useParams<{ slug: string }>();
+  const [searchParams] = useSearchParams();
+  const cloneFromId = searchParams.get('cloneFrom');
 
-  return <RentalObjectWizard slug={slug} />;
+  return <RentalObjectWizard slug={slug} cloneFromId={cloneFromId || undefined} />;
 }
 
 /**

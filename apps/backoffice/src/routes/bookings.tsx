@@ -58,7 +58,7 @@ const STATUS_TABS = [
   { id: 'confirmed', labelKey: 'bookings.status.confirmed', icon: '✓', color: 'success' },
   { id: 'completed', labelKey: 'bookings.status.completed', icon: '✓', color: 'info' },
   { id: 'cancelled', labelKey: 'bookings.status.cancelled', icon: '✕', color: 'danger' },
-  { id: 'all', labelKey: 'bookings.status.all', icon: '📋', color: 'neutral' },
+  { id: 'all', labelKey: 'bookings.status.all', icon: 'FileIcon', color: 'neutral' },
 ] as const;
 
 // Payment status filter options (labels are i18n keys)

@@ -183,7 +183,6 @@ export function CapacityStep({ wizard }: CapacityStepProps) {
           }}
         >
           <Paragraph data-size="sm" style={{ margin: 0 }}>
-            💡{' '}
             {currentCategory === 'LOKALER_OG_BANER'
               ? t('rentalObjects.capacityInfoVenue')
               : t('rentalObjects.capacityInfoExperience')}

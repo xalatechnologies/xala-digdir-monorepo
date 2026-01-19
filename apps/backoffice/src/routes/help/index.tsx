@@ -32,7 +32,7 @@ const helpSectionKeys: HelpSectionKey[] = [
     titleKey: 'help.sections.gettingStarted.title',
     descriptionKey: 'help.sections.gettingStarted.description',
     href: '/help/guides',
-    icon: '📚',
+    icon: 'BookIcon',
   },
   {
     titleKey: 'help.sections.faq.title',
@@ -44,7 +44,7 @@ const helpSectionKeys: HelpSectionKey[] = [
     titleKey: 'help.sections.support.title',
     descriptionKey: 'help.sections.support.description',
     href: 'mailto:support@digilist.no',
-    icon: '📧',
+    icon: 'EnvelopeIcon',
     external: true,
   },
 ];

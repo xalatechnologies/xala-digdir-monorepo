@@ -181,7 +181,6 @@ export function LocationStep({ wizard }: LocationStepProps) {
                 gap: 'var(--ds-spacing-3)',
               }}
             >
-              <div style={{ fontSize: '3rem' }}>🗺️</div>
               <Paragraph data-size="sm" style={{ margin: 0, textAlign: 'center' }}>
                 {t('form.location.mapPreviewPlaceholder')}
                 <br />
@@ -204,7 +203,7 @@ export function LocationStep({ wizard }: LocationStepProps) {
             }}
           >
             <Paragraph data-size="sm" style={{ margin: 0 }}>
-              💡 {t('rentalObjects.locationOptionalNote')}
+              {t('rentalObjects.locationOptionalNote')}
             </Paragraph>
           </div>
         )}

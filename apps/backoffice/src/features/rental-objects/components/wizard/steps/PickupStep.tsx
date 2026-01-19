@@ -84,7 +84,6 @@ export function PickupStep({ wizard }: PickupStepProps) {
               marginBottom: 'var(--ds-spacing-4)',
             }}
           >
-            <div style={{ fontSize: '1.5rem' }}>📍</div>
             <Heading level={4} data-size="xs" style={{ margin: 0 }}>
               {t('form.pickup.location')}
             </Heading>
@@ -162,7 +161,6 @@ export function PickupStep({ wizard }: PickupStepProps) {
                 marginBottom: 'var(--ds-spacing-4)',
               }}
             >
-              <div style={{ fontSize: '1.5rem' }}>🔙</div>
               <Heading level={4} data-size="xs" style={{ margin: 0 }}>
                 {t('form.pickup.returnLocation')}
               </Heading>
@@ -222,7 +220,7 @@ export function PickupStep({ wizard }: PickupStepProps) {
           }}
         >
           <Paragraph data-size="sm" style={{ margin: 0 }}>
-            💡 {t('rentalObjects.pickupInfo')}
+            {t('rentalObjects.pickupInfo')}
           </Paragraph>
         </div>
       </div>

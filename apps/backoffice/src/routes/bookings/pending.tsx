@@ -60,9 +60,6 @@ export default function PendingBookingsPage() {
 
       {bookings.length === 0 ? (
         <Card style={{ padding: 'var(--ds-spacing-8)', textAlign: 'center' }}>
-          <Paragraph data-size="lg" style={{ marginBottom: 'var(--ds-spacing-2)' }}>
-            🎉
-          </Paragraph>
           <Heading level={2} data-size="sm" style={{ marginBottom: 'var(--ds-spacing-2)' }}>
             Ingen ventende forespørsler
           </Heading>

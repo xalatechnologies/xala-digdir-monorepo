@@ -112,16 +112,6 @@
     "category": "Kategori",
     "tags": "Etiketter",
     "notes": "Notater",
-    "common": {
-      "alle_storrelser": "Alle størrelser",
-      "110_personer": "1-10 personer",
-      "1125_personer": "11-25 personer",
-      "2650_personer": "26-50 personer",
-      "51100_personer": "51-100 personer",
-      "over_100_personer": "Over 100 personer",
-      "filter_og_sortering": "Filter og sortering",
-      "sok_etter_utleieobjekter": "Søk etter utleieobjekter"
-    },
     "comment": "Kommentar",
     "message": "Melding",
     "file": "Fil",
