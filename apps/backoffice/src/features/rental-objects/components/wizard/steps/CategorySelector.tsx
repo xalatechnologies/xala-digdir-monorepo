@@ -11,12 +11,33 @@ export interface CategorySelectorProps {
   wizard: UseRentalObjectWizardReturn;
 }
 
-// Icon emojis for each category
+// SVG icons for each category
 const CATEGORY_ICONS = {
-  LOKALER_OG_BANER: '🏢',
-  UTSTYR_OG_INVENTAR: '📦',
-  KJORETOY_OG_TRANSPORT: '🚗',
-  OPPLEVELSER_OG_ARRANGEMENT: '🎉',
+  LOKALER_OG_BANER: (
+    <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+      <polyline points="9 22 9 12 15 12 15 22"/>
+    </svg>
+  ),
+  UTSTYR_OG_INVENTAR: (
+    <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
+      <polyline points="3.27 6.96 12 12.01 20.73 6.96"/>
+      <line x1="12" y1="22.08" x2="12" y2="12"/>
+    </svg>
+  ),
+  KJORETOY_OG_TRANSPORT: (
+    <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M14 16H9m10 0h3v-3.15a1 1 0 0 0-.84-.99L16 11l-2.7-3.6a1 1 0 0 0-.8-.4H5.24a2 2 0 0 0-1.8 1.1l-.8 1.63A6 6 0 0 0 2 12.42V16h2"/>
+      <circle cx="6.5" cy="16.5" r="2.5"/>
+      <circle cx="16.5" cy="16.5" r="2.5"/>
+    </svg>
+  ),
+  OPPLEVELSER_OG_ARRANGEMENT: (
+    <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+    </svg>
+  ),
 };
 
 // Category descriptions
@@ -30,7 +51,7 @@ const CATEGORY_DESCRIPTIONS = {
 const CATEGORIES = [
   'LOKALER_OG_BANER',
   'UTSTYR_OG_INVENTAR',
-  'KJORETOY_OG_TRANSPORT',
+  // 'KJORETOY_OG_TRANSPORT', // Hidden per user request
   'OPPLEVELSER_OG_ARRANGEMENT',
 ] as const;
 
@@ -62,7 +83,7 @@ export function CategorySelector({ wizard }: CategorySelectorProps) {
         <div
           style={{
             display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
+            gridTemplateColumns: 'repeat(3, 1fr)',
             gap: 'var(--ds-spacing-4)',
           }}
         >
@@ -108,7 +129,9 @@ export function CategorySelector({ wizard }: CategorySelectorProps) {
                 {/* Icon */}
                 <div
                   style={{
-                    fontSize: '3rem',
+                    color: isSelected
+                      ? 'var(--ds-color-accent-text-default)'
+                      : 'var(--ds-color-neutral-text-default)',
                     marginBottom: 'var(--ds-spacing-3)',
                   }}
                 >
