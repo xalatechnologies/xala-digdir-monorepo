@@ -62,28 +62,24 @@ export function OpeningHoursStep({ wizard }: OpeningHoursStepProps) {
   // Bulk actions
   const applyToWeekdays = () => {
     const weekdays: Day[] = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday'];
-    const mondayHours = openingHours.monday;
+    const mondayHours = openingHours.monday || { open: '08:00', close: '20:00' };
 
-    if (mondayHours) {
-      const updated = { ...openingHours };
-      weekdays.forEach((day) => {
-        updated[day] = { ...mondayHours };
-      });
-      updateFormData({ openingHours: updated });
-    }
+    const updated = { ...openingHours };
+    weekdays.forEach((day) => {
+      updated[day] = { ...mondayHours };
+    });
+    updateFormData({ openingHours: updated });
   };
 
   const applyToWeekend = () => {
     const weekend: Day[] = ['saturday', 'sunday'];
-    const saturdayHours = openingHours.saturday;
+    const saturdayHours = openingHours.saturday || { open: '10:00', close: '18:00' };
 
-    if (saturdayHours) {
-      const updated = { ...openingHours };
-      weekend.forEach((day) => {
-        updated[day] = { ...saturdayHours };
-      });
-      updateFormData({ openingHours: updated });
-    }
+    const updated = { ...openingHours };
+    weekend.forEach((day) => {
+      updated[day] = { ...saturdayHours };
+    });
+    updateFormData({ openingHours: updated });
   };
 
   const copyFromMonday = (targetDay: Day) => {
@@ -138,7 +134,6 @@ export function OpeningHoursStep({ wizard }: OpeningHoursStepProps) {
             variant="tertiary"
             size="sm"
             onClick={applyToWeekdays}
-            disabled={!openingHours.monday}
           >
             {t('form.openingHours.applyToWeekdays')}
           </Button>
@@ -147,7 +142,6 @@ export function OpeningHoursStep({ wizard }: OpeningHoursStepProps) {
             variant="tertiary"
             size="sm"
             onClick={applyToWeekend}
-            disabled={!openingHours.saturday}
           >
             {t('form.openingHours.applyToWeekend')}
           </Button>

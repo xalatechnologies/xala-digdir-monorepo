@@ -13,6 +13,7 @@ import {
   Heading,
   EditIcon,
   TrashIcon,
+  CopyIcon,
 } from '@xala/ds';
 import type { RentalObject } from '@digilist/client-sdk/types';
 
@@ -58,6 +59,18 @@ export function RentalObjectsGrid({
 
   const handleEdit = (id: string, slug?: string) => {
     navigate(`/rental-objects/${slug || id}/edit`);
+  };
+
+  const handleClone = (id: string) => {
+    // TODO: Implement clone functionality
+    console.log('Clone rental object:', id);
+    // Navigate to create wizard with cloned data
+    navigate(`/rental-objects/create?cloneFrom=${id}`);
+  };
+
+  const handleArchive = (id: string) => {
+    // TODO: Implement archive functionality with confirmation
+    console.log('Archive rental object:', id);
   };
 
   const handleDelete = (id: string) => {
@@ -149,7 +162,7 @@ export function RentalObjectsGrid({
               )}
 
               {/* Action Buttons */}
-              <div style={{ display: 'flex', gap: 'var(--ds-spacing-2)', marginTop: 'var(--ds-spacing-4)' }}>
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 'var(--ds-spacing-2)', marginTop: 'var(--ds-spacing-4)' }}>
                 <Button
                   variant="secondary"
                   data-size="sm"
@@ -157,10 +170,30 @@ export function RentalObjectsGrid({
                     e.stopPropagation();
                     handleEdit(item.id, item.slug);
                   }}
-                  style={{ flex: 1 }}
                 >
-                  <EditIcon aria-hidden style={{ marginRight: 'var(--ds-spacing-1)' }} />
-                  Rediger
+                  <EditIcon aria-hidden style={{ width: '1rem', height: '1rem', marginRight: 'var(--ds-spacing-1)' }} />
+                  {t('action.edit')}
+                </Button>
+                <Button
+                  variant="secondary"
+                  data-size="sm"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleClone(item.id);
+                  }}
+                >
+                  <CopyIcon aria-hidden style={{ width: '1rem', height: '1rem', marginRight: 'var(--ds-spacing-1)' }} />
+                  {t('action.clone')}
+                </Button>
+                <Button
+                  variant="secondary"
+                  data-size="sm"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleArchive(item.id);
+                  }}
+                >
+                  📦 {t('action.archive')}
                 </Button>
                 <Button
                   variant="secondary"
@@ -169,10 +202,9 @@ export function RentalObjectsGrid({
                     e.stopPropagation();
                     handleDelete(item.id);
                   }}
-                  style={{ flex: 1 }}
                 >
-                  <TrashIcon aria-hidden style={{ marginRight: 'var(--ds-spacing-1)' }} />
-                  Slett
+                  <TrashIcon aria-hidden style={{ width: '1rem', height: '1rem', marginRight: 'var(--ds-spacing-1)' }} />
+                  {t('action.delete')}
                 </Button>
               </div>
             </div>

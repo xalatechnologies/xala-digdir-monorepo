@@ -19,6 +19,7 @@
   "timeMode.PERIOD": "Time Period",
   "timeMode.SLOT": "Time Slot",
   "timeMode.ALL-DAY": "All Day",
+  "timeMode.ALL_DAY": "All Day",
   "pricingUnit.hour": "hour",
   "pricingUnit.day": "day",
   "pricingUnit.booking": "booking",

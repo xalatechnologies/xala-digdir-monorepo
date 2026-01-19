@@ -49,7 +49,9 @@
     "apply": "Bruk",
     "login": "Logg inn",
     "logout": "Logg ut",
-    "signup": "Registrer deg"
+    "signup": "Registrer deg",
+    "clone": "Klon",
+    "archive": "Arkiver"
   },
   
   "state": {
@@ -110,6 +112,16 @@
     "category": "Kategori",
     "tags": "Etiketter",
     "notes": "Notater",
+    "common": {
+      "alle_storrelser": "Alle størrelser",
+      "110_personer": "1-10 personer",
+      "1125_personer": "11-25 personer",
+      "2650_personer": "26-50 personer",
+      "51100_personer": "51-100 personer",
+      "over_100_personer": "Over 100 personer",
+      "filter_og_sortering": "Filter og sortering",
+      "sok_etter_utleieobjekter": "Søk etter utleieobjekter"
+    },
     "comment": "Kommentar",
     "message": "Melding",
     "file": "Fil",
@@ -172,6 +184,39 @@
     "sun": "Søn"
   },
   
+  "form": {
+    "form": {
+      "subcategory": {
+        "placeholder": "Velg underkategori"
+      }
+    },
+    "subcategory": {
+      "placeholder": "Velg underkategori"
+    },
+    "inventory": {
+      "tip": {
+        "page": {
+          "title": "Tips for beholdning"
+        }
+      }
+    },
+    "schedule": {
+      "on-demandDescription": "Opplevelsen er tilgjengelig på forespørsel og krever manuell godkjenning"
+    },
+    "basics": {
+      "name": "Navn",
+      "category": "Kategori",
+      "description": "Beskrivelse"
+    },
+    "category": {
+      "UTSTYR_OG_INVENTAR": "Utstyr og inventar"
+    },
+    "openingHours": {
+      "applyToWeekdays": "Bruk for alle ukedager",
+      "applyToWeekend": "Bruk for helg"
+    }
+  },
+  
   "validation": {
     "required": "Dette feltet er påkrevd",
     "email": "Ugyldig e-postadresse",
@@ -224,6 +269,19 @@
     "next": "Neste",
     "previous": "Forrige",
     "showing": "Viser {{from}}-{{to}} av {{total}}"
+  },
+  
+  "media": {
+    "dropzone": {
+      "page": {
+        "title": "Last opp bilder"
+      }
+    },
+    "requirements": {
+      "page": {
+        "title": "Bildekrav"
+      }
+    }
   },
   
   "aria": {

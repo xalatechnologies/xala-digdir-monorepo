@@ -19,6 +19,7 @@
   "timeMode.PERIOD": "Tidsperiode",
   "timeMode.SLOT": "Tidsluke",
   "timeMode.ALL-DAY": "Heldags",
+  "timeMode.ALL_DAY": "Heldags",
   "pricingUnit.hour": "time",
   "pricingUnit.day": "dag",
   "pricingUnit.booking": "booking",

@@ -29,6 +29,8 @@ import { useT } from '@xala/i18n';
 export interface UseRentalObjectWizardOptions {
   /** Rental object slug for edit mode */
   slug?: string | undefined;
+  /** Rental object ID to clone from */
+  cloneFromId?: string | undefined;
   /** Initial category (for create mode) */
   initialCategory?: RentalObjectCategory | undefined;
   /** Callback when wizard completes */
@@ -97,13 +99,14 @@ export function useRentalObjectWizard(
 ): UseRentalObjectWizardReturn {
   // Translation function available for future localization
   const t = useT();
-  const { slug, initialCategory, onComplete } = options;
+  const { slug, cloneFromId, initialCategory, onComplete } = options;
   const navigate = useNavigate();
   const isEditMode = !!slug;
+  const isCloneMode = !!cloneFromId;
 
-  // SDK hooks - fetch by slug for edit mode
-  const { data: existingObject, isLoading: isLoadingObject } = useRentalObjectBySlug(slug || '', {
-    enabled: isEditMode,
+  // SDK hooks - fetch by slug for edit mode or clone mode
+  const { data: existingObject, isLoading: isLoadingObject } = useRentalObjectBySlug(slug || cloneFromId || '', {
+    enabled: isEditMode || isCloneMode,
   });
   const createMutation = useCreateRentalObject();
   const updateMutation = useUpdateRentalObject();

@@ -49,7 +49,9 @@
     "apply": "Apply",
     "login": "Log in",
     "logout": "Log out",
-    "signup": "Sign up"
+    "signup": "Sign up",
+    "clone": "Clone",
+    "archive": "Archive"
   },
   
   "state": {
@@ -110,6 +112,16 @@
     "category": "Category",
     "tags": "Tags",
     "notes": "Notes",
+    "common": {
+      "alle_storrelser": "All sizes",
+      "110_personer": "1-10 people",
+      "1125_personer": "11-25 people",
+      "2650_personer": "26-50 people",
+      "51100_personer": "51-100 people",
+      "over_100_personer": "Over 100 people",
+      "filter_og_sortering": "Filter and sorting",
+      "sok_etter_utleieobjekter": "Search for rental objects"
+    },
     "comment": "Comment",
     "message": "Message",
     "file": "File",
@@ -172,6 +184,39 @@
     "sun": "Sun"
   },
   
+  "form": {
+    "form": {
+      "subcategory": {
+        "placeholder": "Select subcategory"
+      }
+    },
+    "subcategory": {
+      "placeholder": "Select subcategory"
+    },
+    "inventory": {
+      "tip": {
+        "page": {
+          "title": "Inventory tips"
+        }
+      }
+    },
+    "schedule": {
+      "on-demandDescription": "Experience is available on demand and requires manual approval"
+    },
+    "basics": {
+      "name": "Name",
+      "category": "Category",
+      "description": "Description"
+    },
+    "category": {
+      "UTSTYR_OG_INVENTAR": "Equipment & Inventory"
+    },
+    "openingHours": {
+      "applyToWeekdays": "Apply to all weekdays",
+      "applyToWeekend": "Apply to weekend"
+    }
+  },
+  
   "validation": {
     "required": "This field is required",
     "email": "Invalid email address",
@@ -224,6 +269,19 @@
     "next": "Next",
     "previous": "Previous",
     "showing": "Showing {{from}}-{{to}} of {{total}}"
+  },
+  
+  "media": {
+    "dropzone": {
+      "page": {
+        "title": "Upload images"
+      }
+    },
+    "requirements": {
+      "page": {
+        "title": "Image requirements"
+      }
+    }
   },
   
   "aria": {
