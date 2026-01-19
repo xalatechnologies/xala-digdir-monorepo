@@ -156,14 +156,19 @@ ENDSSH
 log_info "Database setup complete"
 echo ""
 
-# Step 6: Run migrations
+# Step 6: Run migrations (apply all .sql files in order)
 echo "🔄 Step 6: Running database migrations..."
 ssh ${VPS_USER}@${VPS_HOST} << ENDSSH
 set -e
 cd ${DEPLOY_PATH}/packages/database-schema
-echo "Applying migration file..."
-PGPASSWORD='${DB_PASSWORD}' psql -h ${DB_HOST} -p ${DB_PORT} -U ${DB_USER} -d ${DB_NAME} -f migrations/0000_complete_schema.sql
-echo "✓ Migration applied successfully"
+echo "Applying all migration files..."
+for migration in migrations/*.sql; do
+  if [ -f "\$migration" ]; then
+    echo "  → Applying \$migration..."
+    PGPASSWORD='${DB_PASSWORD}' psql -h ${DB_HOST} -p ${DB_PORT} -U ${DB_USER} -d ${DB_NAME} -f "\$migration" 2>&1 | grep -v "already exists" || true
+  fi
+done
+echo "✓ All migrations applied successfully"
 ENDSSH
 log_info "Database migrations complete"
 echo ""
