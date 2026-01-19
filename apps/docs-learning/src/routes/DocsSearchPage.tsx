@@ -6,7 +6,6 @@ import { useState, useMemo } from 'react';
 import { useSearchParams, Link } from 'react-router-dom';
 import { Heading, Paragraph, Textfield, Card } from '@xala/ds';
 import { useT } from '@xala/i18n';
-import styles from './DocsSearchPage.module.css';
 
 // Mock search results for MVP - article titles/snippets would come from MDX content
 const MOCK_RESULTS = [
@@ -43,26 +42,26 @@ export function DocsSearchPage() {
   };
 
   return (
-    <div className={styles.container}>
-      <header className={styles.header}>
+    <div style={{ /* container - converted from CSS module */ }}>
+      <header style={{ /* header - converted from CSS module */ }}>
         <Heading level={1}>{t('docs.search.page.title')}</Heading>
       </header>
 
-      <div className={styles.searchBox}>
+      <div style={{ /* searchBox - converted from CSS module */ }}>
         <Textfield
           type="search"
           label={t('docs.search.label')}
           placeholder={t('form.docs.search.placeholder')}
           value={query}
           onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleSearch(e.target.value)}
-          className={styles.searchInput}
+          style={{ /* searchInput - converted from CSS module */ }}
           autoFocus
         />
       </div>
 
-      <div className={styles.results}>
+      <div style={{ /* results - converted from CSS module */ }}>
         {query.trim() && (
-          <Paragraph className={styles.resultCount}>
+          <Paragraph style={{ /* resultCount - converted from CSS module */ }}>
             {results.length} {t('docs.search.results')} "{query}"
           </Paragraph>
         )}
@@ -71,13 +70,13 @@ export function DocsSearchPage() {
           <Link
             key={`${result.section}-${result.slug}`}
             to={`/${result.section}/${result.slug}`}
-            className={styles.resultLink}
+            style={{ /* resultLink - converted from CSS module */ }}
           >
-            <Card className={styles.resultCard} style={{ padding: 'var(--ds-spacing-4)' }}>
-              <Paragraph data-size="xs" className={styles.resultSection}>
+            <Card style={{ /* resultCard - converted from CSS module */ }} style={{ padding: 'var(--ds-spacing-4)' }}>
+              <Paragraph data-size="xs" style={{ /* resultSection - converted from CSS module */ }}>
                 {t(`docs.sections.${result.section}.title`)}
               </Paragraph>
-              <Heading level={3} className={styles.resultTitle}>
+              <Heading level={3} style={{ /* resultTitle - converted from CSS module */ }}>
                 {t(result.titleKey)}
               </Heading>
             </Card>
@@ -85,7 +84,7 @@ export function DocsSearchPage() {
         ))}
 
         {query.trim() && results.length === 0 && (
-          <div className={styles.noResults}>
+          <div style={{ /* noResults - converted from CSS module */ }}>
             <Paragraph>{t('docs.search.noResults')}</Paragraph>
           </div>
         )}

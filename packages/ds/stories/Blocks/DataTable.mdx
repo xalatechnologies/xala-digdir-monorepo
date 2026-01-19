@@ -36,7 +36,7 @@ Use the `cell` property to render custom content:
   accessorKey: 'status',
   header: 'Status',
   cell: ({ row }) => (
-    <Badge color={row.status === 'active' ? 'success' : 'neutral'}>
+    <Badge variant={row.status === 'active' ? 'success' : 'neutral'}>
       {row.status}
     </Badge>
   ),

@@ -152,6 +152,7 @@ export {
   PaymentStatusBadge,
   RentalObjectStatusBadge,
   RequestStatusBadge,
+  SeasonalLeaseStatusBadge,
   OrganizationStatusBadge,
   UserStatusBadge,
   GenericStatusBadge,
@@ -183,6 +184,8 @@ export type {
   RentalObjectStatusBadgeProps,
   RequestStatusType,
   RequestStatusBadgeProps,
+  SeasonalLeaseStatusType,
+  SeasonalLeaseStatusBadgeProps,
   OrganizationStatusType,
   OrganizationStatusBadgeProps,
   UserStatusType,
@@ -314,3 +317,17 @@ export type {
 // Season Blocks
 export { SeasonCard } from './seasons';
 export type { SeasonCardProps, SeasonCardData, SeasonStatus } from './seasons';
+
+// Settings Blocks
+export { SettingsTabLayout, SettingsField, SettingsSection } from './settings';
+export type { SettingsTabLayoutProps, SettingsFieldProps, SettingsSectionProps } from './settings';
+
+// Notifications Blocks
+export { NotificationItem, NotificationList } from './notifications';
+export type { NotificationItemProps, NotificationItemData, NotificationListProps } from './notifications';
+
+// Profile Blocks
+export { ProfileCard, QuickStat } from './profile';
+export type { ProfileCardProps, ProfileCardData, QuickStatProps } from './profile';
+
+// Activity Blocks

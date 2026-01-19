@@ -4,6 +4,8 @@
  * Navigation sidebar for platform-wide administration.
  * Supports role-based navigation visibility.
  * Uses API-driven navigation with fallback to static items.
+ * 
+ * REFACTORED: Removed CSS module, now using inline styles with design tokens
  */
 
 import { useMemo } from 'react';
@@ -23,7 +25,6 @@ import {
 import { useT } from '@xala/i18n';
 import { useAuth, type SaasAdminRole } from '@xala/auth';
 import { useNavigationItems, type NavItemFromApi } from '../../hooks/useNavigation';
-import styles from './Sidebar.module.css';
 
 const ICON_MAP: Record<string, React.ReactNode> = {
   home: <HomeIcon />,
@@ -49,11 +50,6 @@ interface NavItem {
   icon: React.ReactNode;
   badge?: number;
   badgeColor?: 'accent' | 'success' | 'warning' | 'danger' | 'info';
-  /**
-   * Roles that can view this nav item.
-   * Empty array or undefined = visible to all authenticated SaaS admins.
-   * SAAS_SUPER_ADMIN always has access to all items.
-   */
   roles?: SaasAdminRole[];
 }
 
@@ -62,42 +58,94 @@ interface NavSection {
   items: NavItem[];
 }
 
-// NavItem component with proper active state handling
+// NavItem component with inline styles using design tokens
 function SidebarNavItem({ item }: { item: NavItem }) {
   const location = useLocation();
   const isActive =
     item.href === '/' ? location.pathname === '/' : location.pathname.startsWith(item.href);
 
-  return (
-    <NavLink
-      to={item.href}
-      end={item.href === '/'}
-      className={`${styles.navItem} ${isActive ? styles.navItemActive : ''}`}
-    >
-      {/* Icon with background */}
-      <div className={`${styles.navIcon} ${isActive ? styles.navIconActive : ''}`}>
-        {item.icon}
-      </div>
+  const navItemStyle: React.CSSProperties = {
+    display: 'flex',
+    alignItems: 'center',
+    gap: 'var(--ds-spacing-4)',
+    padding: 'var(--ds-spacing-4) var(--ds-spacing-5)',
+    borderRadius: 'var(--ds-border-radius-lg)',
+    textDecoration: 'none',
+    position: 'relative',
+    backgroundColor: isActive ? 'var(--ds-color-neutral-surface-hover)' : 'transparent',
+    borderLeft: isActive ? '3px solid var(--ds-color-accent-base-default)' : '3px solid transparent',
+    transition: 'all 0.15s ease',
+  };
 
-      {/* Text content */}
-      <div className={styles.navContent}>
-        <Paragraph
-          size="sm"
-          className={`${styles.navName} ${isActive ? styles.navNameActive : ''}`}
-        >
+  const navIconStyle: React.CSSProperties = {
+    width: '48px',
+    height: '48px',
+    borderRadius: 'var(--ds-border-radius-md)',
+    backgroundColor: isActive ? 'var(--ds-color-accent-surface-default)' : 'var(--ds-color-neutral-surface-hover)',
+    color: isActive ? 'var(--ds-color-accent-text-default)' : 'var(--ds-color-neutral-text-default)',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    flexShrink: 0,
+    transition: 'all 0.15s ease',
+  };
+
+  const navContentStyle: React.CSSProperties = {
+    flex: 1,
+    minWidth: 0,
+  };
+
+  const navNameStyle: React.CSSProperties = {
+    margin: 0,
+    fontWeight: isActive ? 'var(--ds-font-weight-semibold)' : 'var(--ds-font-weight-medium)',
+    color: isActive ? 'var(--ds-color-accent-text-default)' : 'var(--ds-color-neutral-text-default)',
+  };
+
+  const navDescriptionStyle: React.CSSProperties = {
+    margin: 0,
+    marginTop: 'var(--ds-spacing-1)',
+    color: 'var(--ds-color-neutral-text-subtle)',
+  };
+
+  const navActionsStyle: React.CSSProperties = {
+    display: 'flex',
+    alignItems: 'center',
+    gap: 'var(--ds-spacing-3)',
+  };
+
+  const navBadgeStyle: React.CSSProperties = {
+    minWidth: '32px',
+    height: '32px',
+    borderRadius: 'var(--ds-border-radius-full)',
+    backgroundColor: 'var(--ds-color-neutral-surface-hover)',
+    color: 'var(--ds-color-neutral-text-default)',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    fontSize: 'var(--ds-font-size-sm)',
+    fontWeight: 'var(--ds-font-weight-medium)',
+    padding: '0 var(--ds-spacing-3)',
+  };
+
+  const navArrowStyle: React.CSSProperties = {
+    color: isActive ? 'var(--ds-color-accent-text-default)' : 'var(--ds-color-neutral-text-subtle)',
+    opacity: isActive ? 1 : 0.5,
+  };
+
+  return (
+    <NavLink to={item.href} end={item.href === '/'} style={navItemStyle}>
+      <div style={navIconStyle}>{item.icon}</div>
+      <div style={navContentStyle}>
+        <Paragraph size="sm" style={navNameStyle}>
           {item.name}
         </Paragraph>
-        <Paragraph size="xs" className={styles.navDescription}>
+        <Paragraph size="xs" style={navDescriptionStyle}>
           {item.description}
         </Paragraph>
       </div>
-
-      {/* Badge or Arrow */}
-      <div className={styles.navActions}>
-        {item.badge && item.badge > 0 && (
-          <div className={styles.navBadge}>{item.badge}</div>
-        )}
-        <div className={`${styles.navArrow} ${isActive ? styles.navArrowActive : ''}`}>
+      <div style={navActionsStyle}>
+        {item.badge && item.badge > 0 && <div style={navBadgeStyle}>{item.badge}</div>}
+        <div style={navArrowStyle}>
           <ArrowRightIcon />
         </div>
       </div>
@@ -148,185 +196,220 @@ export function Sidebar() {
   const t = useT();
   const { items: apiNavItems } = useNavigationItems();
 
-  // Transform API items to sections (already role-filtered server-side)
-  const apiSections = useMemo(() => {
-    if (apiNavItems.length > 0) {
+  // Static fallback sections (used if API fails or returns nothing)
+  const staticSections: NavSection[] = useMemo(
+    () => [
+      {
+        items: [
+          {
+            name: t('saasAdmin.nav.dashboard'),
+            description: t('saasAdmin.nav.dashboardDesc'),
+            href: '/',
+            icon: <HomeIcon />,
+          },
+        ],
+      },
+      {
+        title: t('saasAdmin.nav.sectionManagement'),
+        items: [
+          {
+            name: t('saasAdmin.nav.tenants'),
+            description: t('saasAdmin.nav.tenantsDesc'),
+            href: '/tenants',
+            icon: <BuildingIcon />,
+          },
+          {
+            name: t('saasAdmin.nav.plans'),
+            description: t('saasAdmin.nav.plansDesc'),
+            href: '/plans',
+            icon: <ChartIcon />,
+          },
+          {
+            name: t('saasAdmin.nav.users'),
+            description: t('saasAdmin.nav.usersDesc'),
+            href: '/users',
+            icon: <UsersIcon />,
+          },
+        ],
+      },
+      {
+        title: t('saasAdmin.nav.sectionTools'),
+        items: [
+          {
+            name: t('saasAdmin.nav.featureFlags'),
+            description: t('saasAdmin.nav.featureFlagsDesc'),
+            href: '/feature-flags',
+            icon: <SparklesIcon />,
+          },
+          {
+            name: t('saasAdmin.nav.auditLog'),
+            description: t('saasAdmin.nav.auditLogDesc'),
+            href: '/audit',
+            icon: <ShieldIcon />,
+          },
+          {
+            name: t('saasAdmin.nav.settings'),
+            description: t('saasAdmin.nav.settingsDesc'),
+            href: '/settings',
+            icon: <SettingsIcon />,
+          },
+        ],
+      },
+    ],
+    [t]
+  );
+
+  // Use API nav items if available, fallback to static
+  const sections: NavSection[] = useMemo(() => {
+    if (apiNavItems && apiNavItems.length > 0) {
       return transformApiNavToSections(apiNavItems, t);
     }
-    return null;
-  }, [apiNavItems, t]);
+    return staticSections;
+  }, [apiNavItems, staticSections, t]);
 
-  // Static fallback navigation
-  const staticNavSections: NavSection[] = [
-    {
-      items: [
-        {
-          name: t('saasAdmin.nav.dashboard'),
-          description: t('saasAdmin.nav.dashboardDesc'),
-          href: '/',
-          icon: <HomeIcon />,
-        },
-      ],
-    },
-    {
-      title: t('saasAdmin.nav.sections.administration'),
-      items: [
-        {
-          name: t('saasAdmin.nav.tenants'),
-          description: t('saasAdmin.nav.tenantsDesc'),
-          href: '/tenants',
-          icon: <BuildingIcon />,
-        },
-        {
-          name: t('saasAdmin.nav.plans'),
-          description: t('saasAdmin.nav.plansDesc'),
-          href: '/plans',
-          icon: <ChartIcon />,
-          roles: ['SAAS_SUPER_ADMIN', 'SAAS_BILLING_ADMIN'],
-        },
-        {
-          name: t('saasAdmin.nav.featureFlags'),
-          description: t('saasAdmin.nav.featureFlagsDesc'),
-          href: '/feature-flags',
-          icon: <ShieldIcon />,
-          roles: ['SAAS_SUPER_ADMIN'],
-        },
-      ],
-    },
-    {
-      title: t('saasAdmin.nav.sections.finance'),
-      items: [
-        {
-          name: t('saasAdmin.nav.billing'),
-          description: t('saasAdmin.nav.billingDesc'),
-          href: '/billing',
-          icon: <ChartIcon />,
-          roles: ['SAAS_SUPER_ADMIN', 'SAAS_BILLING_ADMIN'],
-        },
-      ],
-    },
-    {
-      title: t('saasAdmin.nav.sections.support'),
-      items: [
-        {
-          name: t('saasAdmin.nav.users'),
-          description: t('saasAdmin.nav.usersDesc'),
-          href: '/users',
-          icon: <UsersIcon />,
-        },
-      ],
-    },
-    {
-      title: t('saasAdmin.nav.sections.system'),
-      items: [
-        {
-          name: t('saasAdmin.aiSeed.page.title'),
-          description: t('saasAdmin.aiSeed.description'),
-          href: '/ai-seeds',
-          icon: <SparklesIcon />,
-          roles: ['SAAS_SUPER_ADMIN'],
-        },
-        {
-          name: t('saasAdmin.nav.translations', { defaultValue: 'Oversettelser' }),
-          description: t('saasAdmin.nav.translationsDesc', { defaultValue: 'Administrer oversettelser' }),
-          href: '/translations',
-          icon: <SparklesIcon />,
-          roles: ['SAAS_SUPER_ADMIN'],
-        },
-        {
-          name: t('saasAdmin.nav.monitoring', { defaultValue: 'Overvåking' }),
-          description: t('saasAdmin.nav.monitoringDesc', { defaultValue: 'Plattformovervåking og helse' }),
-          href: '/monitoring',
-          icon: <ChartIcon />,
-          roles: ['SAAS_SUPER_ADMIN'],
-        },
-        {
-          name: t('saasAdmin.nav.auditLog'),
-          description: t('saasAdmin.nav.auditLogDesc'),
-          href: '/audit',
-          icon: <ClockIcon />,
-          roles: ['SAAS_SUPER_ADMIN'],
-        },
-        {
-          name: t('saasAdmin.nav.settings'),
-          description: t('saasAdmin.nav.settingsDesc'),
-          href: '/settings',
-          icon: <SettingsIcon />,
-          roles: ['SAAS_SUPER_ADMIN'],
-        },
-      ],
-    },
-  ];
+  const sidebarStyle: React.CSSProperties = {
+    width: '360px',
+    backgroundColor: 'var(--ds-color-neutral-surface-default)',
+    borderRight: '1px solid var(--ds-color-neutral-border-subtle)',
+    display: 'flex',
+    flexDirection: 'column',
+    height: '100%',
+  };
 
-  // Filter static items based on user role (fallback only)
-  // SAAS_SUPER_ADMIN has access to all items
-  // Other roles only see items they have access to
-  const filteredStaticSections = staticNavSections
-    .map((section) => ({
-      ...section,
-      items: section.items.filter((item) => {
-        // If no roles specified, visible to all authenticated users
-        if (!item.roles || item.roles.length === 0) {
-          return true;
-        }
-        // Super admin has access to everything
-        if (isSuperAdmin) {
-          return true;
-        }
-        // Check if user's role is in the allowed roles
-        return user?.role ? item.roles.includes(user.role) : false;
-      }),
-    }))
-    .filter((section) => section.items.length > 0);
+  const logoSectionStyle: React.CSSProperties = {
+    height: '72px',
+    padding: '0 var(--ds-spacing-6)',
+    borderBottom: '1px solid var(--ds-color-neutral-border-subtle)',
+    display: 'flex',
+    alignItems: 'center',
+  };
 
-  // Use API sections if available, otherwise fall back to static
-  const navSections = apiSections || filteredStaticSections;
+  const logoWrapperStyle: React.CSSProperties = {
+    display: 'flex',
+    alignItems: 'center',
+    gap: 'var(--ds-spacing-3)',
+  };
 
-  // Role display name mapping using i18n
-  const getRoleDisplayName = (role: string | undefined): string => {
-    switch (role) {
-      case 'SAAS_SUPER_ADMIN':
-        return t('saasAdmin.roles.superAdmin');
-      case 'SAAS_BILLING_ADMIN':
-        return t('saasAdmin.roles.billingAdmin');
-      case 'SAAS_SUPPORT_AGENT':
-        return t('saasAdmin.roles.supportAgent');
-      default:
-        return t('saasAdmin.roles.admin');
-    }
+  const logoImageStyle: React.CSSProperties = {
+    height: '40px',
+    width: 'auto',
+  };
+
+  const brandNameStyle: React.CSSProperties = {
+    fontSize: 'var(--ds-font-size-md)',
+    fontWeight: 'var(--ds-font-weight-bold)',
+    color: 'var(--ds-color-accent-text-default)',
+    lineHeight: 'var(--ds-font-line-height-sm)',
+    letterSpacing: 'var(--ds-font-letter-spacing-sm)',
+  };
+
+  const brandTaglineStyle: React.CSSProperties = {
+    fontSize: 'var(--ds-font-size-2xs)',
+    color: 'var(--ds-color-neutral-text-subtle)',
+    letterSpacing: 'var(--ds-font-letter-spacing-md)',
+    marginTop: 'var(--ds-spacing-1)',
+    textTransform: 'uppercase',
+  };
+
+  const navStyle: React.CSSProperties = {
+    flex: 1,
+    padding: 'var(--ds-spacing-4) var(--ds-spacing-3)',
+    overflowY: 'auto',
+  };
+
+  const navSectionStyle: React.CSSProperties = {
+    marginBottom: 'var(--ds-spacing-6)',
+  };
+
+  const sectionTitleStyle: React.CSSProperties = {
+    margin: 0,
+    fontWeight: 'var(--ds-font-weight-semibold)',
+    color: 'var(--ds-color-neutral-text-subtle)',
+    textTransform: 'uppercase',
+    letterSpacing: 'var(--ds-font-letter-spacing-md)',
+    padding: 'var(--ds-spacing-2) var(--ds-spacing-5)',
+    marginBottom: 'var(--ds-spacing-2)',
+  };
+
+  const navListStyle: React.CSSProperties = {
+    listStyle: 'none',
+    margin: 0,
+    padding: 0,
+    display: 'flex',
+    flexDirection: 'column',
+    gap: 'var(--ds-spacing-2)',
+  };
+
+  const userSectionStyle: React.CSSProperties = {
+    padding: 'var(--ds-spacing-5) var(--ds-spacing-6)',
+    borderTop: '1px solid var(--ds-color-neutral-border-subtle)',
+    backgroundColor: 'var(--ds-color-neutral-surface-hover)',
+  };
+
+  const userWrapperStyle: React.CSSProperties = {
+    display: 'flex',
+    alignItems: 'center',
+    gap: 'var(--ds-spacing-4)',
+  };
+
+  const userAvatarStyle: React.CSSProperties = {
+    width: '44px',
+    height: '44px',
+    borderRadius: 'var(--ds-border-radius-full)',
+    backgroundColor: 'var(--ds-color-accent-surface-default)',
+    color: 'var(--ds-color-accent-text-default)',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    fontSize: 'var(--ds-font-size-md)',
+    fontWeight: 'var(--ds-font-weight-semibold)',
+    flexShrink: 0,
+  };
+
+  const userInfoStyle: React.CSSProperties = {
+    flex: 1,
+    minWidth: 0,
+  };
+
+  const userNameStyle: React.CSSProperties = {
+    fontWeight: 'var(--ds-font-weight-semibold)',
+    margin: 0,
+    overflow: 'hidden',
+    textOverflow: 'ellipsis',
+    whiteSpace: 'nowrap',
+  };
+
+  const userRoleStyle: React.CSSProperties = {
+    color: 'var(--ds-color-neutral-text-subtle)',
+    margin: 0,
+    marginTop: 'var(--ds-spacing-1)',
   };
 
   return (
-    <aside className={styles.sidebar}>
+    <aside style={sidebarStyle} data-testid="saas-admin-sidebar">
       {/* Logo Section */}
-      <div className={styles.logoSection}>
-        <div className={styles.logoWrapper}>
-          <img
-            src="/logo.svg"
-            alt={t('app.name', { defaultValue: 'Digilist' })}
-            className={styles.logoImage}
-          />
+      <div style={logoSectionStyle}>
+        <div style={logoWrapperStyle}>
+          <img src="/logo.svg" alt="Digilist" style={logoImageStyle} />
           <div>
-            <div className={styles.brandName}>{t('saasAdmin.text.digilist')}</div>
-            <div className={styles.brandTagline}>
-              {t('saasAdmin.brand.tagline')}
-            </div>
+            <div style={brandNameStyle}>Digilist</div>
+            <div style={brandTaglineStyle}>SaaS Admin</div>
           </div>
         </div>
       </div>
 
-      {/* Navigation */}
-      <nav className={styles.nav}>
-        {navSections.map((section, sectionIndex) => (
-          <div key={sectionIndex} className={styles.navSection}>
+      {/* Navigation Sections */}
+      <nav style={navStyle}>
+        {sections.map((section, sectionIndex) => (
+          <div key={`section-${sectionIndex}`} style={navSectionStyle}>
             {section.title && (
-              <Paragraph size="xs" className={styles.sectionTitle}>
+              <Paragraph size="xs" style={sectionTitleStyle}>
                 {section.title}
               </Paragraph>
             )}
-            <ul className={styles.navList}>
-              {section.items.map((item) => (
-                <li key={item.href}>
+            <ul style={navListStyle}>
+              {section.items.map((item, itemIndex) => (
+                <li key={`item-${sectionIndex}-${itemIndex}`}>
                   <SidebarNavItem item={item} />
                 </li>
               ))}
@@ -337,17 +420,17 @@ export function Sidebar() {
 
       {/* User Info Section */}
       {user && (
-        <div className={styles.userSection}>
-          <div className={styles.userWrapper}>
-            <div className={styles.userAvatar}>
-              {user.name.charAt(0).toUpperCase()}
+        <div style={userSectionStyle}>
+          <div style={userWrapperStyle}>
+            <div style={userAvatarStyle}>
+              {user.name ? user.name.charAt(0).toUpperCase() : 'A'}
             </div>
-            <div className={styles.userInfo}>
-              <Paragraph size="sm" className={styles.userName}>
-                {user.name}
+            <div style={userInfoStyle}>
+              <Paragraph size="sm" style={userNameStyle}>
+                {user.name || 'Admin User'}
               </Paragraph>
-              <Paragraph size="xs" className={styles.userRole}>
-                {getRoleDisplayName(user.role)}
+              <Paragraph size="xs" style={userRoleStyle}>
+                {isSuperAdmin ? t('saasAdmin.roles.superAdmin') : t('saasAdmin.roles.admin')}
               </Paragraph>
             </div>
           </div>

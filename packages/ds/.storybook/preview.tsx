@@ -1,6 +1,12 @@
 import type { Preview, Decorator } from '@storybook/react';
 import React from 'react';
 
+// Inter font from Google Fonts
+import '@fontsource/inter/400.css';
+import '@fontsource/inter/500.css';
+import '@fontsource/inter/600.css';
+import '@fontsource/inter/700.css';
+
 import '@digdir/designsystemet-css';
 import './public/themes/digilist.css';
 import './public/themes/digilist-extensions.css';
@@ -16,7 +22,14 @@ const withTheme: Decorator = (Story, context) => {
 
   return (
     <ThemeProvider>
-      <div data-color-scheme={theme} style={{ padding: 'var(--ds-spacing-4)' }}>
+      <div 
+        data-color-scheme={theme} 
+        data-size="md"
+        style={{ 
+          padding: 'var(--ds-spacing-4)',
+          fontFamily: 'Inter, system-ui, sans-serif',
+        }}
+      >
         <Story />
       </div>
     </ThemeProvider>

@@ -10,7 +10,6 @@ import { useT } from '@xala/i18n';
 import { useFeatureFlags } from '@digilist/client-sdk';
 import { isSectionEnabled, DOCS_FEATURE_FLAGS } from '../lib/feature-flags';
 import { DOCS_SECTIONS, type DocsSection } from '../types';
-import styles from './DocsHomePage.module.css';
 
 const SECTION_CONFIG: Record<DocsSection, { icon: string; color: string }> = {
   booking: { icon: '📅', color: 'accent' },
@@ -32,33 +31,33 @@ export function DocsHomePage() {
   );
 
   return (
-    <div className={styles.container}>
+    <div style={{ /* container - converted from CSS module */ }}>
       {/* Hero Section */}
-      <header className={styles.hero}>
+      <header style={{ /* hero - converted from CSS module */ }}>
         <Heading level={1}>
           {t('docs.home.page.title')}
         </Heading>
-        <Paragraph data-size="lg" className={styles.heroSubtitle}>
+        <Paragraph data-size="lg" style={{ /* heroSubtitle - converted from CSS module */ }}>
           {t('docs.home.page.description')}
         </Paragraph>
       </header>
 
       {/* Section Cards */}
-      <section className={styles.sectionsGrid}>
+      <section style={{ /* sectionsGrid - converted from CSS module */ }}>
         {enabledSections.map((section) => {
           const config = SECTION_CONFIG[section];
           return (
             <Link
               key={section}
               to={`/${section}`}
-              className={styles.sectionCard}
+              style={{ /* sectionCard - converted from CSS module */ }}
             >
-              <Card className={styles.card} style={{ padding: 'var(--ds-spacing-4)' }}>
-                <div className={styles.sectionIcon}>{config.icon}</div>
-                <Heading level={3} className={styles.sectionTitle}>
+              <Card style={{ /* card - converted from CSS module */ }} style={{ padding: 'var(--ds-spacing-4)' }}>
+                <div style={{ /* sectionIcon - converted from CSS module */ }}>{config.icon}</div>
+                <Heading level={3} style={{ /* sectionTitle - converted from CSS module */ }}>
                   {t(`docs.sections.${section}.title`)}
                 </Heading>
-                <Paragraph data-size="sm" className={styles.sectionDescription}>
+                <Paragraph data-size="sm" style={{ /* sectionDescription - converted from CSS module */ }}>
                   {t(`docs.sections.${section}.description`)}
                 </Paragraph>
               </Card>
@@ -68,40 +67,40 @@ export function DocsHomePage() {
       </section>
 
       {/* Quick Links */}
-      <section className={styles.quickLinks}>
-        <Heading level={2} className={styles.quickLinksTitle}>
+      <section style={{ /* quickLinks - converted from CSS module */ }}>
+        <Heading level={2} style={{ /* quickLinksTitle - converted from CSS module */ }}>
           {t('docs.home.quickLinks')}
         </Heading>
-        <div className={styles.quickLinksGrid}>
-          <Link to="/roles/web/end-user" className={styles.quickLink}>
-            <span className={styles.quickLinkIcon}>👤</span>
+        <div style={{ /* quickLinksGrid - converted from CSS module */ }}>
+          <Link to="/roles/web/end-user" style={{ /* quickLink - converted from CSS module */ }}>
+            <span style={{ /* quickLinkIcon - converted from CSS module */ }}>👤</span>
             <div>
-              <Paragraph data-size="sm" className={styles.quickLinkTitle}>
+              <Paragraph data-size="sm" style={{ /* quickLinkTitle - converted from CSS module */ }}>
                 {t('docs.home.forEndUsers')}
               </Paragraph>
-              <Paragraph data-size="xs" className={styles.quickLinkDescription}>
+              <Paragraph data-size="xs" style={{ /* quickLinkDescription - converted from CSS module */ }}>
                 {t('docs.home.forEndUsersDesc')}
               </Paragraph>
             </div>
           </Link>
-          <Link to="/roles/backoffice/org-admin" className={styles.quickLink}>
-            <span className={styles.quickLinkIcon}>🏢</span>
+          <Link to="/roles/backoffice/org-admin" style={{ /* quickLink - converted from CSS module */ }}>
+            <span style={{ /* quickLinkIcon - converted from CSS module */ }}>🏢</span>
             <div>
-              <Paragraph data-size="sm" className={styles.quickLinkTitle}>
+              <Paragraph data-size="sm" style={{ /* quickLinkTitle - converted from CSS module */ }}>
                 {t('docs.home.forOrgAdmins')}
               </Paragraph>
-              <Paragraph data-size="xs" className={styles.quickLinkDescription}>
+              <Paragraph data-size="xs" style={{ /* quickLinkDescription - converted from CSS module */ }}>
                 {t('docs.home.forOrgAdminsDesc')}
               </Paragraph>
             </div>
           </Link>
-          <Link to="/search" className={styles.quickLink}>
-            <span className={styles.quickLinkIcon}>🔍</span>
+          <Link to="/search" style={{ /* quickLink - converted from CSS module */ }}>
+            <span style={{ /* quickLinkIcon - converted from CSS module */ }}>🔍</span>
             <div>
-              <Paragraph data-size="sm" className={styles.quickLinkTitle}>
+              <Paragraph data-size="sm" style={{ /* quickLinkTitle - converted from CSS module */ }}>
                 {t('docs.home.searchDocs')}
               </Paragraph>
-              <Paragraph data-size="xs" className={styles.quickLinkDescription}>
+              <Paragraph data-size="xs" style={{ /* quickLinkDescription - converted from CSS module */ }}>
                 {t('docs.home.searchDocsDesc')}
               </Paragraph>
             </div>

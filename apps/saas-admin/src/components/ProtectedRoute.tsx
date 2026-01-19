@@ -10,8 +10,6 @@ import { Navigate, useLocation } from 'react-router-dom';
 import { Spinner } from '@xala/ds';
 import { useAuth, type SaasAdminRole } from '@xala/auth';
 import { useToast } from '../providers/ToastProvider';
-import styles from './ProtectedRoute.module.css';
-
 import { useT } from '@xala/i18n';
 interface ProtectedRouteProps {
   children: React.ReactNode;
@@ -51,7 +49,15 @@ export function ProtectedRoute({
 
   if (isLoading) {
     return (
-      <div className={styles.loadingContainer}>
+      <div
+        style={{
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          height: '100vh',
+          backgroundColor: 'var(--ds-color-neutral-background-default)',
+        }}
+      >
         <Spinner aria-label={t('saasAdmin.ariaLabel.laster')} size="lg" />
       </div>
     );

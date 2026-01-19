@@ -37,7 +37,6 @@ import {
 } from '@digilist/client-sdk/hooks';
 import type { SaasTenant, SaasTenantStatus } from '@digilist/client-sdk/types';
 import { useT } from '@xala/i18n';
-import styles from './TenantsListPage.module.css';
 
 const statusColors: Record<SaasTenantStatus, 'success' | 'warning' | 'danger' | 'info'> = {
   active: 'success',
@@ -157,7 +156,7 @@ export function TenantsListPage() {
   };
 
   return (
-    <div className={styles.page}>
+    <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--ds-spacing-5)' }}>
       {/* Header */}
       <DataPageHeader
         title={t('saasAdmin.tenants.page.title')}
@@ -188,8 +187,8 @@ export function TenantsListPage() {
 
       {/* Search and Filters */}
       <Card>
-        <div className={styles.filters}>
-          <div className={styles.searchWrapper}>
+        <div style={{ display: 'flex', gap: 'var(--ds-spacing-3)', flexWrap: 'wrap', alignItems: 'center' }}>
+          <div style={{ flex: '1 1 300px', minWidth: '200px' }}>
             <HeaderSearch
               placeholder={t('saasAdmin.tenants.searchPlaceholder')}
               value={searchQuery}
@@ -213,7 +212,7 @@ export function TenantsListPage() {
       {/* Results */}
       <Card>
         {isLoading ? (
-          <div className={styles.loadingContainer}>
+          <div style={{ display: 'flex', justifyContent: 'center', padding: 'var(--ds-spacing-8)' }}>
             <Spinner size="lg" aria-label={t('state.loading')} />
           </div>
         ) : filteredTenants.length === 0 ? (
@@ -247,30 +246,32 @@ export function TenantsListPage() {
                 <Table.HeaderCell>{t('saasAdmin.tenants.plan')}</Table.HeaderCell>
                 <Table.HeaderCell>{t('label.status')}</Table.HeaderCell>
                 <Table.HeaderCell>{t('saasAdmin.tenants.createdAt')}</Table.HeaderCell>
-                <Table.HeaderCell className={styles.actionsCell}>{t('common.actions')}</Table.HeaderCell>
+                <Table.HeaderCell style={{ width: '80px' }}>{t('common.actions')}</Table.HeaderCell>
               </Table.Row>
             </Table.Head>
             <Table.Body>
               {filteredTenants.map((tenant) => (
                 <Table.Row
                   key={tenant.id}
-                  className={styles.tableRow}
+                  style={{ cursor: 'pointer' }}
                   onClick={() => handleViewDetail(tenant)}
                 >
                   <Table.Cell>
-                    <div className={styles.tenantCell}>
-                      <BuildingIcon className={styles.tenantIcon} />
-                      <div className={styles.tenantName}>{tenant.name}</div>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--ds-spacing-2)' }}>
+                      <BuildingIcon style={{ color: 'var(--ds-color-neutral-text-subtle)' }} />
+                      <div style={{ fontWeight: 'var(--ds-font-weight-medium)' }}>{tenant.name}</div>
                     </div>
                   </Table.Cell>
                   <Table.Cell>
-                    <div className={styles.slugCell}>{tenant.slug}</div>
+                    <div style={{ fontFamily: 'var(--ds-font-family-monospace)', fontSize: 'var(--ds-font-size-sm)' }}>
+                      {tenant.slug}
+                    </div>
                   </Table.Cell>
                   <Table.Cell>
                     {tenant.domain ? (
-                      <div className={styles.domainCell}>{tenant.domain}</div>
+                      <div style={{ fontSize: 'var(--ds-font-size-sm)' }}>{tenant.domain}</div>
                     ) : (
-                      <span className={styles.domainEmpty}>—</span>
+                      <span style={{ color: 'var(--ds-color-neutral-text-subtle)' }}>—</span>
                     )}
                   </Table.Cell>
                   <Table.Cell>
@@ -284,7 +285,7 @@ export function TenantsListPage() {
                     <Badge color={statusColors[tenant.status]}>{statusLabels[tenant.status]}</Badge>
                   </Table.Cell>
                   <Table.Cell>
-                    <div className={styles.dateCell}>{formatDate(tenant.createdAt)}</div>
+                    <div style={{ fontSize: 'var(--ds-font-size-sm)' }}>{formatDate(tenant.createdAt)}</div>
                   </Table.Cell>
                   <Table.Cell onClick={(e) => e.stopPropagation()}>
                     <Dropdown.TriggerContext>
@@ -349,7 +350,15 @@ export function TenantsListPage() {
 
       {/* Pagination info */}
       {tenantsData?.meta && (
-        <div className={styles.pagination}>
+        <div
+          style={{
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            color: 'var(--ds-color-neutral-text-subtle)',
+            fontSize: 'var(--ds-font-size-sm)',
+          }}
+        >
           <span>
             {t('pagination.showing')} {filteredTenants.length} {t('common.of')} {tenantsData.meta.total} {t('saasAdmin.nav.tenants').toLowerCase()}
           </span>

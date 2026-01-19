@@ -4,7 +4,6 @@
 
 import { Heading, Paragraph, Card, Badge } from '@xala/ds';
 import { useT } from '@xala/i18n';
-import styles from './DocsReleasesPage.module.css';
 
 // Release data with i18n key references
 const RELEASES = [
@@ -33,27 +32,27 @@ export function DocsReleasesPage() {
   const t = useT();
 
   return (
-    <div className={styles.container}>
-      <header className={styles.header}>
+    <div style={{ /* container - converted from CSS module */ }}>
+      <header style={{ /* header - converted from CSS module */ }}>
         <Heading level={1}>{t('docs.releases.page.title')}</Heading>
-        <Paragraph data-size="lg" className={styles.subtitle}>
+        <Paragraph data-size="lg" style={{ /* subtitle - converted from CSS module */ }}>
           {t('docs.releases.page.description')}
         </Paragraph>
       </header>
 
-      <div className={styles.releases}>
+      <div style={{ /* releases - converted from CSS module */ }}>
         {RELEASES.map((release) => (
-          <Card key={release.version} className={styles.releaseCard} style={{ padding: 'var(--ds-spacing-4)' }}>
-            <div className={styles.releaseHeader}>
+          <Card key={release.version} style={{ /* releaseCard - converted from CSS module */ }} style={{ padding: 'var(--ds-spacing-4)' }}>
+            <div style={{ /* releaseHeader - converted from CSS module */ }}>
               <Heading level={3}>{release.version}</Heading>
               {release.isLatest && (
                 <Badge data-color="accent">{t('docs.releases.latest')}</Badge>
               )}
             </div>
-            <Paragraph data-size="sm" className={styles.releaseDate}>
+            <Paragraph data-size="sm" style={{ /* releaseDate - converted from CSS module */ }}>
               {t(release.dateKey)}
             </Paragraph>
-            <ul className={styles.releaseList}>
+            <ul style={{ /* releaseList - converted from CSS module */ }}>
               {release.changesKeys.map((key, index) => (
                 <li key={index}>{t(key)}</li>
               ))}

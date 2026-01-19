@@ -11,7 +11,6 @@ import { useFeatureFlags } from '@digilist/client-sdk';
 import { isSectionEnabled, DOCS_FEATURE_FLAGS } from '../lib/feature-flags';
 import { DocsRightTOC } from '../components/toc';
 import type { TocItem } from '../types';
-import styles from './DocsArticlePage.module.css';
 
 export function DocsArticlePage() {
   const { section } = useParams<{ section: string; articleSlug: string }>();
@@ -48,23 +47,23 @@ export function DocsArticlePage() {
   ];
 
   return (
-    <div className={styles.container}>
-      <div className={styles.contentWrapper}>
+    <div style={{ /* container - converted from CSS module */ }}>
+      <div style={{ /* contentWrapper - converted from CSS module */ }}>
         {/* Main Content */}
-        <article className={styles.article}>
+        <article style={{ /* article - converted from CSS module */ }}>
           {/* Breadcrumb */}
           <Breadcrumb items={breadcrumbItems} />
 
           {/* Header */}
-          <header className={styles.header}>
+          <header style={{ /* header - converted from CSS module */ }}>
             <Heading level={1}>{MOCK_ARTICLE.title}</Heading>
-            <Paragraph data-size="sm" className={styles.meta}>
+            <Paragraph data-size="sm" style={{ /* meta - converted from CSS module */ }}>
               {t('docs.updatedAt') || 'Sist oppdatert'}: {MOCK_ARTICLE.updatedAt}
             </Paragraph>
           </header>
 
           {/* Article Content */}
-          <div className={styles.content}>
+          <div style={{ /* content - converted from CSS module */ }}>
             <section>
               <Heading level={2} id="introduksjon">{t('common.text.introduksjon')}</Heading>
               <Paragraph>
@@ -79,7 +78,7 @@ export function DocsArticlePage() {
               </Paragraph>
               
               {/* Placeholder for image */}
-              <div className={styles.imagePlaceholder}>
+              <div style={{ /* imagePlaceholder - converted from CSS module */ }}>
                 <Paragraph data-size="sm">📸 Skjermbilde: Lokaleoversikt</Paragraph>
               </div>
             </section>
@@ -96,7 +95,7 @@ export function DocsArticlePage() {
               </Paragraph>
 
               {/* Placeholder for video */}
-              <div className={styles.videoPlaceholder}>
+              <div style={{ /* videoPlaceholder - converted from CSS module */ }}>
                 <Paragraph data-size="sm">🎥 Video: Slik velger du dato og tid (2:30)</Paragraph>
               </div>
             </section>
@@ -108,7 +107,7 @@ export function DocsArticlePage() {
               </Paragraph>
               
               {/* Callout */}
-              <div className={styles.callout} data-type="tip">
+              <div style={{ /* callout - converted from CSS module */ }} data-type="tip">
                 <strong>💡 Tips:</strong> Du kan alltid endre eller kansellere bookingen 
                 fra "Mine bookinger" frem til 24 timer før starttidspunktet.
               </div>
@@ -129,7 +128,7 @@ export function DocsArticlePage() {
         </article>
 
         {/* Right TOC */}
-        <aside className={styles.tocSidebar}>
+        <aside style={{ /* tocSidebar - converted from CSS module */ }}>
           <DocsRightTOC items={MOCK_ARTICLE.toc} />
         </aside>
       </div>

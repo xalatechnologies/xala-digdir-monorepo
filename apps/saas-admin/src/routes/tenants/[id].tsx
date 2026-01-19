@@ -39,7 +39,6 @@ import {
   ListIcon,
 } from '@xala/ds';
 import { CategoryEntitlementsTab } from '../../components/CategoryEntitlementsTab';
-import styles from './TenantDetailPage.module.css';
 import {
   useSaasTenant,
   useSaasTenantFlags,
@@ -195,7 +194,7 @@ export function TenantDetailPage() {
 
   if (isLoading) {
     return (
-      <div className={styles.loadingContainer}>
+      <div style={{ display: "flex", justifyContent: "center", padding: "var(--ds-spacing-8)" }}>
         <Spinner size="lg" aria-label={t('saasAdmin.ariaLabel.laster')} />
       </div>
     );
@@ -203,7 +202,7 @@ export function TenantDetailPage() {
 
   if (!tenant) {
     return (
-      <div className={styles.notFoundContainer}>
+      <div style={{ textAlign: "center", padding: "var(--ds-spacing-8)" }}>
         <Heading level={3} size="sm">
           Tenant ikke funnet
         </Heading>
@@ -221,9 +220,9 @@ export function TenantDetailPage() {
   }
 
   return (
-    <div className={styles.page}>
+    <div style={{ display: "flex", flexDirection: "column", gap: "var(--ds-spacing-5)", maxWidth: "var(--ds-size-container-xl, 1400px)", margin: "0 auto" }}>
       {/* Header */}
-      <div className={styles.header}>
+      <div style={{ display: "flex", flexDirection: "column", gap: "var(--ds-spacing-3)" }}>
         <Link to="/tenants">
           <Button variant="tertiary" size="sm" style={{ marginBottom: 'var(--ds-spacing-3)' }} type="button">
             <ArrowLeftIcon />
@@ -231,12 +230,12 @@ export function TenantDetailPage() {
           </Button>
         </Link>
 
-        <div className={styles.headerTop}>
-          <div className={styles.headerLeft}>
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: "var(--ds-spacing-4)" }}>
+          <div style={{ display: "flex", flexDirection: "column", gap: "var(--ds-spacing-2)" }}>
             <Heading level={2} size="lg" style={{ marginBottom: 'var(--ds-spacing-2)' }}>
               {tenant.name}
             </Heading>
-            <div className={styles.badges}>
+            <div style={{ display: "flex", gap: "var(--ds-spacing-2)", flexWrap: "wrap" }}>
               <Badge color={statusColors[tenant.status]}>{statusLabels[tenant.status]}</Badge>
               {tenant.subscriptionPlanName && <Badge color="info">{tenant.subscriptionPlanName}</Badge>}
               {tenant.licenseKeyFingerprint && (
@@ -245,10 +244,10 @@ export function TenantDetailPage() {
                 </Badge>
               )}
             </div>
-            <div className={styles.metaInfo}>
+            <div style={{ display: "flex", gap: "var(--ds-spacing-4)", color: "var(--ds-color-neutral-text-subtle)", fontSize: "var(--ds-font-size-sm)" }}>
               <div>
                 <strong>Slug:</strong>{' '}
-                <span className={styles.monospace}>{tenant.slug}</span>
+                <span style={{ fontFamily: "var(--ds-font-family-monospace)" }}>{tenant.slug}</span>
               </div>
               {tenant.domain && (
                 <div>
@@ -258,7 +257,7 @@ export function TenantDetailPage() {
             </div>
           </div>
 
-          <div className={styles.headerActions}>
+          <div style={{ display: "flex", gap: "var(--ds-spacing-2)" }}>
             <Link to={`/tenants/${id}/edit`}>
               <Button variant="secondary" size="sm" type="button">
                 <EditIcon />
@@ -282,7 +281,7 @@ export function TenantDetailPage() {
       </div>
 
       {/* Usage Statistics Grid */}
-      <div className={styles.statsGrid}>
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))", gap: "var(--ds-spacing-3)" }}>
         <StatCard
           title={t('saasAdmin.title.users')}
           value={`${tenant.usage.usersCount} / ${tenant.seatLimits.maxUsers}`}
@@ -322,8 +321,8 @@ export function TenantDetailPage() {
 
       {/* New License Key Alert */}
       {newLicenseKey && (
-        <Card className={styles.licenseKeyCard}>
-          <div className={styles.licenseKeyContent}>
+        <Card style={{ backgroundColor: "var(--ds-color-success-surface-default)", padding: "var(--ds-spacing-4)" }}>
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
             <div>
               <Heading level={4} size="xs" style={{ marginBottom: 'var(--ds-spacing-1)' }}>
                 Ny lisensnøkkel generert
@@ -331,7 +330,7 @@ export function TenantDetailPage() {
               <Paragraph size="sm" style={{ color: 'var(--ds-color-success-text-default)', marginBottom: 'var(--ds-spacing-2)' }}>
                 Kopier denne nøkkelen nå. Den vil ikke vises igjen.
               </Paragraph>
-              <code className={styles.licenseKeyCode}>
+              <code style={{ display: "block", padding: "var(--ds-spacing-2)", backgroundColor: "var(--ds-color-neutral-surface-default)", borderRadius: "var(--ds-border-radius-sm)", fontFamily: "var(--ds-font-family-monospace)", fontSize: "var(--ds-font-size-sm)", wordBreak: "break-all" }}>
                 {newLicenseKey}
               </code>
             </div>
@@ -378,45 +377,45 @@ export function TenantDetailPage() {
 
         {/* Overview Tab */}
         <Tabs.Panel value="overview">
-          <div className={styles.overviewGrid}>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(400px, 1fr))", gap: "var(--ds-spacing-4)" }}>
             <Card>
               <Heading level={3} size="sm" style={{ marginBottom: 'var(--ds-spacing-4)' }}>
                 Grunnleggende informasjon
               </Heading>
               <Stack spacing={3}>
                 <div>
-                  <div className={styles.infoLabel}>
+                  <div style={{ fontSize: "var(--ds-font-size-sm)", color: "var(--ds-color-neutral-text-subtle)", marginBottom: "var(--ds-spacing-1)" }}>
                     Tenant ID
                   </div>
-                  <div className={styles.infoValue}>
+                  <div style={{ fontFamily: "var(--ds-font-family-monospace)", fontSize: "var(--ds-font-size-sm)" }}>
                     {tenant.id}
                   </div>
                 </div>
                 <div>
-                  <div className={styles.infoLabel}>{t('saasAdmin.text.status')}</div>
+                  <div style={{ fontSize: "var(--ds-font-size-sm)", color: "var(--ds-color-neutral-text-subtle)", marginBottom: "var(--ds-spacing-1)" }}>{t('saasAdmin.text.status')}</div>
                   <Badge color={statusColors[tenant.status]}>{statusLabels[tenant.status]}</Badge>
                 </div>
                 <div>
-                  <div className={styles.infoLabel}>
+                  <div style={{ fontSize: "var(--ds-font-size-sm)", color: "var(--ds-color-neutral-text-subtle)", marginBottom: "var(--ds-spacing-1)" }}>
                     Abonnementsplan
                   </div>
                   <div>{tenant.subscriptionPlanName ?? 'Ingen plan'}</div>
                 </div>
                 <div>
-                  <div className={styles.infoLabel}>
+                  <div style={{ fontSize: "var(--ds-font-size-sm)", color: "var(--ds-color-neutral-text-subtle)", marginBottom: "var(--ds-spacing-1)" }}>
                     Opprettet
                   </div>
                   <div>{formatDate(tenant.createdAt)}</div>
-                  <div className={styles.infoValueSmall}>
+                  <div style={{ fontSize: "var(--ds-font-size-xs)", color: "var(--ds-color-neutral-text-subtle)" }}>
                     ({formatTimeAgo(tenant.createdAt)})
                   </div>
                 </div>
                 <div>
-                  <div className={styles.infoLabel}>
+                  <div style={{ fontSize: "var(--ds-font-size-sm)", color: "var(--ds-color-neutral-text-subtle)", marginBottom: "var(--ds-spacing-1)" }}>
                     Sist oppdatert
                   </div>
                   <div>{formatDate(tenant.updatedAt)}</div>
-                  <div className={styles.infoValueSmall}>
+                  <div style={{ fontSize: "var(--ds-font-size-xs)", color: "var(--ds-color-neutral-text-subtle)" }}>
                     ({formatTimeAgo(tenant.updatedAt)})
                   </div>
                 </div>
@@ -428,23 +427,23 @@ export function TenantDetailPage() {
                 Grenser (Seat Limits)
               </Heading>
               <Stack spacing={3}>
-                <div className={styles.limitsRow}>
+                <div style={{ display: "flex", justifyContent: "space-between" }}>
                   <span>{t('common.maks_brukere')}</span>
                   <strong>{tenant.seatLimits.maxUsers}</strong>
                 </div>
-                <div className={styles.limitsRow}>
+                <div style={{ display: "flex", justifyContent: "space-between" }}>
                   <span>{t('common.maks_organisasjoner')}</span>
                   <strong>{tenant.seatLimits.maxOrganizations}</strong>
                 </div>
-                <div className={styles.limitsRow}>
+                <div style={{ display: "flex", justifyContent: "space-between" }}>
                   <span>{t('common.maks_leieobjekter')}</span>
                   <strong>{tenant.seatLimits.maxListings}</strong>
                 </div>
-                <div className={styles.limitsRow}>
+                <div style={{ display: "flex", justifyContent: "space-between" }}>
                   <span>{t('common.maks_bookinger_per_mnd')}</span>
                   <strong>{tenant.seatLimits.maxBookingsPerMonth}</strong>
                 </div>
-                <div className={styles.limitsRow}>
+                <div style={{ display: "flex", justifyContent: "space-between" }}>
                   <span>{t('common.maks_lagring')}</span>
                   <strong>{tenant.seatLimits.maxStorageMb} MB</strong>
                 </div>
@@ -463,7 +462,7 @@ export function TenantDetailPage() {
         {/* Feature Flags Tab */}
         <Tabs.Panel value="flags">
           <Card>
-            <div className={styles.flagsHeader}>
+            <div style={{ marginBottom: "var(--ds-spacing-4)" }}>
               <Heading level={3} size="sm" style={{ marginBottom: 'var(--ds-spacing-1)' }}>
                 Feature Flags
               </Heading>
@@ -473,14 +472,14 @@ export function TenantDetailPage() {
             </div>
 
             {loadingFlags ? (
-              <div className={styles.flagsLoading}>
+              <div style={{ display: "flex", justifyContent: "center", padding: "var(--ds-spacing-6)" }}>
                 <Spinner aria-label={t('state.loading')} />
               </div>
             ) : (
-              <div className={styles.flagsList}>
+              <div style={{ display: "flex", flexDirection: "column", gap: "var(--ds-spacing-6)" }}>
                 {(Object.keys(flagsByCategory) as FeatureFlagCategory[]).map((category) => (
                   <div key={category}>
-                    <div className={styles.categoryHeader}>
+                    <div style={{ display: "flex", alignItems: "center", gap: "var(--ds-spacing-2)", marginBottom: "var(--ds-spacing-3)" }}>
                       <Heading level={4} size="xs" style={{ margin: 0 }}>
                         {categoryLabels[category]}
                       </Heading>
@@ -495,12 +494,12 @@ export function TenantDetailPage() {
                           key={flag.key}
                           className={flag.overridden ? `${styles.flagItem} ${styles.flagItemOverridden}` : styles.flagItem}
                         >
-                          <div className={styles.flagContent}>
-                            <div className={styles.flagHeader}>
+                          <div style={{ flex: 1 }}>
+                            <div style={{ display: "flex", alignItems: "center", gap: "var(--ds-spacing-2)" }}>
                               <Paragraph size="sm" style={{ margin: 0, fontWeight: 'var(--ds-font-weight-medium)' }}>
                                 {flag.name}
                               </Paragraph>
-                              <code className={styles.flagKey}>
+                              <code style={{ fontSize: "var(--ds-font-size-xs)", padding: "2px 6px", backgroundColor: "var(--ds-color-neutral-surface-default)", borderRadius: "var(--ds-border-radius-sm)" }}>
                                 {flag.key}
                               </code>
                               {flag.overridden && (
@@ -540,30 +539,30 @@ export function TenantDetailPage() {
         <Tabs.Panel value="billing">
           <Card>
             {loadingBilling ? (
-              <div className={styles.billingLoading}>
+              <div style={{ display: "flex", justifyContent: "center", padding: "var(--ds-spacing-6)" }}>
                 <Spinner aria-label={t('state.loading')} />
               </div>
             ) : billing ? (
-              <div className={styles.billingContent}>
-                <div className={styles.billingGrid}>
-                  <div className={styles.billingField}>
-                    <div className={styles.billingLabel}>{t('saasAdmin.text.status')}</div>
+              <div style={{ display: "flex", flexDirection: "column", gap: "var(--ds-spacing-4)" }}>
+                <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: "var(--ds-spacing-4)" }}>
+                  <div style={{ display: "flex", flexDirection: "column", gap: "var(--ds-spacing-1)" }}>
+                    <div style={{ fontSize: "var(--ds-font-size-sm)", color: "var(--ds-color-neutral-text-subtle)" }}>{t('saasAdmin.text.status')}</div>
                     <Badge color={billing.status === 'paid' ? 'success' : billing.status === 'overdue' ? 'danger' : 'warning'}>
                       {billing.status}
                     </Badge>
                   </div>
-                  <div className={styles.billingField}>
-                    <div className={styles.billingLabel}>{t('saasAdmin.text.navaerendePlan')}</div>
-                    <div className={styles.billingValue}>{billing.currentPlan ?? 'Ingen'}</div>
+                  <div style={{ display: "flex", flexDirection: "column", gap: "var(--ds-spacing-1)" }}>
+                    <div style={{ fontSize: "var(--ds-font-size-sm)", color: "var(--ds-color-neutral-text-subtle)" }}>{t('saasAdmin.text.navaerendePlan')}</div>
+                    <div style={{ fontWeight: "var(--ds-font-weight-medium)" }}>{billing.currentPlan ?? 'Ingen'}</div>
                   </div>
-                  <div className={styles.billingField}>
-                    <div className={styles.billingLabel}>{t('saasAdmin.text.betalt')}</div>
-                    <div className={styles.billingValue}>
+                  <div style={{ display: "flex", flexDirection: "column", gap: "var(--ds-spacing-1)" }}>
+                    <div style={{ fontSize: "var(--ds-font-size-sm)", color: "var(--ds-color-neutral-text-subtle)" }}>{t('saasAdmin.text.betalt')}</div>
+                    <div style={{ fontWeight: "var(--ds-font-weight-medium)" }}>
                       {billing.amountPaid.toLocaleString('nb-NO')} {billing.currency}
                     </div>
                   </div>
-                  <div className={styles.billingField}>
-                    <div className={styles.billingLabel}>{t('saasAdmin.text.skyldig')}</div>
+                  <div style={{ display: "flex", flexDirection: "column", gap: "var(--ds-spacing-1)" }}>
+                    <div style={{ fontSize: "var(--ds-font-size-sm)", color: "var(--ds-color-neutral-text-subtle)" }}>{t('saasAdmin.text.skyldig')}</div>
                     <div className={billing.amountDue > 0 ? styles.billingValueDanger : styles.billingValue}>
                       {billing.amountDue.toLocaleString('nb-NO')} {billing.currency}
                     </div>
@@ -577,7 +576,7 @@ export function TenantDetailPage() {
                 )}
 
                 {billing.invoices.length > 0 && (
-                  <div className={styles.invoicesSection}>
+                  <div style={{ marginTop: "var(--ds-spacing-4)" }}>
                     <Heading level={4} size="xs" style={{ marginBottom: 'var(--ds-spacing-3)' }}>
                       Fakturaer
                     </Heading>
@@ -593,7 +592,7 @@ export function TenantDetailPage() {
                       <Table.Body>
                         {billing.invoices.map((invoice) => (
                           <Table.Row key={invoice.id}>
-                            <Table.Cell className={styles.tableCellMonospace}>
+                            <Table.Cell style={{ fontFamily: "var(--ds-font-family-monospace)" }}>
                               {invoice.number}
                             </Table.Cell>
                             <Table.Cell>
@@ -623,7 +622,7 @@ export function TenantDetailPage() {
         {/* Secrets Tab */}
         <Tabs.Panel value="secrets">
           <Card>
-            <div className={styles.secretsHeader}>
+            <div style={{ marginBottom: "var(--ds-spacing-4)" }}>
               <Heading level={3} size="sm" style={{ marginBottom: 'var(--ds-spacing-1)' }}>
                 Integrasjons-secrets
               </Heading>
@@ -633,12 +632,12 @@ export function TenantDetailPage() {
             </div>
 
             {loadingSecrets ? (
-              <div className={styles.secretsLoading}>
+              <div style={{ display: "flex", justifyContent: "center", padding: "var(--ds-spacing-6)" }}>
                 <Spinner aria-label={t('state.loading')} />
               </div>
             ) : secrets.length === 0 ? (
-              <div className={styles.secretsEmpty}>
-                <LockIcon className={styles.secretsEmptyIcon} />
+              <div style={{ textAlign: "center", padding: "var(--ds-spacing-8)" }}>
+                <LockIcon style={{ fontSize: "var(--ds-font-size-heading-lg)", color: "var(--ds-color-neutral-text-subtle)", marginBottom: "var(--ds-spacing-3)" }} />
                 <Heading level={4} size="xs" style={{ marginBottom: 'var(--ds-spacing-2)' }}>
                   Ingen secrets konfigurert
                 </Heading>
@@ -660,10 +659,10 @@ export function TenantDetailPage() {
                 <Table.Body>
                   {secrets.map((secret) => (
                     <Table.Row key={secret.key}>
-                      <Table.Cell className={styles.tableCellMedium}>
+                      <Table.Cell style={{ fontWeight: "var(--ds-font-weight-medium)" }}>
                         {secret.provider}
                       </Table.Cell>
-                      <Table.Cell className={styles.tableCellMonospace}>
+                      <Table.Cell style={{ fontFamily: "var(--ds-font-family-monospace)" }}>
                         {secret.key}
                       </Table.Cell>
                       <Table.Cell>
@@ -671,7 +670,7 @@ export function TenantDetailPage() {
                           {secret.isConfigured ? 'Konfigurert' : 'Ikke konfigurert'}
                         </Badge>
                       </Table.Cell>
-                      <Table.Cell className={styles.tableCellMonospaceSmall}>
+                      <Table.Cell style={{ fontFamily: "var(--ds-font-family-monospace)", fontSize: "var(--ds-font-size-xs)" }}>
                         {secret.fingerprint ?? '—'}
                       </Table.Cell>
                       <Table.Cell>
@@ -692,14 +691,14 @@ export function TenantDetailPage() {
               Lisensnøkkel
             </Heading>
 
-            <div className={styles.licenseContent}>
-              <div className={styles.licenseInfo}>
+            <div style={{ display: "flex", flexDirection: "column", gap: "var(--ds-spacing-4)" }}>
+              <div style={{ display: "flex", alignItems: "center", gap: "var(--ds-spacing-3)" }}>
                 {tenant.licenseKeyFingerprint ? (
                   <>
                     <Badge color="success">
                       <KeyIcon /> Lisensiert
                     </Badge>
-                    <div className={styles.licenseFingerprint}>
+                    <div style={{ fontFamily: "var(--ds-font-family-monospace)", fontSize: "var(--ds-font-size-sm)", color: "var(--ds-color-neutral-text-subtle)" }}>
                       Fingerprint: {tenant.licenseKeyFingerprint}
                     </div>
                   </>
@@ -728,8 +727,8 @@ export function TenantDetailPage() {
                 </Button>
               </div>
 
-              <div className={styles.licenseWarning}>
-                <Paragraph size="sm" className={styles.licenseWarningText}>
+              <div style={{ padding: "var(--ds-spacing-4)", backgroundColor: "var(--ds-color-warning-surface-default)", borderRadius: "var(--ds-border-radius-md)", marginTop: "var(--ds-spacing-2)" }}>
+                <Paragraph size="sm" style={{ margin: 0, color: "var(--ds-color-warning-text-default)" }}>
                   <strong>{t('common.advarsel')}</strong> Når du roterer lisensnøkkelen vil den gamle nøkkelen bli ugyldig umiddelbart.
                   Alle systemer som bruker den gamle nøkkelen må oppdateres med den nye.
                 </Paragraph>

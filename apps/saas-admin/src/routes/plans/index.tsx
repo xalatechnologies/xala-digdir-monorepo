@@ -34,7 +34,6 @@ import {
 } from '@digilist/client-sdk/hooks';
 import type { Plan, PlanStatus, BillingPeriod } from '@digilist/client-sdk/types';
 import { useT } from '@xala/i18n';
-import styles from './PlansListPage.module.css';
 
 const statusColors: Record<PlanStatus, 'success' | 'warning' | 'danger'> = {
   active: 'success',
@@ -120,8 +119,7 @@ export function PlansListPage() {
   const formatPrice = (price: number, currency: string) => {
     return new Intl.NumberFormat('nb-NO', {
       style: 'currency',
-      currency: currency,
-      minimumFractionDigits: 0,
+      currency,
     }).format(price);
   };
 
@@ -160,7 +158,7 @@ export function PlansListPage() {
   };
 
   return (
-    <div className={styles.page}>
+    <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--ds-spacing-5)' }}>
       {/* Header */}
       <DataPageHeader
         title={t('saasAdmin.plans.page.title')}
@@ -191,8 +189,8 @@ export function PlansListPage() {
 
       {/* Search */}
       <Card>
-        <div className={styles.filters}>
-          <div className={styles.searchWrapper}>
+        <div style={{ display: 'flex', gap: 'var(--ds-spacing-3)', flexWrap: 'wrap', alignItems: 'center' }}>
+          <div style={{ flex: '1 1 300px', minWidth: '200px' }}>
             <HeaderSearch
               placeholder={t('saasAdmin.plans.searchPlaceholder')}
               value={searchQuery}
@@ -216,7 +214,7 @@ export function PlansListPage() {
       {/* Results */}
       <Card>
         {isLoading ? (
-          <div className={styles.loadingContainer}>
+          <div style={{ display: 'flex', justifyContent: 'center', padding: 'var(--ds-spacing-8)' }}>
             <Spinner size="lg" aria-label={t('state.loading')} />
           </div>
         ) : filteredPlans.length === 0 ? (
@@ -252,27 +250,29 @@ export function PlansListPage() {
                 <Table.HeaderCell>{t('label.status')}</Table.HeaderCell>
                 <Table.HeaderCell>{t('saasAdmin.plans.visibility')}</Table.HeaderCell>
                 <Table.HeaderCell>{t('saasAdmin.tenants.createdAt')}</Table.HeaderCell>
-                <Table.HeaderCell className={styles.actionsCell}>{t('common.actions')}</Table.HeaderCell>
+                <Table.HeaderCell style={{ width: '80px' }}>{t('common.actions')}</Table.HeaderCell>
               </Table.Row>
             </Table.Head>
             <Table.Body>
               {filteredPlans.map((plan) => (
                 <Table.Row
                   key={plan.id}
-                  className={styles.tableRow}
+                  style={{ cursor: 'pointer' }}
                   onClick={() => handleViewDetail(plan)}
                 >
                   <Table.Cell>
-                    <div className={styles.planCell}>
-                      <ChartIcon className={styles.planIcon} />
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--ds-spacing-2)' }}>
+                      <ChartIcon style={{ color: 'var(--ds-color-neutral-text-subtle)' }} />
                       <div>
-                        <div className={styles.planName}>{plan.name}</div>
-                        <div className={styles.planSlug}>{plan.slug}</div>
+                        <div style={{ fontWeight: 'var(--ds-font-weight-medium)' }}>{plan.name}</div>
+                        <div style={{ fontFamily: 'var(--ds-font-family-monospace)', fontSize: 'var(--ds-font-size-xs)', color: 'var(--ds-color-neutral-text-subtle)' }}>
+                          {plan.slug}
+                        </div>
                       </div>
                     </div>
                   </Table.Cell>
                   <Table.Cell>
-                    <div className={styles.priceCell}>
+                    <div style={{ fontWeight: 'var(--ds-font-weight-medium)' }}>
                       {formatPrice(plan.basePrice, plan.currency)}
                     </div>
                   </Table.Cell>
@@ -283,13 +283,13 @@ export function PlansListPage() {
                     {plan.trialDays > 0 ? (
                       <span>{plan.trialDays} {t('saasAdmin.plans.days')}</span>
                     ) : (
-                      <span className={styles.seatsSubtle}>—</span>
+                      <span style={{ color: 'var(--ds-color-neutral-text-subtle)' }}>—</span>
                     )}
                   </Table.Cell>
                   <Table.Cell>
-                    <div className={styles.seatsCell}>
+                    <div style={{ fontSize: 'var(--ds-font-size-sm)' }}>
                       <div>{t('saasAdmin.plans.users')}: {plan.seatLimits.maxUsers}</div>
-                      <div className={styles.seatsSubtle}>
+                      <div style={{ color: 'var(--ds-color-neutral-text-subtle)' }}>
                         {t('saasAdmin.plans.orgs')}: {plan.seatLimits.maxOrganizations}
                       </div>
                     </div>
@@ -305,7 +305,7 @@ export function PlansListPage() {
                     )}
                   </Table.Cell>
                   <Table.Cell>
-                    <div className={styles.dateCell}>{formatDate(plan.createdAt)}</div>
+                    <div style={{ fontSize: 'var(--ds-font-size-sm)' }}>{formatDate(plan.createdAt)}</div>
                   </Table.Cell>
                   <Table.Cell onClick={(e) => e.stopPropagation()}>
                     <Dropdown.TriggerContext>
@@ -369,7 +369,15 @@ export function PlansListPage() {
 
       {/* Pagination info */}
       {plansData?.meta && (
-        <div className={styles.pagination}>
+        <div
+          style={{
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            color: 'var(--ds-color-neutral-text-subtle)',
+            fontSize: 'var(--ds-font-size-sm)',
+          }}
+        >
           <span>
             {t('pagination.showing')} {filteredPlans.length} {t('common.of')} {plansData.meta.total} {t('saasAdmin.nav.plans').toLowerCase()}
           </span>

@@ -39,7 +39,7 @@ type Story = StoryObj;
  */
 export const Info: Story = {
   render: () => (
-    <Alert>
+    <Alert data-color="info">
       Your booking request has been received and is being processed.
     </Alert>
   ),
@@ -50,7 +50,7 @@ export const Info: Story = {
  */
 export const Success: Story = {
   render: () => (
-    <Alert color="success">
+    <Alert data-color="success">
       Your booking has been confirmed successfully.
     </Alert>
   ),
@@ -61,7 +61,7 @@ export const Success: Story = {
  */
 export const Warning: Story = {
   render: () => (
-    <Alert color="warning">
+    <Alert data-color="warning">
       Your session will expire in 5 minutes. Please save your work.
     </Alert>
   ),
@@ -72,7 +72,7 @@ export const Warning: Story = {
  */
 export const Danger: Story = {
   render: () => (
-    <Alert color="danger">
+    <Alert data-color="danger">
       There was an error processing your request. Please try again.
     </Alert>
   ),
@@ -83,7 +83,7 @@ export const Danger: Story = {
  */
 export const WithLongerContent: Story = {
   render: () => (
-    <Alert color="success">
+    <Alert data-color="success">
       <strong>Booking Confirmed</strong>
       <br />
       Your booking for Meeting Room A on December 15, 2024 has been confirmed.
@@ -98,10 +98,10 @@ export const WithLongerContent: Story = {
 export const AllVariants: Story = {
   render: () => (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--ds-spacing-4)' }}>
-      <Alert>Info: This is an informational message.</Alert>
-      <Alert color="success">Success: Operation completed successfully.</Alert>
-      <Alert color="warning">Warning: Please review before continuing.</Alert>
-      <Alert color="danger">Error: Something went wrong.</Alert>
+      <Alert data-color="info">Info: This is an informational message.</Alert>
+      <Alert data-color="success">Success: Operation completed successfully.</Alert>
+      <Alert data-color="warning">Warning: Please review before continuing.</Alert>
+      <Alert data-color="danger">Error: Something went wrong.</Alert>
     </div>
   ),
 };

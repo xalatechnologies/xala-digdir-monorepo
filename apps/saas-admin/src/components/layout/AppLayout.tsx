@@ -22,7 +22,6 @@ import {
 import { useT } from '@xala/i18n';
 import { Sidebar } from './Sidebar';
 import { Header } from './Header';
-import styles from './AppLayout.module.css';
 
 const MOBILE_BREAKPOINT = 768;
 
@@ -98,11 +97,24 @@ export function AppLayout() {
   ];
 
   return (
-    <div className={styles.layout}>
+    <div
+      style={{
+        display: 'flex',
+        height: '100vh',
+        backgroundColor: 'var(--ds-color-neutral-background-default)',
+      }}
+    >
       {/* Sidebar - Desktop only */}
       {!isMobile && <Sidebar />}
 
-      <div className={styles.main}>
+      <div
+        style={{
+          flex: 1,
+          display: 'flex',
+          flexDirection: 'column',
+          overflow: 'hidden',
+        }}
+      >
         <Header title={title} />
 
         <DashboardContent

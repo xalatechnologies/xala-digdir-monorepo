@@ -99,7 +99,7 @@ export const WithIcons: Story = {
         <SaveIcon />
         Save
       </Button>
-      <Button variant="tertiary" color="danger">
+      <Button variant="tertiary" data-color="danger">
         <TrashIcon />
         Delete
       </Button>
@@ -150,9 +150,28 @@ export const AsLink: Story = {
 export const Danger: Story = {
   render: () => (
     <div style={{ display: 'flex', gap: 'var(--ds-spacing-3)', alignItems: 'center' }}>
-      <Button variant="primary" color="danger">Delete</Button>
-      <Button variant="secondary" color="danger">Remove</Button>
-      <Button variant="tertiary" color="danger">Cancel</Button>
+      <Button variant="primary" data-color="danger">Delete</Button>
+      <Button variant="secondary" data-color="danger">Remove</Button>
+      <Button variant="tertiary" data-color="danger">Cancel</Button>
+    </div>
+  ),
+};
+
+/**
+ * Icon-only button
+ */
+export const IconOnly: Story = {
+  render: () => (
+    <div style={{ display: 'flex', gap: 'var(--ds-spacing-3)', alignItems: 'center' }}>
+      <Button icon aria-label="Add item">
+        <PlusIcon />
+      </Button>
+      <Button icon variant="secondary" aria-label="Save">
+        <SaveIcon />
+      </Button>
+      <Button icon variant="tertiary" data-color="danger" aria-label="Delete">
+        <TrashIcon />
+      </Button>
     </div>
   ),
 };

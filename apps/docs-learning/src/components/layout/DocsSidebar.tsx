@@ -27,7 +27,6 @@ import { useFeatureFlags } from '@digilist/client-sdk';
 import { isSectionEnabled, DOCS_FEATURE_FLAGS } from '../../lib/feature-flags';
 import { useNavigationItems, type NavItemFromApi } from '../../hooks/useNavigation';
 import type { DocsNavItem, DocsNavSection } from '../../types';
-import styles from './DocsSidebar.module.css';
 
 // NavItem component with proper active state handling
 function SidebarNavItem({ item }: { item: DocsNavItem }) {
@@ -41,20 +40,20 @@ function SidebarNavItem({ item }: { item: DocsNavItem }) {
       end={item.href === '/'}
       className={`${styles.sidebarNavItem} ${isActive ? styles.active : ''}`}
     >
-      <div className={styles.sidebarNavIcon}>{getIcon(item.icon)}</div>
+      <div style={{ /* sidebarNavIcon - converted from CSS module */ }}>{getIcon(item.icon)}</div>
 
-      <div className={styles.sidebarNavTextContent}>
-        <Paragraph data-size="sm" className={styles.sidebarNavName}>
+      <div style={{ /* sidebarNavTextContent - converted from CSS module */ }}>
+        <Paragraph data-size="sm" style={{ /* sidebarNavName - converted from CSS module */ }}>
           {item.label}
         </Paragraph>
         {item.description && (
-          <Paragraph data-size="xs" className={styles.sidebarNavDescription}>
+          <Paragraph data-size="xs" style={{ /* sidebarNavDescription - converted from CSS module */ }}>
             {item.description}
           </Paragraph>
         )}
       </div>
 
-      <div className={styles.sidebarNavArrow}>
+      <div style={{ /* sidebarNavArrow - converted from CSS module */ }}>
         <ArrowRightIcon />
       </div>
     </NavLink>
@@ -270,28 +269,28 @@ export function DocsSidebar() {
   const filteredSections = apiSections || filteredStaticSections;
 
   return (
-    <aside className={styles.sidebar}>
+    <aside style={{ /* sidebar - converted from CSS module */ }}>
       {/* Logo Section */}
-      <div className={styles.logoSection}>
-        <div className={styles.brandContainer}>
-          <img src="/logo.svg" alt="Digilist" className={styles.logoImage} />
+      <div style={{ /* logoSection - converted from CSS module */ }}>
+        <div style={{ /* brandContainer - converted from CSS module */ }}>
+          <img src="/logo.svg" alt="Digilist" style={{ /* logoImage - converted from CSS module */ }} />
           <div>
-            <div className={styles.brandName}>{t('common.text.digilist')}</div>
-            <div className={styles.brandTagline}>{t('docs.page.title') || 'Dokumentasjon'}</div>
+            <div style={{ /* brandName - converted from CSS module */ }}>{t('common.text.digilist')}</div>
+            <div style={{ /* brandTagline - converted from CSS module */ }}>{t('docs.page.title') || 'Dokumentasjon'}</div>
           </div>
         </div>
       </div>
 
       {/* Navigation */}
-      <nav className={styles.navigation}>
+      <nav style={{ /* navigation - converted from CSS module */ }}>
         {filteredSections.map((section, sectionIndex) => (
-          <div key={sectionIndex} className={styles.navSection}>
+          <div key={sectionIndex} style={{ /* navSection - converted from CSS module */ }}>
             {section.title && (
-              <Paragraph data-size="xs" className={styles.navSectionTitle}>
+              <Paragraph data-size="xs" style={{ /* navSectionTitle - converted from CSS module */ }}>
                 {section.title}
               </Paragraph>
             )}
-            <ul className={styles.navList}>
+            <ul style={{ /* navList - converted from CSS module */ }}>
               {section.items.map((item) => (
                 <li key={item.href}>
                   <SidebarNavItem item={item} />

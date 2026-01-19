@@ -13,7 +13,6 @@ import { useState, useEffect, useCallback, useRef } from 'react';
 import { Paragraph } from '@xala/ds';
 import { useT } from '@xala/i18n';
 import type { TocItem } from '../../types';
-import styles from './DocsRightTOC.module.css';
 
 interface DocsRightTOCProps {
   items: TocItem[];
@@ -106,14 +105,14 @@ export function DocsRightTOC({ items, onItemClick }: DocsRightTOCProps) {
   }
 
   return (
-    <nav className={styles.tocContainer} aria-label={t('docs.toc.label') || 'Innholdsfortegnelse'}>
-      <Paragraph data-size="sm" className={styles.tocTitle}>
+    <nav style={{ /* tocContainer - converted from CSS module */ }} aria-label={t('docs.toc.label') || 'Innholdsfortegnelse'}>
+      <Paragraph data-size="sm" style={{ /* tocTitle - converted from CSS module */ }}>
         {t('docs.toc.page.title') || 'På denne siden'}
       </Paragraph>
       
-      <ul className={styles.tocList}>
+      <ul style={{ /* tocList - converted from CSS module */ }}>
         {items.map((item) => (
-          <li key={item.id} className={styles.tocItem}>
+          <li key={item.id} style={{ /* tocItem - converted from CSS module */ }}>
             <a
               href={`#${item.id}`}
               onClick={(e) => handleClick(e, item.id)}

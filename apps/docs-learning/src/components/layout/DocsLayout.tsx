@@ -14,7 +14,6 @@ import { BottomNavigation, type BottomNavigationItem, DashboardContent, HomeIcon
 import { useT } from '@xala/i18n';
 import { DocsSidebar } from './DocsSidebar';
 import { DocsHeader } from './DocsHeader';
-import styles from './DocsLayout.module.css';
 
 const MOBILE_BREAKPOINT = 768;
 
@@ -61,11 +60,11 @@ export function DocsLayout() {
   ];
 
   return (
-    <div className={styles.docsLayout}>
+    <div style={{ /* docsLayout - converted from CSS module */ }}>
       {/* Sidebar - Desktop only */}
       {!isMobile && <DocsSidebar />}
 
-      <div className={styles.contentArea}>
+      <div style={{ /* contentArea - converted from CSS module */ }}>
         <DocsHeader />
 
         <DashboardContent

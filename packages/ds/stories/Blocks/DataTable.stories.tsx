@@ -29,8 +29,8 @@ const columns: ColumnDef<User>[] = [
     header: 'Status',
     cell: (_value, row) => {
       const status = (row as User).status;
-      const color = status === 'active' ? 'success' : status === 'pending' ? 'warning' : 'neutral';
-      return <Badge color={color}>{status}</Badge>;
+      const variant = status === 'active' ? 'success' : status === 'pending' ? 'warning' : 'neutral';
+      return <Badge variant={variant}>{status}</Badge>;
     },
   },
   { id: 'createdAt', accessorKey: 'createdAt', header: 'Created', sortable: true },

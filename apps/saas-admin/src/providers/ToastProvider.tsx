@@ -5,7 +5,6 @@
 
 import React, { createContext, useContext, useState, useCallback, type ReactNode } from 'react';
 import { Alert, Paragraph } from '@xala/ds';
-import styles from './ToastProvider.module.css';
 
 type ToastType = 'success' | 'info' | 'warning' | 'danger';
 
@@ -94,15 +93,34 @@ export function ToastProvider({ children }: ToastProviderProps): React.ReactElem
 
       {/* Toast container - fixed at top right */}
       {toasts.length > 0 && (
-        <div className={styles.toastContainer}>
+        <div
+          style={{
+            position: 'fixed',
+            top: 'var(--ds-spacing-4)',
+            right: 'var(--ds-spacing-4)',
+            zIndex: 'var(--ds-z-index-modal, 9999)',
+            display: 'flex',
+            flexDirection: 'column',
+            gap: 'var(--ds-spacing-2)',
+            maxWidth: 'var(--ds-size-container-sm, 400px)',
+            width: '100%',
+          }}
+        >
           {toasts.map((toast) => (
             <Alert
               key={toast.id}
               color={toast.type}
-              className={styles.toast}
+              style={{
+                boxShadow: 'var(--ds-shadow-md)',
+                animation: 'slideIn 0.2s ease-out',
+              }}
             >
               <strong>{toast.title}</strong>
-              {toast.message && <Paragraph size="sm" className={styles.toastMessage}>{toast.message}</Paragraph>}
+              {toast.message && (
+                <Paragraph size="sm" style={{ margin: 0 }}>
+                  {toast.message}
+                </Paragraph>
+              )}
             </Alert>
           ))}
         </div>

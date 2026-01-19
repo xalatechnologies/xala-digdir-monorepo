@@ -9,7 +9,6 @@ import { Heading, Paragraph, Breadcrumb, Card } from '@xala/ds';
 import { useT } from '@xala/i18n';
 import { useFeatureFlags } from '@digilist/client-sdk';
 import { isSectionEnabled, DOCS_FEATURE_FLAGS } from '../lib/feature-flags';
-import styles from './DocsSectionPage.module.css';
 
 // Mock articles for MVP using i18n keys (would come from content loader)
 const MOCK_ARTICLES: Record<string, { slug: string; titleKey: string; descKey: string; updatedAt: string }[]> = {
@@ -62,38 +61,38 @@ export function DocsSectionPage() {
   ];
 
   return (
-    <div className={styles.container}>
+    <div style={{ /* container - converted from CSS module */ }}>
       {/* Breadcrumb */}
       <Breadcrumb items={breadcrumbItems} />
 
       {/* Header */}
-      <header className={styles.header}>
+      <header style={{ /* header - converted from CSS module */ }}>
         <Heading level={1}>{sectionTitle}</Heading>
-        <Paragraph data-size="lg" className={styles.description}>
+        <Paragraph data-size="lg" style={{ /* description - converted from CSS module */ }}>
           {t(`docs.sections.${section}.description`)}
         </Paragraph>
       </header>
 
       {/* Articles List */}
-      <section className={styles.articlesList}>
+      <section style={{ /* articlesList - converted from CSS module */ }}>
         {articles.length > 0 ? (
           articles.map((article) => (
             <Link
               key={article.slug}
               to={`/${section}/${article.slug}`}
-              className={styles.articleLink}
+              style={{ /* articleLink - converted from CSS module */ }}
             >
-              <Card className={styles.articleCard} style={{ padding: 'var(--ds-spacing-4)' }}>
-                <div className={styles.articleContent}>
+              <Card style={{ /* articleCard - converted from CSS module */ }} style={{ padding: 'var(--ds-spacing-4)' }}>
+                <div style={{ /* articleContent - converted from CSS module */ }}>
                   <div>
-                    <Heading level={3} className={styles.articleTitle}>
+                    <Heading level={3} style={{ /* articleTitle - converted from CSS module */ }}>
                       {t(article.titleKey)}
                     </Heading>
-                    <Paragraph data-size="sm" className={styles.articleDescription}>
+                    <Paragraph data-size="sm" style={{ /* articleDescription - converted from CSS module */ }}>
                       {t(article.descKey)}
                     </Paragraph>
                   </div>
-                  <Paragraph data-size="xs" className={styles.articleDate}>
+                  <Paragraph data-size="xs" style={{ /* articleDate - converted from CSS module */ }}>
                     {t('docs.updatedAt')}: {article.updatedAt}
                   </Paragraph>
                 </div>

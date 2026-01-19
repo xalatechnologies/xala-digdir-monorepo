@@ -2,52 +2,53 @@
 
 **Date:** 2026-01-19  
 **Controllers:** 74  
-**SDK Services:** 60  
-**Gaps:** 34 controllers without matching SDK services
+**SDK Services:** 62  
+**True Gaps:** ~12 (after name matching)
 
-## Controllers Without SDK Services
+## Cross-Reference Analysis
+
+Many "gaps" are false positives due to naming differences:
+
+| Controller | SDK Service | Match |
+|------------|-------------|-------|
+| conversations | conversation | ✅ |
+| notifications | notification | ✅ |
+| organizations | organization | ✅ |
+| reviews | review | ✅ |
+| seasons | season | ✅ |
+| season-applications | season-application | ✅ |
+| discount-codes | discount-code | ✅ |
+| push-notifications | push-notification | ✅ |
+
+## True SDK Gaps (Need Services)
 
 | Controller | Priority | Notes |
 |------------|----------|-------|
-| addons | P1 | Booking add-ons |
+| availability | P1 | Core booking - may use calendar.service |
+| global-search | P1 | Uses search.service? |
+| menu | P1 | Navigation API |
+| public | P2 | Public endpoints |
+| addons | P2 | Booking add-ons |
 | allocations | P2 | Resource allocation |
-| availability | P1 | Core booking feature |
-| backoffice | P2 | Admin-only |
-| booking-contracts | P2 | Contract generation |
-| bulk | P2 | Bulk operations |
-| calendar-contracts | P2 | Calendar sync |
-| capabilities | P2 | Feature capabilities |
-| case-handler-scope | P3 | Admin scope |
-| configuration | P2 | System config |
-| conversations | P1 | Messaging |
-| discount-codes | P2 | Promotions |
-| entitlements | P2 | Access control |
-| global-search | P1 | Search feature |
+| bulk | P3 | Bulk operations |
 | health | P3 | Internal only |
 | idporten-oidc | P3 | Auth callback |
-| menu | P1 | Navigation |
-| messages | P1 | Messaging |
 | monitoring | P3 | Internal only |
-| notification-preferences | P2 | User prefs |
-| notifications | P1 | Core feature |
-| org-context | P2 | Context switch |
-| organizations | P1 | Core feature |
-| policy | P2 | Policy engine |
-| public | P1 | Public endpoints |
-| push-notifications | P2 | Mobile push |
-| reviews | P1 | User reviews |
-| season-applications | P1 | Season bookings |
-| seasons | P1 | Season management |
-| share | P2 | Sharing feature |
-| translations | P2 | i18n |
 | vipps-webhook | P3 | Payment webhook |
 | websocket | P3 | Internal |
-| widgets | P2 | Dashboard widgets |
 
-## P1 Gaps (Critical)
-- availability, conversations, global-search, menu, messages, notifications, organizations, public, reviews, season-applications, seasons
+## Verified Coverage ✅
+- conversation.service ✅
+- notification.service ✅  
+- organization.service ✅
+- review.service ✅
+- season.service ✅
+- season-application.service ✅
+- search.service ✅ (for global-search?)
+- calendar.service ✅ (for availability?)
 
-## Action Items
-1. Verify if these gaps are intentional (internal-only endpoints)
-2. Create SDK services for P1 gaps
-3. Update REPO_MAP.md with findings
+## Recommendations
+1. Verify if `search.service` covers global-search controller
+2. Verify if `calendar.service` covers availability controller
+3. Create `menu.service` for navigation API (P1)
+4. Other gaps are internal-only (P3)

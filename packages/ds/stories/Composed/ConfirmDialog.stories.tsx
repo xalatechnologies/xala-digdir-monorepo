@@ -64,7 +64,7 @@ export const Danger: Story = {
     const [open, setOpen] = useState(false);
     return (
       <>
-        <Button variant="primary" color="danger" onClick={() => setOpen(true)}>
+        <Button variant="primary" data-color="danger" onClick={() => setOpen(true)}>
           Delete Item
         </Button>
         <ConfirmDialog

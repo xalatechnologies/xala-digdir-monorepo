@@ -828,3 +828,6 @@ export {
 
 // Utility hooks
 export { useDebounced } from './useDebounced';
+
+export { useUserContext } from './use-user-context';
+export type { UserContextResponse } from './use-user-context';

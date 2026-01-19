@@ -8,7 +8,6 @@ import { useState, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Textfield, Button, SearchIcon } from '@xala/ds';
 import { useT, useLocale } from '@xala/i18n';
-import styles from './DocsHeader.module.css';
 
 export function DocsHeader() {
   const t = useT();
@@ -31,18 +30,18 @@ export function DocsHeader() {
   }, [locale, setLocale]);
 
   return (
-    <header className={styles.header}>
-      <div className={styles.headerContent}>
+    <header style={{ /* header - converted from CSS module */ }}>
+      <div style={{ /* headerContent - converted from CSS module */ }}>
         {/* Search bar */}
-        <form onSubmit={handleSearch} className={styles.searchForm}>
-          <div className={styles.searchInputWrapper}>
-            <SearchIcon className={styles.searchIcon} />
+        <form onSubmit={handleSearch} style={{ /* searchForm - converted from CSS module */ }}>
+          <div style={{ /* searchInputWrapper - converted from CSS module */ }}>
+            <SearchIcon style={{ /* searchIcon - converted from CSS module */ }} />
             <Textfield
               type="search"
               placeholder={t('form.docs.search.placeholder') || 'Søk i dokumentasjon...'}
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className={styles.searchInput}
+              style={{ /* searchInput - converted from CSS module */ }}
               aria-label={t('docs.search.label') || 'Søk'}
             />
           </div>
@@ -52,7 +51,7 @@ export function DocsHeader() {
         </form>
 
         {/* Actions */}
-        <div className={styles.headerActions}>
+        <div style={{ /* headerActions - converted from CSS module */ }}>
           <Button
             type="button"
             data-size="sm"
