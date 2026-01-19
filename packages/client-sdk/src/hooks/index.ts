@@ -68,6 +68,13 @@ export {
 // Admin Navigation hooks (server-generated menu)
 export { useAdminNavigation } from './use-admin-navigation';
 
+// Backoffice Menu hooks (database-driven, DK API)
+export {
+  useBackofficeMenu,
+  useBackofficeMenuData,
+  menuQueryKeys,
+} from './use-backoffice-menu';
+
 // Domain Navigation hooks (manifest-driven)
 export {
   type DomainNavItem,

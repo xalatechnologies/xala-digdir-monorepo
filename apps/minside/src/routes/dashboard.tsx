@@ -1,4 +1,14 @@
-import { Link } from 'react-router-dom';
+/**
+ * DashboardPage
+ *
+ * Mobile-first responsive dashboard using @xala/ds shared components.
+ * - Uses PageHeader for consistent welcome section
+ * - Uses StatCard for KPI display
+ * - Uses QuickActionCard for quick actions
+ * - Uses ActivityItem for upcoming bookings
+ */
+
+import { Link, useNavigate } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import {
   Card,
@@ -11,10 +21,12 @@ import {
   ClockIcon,
   SettingsIcon,
   HomeIcon,
-  ChevronRightIcon,
   CheckCircleIcon,
   BookingStatusBadge,
-  Link as DSLink,
+  PageHeader,
+  StatCard,
+  QuickActionCard,
+  EmptyState,
 } from '@xala/ds';
 import { useT } from '@xala/i18n';
 import { useMyBookings, formatDate, formatTime, type Booking } from '@digilist/client-sdk';
@@ -27,6 +39,7 @@ const MOBILE_BREAKPOINT = 768;
 
 export function DashboardPage() {
   const t = useT();
+  const navigate = useNavigate();
   const { user } = useAuth();
   const [isMobile, setIsMobile] = useState(
     typeof window !== 'undefined' ? window.innerWidth < MOBILE_BREAKPOINT : false
@@ -73,15 +86,7 @@ export function DashboardPage() {
         }}>
           {[1, 2, 3].map((i) => (
             <Card key={i} style={{ padding: 'var(--ds-spacing-5)' }}>
-              <div style={{
-                display: 'flex',
-                alignItems: 'center',
-                gap: 'var(--ds-spacing-3)',
-                marginBottom: 'var(--ds-spacing-3)',
-              }}>
-                <Skeleton width={40} height={40} style={{ borderRadius: 'var(--ds-border-radius-md)' }} />
-                <Skeleton width="60%" height={20} />
-              </div>
+              <Skeleton width="60%" height={20} style={{ marginBottom: 'var(--ds-spacing-3)' }} />
               <Skeleton width={60} height={40} />
             </Card>
           ))}
@@ -96,189 +101,59 @@ export function DashboardPage() {
             gap: 'var(--ds-spacing-3)'
           }}>
             {[1, 2, 3, 4].map((i) => (
-              <Card key={i} style={{
-                padding: 'var(--ds-spacing-4)',
-                display: 'flex',
-                flexDirection: 'column',
-                alignItems: 'center',
-                gap: 'var(--ds-spacing-2)',
-              }}>
-                <Skeleton width={48} height={48} style={{ borderRadius: 'var(--ds-border-radius-md)' }} />
+              <Card key={i} style={{ padding: 'var(--ds-spacing-4)' }}>
+                <Skeleton width={48} height={48} style={{ borderRadius: 'var(--ds-border-radius-md)', marginBottom: 'var(--ds-spacing-2)' }} />
                 <Skeleton width="80%" height={20} />
               </Card>
             ))}
           </div>
         </div>
-
-        {/* Upcoming Bookings Skeleton */}
-        <Card style={{ padding: isMobile ? 'var(--ds-spacing-4)' : 'var(--ds-spacing-5)' }}>
-          <div style={{
-            display: 'flex',
-            justifyContent: 'space-between',
-            alignItems: 'center',
-            marginBottom: 'var(--ds-spacing-4)',
-          }}>
-            <Skeleton width="40%" height={28} />
-            <Skeleton width={100} height={36} />
-          </div>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--ds-spacing-3)' }}>
-            {[1, 2, 3].map((i) => (
-              <div key={i} style={{
-                padding: isMobile ? 'var(--ds-spacing-3)' : 'var(--ds-spacing-4)',
-                borderRadius: 'var(--ds-border-radius-md)',
-                border: '1px solid var(--ds-color-neutral-border-default)',
-                display: 'flex',
-                flexDirection: isMobile ? 'column' : 'row',
-                justifyContent: 'space-between',
-                alignItems: isMobile ? 'stretch' : 'center',
-                gap: isMobile ? 'var(--ds-spacing-3)' : 'var(--ds-spacing-4)',
-              }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: isMobile ? 'var(--ds-spacing-3)' : 'var(--ds-spacing-4)' }}>
-                  <Skeleton width={isMobile ? 40 : 48} height={isMobile ? 40 : 48} style={{ borderRadius: 'var(--ds-border-radius-md)', flexShrink: 0 }} />
-                  <div style={{ flex: 1 }}>
-                    <Skeleton width="70%" height={20} style={{ marginBottom: 'var(--ds-spacing-1)' }} />
-                    <Skeleton width="50%" height={16} />
-                  </div>
-                </div>
-                <div style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: 'var(--ds-spacing-3)',
-                  marginLeft: isMobile ? 'calc(40px + var(--ds-spacing-3))' : '0'
-                }}>
-                  <Skeleton width={80} height={20} />
-                  <Skeleton width={80} height={24} style={{ borderRadius: 'var(--ds-border-radius-full)' }} />
-                </div>
-              </div>
-            ))}
-          </div>
-        </Card>
       </div>
     );
   }
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--ds-spacing-6)' }}>
-      {/* Welcome Section */}
-      <div>
-        <Heading level={1} data-size="lg" style={{ margin: 0 }}>
-          {t('minside.welcome')}, {user?.name?.split(' ')[0] || 'Bruker'}!
-        </Heading>
-        <Paragraph style={{ color: 'var(--ds-color-neutral-text-default)', marginTop: 'var(--ds-spacing-2)', marginBottom: 0 }}>
-          {t('minside.dashboardDesc')}
-        </Paragraph>
-      </div>
+      {/* Welcome Section - Using DS PageHeader */}
+      <PageHeader
+        title={`${t('minside.welcome')}, ${user?.name?.split(' ')[0] || 'Bruker'}!`}
+        subtitle={t('minside.dashboardDesc')}
+      />
 
-      {/* Quick Stats */}
+      {/* Quick Stats - Using DS StatCard */}
       <div style={{
         display: 'grid',
         gridTemplateColumns: isMobile ? '1fr' : 'repeat(3, 1fr)',
         gap: isMobile ? 'var(--ds-spacing-3)' : 'var(--ds-spacing-4)'
       }}>
         <Link to="/bookings" style={{ textDecoration: 'none' }}>
-          <Card style={{ 
-            padding: 'var(--ds-spacing-5)', 
-            borderLeft: '4px solid var(--ds-color-success-base-default)',
-            transition: 'box-shadow 0.2s ease',
-          }}>
-            <div style={{ 
-              display: 'flex', 
-              alignItems: 'center', 
-              gap: 'var(--ds-spacing-3)',
-              marginBottom: 'var(--ds-spacing-3)',
-            }}>
-              <div style={{
-                width: '40px',
-                height: '40px',
-                borderRadius: 'var(--ds-border-radius-md)',
-                backgroundColor: 'var(--ds-color-success-surface-default)',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                color: 'var(--ds-color-success-base-default)',
-              }}>
-                <CalendarIcon />
-              </div>
-              <Paragraph data-size="sm" style={{ color: 'var(--ds-color-neutral-text-default)', margin: 0, fontWeight: 'var(--ds-font-weight-medium)' }}>
-                {t('minside.upcomingBookings')}
-              </Paragraph>
-            </div>
-            <Heading level={2} data-size="2xl" style={{ margin: 0, color: 'var(--ds-color-success-text-default)' }}>
-              {upcomingBookings.length}
-            </Heading>
-          </Card>
+          <StatCard
+            title={t('minside.upcomingBookings')}
+            value={upcomingBookings.length}
+            color="var(--ds-color-success-text-default)"
+            icon={<CalendarIcon />}
+          />
         </Link>
         
         <Link to="/bookings?status=pending" style={{ textDecoration: 'none' }}>
-          <Card style={{ 
-            padding: 'var(--ds-spacing-5)', 
-            borderLeft: '4px solid var(--ds-color-warning-base-default)',
-            transition: 'box-shadow 0.2s ease',
-          }}>
-            <div style={{ 
-              display: 'flex', 
-              alignItems: 'center', 
-              gap: 'var(--ds-spacing-3)',
-              marginBottom: 'var(--ds-spacing-3)',
-            }}>
-              <div style={{
-                width: '40px',
-                height: '40px',
-                borderRadius: 'var(--ds-border-radius-md)',
-                backgroundColor: 'var(--ds-color-warning-surface-default)',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                color: 'var(--ds-color-warning-base-default)',
-              }}>
-                <ClockIcon />
-              </div>
-              <Paragraph data-size="sm" style={{ color: 'var(--ds-color-neutral-text-default)', margin: 0, fontWeight: 'var(--ds-font-weight-medium)' }}>
-                {t('requests.pending')}
-              </Paragraph>
-            </div>
-            <Heading level={2} data-size="2xl" style={{ margin: 0, color: pendingCount > 0 ? 'var(--ds-color-warning-text-default)' : undefined }}>
-              {pendingCount}
-            </Heading>
-          </Card>
+          <StatCard
+            title={t('requests.pending')}
+            value={pendingCount}
+            color={pendingCount > 0 ? 'var(--ds-color-warning-text-default)' : undefined}
+            icon={<ClockIcon />}
+          />
         </Link>
         
         <Link to="/bookings" style={{ textDecoration: 'none' }}>
-          <Card style={{ 
-            padding: 'var(--ds-spacing-5)', 
-            borderLeft: '4px solid var(--ds-color-brand-1-base-default)',
-            transition: 'box-shadow 0.2s ease',
-          }}>
-            <div style={{ 
-              display: 'flex', 
-              alignItems: 'center', 
-              gap: 'var(--ds-spacing-3)',
-              marginBottom: 'var(--ds-spacing-3)',
-            }}>
-              <div style={{
-                width: '40px',
-                height: '40px',
-                borderRadius: 'var(--ds-border-radius-md)',
-                backgroundColor: 'var(--ds-color-brand-1-surface-default)',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                color: 'var(--ds-color-brand-1-base-default)',
-              }}>
-                <CheckCircleIcon />
-              </div>
-              <Paragraph data-size="sm" style={{ color: 'var(--ds-color-neutral-text-default)', margin: 0, fontWeight: 'var(--ds-font-weight-medium)' }}>
-                {t('bookings.totalBookings')}
-              </Paragraph>
-            </div>
-            <Heading level={2} data-size="2xl" style={{ margin: 0 }}>
-              {totalBookings}
-            </Heading>
-          </Card>
+          <StatCard
+            title={t('bookings.totalBookings')}
+            value={totalBookings}
+            icon={<CheckCircleIcon />}
+          />
         </Link>
       </div>
 
-      {/* Quick Actions */}
+      {/* Quick Actions - Using DS QuickActionCard */}
       <div>
         <Heading level={2} data-size="md" style={{ margin: 0, marginBottom: 'var(--ds-spacing-4)' }}>
           {t('common.actions')}
@@ -288,172 +163,64 @@ export function DashboardPage() {
           gridTemplateColumns: isMobile ? 'repeat(2, 1fr)' : 'repeat(4, 1fr)',
           gap: 'var(--ds-spacing-3)'
         }}>
-          <DSLink href={WEB_APP_URL} target="_blank" rel="noopener noreferrer" style={{ textDecoration: 'none' }}>
-            <Card style={{ 
-              padding: 'var(--ds-spacing-4)', 
-              display: 'flex', 
-              flexDirection: 'column', 
-              alignItems: 'center',
-              gap: 'var(--ds-spacing-2)',
-              cursor: 'pointer',
-              transition: 'all 0.2s ease',
-            }}>
-              <div style={{
-                width: '48px',
-                height: '48px',
-                borderRadius: 'var(--ds-border-radius-md)',
-                backgroundColor: 'var(--ds-color-brand-1-surface-default)',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                color: 'var(--ds-color-brand-1-base-default)',
-              }}>
-                <HomeIcon />
-              </div>
-              <Paragraph data-size="sm" style={{ margin: 0, fontWeight: 'var(--ds-font-weight-medium)', textAlign: 'center', color: 'var(--ds-color-neutral-text-default)' }}>
-                {t('minside.bookNow')}
-              </Paragraph>
-            </Card>
-          </DSLink>
-          <Link to="/bookings" style={{ textDecoration: 'none' }}>
-            <Card style={{ 
-              padding: 'var(--ds-spacing-4)', 
-              display: 'flex', 
-              flexDirection: 'column', 
-              alignItems: 'center',
-              gap: 'var(--ds-spacing-2)',
-              cursor: 'pointer',
-              transition: 'all 0.2s ease',
-            }}>
-              <div style={{
-                width: '48px',
-                height: '48px',
-                borderRadius: 'var(--ds-border-radius-md)',
-                backgroundColor: 'var(--ds-color-success-surface-default)',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                color: 'var(--ds-color-success-base-default)',
-              }}>
-                <CalendarIcon />
-              </div>
-              <Paragraph data-size="sm" style={{ margin: 0, fontWeight: 'var(--ds-font-weight-medium)', textAlign: 'center', color: 'var(--ds-color-neutral-text-default)' }}>
-                {t('minside.myBookings')}
-              </Paragraph>
-            </Card>
-          </Link>
-          <Link to="/messages" style={{ textDecoration: 'none' }}>
-            <Card style={{ 
-              padding: 'var(--ds-spacing-4)', 
-              display: 'flex', 
-              flexDirection: 'column', 
-              alignItems: 'center',
-              gap: 'var(--ds-spacing-2)',
-              cursor: 'pointer',
-              transition: 'all 0.2s ease',
-            }}>
-              <div style={{
-                width: '48px',
-                height: '48px',
-                borderRadius: 'var(--ds-border-radius-md)',
-                backgroundColor: 'var(--ds-color-accent-surface-default)',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                color: 'var(--ds-color-accent-base-default)',
-              }}>
-                <MessageSquareIcon />
-              </div>
-              <Paragraph data-size="sm" style={{ margin: 0, fontWeight: 'var(--ds-font-weight-medium)', textAlign: 'center', color: 'var(--ds-color-neutral-text-default)' }}>
-                {t('minside.messages')}
-              </Paragraph>
-            </Card>
-          </Link>
-          <Link to="/settings" style={{ textDecoration: 'none' }}>
-            <Card style={{ 
-              padding: 'var(--ds-spacing-4)', 
-              display: 'flex', 
-              flexDirection: 'column', 
-              alignItems: 'center',
-              gap: 'var(--ds-spacing-2)',
-              cursor: 'pointer',
-              transition: 'all 0.2s ease',
-            }}>
-              <div style={{
-                width: '48px',
-                height: '48px',
-                borderRadius: 'var(--ds-border-radius-md)',
-                backgroundColor: 'var(--ds-color-neutral-surface-hover)',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                color: 'var(--ds-color-neutral-text-default)',
-              }}>
-                <SettingsIcon />
-              </div>
-              <Paragraph data-size="sm" style={{ margin: 0, fontWeight: 'var(--ds-font-weight-medium)', textAlign: 'center', color: 'var(--ds-color-neutral-text-default)' }}>
-                {t('minside.settings')}
-              </Paragraph>
-            </Card>
-          </Link>
+          <QuickActionCard
+            title={t('minside.bookNow')}
+            icon={<HomeIcon size={24} />}
+            onClick={() => window.open(WEB_APP_URL, '_blank')}
+          />
+          <QuickActionCard
+            title={t('minside.myBookings')}
+            icon={<CalendarIcon size={24} />}
+            onClick={() => navigate('/bookings')}
+          />
+          <QuickActionCard
+            title={t('nav.messages')}
+            icon={<MessageSquareIcon size={24} />}
+            onClick={() => navigate('/messages')}
+          />
+          <QuickActionCard
+            title={t('nav.settings')}
+            icon={<SettingsIcon size={24} />}
+            onClick={() => navigate('/settings')}
+          />
         </div>
       </div>
 
-      {/* Upcoming Bookings */}
+      {/* Upcoming Bookings Section */}
       <Card style={{ padding: isMobile ? 'var(--ds-spacing-4)' : 'var(--ds-spacing-5)' }}>
         <div style={{
           display: 'flex',
           justifyContent: 'space-between',
           alignItems: 'center',
           marginBottom: 'var(--ds-spacing-4)',
-          flexWrap: isMobile ? 'wrap' : 'nowrap',
-          gap: isMobile ? 'var(--ds-spacing-2)' : '0'
         }}>
-          <Heading level={2} data-size={isMobile ? 'sm' : 'md'} style={{ margin: 0 }}>
+          <Heading level={2} data-size="md" style={{ margin: 0 }}>
             {t('minside.upcomingBookings')}
           </Heading>
           <Link to="/bookings">
-            <Button type="button" variant="tertiary" data-size="sm" aria-label={t('minside.viewAll') || 'View all'}>
-              {t('minside.viewAll')}
-              <ChevronRightIcon />
+            <Button type="button" variant="tertiary" data-size="sm">
+              {t('common.seeAll')}
             </Button>
           </Link>
         </div>
 
         {upcomingBookings.length === 0 ? (
-          <div style={{
-            textAlign: 'center',
-            padding: isMobile ? 'var(--ds-spacing-6)' : 'var(--ds-spacing-8)',
-            backgroundColor: 'var(--ds-color-neutral-surface-hover)',
-            borderRadius: 'var(--ds-border-radius-md)'
-          }}>
-            <div style={{
-              width: isMobile ? '48px' : '64px',
-              height: isMobile ? '48px' : '64px',
-              borderRadius: 'var(--ds-border-radius-full)',
-              backgroundColor: 'var(--ds-color-neutral-surface-default)',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              margin: `0 auto ${isMobile ? 'var(--ds-spacing-3)' : 'var(--ds-spacing-4)'}`,
-              color: 'var(--ds-color-neutral-text-subtle)',
-            }}>
-              <CalendarIcon />
-            </div>
-            <Paragraph style={{ color: 'var(--ds-color-neutral-text-default)', margin: 0, marginBottom: isMobile ? 'var(--ds-spacing-3)' : 'var(--ds-spacing-4)' }}>
-              {t('minside.noUpcomingBookings')}
-            </Paragraph>
-            <DSLink href={WEB_APP_URL} target="_blank" rel="noopener noreferrer">
-              <Button type="button" variant="primary" data-size={isMobile ? 'sm' : 'md'}>
-                {t('minside.bookNow')}
-              </Button>
-            </DSLink>
-          </div>
+          <EmptyState
+            icon={<CalendarIcon size={48} />}
+            title={t('minside.noUpcomingBookings')}
+            description={t('minside.noUpcomingBookingsDesc')}
+            action={{
+              label: t('minside.bookNow'),
+              onClick: () => window.open(WEB_APP_URL, '_blank'),
+            }}
+            size="sm"
+          />
         ) : (
           <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--ds-spacing-3)' }}>
             {upcomingBookings.map((booking: Booking) => (
-              <Link key={booking.id} to={`/bookings?id=${booking.id}`} style={{ textDecoration: 'none', color: 'inherit' }}>
-                <div style={{
+              <div
+                key={booking.id}
+                style={{
                   padding: isMobile ? 'var(--ds-spacing-3)' : 'var(--ds-spacing-4)',
                   borderRadius: 'var(--ds-border-radius-md)',
                   border: '1px solid var(--ds-color-neutral-border-default)',
@@ -461,70 +228,55 @@ export function DashboardPage() {
                   flexDirection: isMobile ? 'column' : 'row',
                   justifyContent: 'space-between',
                   alignItems: isMobile ? 'stretch' : 'center',
-                  gap: isMobile ? 'var(--ds-spacing-3)' : '0',
-                  transition: 'all 0.2s ease',
-                  cursor: 'pointer',
-                  backgroundColor: 'var(--ds-color-neutral-background-default)',
-                }}>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: isMobile ? 'var(--ds-spacing-3)' : 'var(--ds-spacing-4)' }}>
-                    <div style={{
-                      width: isMobile ? '40px' : '48px',
-                      height: isMobile ? '40px' : '48px',
-                      minWidth: isMobile ? '40px' : '48px',
-                      borderRadius: 'var(--ds-border-radius-md)',
-                      backgroundColor: 'var(--ds-color-brand-1-surface-default)',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      color: 'var(--ds-color-brand-1-base-default)',
-                    }}>
-                      <HomeIcon />
-                    </div>
-                    <div style={{ flex: 1, minWidth: 0 }}>
-                      <Paragraph data-size={isMobile ? 'sm' : 'md'} style={{
-                        margin: 0,
-                        fontWeight: 'var(--ds-font-weight-semibold)',
-                        color: 'var(--ds-color-neutral-text-default)',
-                        overflow: 'hidden',
-                        textOverflow: 'ellipsis',
-                        whiteSpace: isMobile ? 'nowrap' : 'normal'
-                      }}>
-                        {booking.listingName || booking.listingId}
-                      </Paragraph>
-                      <div style={{
-                        display: 'flex',
-                        alignItems: 'center',
-                        gap: 'var(--ds-spacing-2)',
-                        marginTop: 'var(--ds-spacing-1)',
-                        flexWrap: isMobile ? 'wrap' : 'nowrap'
-                      }}>
-                        <CalendarIcon style={{ width: '14px', height: '14px', color: 'var(--ds-color-neutral-text-subtle)', flexShrink: 0 }} />
-                        <Paragraph data-size="sm" style={{
-                          margin: 0,
-                          color: 'var(--ds-color-neutral-text-default)',
-                          fontSize: isMobile ? '0.75rem' : undefined
-                        }}>
-                          {formatDate(booking.startTime)} • {formatTime(booking.startTime)} - {formatTime(booking.endTime)}
-                        </Paragraph>
-                      </div>
-                    </div>
-                  </div>
+                  gap: isMobile ? 'var(--ds-spacing-3)' : 'var(--ds-spacing-4)',
+                }}
+              >
+                <div style={{ display: 'flex', alignItems: 'center', gap: isMobile ? 'var(--ds-spacing-3)' : 'var(--ds-spacing-4)' }}>
                   <div style={{
+                    width: isMobile ? '40px' : '48px',
+                    height: isMobile ? '40px' : '48px',
+                    borderRadius: 'var(--ds-border-radius-md)',
+                    backgroundColor: 'var(--ds-color-brand-1-surface-default)',
                     display: 'flex',
                     alignItems: 'center',
-                    justifyContent: isMobile ? 'space-between' : 'flex-end',
-                    gap: 'var(--ds-spacing-3)',
-                    marginLeft: isMobile ? 'calc(40px + var(--ds-spacing-3))' : '0'
+                    justifyContent: 'center',
+                    color: 'var(--ds-color-brand-1-base-default)',
+                    flexShrink: 0,
                   }}>
-                    {booking.totalPrice && (
-                      <Paragraph data-size={isMobile ? 'sm' : 'md'} style={{ margin: 0, fontWeight: 'var(--ds-font-weight-semibold)' }}>
-                        {booking.totalPrice.toLocaleString('nb-NO')} kr
-                      </Paragraph>
-                    )}
-                    <BookingStatusBadge status={booking.status} />
+                    <CalendarIcon />
+                  </div>
+                  <div>
+                    <Paragraph data-size="sm" style={{
+                      margin: 0,
+                      fontWeight: 'var(--ds-font-weight-semibold)',
+                      color: 'var(--ds-color-neutral-text-default)',
+                    }}>
+                      {booking.listingName || booking.rentalObjectId}
+                    </Paragraph>
+                    <Paragraph data-size="xs" style={{
+                      margin: 0,
+                      color: 'var(--ds-color-neutral-text-subtle)',
+                    }}>
+                      {formatDate(booking.startTime)} • {formatTime(booking.startTime)} - {formatTime(booking.endTime)}
+                    </Paragraph>
                   </div>
                 </div>
-              </Link>
+                <div style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: 'var(--ds-spacing-3)',
+                  marginLeft: isMobile ? 'calc(40px + var(--ds-spacing-3))' : '0'
+                }}>
+                  <Paragraph data-size="sm" style={{
+                    margin: 0,
+                    fontWeight: 'var(--ds-font-weight-semibold)',
+                    color: 'var(--ds-color-neutral-text-default)',
+                  }}>
+                    {parseFloat(booking.totalPrice ?? '0').toLocaleString('nb-NO')} kr
+                  </Paragraph>
+                  <BookingStatusBadge status={booking.status} />
+                </div>
+              </div>
             ))}
           </div>
         )}

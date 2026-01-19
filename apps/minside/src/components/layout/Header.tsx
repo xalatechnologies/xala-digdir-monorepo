@@ -32,7 +32,7 @@ const MOBILE_BREAKPOINT = 768;
  * Get navigation search results based on query
  * TODO: Replace with SDK global search when available
  */
-const getNavigationResults = (query: string): SearchResultGroup[] => {
+const getNavigationResults = (query: string, t: (key: string) => string): SearchResultGroup[] => {
   if (!query.trim()) return [];
 
   const q = query.toLowerCase();
@@ -43,7 +43,7 @@ const getNavigationResults = (query: string): SearchResultGroup[] => {
     navItems.push({
       id: 'nav-dashboard',
       label: 'Dashboard',
-      description: t('common.gaa_til_oversikt'),
+      description: t('common.gaa_til_oversikt') || 'Gå til oversikt',
       icon: <SearchIcon size={18} />,
       href: '/',
     });
@@ -54,7 +54,7 @@ const getNavigationResults = (query: string): SearchResultGroup[] => {
     navItems.push({
       id: 'nav-bookings',
       label: 'Bookinger',
-      description: t('common.se_alle_dine_bookinger'),
+      description: t('common.se_alle_dine_bookinger') || 'Se alle dine bookinger',
       icon: <CalendarIcon size={18} />,
       href: '/bookings',
     });
@@ -65,7 +65,7 @@ const getNavigationResults = (query: string): SearchResultGroup[] => {
     navItems.push({
       id: 'nav-calendar',
       label: 'Kalender',
-      description: t('common.se_bookinger_i_kalendervisning'),
+      description: t('common.se_bookinger_i_kalendervisning') || 'Se bookinger i kalendervisning',
       icon: <CalendarIcon size={18} />,
       href: '/calendar',
     });
@@ -76,7 +76,7 @@ const getNavigationResults = (query: string): SearchResultGroup[] => {
     navItems.push({
       id: 'nav-messages',
       label: 'Meldinger',
-      description: t('common.se_samtaler_og_meldinger'),
+      description: t('common.se_samtaler_og_meldinger') || 'Se samtaler og meldinger',
       icon: <PeopleIcon size={18} />,
       href: '/messages',
     });
@@ -142,7 +142,7 @@ export function Header({ title: _title }: HeaderProps) {
 
   const handleSearchChange = (value: string) => {
     setSearchQuery(value);
-    setSearchResults(getNavigationResults(value));
+    setSearchResults(getNavigationResults(value, t));
   };
 
   const handleResultSelect = (result: SearchResultItem) => {

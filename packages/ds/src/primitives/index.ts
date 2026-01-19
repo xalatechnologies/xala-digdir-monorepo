@@ -132,3 +132,6 @@ export type { CodeBlockProps } from './CodeBlock';
 
 export { FilterChip } from './FilterChip';
 export type { FilterChipProps } from './FilterChip';
+
+export { Logo } from './Logo';
+export type { LogoProps } from './Logo';

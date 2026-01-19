@@ -348,8 +348,37 @@ async function bootstrap() {
     TranslationsController,
   ];
 
-  // Create Fastify app with controllers
-  const app = await createFastifyApp(controllers, { adapters });
+  // Import audit service for error logging
+  const { getAuditService } = await import('./core/audit/audit.service');
+
+  // Create Fastify app with controllers and error audit callback
+  const app = await createFastifyApp(controllers, { 
+    adapters,
+    onError: async (info) => {
+      try {
+        const auditService = getAuditService();
+        await auditService.log({
+          tenantId: info.tenantId,
+          userId: info.userId,
+          action: 'error',
+          resource: 'api',
+          severity: info.statusCode >= 500 ? 'error' : 'warning',
+          metadata: {
+            errorType: info.errorType,
+            errorMessage: info.errorMessage,
+            statusCode: info.statusCode,
+            method: info.method,
+            url: info.url,
+            correlationId: info.correlationId,
+          },
+          ipAddress: info.ipAddress,
+          userAgent: info.userAgent,
+        });
+      } catch {
+        // Silently ignore audit failures to prevent error loops
+      }
+    },
+  });
   console.log('✓ REST routes registered');
 
   // Register Fastify plugin routes
@@ -374,6 +403,35 @@ async function bootstrap() {
     path: '/graphql',
   });
   console.log('✓ GraphQL endpoint registered at /graphql');
+
+  // Setup global error handlers for uncaught exceptions
+  const { setupGlobalErrorHandlers } = await import('./core/errors/global-exception-handler');
+  const auditService = getAuditService();
+  
+  setupGlobalErrorHandlers({
+    onShutdown: async () => {
+      console.log('\n👋 Shutting down gracefully...');
+      await app.close();
+    },
+    onAuditError: async (entry) => {
+      try {
+        await auditService.log({
+          action: 'error',
+          resource: 'system',
+          severity: entry.severity === 'critical' ? 'critical' : 'error',
+          metadata: {
+            errorType: entry.errorType,
+            errorMessage: entry.errorMessage,
+            errorStack: entry.errorStack,
+            recovered: entry.recovered,
+          },
+        });
+      } catch {
+        // Ignore audit failures during critical errors
+      }
+    },
+  });
+  console.log('✓ Global error handlers registered');
 
   // Graceful shutdown
   const shutdown = async () => {

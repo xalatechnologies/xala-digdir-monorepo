@@ -9,3 +9,4 @@ export * from './booking.projection';
 export * from './organization.projection';
 export * from './user.projection';
 export * from './capabilities.projection';
+export * from './menu';

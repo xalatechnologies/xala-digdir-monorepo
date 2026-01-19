@@ -46,8 +46,8 @@ export function Login(): React.ReactElement {
   // Track if we've already processed flow restoration
   const flowRestorationProcessed = useRef(false);
 
-  // Demo login hook
-  const { showDialog, openDemoLogin, closeDemoLogin, handleDemoLogin } = useDemoLogin();
+  // Demo login hook - one-click, no dialog
+  const { handleDemoLogin } = useDemoLogin();
 
   // Check for auth callback params
   const authSuccess = searchParams.get('auth_success') === 'true';
@@ -127,6 +127,9 @@ export function Login(): React.ReactElement {
     
     if (providerId === 'idporten') {
       idportenService.authorize(returnTo);
+    } else if (providerId === 'demo') {
+      // One-click demo login for citizens - no dialog needed
+      handleDemoLogin();
     } else if (providerId === 'vipps') {
       // For demo mode, simulate Vipps login with a demo user
       const demoUser = {
@@ -193,10 +196,6 @@ export function Login(): React.ReactElement {
       onProviderClick={handleProviderClick}
       isAuthenticated={isAuthenticated}
       isLoading={isLoading}
-      demoLoginOpen={showDialog}
-      onDemoLoginOpen={openDemoLogin}
-      onDemoLoginClose={closeDemoLogin}
-      onDemoLoginSubmit={handleDemoLogin}
     />
   );
 }

@@ -66,8 +66,8 @@ export type { ThemeProviderProps, ThemeContextValue } from './ThemeProvider';
 // =============================================================================
 
 // Shells - High-level layout components
-export { AppShell, AppLayout } from './shells';
-export type { AppShellProps, AppLayoutProps } from './shells';
+export { AppShell, AppLayout, DashboardSidebar } from './shells';
+export type { AppShellProps, AppLayoutProps, DashboardSidebarProps, SidebarNavItem, SidebarSection } from './shells';
 
 // Composed - Mid-level components
 export {
@@ -115,6 +115,8 @@ export {
   // DataTable Components
   DataTable,
   TableFilter,
+  // ListToolbar
+  ListToolbar,
 } from './composed';
 export type {
   ProtectedRouteProps,
@@ -144,6 +146,12 @@ export type {
   TableFilterDef,
   TableFilterOption,
   FilterValues,
+  // ListToolbar Types
+  ListToolbarProps,
+  ListToolbarFilter,
+  ListToolbarFilterOption,
+  ListToolbarSearchConfig,
+  ListToolbarSortOption,
 } from './composed';
 export { mockFilterData } from './composed';
 
@@ -519,7 +527,11 @@ export type {
   GuidelineSection,
   FAQItem,
   ListingDetail,
-  ActivityType
+  ActivityType,
+  CalendarSelection,
+  CalendarCell,
+  CalendarSelectionType,
+  CalendarSelectionRange
 } from './types/listing-detail';
 
 // Booking Engine Types

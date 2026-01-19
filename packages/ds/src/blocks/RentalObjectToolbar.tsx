@@ -30,6 +30,8 @@ export interface RentalObjectToolbarProps {
   availableViews?: ViewMode[];
   /** Custom class name */
   className?: string;
+  /** Test ID for E2E testing */
+  'data-testid'?: string;
 }
 
 export function RentalObjectToolbar({
@@ -42,6 +44,7 @@ export function RentalObjectToolbar({
   showViewToggle = true,
   availableViews = ['grid', 'list', 'map', 'table'],
   className,
+  'data-testid': testId = 'rental-object-toolbar',
 }: RentalObjectToolbarProps): React.ReactElement {
   const viewIcons: Record<ViewMode, React.ReactNode> = {
     grid: <GridIcon size={20} aria-hidden />,
@@ -66,6 +69,7 @@ export function RentalObjectToolbar({
   return (
     <div
       className={cn('rental-object-toolbar', className)}
+      data-testid={testId}
       style={{
         display: 'flex',
         alignItems: 'center',
@@ -75,7 +79,12 @@ export function RentalObjectToolbar({
     >
       <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--ds-spacing-4)' }}>
         {onFilterClick && (
-          <Button variant="secondary" type="button" onClick={onFilterClick}>
+          <Button
+            variant="secondary"
+            type="button"
+            onClick={onFilterClick}
+            data-testid={`${testId}-filter-button`}
+          >
             <FilterIcon size={18} aria-hidden />
             Filtre
             {activeFilterCount > 0 && (
@@ -84,6 +93,9 @@ export function RentalObjectToolbar({
           </Button>
         )}
         <span
+          aria-live="polite"
+          aria-atomic="true"
+          data-testid={`${testId}-result-count`}
           style={{
             fontSize: 'var(--ds-font-size-md)',
             fontWeight: 'var(--ds-font-weight-semibold)' as unknown as number,
@@ -98,10 +110,16 @@ export function RentalObjectToolbar({
         <ToggleGroup
           value={viewMode}
           onChange={handleViewChange}
+          data-testid={`${testId}-view-toggle`}
         >
           {availableViews.map((view) => (
             <Tooltip key={view} content={viewTitles[view]}>
-              <ToggleGroup.Item value={view} icon>
+              <ToggleGroup.Item
+                value={view}
+                icon
+                data-testid={`${testId}-view-${view}`}
+                aria-label={viewTitles[view]}
+              >
                 {viewIcons[view]}
               </ToggleGroup.Item>
             </Tooltip>
@@ -113,3 +131,4 @@ export function RentalObjectToolbar({
 }
 
 export default RentalObjectToolbar;
+

@@ -84,6 +84,9 @@ export interface LoginPageProps {
   /** Whether auth state is loading */
   isLoading?: boolean;
   
+  /** Whether to show demo login option (default: true if demo provider exists in config) */
+  showDemoLogin?: boolean;
+  
   /** Demo login dialog state */
   demoLoginOpen?: boolean;
   
@@ -124,6 +127,7 @@ export function LoginPage({
   onProviderClick,
   isAuthenticated = false,
   isLoading = false,
+  showDemoLogin = true,
   demoLoginOpen = false,
   onDemoLoginOpen,
   onDemoLoginClose,
@@ -154,8 +158,12 @@ export function LoginPage({
     }
   }, [isAuthenticated, isLoading, navigate, config.redirectAfterLogin]);
   
-  // Get enabled providers
-  const enabledProviders = config.providers.filter(p => p.enabled);
+  // Get enabled providers, optionally filtering out demo
+  const enabledProviders = config.providers.filter(p => {
+    if (!p.enabled) return false;
+    if (p.id === 'demo' && !showDemoLogin) return false;
+    return true;
+  });
   
   // Handle provider click
   const handleProviderClick = (providerId: string) => {
@@ -200,7 +208,7 @@ export function LoginPage({
         })}
       </LoginLayout>
       
-      {onDemoLoginClose && onDemoLoginSubmit && (
+      {showDemoLogin && onDemoLoginClose && onDemoLoginSubmit && (
         <DemoLoginDialog
           open={demoLoginOpen}
           onClose={onDemoLoginClose}

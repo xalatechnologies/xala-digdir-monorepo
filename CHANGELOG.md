@@ -8,6 +8,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- **MinSide Pattern Consolidation (2026-01-19)**: Baseline for consistent citizen dashboard
+  - New `ListToolbar` component in `@xala/ds` for search/filter/sort toolbars
+  - `docs/DESIGN/minside-ui-patterns.md` - Canonical UI patterns for MinSide
+  - Migrated `bookings.tsx` to use DS components (`PageHeader`, `StatCard`, `EmptyState`)
+- **Quality Audit (2026-01-19)**: Comprehensive gap analysis and test strategy
+  - `docs/QUALITY/GAP_MATRIX.md` - Requirements mapped to implementation status
+  - `docs/QUALITY/TEST_STRATEGY.md` - Unit/Integration/E2E test plan
+  - New DS components: `FilterChip`, `ResultsSkeleton`, `ResultsEmptyState`, `UserMenu`
 - POST endpoints for booking state transitions: `/confirm`, `/cancel`, `/complete` (canonical replacements for PUT)
 - PUT `/reject` endpoint with deprecation headers (successor to `/deny`)
 - Comprehensive booking status unit tests (`booking-status.test.ts`)

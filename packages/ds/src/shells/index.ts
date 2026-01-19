@@ -9,3 +9,6 @@ export type { AppShellProps } from './app-shell';
 
 export { AppLayout } from './AppLayout';
 export type { AppLayoutProps } from './AppLayout';
+
+export { DashboardSidebar } from './DashboardSidebar';
+export type { DashboardSidebarProps, SidebarNavItem, SidebarSection } from './DashboardSidebar';

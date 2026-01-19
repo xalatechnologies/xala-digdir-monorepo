@@ -4,7 +4,7 @@
  */
 import { useEffect, useCallback, useRef } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { LoginPage as LoginPageComponent, DemoRoleSwitcher } from '@xala/ds';
+import { LoginPage as LoginPageComponent } from '@xala/ds';
 import { minsideAuthConfig } from '@xala/auth';
 import {
   PlatformIcon,
@@ -37,18 +37,7 @@ export function LoginPage(): React.ReactElement {
   const t = useT();
 
   const flowRestorationProcessed = useRef(false);
-  const {
-    showDialog,
-    openDemoLogin,
-    closeDemoLogin,
-    handleDemoLogin,
-    showRoleSwitcher,
-    openRoleSwitcher,
-    closeRoleSwitcher,
-    handleRoleSelect,
-    loadingRole,
-    error: demoError,
-  } = useDemoLogin();
+  const { handleDemoLogin } = useDemoLogin();
 
   const from = (location.state as { from?: { pathname: string } })?.from?.pathname || '/';
 
@@ -108,6 +97,9 @@ export function LoginPage(): React.ReactElement {
     if (providerId === 'idporten') {
       const returnTo = window.location.href;
       idportenService.authorize(returnTo);
+    } else if (providerId === 'demo') {
+      // One-click demo login for citizens - no dialog needed
+      handleDemoLogin();
     } else if (providerId === 'vipps') {
       console.log('Vipps login is temporarily disabled');
     } else if (providerId === 'microsoft') {
@@ -156,33 +148,15 @@ export function LoginPage(): React.ReactElement {
   ];
 
   return (
-    <>
-      <LoginPageComponent
-        config={minsideAuthConfig}
-        brandConfig={brandConfig}
-        panelConfig={panelConfig}
-        footerLinks={footerLinks}
-        onProviderClick={handleProviderClick}
-        isAuthenticated={isAuthenticated}
-        isLoading={isLoading}
-        demoLoginOpen={showDialog}
-        onDemoLoginOpen={openRoleSwitcher}
-        onDemoLoginClose={closeDemoLogin}
-        onDemoLoginSubmit={handleDemoLogin}
-      />
-      
-      {/* Demo Role Switcher - one-click demo login */}
-      <DemoRoleSwitcher
-        open={showRoleSwitcher}
-        onClose={closeRoleSwitcher}
-        onRoleSelect={handleRoleSelect}
-        loadingRole={loadingRole}
-        error={demoError}
-        title={t('auth.demoLogin')}
-        description={t('auth.demoLoginDescription')}
-        cancelText={t('common.cancel')}
-      />
-    </>
+    <LoginPageComponent
+      config={minsideAuthConfig}
+      brandConfig={brandConfig}
+      panelConfig={panelConfig}
+      footerLinks={footerLinks}
+      onProviderClick={handleProviderClick}
+      isAuthenticated={isAuthenticated}
+      isLoading={isLoading}
+    />
   );
 }
 

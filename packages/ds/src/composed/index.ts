@@ -209,3 +209,15 @@ export type { FilterConfig as TableFilterDef, FilterOption as TableFilterOption 
 export { UserMenu } from './UserMenu';
 export type { UserMenuProps, UserMenuItem, UserMenuUser } from './UserMenu';
 
+// ListToolbar Component
+export {
+  ListToolbar,
+  type ListToolbarProps,
+  type ListToolbarFilter,
+  type ListToolbarFilterOption,
+  type ListToolbarSearchConfig,
+  type ListToolbarSortOption,
+} from './ListToolbar';
+
+export { DashboardHeader } from './DashboardHeader';
+export type { DashboardHeaderProps, DashboardHeaderUser } from './DashboardHeader';

@@ -7,7 +7,7 @@
 
 import * as React from 'react';
 import { Heading, Paragraph, Button } from '@xala/ds';
-import { bookingService, auditService, type CreateBookingDTO, useOrganizations } from '@digilist/client-sdk';
+import { bookingService, auditService, authService, type CreateBookingDTO, useOrganizations } from '@digilist/client-sdk';
 import type { BookingConfig } from '../../types';
 import { BookingDialog, type BookingFormData, type BookingSlot } from '../BookingDialog';
 import { CalendarSection } from '../CalendarSection';
@@ -25,7 +25,17 @@ import { BookingModeSelector } from './components/BookingModeSelector';
 import { RecurringBuilder, type RecurringPattern } from './components/RecurringBuilder';
 import { RecurringPreview } from './components/RecurringPreview';
 import { ConflictResolver, type ConflictResolution, type AlternativeSlot } from './components/ConflictResolver';
-import type { BookingMode, RecurringConstraintsDTO, RecurringOccurrenceDTO, RecurringSummary } from '@digilist/client-sdk';
+import type { RecurringConstraintsDTO, RecurringOccurrenceDTO, RecurringSummary } from '@digilist/client-sdk';
+
+// =============================================================================
+// Local Types - Extended BookingMode for this component
+// =============================================================================
+
+/**
+ * Extended BookingMode for this component.
+ * The SDK has a narrower type, but this component supports more modes.
+ */
+type BookingMode = 'SINGLE_SLOT' | 'RECURRING' | 'IN_GAME' | 'ACTIVITY_REGISTRATION' | 'RANGE' | 'ALL_DAY' | 'SEASON_RENTAL';
 
 // =============================================================================
 // Icons
@@ -113,10 +123,11 @@ export interface BookingWidgetPlacementProps {
 // 4. confirm - Confirm booking details
 // 5. done - Success
 const BOOKING_STEP_IDS = ['calendar', 'details', 'login', 'confirm', 'done'] as const;
-const BOOKING_STEP_ICONS: Record<string, string> = {
+type BookingStepIcon = 'calendar' | 'confirm' | 'pricing' | 'success' | undefined;
+const BOOKING_STEP_ICONS: Record<string, BookingStepIcon> = {
   calendar: 'calendar',
   details: 'pricing',
-  login: 'login',
+  login: undefined,
   confirm: 'confirm',
   done: 'success',
 };
@@ -693,60 +704,37 @@ export function BookingWidgetPlacement({
     }
   }, []);
 
-  // Demo login form state
-  const [demoFormData, setDemoFormData] = React.useState({
-    name: '',
-    email: '',
-    token: 'demo-token-2026',
-  });
-  const [demoFormError, setDemoFormError] = React.useState('');
-
-  // Demo login with form data
-  const handleDemoLoginSubmit = async (e: React.FormEvent): Promise<void> => {
-    e.preventDefault();
-    setDemoFormError('');
-    
-    // Validate form
-    if (!demoFormData.name.trim()) {
-      setDemoFormError(t('auth.demoLogin.errorName'));
-      return;
-    }
-    if (!demoFormData.email.trim() || !demoFormData.email.includes('@')) {
-      setDemoFormError(t('auth.demoLogin.errorEmail'));
-      return;
-    }
-    if (!demoFormData.token.trim()) {
-      setDemoFormError(t('auth.demoLogin.errorToken'));
-      return;
-    }
-    
-    // Validate demo token
-    const validTokens = ['demo-token-2026', 'test-token', 'admin-demo'];
-    if (!validTokens.includes(demoFormData.token)) {
-      setDemoFormError(t('auth.demoLogin.errorInvalidToken'));
-      return;
-    }
+  // One-click demo login - no form, no dialog
+  const CITIZEN_DEMO_TOKEN = 'demo-token-2026';
+  
+  const handleDemoLoginOneClick = async (): Promise<void> => {
+    if (isLoggingIn) return;
     
     setIsLoggingIn(true);
-    setShowDemoDialog(false);
     saveBookingState();
     
-    // Use existing demo user ID from database
-    const demoUser = {
-      id: '00000000-0000-0000-0000-000000000011', // Demo Xala user from seeds
-      name: demoFormData.name,
-      email: demoFormData.email,
-    };
-    
-    // Use handleAuthCallback to update auth state without page reload
-    await new Promise(resolve => setTimeout(resolve, 300));
-    handleAuthCallback(demoUser);
-    // Default to private - user can click Fortsett immediately or change to organization
-    setBookingAccountType('private');
-    setSelectedOrganizationId(undefined);
-    setDemoAuthComplete(true);
-    setIsLoggingIn(false);
-    setShowDemoDialog(false);
+    try {
+      const response = await authService.loginWithDemoToken(CITIZEN_DEMO_TOKEN);
+      
+      if (response.data?.user) {
+        // Store user in localStorage
+        localStorage.setItem('web_user', JSON.stringify(response.data.user));
+        
+        // Use handleAuthCallback to update auth state
+        handleAuthCallback(response.data.user);
+        
+        // Default to private booking
+        setBookingAccountType('private');
+        setSelectedOrganizationId(undefined);
+        setDemoAuthComplete(true);
+      } else {
+        console.error('[DEMO LOGIN] No user in response');
+      }
+    } catch (error) {
+      console.error('[DEMO LOGIN] Failed:', error);
+    } finally {
+      setIsLoggingIn(false);
+    }
   };
 
   const handleLoginVipps = async (): Promise<void> => {
@@ -769,9 +757,8 @@ export function BookingWidgetPlacement({
         setDemoAuthComplete(true);
         setIsLoggingIn(false);
       } else {
-        // Production mode: Use real auth login with returnTo URL
-        const returnUrl = window.location.pathname + window.location.search;
-        authLogin('vipps', returnUrl);
+        // Production mode: Use real auth login (state saved via saveBookingState)
+        authLogin('vipps');
       }
     } catch (error) {
       auditService.logError('login_failed', 'auth', error instanceof Error ? error : String(error), { provider: 'vipps' });
@@ -799,9 +786,8 @@ export function BookingWidgetPlacement({
         setDemoAuthComplete(true);
         setIsLoggingIn(false);
       } else {
-        // Production mode: Use real auth login for organization (ID-porten) with returnTo URL
-        const returnUrl = window.location.pathname + window.location.search;
-        authLogin('idporten', returnUrl);
+        // Production mode: Use real auth login for organization (ID-porten)
+        authLogin('idporten');
       }
     } catch (error) {
       auditService.logError('login_failed', 'auth', error instanceof Error ? error : String(error), { provider: 'idporten' });
@@ -850,8 +836,7 @@ export function BookingWidgetPlacement({
       }
       
       // Production mode: Real OAuth flow - state is already saved via saveBookingState()
-      const returnUrl = window.location.pathname + window.location.search;
-      authLogin(options.provider, returnUrl);
+      authLogin(options.provider);
     } catch (error) {
       auditService.logError('login_failed', 'auth', error instanceof Error ? error : String(error), {
         provider: options.provider,
@@ -1056,9 +1041,9 @@ export function BookingWidgetPlacement({
             <>
               {/* Booking Mode Selector (Single / Recurring / Seasonal) */}
               <BookingModeSelector
-                value={bookingMode}
-                onChange={setBookingMode}
-                availableModes={availableBookingModes}
+                value={bookingMode as unknown as 'single' | 'recurring' | 'in-game'}
+                onChange={setBookingMode as unknown as (mode: 'single' | 'recurring' | 'in-game') => void}
+                availableModes={availableBookingModes as unknown as ('single' | 'recurring' | 'in-game')[]}
                 recurringConstraints={recurringConstraints}
               />
 
@@ -1493,10 +1478,10 @@ export function BookingWidgetPlacement({
               isAccountTypeConfirmed={false} // Force showing account type selection
               rentalObjectId={rentalObjectId}
               tenantId={import.meta.env.VITE_TENANT_ID}
-              bookingMode={bookingConfig?.mode || 'SLOTS'}
+              bookingMode={(bookingConfig?.mode || 'SLOTS') as 'SLOTS' | 'ALL_DAY' | 'DURATION' | 'TICKETS' | 'NONE' | undefined}
               visibility={visibility}
               onVisibilityChange={setVisibility}
-              onDemoLogin={() => setShowDemoDialog(true)}
+              onDemoLogin={handleDemoLoginOneClick}
               onLogout={() => {
                 // Clear demo login state using auth hook (no page reload)
                 authLogout();
@@ -1534,10 +1519,10 @@ export function BookingWidgetPlacement({
               displayMode="confirmation-only"
               rentalObjectId={rentalObjectId}
               tenantId={import.meta.env.VITE_TENANT_ID}
-              bookingMode={bookingConfig?.mode || 'SLOTS'}
+              bookingMode={(bookingConfig?.mode || 'SLOTS') as 'SLOTS' | 'ALL_DAY' | 'DURATION' | 'TICKETS' | 'NONE' | undefined}
               visibility={visibility}
               onVisibilityChange={setVisibility}
-              onDemoLogin={() => setShowDemoDialog(true)}
+              onDemoLogin={handleDemoLoginOneClick}
               onLogout={() => {
                 // Clear demo login state and go back to login step (no page reload)
                 authLogout();
@@ -1548,217 +1533,6 @@ export function BookingWidgetPlacement({
                 setCurrentStep(2);
               }}
             />
-          )}
-
-          {/* Demo Login Dialog */}
-          {showDemoDialog && (
-            <div
-              style={{
-                position: 'fixed',
-                top: 0,
-                left: 0,
-                right: 0,
-                bottom: 0,
-                backgroundColor: 'rgba(0, 0, 0, 0.6)',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                zIndex: 1000,
-              }}
-              onClick={() => setShowDemoDialog(false)}
-            >
-              <div
-                style={{
-                  backgroundColor: 'var(--ds-color-neutral-background-default)',
-                  borderRadius: 'var(--ds-border-radius-xl)',
-                  padding: 'var(--ds-spacing-6)',
-                  maxWidth: '420px',
-                  width: '90%',
-                  boxShadow: '0 20px 50px rgba(0,0,0,0.3)',
-                }}
-                onClick={(e) => e.stopPropagation()}
-              >
-                {/* Header */}
-                <div style={{ textAlign: 'center', marginBottom: 'var(--ds-spacing-5)' }}>
-                  <div
-                    style={{
-                      width: '56px',
-                      height: '56px',
-                      borderRadius: 'var(--ds-border-radius-full)',
-                      backgroundColor: 'var(--ds-color-warning-surface-default)',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      margin: '0 auto var(--ds-spacing-3)',
-                      fontSize: '24px',
-                    }}
-                  >
-                    🧪
-                  </div>
-                  <Heading level={3} data-size="md" style={{ margin: 0 }}>
-                    {t('auth.demoLogin.title')}
-                  </Heading>
-                  <Paragraph data-size="sm" style={{ margin: 'var(--ds-spacing-2) 0 0 0', color: 'var(--ds-color-neutral-text-subtle)' }}>
-                    {t('auth.demoLogin.formDescription')}
-                  </Paragraph>
-                </div>
-
-                {/* Demo Login Form */}
-                <form onSubmit={handleDemoLoginSubmit} style={{ display: 'flex', flexDirection: 'column', gap: 'var(--ds-spacing-4)' }}>
-                  {/* Error message */}
-                  {demoFormError && (
-                    <div
-                      style={{
-                        padding: 'var(--ds-spacing-3)',
-                        backgroundColor: 'var(--ds-color-danger-surface-default)',
-                        borderRadius: 'var(--ds-border-radius-md)',
-                        color: 'var(--ds-color-danger-text-default)',
-                        fontSize: 'var(--ds-font-size-sm)',
-                      }}
-                    >
-                      {demoFormError}
-                    </div>
-                  )}
-
-                  {/* Name field */}
-                  <div>
-                    <label
-                      htmlFor="demo-name"
-                      style={{
-                        display: 'block',
-                        marginBottom: 'var(--ds-spacing-1)',
-                        fontSize: 'var(--ds-font-size-sm)',
-                        fontWeight: 'var(--ds-font-weight-medium)',
-                        color: 'var(--ds-color-neutral-text-default)',
-                      }}
-                    >
-                      {t('auth.demoLogin.nameLabel')}
-                    </label>
-                    <input
-                      id="demo-name"
-                      type="text"
-                      value={demoFormData.name}
-                      onChange={(e) => setDemoFormData(prev => ({ ...prev, name: e.target.value }))}
-                      placeholder={t('auth.demoLogin.namePlaceholder')}
-                      style={{
-                        width: '100%',
-                        padding: 'var(--ds-spacing-3)',
-                        fontSize: 'var(--ds-font-size-md)',
-                        border: '1px solid var(--ds-color-neutral-border-default)',
-                        borderRadius: 'var(--ds-border-radius-md)',
-                        backgroundColor: 'var(--ds-color-neutral-background-default)',
-                        color: 'var(--ds-color-neutral-text-default)',
-                        boxSizing: 'border-box',
-                      }}
-                    />
-                  </div>
-
-                  {/* Email field */}
-                  <div>
-                    <label
-                      htmlFor="demo-email"
-                      style={{
-                        display: 'block',
-                        marginBottom: 'var(--ds-spacing-1)',
-                        fontSize: 'var(--ds-font-size-sm)',
-                        fontWeight: 'var(--ds-font-weight-medium)',
-                        color: 'var(--ds-color-neutral-text-default)',
-                      }}
-                    >
-                      {t('auth.demoLogin.emailLabel')}
-                    </label>
-                    <input
-                      id="demo-email"
-                      type="email"
-                      value={demoFormData.email}
-                      onChange={(e) => setDemoFormData(prev => ({ ...prev, email: e.target.value }))}
-                      placeholder={t('auth.demoLogin.emailPlaceholder')}
-                      style={{
-                        width: '100%',
-                        padding: 'var(--ds-spacing-3)',
-                        fontSize: 'var(--ds-font-size-md)',
-                        border: '1px solid var(--ds-color-neutral-border-default)',
-                        borderRadius: 'var(--ds-border-radius-md)',
-                        backgroundColor: 'var(--ds-color-neutral-background-default)',
-                        color: 'var(--ds-color-neutral-text-default)',
-                        boxSizing: 'border-box',
-                      }}
-                    />
-                  </div>
-
-                  {/* Token field */}
-                  <div>
-                    <label
-                      htmlFor="demo-token"
-                      style={{
-                        display: 'block',
-                        marginBottom: 'var(--ds-spacing-1)',
-                        fontSize: 'var(--ds-font-size-sm)',
-                        fontWeight: 'var(--ds-font-weight-medium)',
-                        color: 'var(--ds-color-neutral-text-default)',
-                      }}
-                    >
-                      {t('auth.demoLogin.tokenLabel')}
-                    </label>
-                    <input
-                      id="demo-token"
-                      type="text"
-                      value={demoFormData.token}
-                      onChange={(e) => setDemoFormData(prev => ({ ...prev, token: e.target.value }))}
-                      placeholder={t('auth.demoLogin.tokenPlaceholder')}
-                      style={{
-                        width: '100%',
-                        padding: 'var(--ds-spacing-3)',
-                        fontSize: 'var(--ds-font-size-md)',
-                        border: '1px solid var(--ds-color-neutral-border-default)',
-                        borderRadius: 'var(--ds-border-radius-md)',
-                        backgroundColor: 'var(--ds-color-neutral-background-default)',
-                        color: 'var(--ds-color-neutral-text-default)',
-                        fontFamily: 'monospace',
-                        boxSizing: 'border-box',
-                      }}
-                    />
-                    <Paragraph data-size="xs" style={{ margin: 'var(--ds-spacing-1) 0 0 0', color: 'var(--ds-color-neutral-text-subtle)' }}>
-                      {t('auth.demoLogin.tokenHint')}
-                    </Paragraph>
-                  </div>
-
-                  {/* Submit button */}
-                  <Button
-                    type="submit"
-                    variant="primary"
-                    data-size="lg"
-                    disabled={isLoggingIn}
-                    style={{
-                      width: '100%',
-                      marginTop: 'var(--ds-spacing-2)',
-                    }}
-                  >
-                    {isLoggingIn ? t('auth.loggingIn') : t('auth.demoLogin.submitButton')}
-                  </Button>
-
-                  {/* Cancel button */}
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setShowDemoDialog(false);
-                      setDemoFormError('');
-                    }}
-                    style={{
-                      width: '100%',
-                      padding: 'var(--ds-spacing-2)',
-                      backgroundColor: 'transparent',
-                      border: 'none',
-                      color: 'var(--ds-color-neutral-text-subtle)',
-                      cursor: 'pointer',
-                      fontSize: 'var(--ds-font-size-sm)',
-                    }}
-                  >
-                    {t('common.cancel')}
-                  </button>
-                </form>
-              </div>
-            </div>
           )}
 
           {/* Step 4: Success */}

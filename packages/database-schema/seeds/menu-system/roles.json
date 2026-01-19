@@ -1,0 +1,68 @@
+[
+  {
+    "id": "550e8400-e29b-41d4-a716-446655440001",
+    "code": "SAAS_ADMIN",
+    "scope": "PLATFORM",
+    "name_nb": "Plattformadministrator",
+    "name_en": "Platform Admin",
+    "description_nb": "Fullstendig tilgang til alle funksjoner p\u00e5 plattformen",
+    "description_en": "Full access to all platform functions",
+    "is_active": true,
+    "sort_order": 0
+  },
+  {
+    "id": "550e8400-e29b-41d4-a716-446655440002",
+    "code": "TENANT_ADMIN",
+    "scope": "TENANT",
+    "name_nb": "Kommuneadministrator",
+    "name_en": "Tenant Admin",
+    "description_nb": "Administrerer hele leietakeren (kommune/organisasjon)",
+    "description_en": "Administers the entire tenant (municipality/organization)",
+    "is_active": true,
+    "sort_order": 10
+  },
+  {
+    "id": "550e8400-e29b-41d4-a716-446655440003",
+    "code": "ORG_ADMIN",
+    "scope": "ORG",
+    "name_nb": "Organisasjonsadministrator",
+    "name_en": "Organization Admin",
+    "description_nb": "Administrerer en organisasjon innen leietakeren",
+    "description_en": "Administers an organization within the tenant",
+    "is_active": true,
+    "sort_order": 20
+  },
+  {
+    "id": "550e8400-e29b-41d4-a716-446655440004",
+    "code": "TENANT_USER",
+    "scope": "TENANT",
+    "name_nb": "Kommunebruker",
+    "name_en": "Tenant User",
+    "description_nb": "Standard bruker i leietakeren",
+    "description_en": "Standard user within the tenant",
+    "is_active": true,
+    "sort_order": 30
+  },
+  {
+    "id": "550e8400-e29b-41d4-a716-446655440005",
+    "code": "ORG_USER",
+    "scope": "ORG",
+    "name_nb": "Organisasjonsbruker",
+    "name_en": "Organization User",
+    "description_nb": "Standard bruker i en organisasjon",
+    "description_en": "Standard user within an organization",
+    "is_active": true,
+    "sort_order": 40
+  },
+  {
+    "id": "550e8400-e29b-41d4-a716-446655440006",
+    "code": "CASE_HANDLER",
+    "scope": "TENANT",
+    "name_nb": "Saksbehandler",
+    "name_en": "Case Handler",
+    "description_nb": "Behandler bookingforesp\u00f8rsler og saker",
+    "description_en": "Handles booking requests and cases",
+    "is_active": true,
+    "sort_order": 50
+  }
+]

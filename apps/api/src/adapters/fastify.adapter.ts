@@ -23,10 +23,25 @@ import {
   authEndpoints,
 } from '../core/middleware/rate-limit.middleware';
 
+export interface ErrorAuditInfo {
+  error: Error;
+  errorType: string;
+  errorMessage: string;
+  statusCode: number;
+  correlationId: string;
+  method: string;
+  url: string;
+  userId?: string;
+  tenantId?: string;
+  ipAddress?: string;
+  userAgent?: string;
+}
+
 export interface FastifyAdapterOptions {
   logger?: boolean;
   prefix?: string;
   adapters?: any;
+  onError?: (info: ErrorAuditInfo) => Promise<void>;
 }
 
 /**
@@ -325,25 +340,48 @@ export async function createFastifyApp(
     });
   }
 
-  // Global error handler (RFC 7807)
+  // Global error handler (RFC 7807) with audit logging
   app.setErrorHandler(async (error: Error, request: FastifyRequest, reply: FastifyReply) => {
-    // Handle both Error objects and non-Error values
     const errorMessage = error instanceof Error ? error.message : String(error);
     const errorStack = error instanceof Error ? error.stack : undefined;
     const errorType = error?.constructor?.name || typeof error;
     
+    const problemDetails = serializeError(error, request.id);
+    const isServerError = problemDetails.status >= 500;
+
     options.adapters?.log?.error('Request error', {
       method: request.method,
       url: request.url,
       error: errorMessage,
       stack: errorStack,
       errorType,
+      statusCode: problemDetails.status,
       correlationId: request.id,
-      // Include full error object for debugging (only in non-production)
+      userId: (request as { userId?: string }).userId,
+      tenantId: (request as { tenantId?: string }).tenantId,
       ...(process.env.NODE_ENV !== 'production' && { fullError: error }),
     });
 
-    const problemDetails = serializeError(error, request.id);
+    if (isServerError && options.onError) {
+      try {
+        await options.onError({
+          error,
+          errorType,
+          errorMessage,
+          statusCode: problemDetails.status,
+          correlationId: request.id as string,
+          method: request.method,
+          url: request.url,
+          userId: (request as { userId?: string }).userId,
+          tenantId: (request as { tenantId?: string }).tenantId,
+          ipAddress: request.ip,
+          userAgent: request.headers['user-agent'],
+        });
+      } catch (auditError) {
+        options.adapters?.log?.error('Failed to audit error', { auditError });
+      }
+    }
+
     return reply
       .status(problemDetails.status)
       .header('Content-Type', 'application/problem+json')

@@ -153,6 +153,54 @@ export class InternalError extends AppError {
   }
 }
 
+export class DatabaseError extends AppError {
+  constructor(detail?: string, public readonly originalError?: Error) {
+    super(
+      'Database Error',
+      503,
+      detail || 'A database error occurred',
+      '/errors/database'
+    );
+    this.name = 'DatabaseError';
+  }
+}
+
+export class ServiceUnavailableError extends AppError {
+  constructor(service: string, retryAfter?: number) {
+    super(
+      'Service Unavailable',
+      503,
+      `${service} is temporarily unavailable${retryAfter ? `. Retry after ${retryAfter} seconds` : ''}`,
+      '/errors/service-unavailable'
+    );
+    this.name = 'ServiceUnavailableError';
+  }
+}
+
+export class TimeoutError extends AppError {
+  constructor(operation: string, timeoutMs: number) {
+    super(
+      'Request Timeout',
+      408,
+      `${operation} timed out after ${timeoutMs}ms`,
+      '/errors/timeout'
+    );
+    this.name = 'TimeoutError';
+  }
+}
+
+export class ExternalServiceError extends AppError {
+  constructor(service: string, detail?: string) {
+    super(
+      'External Service Error',
+      502,
+      detail || `Failed to communicate with ${service}`,
+      '/errors/external-service'
+    );
+    this.name = 'ExternalServiceError';
+  }
+}
+
 /**
  * Error serializer for HTTP responses
  */

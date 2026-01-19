@@ -1,0 +1,65 @@
+[
+  {
+    "id": "660e8400-e29b-41d4-a716-446655440001",
+    "code": "FEATURE_RECURRING",
+    "type": "BOOLEAN",
+    "default_value": false,
+    "description_nb": "Sesongleie og gjentakende bookinger",
+    "description_en": "Seasonal and recurring bookings",
+    "is_active": true
+  },
+  {
+    "id": "660e8400-e29b-41d4-a716-446655440002",
+    "code": "FEATURE_REVIEWS",
+    "type": "BOOLEAN",
+    "default_value": false,
+    "description_nb": "Kundeanmeldelser og vurderinger",
+    "description_en": "Customer reviews and ratings",
+    "is_active": true
+  },
+  {
+    "id": "660e8400-e29b-41d4-a716-446655440003",
+    "code": "FEATURE_ECONOMY",
+    "type": "BOOLEAN",
+    "default_value": false,
+    "description_nb": "Finansiell rapportering og okonomimodul",
+    "description_en": "Financial reporting and economy module",
+    "is_active": true
+  },
+  {
+    "id": "660e8400-e29b-41d4-a716-446655440004",
+    "code": "FEATURE_AUDIT_LOG",
+    "type": "BOOLEAN",
+    "default_value": false,
+    "description_nb": "Detaljert revisjonslogging",
+    "description_en": "Detailed audit logging",
+    "is_active": true
+  },
+  {
+    "id": "660e8400-e29b-41d4-a716-446655440005",
+    "code": "FEATURE_MESSAGING",
+    "type": "BOOLEAN",
+    "default_value": true,
+    "description_nb": "Meldinger i applikasjonen",
+    "description_en": "In-app messaging",
+    "is_active": true
+  },
+  {
+    "id": "660e8400-e29b-41d4-a716-446655440006",
+    "code": "FEATURE_MESSAGE_TEMPLATES",
+    "type": "BOOLEAN",
+    "default_value": false,
+    "description_nb": "Meldingsmaler for automatiserte meldinger",
+    "description_en": "Message templates for automated messages",
+    "is_active": true
+  },
+  {
+    "id": "660e8400-e29b-41d4-a716-446655440007",
+    "code": "FEATURE_ADVANCED_REPORTS",
+    "type": "BOOLEAN",
+    "default_value": false,
+    "description_nb": "Avanserte rapporter og eksport",
+    "description_en": "Advanced reports and export",
+    "is_active": true
+  }
+]

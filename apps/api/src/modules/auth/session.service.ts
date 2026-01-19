@@ -152,8 +152,7 @@ export class SessionService {
       .where(
         and(
           eq(sessions.refreshTokenHash, tokenHash),
-          isNull(sessions.revokedAt),
-          isNull(sessions.deletedAt)
+          isNull(sessions.revokedAt)
         )
       )
       .limit(1);
