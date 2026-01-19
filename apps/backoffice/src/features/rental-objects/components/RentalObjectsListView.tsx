@@ -32,7 +32,6 @@ import {
 } from '@digilist/client-sdk';
 import { useQueryClient } from '@tanstack/react-query';
 import { useT } from '@xala/i18n';
-import { motion, AnimatePresence } from 'framer-motion';
 import { useRentalObjectPermissions } from '../hooks/useRentalObjectPermissions';
 
 // Mapbox token
@@ -69,14 +68,9 @@ const PRICE_UNIT_LABELS: Record<string, string> = {
 
 // Filter Chip Component
 const FilterChip = ({ label, onRemove }: { label: string; onRemove: () => void }) => (
-  <motion.button
+  <button
     type="button"
     onClick={onRemove}
-    initial={{ scale: 0.9, opacity: 0 }}
-    animate={{ scale: 1, opacity: 1 }}
-    exit={{ scale: 0.9, opacity: 0 }}
-    whileHover={{ scale: 1.05 }}
-    whileTap={{ scale: 0.95 }}
     style={{
       display: 'inline-flex',
       alignItems: 'center',
@@ -89,6 +83,7 @@ const FilterChip = ({ label, onRemove }: { label: string; onRemove: () => void }
       color: 'var(--ds-color-neutral-text-default)',
       cursor: 'pointer',
       whiteSpace: 'nowrap',
+      transition: 'all 0.2s ease',
     }}
   >
     {label}
@@ -96,7 +91,7 @@ const FilterChip = ({ label, onRemove }: { label: string; onRemove: () => void }
       <line x1="18" y1="6" x2="6" y2="18"></line>
       <line x1="6" y1="6" x2="18" y2="18"></line>
     </svg>
-  </motion.button>
+  </button>
 );
 
 export function RentalObjectsListView() {

@@ -199,12 +199,22 @@ ENDSSH
 log_info "Schema permissions granted"
 echo ""
 
-# Step 7: Deploy storage files (seed images)
-echo "📸 Step 7: Deploying storage files..."
+# Step 7: Deploy storage files (seed images) - Skip if already uploaded
+echo "📸 Step 7: Checking storage files..."
 ssh ${VPS_USER}@${VPS_HOST} "mkdir -p /var/www/digilist-storage/uploads"
-rsync -avz packages/database-schema/seeds/storage/ ${VPS_USER}@${VPS_HOST}:/var/www/digilist-storage/uploads/
-ssh ${VPS_USER}@${VPS_HOST} "chown -R www-data:www-data /var/www/digilist-storage 2>/dev/null || chown -R root:root /var/www/digilist-storage"
-log_info "Storage files deployed to /var/www/digilist-storage/uploads"
+
+# Check if storage files already exist
+FILE_COUNT=$(ssh ${VPS_USER}@${VPS_HOST} "find /var/www/digilist-storage/uploads -type f 2>/dev/null | wc -l" || echo "0")
+
+if [ "$FILE_COUNT" -gt "10" ]; then
+  echo "⏭️  Storage files already exist ($FILE_COUNT files), skipping upload"
+  log_info "Storage upload skipped - files already present"
+else
+  echo "📤 Uploading storage files..."
+  rsync -avz packages/database-schema/seeds/storage/ ${VPS_USER}@${VPS_HOST}:/var/www/digilist-storage/uploads/
+  ssh ${VPS_USER}@${VPS_HOST} "chown -R www-data:www-data /var/www/digilist-storage 2>/dev/null || chown -R root:root /var/www/digilist-storage"
+  log_info "Storage files deployed to /var/www/digilist-storage/uploads"
+fi
 echo ""
 
 # Step 8: Seed database
