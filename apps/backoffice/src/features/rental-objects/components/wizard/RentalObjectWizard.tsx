@@ -53,65 +53,120 @@ export function RentalObjectWizard({ slug }: RentalObjectWizardProps) {
         backgroundColor: 'var(--ds-color-neutral-surface-subtle)',
       }}
     >
-      {/* Header */}
+      {/* Compact Header with Tabs */}
       <div
         style={{
           backgroundColor: 'var(--ds-color-neutral-surface-default)',
-          borderBottom: '1px solid var(--ds-color-neutral-border-default)',
-          padding: 'var(--ds-spacing-6) var(--ds-spacing-8)',
+          borderBottom: '2px solid var(--ds-color-neutral-border-default)',
         }}
       >
-        <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
-          <Heading level={1} data-size="lg" style={{ margin: 0, marginBottom: 'var(--ds-spacing-2)' }}>
-            {wizard.isEditMode ? t('rentalObjects.editTitle') : t('rentalObjects.createTitle')}
-          </Heading>
-          <Paragraph style={{ margin: 0, color: 'var(--ds-color-neutral-text-subtle)' }}>
-            {t('rentalObjects.wizardDescription')}
-          </Paragraph>
+        <div style={{ maxWidth: '1400px', margin: '0 auto', padding: 'var(--ds-spacing-4) var(--ds-spacing-6)' }}>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 'var(--ds-spacing-3)' }}>
+            <Heading level={1} data-size="md" style={{ margin: 0 }}>
+              {wizard.isEditMode ? t('rentalObjects.editTitle') : t('rentalObjects.createTitle')}
+            </Heading>
+            <Paragraph data-size="sm" style={{ margin: 0, color: 'var(--ds-color-neutral-text-subtle)' }}>
+              {t('wizard.stepProgress', { current: wizard.currentStep + 1, total: wizard.steps.length })}
+            </Paragraph>
+          </div>
+
+          {/* Professional Tab Navigation */}
+          <div
+            style={{
+              display: 'flex',
+              gap: 'var(--ds-spacing-1)',
+              overflowX: 'auto',
+              paddingBottom: 'var(--ds-spacing-2)',
+            }}
+          >
+            {wizard.steps.map((step, index) => {
+              const isActive = index === wizard.currentStep;
+              const isCompleted = index < wizard.currentStep;
+              const hasError = wizard.errors[step.id]?.length > 0;
+              
+              return (
+                <button
+                  key={step.id}
+                  onClick={() => wizard.goToStep(index)}
+                  style={{
+                    flex: '1 1 auto',
+                    minWidth: '120px',
+                    padding: 'var(--ds-spacing-3) var(--ds-spacing-4)',
+                    backgroundColor: isActive 
+                      ? 'var(--ds-color-accent-surface-default)' 
+                      : 'transparent',
+                    color: isActive 
+                      ? 'var(--ds-color-accent-text-default)' 
+                      : isCompleted 
+                        ? 'var(--ds-color-neutral-text-default)'
+                        : 'var(--ds-color-neutral-text-subtle)',
+                    border: 'none',
+                    borderBottom: isActive 
+                      ? '3px solid var(--ds-color-accent-border-strong)' 
+                      : '3px solid transparent',
+                    borderRadius: 'var(--ds-border-radius-md) var(--ds-border-radius-md) 0 0',
+                    cursor: 'pointer',
+                    fontSize: 'var(--ds-font-size-sm)',
+                    fontWeight: isActive ? 600 : 500,
+                    transition: 'all 0.2s ease',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    gap: 'var(--ds-spacing-2)',
+                    whiteSpace: 'nowrap',
+                  }}
+                  onMouseEnter={(e) => {
+                    if (!isActive) {
+                      e.currentTarget.style.backgroundColor = 'var(--ds-color-neutral-surface-hover)';
+                    }
+                  }}
+                  onMouseLeave={(e) => {
+                    if (!isActive) {
+                      e.currentTarget.style.backgroundColor = 'transparent';
+                    }
+                  }}
+                >
+                  {isCompleted && (
+                    <span style={{ fontSize: '16px' }}>✓</span>
+                  )}
+                  {hasError && !isCompleted && (
+                    <span style={{ color: 'var(--ds-color-danger-text-default)', fontSize: '16px' }}>!</span>
+                  )}
+                  <span>{t(`wizard.step.${step.id}`)}</span>
+                </button>
+              );
+            })}
+          </div>
         </div>
       </div>
 
-      {/* Stepper */}
-      <div
-        style={{
-          backgroundColor: 'var(--ds-color-neutral-surface-default)',
-          borderBottom: '1px solid var(--ds-color-neutral-border-default)',
-          padding: 'var(--ds-spacing-6) var(--ds-spacing-8)',
-          overflowX: 'auto',
-        }}
-      >
-        <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
-          <WizardStepper
-            steps={wizard.steps.map(step => ({
-              id: step.id,
-              label: t(`wizard.step.${step.id}`),
-              icon: WIZARD_ICONS[step.id],
-            }))}
-            currentStep={wizard.currentStep}
-            onStepClick={wizard.goToStep}
-            errors={wizard.errors}
-          />
-        </div>
-      </div>
-
-      {/* Step Content */}
+      {/* Taller Content Area - No Scrolling Needed */}
       <div
         style={{
           flex: 1,
-          overflowY: 'auto',
-          padding: 'var(--ds-spacing-8)',
+          display: 'flex',
+          flexDirection: 'column',
+          minHeight: 0,
         }}
       >
-        <div style={{ maxWidth: '800px', margin: '0 auto' }}>
-          {(() => {
-            const step = wizard.steps[wizard.currentStep];
-            return step ? renderStep(step, wizard) : null;
-          })()}
+        <div
+          style={{
+            flex: 1,
+            overflowY: 'auto',
+            padding: 'var(--ds-spacing-6) var(--ds-spacing-8)',
+          }}
+        >
+          <div style={{ maxWidth: '1000px', margin: '0 auto' }}>
+            {(() => {
+              const step = wizard.steps[wizard.currentStep];
+              return step ? renderStep(step, wizard) : null;
+            })()}
+          </div>
         </div>
-      </div>
 
-      {/* Footer Navigation */}
-      <WizardFooter wizard={wizard} />
+        {/* Footer Navigation */}
+        <WizardFooter wizard={wizard} />
+      </div>
     </div>
   );
 }

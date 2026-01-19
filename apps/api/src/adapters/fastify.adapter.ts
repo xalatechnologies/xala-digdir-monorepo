@@ -327,10 +327,20 @@ export async function createFastifyApp(
 
   // Global error handler (RFC 7807)
   app.setErrorHandler(async (error: Error, request: FastifyRequest, reply: FastifyReply) => {
+    // Handle both Error objects and non-Error values
+    const errorMessage = error instanceof Error ? error.message : String(error);
+    const errorStack = error instanceof Error ? error.stack : undefined;
+    const errorType = error?.constructor?.name || typeof error;
+    
     options.adapters?.log?.error('Request error', {
-      error: error.message,
-      stack: error.stack,
+      method: request.method,
+      url: request.url,
+      error: errorMessage,
+      stack: errorStack,
+      errorType,
       correlationId: request.id,
+      // Include full error object for debugging (only in non-production)
+      ...(process.env.NODE_ENV !== 'production' && { fullError: error }),
     });
 
     const problemDetails = serializeError(error, request.id);

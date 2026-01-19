@@ -8,9 +8,10 @@ import type { RateLimitPluginOptions } from '@fastify/rate-limit';
 /**
  * Global rate limit configuration
  * Protects all endpoints from general DoS attacks
+ * Higher limits in development/test environments for easier testing
  */
 export const globalRateLimitConfig: RateLimitPluginOptions = {
-  max: 100,
+  max: process.env.NODE_ENV === 'production' ? 100 : 1000, // 1000 req/min in dev/test
   timeWindow: '1 minute',
   cache: 10000, // Maximum number of clients in cache
   allowList: [], // IPs/functions that bypass rate limiting
@@ -40,9 +41,10 @@ export const globalRateLimitConfig: RateLimitPluginOptions = {
 /**
  * Authentication endpoints rate limit configuration
  * Stricter limits to prevent brute force attacks on authentication
+ * Higher limits in development/test environments for easier testing
  */
 export const authRateLimitConfig: RateLimitPluginOptions = {
-  max: 5,
+  max: process.env.NODE_ENV === 'production' ? 5 : 50, // 50 req/min in dev/test
   timeWindow: '1 minute',
   cache: 5000,
   allowList: [],
