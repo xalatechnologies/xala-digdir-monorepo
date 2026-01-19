@@ -11,7 +11,7 @@ import { bookingService, auditService, type CreateBookingDTO, useOrganizations }
 import type { BookingConfig } from '../../types';
 import { BookingDialog, type BookingFormData, type BookingSlot } from '../BookingDialog';
 import { CalendarSection } from '../CalendarSection';
-import { useAuth } from '../../../../hooks/useAuth';
+import { useAuth } from '@xala/auth';
 import { useT } from '@xala/i18n';
 import type { CalendarSelection, CalendarCell } from '@xala/ds';
 
@@ -106,11 +106,17 @@ export interface BookingWidgetPlacementProps {
 // Constants
 // =============================================================================
 
-// Booking steps are now created dynamically in the component using t()
-const BOOKING_STEP_IDS = ['calendar', 'details', 'confirm', 'done'] as const;
+// Booking steps - 5 step flow:
+// 1. calendar - Select time
+// 2. details - Pricing and terms
+// 3. login - Login (if not authenticated)
+// 4. confirm - Confirm booking details
+// 5. done - Success
+const BOOKING_STEP_IDS = ['calendar', 'details', 'login', 'confirm', 'done'] as const;
 const BOOKING_STEP_ICONS: Record<string, string> = {
   calendar: 'calendar',
   details: 'pricing',
+  login: 'login',
   confirm: 'confirm',
   done: 'success',
 };
@@ -126,6 +132,10 @@ const SERVICE_CONFIGS = [
   { id: 'cleaning', price: 500 },
   { id: 'equipment', price: 300 },
 ] as const;
+
+// Flag to enable demo/auto-login for testing
+// Set to false when proper OAuth is implemented
+const DEMO_MODE_ENABLED = true;
 
 const DEFAULT_OPENING_HOURS: Record<number, OpeningHours> = {
   0: { open: '10:00', close: '18:00' },
@@ -277,14 +287,18 @@ export function BookingWidgetPlacement({
   const [weekStart, setWeekStart] = React.useState(() => getStartOfWeek(new Date()));
   const [selectedSlots, setSelectedSlots] = React.useState<Set<string>>(new Set());
   const [slotDetails, setSlotDetails] = React.useState<Record<string, SlotDetail>>({});
-  const [selectedPriceGroup, setSelectedPriceGroup] = React.useState('');
+  const [selectedPriceGroup, setSelectedPriceGroup] = React.useState('standard'); // Default to standard price
   const [selectedServices, setSelectedServices] = React.useState<Set<string>>(new Set());
   const [termsAccepted, setTermsAccepted] = React.useState(false);
   const [isLoggingIn, setIsLoggingIn] = React.useState(false);
-  const [bookingAccountType, setBookingAccountType] = React.useState<'private' | 'organization' | undefined>(undefined);
+  const [bookingAccountType, setBookingAccountType] = React.useState<'private' | 'organization' | undefined>('private'); // Default to private
   const [selectedOrganizationId, setSelectedOrganizationId] = React.useState<string | undefined>(undefined);
   const [isAccountTypeConfirmed, setIsAccountTypeConfirmed] = React.useState(false);
   const [visibility, setVisibility] = React.useState<BookingVisibility>('PUBLIC_TITLE');
+
+  // Use real authentication state - MUST be before any useEffect that uses isAuthenticated
+  const { isAuthenticated: authIsAuthenticated, user, login: authLogin, handleAuthCallback, logout: authLogout } = useAuth();
+  const isAuthenticated = authIsAuthenticated;
 
   // Storage key for persisting booking state across login
   const BOOKING_STATE_KEY = `booking_state_${rentalObjectId || 'default'}`;
@@ -300,15 +314,25 @@ export function BookingWidgetPlacement({
         if (state.selectedPriceGroup) setSelectedPriceGroup(state.selectedPriceGroup);
         if (state.selectedServices) setSelectedServices(new Set(state.selectedServices));
         if (state.weekStart) setWeekStart(new Date(state.weekStart));
-        if (state.currentStep !== undefined) setCurrentStep(state.currentStep);
         if (state.visibility) setVisibility(state.visibility);
+        
+        // Restore step - but advance to step 3 if we were on login step and now authenticated
+        if (state.currentStep !== undefined) {
+          if (state.currentStep === 2 && isAuthenticated) {
+            // User just logged in, advance to confirm step
+            setCurrentStep(3);
+          } else {
+            setCurrentStep(state.currentStep);
+          }
+        }
+        
         // Clear saved state after restoring
         sessionStorage.removeItem(BOOKING_STATE_KEY);
       }
     } catch (error) {
       console.warn('[BookingWidget] Failed to restore booking state:', error);
     }
-  }, [BOOKING_STATE_KEY]);
+  }, [BOOKING_STATE_KEY, isAuthenticated]);
 
   // Function to save booking state before login redirect
   const saveBookingState = React.useCallback(() => {
@@ -361,9 +385,7 @@ export function BookingWidgetPlacement({
   const [conflictResolutions, setConflictResolutions] = React.useState<ConflictResolution[]>([]);
   const [conflictAlternatives, setConflictAlternatives] = React.useState<Map<number, AlternativeSlot[]>>(new Map());
   
-  // Use real authentication state with flow context support
-  const { isAuthenticated: authIsAuthenticated, user, login: authLogin, loginWithFlowContext } = useAuth();
-  const isAuthenticated = authIsAuthenticated;
+  // isAuthenticated, user, authLogin, loginWithFlowContext defined earlier (before useEffects)
   
   // Fetch user's organizations when authenticated
   // The API should return only organizations the user is a member of
@@ -371,10 +393,44 @@ export function BookingWidgetPlacement({
     isAuthenticated ? {} : undefined
   );
   
+  // Demo organizations for testing (shown when DEMO_MODE_ENABLED and user email suggests org access)
+  const DEMO_ORGANIZATIONS = [
+    { id: 'demo-org-1', name: 'Skien Idrettslag' },
+    { id: 'demo-org-2', name: 'Porsgrunn Fotballklubb' },
+    { id: 'demo-org-3', name: 'Telemark Svømmeklubb' },
+  ];
+  
   const organizations = React.useMemo(() => {
-    if (!organizationsData?.data) return [];
+    // First try to get from API
+    if (organizationsData?.data && organizationsData.data.length > 0) {
     return organizationsData.data.map(org => ({ id: org.id, name: org.name }));
-  }, [organizationsData]);
+    }
+    
+    // In demo mode, check if user should have organization access
+    if (DEMO_MODE_ENABLED && user) {
+      // Check localStorage for demo user info
+      const savedUser = localStorage.getItem('web_user');
+      if (savedUser) {
+        try {
+          const demoUser = JSON.parse(savedUser);
+          // If email contains 'org', 'kommune', 'ansatt', or 'bedrift' - show demo orgs
+          if (demoUser.email && (
+            demoUser.email.includes('org') ||
+            demoUser.email.includes('kommune') ||
+            demoUser.email.includes('ansatt') ||
+            demoUser.email.includes('bedrift') ||
+            demoUser.id?.includes('bankid')
+          )) {
+            return DEMO_ORGANIZATIONS;
+          }
+        } catch {
+          // Ignore parse errors
+        }
+      }
+    }
+    
+    return [];
+  }, [organizationsData, user]);
   
   // Reset account selection when authentication changes
   React.useEffect(() => {
@@ -385,6 +441,13 @@ export function BookingWidgetPlacement({
     }
   }, [isAuthenticated]);
   
+  // Auto-skip login step (step 2) if already authenticated
+  React.useEffect(() => {
+    if (currentStep === 2 && isAuthenticated) {
+      setCurrentStep(3); // Go directly to confirmation
+    }
+  }, [currentStep, isAuthenticated]);
+  
   const handleAccountTypeSelect = (type: 'private' | 'organization' | undefined, organizationId?: string): void => {
     if (type === undefined) {
       // Reset selection
@@ -394,7 +457,8 @@ export function BookingWidgetPlacement({
     } else {
       setBookingAccountType(type);
       setSelectedOrganizationId(organizationId);
-      setIsAccountTypeConfirmed(false); // Reset confirmation when selection changes
+      setIsAccountTypeConfirmed(false);
+      // User clicks "Fortsett" button to advance - no auto-advance
     }
   };
 
@@ -617,10 +681,6 @@ export function BookingWidgetPlacement({
     });
   };
 
-  // Flag to enable demo/auto-login for testing
-  // Set to false when proper OAuth is implemented
-  const DEMO_MODE_ENABLED = true;
-
   // State to track demo auth (forces re-render when demo login happens)
   const [demoAuthComplete, setDemoAuthComplete] = React.useState(false);
   const [showDemoDialog, setShowDemoDialog] = React.useState(false);
@@ -671,17 +731,22 @@ export function BookingWidgetPlacement({
     setShowDemoDialog(false);
     saveBookingState();
     
+    // Use existing demo user ID from database
     const demoUser = {
-      id: `demo-user-${Date.now()}`,
+      id: '00000000-0000-0000-0000-000000000011', // Demo Xala user from seeds
       name: demoFormData.name,
       email: demoFormData.email,
     };
     
-    localStorage.setItem('web_user', JSON.stringify(demoUser));
-    await new Promise(resolve => setTimeout(resolve, 500));
+    // Use handleAuthCallback to update auth state without page reload
+    await new Promise(resolve => setTimeout(resolve, 300));
+    handleAuthCallback(demoUser);
+    // Default to private - user can click Fortsett immediately or change to organization
+    setBookingAccountType('private');
+    setSelectedOrganizationId(undefined);
     setDemoAuthComplete(true);
     setIsLoggingIn(false);
-    window.location.reload();
+    setShowDemoDialog(false);
   };
 
   const handleLoginVipps = async (): Promise<void> => {
@@ -690,21 +755,19 @@ export function BookingWidgetPlacement({
     saveBookingState();
     try {
       if (DEMO_MODE_ENABLED) {
-        // Demo mode: Simulate login with mock user
-        // This allows testing the booking flow without real OAuth
+        // Demo mode: Simulate login with mock user (private user via Vipps)
         const demoUser = {
-          id: 'demo-user-vipps',
+          id: '00000000-0000-0000-0000-000000000011', // Demo Xala user from seeds
           name: 'Demo Bruker',
-          email: 'demo@example.no',
+          email: 'demo@xala.no',
         };
-        localStorage.setItem('web_user', JSON.stringify(demoUser));
-        // Small delay to simulate authentication
-        await new Promise(resolve => setTimeout(resolve, 800));
-        // Trigger state update to force re-render with new auth state
+        await new Promise(resolve => setTimeout(resolve, 300));
+        handleAuthCallback(demoUser);
+        // Default to private - user can click Fortsett immediately or change to organization
+        setBookingAccountType('private');
+        setSelectedOrganizationId(undefined);
         setDemoAuthComplete(true);
         setIsLoggingIn(false);
-        // Reload to pick up the new user properly in useAuth hook
-        window.location.reload();
       } else {
         // Production mode: Use real auth login with returnTo URL
         const returnUrl = window.location.pathname + window.location.search;
@@ -722,21 +785,19 @@ export function BookingWidgetPlacement({
     saveBookingState();
     try {
       if (DEMO_MODE_ENABLED) {
-        // Demo mode: Simulate login with mock user (organization)
-        // This allows testing the booking flow without real OAuth
+        // Demo mode: Simulate login with mock user (organization employee via BankID)
         const demoUser = {
-          id: 'demo-user-bankid',
-          name: 'Demo Ansatt',
-          email: 'ansatt@kommune.no',
+          id: '00000000-0000-0000-0000-000000000013', // Ola Hansen from seeds (kommune employee)
+          name: 'Ola Hansen',
+          email: 'ola.hansen@kommune.no',
         };
-        localStorage.setItem('web_user', JSON.stringify(demoUser));
-        // Small delay to simulate authentication
-        await new Promise(resolve => setTimeout(resolve, 800));
-        // Trigger state update to force re-render with new auth state
+        await new Promise(resolve => setTimeout(resolve, 300));
+        handleAuthCallback(demoUser);
+        // Default to private - user can click Fortsett immediately or change to organization
+        setBookingAccountType('private');
+        setSelectedOrganizationId(undefined);
         setDemoAuthComplete(true);
         setIsLoggingIn(false);
-        // Reload to pick up the new user properly in useAuth hook
-        window.location.reload();
       } else {
         // Production mode: Use real auth login for organization (ID-porten) with returnTo URL
         const returnUrl = window.location.pathname + window.location.search;
@@ -753,7 +814,7 @@ export function BookingWidgetPlacement({
    * Called from BookingConfirmationStep when user needs to authenticate
    * Saves complete booking state before OAuth redirect
    */
-  const handleLoginWithFlowContext = (options: {
+  const handleLoginWithFlowContext = async (options: {
     provider: 'idporten' | 'microsoft' | 'vipps';
     bookingState: {
       selectedSlots: Array<{ date: string; startTime: string; endTime: string }>;
@@ -765,30 +826,32 @@ export function BookingWidgetPlacement({
     rentalObjectId?: string;
     tenantId?: string;
     bookingMode?: string;
-  }): void => {
+  }): Promise<void> => {
     setIsLoggingIn(true);
+    
+    // Save booking state for restoration after login
+    saveBookingState();
+    
     try {
-      // Get tenant ID from environment or props
-      const tenantId = options.tenantId || import.meta.env.VITE_TENANT_ID || 'default';
-
-      // Map booking mode to SDK type
-      const bookingMode = (options.bookingMode || bookingConfig?.mode || 'SLOTS') as 'SLOTS' | 'ALL_DAY' | 'DURATION' | 'TICKETS' | 'NONE';
-
-      // Convert booking state to flow context format
-      loginWithFlowContext({
-        provider: options.provider,
-        tenantId,
-        rentalObjectId: options.rentalObjectId || rentalObjectId,
-        bookingMode,
-        selectedSlots: options.bookingState.selectedSlots,
-        formData: {
-          slotDetails: options.bookingState.slotDetails,
-          weekStart: options.bookingState.weekStart,
-          bookingAccountType: options.bookingState.bookingAccountType,
-          selectedOrganizationId: options.bookingState.selectedOrganizationId,
-        },
-      });
-      // Navigation will happen in loginWithFlowContext via OAuth redirect
+      // Demo mode: Simulate login with mock user
+      if (DEMO_MODE_ENABLED) {
+        const demoUser = options.provider === 'vipps' 
+          ? { id: '00000000-0000-0000-0000-000000000011', name: 'Demo Bruker', email: 'demo@xala.no' }
+          : { id: '00000000-0000-0000-0000-000000000013', name: 'Ola Hansen', email: 'ola.hansen@kommune.no' };
+        
+        await new Promise(resolve => setTimeout(resolve, 300));
+        handleAuthCallback(demoUser);
+        // Default to private - user can click Fortsett immediately or change to organization
+        setBookingAccountType('private');
+        setSelectedOrganizationId(undefined);
+        setDemoAuthComplete(true);
+        setIsLoggingIn(false);
+        return;
+      }
+      
+      // Production mode: Real OAuth flow - state is already saved via saveBookingState()
+      const returnUrl = window.location.pathname + window.location.search;
+      authLogin(options.provider, returnUrl);
     } catch (error) {
       auditService.logError('login_failed', 'auth', error instanceof Error ? error : String(error), {
         provider: options.provider,
@@ -820,20 +883,31 @@ export function BookingWidgetPlacement({
         const endMins = ((startH ?? 0) * 60 + (startM ?? 0)) + details.duration;
         const endH = Math.floor(endMins / 60);
         const endM = endMins % 60;
-        const endTime = `${endH.toString().padStart(2, '0')}:${endM.toString().padStart(2, '0')}`;
 
+        // Create full datetime objects for API
+        const startDateTime = new Date(slotDate);
+        startDateTime.setHours(startH ?? 0, startM ?? 0, 0, 0);
+        
+        const endDateTime = new Date(slotDate);
+        endDateTime.setHours(endH, endM, 0, 0);
+
+        // API expects: rentalObjectId, startTime, endTime, userId?, totalPrice?, notes?, metadata?
+        // Include userId from authenticated user (demo or real)
         return {
           rentalObjectId,
-          date: slotDate.toISOString().split('T')[0] ?? '',
-          startTime: timeStr ?? '',
-          endTime,
-          purpose: details.purpose,
-          attendees: details.attendees ? parseInt(details.attendees, 10) : undefined,
-          activityType: details.activityType,
-          priceGroupId: selectedPriceGroup || undefined,
-          additionalServices: Array.from(selectedServices),
-          visibility,
-          organizationId: bookingAccountType === 'organization' ? selectedOrganizationId : undefined,
+          startTime: startDateTime.toISOString(),
+          endTime: endDateTime.toISOString(),
+          userId: user?.id || '00000000-0000-0000-0000-000000000011', // Demo user fallback
+          notes: details.purpose || undefined,
+          metadata: {
+            attendees: details.attendees ? parseInt(details.attendees, 10) : 1,
+            activityType: details.activityType,
+            priceGroupId: selectedPriceGroup || undefined,
+            additionalServices: Array.from(selectedServices),
+            visibility,
+            organizationId: bookingAccountType === 'organization' ? selectedOrganizationId : undefined,
+            bookingMode,
+          },
         };
       });
 
@@ -841,7 +915,8 @@ export function BookingWidgetPlacement({
         await bookingService.create(booking);
       }
 
-      setCurrentStep(3);
+      // Go to done step (step 4)
+      setCurrentStep(4);
     } catch (error) {
       setBookingError(error instanceof Error ? error.message : t('bookingWidget.error.bookingFailed'));
     } finally {
@@ -968,11 +1043,13 @@ export function BookingWidgetPlacement({
         {/* LEFT COLUMN: Step Content */}
         <div
           style={{
-            flex: isMobile || currentStep === 2 ? 1 : '0 0 68%',
+            flex: isMobile || currentStep === 2 || currentStep === 4 ? 1 : '0 0 68%',
             display: 'flex',
             flexDirection: 'column',
             overflow: 'auto',
+            transition: 'opacity 0.2s ease-in-out',
           }}
+          key={`step-content-${currentStep}`}
         >
           {/* Step 0: Calendar Selection */}
           {currentStep === 0 && (
@@ -1376,7 +1453,7 @@ export function BookingWidgetPlacement({
             </>
           )}
 
-          {/* Step 1: Pricing */}
+          {/* Step 1: Pricing/Details */}
           {currentStep === 1 && (
             <BookingPricingStep
               priceGroups={priceGroups}
@@ -1390,12 +1467,53 @@ export function BookingWidgetPlacement({
             />
           )}
 
-          {/* Step 2: Confirmation */}
+          {/* Step 2: Login + Account Type Selection */}
           {currentStep === 2 && (
             <BookingConfirmationStep
-              key={`confirmation-${isAuthenticated}-${bookingAccountType}-${selectedOrganizationId}`}
+              key={`login-${isAuthenticated}-${bookingAccountType}-${selectedOrganizationId}`}
               isAuthenticated={isAuthenticated}
               isLoggingIn={isLoggingIn}
+              isSubmitting={false}
+              bookingError={null}
+              isMobile={isMobile}
+              selectedSlots={selectedSlots}
+              slotDetails={slotDetails}
+              weekStart={weekStart}
+              onLoginWithVipps={handleLoginVipps}
+              onLoginAsEmployee={handleLoginEmployee}
+              onLoginWithFlowContext={handleLoginWithFlowContext}
+              onConfirmBooking={() => {}} // Not used in step 2
+              onClearError={() => {}}
+              bookingAccountType={bookingAccountType}
+              selectedOrganizationId={selectedOrganizationId}
+              onAccountTypeSelect={handleAccountTypeSelect}
+              onConfirmAccountType={handleConfirmAccountType}
+              displayMode="login-and-selection"
+              organizations={organizations}
+              isAccountTypeConfirmed={false} // Force showing account type selection
+              rentalObjectId={rentalObjectId}
+              tenantId={import.meta.env.VITE_TENANT_ID}
+              bookingMode={bookingConfig?.mode || 'SLOTS'}
+              visibility={visibility}
+              onVisibilityChange={setVisibility}
+              onDemoLogin={() => setShowDemoDialog(true)}
+              onLogout={() => {
+                // Clear demo login state using auth hook (no page reload)
+                authLogout();
+                setDemoAuthComplete(false);
+                setBookingAccountType(undefined);
+                setSelectedOrganizationId(undefined);
+                setIsAccountTypeConfirmed(false);
+              }}
+            />
+          )}
+
+          {/* Step 3: Final Confirmation (booking summary) */}
+          {currentStep === 3 && (
+            <BookingConfirmationStep
+              key={`confirmation-${isAuthenticated}-${bookingAccountType}-${selectedOrganizationId}`}
+              isAuthenticated={true}
+              isLoggingIn={false}
               isSubmitting={isSubmitting}
               bookingError={bookingError}
               isMobile={isMobile}
@@ -1412,13 +1530,23 @@ export function BookingWidgetPlacement({
               onAccountTypeSelect={handleAccountTypeSelect}
               onConfirmAccountType={handleConfirmAccountType}
               organizations={organizations}
-              isAccountTypeConfirmed={isAccountTypeConfirmed}
+              isAccountTypeConfirmed={true}
+              displayMode="confirmation-only"
               rentalObjectId={rentalObjectId}
               tenantId={import.meta.env.VITE_TENANT_ID}
               bookingMode={bookingConfig?.mode || 'SLOTS'}
               visibility={visibility}
               onVisibilityChange={setVisibility}
               onDemoLogin={() => setShowDemoDialog(true)}
+              onLogout={() => {
+                // Clear demo login state and go back to login step (no page reload)
+                authLogout();
+                setDemoAuthComplete(false);
+                setBookingAccountType(undefined);
+                setSelectedOrganizationId(undefined);
+                setIsAccountTypeConfirmed(false);
+                setCurrentStep(2);
+              }}
             />
           )}
 
@@ -1633,8 +1761,8 @@ export function BookingWidgetPlacement({
             </div>
           )}
 
-          {/* Step 3: Success */}
-          {currentStep === 3 && (
+          {/* Step 4: Success */}
+          {currentStep === 4 && (
             <div style={{ padding: 'var(--ds-spacing-8)', textAlign: 'center' }}>
               <div
                 style={{
@@ -1660,8 +1788,8 @@ export function BookingWidgetPlacement({
           )}
         </div>
 
-        {/* RIGHT COLUMN: Fixed Sidebar - Hidden on login step */}
-        {!isMobile && currentStep < 3 && currentStep !== 2 && (
+        {/* RIGHT COLUMN: Fixed Sidebar - Only hidden on login step */}
+        {!isMobile && currentStep !== 2 && currentStep < 4 && (
           <div
             style={{
               flex: '0 0 32%',
@@ -1701,30 +1829,41 @@ export function BookingWidgetPlacement({
           gap: 'var(--ds-spacing-3)',
         }}
       >
-        {currentStep > 0 && currentStep < 3 && (
+        {currentStep > 0 && currentStep < 4 && (
           <Button
             type="button"
             variant="secondary"
             data-size="lg"
-            onClick={() => setCurrentStep(prev => Math.max(0, prev - 1))}
+            onClick={() => {
+              // Normal back navigation through all steps
+              setCurrentStep(prev => Math.max(0, prev - 1));
+            }}
           >
             {t('bookingWidget.back')}
           </Button>
         )}
-        {currentStep < 3 && (
+        {currentStep < 4 && (
           <Button
             type="button"
             variant="primary"
             data-size="lg"
             data-color="accent"
             onClick={() => {
-              if (currentStep === 2 && isAuthenticated) {
+              if (currentStep === 3) {
+                // Step 3: Submit booking
                 handleSubmitBooking();
+              } else if (currentStep === 2) {
+                // Step 2: Login + Account Type - go to step 3 when both complete
+                if (isAuthenticated && bookingAccountType && (bookingAccountType === 'private' || selectedOrganizationId)) {
+                  setCurrentStep(3);
+                }
+                // Login buttons handle authentication
+              } else if (currentStep === 1) {
+                // Step 1: Details - go to login (will auto-skip if already authenticated)
+                setCurrentStep(2);
               } else if (currentStep === 0) {
-                // Check availability before proceeding from calendar step
+                // Step 0: Calendar - check availability
                 handleCheckAvailabilityAndProceed();
-              } else if (currentStep < 2) {
-                setCurrentStep(prev => prev + 1);
               }
             }}
             disabled={
@@ -1736,8 +1875,10 @@ export function BookingWidgetPlacement({
                 (bookingMode === 'RECURRING' && selectedRecurringIndices.size === 0)
               )) ||
               (currentStep === 1 && (!selectedPriceGroup || !termsAccepted)) ||
-              (currentStep === 2 && (!isAuthenticated || !isAccountTypeConfirmed)) ||
-              isSubmitting
+              // Step 2: Need authenticated
+              (currentStep === 2 && !isAuthenticated) ||
+              // Step 3: Need account type selected (+ org if organization), not submitting
+              (currentStep === 3 && (!bookingAccountType || (bookingAccountType === 'organization' && !selectedOrganizationId) || isSubmitting))
             }
             style={{
               flex: 1,
@@ -1776,19 +1917,17 @@ export function BookingWidgetPlacement({
                     return t('bookingWidget.selectTimeToContiue');
                   })()
                 : currentStep === 1
+                  ? isAuthenticated
                   ? t('bookingWidget.continueToConfirmation')
+                    : t('bookingWidget.continueToLogin')
                   : currentStep === 2
-                    ? isAuthenticated && isAccountTypeConfirmed
+                    ? t('bookingWidget.loginToContinue')
+                    : currentStep === 3
                       ? t('bookingWidget.sendRequest')
-                      : isAuthenticated && bookingAccountType
-                        ? t('bookingWidget.confirmBookingType')
-                        : isAuthenticated
-                          ? t('bookingWidget.selectBookingType')
-                          : t('bookingWidget.loginToContinue')
                     : t('bookingWidget.done')}
           </Button>
         )}
-        {currentStep === 3 && (
+        {currentStep === 4 && (
           <Button
             type="button"
             variant="primary"

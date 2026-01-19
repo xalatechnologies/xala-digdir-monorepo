@@ -111,8 +111,8 @@ function transformApiToListing(api: ApiListing, t: (key: string) => string): Ren
     category: 'general' as const,
   }));
 
-  // Map opening hours from DTO - check both flat and nested in metadata
-  const openingHoursData = dto.openingHours || dto.metadata?.openingHours;
+  // Map opening hours from DTO - check both flat and nested in metadata (handle both camelCase and snake_case)
+  const openingHoursData = dto.openingHours || dto.metadata?.openingHours || dto.metadata?.opening_hours;
 
   // Convert opening hours to array format
   let openingHoursArray: any[] = [];
@@ -133,13 +133,19 @@ function transformApiToListing(api: ApiListing, t: (key: string) => string): Ren
 
     openingHoursArray = Object.entries(openingHoursData)
       .filter(([key]) => dayNameMap[key])
-      .map(([key, hours]: [string, any]) => ({
-        day: dayNameMap[key]?.name || key,
-        dayIndex: dayNameMap[key]?.index ?? 0,
-        open: hours.open || '',
-        close: hours.close || '',
-        isClosed: !hours.open && !hours.close,
-      }));
+      .map(([key, hours]: [string, any]) => {
+        // Handle array format [{from, to}] and object format {open, close}
+        const hoursData = Array.isArray(hours) ? hours[0] : hours;
+        const openTime = hoursData?.open || hoursData?.from || '';
+        const closeTime = hoursData?.close || hoursData?.to || '';
+        return {
+          day: dayNameMap[key]?.name || key,
+          dayIndex: dayNameMap[key]?.index ?? 0,
+          open: openTime,
+          close: closeTime,
+          isClosed: !openTime && !closeTime,
+        };
+      });
   }
 
   const openingHours: OpeningHours = {

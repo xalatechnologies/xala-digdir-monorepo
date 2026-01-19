@@ -12718,5 +12718,9 @@
     "heating": "Oppvarming",
     "outdoor_area": "Utendørsområde",
     "changing_rooms": "Garderober"
-  }
+  },
+  "filtrer": "Filtrer",
+  "område": "Område",
+  "kapasitet": "Kapasitet",
+  "fasiliteter": "Fasiliteter"
 }

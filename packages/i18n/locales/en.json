@@ -12749,5 +12749,9 @@
     "heating": "Heating",
     "outdoor_area": "Outdoor Area",
     "changing_rooms": "Changing Rooms"
-  }
+  },
+  "filtrer": "Filter",
+  "område": "Area",
+  "kapasitet": "Capacity",
+  "fasiliteter": "Facilities"
 }

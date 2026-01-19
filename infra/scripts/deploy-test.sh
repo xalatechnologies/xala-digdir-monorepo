@@ -113,9 +113,14 @@ rsync -avz packages/contracts/dist/ ${VPS_USER}@${VPS_HOST}:${DEPLOY_PATH}/packa
 rsync -avz packages/client-sdk/dist/ ${VPS_USER}@${VPS_HOST}:${DEPLOY_PATH}/packages/client-sdk/dist/
 rsync -avz packages/database-schema/dist/ ${VPS_USER}@${VPS_HOST}:${DEPLOY_PATH}/packages/database-schema/dist/
 rsync -avz apps/api/dist/ ${VPS_USER}@${VPS_HOST}:${DEPLOY_PATH}/apps/api/dist/
-rsync -avz apps/web/dist/ ${VPS_USER}@${VPS_HOST}:${DEPLOY_PATH}/apps/web/dist/
-rsync -avz apps/minside/dist/ ${VPS_USER}@${VPS_HOST}:${DEPLOY_PATH}/apps/minside/dist/
-rsync -avz apps/backoffice/dist/ ${VPS_USER}@${VPS_HOST}:${DEPLOY_PATH}/apps/backoffice/dist/
+# Clean old bundles before deploying new ones
+ssh root@${VPS_HOST} "rm -rf /var/www/web-test.digilist.no/assets/*.js /var/www/web-test.digilist.no/assets/*.css"
+ssh root@${VPS_HOST} "rm -rf /var/www/minside-test.digilist.no/assets/*.js /var/www/minside-test.digilist.no/assets/*.css"
+ssh root@${VPS_HOST} "rm -rf /var/www/backoffice-test.digilist.no/assets/*.js /var/www/backoffice-test.digilist.no/assets/*.css"
+
+rsync -avz apps/web/dist/ root@${VPS_HOST}:/var/www/web-test.digilist.no/
+rsync -avz apps/minside/dist/ root@${VPS_HOST}:/var/www/minside-test.digilist.no/
+rsync -avz apps/backoffice/dist/ root@${VPS_HOST}:/var/www/backoffice-test.digilist.no/
 log_info "Built packages deployed"
 echo ""
 
@@ -138,7 +143,27 @@ GRANT ALL PRIVILEGES ON DATABASE digilist_dev TO digilist_dev;
 EOF
 echo "✓ Database created"
 
-# Grant schema permissions
+echo "✓ Database user created (permissions will be granted after migration)"
+ENDSSH
+log_info "Database setup complete"
+echo ""
+
+# Step 6: Run migrations
+echo "🔄 Step 6: Running database migrations..."
+ssh ${VPS_USER}@${VPS_HOST} << ENDSSH
+set -e
+cd ${DEPLOY_PATH}/packages/database-schema
+echo "Applying migration file..."
+PGPASSWORD='${DB_PASSWORD}' psql -h ${DB_HOST} -p ${DB_PORT} -U ${DB_USER} -d ${DB_NAME} -f migrations/0000_complete_schema.sql
+echo "✓ Migration applied successfully"
+ENDSSH
+log_info "Database migrations complete"
+echo ""
+
+# Step 6.5: Grant schema permissions (after migration creates schemas)
+echo "🔐 Step 6.5: Granting schema permissions..."
+ssh ${VPS_USER}@${VPS_HOST} << 'ENDSSH'
+set -e
 sudo -u postgres psql -d digilist_dev << 'EOF'
 GRANT USAGE ON SCHEMA platform TO digilist_dev;
 GRANT USAGE ON SCHEMA domain TO digilist_dev;
@@ -170,21 +195,8 @@ ALTER DEFAULT PRIVILEGES IN SCHEMA compliance GRANT ALL ON SEQUENCES TO digilist
 ALTER DEFAULT PRIVILEGES IN SCHEMA monitoring GRANT ALL ON SEQUENCES TO digilist_dev;
 ALTER DEFAULT PRIVILEGES IN SCHEMA saas GRANT ALL ON SEQUENCES TO digilist_dev;
 EOF
-echo "✓ Database permissions granted"
 ENDSSH
-log_info "Database setup complete"
-echo ""
-
-# Step 6: Run migrations
-echo "🔄 Step 6: Running database migrations..."
-ssh ${VPS_USER}@${VPS_HOST} << ENDSSH
-set -e
-cd ${DEPLOY_PATH}/packages/database-schema
-echo "Applying migration file..."
-PGPASSWORD='${DB_PASSWORD}' psql -h ${DB_HOST} -p ${DB_PORT} -U ${DB_USER} -d ${DB_NAME} -f migrations/0000_fuzzy_dragon_lord.sql
-echo "✓ Migration applied successfully"
-ENDSSH
-log_info "Database migrations complete"
+log_info "Schema permissions granted"
 echo ""
 
 # Step 7: Deploy storage files (seed images)

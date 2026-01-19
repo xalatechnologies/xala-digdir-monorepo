@@ -513,6 +513,26 @@ export function AuthProvider({ children, config }: AuthProviderProps) {
   }, [config.appType, navigate, debug]);
 
   /**
+   * Handle auth callback - set user state directly (for demo login without page reload)
+   */
+  const handleAuthCallback = useCallback((userData: Pick<User, 'id' | 'name' | 'email'>) => {
+    debug('handleAuthCallback called:', userData.email);
+    
+    const fullUser: User = {
+      id: userData.id,
+      name: userData.name,
+      email: userData.email,
+      role: 'citizen' as UserRole, // Default role for demo users
+    };
+    
+    // Store in localStorage for persistence
+    localStorage.setItem(`${config.appType}_user`, JSON.stringify(fullUser));
+    setUser(fullUser);
+    
+    debug('User state updated via handleAuthCallback');
+  }, [config.appType, debug]);
+
+  /**
    * Check if user has specific role
    */
   const checkRole = useCallback((role: UserRole): boolean => {
@@ -575,8 +595,9 @@ export function AuthProvider({ children, config }: AuthProviderProps) {
       checkRole,
       restoreFlowContext,
       clearFlowContext,
+      handleAuthCallback,
     }),
-    [user, isLoading, accessDeniedError, hasStoredContext, login, logout, checkRole, restoreFlowContext, clearFlowContext]
+    [user, isLoading, accessDeniedError, hasStoredContext, login, logout, checkRole, restoreFlowContext, clearFlowContext, handleAuthCallback]
   );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

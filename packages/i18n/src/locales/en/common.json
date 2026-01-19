@@ -21,6 +21,8 @@
   "yes": "Yes",
   "no": "No",
   "or": "or",
+  "du_booker_som_privatperson": "You are booking as a private individual.",
+  "du_har_valgt_aa": "You have chosen to book as a private individual.",
   "all": "All",
   "none": "None",
   "showMore": "Show more",

@@ -103,8 +103,8 @@ export function BookingPricingStep({
           {t('booking.priceGroup')}
         </Heading>
         <Paragraph data-size="sm" style={{ margin: 0, marginBottom: 'var(--ds-spacing-3)', color: 'var(--ds-color-neutral-text-subtle)' }}>
-          Utleier tilbyr egne priser til enkelte kundegrupper. Valg av prisgruppe medfører en godkjenningsprosess.
-          {allowMultiplePriceGroups && ' Du kan velge flere prisgrupper.'}
+          {t('booking.priceGroupDescription')}
+          {allowMultiplePriceGroups && ` ${t('booking.canSelectMultiplePriceGroups')}`}
         </Paragraph>
         
         {/* Button-based Price Group Selection */}
@@ -257,7 +257,7 @@ export function BookingPricingStep({
       {/* Additional Services */}
       <div>
         <Heading level={4} data-size="sm" style={{ margin: 0, marginBottom: 'var(--ds-spacing-3)' }}>
-          ANBEFALTE TILLEGG
+          {t('booking.recommendedAddons')}
         </Heading>
         <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--ds-spacing-3)' }}>
           {additionalServices.map(service => (
@@ -322,7 +322,7 @@ export function BookingPricingStep({
       {/* Terms and Conditions */}
       <div>
         <Heading level={4} data-size="sm" style={{ margin: 0, marginBottom: 'var(--ds-spacing-3)' }}>
-          Vilkår og betingelser
+          {t('booking.termsAndConditions')}
         </Heading>
         <div
           style={{
@@ -334,7 +334,7 @@ export function BookingPricingStep({
           }}
         >
           <Paragraph data-size="sm" style={{ margin: 0, marginBottom: 'var(--ds-spacing-2)', fontWeight: 'var(--ds-font-weight-semibold)' }}>
-            Les viktige vilkår
+            {t('booking.readImportantTerms')}
           </Paragraph>
           <ul style={{ margin: 0, paddingLeft: 'var(--ds-spacing-4)', fontSize: 'var(--ds-font-size-sm)', lineHeight: 'var(--ds-line-height-lg)', color: 'var(--ds-color-neutral-text-subtle)' }}>
             <li>{t('terms.cancellationAndRefund')}</li>
@@ -391,7 +391,7 @@ export function BookingPricingStep({
             }}
           />
           <Paragraph data-size="sm" style={{ margin: 0 }}>
-            Jeg har lest og godkjenner betingelsene
+            {t('booking.acceptTermsLabel')}
           </Paragraph>
         </label>
       </div>

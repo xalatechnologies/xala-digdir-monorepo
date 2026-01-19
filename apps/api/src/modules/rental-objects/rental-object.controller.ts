@@ -59,7 +59,8 @@ export class RentalObjectController {
   @Get('/:id')
   async findById(request: FastifyRequest<{ Params: { id: string } }>, _reply: FastifyReply) {
     const rentalObject = await this.service.findByIdOrFail(request.params.id);
-    return { data: rentalObject };
+    const projected = toDetailsProjection(rentalObject as any);
+    return { data: projected };
   }
 
   /**

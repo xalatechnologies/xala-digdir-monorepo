@@ -128,6 +128,10 @@ export interface BookingConfirmationStepProps {
   onVisibilityChange?: (visibility: BookingVisibility) => void;
   /** Handler for demo login */
   onDemoLogin?: () => void;
+  /** Handler for logout (for testing) */
+  onLogout?: () => void;
+  /** Display mode: 'auto' (default), 'login-and-selection', 'confirmation-only' */
+  displayMode?: 'auto' | 'login-and-selection' | 'confirmation-only';
 }
 
 export function BookingConfirmationStep({
@@ -150,12 +154,14 @@ export function BookingConfirmationStep({
   onConfirmAccountType,
   organizations = [],
   isAccountTypeConfirmed = false,
+  displayMode = 'auto',
   rentalObjectId,
   tenantId,
   bookingMode,
   visibility,
   onVisibilityChange,
   onDemoLogin,
+  onLogout,
 }: BookingConfirmationStepProps): React.ReactElement {
   const t = useT();
   const monthNames = ['januar', 'februar', 'mars', 'april', 'mai', 'juni', 'juli', 'august', 'september', 'oktober', 'november', 'desember'];
@@ -259,20 +265,22 @@ export function BookingConfirmationStep({
     }
   }, [onLoginWithFlowContext, captureBookingState, onLoginAsEmployee, rentalObjectId, tenantId, bookingMode]);
 
-  // Show account selection if authenticated but no account type selected yet
-  const showAccountSelection = isAuthenticated && !bookingAccountType;
+  // Determine what to show based on displayMode
+  // 'login-and-selection': Only show login UI (Step 2 - login only)
+  // 'confirmation-only': Show full confirmation with account selection at top (Step 3)
+  // 'auto': Original behavior based on state
+  
+  const showAccountSelection = displayMode === 'login-and-selection'
+    ? false // Login step doesn't show account selection
+    : displayMode === 'confirmation-only'
+      ? false // Account selection is now PART of confirmation, not separate
+      : isAuthenticated && !bookingAccountType;
 
-  // Show account type confirmation if account type is selected but not yet confirmed
-  // (for organization, we also need the organization to be selected)
-  const showAccountTypeConfirmation = isAuthenticated && bookingAccountType && !isAccountTypeConfirmed && (
-    bookingAccountType === 'private' || 
-    (bookingAccountType === 'organization' && selectedOrganizationId)
-  );
-
-  // Show booking confirmation only after account type is confirmed
-  const showBookingConfirmation = isAuthenticated && isAccountTypeConfirmed && bookingAccountType && (
-    bookingAccountType === 'private' || selectedOrganizationId
-  );
+  const showBookingConfirmation = displayMode === 'confirmation-only'
+    ? true // Always show confirmation in this mode (includes account type at top)
+    : displayMode === 'login-and-selection'
+      ? false // Login step doesn't show confirmation
+      : isAuthenticated && bookingAccountType && (bookingAccountType === 'private' || selectedOrganizationId);
 
   // Explicit check: If not authenticated, ALWAYS show login
   if (!isAuthenticated) {
@@ -637,201 +645,105 @@ export function BookingConfirmationStep({
             </div>
           )}
         </>
-      ) : showAccountTypeConfirmation ? (
-        /* Account Type Confirmation - Confirm selection before proceeding */
+      ) : showBookingConfirmation ? (
+        /* Confirmation Step - Account Type + Visibility only */
         <>
-          <Heading level={3} data-size="md" style={{ margin: 0, marginBottom: 'var(--ds-spacing-2)' }}>
-            Bekreft bookingtype
-          </Heading>
-          <Paragraph data-size="sm" style={{ margin: 0, marginBottom: 'var(--ds-spacing-6)', color: 'var(--ds-color-neutral-text-subtle)' }}>
-            {bookingAccountType === 'private' 
-              ? t('common.du_har_valgt_aa')
-              : selectedOrganizationId && organizations.find(o => o.id === selectedOrganizationId)
-                ? `Du har valgt å booke på vegne av ${organizations.find(o => o.id === selectedOrganizationId)?.name}.`
-                : 'Du har valgt å booke på vegne av en organisasjon.'}
-          </Paragraph>
-
-          <div
-            style={{
-              padding: 'var(--ds-spacing-5)',
-              backgroundColor: 'var(--ds-color-neutral-surface-default)',
-              borderRadius: 'var(--ds-border-radius-lg)',
-              border: '1px solid var(--ds-color-neutral-border-subtle)',
-              marginBottom: 'var(--ds-spacing-6)',
-            }}
-          >
-            <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--ds-spacing-3)', marginBottom: 'var(--ds-spacing-4)' }}>
-              <div
+          {/* Account Type Toggle (Private / Organization) - Private is default */}
+          <div style={{ marginBottom: 'var(--ds-spacing-4)' }}>
+            <Paragraph data-size="sm" style={{ margin: 0, marginBottom: 'var(--ds-spacing-2)', fontWeight: 'var(--ds-font-weight-medium)' }}>
+              {t('hvordan.vil.du.booke')}
+            </Paragraph>
+            <div style={{ display: 'flex', gap: 'var(--ds-spacing-2)' }}>
+              <button
+                type="button"
+                onClick={() => onAccountTypeSelect?.('private')}
                 style={{
-                  width: '48px',
-                  height: '48px',
+                  flex: 1,
+                  padding: 'var(--ds-spacing-3)',
                   borderRadius: 'var(--ds-border-radius-md)',
-                  backgroundColor: bookingAccountType === 'private' 
-                    ? 'var(--ds-color-accent-base-default)'
-                    : 'var(--ds-color-neutral-surface-default)',
-                  border: bookingAccountType === 'private' 
-                    ? 'none'
-                    : '1px solid var(--ds-color-neutral-border-default)',
+                  border: `2px solid ${bookingAccountType === 'private' ? 'var(--ds-color-accent-border-default)' : 'var(--ds-color-neutral-border-default)'}`,
+                  backgroundColor: bookingAccountType === 'private' ? 'var(--ds-color-accent-surface-default)' : 'var(--ds-color-neutral-background-default)',
+                  cursor: 'pointer',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
-                  color: bookingAccountType === 'private'
-                    ? 'var(--ds-color-accent-base-contrast-default)'
-                    : 'var(--ds-color-neutral-text-default)',
-                  fontWeight: 'bold',
-                  fontSize: 'var(--ds-font-size-lg)',
-                  flexShrink: 0,
+                  gap: 'var(--ds-spacing-2)',
+                  transition: 'all 150ms ease',
                 }}
               >
-                {bookingAccountType === 'private' ? '👤' : '🏢'}
-              </div>
-              <div style={{ flex: 1 }}>
-                <Paragraph data-size="md" style={{ margin: 0, fontWeight: 'var(--ds-font-weight-semibold)', color: 'var(--ds-color-neutral-text-default)' }}>
-                  {bookingAccountType === 'private' 
-                    ? 'Som privatperson'
-                    : selectedOrganizationId && organizations.find(o => o.id === selectedOrganizationId)
-                      ? organizations.find(o => o.id === selectedOrganizationId)?.name
-                      : 'På vegne av organisasjon'}
-                </Paragraph>
-                <Paragraph data-size="sm" style={{ margin: 0, marginTop: 'var(--ds-spacing-1)', color: 'var(--ds-color-neutral-text-subtle)' }}>
-                  {bookingAccountType === 'private' 
-                    ? 'Booke for deg selv eller din familie'
-                    : 'Booke for en organisasjon du representerer'}
-                </Paragraph>
-              </div>
+                <span>👤</span>
+                <span style={{ fontSize: 'var(--ds-font-size-sm)', fontWeight: bookingAccountType === 'private' ? 'var(--ds-font-weight-semibold)' : 'normal' }}>
+                  {t('som.privatperson')}
+                </span>
+              </button>
+              <button
+                type="button"
+                onClick={() => onAccountTypeSelect?.('organization')}
+                style={{
+                  flex: 1,
+                  padding: 'var(--ds-spacing-3)',
+                  borderRadius: 'var(--ds-border-radius-md)',
+                  border: `2px solid ${bookingAccountType === 'organization' ? 'var(--ds-color-accent-border-default)' : 'var(--ds-color-neutral-border-default)'}`,
+                  backgroundColor: bookingAccountType === 'organization' ? 'var(--ds-color-accent-surface-default)' : 'var(--ds-color-neutral-background-default)',
+                  cursor: 'pointer',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  gap: 'var(--ds-spacing-2)',
+                  transition: 'all 150ms ease',
+                }}
+              >
+                <span>🏢</span>
+                <span style={{ fontSize: 'var(--ds-font-size-sm)', fontWeight: bookingAccountType === 'organization' ? 'var(--ds-font-weight-semibold)' : 'normal' }}>
+                  {t('paa.vegne.av.organisasjon')}
+                </span>
+              </button>
             </div>
+            {/* Organization selector if organization is selected */}
+            {bookingAccountType === 'organization' && organizations.length > 0 && (
+              <div style={{ marginTop: 'var(--ds-spacing-3)' }}>
+                <select
+                  value={selectedOrganizationId || ''}
+                  onChange={(e) => onAccountTypeSelect?.('organization', e.target.value || undefined)}
+                  style={{
+                    width: '100%',
+                    padding: 'var(--ds-spacing-3)',
+                    borderRadius: 'var(--ds-border-radius-md)',
+                    border: '1px solid var(--ds-color-neutral-border-default)',
+                    backgroundColor: 'var(--ds-color-neutral-background-default)',
+                    fontSize: 'var(--ds-font-size-sm)',
+                  }}
+                >
+                  <option value="">{t('velg.organisasjon')}</option>
+                  {organizations.map(org => (
+                    <option key={org.id} value={org.id}>{org.name}</option>
+                  ))}
+                </select>
+              </div>
+            )}
           </div>
-
-          <div style={{ display: 'flex', gap: 'var(--ds-spacing-3)', justifyContent: 'flex-end' }}>
-            <Button
-              type="button"
-              variant="secondary"
-              onClick={() => {
-                onAccountTypeSelect?.(undefined, undefined);
-              }}
-              style={{ minWidth: '120px' }}
-            >
-              Endre valg
-            </Button>
-            <Button
-              type="button"
-              variant="primary"
-              onClick={onConfirmAccountType}
-              style={{ minWidth: '120px' }}
-            >
-              t('actions.bekreft_og_fortsett')
-            </Button>
-          </div>
-        </>
-      ) : showBookingConfirmation ? (
-        /* Authenticated with Account Type Selected - Show Confirmation */
-        <>
-          <Heading level={3} data-size="md" style={{ margin: 0, marginBottom: 'var(--ds-spacing-2)' }}>
-            Bekreft booking
-          </Heading>
-          <Paragraph data-size="sm" style={{ margin: 0, marginBottom: 'var(--ds-spacing-4)', color: 'var(--ds-color-neutral-text-subtle)' }}>
-            {bookingAccountType === 'private'
-              ? t('common.du_booker_som_privatperson')
-              : selectedOrganizationId && organizations.find(o => o.id === selectedOrganizationId)
-                ? `Du booker på vegne av ${organizations.find(o => o.id === selectedOrganizationId)?.name}.`
-                : 'Du booker på vegne av en organisasjon.'}
-          </Paragraph>
 
           {/* Calendar Visibility Selection (GDPR Compliance) */}
-          <div style={{ marginBottom: 'var(--ds-spacing-5)' }}>
-            <BookingVisibilitySelector
-              value={visibility ?? 'PUBLIC_TITLE'}
-              onChange={onVisibilityChange ?? (() => {})}
-            />
-          </div>
+          <BookingVisibilitySelector
+            value={visibility ?? 'PUBLIC_TITLE'}
+            onChange={onVisibilityChange ?? (() => {})}
+          />
 
-          {/* Error Display */}
+          {/* Error Display - only show if there's an error */}
           {bookingError && (
             <div
               style={{
-                padding: 'var(--ds-spacing-4)',
+                padding: 'var(--ds-spacing-3)',
                 backgroundColor: 'var(--ds-color-danger-surface-default)',
                 borderRadius: 'var(--ds-border-radius-md)',
-                border: '1px solid var(--ds-color-danger-border-default)',
-                marginBottom: 'var(--ds-spacing-4)',
-                display: 'flex',
-                alignItems: 'flex-start',
-                gap: 'var(--ds-spacing-3)',
+                marginTop: 'var(--ds-spacing-4)',
               }}
             >
-              <div>
-                <Paragraph data-size="sm" style={{ margin: 0, fontWeight: 'var(--ds-font-weight-semibold)', color: 'var(--ds-color-danger-text-default)' }}>
-                  {bookingError}
-                </Paragraph>
-                {onClearError && (
-                  <button
-                    type="button"
-                    onClick={onClearError}
-                    style={{
-                      marginTop: 'var(--ds-spacing-2)',
-                      padding: 0,
-                      border: 'none',
-                      background: 'none',
-                      color: 'var(--ds-color-danger-text-default)',
-                      fontSize: 'var(--ds-font-size-xs)',
-                      textDecoration: 'underline',
-                      cursor: 'pointer',
-                    }}
-                  >{t("action.close")}</button>
-                )}
-              </div>
+              <Paragraph data-size="sm" style={{ margin: 0, color: 'var(--ds-color-danger-text-default)' }}>
+                {bookingError}
+              </Paragraph>
             </div>
           )}
-
-          {/* Booking Summary */}
-          <div
-            style={{
-              padding: 'var(--ds-spacing-5)',
-              backgroundColor: 'var(--ds-color-neutral-surface-default)',
-              borderRadius: 'var(--ds-border-radius-lg)',
-              border: '1px solid var(--ds-color-neutral-border-subtle)',
-            }}
-          >
-            <Paragraph data-size="sm" style={{ margin: 0, color: 'var(--ds-color-neutral-text-subtle)', marginBottom: 'var(--ds-spacing-3)' }}>
-              Vennligst bekreft at følgende informasjon er korrekt:
-            </Paragraph>
-
-            {Array.from(selectedSlots).map((slotKey, index) => {
-              const parts = slotKey.split('-');
-              const dayIdx = parseInt(parts[0] ?? '0', 10);
-              const timeStr = parts[1] ?? '';
-              const details = slotDetails[slotKey] ?? { duration: 60 };
-
-              const [startH, startM] = timeStr.split(':').map(Number);
-              const endMins = ((startH ?? 0) * 60 + (startM ?? 0)) + details.duration;
-              const endH = Math.floor(endMins / 60);
-              const endM = endMins % 60;
-              const endTime = `${endH.toString().padStart(2, '0')}:${endM.toString().padStart(2, '0')}`;
-
-              const slotDate = new Date(weekStart);
-              slotDate.setDate(weekStart.getDate() + dayIdx);
-
-              return (
-                <div
-                  key={slotKey}
-                  style={{
-                    paddingTop: index > 0 ? 'var(--ds-spacing-3)' : 0,
-                    marginTop: index > 0 ? 'var(--ds-spacing-3)' : 0,
-                    borderTop: index > 0 ? '1px solid var(--ds-color-neutral-border-subtle)' : 'none',
-                  }}
-                >
-                  <Paragraph data-size="sm" style={{ margin: 0, fontWeight: 'var(--ds-font-weight-semibold)', marginBottom: 'var(--ds-spacing-1)' }}>
-                    {dayNames[slotDate.getDay()]} {slotDate.getDate()}. {monthNames[slotDate.getMonth()]}
-                  </Paragraph>
-                  <Paragraph data-size="sm" style={{ margin: 0, color: 'var(--ds-color-neutral-text-subtle)' }}>
-                    <span>{timeStr} – {endTime}</span>
-                    {details.purpose && <span> • {details.purpose}</span>}
-                    {details.attendees && <span> • {details.attendees} personer</span>}
-                  </Paragraph>
-                </div>
-              );
-            })}
-          </div>
         </>
       ) : isAuthenticated ? (
         /* Fallback: If authenticated but somehow no account type, show account selection */

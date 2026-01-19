@@ -5,13 +5,12 @@
  */
 
 import type { SeasonStatus } from '@digilist/client-sdk/types';
-import type { StatusBadgeConfig } from '@xala/ds';
 
 // =============================================================================
 // Season Status Configuration
 // =============================================================================
 
-export const SEASON_STATUS_CONFIG: Record<SeasonStatus, StatusBadgeConfig> = {
+export const SEASON_STATUS_CONFIG: Record<SeasonStatus, { label: string; color: string }> = {
   draft: {
     label: 'Utkast',
     color: 'neutral',
@@ -36,7 +35,7 @@ export const SEASON_STATUS_CONFIG: Record<SeasonStatus, StatusBadgeConfig> = {
     label: 'Kansellert',
     color: 'danger',
   },
-});
+};
 
 // =============================================================================
 // Application Status Configuration

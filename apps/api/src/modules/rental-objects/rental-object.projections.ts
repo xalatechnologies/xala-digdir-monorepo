@@ -242,8 +242,40 @@ function safeArray<T>(val: unknown): T[] {
   return Array.isArray(val) ? val : [];
 }
 
+/**
+ * Safely parse metadata which may be stored as a JSON string in the database.
+ * Drizzle ORM sometimes returns JSONB as a string when stored by raw SQL seeds.
+ */
+function safeParseMetadata(meta: unknown): Record<string, unknown> {
+  if (!meta) return {};
+  if (typeof meta === 'object' && !Array.isArray(meta)) {
+    // Check if it's a string-indexed object (character array from string)
+    const keys = Object.keys(meta);
+    if (keys.length > 0 && keys[0] === '0') {
+      // This is a string stored as object - sort keys numerically and reconstruct string
+      try {
+        const sortedKeys = keys.map(k => parseInt(k, 10)).sort((a, b) => a - b);
+        const str = sortedKeys.map(k => (meta as Record<string, string>)[k.toString()]).join('');
+        const parsed = JSON.parse(str) as Record<string, unknown>;
+        return parsed;
+      } catch {
+        return {};
+      }
+    }
+    return meta as Record<string, unknown>;
+  }
+  if (typeof meta === 'string') {
+    try {
+      return JSON.parse(meta) as Record<string, unknown>;
+    } catch {
+      return {};
+    }
+  }
+  return {};
+}
+
 function formatLocation(obj: DbRentalObject): { formatted: string; city: string } {
-  const meta = obj.metadata || {};
+  const meta = safeParseMetadata(obj.metadata);
   const location = (meta.location || {}) as Record<string, unknown>;
   const addr = (meta.address && typeof meta.address === 'object' ? meta.address : {}) as Record<string, string>;
 
@@ -259,7 +291,7 @@ function formatLocation(obj: DbRentalObject): { formatted: string; city: string 
 }
 
 function getCoordinates(obj: DbRentalObject): { lat: number | null; lng: number | null } {
-  const meta = obj.metadata || {};
+  const meta = safeParseMetadata(obj.metadata);
   const location = (meta.location || {}) as Record<string, unknown>;
   const address = (meta.address || {}) as Record<string, unknown>;
 
@@ -334,7 +366,7 @@ function getPrimaryImage(obj: DbRentalObject): { url: string; thumbnail: string;
 }
 
 function getAmenities(obj: DbRentalObject, maxCount: number = 3): { visible: string[]; moreCount: number } {
-  const meta = obj.metadata || {};
+  const meta = safeParseMetadata(obj.metadata);
   const all = safeArray<string>(meta.amenities) || safeArray<string>(meta.facilities);
   
   // Ensure amenity keys have the 'amenity.' prefix for i18n translation
@@ -397,7 +429,7 @@ export function toCardProjection(obj: DbRentalObject): RentalObjectCardProjectio
   const { visible: amenities, moreCount } = getAmenities(obj);
   const price = formatPrice(obj.pricing);
   const capacity = obj.capacity || 0;
-  const meta = obj.metadata || {};
+  const meta = safeParseMetadata(obj.metadata);
 
   const avgRating = safeNumber(meta.averageRating);
   const revCount = safeNumber(meta.reviewCount);
@@ -448,19 +480,9 @@ export function toDetailsProjection(
   obj: DbRentalObject,
   options: { canBook?: boolean; canEdit?: boolean; canViewPricing?: boolean} = {}
 ): RentalObjectDetailsProjectionDTO {
-  // DEBUG: Log what we're receiving
-  console.log('[PROJECTION DEBUG]', {
-    id: obj.id,
-    name: obj.name,
-    imagesType: typeof obj.images,
-    imagesIsArray: Array.isArray(obj.images),
-    imagesLength: Array.isArray(obj.images) ? obj.images.length : 'not array',
-    metadataType: typeof obj.metadata,
-    metadataKeys: obj.metadata ? Object.keys(obj.metadata) : 'no metadata'
-  });
   
   const card = toCardProjection(obj);
-  const meta = obj.metadata || {};
+  const meta = safeParseMetadata(obj.metadata);
   const location = (meta.location || {}) as Record<string, unknown>;
   const addr = (meta.address && typeof meta.address === 'object' ? meta.address : {}) as Record<string, string>;
 
@@ -582,10 +604,10 @@ export function toDetailsProjection(
     addressCity: safeString(addr.city) || safeString(location.city) || '',
     addressMunicipality: safeString(location.municipality) || '',
     addressCountry: safeString(location.country) || '',
-    contactName: safeString(meta.contactName) || '',
-    contactEmail: safeString(meta.contactEmail) || '',
-    contactPhone: safeString(meta.contactPhone) || '',
-    contactWebsite: safeString(meta.contactWebsite) || '',
+    contactName: safeString(meta.contactName) || safeString((meta.contact as Record<string, unknown>)?.name) || '',
+    contactEmail: safeString(meta.contactEmail) || safeString((meta.contact as Record<string, unknown>)?.email) || '',
+    contactPhone: safeString(meta.contactPhone) || safeString((meta.contact as Record<string, unknown>)?.phone) || '',
+    contactWebsite: safeString(meta.contactWebsite) || safeString((meta.contact as Record<string, unknown>)?.website) || '',
     allAmenities,
     openingHours,
     isOpenNow: false,

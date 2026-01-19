@@ -11,7 +11,7 @@ export const webAuthConfig: AppAuthConfig = {
   
   providers: [
     idportenProvider,
-    { ...vippsProvider, enabled: false }, // Disabled pending integration
+    vippsProvider, // Enabled for web app
     demoProvider,
   ],
   

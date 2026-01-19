@@ -113,10 +113,10 @@ export function FeatureItem({
 }: FeatureItemProps): React.ReactElement {
   // For 'light' variant (on colored background), use white text for WCAG compliance
   const textColor = variant === 'light'
-    ? 'var(--ds-color-neutral-text-inverse)'
+    ? '#ffffff'
     : 'var(--ds-color-neutral-text-default)';
   const iconBg = variant === 'light'
-    ? 'rgba(255, 255, 255, 0.2)'
+    ? 'rgba(255, 255, 255, 0.25)'
     : 'var(--ds-color-neutral-surface-hover)';
 
   return (
@@ -189,12 +189,12 @@ export function IntegrationBadge({
   variant = 'light',
   className,
 }: IntegrationBadgeProps): React.ReactElement {
-  const bgColor = variant === 'light'
-    ? 'rgba(255, 255, 255, 0.95)'
-    : 'var(--ds-color-neutral-surface-hover)';
   const textColor = variant === 'light'
-    ? 'var(--ds-color-neutral-text-default)'
+    ? '#ffffff'
     : 'var(--ds-color-neutral-text-default)';
+  const bgColor = variant === 'light'
+    ? 'rgba(255, 255, 255, 0.3)'
+    : 'var(--ds-color-neutral-surface-hover)';
 
   return (
     <span
@@ -563,7 +563,7 @@ export function LoginLayout({
               <Paragraph
                 data-size="xs"
                 style={{
-                  color: 'var(--ds-color-neutral-text-inverse)',
+                  color: '#ffffff',
                   textTransform: 'uppercase',
                   letterSpacing: 'var(--ds-letter-spacing-9)',
                   fontWeight: 'var(--ds-font-weight-medium)',
@@ -579,7 +579,7 @@ export function LoginLayout({
               level={2}
               data-size="2xl"
               style={{
-                color: 'var(--ds-color-neutral-text-inverse)',
+                color: '#ffffff',
                 marginBottom: 'var(--ds-spacing-4)',
                 wordBreak: 'break-word',
               }}
@@ -590,7 +590,7 @@ export function LoginLayout({
               <Paragraph
                 data-size="md"
                 style={{
-                  color: 'var(--ds-color-neutral-text-inverse)',
+                  color: '#ffffff',
                   wordBreak: 'break-word',
                   lineHeight: 'var(--ds-line-height-md)',
                 }}

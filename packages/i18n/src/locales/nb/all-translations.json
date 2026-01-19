@@ -2003,16 +2003,16 @@
     "complete": "Fullfør",
     "components": {
       "accountModal": {
-        "back": "Back",
-        "continue": "Continue",
-        "noOrganizations": "No Organizations",
-        "orgNumber": "Org Number",
+        "back": "Tilbake",
+        "continue": "Fortsett",
+        "noOrganizations": "Ingen organisasjoner",
+        "orgNumber": "Org.nr",
         "page": {
-          "description": "Description",
-          "title": "Title"
+          "description": "Velg hvordan du vil logge inn på plattformen",
+          "title": "Velg kontotype"
         },
-        "selectOrganization": "Select Organization",
-        "selectOrganizationSubtitle": "Select Organization Subtitle"
+        "selectOrganization": "Velg organisasjon",
+        "selectOrganizationSubtitle": "Velg hvilken organisasjon du vil representere"
       },
       "accountSwitcher": {
         "manageOrganizations": "Manage Organizations",
@@ -2041,8 +2041,8 @@
         "noAccessDescription": "No Access Description"
       },
       "sidebar": {
-        "appSubtitle": "App Subtitle",
-        "openMenu": "Open Menu"
+        "appSubtitle": "Din personlige portal",
+        "openMenu": "Åpne meny"
       }
     },
     "confirm": "Bekreft",

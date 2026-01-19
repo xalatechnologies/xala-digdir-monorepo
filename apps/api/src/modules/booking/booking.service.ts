@@ -95,7 +95,8 @@ export class BookingService {
     const ANONYMOUS_USER_ID = '00000000-0000-0000-0000-000000000000';
     
     // Determine userId - use validated userId, fall back to request userId, or anonymous placeholder
-    const effectiveUserId = validated.userId || (userId !== 'anonymous' ? userId : ANONYMOUS_USER_ID);
+    // Handle null/undefined userId properly
+    const effectiveUserId = validated.userId || userId || ANONYMOUS_USER_ID;
 
     const booking = await this.repository.create({
       tenantId,

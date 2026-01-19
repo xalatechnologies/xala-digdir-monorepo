@@ -19,13 +19,13 @@ export const idportenProvider: AuthProvider = {
 
 /**
  * Vipps (Norwegian payment/auth provider)
- * Currently disabled pending integration
+ * For fast mobile login
  */
 export const vippsProvider: AuthProvider = {
   id: 'vipps',
   name: 'Vipps',
-  description: 'Logg inn med Vipps',
-  enabled: false,
+  description: 'Rask innlogging med Vipps',
+  enabled: true,
   authorizeEndpoint: '/api/auth/vipps/authorize',
 };
 

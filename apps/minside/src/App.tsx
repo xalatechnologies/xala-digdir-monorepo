@@ -7,7 +7,7 @@ import { AuthProvider, useOAuthCallback } from '@xala/auth';
 import { RealtimeProvider } from '@digilist/client-sdk';
 import { ThemeProvider, useTheme } from '@xala/ds';
 import { AccountContextProvider, useAccountContext, type DashboardContext } from './providers/AccountContextProvider';
-import { ProtectedRoute } from '@xala/ds';
+import { ProtectedRoute } from './components/ProtectedRoute';
 import { AccountSelectionModal } from './components/AccountSelectionModal';
 
 // Dashboard context constants (technical identifiers, not user-facing strings)
@@ -28,6 +28,9 @@ import { NotificationsPage } from './routes/notifications';
 import { HelpPage } from './routes/help';
 import { PrivacyPage } from './routes/privacy';
 import { FavoritesPage } from './routes/favorites';
+import { SeasonsPage } from './routes/seasons';
+import { SeasonApplicationsPage } from './routes/season-applications';
+import { SeasonDetailPage } from './routes/season-detail';
 
 // Notification Center Context
 interface NotificationCenterContextValue {
@@ -149,6 +152,9 @@ function AppWithTheme() {
               <Route path="calendar" element={<ProtectedRoute requiredContext={CONTEXT_PERSONAL}><CalendarPage /></ProtectedRoute>} />
               <Route path="messages" element={<ProtectedRoute requiredContext={CONTEXT_PERSONAL}><MessagesPage /></ProtectedRoute>} />
               <Route path="favorites" element={<ProtectedRoute requiredContext={CONTEXT_PERSONAL}><FavoritesPage /></ProtectedRoute>} />
+              <Route path="seasons" element={<ProtectedRoute requiredContext={CONTEXT_PERSONAL}><SeasonsPage /></ProtectedRoute>} />
+              <Route path="seasons/:id" element={<ProtectedRoute requiredContext={CONTEXT_PERSONAL}><SeasonDetailPage /></ProtectedRoute>} />
+              <Route path="season-applications" element={<ProtectedRoute requiredContext={CONTEXT_PERSONAL}><SeasonApplicationsPage /></ProtectedRoute>} />
 
               {/* Shared routes (any context) */}
               <Route path="settings" element={<SettingsPage />} />

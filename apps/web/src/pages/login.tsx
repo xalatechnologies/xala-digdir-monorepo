@@ -123,13 +123,21 @@ export function Login(): React.ReactElement {
 
   // Handle provider click
   const handleProviderClick = (providerId: string) => {
+    const returnTo = window.location.href;
+    
     if (providerId === 'idporten') {
-      const returnTo = window.location.href;
       idportenService.authorize(returnTo);
     } else if (providerId === 'vipps') {
-      console.log('Vipps login is temporarily disabled');
+      // For demo mode, simulate Vipps login with a demo user
+      const demoUser = {
+        id: 'demo-user-vipps',
+        name: 'Vipps Bruker',
+        email: 'vipps@example.no',
+      };
+      localStorage.setItem('web_user', JSON.stringify(demoUser));
+      navigate('/', { replace: true });
     } else if (providerId === 'microsoft') {
-      console.warn('Microsoft login is temporarily disabled');
+      console.warn('Microsoft login is not available for web app');
     }
   };
 
@@ -144,29 +152,29 @@ export function Login(): React.ReactElement {
     logoHref: '/',
   };
 
-  // Panel configuration with icons
+  // Panel configuration with icons - Web app branding (NOT backoffice)
   const panelConfig = {
-    title: t('auth.backoffice'),
-    subtitle: t('auth.holisticSolution'),
-    description: t('auth.platformDesc'),
+    title: t('auth.webPortal'),
+    subtitle: t('auth.webSubtitle'),
+    description: t('auth.webDescription'),
     features: [
       {
         icon: <PlatformIcon size={20} />,
-        title: t('auth.completePlatform'),
-        description: t('auth.completePlatformDesc'),
+        title: t('auth.easyBooking'),
+        description: t('auth.easyBookingDesc'),
       },
       {
         icon: <AutomationIcon size={20} />,
-        title: t('auth.automation'),
-        description: t('auth.automationDesc'),
+        title: t('auth.instantConfirmation'),
+        description: t('auth.instantConfirmationDesc'),
       },
       {
         icon: <ShieldCheckIcon size={20} />,
-        title: t('auth.gdprSecure'),
-        description: t('auth.gdprSecureDesc'),
+        title: t('auth.securePayment'),
+        description: t('auth.securePaymentDesc'),
       },
     ],
-    integrations: ['BankID', 'Vipps', 'Visma', 'RCO', 'ISO 27001', 'ISO 27701'],
+    integrations: ['BankID', 'Vipps', 'Visma'],
   };
 
   // Footer links

@@ -141,4 +141,7 @@ export interface AuthContextType {
   
   /** Clear any stored flow context */
   clearFlowContext: () => void;
+  
+  /** Handle auth callback with user data (for demo login without page reload) */
+  handleAuthCallback: (userData: Pick<User, 'id' | 'name' | 'email'>) => void;
 }
