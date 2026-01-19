@@ -1,8 +1,16 @@
 import { Paragraph } from '@xala/ds';
 import { useT } from '@xala/i18n';
+import type { RentalObject } from '@digilist/client-sdk';
 
-export function RentalObjectOverviewTab() {
-  // TODO: Implement with translations
-  return <Paragraph>{t('common.todo_implement_rentalobjectoverviewtab')}</Paragraph>;
+interface RentalObjectOverviewTabProps {
+  rentalObject: RentalObject;
+}
+
+export function RentalObjectOverviewTab({ rentalObject }: RentalObjectOverviewTabProps) {
   const t = useT();
+  return (
+    <Paragraph>
+      {t('common.todo_implement_rentalobjectoverviewtab')} - {rentalObject.name}
+    </Paragraph>
+  );
 }

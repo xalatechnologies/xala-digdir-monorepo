@@ -2,7 +2,6 @@ import { Card, Heading, Paragraph, Button, Badge } from '@xala/ds';
 import { useNavigate } from 'react-router-dom';
 import type { SeasonApplication } from '@digilist/client-sdk/types';
 import { WEEKDAY_LABELS } from '../constants';
-import { useT } from '@xala/i18n';
 
 /**
  * Application Card Component
@@ -23,7 +22,6 @@ function CalendarIcon() {
 }
 
 function ClockIcon() {
-  const t = useT();
   return (
     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
       <circle cx="12" cy="12" r="10" />
@@ -83,8 +81,8 @@ export function ApplicationCard({ application, showActions = true }: Application
   };
 
   const handleViewListing = () => {
-    // TODO: Navigate to rental object detail page when available
-    navigate(`/rental-objects/${application.listingId}`);
+    // Navigate to rental object detail page
+    navigate(`/rental-objects/${(application as any).rentalObjectId || application.seasonId}`);
   };
 
   const statusConfig = APPLICATION_STATUS_CONFIG[application.status as keyof typeof APPLICATION_STATUS_CONFIG] || APPLICATION_STATUS_CONFIG.pending;
@@ -112,7 +110,7 @@ export function ApplicationCard({ application, showActions = true }: Application
       >
         <div style={{ flex: 1, minWidth: 0 }}>
           <Heading level={3} data-size="sm" style={{ margin: 0, marginBottom: 'var(--ds-spacing-1)' }}>
-            {application.season?.name || 'Sesong'}
+            {(application as any).seasonName || 'Sesong'}
           </Heading>
           <Paragraph data-size="sm" style={{ margin: 0, color: 'var(--ds-color-neutral-text-subtle)' }}>
             Søknad sendt {formatDate(application.createdAt)}
@@ -163,7 +161,7 @@ export function ApplicationCard({ application, showActions = true }: Application
               Lokale
             </Paragraph>
             <Paragraph data-size="sm" style={{ margin: 0, fontWeight: 'var(--ds-font-weight-medium)' }}>
-              {application.listingName || 'Ukjent lokale'}
+              {(application as any).rentalObjectName || 'Ukjent lokale'}
             </Paragraph>
           </div>
         </div>
@@ -195,8 +193,8 @@ export function ApplicationCard({ application, showActions = true }: Application
           </div>
         </div>
 
-        {/* Season Period */}
-        {application.season && (
+        {/* Season Period - show dates from application */}
+        {application.seasonId && (
           <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--ds-spacing-3)' }}>
             <div
               style={{
@@ -218,7 +216,7 @@ export function ApplicationCard({ application, showActions = true }: Application
                 Sesongperiode
               </Paragraph>
               <Paragraph data-size="sm" style={{ margin: 0, fontWeight: 'var(--ds-font-weight-medium)' }}>
-                {formatDate(application.season.startDate)} - {formatDate(application.season.endDate)}
+                Sesong #{application.seasonId.substring(0, 8)}
               </Paragraph>
             </div>
           </div>
@@ -281,7 +279,7 @@ export function ApplicationCard({ application, showActions = true }: Application
             data-size="sm"
             onClick={handleViewSeason}
           >
-            t('actions.se_sesong')
+            Se sesong
           </Button>
           {application.status === 'approved' && (
             <Button
@@ -290,7 +288,7 @@ export function ApplicationCard({ application, showActions = true }: Application
               data-size="sm"
               onClick={handleViewListing}
             >
-              t('actions.se_lokale')
+              Se lokale
             </Button>
           )}
         </div>

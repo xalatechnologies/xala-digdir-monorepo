@@ -46,11 +46,25 @@ export function ConsentManager() {
   // Update local state when consents data is loaded
   useEffect(() => {
     if (consentsData?.data) {
-      setConsents({
-        marketing: consentsData.data.marketing ?? false,
-        analytics: consentsData.data.analytics ?? false,
-        thirdPartySharing: consentsData.data.thirdPartySharing ?? false,
-      });
+      // Handle both array format (from SDK) and object format
+      const data = consentsData.data as any;
+      if (Array.isArray(data)) {
+        // SDK returns Consent[] array - find each consent type
+        const findConsent = (type: string) => 
+          data.find((c: any) => c.type === type)?.granted ?? false;
+        setConsents({
+          marketing: findConsent('marketing'),
+          analytics: findConsent('analytics'),
+          thirdPartySharing: findConsent('thirdPartySharing'),
+        });
+      } else {
+        // Legacy object format
+        setConsents({
+          marketing: data.marketing ?? false,
+          analytics: data.analytics ?? false,
+          thirdPartySharing: data.thirdPartySharing ?? false,
+        });
+      }
     }
   }, [consentsData]);
 
@@ -61,7 +75,13 @@ export function ConsentManager() {
 
   const handleSave = async () => {
     try {
-      await updateConsents.mutateAsync(consents);
+      // Transform local state to array format expected by SDK
+      const payload = [
+        { type: 'marketing', granted: consents.marketing },
+        { type: 'analytics', granted: consents.analytics },
+        { type: 'thirdPartySharing', granted: consents.thirdPartySharing },
+      ];
+      await updateConsents.mutateAsync(payload as any);
       setHasChanges(false);
     } catch (error) {
       console.error(t('validation.failed_to_update_consents'), error);
@@ -69,11 +89,16 @@ export function ConsentManager() {
   };
 
   const getLastUpdatedText = () => {
-    if (!consentsData?.data?.updatedAt) {
+    const data = consentsData?.data as any;
+    // Handle both array and object formats
+    const updatedAt = Array.isArray(data) 
+      ? data[0]?.updatedAt 
+      : data?.updatedAt;
+    if (!updatedAt) {
       return null;
     }
 
-    const date = new Date(consentsData.data.updatedAt);
+    const date = new Date(updatedAt);
     return date.toLocaleDateString('nb-NO', {
       year: 'numeric',
       month: 'long',

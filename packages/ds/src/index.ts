@@ -430,8 +430,7 @@ export type {
   RentalObjectMapProps,
   MapRentalObject,
   RentalObjectTableViewProps,
-  // TODO: RentalObjectsFilterBarProps - type not yet implemented
-  ViewMode,
+  // ViewMode already exported from composed at line 140
   ImageGalleryProps,
   ImageSliderProps,
   RentalObjectDetailHeaderProps,
@@ -573,10 +572,10 @@ export {
 // Rental Object Management Types
 export type {
   RentalObjectQueryFilters,
-  ViewMode,
+  // ViewMode already exported from composed
   RentalObjectFilterState,
   ListingStatus,
-  ListingType,
+  // ListingType already exported from composed
   RentalObjectStatus,
   RentalObjectType
 } from './types/rental-objects';

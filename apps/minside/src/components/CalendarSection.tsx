@@ -16,7 +16,7 @@ import * as React from 'react';
 import { Paragraph, RentalObjectAvailabilityCalendar } from '@xala/ds';
 import { useT } from '@xala/i18n';
 import {
-  useListingCalendarConfig,
+  useCalendarConfig,
   useAvailabilityMatrix,
   useCalendarRealtime,
 } from '@digilist/client-sdk/hooks';
@@ -174,13 +174,10 @@ export function CalendarSection({
 
   // Fetch calendar configuration from API
   const {
-    data: configResponse,
+    data: config,
     isLoading: isConfigLoading,
     error: configError,
-  } = useListingCalendarConfig(effectiveRentalObjectId, bookingType ? { bookingType } : undefined);
-
-  // Extract config from response
-  const config = configResponse?.data;
+  } = useCalendarConfig(effectiveRentalObjectId);
 
   // Determine calendar mode from config
   const calendarMode: CalendarMode = React.useMemo(() => {
@@ -325,7 +322,7 @@ export function CalendarSection({
   }, [matrixResponse, t]);
 
   // Check permissions
-  const canSelect = config?.permissions?.canSelectSlot ?? true;
+  const canSelect = config?.permissions?.canBook ?? true;
 
   // Empty state if no config
   if (!isLoading && !config && !configError) {
@@ -351,14 +348,14 @@ export function CalendarSection({
         mode={calendarMode}
         cells={cells}
         selection={selection}
-        legend={legend}
+        legend={legend as any}
         currentDate={currentDate}
         onDateChange={handleDateChange}
-        onCellClick={handleCellClick}
-        onSelectionChange={setSelection}
-        startHour={config?.openingHours?.weekly?.['1']?.open ? parseInt(config.openingHours.weekly['1'].open.split(':')[0]!, 10) : 8}
-        endHour={config?.openingHours?.weekly?.['1']?.close ? parseInt(config.openingHours.weekly['1'].close.split(':')[0]!, 10) : 17}
-        slotSizeMinutes={config?.slotSizeMinutes ?? 60}
+        onCellClick={handleCellClick as any}
+        onSelectionChange={setSelection as any}
+        startHour={8}
+        endHour={17}
+        slotSizeMinutes={60}
         showTips={true}
         title={t('components.calendar.selectTime')}
         subtitle={calendarMode === 'TIME_SLOTS' ? t('components.calendar.selectTimeSlots') : calendarMode === 'ALL_DAY' ? t('components.calendar.selectDays') : t('components.calendar.selectPeriod')}

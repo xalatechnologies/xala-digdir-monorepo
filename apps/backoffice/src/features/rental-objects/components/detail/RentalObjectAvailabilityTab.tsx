@@ -1,8 +1,16 @@
 import { Paragraph } from '@xala/ds';
 import { useT } from '@xala/i18n';
 
-export function RentalObjectAvailabilityTab() {
-  // TODO: Implement with translations
-  return <Paragraph>{t('common.todo_implement_rentalobjectavailabilitytab')}</Paragraph>;
+interface RentalObjectAvailabilityTabProps {
+  rentalObjectId: string;
+  rentalObjectName: string;
+}
+
+export function RentalObjectAvailabilityTab({ rentalObjectId, rentalObjectName }: RentalObjectAvailabilityTabProps) {
   const t = useT();
+  return (
+    <Paragraph>
+      {t('common.todo_implement_rentalobjectavailabilitytab')} - {rentalObjectName} ({rentalObjectId})
+    </Paragraph>
+  );
 }

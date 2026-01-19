@@ -257,14 +257,16 @@ export function NotificationPreferencesMatrix({
 
   // Group notification types by category
   const groupedTypes = useMemo(() => {
-    const groups: Record<NotificationCategory, typeof NOTIFICATION_TYPES_REGISTRY> = {
+    const groups: Record<NotificationCategory, any[]> = {
       booking: [],
       reminder: [],
       billing: [],
     };
 
-    for (const type of NOTIFICATION_TYPES_REGISTRY) {
-      groups[type.category].push(type);
+    for (const typeInfo of NOTIFICATION_TYPES_REGISTRY as any[]) {
+      if (typeInfo.category && groups[typeInfo.category as NotificationCategory]) {
+        groups[typeInfo.category as NotificationCategory].push(typeInfo);
+      }
     }
 
     return groups;
@@ -319,16 +321,16 @@ export function NotificationPreferencesMatrix({
           </Paragraph>
         </div>
 
-        {types.map((typeInfo) => (
+        {types.map((typeInfo: any) => (
           <NotificationTypeRow
             key={typeInfo.type}
             labelKey={typeInfo.labelKey}
             descriptionKey={typeInfo.descriptionKey}
-            settings={preferences[typeInfo.type]}
-            smsRecommended={typeInfo.smsRecommended}
+            settings={preferences[typeInfo.type as NotificationType] || { in_app: false, email: false, sms: false }}
+            smsRecommended={typeInfo.smsRecommended ?? false}
             showSmsRecommendedBadge={showSmsRecommended}
             masterToggles={masterToggles}
-            onChange={(channel, enabled) => handleTypeChannelChange(typeInfo.type, channel, enabled)}
+            onChange={(channel, enabled) => handleTypeChannelChange(typeInfo.type as NotificationType, channel, enabled)}
           />
         ))}
       </div>

@@ -15,7 +15,7 @@ import {
   Text,
   HeaderSearch,
   PlusIcon,
-  Heading,
+  PageHeader,
   Paragraph,
   ChevronLeftIcon,
   ChevronRightIcon,
@@ -118,7 +118,7 @@ export function RentalObjectsListView() {
     const sortOption = SORT_OPTIONS.find(s => s.id === selectedSort);
     if (sortOption && sortOption.field && sortOption.order) {
       setFilter('sortBy', sortOption.field);
-      setFilter('sortOrder', sortOption.order);
+      setFilter('sortOrder', sortOption.order as 'asc' | 'desc');
     }
 
     setIsFilterOpen(false);
@@ -147,19 +147,10 @@ export function RentalObjectsListView() {
     }
   }, []);
 
-  const handleSort = useCallback((field: 'name' | 'updatedAt' | 'createdAt' | 'status' | undefined) => {
-    if (!field) return;
-
-    const currentSortBy = filters.sortBy;
-    const currentSortOrder = filters.sortOrder;
-
-    if (field === currentSortBy) {
-      setFilter('sortOrder', currentSortOrder === 'desc' ? 'asc' : 'desc');
-    } else {
-      setFilter('sortBy', field);
-      setFilter('sortOrder', 'desc');
-    }
-  }, [filters.sortBy, filters.sortOrder, setFilter]);
+  const handleSort = useCallback((sortBy: string, sortOrder: 'asc' | 'desc') => {
+    setFilter('sortBy', sortBy as 'name' | 'updatedAt' | 'createdAt' | 'status');
+    setFilter('sortOrder', sortOrder);
+  }, [setFilter]);
 
   const handlePageChange = useCallback((page: number) => {
     setFilter('page', page);
@@ -314,39 +305,21 @@ export function RentalObjectsListView() {
         }}
       >
         {/* Header Row: Title + Create Button */}
-        <div
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'space-between',
-          }}
-        >
-          <Heading level={1} data-size="md" style={{ margin: 0 }}>
-            Utleieobjekter
-            {totalCount > 0 && (
-              <span
-                style={{
-                  color: 'var(--ds-color-neutral-text-subtle)',
-                  fontWeight: 'var(--ds-font-weight-regular)',
-                  marginLeft: 'var(--ds-spacing-2)',
-                }}
+        <PageHeader
+          title={`Utleieobjekter${totalCount > 0 ? ` (${totalCount})` : ''}`}
+          actions={
+            permissions.canCreate && (
+              <Button
+                type="button"
+                variant="primary"
+                onClick={() => navigate('/rental-objects/new')}
               >
-                ({totalCount})
-              </span>
-            )}
-          </Heading>
-
-          {permissions.canCreate && (
-            <Button
-              type="button"
-              variant="primary"
-              onClick={() => navigate('/rental-objects/new')}
-            >
-              <PlusIcon />
-              Nytt utleieobjekt
-            </Button>
-          )}
-        </div>
+                <PlusIcon />
+                Nytt utleieobjekt
+              </Button>
+            )
+          }
+        />
 
         {/* Toolbar Row: Search (left) | Count (center) | View toggle + Filter (right) */}
         <div

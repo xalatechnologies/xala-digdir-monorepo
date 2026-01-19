@@ -5,7 +5,6 @@
 import { useState } from 'react';
 import {
   Card,
-  Heading,
   Paragraph,
   Button,
   Table,
@@ -16,12 +15,13 @@ import {
   TableCell,
   Badge,
   Skeleton,
-  Select,
   PlusIcon,
   TrashIcon,
   EditIcon,
   EyeIcon,
   useDialog,
+  PageHeader,
+  NativeSelect,
 } from '@xala/ds';
 import { useBlocks, useAssignedBlocks, useDeleteBlock, useAssignedRentalObjects } from '@digilist/client-sdk/hooks';
 import { useT } from '@xala/i18n';
@@ -68,8 +68,6 @@ export function BlocksListPage(): React.ReactElement {
     const confirmed = await confirm({
       title: t('blocks.deleteConfirm.page.title'),
       description: t('blocks.deleteConfirm.description', { title: blockTitle }),
-      confirmLabel: t('action.delete'),
-      cancelLabel: t('action.cancel'),
       variant: 'danger',
     });
 
@@ -83,18 +81,11 @@ export function BlocksListPage(): React.ReactElement {
   };
 
   // Format date range for display
-  const formatDateRange = (startDate: string, endDate: string, allDay: boolean) => {
-    const start = new Date(startDate);
-    const end = new Date(endDate);
+  const formatDateRange = (startTime: string, endTime: string) => {
+    const start = new Date(startTime);
+    const end = new Date(endTime);
     const dateOptions: Intl.DateTimeFormatOptions = { day: 'numeric', month: 'short', year: 'numeric' };
     const timeOptions: Intl.DateTimeFormatOptions = { hour: '2-digit', minute: '2-digit' };
-
-    if (allDay) {
-      if (start.toDateString() === end.toDateString()) {
-        return start.toLocaleDateString('nb-NO', dateOptions);
-      }
-      return `${start.toLocaleDateString('nb-NO', dateOptions)} - ${end.toLocaleDateString('nb-NO', dateOptions)}`;
-    }
 
     if (start.toDateString() === end.toDateString()) {
       return `${start.toLocaleDateString('nb-NO', dateOptions)} ${start.toLocaleTimeString('nb-NO', timeOptions)} - ${end.toLocaleTimeString('nb-NO', timeOptions)}`;
@@ -150,31 +141,29 @@ export function BlocksListPage(): React.ReactElement {
   return (
     <div data-testid="blocks-list" style={{ display: 'flex', flexDirection: 'column', gap: 'var(--ds-spacing-6)' }}>
       {/* Header */}
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-        <div>
-          <Heading level={1} data-size="lg" style={{ margin: 0 }}>
-            {t('blocks.page.title')}
-          </Heading>
-          <Paragraph style={{ color: 'var(--ds-color-neutral-text-subtle)', marginTop: 'var(--ds-spacing-2)', marginBottom: 0 }}>
-            {t('blocks.description')}
-          </Paragraph>
-        </div>
-        {canCreateBlock && (
-          <Button type="button" variant="primary" onClick={() => navigate('/blocks/new')} aria-label={t('action.create')}>
-            <PlusIcon />
-            {t('blocks.createBlock')}
-          </Button>
-        )}
-      </div>
+      <PageHeader
+        title={t('blocks.page.title')}
+        subtitle={t('blocks.description')}
+        actions={
+          canCreateBlock && (
+            <Button type="button" variant="primary" onClick={() => navigate('/blocks/new')} aria-label={t('action.create')}>
+              <PlusIcon />
+              {t('blocks.createBlock')}
+            </Button>
+          )
+        }
+      />
 
       {/* Filters */}
       <Card style={{ padding: 'var(--ds-spacing-4)' }}>
         <div style={{ display: 'flex', gap: 'var(--ds-spacing-4)', flexWrap: 'wrap' }}>
           <div style={{ minWidth: '200px' }}>
-            <Select
-              label={t('blocks.filterByRentalObject')}
+            <label style={{ display: 'block', fontSize: 'var(--ds-font-size-sm)', marginBottom: 'var(--ds-spacing-1)' }}>
+              {t('blocks.filterByRentalObject')}
+            </label>
+            <NativeSelect
               value={selectedRentalObjectId}
-              onChange={(e) => setSelectedRentalObjectId(e.target.value)}
+              onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setSelectedRentalObjectId(e.target.value)}
             >
               <option value="">{t('label.all')}</option>
               {rentalObjects.map((obj) => (
@@ -182,19 +171,20 @@ export function BlocksListPage(): React.ReactElement {
                   {obj.name}
                 </option>
               ))}
-            </Select>
+            </NativeSelect>
           </div>
           <div style={{ minWidth: '150px' }}>
-            <Select
-              label={t('blocks.filterByStatus')}
+            <label style={{ display: 'block', fontSize: 'var(--ds-font-size-sm)', marginBottom: 'var(--ds-spacing-1)' }}>
+              {t('blocks.filterByStatus')}
+            </label>
+            <NativeSelect
               value={statusFilter}
-              onChange={(e) => setStatusFilter(e.target.value)}
+              onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setStatusFilter(e.target.value)}
             >
               <option value="">{t('label.all')}</option>
               <option value="active">{t('blocks.status.active')}</option>
               <option value="cancelled">{t('blocks.status.cancelled')}</option>
-              <option value="completed">{t('blocks.status.completed')}</option>
-            </Select>
+            </NativeSelect>
           </div>
         </div>
       </Card>
@@ -218,10 +208,9 @@ export function BlocksListPage(): React.ReactElement {
             <TableHead>
               <TableRow>
                 <TableHeaderCell>{t('blocks.table.page.title')}</TableHeaderCell>
-                <TableHeaderCell>{t('blocks.table.rentalObject')}</TableHeaderCell>
+                <TableHeaderCell>{t('blocks.table.type')}</TableHeaderCell>
                 <TableHeaderCell>{t('blocks.table.dateRange')}</TableHeaderCell>
                 <TableHeaderCell>{t('blocks.table.status')}</TableHeaderCell>
-                <TableHeaderCell>{t('blocks.table.visibility')}</TableHeaderCell>
                 <TableHeaderCell style={{ textAlign: 'right' }}>{t('common.actions')}</TableHeaderCell>
               </TableRow>
             </TableHead>
@@ -233,19 +222,23 @@ export function BlocksListPage(): React.ReactElement {
                       <Paragraph data-size="sm" style={{ margin: 0, fontWeight: 'var(--ds-font-weight-medium)' }}>
                         {block.title}
                       </Paragraph>
-                      {block.reason && (
+                      {block.notes && (
                         <Paragraph data-size="xs" style={{ margin: 0, color: 'var(--ds-color-neutral-text-subtle)', marginTop: 'var(--ds-spacing-1)' }}>
-                          {block.reason.length > 50 ? `${block.reason.substring(0, 50)}...` : block.reason}
+                          {block.notes.length > 50 ? `${block.notes.substring(0, 50)}...` : block.notes}
                         </Paragraph>
                       )}
                     </div>
                   </TableCell>
-                  <TableCell>{block.rentalObjectName || '-'}</TableCell>
+                  <TableCell>
+                    <Badge data-color="neutral" data-size="sm">
+                      {t(`blocks.type.${block.blockType}`)}
+                    </Badge>
+                  </TableCell>
                   <TableCell>
                     <Paragraph data-size="sm" style={{ margin: 0 }}>
-                      {formatDateRange(block.startDate, block.endDate, block.allDay)}
+                      {formatDateRange(block.startTime, block.endTime)}
                     </Paragraph>
-                    {block.recurring && (
+                    {block.recurrenceRule && (
                       <Badge data-color="info" data-size="sm" style={{ marginTop: 'var(--ds-spacing-1)' }}>
                         {t('blocks.recurring')}
                       </Badge>
@@ -254,11 +247,6 @@ export function BlocksListPage(): React.ReactElement {
                   <TableCell>
                     <Badge data-color={getStatusColor(block.status)}>
                       {t(`blocks.status.${block.status}`)}
-                    </Badge>
-                  </TableCell>
-                  <TableCell>
-                    <Badge data-color={block.visibility === 'public' ? 'success' : 'neutral'} data-size="sm">
-                      {t(`blocks.visibility.${block.visibility}`)}
                     </Badge>
                   </TableCell>
                   <TableCell>

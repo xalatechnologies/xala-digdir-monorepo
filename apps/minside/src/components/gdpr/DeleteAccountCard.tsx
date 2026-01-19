@@ -15,12 +15,12 @@ import type { GdprRequest } from '@digilist/client-sdk/types';
 import { useT } from '@xala/i18n';
 
 export function DeleteAccountCard() {
+  const t = useT();
   const [showConfirmation, setShowConfirmation] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
 
   // Fetch user's deletion requests
   const { data: requestsData, isLoading } = useMyGdprRequests({
-  const t = useT();
     requestType: 'deletion',
     limit: 1
   });
@@ -136,7 +136,7 @@ export function DeleteAccountCard() {
                 borderColor: 'var(--ds-color-danger-border)',
               }}
             >
-              t('actions.slett_min_konto')
+              {t('actions.slett_min_konto')}
             </Button>
           </>
         )}

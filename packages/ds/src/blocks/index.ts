@@ -166,6 +166,11 @@ export {
   BlackoutIndicator,
   RequiresApprovalBadge,
   RuleSetBadge,
+  // Additional Status Badges (consolidated from apps)
+  GdprRequestStatusBadge,
+  BlockStatusBadge,
+  InvoiceStatusBadge,
+  IntegrationStatusBadge,
 } from './StatusBadges';
 export type {
   StatusTagProps,
@@ -198,6 +203,15 @@ export type {
   BlackoutIndicatorProps,
   RequiresApprovalBadgeProps,
   RuleSetBadgeProps,
+  // Additional Status Badge Types
+  GdprRequestStatusType,
+  GdprRequestStatusBadgeProps,
+  BlockStatusType,
+  BlockStatusBadgeProps,
+  InvoiceStatusType,
+  InvoiceStatusBadgeProps,
+  IntegrationStatusType,
+  IntegrationStatusBadgeProps,
 } from './StatusBadges';
 
 // Chart Components

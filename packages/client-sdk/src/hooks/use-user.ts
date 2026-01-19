@@ -9,12 +9,17 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
 export interface UserPreferences {
   language?: 'nb' | 'en';
+  locale?: string;
   notifications?: {
     email?: boolean;
     sms?: boolean;
     push?: boolean;
   };
   theme?: 'light' | 'dark' | 'auto';
+  colorScheme?: 'light' | 'dark' | 'auto';
+  fontSize?: 'small' | 'medium' | 'large';
+  defaultView?: string;
+  compactMode?: boolean;
 }
 
 interface UserPreferencesResponse {
@@ -25,10 +30,26 @@ interface UpdateUserPayload {
   name?: string;
   email?: string;
   phone?: string;
+  dateOfBirth?: string;
+  nationalId?: string;
+  invoiceAddress?: {
+    street?: string;
+    city?: string;
+    postalCode?: string;
+    country?: string;
+  };
+  residenceAddress?: {
+    street?: string;
+    city?: string;
+    postalCode?: string;
+    country?: string;
+  };
 }
 
 interface UploadAvatarPayload {
   file: File;
+  id?: string;
+  options?: Record<string, unknown>;
 }
 
 /**

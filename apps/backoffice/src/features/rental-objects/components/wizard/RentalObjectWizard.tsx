@@ -5,10 +5,9 @@
  */
 
 import { useT } from '@xala/i18n';
-import { Heading, Paragraph, Spinner, WizardStepper } from '@xala/ds';
+import { Heading, Paragraph, Spinner, Breadcrumb, WizardStepper } from '@xala/ds';
 import { useRentalObjectWizard } from '../../hooks/useRentalObjectWizard';
 import { WizardFooter } from './WizardFooter';
-import { WIZARD_ICONS } from './WizardIcons';
 import { CategorySelector } from './steps/CategorySelector';
 import { BasicsStep } from './steps/BasicsStep';
 import { MediaStep } from './steps/MediaStep';
@@ -55,76 +54,41 @@ export function RentalObjectWizard({ slug, cloneFromSlug }: RentalObjectWizardPr
         backgroundColor: 'var(--ds-color-neutral-surface-subtle)',
       }}
     >
-      {/* Page Header - Separate from Tabs */}
-      <div
-        style={{
-          backgroundColor: '#1E3A52',
-          padding: 'var(--ds-spacing-5) var(--ds-spacing-6)',
-        }}
-      >
-        <div style={{ maxWidth: '1400px', margin: '0 auto', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-          <Heading level={1} data-size="lg" style={{ margin: 0, color: '#FFFFFF' }}>
-            {wizard.isEditMode ? t('rentalObjects.editTitle') : t('rentalObjects.createTitle')}
-          </Heading>
-          <Paragraph data-size="sm" style={{ margin: 0, color: 'rgba(255, 255, 255, 0.7)' }}>
-            {t('wizard.stepProgress', { current: wizard.currentStep + 1, total: wizard.steps.length })}
-          </Paragraph>
+      {/* Breadcrumb Navigation */}
+      <div style={{ padding: 'var(--ds-spacing-3) var(--ds-spacing-6)', backgroundColor: 'var(--ds-color-neutral-surface-default)' }}>
+        <div style={{ maxWidth: '1400px', margin: '0 auto' }}>
+          <Breadcrumb
+            items={[
+              { label: t('nav.rentalObjects'), href: '/rental-objects' },
+              { label: wizard.isEditMode ? t('rentalObjects.editTitle') : t('rentalObjects.createTitle') },
+            ]}
+          />
         </div>
       </div>
 
-      {/* Enhanced Tab Navigation */}
+      {/* Page Header */}
       <div
         style={{
-          backgroundColor: '#1E3A52',
-          borderBottom: '1px solid rgba(255, 255, 255, 0.1)',
+          backgroundColor: 'var(--ds-color-neutral-background-default)',
+          padding: 'var(--ds-spacing-5) var(--ds-spacing-6)',
+          borderBottom: '1px solid var(--ds-color-neutral-border-subtle)',
         }}
       >
-        <div style={{ maxWidth: '1400px', margin: '0 auto', display: 'flex', gap: 0 }}>
-          {wizard.steps.map((step, index) => {
-            const isActive = index === wizard.currentStep;
-            const isCompleted = index < wizard.currentStep;
-            
-            return (
-              <button
-                key={step.id}
-                onClick={() => wizard.goToStep(index)}
-                style={{
-                  flex: 1,
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  gap: 'var(--ds-spacing-2)',
-                  padding: 'var(--ds-spacing-4) var(--ds-spacing-3)',
-                  background: 'none',
-                  border: 'none',
-                  borderBottom: isActive ? '3px solid #4A9EDA' : '3px solid transparent',
-                  cursor: 'pointer',
-                  color: isActive ? '#4A9EDA' : isCompleted ? '#FFFFFF' : 'rgba(255, 255, 255, 0.5)',
-                  fontSize: 'var(--ds-font-size-sm)',
-                  fontWeight: isActive ? 600 : 400,
-                  transition: 'all 0.2s ease',
-                  whiteSpace: 'nowrap',
-                }}
-                onMouseEnter={(e) => {
-                  if (!isActive) {
-                    e.currentTarget.style.color = '#FFFFFF';
-                  }
-                }}
-                onMouseLeave={(e) => {
-                  if (!isActive) {
-                    e.currentTarget.style.color = isCompleted ? '#FFFFFF' : 'rgba(255, 255, 255, 0.5)';
-                  }
-                }}
-              >
-                {isCompleted && (
-                  <svg width="16" height="16" viewBox="0 0 16 16" fill="none" style={{ flexShrink: 0 }}>
-                    <path d="M13.3333 4L6 11.3333L2.66666 8" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                  </svg>
-                )}
-                <span>{t(`wizard.step.${step.id}`)}</span>
-              </button>
-            );
-          })}
+        <div style={{ maxWidth: '1400px', margin: '0 auto' }}>
+          <Heading level={1} data-size="lg" style={{ margin: 0, marginBottom: 'var(--ds-spacing-4)' }}>
+            {wizard.isEditMode ? t('rentalObjects.editTitle') : t('rentalObjects.createTitle')}
+          </Heading>
+          
+          {/* WizardStepper - Reusable component from @xala/ds */}
+          <WizardStepper
+            steps={wizard.steps.map(step => ({
+              id: step.id,
+              label: t(`wizard.step.${step.id}`),
+            }))}
+            currentStep={wizard.currentStep}
+            onStepClick={(index) => wizard.goToStep(index)}
+            errors={wizard.errors}
+          />
         </div>
       </div>
 
@@ -143,10 +107,11 @@ export function RentalObjectWizard({ slug, cloneFromSlug }: RentalObjectWizardPr
         </div>
       </div>
 
-      {/* Footer Navigation - Matching Header Style */}
+      {/* Footer Navigation */}
       <div
         style={{
-          backgroundColor: '#1E3A52',
+          backgroundColor: 'var(--ds-color-neutral-background-default)',
+          borderTop: '1px solid var(--ds-color-neutral-border-subtle)',
           padding: 'var(--ds-spacing-5) var(--ds-spacing-6)',
         }}
       >

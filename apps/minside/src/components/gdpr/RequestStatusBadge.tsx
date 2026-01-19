@@ -9,7 +9,6 @@
 
 import * as React from 'react';
 import type { GdprRequestStatus } from '@digilist/client-sdk/types';
-import { useT } from '@xala/i18n';
 
 // =============================================================================
 // Types
@@ -84,7 +83,6 @@ function StatusTag({
   size = 'sm',
   className,
 }: StatusTagProps): React.ReactElement {
-  const t = useT();
   const colorStyle = colorStyles[color];
   const sizeStyle = sizeStyles[size];
 

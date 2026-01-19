@@ -25,6 +25,7 @@ import {
   ShieldCheckIcon,
   EyeIcon,
   HeaderSearch,
+  PageHeader,
 } from '@xala/ds';
 import {
   useOrganizations,
@@ -63,13 +64,12 @@ export function OrganizationsListPage() {
 
   // State
   const [searchQuery, setSearchQuery] = useState('');
-  const [statusFilter, setStatusFilter] = useState<OrganizationStatus | 'all'>('all');
+  const [statusFilter, setStatusFilter] = useState<'active' | 'inactive' | 'all'>('all');
   const [actorTypeFilter, setActorTypeFilter] = useState<ActorType | 'all'>('all');
 
   // Queries
   const { data: orgsData, isLoading } = useOrganizations({
     status: statusFilter === 'all' ? undefined : statusFilter,
-    search: searchQuery || undefined,
   });
   const orgs = orgsData?.data ?? [];
 
@@ -101,25 +101,18 @@ export function OrganizationsListPage() {
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--ds-spacing-5)' }}>
       {/* Header */}
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
-        <div>
-          <Heading level={2} data-size="md">
-            {t('organizations.page.list.title')}
-          </Heading>
-          <Paragraph
-            data-size="sm"
-            style={{ color: 'var(--ds-color-neutral-text-subtle)', marginTop: 'var(--ds-spacing-1)' }}
-          >
-            {t('organizations.subtitleAdmin')}
-          </Paragraph>
-        </div>
-        <Link to="/organizations/new">
-          <Button type="button">
-            <PlusIcon />
-            {t('organizations.new')}
-          </Button>
-        </Link>
-      </div>
+      <PageHeader
+        title={t('organizations.page.list.title')}
+        subtitle={t('organizations.subtitleAdmin')}
+        actions={
+          <Link to="/organizations/new">
+            <Button type="button">
+              <PlusIcon />
+              {t('organizations.new')}
+            </Button>
+          </Link>
+        }
+      />
 
       {/* Filters */}
       <Card>
@@ -147,9 +140,6 @@ export function OrganizationsListPage() {
                 </Dropdown.Item>
                 <Dropdown.Item>
                   <Dropdown.Button onClick={() => setStatusFilter('inactive')}>{t('organizations.inactive')}</Dropdown.Button>
-                </Dropdown.Item>
-                <Dropdown.Item>
-                  <Dropdown.Button onClick={() => setStatusFilter('suspended')}>{t('organizations.suspended')}</Dropdown.Button>
                 </Dropdown.Item>
               </Dropdown.List>
             </Dropdown>

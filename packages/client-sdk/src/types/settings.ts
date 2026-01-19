@@ -42,6 +42,19 @@ export interface TenantSettings {
   bookingSettings?: BookingSettingsConfig;
   notificationSettings?: NotificationSettings;
   paymentSettings?: PaymentSettings;
+  // Alias for component compatibility
+  notifications?: {
+    email?: boolean;
+    sms?: boolean;
+    push?: boolean;
+    emailEnabled?: boolean;
+    smsEnabled?: boolean;
+    pushEnabled?: boolean;
+    bookingConfirmation?: boolean;
+    bookingReminder?: boolean;
+    reminderHours?: number;
+    reminderHoursBefore?: number;
+  };
 }
 
 // =============================================================================

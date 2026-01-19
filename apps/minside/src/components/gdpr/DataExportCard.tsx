@@ -14,11 +14,11 @@ import type { GdprRequest } from '@digilist/client-sdk/types';
 import { useT } from '@xala/i18n';
 
 export function DataExportCard() {
+  const t = useT();
   const [isRequesting, setIsRequesting] = useState(false);
 
   // Fetch user's GDPR requests
   const { data: requestsData, isLoading } = useMyGdprRequests({
-  const t = useT();
     requestType: 'export',
     limit: 1
   });
@@ -159,7 +159,7 @@ export function DataExportCard() {
                   onClick={handleDownload}
                   style={{ minHeight: '40px', alignSelf: 'flex-start' }}
                 >
-                  t('actions.last_ned_mine_data')
+                  {t('actions.last_ned_mine_data')}
                 </Button>
               </div>
             )}

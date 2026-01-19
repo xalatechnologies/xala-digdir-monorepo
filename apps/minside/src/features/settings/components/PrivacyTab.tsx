@@ -53,14 +53,27 @@ export function PrivacyTab() {
     thirdPartySharing: false,
   });
 
-  // Load consents
+  // Load consents - handle both array format (from SDK) and object format
   useEffect(() => {
     if (consents) {
-      setConsentSettings({
-        marketing: consents.marketing || false,
-        analytics: consents.analytics || false,
-        thirdPartySharing: consents.thirdPartySharing || false,
-      });
+      const data = consents as any;
+      if (Array.isArray(data)) {
+        // SDK returns Consent[] array - find each consent type
+        const findConsent = (type: string) => 
+          data.find((c: any) => c.type === type)?.granted ?? false;
+        setConsentSettings({
+          marketing: findConsent('marketing'),
+          analytics: findConsent('analytics'),
+          thirdPartySharing: findConsent('thirdPartySharing'),
+        });
+      } else {
+        // Legacy object format
+        setConsentSettings({
+          marketing: data.marketing || false,
+          analytics: data.analytics || false,
+          thirdPartySharing: data.thirdPartySharing || false,
+        });
+      }
     }
   }, [consents]);
 
@@ -98,7 +111,13 @@ export function PrivacyTab() {
     const newConsents = { ...consentSettings, [field]: value };
     setConsentSettings(newConsents);
     try {
-      await updateConsentsMutation.mutateAsync(newConsents);
+      // Transform to array format expected by SDK
+      const payload = [
+        { type: 'marketing', granted: newConsents.marketing },
+        { type: 'analytics', granted: newConsents.analytics },
+        { type: 'thirdPartySharing', granted: newConsents.thirdPartySharing },
+      ];
+      await updateConsentsMutation.mutateAsync(payload as any);
     } catch {
       // Error handling is managed by the SDK
     }

@@ -18,6 +18,7 @@ import {
   Select,
   Badge,
   Spinner,
+  DashboardPageHeader,
 } from '@xala/ds';
 import { useLocale, useT } from '@xala/i18n';
 import { useAuditLog, type AuditLogEntry } from '@digilist/client-sdk';
@@ -144,39 +145,29 @@ export function OrganizationActivityPage() {
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--ds-spacing-6)' }}>
-      {/* Header */}
-      <div style={{
-        display: 'flex',
-        flexDirection: isMobile ? 'column' : 'row',
-        justifyContent: 'space-between',
-        alignItems: isMobile ? 'flex-start' : 'center',
-        gap: 'var(--ds-spacing-4)',
-      }}>
-        <div>
-          <Heading level={1} data-size="lg" style={{ margin: 0 }}>
-            {t('org.activity')}
-          </Heading>
-          <Paragraph style={{ color: 'var(--ds-color-neutral-text-subtle)', marginTop: 'var(--ds-spacing-2)', marginBottom: 0 }}>
-            {t('org.activityDesc')}
-          </Paragraph>
-        </div>
-        <div style={{ display: 'flex', gap: 'var(--ds-spacing-3)', alignItems: 'center' }}>
-          <Select
-            value={typeFilter}
-            onChange={(e) => setTypeFilter(e.target.value as ActivityType)}
-            style={{ minWidth: '150px' }}
-          >
-            <option value="all">{t('org.activity.allTypes')}</option>
-            <option value="booking">{t('org.activity.bookings')}</option>
-            <option value="member">{t('org.activity.members')}</option>
-            <option value="invoice">{t('org.activity.invoices')}</option>
-            <option value="season">{t('org.activity.season')}</option>
-          </Select>
-          <Button type="button" variant="secondary" data-size="md" style={{ minHeight: '44px' }}>
-            {t('common.export')}
-          </Button>
-        </div>
-      </div>
+      {/* Header - Using DashboardPageHeader */}
+      <DashboardPageHeader
+        title={t('org.activity')}
+        subtitle={t('org.activityDesc')}
+        primaryAction={
+          <div style={{ display: 'flex', gap: 'var(--ds-spacing-3)', alignItems: 'center' }}>
+            <Select
+              value={typeFilter}
+              onChange={(e) => setTypeFilter(e.target.value as ActivityType)}
+              style={{ minWidth: '150px' }}
+            >
+              <option value="all">{t('org.activity.allTypes')}</option>
+              <option value="booking">{t('org.activity.bookings')}</option>
+              <option value="member">{t('org.activity.members')}</option>
+              <option value="invoice">{t('org.activity.invoices')}</option>
+              <option value="season">{t('org.activity.season')}</option>
+            </Select>
+            <Button type="button" variant="secondary">
+              {t('common.export')}
+            </Button>
+          </div>
+        }
+      />
 
       {/* Stats */}
       <div style={{

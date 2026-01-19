@@ -29,6 +29,7 @@ import {
   FilterIcon,
   DownloadIcon,
   useDialog,
+  PageHeader,
 } from '@xala/ds';
 
 import {
@@ -584,6 +585,21 @@ export function BookingsPage() {
 
       {/* Main Content Area */}
       <div data-testid="bookings-list" style={{ display: 'flex', flexDirection: 'column', gap: 'var(--ds-spacing-4)', flex: 1, overflow: 'hidden' }}>
+        {/* Page Header */}
+        <PageHeader
+          title={t('nav.bookings')}
+          actions={
+            <Button
+              type="button"
+              variant="tertiary"
+              onClick={() => setIsFilterOpen(true)}
+            >
+              <FilterIcon size={16} />
+              {t('bookings.filter.page.title')}
+            </Button>
+          }
+        />
+
         {/* Status Tabs */}
         <div style={{
           display: 'flex',

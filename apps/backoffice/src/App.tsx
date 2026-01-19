@@ -1,4 +1,4 @@
-import React, { Suspense } from 'react';
+import React, { Suspense, useState, useCallback, createContext, useContext } from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { DesignsystemetProvider, DialogProvider, ErrorBoundary } from '@xala/ds';
 import { I18nProvider } from '@xala/i18n';
@@ -85,6 +85,50 @@ const HelpFAQPage = React.lazy(() => import('./routes/help/faq'));
 // Initialize Sentry error tracking before React rendering
 initSentry();
 
+// Notification Center Context
+interface NotificationCenterContextValue {
+  openNotificationCenter: () => void;
+  closeNotificationCenter: () => void;
+  isOpen: boolean;
+}
+
+const NotificationCenterContext = createContext<NotificationCenterContextValue | null>(null);
+
+export function useNotificationCenter(): NotificationCenterContextValue {
+  const context = useContext(NotificationCenterContext);
+  if (!context) {
+    throw new Error('useNotificationCenter must be used within NotificationCenterProvider');
+  }
+  return context;
+}
+
+function NotificationCenterProvider({ children }: { children: React.ReactNode }) {
+  const [isOpen, setIsOpen] = useState(false);
+
+  const openNotificationCenter = useCallback(() => {
+    setIsOpen(true);
+  }, []);
+
+  const closeNotificationCenter = useCallback(() => {
+    setIsOpen(false);
+  }, []);
+
+  return (
+    <NotificationCenterContext.Provider value={{ openNotificationCenter, closeNotificationCenter, isOpen }}>
+      {children}
+    </NotificationCenterContext.Provider>
+  );
+}
+
+/**
+ * OAuth Callback Handler
+ * Handles OAuth/BankID redirects automatically - must be inside BrowserRouter
+ */
+function OAuthCallbackHandler() {
+  useOAuthCallback();
+  return null;
+}
+
 export function App() {
   return (
     <ThemeProvider>
@@ -108,9 +152,12 @@ function AppWithTheme() {
           v7_relativeSplatPath: true,
         }}
       >
-        <AuthProvider config={{ appType: 'backoffice', debug: import.meta.env.DEV }}>
-          <AppContent />
-        </AuthProvider>
+        <OAuthCallbackHandler />
+        <NotificationCenterProvider>
+          <AuthProvider config={{ appType: 'backoffice', debug: import.meta.env.DEV }}>
+            <AppContent />
+          </AuthProvider>
+        </NotificationCenterProvider>
       </BrowserRouter>
       </ToastProvider>
       </ErrorBoundary>
@@ -121,9 +168,6 @@ function AppWithTheme() {
 }
 
 function AppContent() {
-  // Handle OAuth/BankID redirects automatically (needs router context)
-  useOAuthCallback();
-  
   return (
     <BackofficeRoleProvider>
           <CapabilityProvider>

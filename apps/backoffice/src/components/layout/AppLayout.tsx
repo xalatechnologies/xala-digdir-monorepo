@@ -12,6 +12,7 @@ import { useState, useEffect } from 'react';
 import {
   BottomNavigation,
   type BottomNavigationItem,
+  DashboardContent,
   HomeIcon,
   BuildingIcon,
   CalendarIcon,
@@ -20,7 +21,6 @@ import {
   SettingsIcon,
 } from '@xala/ds';
 import { useT } from '@xala/i18n';
-// import { GlobalSearch } from '../GlobalSearch'; // TODO: Implement GlobalSearch component
 import { Sidebar } from './Sidebar';
 import { Header } from './Header';
 
@@ -133,19 +133,9 @@ export function AppLayout() {
         )}
         */}
 
-        <main
-          style={{
-            flex: 1,
-            overflow: 'auto',
-            padding: isMobile ? 'var(--ds-spacing-4)' : 'var(--ds-spacing-8)',
-            // Add padding at bottom for bottom navigation on mobile
-            paddingBottom: isMobile ? 'calc(64px + var(--ds-spacing-4) + env(safe-area-inset-bottom))' : 'var(--ds-spacing-8)',
-          }}
-        >
-          <div style={{ maxWidth: '1400px' }}>
-            <Outlet />
-          </div>
-        </main>
+        <DashboardContent hasBottomNav={isMobile} data-testid="backoffice-content">
+          <Outlet />
+        </DashboardContent>
       </div>
 
       {/* Bottom Navigation - Mobile only */}

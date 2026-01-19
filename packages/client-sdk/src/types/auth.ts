@@ -16,6 +16,22 @@ export interface AuthUser {
   role: UserRole;
   tenantId: string;
   organizationId?: string;
+  // Extended user profile fields
+  phone?: string;
+  avatar?: string;
+  dateOfBirth?: string;
+  nationalId?: string;
+  invoiceAddress?: Address;
+  residenceAddress?: Address;
+  // RBAC fields
+  grantedRoles?: string[];
+}
+
+export interface Address {
+  street?: string;
+  city?: string;
+  postalCode?: string;
+  country?: string;
 }
 
 export interface AuthSession {
@@ -23,6 +39,17 @@ export interface AuthSession {
   token: string;
   expiresAt: string;
   permissions: string[];
+  // Flattened user properties for component compatibility
+  // Components can access session.name instead of session.user.name
+  id?: string;
+  name?: string;
+  email?: string;
+  phone?: string;
+  avatar?: string;
+  dateOfBirth?: string;
+  nationalId?: string;
+  invoiceAddress?: Address;
+  residenceAddress?: Address;
 }
 
 // =============================================================================

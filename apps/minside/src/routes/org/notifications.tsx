@@ -29,6 +29,7 @@ import {
   Badge,
   Label,
   Alert,
+  DashboardPageHeader,
 } from '@xala/ds';
 import { useT } from '@xala/i18n';
 import {
@@ -275,48 +276,26 @@ export function OrganizationNotificationsPage(): React.ReactElement {
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--ds-spacing-6)' }}>
-      {/* Header */}
-      <div
-        style={{
-          display: 'flex',
-          flexDirection: isMobile ? 'column' : 'row',
-          justifyContent: 'space-between',
-          alignItems: isMobile ? 'flex-start' : 'center',
-          gap: 'var(--ds-spacing-4)',
-        }}
-      >
-        <div>
-          <Heading level={1} data-size="lg" style={{ margin: 0 }}>
-            {t('notifications.org.page.title')}
-          </Heading>
-          <Paragraph
-            style={{
-              color: 'var(--ds-color-neutral-text-subtle)',
-              marginTop: 'var(--ds-spacing-2)',
-              marginBottom: 0,
-            }}
-          >
-            {t('notifications.org.page.description')}
-          </Paragraph>
-        </div>
-        <div style={{ display: 'flex', gap: 'var(--ds-spacing-2)' }}>
+      {/* Header - Using DashboardPageHeader */}
+      <DashboardPageHeader
+        title={t('notifications.org.page.title')}
+        subtitle={t('notifications.org.page.description')}
+        secondaryAction={
           <Button
             type="button"
             variant="tertiary"
-            data-size="md"
             onClick={handleReset}
             disabled={isSaving}
-            style={{ minHeight: '44px' }}
           >
             {t('org.notificationSettings.resetToDefault')}
           </Button>
+        }
+        primaryAction={
           <Button
             type="button"
             variant="primary"
-            data-size="md"
             onClick={handleSave}
             disabled={isSaving || !hasChanges}
-            style={{ minHeight: '44px' }}
           >
             {isSaving ? t('state.saving') : t('action.save')}
             {hasChanges && !isSaving && (
@@ -332,8 +311,8 @@ export function OrganizationNotificationsPage(): React.ReactElement {
               </Badge>
             )}
           </Button>
-        </div>
-      </div>
+        }
+      />
 
       {/* Save error alert */}
       {saveError && (

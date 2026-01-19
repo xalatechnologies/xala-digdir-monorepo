@@ -74,6 +74,12 @@ export interface AuthConfig {
   allowedRoles?: UserRole[];
   
   /**
+   * Path to the login page
+   * @default '/login'
+   */
+  loginPath?: string;
+  
+  /**
    * Path to redirect after successful login
    * @default '/'
    */

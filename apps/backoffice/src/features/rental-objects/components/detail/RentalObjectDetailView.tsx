@@ -16,9 +16,10 @@ import {
   Skeleton,
   ChevronLeftIcon,
   AlertTriangleIcon,
+  DashboardPageHeader,
+  Breadcrumb,
 } from '@xala/ds';
 import { useRentalObjectBySlug, useRentalObject } from '@digilist/client-sdk';
-import { RentalObjectHeader } from './RentalObjectHeader';
 import { RentalObjectOverviewTab } from './RentalObjectOverviewTab';
 import { RentalObjectBookingsTab } from './RentalObjectBookingsTab';
 import { RentalObjectAvailabilityTab } from './RentalObjectAvailabilityTab';
@@ -53,7 +54,7 @@ class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
   componentDidCatch(error: Error, errorInfo: unknown) {
     // Log error to console for debugging (in development)
     if (import.meta.env.DEV) {
-      console.error(t('validation.errorboundary_caught_error'), error, errorInfo);
+      console.error('ErrorBoundary caught error:', error, errorInfo);
     }
   }
 
@@ -80,13 +81,8 @@ export function RentalObjectDetailView({ slug }: RentalObjectDetailViewProps) {
 
   // Fetch rental object data by slug or ID
   // NOTE: Uses rental object hooks - rental objects are RESOURCE type listings
-  const slugQuery = useRentalObjectBySlug(slug || '', {
-    enabled: !!slug && !isUuid,
-  });
-
-  const idQuery = useRentalObject(slug || '', {
-    enabled: !!slug && !!isUuid,
-  });
+  const slugQuery = useRentalObjectBySlug(slug || '');
+  const idQuery = useRentalObject(slug || '');
 
   const data = isUuid ? idQuery.data : slugQuery.data;
   const isLoading = isUuid ? idQuery.isLoading : slugQuery.isLoading;
@@ -103,9 +99,8 @@ export function RentalObjectDetailView({ slug }: RentalObjectDetailViewProps) {
     setSearchParams(params);
   }, [searchParams, setSearchParams]);
 
-  const handleEditSuccess = useCallback(() => {
-    refetch();
-  }, [refetch]);
+  // refetch can be used for refresh after edit
+  void refetch;
 
   // Loading state - Skeleton screen
   if (isLoading) {
@@ -256,54 +251,40 @@ export function RentalObjectDetailView({ slug }: RentalObjectDetailViewProps) {
       }
     >
       <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--ds-spacing-6)' }}>
-        {/* Header Section */}
-        <RentalObjectHeader rentalObject={rentalObject} onEditSuccess={handleEditSuccess} />
+        {/* Header Section with Breadcrumb and Tabs */}
+        <DashboardPageHeader
+          breadcrumb={
+            <Breadcrumb
+              items={[
+                { label: t('nav.rentalObjects'), href: '/rental-objects' },
+                { label: rentalObject.name },
+              ]}
+            />
+          }
+          title={rentalObject.name}
+          subtitle={rentalObject.description?.slice(0, 100)}
+          primaryAction={
+            <Button
+              type="button"
+              variant="primary"
+              onClick={() => navigate(`/rental-objects/${slug}`)}
+            >
+              {t('actions.edit')}
+            </Button>
+          }
+          tabs={[
+            { id: 'overview', label: t('ui.overview') },
+            { id: 'bookings', label: t('nav.bookings') },
+            { id: 'availability', label: t('common.tilgjengelighet') },
+            { id: 'custody', label: t('common.ansvar') },
+            { id: 'audit', label: t('common.endringslogg') },
+          ]}
+          activeTab={activeTab}
+          onTabChange={handleTabChange}
+        />
 
-        {/* Tabs Section */}
+        {/* Tab Content */}
         <div>
-          <div
-            style={{
-              display: 'flex',
-              gap: 'var(--ds-spacing-2)',
-              borderBottom: '1px solid var(--ds-color-neutral-border-subtle)',
-              marginBottom: 'var(--ds-spacing-6)',
-            }}
-          >
-            {[
-              { id: 'overview', label: t("ui.overview") },
-              { id: 'bookings', label: 'Bookinger' },
-              { id: 'availability', label: 'Tilgjengelighet' },
-              { id: 'custody', label: 'Ansvar' },
-              { id: 'audit', label: 'Endringslogg' },
-            ].map((tab) => (
-              <button
-                key={tab.id}
-                type="button"
-                onClick={() => handleTabChange(tab.id)}
-                style={{
-                  padding: 'var(--ds-spacing-3) var(--ds-spacing-4)',
-                  background: 'none',
-                  border: 'none',
-                  borderBottom:
-                    activeTab === tab.id
-                      ? '2px solid var(--ds-color-accent-border-default)'
-                      : '2px solid transparent',
-                  color:
-                    activeTab === tab.id
-                      ? 'var(--ds-color-accent-text-default)'
-                      : 'var(--ds-color-neutral-text-subtle)',
-                  fontWeight: activeTab === tab.id ? 600 : 400,
-                  cursor: 'pointer',
-                  fontSize: 'var(--ds-font-size-md)',
-                  fontFamily: 'inherit',
-                  transition: 'all 0.2s ease',
-                }}
-                aria-current={activeTab === tab.id ? 'page' : undefined}
-              >
-                {tab.label}
-              </button>
-            ))}
-          </div>
 
           {/* Tab Content */}
           <Card style={{ padding: 'var(--ds-spacing-6)' }}>

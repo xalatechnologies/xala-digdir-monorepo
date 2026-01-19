@@ -477,3 +477,97 @@ export function RuleSetBadge({ ruleSetKey, size = 'sm' }: RuleSetBadgeProps): Re
     </StatusTag>
   );
 }
+
+// =============================================================================
+// GDPR Request Status Badge
+// =============================================================================
+
+export type GdprRequestStatusType = 'pending' | 'processing' | 'completed' | 'rejected';
+
+const gdprRequestStatusConfig: Record<GdprRequestStatusType, StatusBadgeConfig> = {
+  pending: { color: 'warning', label: 'Venter' },
+  processing: { color: 'info', label: 'Behandles' },
+  completed: { color: 'success', label: 'Fullført' },
+  rejected: { color: 'danger', label: 'Avslått' },
+};
+
+export interface GdprRequestStatusBadgeProps {
+  status: GdprRequestStatusType;
+  size?: 'sm' | 'md' | 'lg';
+}
+
+export function GdprRequestStatusBadge({ status, size = 'sm' }: GdprRequestStatusBadgeProps): React.ReactElement {
+  const config = gdprRequestStatusConfig[status] || { color: 'neutral' as BadgeColor, label: status };
+  return <StatusTag color={config.color} size={size}>{config.label}</StatusTag>;
+}
+
+// =============================================================================
+// Block Status Badge
+// =============================================================================
+
+export type BlockStatusType = 'active' | 'cancelled' | 'completed' | 'scheduled';
+
+const blockStatusConfig: Record<BlockStatusType, StatusBadgeConfig> = {
+  active: { color: 'success', label: 'Aktiv' },
+  scheduled: { color: 'info', label: 'Planlagt' },
+  completed: { color: 'neutral', label: 'Fullført' },
+  cancelled: { color: 'danger', label: 'Kansellert' },
+};
+
+export interface BlockStatusBadgeProps {
+  status: BlockStatusType;
+  size?: 'sm' | 'md' | 'lg';
+}
+
+export function BlockStatusBadge({ status, size = 'sm' }: BlockStatusBadgeProps): React.ReactElement {
+  const config = blockStatusConfig[status] || { color: 'neutral' as BadgeColor, label: status };
+  return <StatusTag color={config.color} size={size}>{config.label}</StatusTag>;
+}
+
+// =============================================================================
+// Invoice Status Badge
+// =============================================================================
+
+export type InvoiceStatusType = 'draft' | 'sent' | 'paid' | 'overdue' | 'cancelled' | 'refunded';
+
+const invoiceStatusConfig: Record<InvoiceStatusType, StatusBadgeConfig> = {
+  draft: { color: 'neutral', label: 'Utkast' },
+  sent: { color: 'info', label: 'Sendt' },
+  paid: { color: 'success', label: 'Betalt' },
+  overdue: { color: 'danger', label: 'Forfalt' },
+  cancelled: { color: 'neutral', label: 'Kansellert' },
+  refunded: { color: 'warning', label: 'Refundert' },
+};
+
+export interface InvoiceStatusBadgeProps {
+  status: InvoiceStatusType;
+  size?: 'sm' | 'md' | 'lg';
+}
+
+export function InvoiceStatusBadge({ status, size = 'sm' }: InvoiceStatusBadgeProps): React.ReactElement {
+  const config = invoiceStatusConfig[status] || { color: 'neutral' as BadgeColor, label: status };
+  return <StatusTag color={config.color} size={size}>{config.label}</StatusTag>;
+}
+
+// =============================================================================
+// Integration Status Badge
+// =============================================================================
+
+export type IntegrationStatusType = 'connected' | 'disconnected' | 'error' | 'pending';
+
+const integrationStatusConfig: Record<IntegrationStatusType, StatusBadgeConfig> = {
+  connected: { color: 'success', label: 'Tilkoblet' },
+  disconnected: { color: 'neutral', label: 'Frakoblet' },
+  error: { color: 'danger', label: 'Feil' },
+  pending: { color: 'warning', label: 'Venter' },
+};
+
+export interface IntegrationStatusBadgeProps {
+  status: IntegrationStatusType;
+  size?: 'sm' | 'md' | 'lg';
+}
+
+export function IntegrationStatusBadge({ status, size = 'sm' }: IntegrationStatusBadgeProps): React.ReactElement {
+  const config = integrationStatusConfig[status] || { color: 'neutral' as BadgeColor, label: status };
+  return <StatusTag color={config.color} size={size}>{config.label}</StatusTag>;
+}

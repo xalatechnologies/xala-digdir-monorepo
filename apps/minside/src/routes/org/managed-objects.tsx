@@ -11,6 +11,7 @@ import {
   Button,
   Badge,
   Skeleton,
+  DashboardPageHeader,
 } from '@xala/ds';
 import { 
   useCreateCustodySubgrant,
@@ -33,10 +34,10 @@ export function ManagedRentalObjectsPage() {
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--ds-spacing-6)' }}>
-      <div>
-        <Heading level={1} data-size="md">{t('minside.text.administrerUtleieobjekter')}</Heading>
-        <Paragraph>{t('common.objekter_din_organisasjon_har')}</Paragraph>
-      </div>
+      <DashboardPageHeader
+        title={t('minside.text.administrerUtleieobjekter')}
+        subtitle={t('common.objekter_din_organisasjon_har')}
+      />
 
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: 'var(--ds-spacing-4)' }}>
         {managedGrants.map((grant: CustodyGrant) => (
@@ -51,6 +52,7 @@ export function ManagedRentalObjectsPage() {
 }
 
 function ManagedObjectCard({ grant, orgId }: { grant: CustodyGrant, orgId: string }) {
+  const t = useT();
   const [isSubgrantOpen, setIsSubgrantOpen] = useState(false);
   const [selectedMemberId, setSelectedMemberId] = useState('');
   const [selectedScopes, setSelectedScopes] = useState<string[]>(grant.scopes);

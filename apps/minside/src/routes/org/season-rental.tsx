@@ -20,6 +20,7 @@ import {
   Select,
   Badge,
   Spinner,
+  DashboardPageHeader,
 } from '@xala/ds';
 import { useLocale, useT } from '@xala/i18n';
 import {
@@ -172,15 +173,11 @@ export function SeasonRentalPage() {
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--ds-spacing-6)' }}>
-      {/* Header */}
-      <div>
-        <Heading level={1} data-size="lg" style={{ margin: 0 }}>
-          {t('org.seasonRental.apply')}
-        </Heading>
-        <Paragraph style={{ color: 'var(--ds-color-neutral-text-subtle)', marginTop: 'var(--ds-spacing-2)', marginBottom: 0 }}>
-          {t('org.seasonRental.applyDesc')}
-        </Paragraph>
-      </div>
+      {/* Header - Using DashboardPageHeader */}
+      <DashboardPageHeader
+        title={t('org.seasonRental.apply')}
+        subtitle={t('org.seasonRental.applyDesc')}
+      />
 
       {/* Progress Steps */}
       <Card style={{ padding: 'var(--ds-spacing-4)' }}>

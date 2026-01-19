@@ -224,3 +224,289 @@ export type { DashboardHeaderProps, DashboardHeaderUser } from './DashboardHeade
 
 export { DashboardPageHeader } from './DashboardPageHeader';
 export type { DashboardPageHeaderProps, PageHeaderMetaItem, PageHeaderTab } from './DashboardPageHeader';
+
+// Toast Notifications
+export { ToastProvider, useToast } from './Toast';
+export type {
+  ToastOptions,
+  Toast,
+  ToastVariant,
+  ToastPosition,
+  ToastContextValue,
+  ToastProviderProps,
+} from './Toast';
+
+// Alert (inline banners)
+export { Alert } from './Alert';
+export type { AlertProps, AlertVariant } from './Alert';
+
+// Modal
+export { Modal, ModalHeader, ModalBody, ModalFooter } from './Modal';
+export type {
+  ModalProps,
+  ModalSize,
+  ModalHeaderProps,
+  ModalBodyProps,
+  ModalFooterProps,
+} from './Modal';
+
+// Table Conditions Filter (advanced filter builder)
+export { TableConditionsFilter, useTableConditions } from './TableConditionsFilter';
+export type {
+  TableConditionsFilterProps,
+  Condition,
+  ConditionField,
+  ConditionFieldOption,
+  ConditionOperator,
+  FieldType,
+  LogicOperator,
+  UseTableConditionsReturn,
+} from './TableConditionsFilter';
+
+// Filter Chips Bar (active filters display)
+export { FilterChipsBar } from './FilterChipsBar';
+export type { FilterChipsBarProps, ActiveFilter } from './FilterChipsBar';
+
+// Filter Panel (dropdown filter builder)
+export { FilterPanel } from './FilterPanel';
+export type {
+  FilterPanelProps,
+  FilterCondition,
+  FilterField,
+  FilterFieldOption,
+  FilterFieldType,
+  FilterLogic,
+  FilterOperator,
+} from './FilterPanel';
+
+// Action Button Group (consistent table actions)
+export { ActionButtonGroup, TableActions } from './ActionButtonGroup';
+export type {
+  ActionButtonGroupProps,
+  TableActionsProps,
+  Action,
+  ActionType,
+} from './ActionButtonGroup';
+
+// Stat Card (dashboard statistics)
+export { StatCard, StatCardGrid } from './StatCard';
+export type {
+  StatCardProps,
+  StatCardGridProps,
+  StatTrend,
+  StatVariant,
+} from './StatCard';
+
+// Section Card (page sections)
+export { SectionCard, SectionCardHeader, SectionCardContent, SectionCardFooter } from './SectionCard';
+export type {
+  SectionCardProps,
+  SectionCardHeaderProps,
+  SectionCardContentProps,
+  SectionCardFooterProps,
+} from './SectionCard';
+
+// Avatar (user avatars with initials fallback)
+export { Avatar, AvatarGroup, UserInfo } from './Avatar';
+export type {
+  AvatarProps,
+  AvatarGroupProps,
+  UserInfoProps,
+  AvatarSize,
+} from './Avatar';
+
+// Accessibility Statement (Norwegian universal design compliance)
+export { AccessibilityStatement } from './AccessibilityStatement';
+export type {
+  AccessibilityStatementProps,
+  ConformanceLevel,
+  WCAGLevel,
+  KnownIssue,
+  AccessibilityContact,
+} from './AccessibilityStatement';
+
+// Page Shell Components (List, Detail, Form page layouts)
+export { 
+  PageHeader as ShellPageHeader, 
+  ListPageShell, 
+  DetailPageShell, 
+  FormPageShell 
+} from './PageShell';
+export type {
+  PageHeaderProps as ShellPageHeaderProps,
+  ListPageShellProps,
+  DetailPageShellProps,
+  FormPageShellProps,
+} from './PageShell';
+
+// Status Banner (contextual status displays)
+export { StatusBanner } from './StatusBanner';
+export type { StatusBannerProps, StatusBannerVariant } from './StatusBanner';
+
+// Detail Field Components (labeled data display)
+export {
+  DetailField,
+  DetailFieldGroup,
+  DetailCard,
+  MonoField,
+  LinkField,
+} from './DetailField';
+export type {
+  DetailFieldProps,
+  DetailFieldGroupProps,
+  DetailCardProps,
+  MonoFieldProps,
+  LinkFieldProps,
+} from './DetailField';
+
+// Page States (Loading, Empty, NotFound, Error)
+export {
+  LoadingState,
+  EmptyState as PageEmptyState,
+  NotFoundState,
+  ErrorState,
+} from './PageStates';
+export type {
+  LoadingStateProps,
+  EmptyStateProps as PageEmptyStateProps,
+  NotFoundStateProps,
+  ErrorStateProps,
+} from './PageStates';
+
+// Table Row Actions (dropdown menu for table actions)
+export {
+  TableRowActions,
+  createViewAction,
+  createEditAction,
+  createDeleteAction,
+  createDuplicateAction,
+} from './TableRowActions';
+export type {
+  TableRowActionsProps,
+  RowAction,
+  ActionVariant,
+} from './TableRowActions';
+
+// Rich Text Editor
+export { RichTextEditor } from './RichTextEditor';
+export type { RichTextEditorProps, TextFormat } from './RichTextEditor';
+
+// File Uploader
+export { FileUploader } from './FileUploader';
+export type { FileUploaderProps, UploadedFile } from './FileUploader';
+
+// PDF Preview
+export { PDFPreview } from './PDFPreview';
+export type { PDFPreviewProps } from './PDFPreview';
+
+// Template Canvas (Email/Invoice template builder)
+export { TemplateCanvas, BlockPalette } from './TemplateCanvas';
+export type {
+  TemplateCanvasProps,
+  BlockPaletteProps,
+  TemplateBlock,
+  TemplatePlaceholder,
+  BlockType,
+} from './TemplateCanvas';
+
+// Confirm Dialog & Action Dialog (Rich version with async support)
+export { 
+  ConfirmDialog as RichConfirmDialog, 
+  ActionDialog, 
+  useConfirmDialog 
+} from './ConfirmDialog';
+export type {
+  ConfirmDialogProps as RichConfirmDialogProps,
+  ActionDialogProps,
+  DialogVariant as RichDialogVariant,
+  UseConfirmDialogOptions,
+} from './ConfirmDialog';
+
+// Stepper & Wizard (Multi-step form navigation)
+export { 
+  Stepper, 
+  Wizard as FormWizard, 
+  useWizard 
+} from './Stepper';
+export type {
+  StepperProps,
+  WizardProps as FormWizardProps,
+  Step,
+  StepStatus,
+} from './Stepper';
+
+// Stats Grid & Mini Stats
+export { StatsGrid, StatCardEnhanced, MiniStat } from './StatsGrid';
+export type {
+  StatsGridProps,
+  StatCardEnhancedProps,
+  StatItem,
+  TrendDirection,
+  MiniStatProps,
+} from './StatsGrid';
+
+// Timeline & Activity Feed
+export { Timeline, CompactTimeline } from './Timeline';
+export type {
+  TimelineProps,
+  TimelineItem,
+  TimelineItemType,
+  CompactTimelineProps,
+} from './Timeline';
+
+// Date Range Picker
+export { DateRangePicker } from './DateRangePicker';
+export type {
+  DateRangePickerProps,
+  DateRange,
+  DatePreset,
+} from './DateRangePicker';
+
+// Searchable Select / Combobox
+export { SearchableSelect } from './SearchableSelect';
+export type {
+  SearchableSelectProps,
+  SelectOption,
+} from './SearchableSelect';
+
+// Rich Notification Toast (with queue management)
+export { 
+  ToastProvider as RichToastProvider, 
+  useToast as useRichToast, 
+  toast as richToast, 
+  setGlobalToastHandler 
+} from './NotificationToast';
+export type {
+  ToastProviderProps as RichToastProviderProps,
+  Toast as RichToast,
+  ToastOptions as RichToastOptions,
+  ToastType as RichToastType,
+  ToastPosition as RichToastPosition,
+  ToastContextValue as RichToastContextValue,
+} from './NotificationToast';
+
+// Breadcrumbs
+export { Breadcrumbs, useBreadcrumbs } from './Breadcrumbs';
+export type {
+  BreadcrumbsProps,
+  BreadcrumbItem,
+  UseBreadcrumbsOptions,
+} from './Breadcrumbs';
+
+// Command Palette (Cmd+K)
+export { CommandPalette, useCommandPalette } from './CommandPalette';
+export type {
+  CommandPaletteProps,
+  CommandItem,
+  CommandGroup,
+} from './CommandPalette';
+
+// Form Layout Components
+export { FormSection, FormActions, FormRow, FormField, FormDivider } from './FormLayout';
+export type {
+  FormSectionProps,
+  FormActionsProps,
+  FormRowProps,
+  FormFieldProps,
+  FormDividerProps,
+} from './FormLayout';

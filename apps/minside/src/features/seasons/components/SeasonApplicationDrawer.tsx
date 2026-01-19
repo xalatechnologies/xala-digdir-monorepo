@@ -370,6 +370,7 @@ export function SeasonApplicationDrawer({
                   {t('seasons.drawer.startTime')}
                 </Label>
                 <Textfield
+                  aria-label={t('seasons.drawer.startTime')}
                   type="time"
                   id="startTime"
                   value={startTime}
@@ -398,6 +399,7 @@ export function SeasonApplicationDrawer({
                   {t('seasons.drawer.endTime')}
                 </Label>
                 <Textfield
+                  aria-label={t('seasons.drawer.endTime')}
                   type="time"
                   id="endTime"
                   value={endTime}

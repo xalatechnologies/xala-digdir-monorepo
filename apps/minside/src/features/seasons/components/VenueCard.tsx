@@ -1,5 +1,5 @@
 import { Card, Heading, Paragraph, Button, Badge } from '@xala/ds';
-import type { RentalObject, Listing } from '@digilist/client-sdk/types';
+import type { RentalObject } from '@digilist/client-sdk/types';
 import { useT } from '@xala/i18n';
 
 /**
@@ -38,7 +38,7 @@ function SquareIcon() {
 }
 
 interface VenueCardProps {
-  venue: RentalObject | Listing; // Support both RentalObject (new) and Listing (backward compatibility)
+  venue: RentalObject;
   onApply?: (venueId: string) => void;
   showApplyButton?: boolean;
 }
@@ -70,7 +70,7 @@ export function VenueCard({ venue, onApply, showApplyButton = true }: VenueCardP
             width: '100%',
             height: '180px',
             backgroundColor: 'var(--ds-color-neutral-background-subtle)',
-            backgroundImage: `url(${venue.images[0].url})`,
+            backgroundImage: `url(${typeof venue.images[0] === 'string' ? venue.images[0] : (venue.images[0] as any)?.url || ''})`,
             backgroundSize: 'cover',
             backgroundPosition: 'center',
             borderBottom: '1px solid var(--ds-color-neutral-border-subtle)',
@@ -107,7 +107,7 @@ export function VenueCard({ venue, onApply, showApplyButton = true }: VenueCardP
           <Heading level={3} data-size="sm" style={{ margin: 0, marginBottom: 'var(--ds-spacing-2)' }}>
             {venue.name}
           </Heading>
-          {venue.address && (
+          {(venue as any).address && (
             <Paragraph
               data-size="sm"
               style={{
@@ -119,7 +119,7 @@ export function VenueCard({ venue, onApply, showApplyButton = true }: VenueCardP
               }}
             >
               <MapPinIcon />
-              {venue.address.street}, {venue.address.city}
+              {(venue as any).address.street}, {(venue as any).address.city}
             </Paragraph>
           )}
         </div>
@@ -158,20 +158,20 @@ export function VenueCard({ venue, onApply, showApplyButton = true }: VenueCardP
               </Paragraph>
             </div>
           )}
-          {venue.size && (
+          {(venue as any).size && (
             <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--ds-spacing-1)' }}>
               <SquareIcon />
               <Paragraph data-size="xs" style={{ margin: 0, color: 'var(--ds-color-neutral-text-subtle)' }}>
-                {t('seasons.venue.area', { size: venue.size })}
+                {t('seasons.venue.area', { size: (venue as any).size })}
               </Paragraph>
             </div>
           )}
         </div>
 
         {/* Categories/Tags */}
-        {venue.categories && venue.categories.length > 0 && (
+        {(venue.category || (venue as any).categories) && (
           <div style={{ display: 'flex', gap: 'var(--ds-spacing-2)', flexWrap: 'wrap' }}>
-            {venue.categories.slice(0, 3).map((category: string, index: number) => (
+            {(Array.isArray((venue as any).categories) ? (venue as any).categories : [venue.category]).filter(Boolean).slice(0, 3).map((category: string, index: number) => (
               <Badge
                 key={index}
                 data-size="sm"

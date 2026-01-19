@@ -42,8 +42,9 @@ export function NotificationsTab() {
         <Stack spacing={4}>
           <FormField label={t('common.epostvarsler')}>
             <Switch
+              aria-label={t('common.send.varsler.paa.epost')}
               checked={notificationData.emailEnabled}
-              onChange={(checked) => updateField('emailEnabled', checked)}
+              onChange={(e) => updateField('emailEnabled', e.target.checked)}
             >
               {t('common.send.varsler.paa.epost')}
             </Switch>
@@ -51,8 +52,9 @@ export function NotificationsTab() {
 
           <FormField label={t('common.smsvarsler')}>
             <Switch
+              aria-label={t('common.send.varsler.paa.sms')}
               checked={notificationData.smsEnabled}
-              onChange={(checked) => updateField('smsEnabled', checked)}
+              onChange={(e) => updateField('smsEnabled', e.target.checked)}
             >
               {t('common.send.varsler.paa.sms')}
             </Switch>
@@ -60,8 +62,9 @@ export function NotificationsTab() {
 
           <FormField label={t('common.pushvarsler')}>
             <Switch
+              aria-label={t('common.send.pushvarsler.til.mobilapp')}
               checked={notificationData.pushEnabled}
-              onChange={(checked) => updateField('pushEnabled', checked)}
+              onChange={(e) => updateField('pushEnabled', e.target.checked)}
             >
               {t('common.send.pushvarsler.til.mobilapp')}
             </Switch>
@@ -80,8 +83,9 @@ export function NotificationsTab() {
             <Stack spacing={3}>
               <FormField label={t('common.bookingbekreftelse')}>
                 <Switch
+                  aria-label={t('common.send.bekreftelse.naar.booking.er.godkjent')}
                   checked={notificationData.bookingConfirmation}
-                  onChange={(checked) => updateField('bookingConfirmation', checked)}
+                  onChange={(e) => updateField('bookingConfirmation', e.target.checked)}
                 >
                   {t('common.send.bekreftelse.naar.booking.er.godkjent')}
                 </Switch>
@@ -89,8 +93,9 @@ export function NotificationsTab() {
 
               <FormField label={t('common.bookingpaaminnelse')}>
                 <Switch
+                  aria-label={t('common.send.paaminnelse.for.booking.starter')}
                   checked={notificationData.bookingReminder}
-                  onChange={(checked) => updateField('bookingReminder', checked)}
+                  onChange={(e) => updateField('bookingReminder', e.target.checked)}
                 >
                   {t('common.send.paaminnelse.for.booking.starter')}
                 </Switch>

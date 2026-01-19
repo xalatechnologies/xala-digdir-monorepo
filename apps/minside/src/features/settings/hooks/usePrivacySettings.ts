@@ -51,14 +51,26 @@ export function usePrivacySettings(options: UsePrivacySettingsOptions = {}) {
   const [isExporting, setIsExporting] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
 
-  // Load consents from API
+  // Load consents from API - handle both array format (from SDK) and object format
   useEffect(() => {
     if (consentsData?.data) {
-      setConsentSettings({
-        marketing: consentsData.data.marketing || false,
-        analytics: consentsData.data.analytics || false,
-        thirdPartySharing: consentsData.data.thirdPartySharing || false,
-      });
+      const data = consentsData.data as any;
+      if (Array.isArray(data)) {
+        // SDK returns Consent[] array - find each consent type
+        const findConsent = (type: string) =>
+          data.find((c: any) => c.type === type)?.granted ?? false;
+        setConsentSettings({
+          marketing: findConsent('marketing'),
+          analytics: findConsent('analytics'),
+          thirdPartySharing: findConsent('thirdPartySharing'),
+        });
+      } else {
+        setConsentSettings({
+          marketing: data.marketing || false,
+          analytics: data.analytics || false,
+          thirdPartySharing: data.thirdPartySharing || false,
+        });
+      }
     }
   }, [consentsData]);
 
@@ -69,7 +81,13 @@ export function usePrivacySettings(options: UsePrivacySettingsOptions = {}) {
       setConsentSettings(newConsents);
 
       try {
-        await updateConsentsMutation.mutateAsync(newConsents);
+        // Transform to array format expected by SDK
+        const payload = [
+          { type: 'marketing', granted: newConsents.marketing },
+          { type: 'analytics', granted: newConsents.analytics },
+          { type: 'thirdPartySharing', granted: newConsents.thirdPartySharing },
+        ];
+        await updateConsentsMutation.mutateAsync(payload as any);
         onConsentUpdateSuccess?.();
       } catch (error) {
         // Revert on error
@@ -88,7 +106,13 @@ export function usePrivacySettings(options: UsePrivacySettingsOptions = {}) {
       setConsentSettings(newConsents);
 
       try {
-        await updateConsentsMutation.mutateAsync(newConsents);
+        // Transform to array format expected by SDK
+        const payload = [
+          { type: 'marketing', granted: newConsents.marketing },
+          { type: 'analytics', granted: newConsents.analytics },
+          { type: 'thirdPartySharing', granted: newConsents.thirdPartySharing },
+        ];
+        await updateConsentsMutation.mutateAsync(payload as any);
         onConsentUpdateSuccess?.();
       } catch (error) {
         // Revert on error
