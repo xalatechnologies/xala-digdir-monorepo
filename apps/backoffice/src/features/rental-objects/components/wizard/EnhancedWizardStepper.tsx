@@ -116,7 +116,7 @@ export function EnhancedWizardStepper({
               ) : isCompleted ? (
                 <CheckIcon size={14} />
               ) : (
-                <div style={{ fontSize: '14px', display: 'flex' }}>{Icon}</div>
+                <div style={{ display: 'flex' }}>{Icon}</div>
               )}
             </div>
 

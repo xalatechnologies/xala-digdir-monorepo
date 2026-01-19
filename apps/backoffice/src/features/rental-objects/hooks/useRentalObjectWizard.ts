@@ -105,9 +105,11 @@ export function useRentalObjectWizard(
   const isCloneMode = !!cloneFromId;
 
   // SDK hooks - fetch by slug for edit mode or clone mode
+  console.log('[useRentalObjectWizard] Clone debug:', { slug, cloneFromId, isEditMode, isCloneMode });
   const { data: existingObject, isLoading: isLoadingObject } = useRentalObjectBySlug(slug || cloneFromId || '', {
     enabled: isEditMode || isCloneMode,
   });
+  console.log('[useRentalObjectWizard] Existing object:', existingObject);
   const createMutation = useCreateRentalObject();
   const updateMutation = useUpdateRentalObject();
 
@@ -136,8 +138,10 @@ export function useRentalObjectWizard(
 
   // Load existing rental object data in edit mode or clone mode
   useEffect(() => {
+    console.log('[useRentalObjectWizard] useEffect triggered:', { isEditMode, isCloneMode, hasData: !!existingObject?.data });
     if ((isEditMode || isCloneMode) && existingObject?.data) {
       const obj = existingObject.data as any; // Cast to any to avoid type mismatches with outdated contracts
+      console.log('[useRentalObjectWizard] Loading data from object:', obj);
       setFormData({
         // For clone mode, don't include id and slug (create new object)
         ...(isEditMode && { id: obj.id, slug: obj.slug }),

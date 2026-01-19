@@ -79,7 +79,6 @@ export function RequirementsStep({ wizard }: RequirementsStepProps) {
               marginBottom: 'var(--ds-spacing-3)',
             }}
           >
-            <div style={{ fontSize: '1.5rem' }}>🪪</div>
             <Heading level={4} data-size="xs" style={{ margin: 0 }}>
               {t('form.requirements.licenseRequired')}
             </Heading>
@@ -138,7 +137,6 @@ export function RequirementsStep({ wizard }: RequirementsStepProps) {
                         onChange={() => toggleLicenseType(license.value)}
                         style={{ margin: 0 }}
                       />
-                      <div style={{ fontSize: '1.5rem' }}>{license.icon}</div>
                       <div style={{ flex: 1 }}>
                         <div style={{ fontWeight: 'var(--ds-font-weight-semibold)' }}>{license.label}</div>
                         <div
@@ -201,7 +199,6 @@ export function RequirementsStep({ wizard }: RequirementsStepProps) {
               marginBottom: 'var(--ds-spacing-3)',
             }}
           >
-            <div style={{ fontSize: '1.5rem' }}>💰</div>
             <Heading level={4} data-size="xs" style={{ margin: 0 }}>
               {t('form.requirements.depositRequired')}
             </Heading>
@@ -242,7 +239,7 @@ export function RequirementsStep({ wizard }: RequirementsStepProps) {
           }}
         >
           <Paragraph data-size="sm" style={{ margin: 0 }}>
-            💡 {t('rentalObjects.requirementsInfo')}
+            {t('rentalObjects.requirementsInfo')}
           </Paragraph>
         </div>
       </div>

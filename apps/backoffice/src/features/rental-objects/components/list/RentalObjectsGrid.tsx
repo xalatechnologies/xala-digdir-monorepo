@@ -62,11 +62,9 @@ export function RentalObjectsGrid({
     navigate(`/rental-objects/${slug || id}/edit`);
   };
 
-  const handleClone = (id: string) => {
-    // TODO: Implement clone functionality
-    console.log('Clone rental object:', id);
-    // Navigate to create wizard with cloned data
-    navigate(`/rental-objects/create?cloneFrom=${id}`);
+  const handleClone = (id: string, slug?: string) => {
+    // Navigate to create wizard with cloned data using slug
+    navigate(`/rental-objects/create?cloneFrom=${slug || id}`);
   };
 
   const handleArchive = (id: string) => {
@@ -180,7 +178,7 @@ export function RentalObjectsGrid({
                   data-size="sm"
                   onClick={(e) => {
                     e.stopPropagation();
-                    handleClone(item.id);
+                    handleClone(item.id, item.slug);
                   }}
                 >
                   <CopyIcon aria-hidden style={{ width: '1rem', height: '1rem', marginRight: 'var(--ds-spacing-1)' }} />

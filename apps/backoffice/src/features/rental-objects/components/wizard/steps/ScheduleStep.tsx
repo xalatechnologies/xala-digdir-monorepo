@@ -128,9 +128,9 @@ export function ScheduleStep({ wizard }: ScheduleStepProps) {
                   <div style={{ fontWeight: 'var(--ds-font-weight-semibold)', marginBottom: 'var(--ds-spacing-1)' }}>
                     {t(`form.schedule.${type}`)}
                   </div>
-                  <div style={{ fontSize: 'var(--ds-font-size-sm)', color: 'var(--ds-color-neutral-text-subtle)' }}>
+                  <Paragraph data-size="sm" style={{ margin: 0, color: 'var(--ds-color-neutral-text-subtle)' }}>
                     {t(`form.schedule.${type}Description`)}
-                  </div>
+                  </Paragraph>
                 </div>
               </label>
             ))}

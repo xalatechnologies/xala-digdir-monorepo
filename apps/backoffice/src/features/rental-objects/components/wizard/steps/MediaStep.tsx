@@ -268,14 +268,6 @@ export function MediaStep({ wizard }: MediaStepProps) {
           }}
           onClick={handleBrowseClick}
         >
-          <div
-            style={{
-              fontSize: '3rem',
-              marginBottom: 'var(--ds-spacing-3)',
-            }}
-          >
-            📸
-          </div>
           <Heading level={4} data-size="xs" style={{ marginBottom: 'var(--ds-spacing-2)' }}>
             {t('media.dropzone.page.title')}
           </Heading>
@@ -316,7 +308,7 @@ export function MediaStep({ wizard }: MediaStepProps) {
           <Paragraph data-size="sm" style={{ margin: 0, marginBottom: 'var(--ds-spacing-2)' }}>
             <strong>{t('media.requirements.page.title')}</strong>
           </Paragraph>
-          <ul style={{ margin: 0, paddingLeft: 'var(--ds-spacing-5)', fontSize: 'var(--ds-font-size-sm)' }}>
+          <ul style={{ margin: 0, paddingLeft: 'var(--ds-spacing-5)' }}>
             <li>{t('media.requirements.formats')}</li>
             <li>{t('media.requirements.maxSize')}</li>
             <li>{t('media.requirements.minImages')}</li>

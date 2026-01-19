@@ -234,7 +234,7 @@ export function OpeningHoursStep({ wizard }: OpeningHoursStepProps) {
           }}
         >
           <Paragraph data-size="sm" style={{ margin: 0 }}>
-            💡 {t('rentalObjects.openingHoursInfo')}
+            {t('rentalObjects.openingHoursInfo')}
           </Paragraph>
         </div>
       </div>

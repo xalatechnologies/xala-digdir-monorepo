@@ -176,7 +176,7 @@ export function CustodyStep({ wizard }: CustodyStepProps) {
 
             <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--ds-spacing-4)', marginTop: 'var(--ds-spacing-4)' }}>
               <div>
-                <label style={{ display: 'block', marginBottom: 'var(--ds-spacing-1)', fontSize: 'var(--ds-font-size-sm)' }}>{t('common.grantee_type')}</label>
+                <Paragraph data-size="sm" style={{ display: 'block', marginBottom: 'var(--ds-spacing-1)', margin: 0 }}>{t('common.grantee_type')}</Paragraph>
                 <select
                   value={newGrant.granteeType}
                   onChange={(e) => setNewGrant({ ...newGrant, granteeType: e.target.value as 'USER' | 'ORG', granteeId: '' })}
@@ -188,7 +188,7 @@ export function CustodyStep({ wizard }: CustodyStepProps) {
               </div>
 
               <div>
-                <label style={{ display: 'block', marginBottom: 'var(--ds-spacing-1)', fontSize: 'var(--ds-font-size-sm)' }}>{t('common.select_grantee')}</label>
+                <Paragraph data-size="sm" style={{ display: 'block', marginBottom: 'var(--ds-spacing-1)', margin: 0 }}>{t('common.select_grantee')}</Paragraph>
                 <select
                   value={newGrant.granteeId}
                   onChange={(e) => setNewGrant({ ...newGrant, granteeId: e.target.value })}
@@ -202,10 +202,10 @@ export function CustodyStep({ wizard }: CustodyStepProps) {
               </div>
 
               <div>
-                <label style={{ display: 'block', marginBottom: 'var(--ds-spacing-1)', fontSize: 'var(--ds-font-size-sm)' }}>{t('backoffice.text.scopes')}</label>
+                <Paragraph data-size="sm" style={{ display: 'block', marginBottom: 'var(--ds-spacing-1)', margin: 0 }}>{t('backoffice.text.scopes')}</Paragraph>
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 'var(--ds-spacing-2)' }}>
                   {['RO_VIEW', 'RO_EDIT', 'RO_BOOKING_MANAGE', 'RO_MAINTENANCE', 'RO_MEDIA', 'RO_PRICING', 'RO_REPORTING', 'RO_DELEGATE'].map(scope => (
-                    <label key={scope} style={{ display: 'flex', alignItems: 'center', gap: 'var(--ds-spacing-2)', fontSize: 'var(--ds-font-size-sm)' }}>
+                    <label key={scope} style={{ display: 'flex', alignItems: 'center', gap: 'var(--ds-spacing-2)' }}>
                       <input
                         type="checkbox"
                         checked={newGrant.scopes.includes(scope)}
@@ -224,7 +224,7 @@ export function CustodyStep({ wizard }: CustodyStepProps) {
 
               {newGrant.granteeType === 'ORG' && (
                 <div>
-                  <label style={{ display: 'flex', alignItems: 'center', gap: 'var(--ds-spacing-2)', fontSize: 'var(--ds-font-size-sm)' }}>
+                  <label style={{ display: 'flex', alignItems: 'center', gap: 'var(--ds-spacing-2)' }}>
                     <input
                       type="checkbox"
                       checked={newGrant.canSubdelegate}
