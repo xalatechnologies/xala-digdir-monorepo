@@ -1,6 +1,13 @@
 {
   "title": "Meldinger",
   "subtitle": "Kommunikasjon med brukere og organisasjoner.",
+  "headerTitle": "Meldinger",
+  "searchPlaceholder": "Søk i meldinger...",
+  "filterAll": "Alle",
+  "filterUnread": "Ulest",
+  "selectConversationToView": "Velg en samtale for å se meldinger",
+  "clickToViewMessages": "Klikk på en samtale i listen til venstre",
+  "noConversationsYet": "Ingen samtaler ennå",
   "unread": "uleste",
   "noMessages": "Ingen meldinger",
   "newMessage": "Ny melding",

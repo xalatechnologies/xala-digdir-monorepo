@@ -217,5 +217,22 @@
       "bankid_otp": "otp",
       "bankid_password": "qwer1234"
     }
+  },
+  {
+    "id": "00000000-0000-0000-0000-000000000014",
+    "tenant_id": "f47ac10b-58cc-4372-a567-0e02b2c3d479",
+    "email": "demo2026@digilist.no",
+    "name": "Demo User 2026",
+    "national_id": "12345678901",
+    "role": "member",
+    "status": "active",
+    "demo_token": "demo-token-2026",
+    "metadata": {
+      "vipps_phone": "12345678",
+      "bankid_national_id": "12345678901",
+      "bankid_otp": "otp",
+      "bankid_password": "qwer1234",
+      "description": "Demo user for MinSide testing with demo-token-2026"
+    }
   }
 ]

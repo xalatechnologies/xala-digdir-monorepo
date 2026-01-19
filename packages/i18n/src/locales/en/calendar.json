@@ -9,6 +9,8 @@
   "selectAvailable.period": "Select period",
   "previousWeek": "Previous week",
   "nextWeek": "Next week",
+  "previous_week": "Previous week",
+  "next_week": "Next week",
   "busy": "Busy",
   "selected": "Selected",
   "title": "Calendar",

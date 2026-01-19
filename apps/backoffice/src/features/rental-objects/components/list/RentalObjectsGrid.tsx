@@ -1,18 +1,18 @@
 /**
  * RentalObjectsGrid
- * Card-based grid view for rental objects
+ * Card-based grid view for rental objects using web frontend card design
  */
 
 import { useNavigate } from 'react-router-dom';
 import { useT } from '@xala/i18n';
 import {
-  Card,
-  Heading,
-  Paragraph,
-  Button,
-  Badge,
-  Stack,
+  RentalObjectCard,
+  RentalObjectGrid,
   Spinner,
+  Button,
+  Paragraph,
+  EditIcon,
+  TrashIcon,
 } from '@xala/ds';
 import type { RentalObject } from '@digilist/client-sdk/types';
 
@@ -56,243 +56,106 @@ export function RentalObjectsGrid({
     );
   }
 
-  const handleItemClick = (item: RentalObject) => {
-    navigate(`/rental-objects/${item.slug}`);
+  const handleEdit = (id: string, slug?: string) => {
+    navigate(`/rental-objects/${slug || id}/edit`);
+  };
+
+  const handleDelete = (id: string) => {
+    // TODO: Implement delete functionality with confirmation
+    console.log('Delete rental object:', id);
+  };
+
+  const PRICE_UNIT_LABELS: Record<string, string> = {
+    'day': 'dag',
+    'hour': 'time',
+    'week': 'uke',
+    'month': 'måned',
+    'year': 'år',
   };
 
   return (
-    <div
-      style={{
-        display: 'grid',
-        gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))',
-        gap: 'var(--ds-spacing-6)',
-        padding: 'var(--ds-spacing-4)',
-      }}
-    >
-      {rentalObjects.map((item) => (
-        <RentalObjectCard
-          key={item.id}
-          item={item}
-          isSelected={selectedIds.includes(item.id)}
-          onSelect={(selected) => onSelectOne?.(item.id, selected)}
-          onItemClick={handleItemClick}
-        />
-      ))}
-    </div>
-  );
-}
+    <RentalObjectGrid minCardWidth={450} maxColumns={3}>
+        {rentalObjects.map((item) => {
+          // Map RentalObject to card props
+          const primaryImage = item.images?.[0] || '/placeholder-image.jpg';
+          const priceAmount = item.pricing ? item.pricing.basePrice / 100 : 0;
+          const priceUnit = item.pricing ? PRICE_UNIT_LABELS[item.pricing.unit] || item.pricing.unit : 'time';
+          const locationFormatted = item.location?.city || t('rentalObjects.noLocation');
+          const descriptionExcerpt = item.description
+            ? item.description.substring(0, 100) + (item.description.length > 100 ? '...' : '')
+            : '';
 
-interface RentalObjectCardProps {
-  item: RentalObject;
-  isSelected?: boolean;
-  onSelect?: (selected: boolean) => void;
-  onItemClick?: (item: RentalObject) => void;
-}
-
-function RentalObjectCard({ item, isSelected: _isSelected, onSelect: _onSelect, onItemClick }: RentalObjectCardProps) {
-  const t = useT();
-  const navigate = useNavigate();
-
-  const primaryImage = item.images?.[0] || '/placeholder-image.jpg';
-  const isAvailable = item.status === 'published';
-
-  // Format price display
-  const priceDisplay = item.pricing
-    ? `${(item.pricing.basePrice / 100).toFixed(0)} kr/${t(`rentalObjects.pricingUnit.${item.pricing.unit}`)}`
-    : t('rentalObjects.priceNotSet');
-
-  // Format capacity label based on category
-  const getCapacityLabel = () => {
-    if (!item.capacity) return null;
-
-    if (item.category === 'LOKALER_OG_BANER') {
-      return `${item.capacity} ${t('rentalObjects.persons')}`;
-    }
-    if (item.category === 'OPPLEVELSER_OG_ARRANGEMENT') {
-      return `${item.capacity} ${t('rentalObjects.participants')}`;
-    }
-    if (item.bookingFeatures?.inventory) {
-      return `${item.bookingFeatures.inventory.total} ${t('rentalObjects.available')}`;
-    }
-    return null;
-  };
-
-  const capacityLabel = getCapacityLabel();
-
-  // Format location
-  const locationFormatted = item.location?.city || t('rentalObjects.noLocation');
-
-  // Get category translation key
-  const categoryI18nKey = `rentalObjects.category.${item.category}`;
-
-  // Description excerpt (first 100 characters)
-  const descriptionExcerpt = item.description
-    ? item.description.substring(0, 100) + (item.description.length > 100 ? '...' : '')
-    : '';
-
-  const handleViewClick = () => {
-    if (onItemClick) {
-      onItemClick(item);
-    } else {
-      navigate(`/rental-objects/${item.slug}`);
-    }
-  };
-
-  const _handleEditClick = (e: React.MouseEvent) => {
-    e.stopPropagation();
-    navigate(`/rental-objects/${item.slug}/edit`);
-  };
-
-  return (
-    <Card
-      style={{
-        cursor: 'pointer',
-        transition: 'transform 0.2s ease, box-shadow 0.2s ease',
-        height: '100%',
-        display: 'flex',
-        flexDirection: 'column',
-      }}
-      onClick={handleViewClick}
-    >
-      {/* Image Section */}
-      <div
-        style={{
-          position: 'relative',
-          width: '100%',
-          height: '200px',
-          overflow: 'hidden',
-          borderTopLeftRadius: 'var(--ds-border-radius-lg)',
-          borderTopRightRadius: 'var(--ds-border-radius-lg)',
-        }}
-      >
-        <img
-          src={primaryImage}
-          alt={item.name}
-          style={{
-            width: '100%',
-            height: '100%',
-            objectFit: 'cover',
-          }}
-        />
-
-        {/* Category Badge */}
-        <div
-          style={{
-            position: 'absolute',
-            top: 'var(--ds-spacing-3)',
-            left: 'var(--ds-spacing-3)',
-          }}
-        >
-          <Badge color="info">{t(categoryI18nKey)}</Badge>
-        </div>
-
-        {/* Availability Badge */}
-        {!isAvailable && (
-          <div
-            style={{
-              position: 'absolute',
-              top: 'var(--ds-spacing-3)',
-              right: 'var(--ds-spacing-3)',
-            }}
-          >
-            <Badge color="warning">{t('rentalObjects.notAvailable')}</Badge>
-          </div>
-        )}
-      </div>
-
-      {/* Content Section */}
-      <div
-        style={{
-          padding: 'var(--ds-spacing-5)',
-          flex: 1,
-          display: 'flex',
-          flexDirection: 'column',
-          gap: 'var(--ds-spacing-3)',
-        }}
-      >
-        <Heading level={3} data-size="sm" style={{ margin: 0 }}>
-          {item.name}
-        </Heading>
-
-        {descriptionExcerpt && (
-          <Paragraph
-            data-size="sm"
-            style={{
-              margin: 0,
-              color: 'var(--ds-color-neutral-text-subtle)',
-              lineHeight: 'var(--ds-line-height-md)',
-            }}
-          >
-            {descriptionExcerpt}
-          </Paragraph>
-        )}
-
-        {/* Location (only for venues and experiences) */}
-        {(item.category === 'LOKALER_OG_BANER' ||
-          item.category === 'OPPLEVELSER_OG_ARRANGEMENT') && (
-          <Stack direction="horizontal" spacing="var(--ds-spacing-2)">
-            <span style={{ fontSize: 'var(--ds-font-size-sm)' }}>📍</span>
-            <Paragraph data-size="sm" style={{ margin: 0 }}>
-              {locationFormatted}
-            </Paragraph>
-          </Stack>
-        )}
-
-        {/* Price and Capacity */}
-        <Stack
-          direction="horizontal"
-          spacing="var(--ds-spacing-2)"
-          style={{ marginTop: 'auto', paddingTop: 'var(--ds-spacing-3)' }}
-        >
-          <Paragraph
-            style={{
-              margin: 0,
-              fontWeight: 'var(--ds-font-weight-bold)',
-              color: 'var(--ds-color-accent-text-default)',
-            }}
-          >
-            {priceDisplay}
-          </Paragraph>
-          {capacityLabel && (
-            <>
-              <span style={{ color: 'var(--ds-color-neutral-text-subtle)' }}>•</span>
-              <Paragraph
-                data-size="sm"
-                style={{ margin: 0, color: 'var(--ds-color-neutral-text-subtle)' }}
+          return (
+            <div
+              key={item.id}
+              style={{ position: 'relative' }}
+            >
+              <RentalObjectCard
+                id={item.id}
+                name={item.name}
+                type={t(`rentalObjects.category.${item.category}`)}
+                listingType={item.category as 'SPACE' | 'RESOURCE' | 'SERVICE' | 'VEHICLE' | 'EVENT' | 'OTHER'}
+                location={locationFormatted}
+                description={descriptionExcerpt}
+                image={primaryImage}
+                facilities={[]}
+                capacity={item.capacity || 0}
+                price={priceAmount}
+                priceUnit={priceUnit}
+                currency="NOK"
+                imageHeight={260}
+                showLocation={true}
+                showDescription={true}
+                showFacilities={true}
+                showCapacity={true}
+                showPrice={true}
+                onClick={() => navigate(`/rental-objects/${item.slug || item.id}`)}
+                onFavorite={undefined}
+                onShare={undefined}
+              />
+              
+              {/* Admin Action Buttons Overlay */}
+              <div
+                style={{
+                  position: 'absolute',
+                  bottom: 'var(--ds-spacing-4)',
+                  left: 'var(--ds-spacing-4)',
+                  right: 'var(--ds-spacing-4)',
+                  display: 'flex',
+                  gap: 'var(--ds-spacing-2)',
+                  zIndex: 10,
+                }}
               >
-                {capacityLabel}
-              </Paragraph>
-            </>
-          )}
-        </Stack>
-      </div>
-
-      {/* Actions */}
-      <div
-        style={{
-          padding: 'var(--ds-spacing-5)',
-          paddingTop: 0,
-          display: 'flex',
-          gap: 'var(--ds-spacing-3)',
-        }}
-      >
-        <Button
-          variant="secondary"
-          data-size="sm"
-          onClick={handleViewClick}
-          style={{ flex: 1 }} type="button"
-        >
-          {t('common.viewDetails')}
-        </Button>
-      </div>
-
-      {/* Hover Effect */}
-      <style>{`
-        div[role="group"]:hover {
-          transform: translateY(-4px);
-          box-shadow: var(--ds-shadow-lg);
-        }
-      `}</style>
-    </Card>
+                <Button
+                  variant="secondary"
+                  data-size="sm"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleEdit(item.id, item.slug);
+                  }}
+                  style={{ flex: 1 }}
+                  type="button"
+                  title="Edit"
+                >
+                  <EditIcon size={16} />
+                  Edit
+                </Button>
+                <Button
+                  variant="tertiary"
+                  data-size="sm"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleDelete(item.id);
+                  }}
+                  type="button"
+                  title="Delete"
+                >
+                  <TrashIcon size={16} />
+                </Button>
+              </div>
+            </div>
+          );
+        })}
+    </RentalObjectGrid>
   );
 }

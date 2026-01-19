@@ -5,12 +5,11 @@
  */
 
 import { useT } from '@xala/i18n';
-import { Heading, Paragraph, Spinner } from '@xala/ds';
+import { Heading, Paragraph, Spinner, WizardStepper } from '@xala/ds';
 import { useRentalObjectWizard } from '../../hooks/useRentalObjectWizard';
 import { WizardFooter } from './WizardFooter';
+import { WIZARD_ICONS } from './WizardIcons';
 import { CategorySelector } from './steps/CategorySelector';
-import { CloneSelectionStep } from './steps/CloneSelectionStep';
-import { useState } from 'react';
 import { BasicsStep } from './steps/BasicsStep';
 import { MediaStep } from './steps/MediaStep';
 import { PackagesStep } from './steps/PackagesStep';
@@ -25,22 +24,7 @@ export interface RentalObjectWizardProps {
 
 export function RentalObjectWizard({ slug }: RentalObjectWizardProps) {
   const t = useT();
-  // If slug is present, we are in edit mode, so clone selection is skipped.
-  // If slug is explicitly undefined, we are modifying a new creation flow.
-  const [isCloneStep, setIsCloneStep] = useState(!slug); 
   const wizard = useRentalObjectWizard({ slug });
-
-  // Handle clone selection
-  const handleCloneSelect = (_mode: 'create' | 'clone', _cloneSource?: any) => {
-      // Logic to initialize wizard with clone data would go here
-      // For now, we just exit the clone step to show the main wizard
-      setIsCloneStep(false);
-      // TODO: Populate form with cloneSource if mode === 'clone'
-  };
-
-  if (isCloneStep && !wizard.isLoading) {
-      return <CloneSelectionStep onSelect={handleCloneSelect} />;
-  }
 
   if (wizard.isLoading) {
     return (
@@ -98,7 +82,11 @@ export function RentalObjectWizard({ slug }: RentalObjectWizardProps) {
       >
         <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
           <WizardStepper
-            steps={wizard.steps}
+            steps={wizard.steps.map(step => ({
+              id: step.id,
+              label: t(`wizard.step.${step.id}`),
+              icon: WIZARD_ICONS[step.id],
+            }))}
             currentStep={wizard.currentStep}
             onStepClick={wizard.goToStep}
             errors={wizard.errors}
@@ -124,151 +112,6 @@ export function RentalObjectWizard({ slug }: RentalObjectWizardProps) {
 
       {/* Footer Navigation */}
       <WizardFooter wizard={wizard} />
-    </div>
-  );
-}
-
-interface WizardStepperProps {
-  steps: WizardStep[];
-  currentStep: number;
-  onStepClick: (step: number) => void;
-  errors: Record<string, string[]>;
-}
-
-import { WIZARD_ICONS } from './WizardIcons';
-
-function WizardStepper({ steps, currentStep, onStepClick, errors }: WizardStepperProps) {
-  const t = useT();
-
-  return (
-    <div
-      style={{
-        display: 'flex',
-        alignItems: 'center',
-        gap: 'var(--ds-spacing-2)',
-        position: 'relative',
-        overflowX: 'auto',
-        paddingBottom: 'var(--ds-spacing-2)', // Scrollbar space
-      }}
-    >
-      {steps.map((step, index) => {
-        const isActive = index === currentStep;
-        const isCompleted = index < currentStep;
-        const hasErrors = errors[step.id]?.length > 0;
-        const isClickable = index <= currentStep;
-        const Icon = WIZARD_ICONS[step.id] || WIZARD_ICONS['basics'];
-
-        return (
-          <div
-            key={step.id}
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: 'var(--ds-spacing-2)',
-              flex: index === steps.length - 1 ? '0 0 auto' : '1 0 auto', // Last item doesn't stretch
-              minWidth: '120px',
-            }}
-          >
-            {/* Step Button */}
-            <button
-              onClick={() => isClickable && onStepClick(index)}
-              disabled={!isClickable}
-              type="button"
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                gap: 'var(--ds-spacing-3)',
-                border: 'none',
-                background: 'transparent',
-                cursor: isClickable ? 'pointer' : 'default',
-                padding: 'var(--ds-spacing-2)',
-                borderRadius: 'var(--ds-border-radius-md)',
-                transition: 'all 0.2s ease',
-                opacity: isClickable ? 1 : 0.5,
-              }}
-              onMouseEnter={(e) => {
-                if (isClickable && !isActive) {
-                  e.currentTarget.style.backgroundColor = 'var(--ds-color-neutral-surface-hover)';
-                }
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.backgroundColor = 'transparent';
-              }}
-            >
-              {/* Icon Circle */}
-              <div
-                style={{
-                  width: '32px',
-                  height: '32px',
-                  borderRadius: 'var(--ds-border-radius-full)',
-                  backgroundColor: isActive
-                    ? 'var(--ds-color-accent-base-default)'
-                    : isCompleted
-                      ? 'var(--ds-color-success-surface-subtle)'
-                      : hasErrors
-                        ? 'var(--ds-color-danger-surface-subtle)'
-                        : 'var(--ds-color-neutral-surface-subtle)',
-                  color: isActive
-                    ? 'var(--ds-color-neutral-contrast-1)'
-                    : isCompleted
-                      ? 'var(--ds-color-success-text-default)'
-                      : hasErrors
-                        ? 'var(--ds-color-danger-text-default)'
-                        : 'var(--ds-color-neutral-text-subtle)',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  border: isActive
-                    ? 'none'
-                    : hasErrors
-                      ? '1px solid var(--ds-color-danger-border-default)'
-                      : isCompleted
-                        ? '1px solid var(--ds-color-success-border-default)'
-                        : '1px solid var(--ds-color-neutral-border-default)',
-                  flexShrink: 0,
-                }}
-              >
-                {/* Clone icon to enforce size if needed, or rely on CSS inheritance */}
-                <div style={{ fontSize: 'var(--ds-font-size-5)', display: 'flex' }}>
-                   {hasErrors ? '!' : isCompleted ? '✓' : Icon}
-                </div>
-              </div>
-
-              {/* Label */}
-              <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}>
-                <Paragraph
-                  data-size="xs"
-                  style={{
-                    margin: 0,
-                    whiteSpace: 'nowrap',
-                    color: isActive
-                      ? 'var(--ds-color-accent-text-default)'
-                      : 'var(--ds-color-neutral-text-default)',
-                    fontWeight: isActive ? 'var(--ds-font-weight-semibold)' : 'var(--ds-font-weight-medium)',
-                  }}
-                >
-                  {t(`wizard.step.${step.id}`)}
-                </Paragraph>
-              </div>
-            </button>
-
-            {/* Connector Line */}
-            {index < steps.length - 1 && (
-              <div
-                style={{
-                  height: '1px',
-                  flex: 1,
-                  minWidth: '20px',
-                  backgroundColor: index < currentStep
-                    ? 'var(--ds-color-success-base-default)'
-                    : 'var(--ds-color-neutral-border-default)',
-                  margin: '0 var(--ds-spacing-2)',
-                }}
-              />
-            )}
-          </div>
-        );
-      })}
     </div>
   );
 }

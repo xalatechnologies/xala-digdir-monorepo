@@ -83,6 +83,8 @@ export type { BreadcrumbProps } from './Breadcrumb';
 // Booking Stepper
 export { BookingStepper } from './BookingStepper';
 export type { BookingStepperProps } from './BookingStepper';
+export { WizardStepper } from './WizardStepper';
+export type { WizardStepperProps, WizardStep } from './WizardStepper';
 
 // Dialogs
 export {
@@ -160,7 +162,6 @@ export {
   DataPageHeader,
   DataPageToolbar,
   Wizard,
-  WizardStepper,
   WizardNavigation,
 } from './data-page';
 export type {
@@ -177,7 +178,5 @@ export type {
   FilterConfig,
   ViewMode,
   WizardProps,
-  WizardStep,
-  WizardStepperProps,
   WizardNavigationProps,
 } from './data-page';

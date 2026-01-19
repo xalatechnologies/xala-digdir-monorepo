@@ -3,7 +3,7 @@
     "version": "1.0.0",
     "created": "2026-01-17T10:49:04.379Z",
     "description": "Booking and calendar seed data for Digilist Platform",
-    "total_bookings": 50
+    "total_bookings": 52
   },
   "bookings": [
     {
@@ -705,6 +705,34 @@
       "notes": "Generated booking 50",
       "created_at": "2026-01-29T08:00:00.000Z",
       "updated_at": "2026-02-04T08:00:00.000Z"
+    },
+    {
+      "id": "b0000050-0000-0000-0000-000000000000",
+      "tenant_id": "f47ac10b-58cc-4372-a567-0e02b2c3d479",
+      "rental_object_id": "d0000001-0000-0000-0000-000000000000",
+      "user_id": "00000000-0000-0000-0000-000000000014",
+      "start_time": "2026-01-20T10:00:00.000Z",
+      "end_time": "2026-01-20T12:00:00.000Z",
+      "status": "confirmed",
+      "total_price": 800,
+      "currency": "NOK",
+      "notes": "Booking by demo-token-2026 user",
+      "created_at": "2026-01-19T08:00:00.000Z",
+      "updated_at": "2026-01-19T08:00:00.000Z"
+    },
+    {
+      "id": "b0000051-0000-0000-0000-000000000000",
+      "tenant_id": "f47ac10b-58cc-4372-a567-0e02b2c3d479",
+      "rental_object_id": "d0000005-0000-0000-0000-000000000000",
+      "user_id": "00000000-0000-0000-0000-000000000014",
+      "start_time": "2026-01-22T14:00:00.000Z",
+      "end_time": "2026-01-22T16:00:00.000Z",
+      "status": "pending",
+      "total_price": 600,
+      "currency": "NOK",
+      "notes": "Another booking by demo-token-2026 user",
+      "created_at": "2026-01-19T08:15:00.000Z",
+      "updated_at": "2026-01-19T08:15:00.000Z"
     }
   ]
 }

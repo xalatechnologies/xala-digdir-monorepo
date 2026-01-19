@@ -7292,7 +7292,7 @@
     "namespace": "misc",
     "key": "app.name",
     "language": "en",
-    "value": "Digilist",
+    "value": "DIGILIST",
     "isSystemDefault": true
   },
   {
@@ -7300,7 +7300,7 @@
     "namespace": "misc",
     "key": "app.name",
     "language": "nb",
-    "value": "Digilist",
+    "value": "DIGILIST",
     "isSystemDefault": true
   },
   {
@@ -33228,7 +33228,7 @@
     "namespace": "common",
     "key": "components.sidebar.appSubtitle",
     "language": "en",
-    "value": "App Subtitle",
+    "value": "Digital Booking Platform",
     "isSystemDefault": true
   },
   {
@@ -33236,7 +33236,7 @@
     "namespace": "common",
     "key": "components.sidebar.appSubtitle",
     "language": "nb",
-    "value": "App Subtitle",
+    "value": "Digital Bookingplattform",
     "isSystemDefault": true
   },
   {
@@ -117861,6 +117861,38 @@
     "key": "yes",
     "language": "nb",
     "value": "Ja",
+    "isSystemDefault": true
+  },
+  {
+    "tenantId": null,
+    "namespace": "bookings",
+    "key": "bookings.filter.page.title",
+    "language": "en",
+    "value": "Filter Bookings",
+    "isSystemDefault": true
+  },
+  {
+    "tenantId": null,
+    "namespace": "bookings",
+    "key": "bookings.filter.page.title",
+    "language": "nb",
+    "value": "Filtrer bookinger",
+    "isSystemDefault": true
+  },
+  {
+    "tenantId": null,
+    "namespace": "form",
+    "key": "form.bookings.search.placeholder",
+    "language": "en",
+    "value": "Search bookings...",
+    "isSystemDefault": true
+  },
+  {
+    "tenantId": null,
+    "namespace": "form",
+    "key": "form.bookings.search.placeholder",
+    "language": "nb",
+    "value": "Søk i bookinger...",
     "isSystemDefault": true
   }
 ]

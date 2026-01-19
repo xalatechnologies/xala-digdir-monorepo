@@ -82,13 +82,7 @@ async function geocodeRentalObjects() {
   try {
     // Fetch rental objects without coordinates
     const objectsToGeocode = await db
-      .select({
-        id: rentalObjects.id,
-        name: rentalObjects.name,
-        address: rentalObjects.address,
-        city: rentalObjects.city,
-        postalCode: rentalObjects.postalCode,
-      })
+      .select()
       .from(rentalObjects)
       .where(
         or(
