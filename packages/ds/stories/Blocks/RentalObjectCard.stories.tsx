@@ -138,7 +138,7 @@ export const Minimal: Story = {
  */
 export const ListingTypes: Story = {
   render: () => (
-    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 'var(--ds-spacing-4)', maxWidth: '1000px' }}>
+    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 'var(--ds-spacing-4)' }}>
       <RentalObjectCard
         {...sampleListing}
         id="1"

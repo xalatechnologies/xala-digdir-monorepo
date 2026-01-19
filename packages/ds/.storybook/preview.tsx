@@ -12,6 +12,7 @@ import './public/themes/digilist.css';
 import './public/themes/digilist-extensions.css';
 
 import { ThemeProvider, useTheme } from '../src/ThemeProvider';
+import { I18nProvider } from '@xala/i18n';
 
 /**
  * Theme decorator that wraps all stories with DS theme provider
@@ -21,18 +22,20 @@ const withTheme: Decorator = (Story, context) => {
   const theme = context.globals.theme || 'light';
 
   return (
-    <ThemeProvider>
-      <div 
-        data-color-scheme={theme} 
-        data-size="md"
-        style={{ 
-          padding: 'var(--ds-spacing-4)',
-          fontFamily: 'Inter, system-ui, sans-serif',
-        }}
-      >
-        <Story />
-      </div>
-    </ThemeProvider>
+    <I18nProvider initialLocale="nb">
+      <ThemeProvider>
+        <div 
+          data-color-scheme={theme} 
+          data-size="md"
+          style={{ 
+            padding: 'var(--ds-spacing-4)',
+            fontFamily: 'Inter, system-ui, sans-serif',
+          }}
+        >
+          <Story />
+        </div>
+      </ThemeProvider>
+    </I18nProvider>
   );
 };
 

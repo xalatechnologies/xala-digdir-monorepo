@@ -55,3 +55,4 @@ tests/playwright-report/*
 tests/test-results/*
 tests/reports/
 tests/e2e/backoffice/reports/
+packages/testing-e2e/test-results/
