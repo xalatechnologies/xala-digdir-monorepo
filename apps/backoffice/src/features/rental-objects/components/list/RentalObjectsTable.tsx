@@ -278,7 +278,7 @@ function TableRow({
   const t = useT();
   const navigate = useNavigate();
 
-  const primaryImage = item.images?.[0] || '/placeholder-image.jpg';
+  const primaryImage = item.primaryImageUrl || item.images?.[0] || 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="80" height="60"%3E%3Crect fill="%23ddd" width="80" height="60"/%3E%3Ctext fill="%23999" x="50%25" y="50%25" dominant-baseline="middle" text-anchor="middle" font-family="sans-serif" font-size="10"%3ENo image%3C/text%3E%3C/svg%3E';
 
   const priceDisplay = item.pricing
     ? `${(item.pricing.basePrice / 100).toFixed(0)} kr/${t(`rentalObjects.pricingUnit.${item.pricing.unit}`)}`
