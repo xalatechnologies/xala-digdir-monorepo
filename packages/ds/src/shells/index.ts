@@ -12,3 +12,6 @@ export type { AppLayoutProps } from './AppLayout';
 
 export { DashboardSidebar } from './DashboardSidebar';
 export type { DashboardSidebarProps, SidebarNavItem, SidebarSection } from './DashboardSidebar';
+
+export { DashboardContent } from './DashboardContent';
+export type { DashboardContentProps } from './DashboardContent';

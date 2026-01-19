@@ -125,6 +125,8 @@ export const navPolicies = saasSchema.table('nav_policies', {
   labelKey: varchar('label_key', { length: 200 }).notNull(),
   iconKey: varchar('icon_key', { length: 100 }),
   parentKey: varchar('parent_key', { length: 200 }),
+  section: varchar('section', { length: 200 }),
+  contexts: jsonb('contexts').notNull().default('[]'),
   order: integer('order').notNull().default(0),
   createdAt: timestamp('created_at').notNull().defaultNow(),
   updatedAt: timestamp('updated_at').notNull().defaultNow(),

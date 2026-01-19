@@ -16,6 +16,7 @@ import {
   Button,
   Input,
   Switch,
+  DashboardPageHeader,
 } from '@xala/ds';
 import { useT } from '@xala/i18n';
 
@@ -65,33 +66,21 @@ export function OrganizationSettingsPage() {
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--ds-spacing-6)' }}>
-      {/* Header */}
-      <div style={{
-        display: 'flex',
-        flexDirection: isMobile ? 'column' : 'row',
-        justifyContent: 'space-between',
-        alignItems: isMobile ? 'flex-start' : 'center',
-        gap: 'var(--ds-spacing-4)',
-      }}>
-        <div>
-          <Heading level={1} data-size="lg" style={{ margin: 0 }}>
-            {t('org.settings')}
-          </Heading>
-          <Paragraph style={{ color: 'var(--ds-color-neutral-text-subtle)', marginTop: 'var(--ds-spacing-2)', marginBottom: 0 }}>
-            {t('org.settingsDesc')}
-          </Paragraph>
-        </div>
-        <Button 
-          type="button" 
-          variant="primary" 
-          data-size="md" 
-          onClick={handleSave}
-          disabled={isSaving}
-          style={{ minHeight: '44px' }}
-        >
-          {isSaving ? t('state.saving') : t('action.save')}
-        </Button>
-      </div>
+      {/* Header - Using DashboardPageHeader */}
+      <DashboardPageHeader
+        title={t('org.settings')}
+        subtitle={t('org.settingsDesc')}
+        primaryAction={
+          <Button 
+            type="button" 
+            variant="primary"
+            onClick={handleSave}
+            disabled={isSaving}
+          >
+            {isSaving ? t('state.saving') : t('action.save')}
+          </Button>
+        }
+      />
 
       {/* Organization Profile */}
       <Card style={{ padding: 'var(--ds-spacing-5)' }}>

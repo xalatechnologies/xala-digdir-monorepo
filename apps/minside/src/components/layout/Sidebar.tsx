@@ -2,7 +2,8 @@
  * Sidebar
  *
  * MinSide sidebar using DashboardSidebar from @xala/ds.
- * Contains app-specific navigation data and RBAC filtering.
+ * Fetches navigation items from API with feature flag and role-based filtering.
+ * Falls back to static navigation if API fails.
  */
 
 import { useState, useEffect, useMemo } from 'react';
@@ -23,6 +24,7 @@ import {
 import { useT } from '@xala/i18n';
 import { useAuth } from '@xala/auth';
 import { useAccountContext } from '../../providers/AccountContextProvider';
+import { useNavigationItems, type NavItemFromApi } from '../../hooks/useNavigation';
 
 // Icon for Billing/Credit Card
 function CreditCardIcon() {
@@ -49,6 +51,67 @@ const MOBILE_BREAKPOINT = 768;
 
 type DashboardContext = 'personal' | 'organization';
 
+function getIconByKey(iconKey: string | undefined): React.ReactNode {
+  switch (iconKey) {
+    case 'home': return <HomeIcon />;
+    case 'calendar': return <CalendarIcon />;
+    case 'book-open': return <BookOpenIcon />;
+    case 'message': return <MessageIcon />;
+    case 'settings': return <SettingsIcon />;
+    case 'repeat': return <RepeatIcon />;
+    case 'users': return <UsersIcon />;
+    case 'credit-card': return <CreditCardIcon />;
+    case 'bell': return <MessageIcon />;
+    case 'help-circle': return <BookOpenIcon />;
+    case 'building': return <UsersIcon />;
+    case 'activity': return <CalendarIcon />;
+    case 'sliders': return <SettingsIcon />;
+    default: return <HomeIcon />;
+  }
+}
+
+function transformApiNavToSections(
+  items: NavItemFromApi[],
+  t: (key: string) => string,
+  accountType: DashboardContext
+): SidebarSection[] {
+  if (!items.length) return [];
+
+  const sectionMap = new Map<string | null, SidebarNavItem[]>();
+
+  for (const item of items) {
+    if (item.contexts.length > 0 && !item.contexts.includes(accountType)) {
+      continue;
+    }
+
+    const sectionKey = item.section || null;
+    if (!sectionMap.has(sectionKey)) {
+      sectionMap.set(sectionKey, []);
+    }
+
+    const navItem: SidebarNavItem = {
+      name: t(item.labelKey),
+      description: t(`${item.labelKey}Desc`),
+      href: item.routeKey || '/',
+      icon: getIconByKey(item.iconKey),
+      contexts: item.contexts as DashboardContext[],
+    };
+
+    sectionMap.get(sectionKey)!.push(navItem);
+  }
+
+  const sections: SidebarSection[] = [];
+
+  for (const [sectionKey, sectionItems] of sectionMap) {
+    sections.push({
+      title: sectionKey ? t(sectionKey) : undefined,
+      items: sectionItems,
+    });
+  }
+
+  return sections;
+}
+
 export function Sidebar() {
   const { user } = useAuth();
   const { accountType } = useAccountContext();
@@ -58,6 +121,8 @@ export function Sidebar() {
   const [isMobile, setIsMobile] = useState(
     typeof window !== 'undefined' ? window.innerWidth < MOBILE_BREAKPOINT : false
   );
+
+  const { items: apiNavItems } = useNavigationItems('minside');
 
   // Track viewport size
   useEffect(() => {
@@ -74,8 +139,16 @@ export function Sidebar() {
   // Dynamic dashboard href based on context
   const dashboardHref = accountType === 'organization' ? '/org' : '/';
 
-  // Navigation sections with context filtering
-  const navSections: SidebarSection[] = useMemo(() => [
+  // Use API-driven navigation if available, fall back to static
+  const apiSections = useMemo(() => {
+    if (apiNavItems.length > 0) {
+      return transformApiNavToSections(apiNavItems, t, accountType);
+    }
+    return null;
+  }, [apiNavItems, t, accountType]);
+
+  // Static fallback navigation sections with context filtering
+  const staticNavSections: SidebarSection[] = useMemo(() => [
     {
       items: [
         { name: t('minside.dashboard'), description: t('minside.dashboardDesc'), href: dashboardHref, icon: <HomeIcon /> },
@@ -113,6 +186,9 @@ export function Sidebar() {
       ],
     },
   ], [t, dashboardHref]);
+
+  // Use API sections if available, otherwise fall back to static
+  const navSections = apiSections || staticNavSections;
 
   // Filter items by current context
   const filterByContext = (item: SidebarNavItem): boolean => {

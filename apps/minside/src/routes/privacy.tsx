@@ -20,6 +20,7 @@ import {
   DownloadIcon,
   TrashIcon,
   ShieldIcon,
+  DashboardPageHeader,
 } from '@xala/ds';
 import {
   useCreateGdprRequest,
@@ -133,28 +134,27 @@ export function PrivacyPage() {
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--ds-spacing-6)' }}>
-      {/* Header */}
-      <div style={{
-        display: 'flex',
-        flexDirection: isMobile ? 'column' : 'row',
-        justifyContent: 'space-between',
-        alignItems: isMobile ? 'flex-start' : 'flex-start',
-        gap: 'var(--ds-spacing-4)',
-      }}>
-        <div>
-          <Heading level={1} data-size="lg" style={{ margin: 0 }}>
-            Personvern
-          </Heading>
-          <Paragraph style={{ color: 'var(--ds-color-neutral-text-subtle)', marginTop: 'var(--ds-spacing-2)', marginBottom: 0 }}>
-            Administrer dine personverninnstillinger og GDPR-rettigheter
-          </Paragraph>
-        </div>
-        {exportSuccess && (
-          <Alert style={{ maxWidth: isMobile ? '100%' : '400px' }}>
-            t('common.din_eksportforesporsel_er_mottatt')
-          </Alert>
-        )}
-      </div>
+      {/* Header - Using DashboardPageHeader */}
+      <DashboardPageHeader
+        title={t('privacy.page.title') || 'Personvern'}
+        subtitle={t('privacy.page.description') || 'Administrer dine personverninnstillinger og GDPR-rettigheter'}
+        primaryAction={
+          <Button
+            type="button"
+            variant="secondary"
+            onClick={handleExportData}
+            disabled={isExporting}
+          >
+            <DownloadIcon />
+            {isExporting ? t('common.behandler_foresporsel') : t('privacy.exportData')}
+          </Button>
+        }
+      />
+      {exportSuccess && (
+        <Alert style={{ marginTop: 'var(--ds-spacing-4)' }}>
+          {t('common.din_eksportforesporsel_er_mottatt')}
+        </Alert>
+      )}
 
       {/* Data Export Card */}
       <Card style={{ padding: 'var(--ds-spacing-5)' }}>

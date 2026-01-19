@@ -16,6 +16,22 @@ import {
 import { useT } from '@xala/i18n';
 import { useAuth } from '@xala/auth';
 import { useAccountContext } from '../../providers/AccountContextProvider';
+import { useNavigationItems, type NavItemFromApi } from '../../hooks/useNavigation';
+
+const ICON_MAP: Record<string, React.ReactNode> = {
+  home: <HomeIcon />,
+  calendar: <CalendarIcon />,
+  'book-open': <BookOpenIcon />,
+  message: <MessageIcon />,
+  settings: <SettingsIcon />,
+  repeat: <RepeatIcon />,
+  users: <UsersIcon />,
+};
+
+function getIconFromKey(iconKey: string | undefined): React.ReactNode {
+  if (!iconKey) return <HomeIcon />;
+  return ICON_MAP[iconKey] ?? <HomeIcon />;
+}
 
 // Icon for Billing/Credit Card
 function CreditCardIcon() {
@@ -315,6 +331,51 @@ function SidebarContent({ navSections, user, onItemClick, t }: { navSections: Na
   );
 }
 
+/**
+ * Transform API navigation items to NavSection format
+ */
+function transformApiNavToSections(
+  items: NavItemFromApi[],
+  t: (key: string) => string,
+  accountType: DashboardContext
+): NavSection[] {
+  if (!items.length) return [];
+
+  const sectionMap = new Map<string | null, NavItem[]>();
+
+  for (const item of items) {
+    // Filter by context
+    if (item.contexts.length > 0 && !item.contexts.includes(accountType)) {
+      continue;
+    }
+
+    const sectionKey = item.section || null;
+    if (!sectionMap.has(sectionKey)) {
+      sectionMap.set(sectionKey, []);
+    }
+
+    const navItem: NavItem = {
+      name: t(item.labelKey),
+      description: t(`${item.labelKey}Desc`),
+      href: item.routeKey || '/',
+      icon: getIconFromKey(item.iconKey),
+      contexts: item.contexts as DashboardContext[],
+    };
+
+    sectionMap.get(sectionKey)!.push(navItem);
+  }
+
+  const sections: NavSection[] = [];
+  for (const [sectionKey, sectionItems] of sectionMap) {
+    sections.push({
+      title: sectionKey ? t(sectionKey) : undefined,
+      items: sectionItems,
+    });
+  }
+
+  return sections;
+}
+
 export function Sidebar() {
   const { user } = useAuth();
   const { accountType } = useAccountContext();
@@ -322,11 +383,21 @@ export function Sidebar() {
   const location = useLocation();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
+  const { items: apiNavItems } = useNavigationItems();
+
+  // Transform API items to sections
+  const apiSections = useMemo(() => {
+    if (apiNavItems.length > 0) {
+      return transformApiNavToSections(apiNavItems, t, accountType);
+    }
+    return null;
+  }, [apiNavItems, t, accountType]);
 
   // Dynamic dashboard href based on current context
   const dashboardHref = accountType === 'organization' ? '/org' : '/';
 
-  const navSections: NavSection[] = [
+  // Static fallback navigation
+  const staticNavSections: NavSection[] = [
     {
       items: [
         // Single dashboard item that changes destination based on context
@@ -366,9 +437,9 @@ export function Sidebar() {
     },
   ];
 
-  // Filter nav sections and items based on current account context
-  const filteredNavSections = useMemo(() => {
-    return navSections
+  // Filter static nav sections and items based on current account context (fallback only)
+  const filteredStaticSections = useMemo(() => {
+    return staticNavSections
       .map((section) => ({
         ...section,
         items: section.items.filter((item) => {
@@ -383,6 +454,9 @@ export function Sidebar() {
       // Remove sections with no items after filtering
       .filter((section) => section.items.length > 0);
   }, [accountType, t]);
+
+  // Use API sections if available, otherwise fall back to static
+  const filteredNavSections = apiSections || filteredStaticSections;
 
   // Detect mobile viewport
   useEffect(() => {

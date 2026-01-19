@@ -1,5 +1,5 @@
 import { useState, useMemo } from 'react';
-import { Container, Heading, Paragraph, Card, Button, Spinner } from '@xala/ds';
+import { Heading, Paragraph, Card, Button, Spinner, DashboardPageHeader } from '@xala/ds';
 import { useSeasonApplications } from '@digilist/client-sdk/hooks';
 import type { SeasonApplicationStatus } from '@digilist/client-sdk/types';
 import { useAccountContext } from '../providers/AccountContextProvider';
@@ -107,7 +107,7 @@ export function SeasonApplicationsPage() {
   }, [applications, statusFilter]);
 
   return (
-    <Container style={{ padding: 'var(--ds-spacing-8)' }}>
+    <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--ds-spacing-6)' }}>
       {/* Account Context Banner */}
       {accountType === 'organization' && selectedOrganization && (
         <Card
@@ -146,15 +146,20 @@ export function SeasonApplicationsPage() {
         </Card>
       )}
 
-      {/* Page Header */}
-      <div style={{ marginBottom: 'var(--ds-spacing-6)' }}>
-        <Heading level={1} data-size="lg" style={{ margin: 0, marginBottom: 'var(--ds-spacing-2)' }}>
-          Mine søknader
-        </Heading>
-        <Paragraph style={{ margin: 0, color: 'var(--ds-color-neutral-text-subtle)', maxWidth: '800px' }}>
-          Oversikt over alle dine sesongbookingsøknader. Se status og detaljer for hver søknad.
-        </Paragraph>
-      </div>
+      {/* Page Header - Using DashboardPageHeader */}
+      <DashboardPageHeader
+        title={t('seasonApplications.page.title') || 'Mine søknader'}
+        subtitle={t('seasonApplications.page.description') || 'Oversikt over alle dine sesongbookingsøknader'}
+        primaryAction={
+          <Button
+            type="button"
+            variant="primary"
+            onClick={() => navigate('/seasons')}
+          >
+            {t('seasons.exploreSeasonsButton') || 'Utforsk sesonger'}
+          </Button>
+        }
+      />
 
       {/* Stats Grid */}
       <div
@@ -363,6 +368,6 @@ export function SeasonApplicationsPage() {
           ))}
         </div>
       )}
-    </Container>
+    </div>
   );
 }

@@ -3,8 +3,10 @@
  *
  * Navigation sidebar for platform-wide administration.
  * Supports role-based navigation visibility.
+ * Uses API-driven navigation with fallback to static items.
  */
 
+import { useMemo } from 'react';
 import { NavLink, useLocation } from 'react-router-dom';
 import {
   Paragraph,
@@ -20,7 +22,25 @@ import {
 } from '@xala/ds';
 import { useT } from '@xala/i18n';
 import { useAuth, type SaasAdminRole } from '@xala/auth';
+import { useNavigationItems, type NavItemFromApi } from '../../hooks/useNavigation';
 import styles from './Sidebar.module.css';
+
+const ICON_MAP: Record<string, React.ReactNode> = {
+  home: <HomeIcon />,
+  building: <BuildingIcon />,
+  settings: <SettingsIcon />,
+  chart: <ChartIcon />,
+  'chart-bar': <ChartIcon />,
+  shield: <ShieldIcon />,
+  clock: <ClockIcon />,
+  users: <UsersIcon />,
+  sparkles: <SparklesIcon />,
+};
+
+function getIcon(iconKey: string | undefined): React.ReactNode {
+  if (!iconKey) return <HomeIcon />;
+  return ICON_MAP[iconKey] ?? <HomeIcon />;
+}
 
 interface NavItem {
   name: string;
@@ -85,11 +105,59 @@ function SidebarNavItem({ item }: { item: NavItem }) {
   );
 }
 
+/**
+ * Transform API navigation items to NavSection format
+ */
+function transformApiNavToSections(
+  items: NavItemFromApi[],
+  t: (key: string, opts?: Record<string, string>) => string
+): NavSection[] {
+  if (!items.length) return [];
+
+  const sectionMap = new Map<string | null, NavItem[]>();
+
+  for (const item of items) {
+    const sectionKey = item.section || null;
+    if (!sectionMap.has(sectionKey)) {
+      sectionMap.set(sectionKey, []);
+    }
+
+    const navItem: NavItem = {
+      name: t(item.labelKey),
+      description: t(`${item.labelKey}Desc`),
+      href: item.routeKey || '/',
+      icon: getIcon(item.iconKey),
+    };
+
+    sectionMap.get(sectionKey)!.push(navItem);
+  }
+
+  const sections: NavSection[] = [];
+  for (const [sectionKey, sectionItems] of sectionMap) {
+    sections.push({
+      title: sectionKey ? t(sectionKey) : undefined,
+      items: sectionItems,
+    });
+  }
+
+  return sections;
+}
+
 export function Sidebar() {
   const { user, isSuperAdmin } = useAuth();
   const t = useT();
+  const { items: apiNavItems } = useNavigationItems();
 
-  const navSections: NavSection[] = [
+  // Transform API items to sections (already role-filtered server-side)
+  const apiSections = useMemo(() => {
+    if (apiNavItems.length > 0) {
+      return transformApiNavToSections(apiNavItems, t);
+    }
+    return null;
+  }, [apiNavItems, t]);
+
+  // Static fallback navigation
+  const staticNavSections: NavSection[] = [
     {
       items: [
         {
@@ -190,10 +258,10 @@ export function Sidebar() {
     },
   ];
 
-  // Filter items based on user role
+  // Filter static items based on user role (fallback only)
   // SAAS_SUPER_ADMIN has access to all items
   // Other roles only see items they have access to
-  const filteredSections = navSections
+  const filteredStaticSections = staticNavSections
     .map((section) => ({
       ...section,
       items: section.items.filter((item) => {
@@ -210,6 +278,9 @@ export function Sidebar() {
       }),
     }))
     .filter((section) => section.items.length > 0);
+
+  // Use API sections if available, otherwise fall back to static
+  const navSections = apiSections || filteredStaticSections;
 
   // Role display name mapping using i18n
   const getRoleDisplayName = (role: string | undefined): string => {
@@ -246,7 +317,7 @@ export function Sidebar() {
 
       {/* Navigation */}
       <nav className={styles.nav}>
-        {filteredSections.map((section, sectionIndex) => (
+        {navSections.map((section, sectionIndex) => (
           <div key={sectionIndex} className={styles.navSection}>
             {section.title && (
               <Paragraph size="xs" className={styles.sectionTitle}>

@@ -66,8 +66,8 @@ export type { ThemeProviderProps, ThemeContextValue } from './ThemeProvider';
 // =============================================================================
 
 // Shells - High-level layout components
-export { AppShell, AppLayout, DashboardSidebar } from './shells';
-export type { AppShellProps, AppLayoutProps, DashboardSidebarProps, SidebarNavItem, SidebarSection } from './shells';
+export { AppShell, AppLayout, DashboardSidebar, DashboardContent } from './shells';
+export type { AppShellProps, AppLayoutProps, DashboardSidebarProps, SidebarNavItem, SidebarSection, DashboardContentProps } from './shells';
 
 // Composed - Mid-level components
 export {
@@ -117,6 +117,10 @@ export {
   TableFilter,
   // ListToolbar
   ListToolbar,
+  // DashboardHeader
+  DashboardHeader,
+  // DashboardPageHeader
+  DashboardPageHeader,
 } from './composed';
 export type {
   ProtectedRouteProps,
@@ -152,6 +156,13 @@ export type {
   ListToolbarFilterOption,
   ListToolbarSearchConfig,
   ListToolbarSortOption,
+  // DashboardHeader Types
+  DashboardHeaderProps,
+  DashboardHeaderUser,
+  // DashboardPageHeader Types
+  DashboardPageHeaderProps,
+  PageHeaderMetaItem,
+  PageHeaderTab,
 } from './composed';
 export { mockFilterData } from './composed';
 

@@ -372,9 +372,66 @@ export const DashboardHeader = forwardRef<HTMLElement, DashboardHeaderProps>(
               position: 'relative',
             }}
           >
-            {/* Left zone - User dropdown */}
+            {/* Left zone - Logo/AccountSwitcher */}
             <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--ds-spacing-3)', flexShrink: 0, zIndex: 1 }}>
               {isMobile && logo}
+              {!isMobile && leftSlot}
+            </div>
+
+            {/* Center zone - Search (absolute center) */}
+            {!isMobile && onSearchChange && (
+              <div 
+                className="ds-header-search-container" 
+                style={{ 
+                  position: 'absolute',
+                  left: '50%',
+                  transform: 'translateX(-50%)',
+                  width: '100%',
+                  maxWidth: '500px',
+                  display: 'flex',
+                  justifyContent: 'center',
+                  pointerEvents: 'none',
+                }}
+              >
+                <div style={{ width: '100%', pointerEvents: 'auto' }}>
+                  <HeaderSearch
+                    placeholder={searchPlaceholder}
+                    value={searchQuery}
+                    onSearchChange={handleSearchChange}
+                    onResultSelect={onSearchResultSelect}
+                    results={searchResults}
+                    showShortcut
+                    enableGlobalShortcut
+                    noResultsText={noSearchResultsText}
+                  />
+                </div>
+              </div>
+            )}
+
+            {/* Right zone - Actions, Icons & User Profile */}
+            <div
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: 'var(--ds-spacing-2)',
+                flexShrink: 0,
+                zIndex: 1,
+              }}
+            >
+              {/* Custom actions */}
+              {actions}
+
+              {/* Theme toggle */}
+              {showThemeToggle && onThemeToggle && (
+                <HeaderThemeToggle isDark={isDark} onToggle={onThemeToggle} />
+              )}
+
+              {/* Notifications */}
+              {showNotifications && onNotificationClick && (
+                <NotificationBell count={notificationCount} onClick={onNotificationClick} />
+              )}
+
+              {/* User profile dropdown - rightmost */}
               {user && (
                 <div ref={userMenuRef} style={{ position: 'relative' }}>
                   <Button
@@ -411,61 +468,6 @@ export const DashboardHeader = forwardRef<HTMLElement, DashboardHeaderProps>(
                     />
                   )}
                 </div>
-              )}
-              {!isMobile && leftSlot}
-            </div>
-
-            {/* Center zone - Search (absolute center) */}
-            {!isMobile && onSearchChange && (
-              <div 
-                className="ds-header-search-container" 
-                style={{ 
-                  position: 'absolute',
-                  left: '50%',
-                  transform: 'translateX(-50%)',
-                  width: '100%',
-                  maxWidth: '500px',
-                  display: 'flex',
-                  justifyContent: 'center',
-                  pointerEvents: 'none',
-                }}
-              >
-                <div style={{ width: '100%', pointerEvents: 'auto' }}>
-                  <HeaderSearch
-                    placeholder={searchPlaceholder}
-                    value={searchQuery}
-                    onSearchChange={handleSearchChange}
-                    onResultSelect={onSearchResultSelect}
-                    results={searchResults}
-                    showShortcut
-                    enableGlobalShortcut
-                    noResultsText={noSearchResultsText}
-                  />
-                </div>
-              </div>
-            )}
-
-            {/* Right zone - Actions & Icons */}
-            <div
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                gap: 'var(--ds-spacing-2)',
-                flexShrink: 0,
-                zIndex: 1,
-              }}
-            >
-              {/* Custom actions */}
-              {actions}
-
-              {/* Theme toggle */}
-              {showThemeToggle && onThemeToggle && (
-                <HeaderThemeToggle isDark={isDark} onToggle={onThemeToggle} />
-              )}
-
-              {/* Notifications */}
-              {showNotifications && onNotificationClick && (
-                <NotificationBell count={notificationCount} onClick={onNotificationClick} />
               )}
             </div>
           </div>

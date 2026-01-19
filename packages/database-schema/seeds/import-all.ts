@@ -98,6 +98,35 @@ async function importSeeds(): Promise<void> {
     }
     console.log(`      ✅ ${demoUsersData.length} demo users`);
 
+    // Auth Demo Tokens (for role-based demo login)
+    console.log('   └─ Auth Demo Tokens...');
+    let authDemoTokens = 0;
+    try {
+      const authDemoTokensData = JSON.parse(
+        readFileSync(join(__dirname, 'auth-demo-tokens.json'), 'utf-8')
+      );
+      for (const token of authDemoTokensData) {
+        await sql`
+          INSERT INTO platform.auth_demo_tokens (
+            id, key, tenant_id, organization_id, user_id, 
+            token_hash, is_active, expires_at
+          )
+          VALUES (
+            ${token.id}, ${token.key}, ${token.tenant_id}, ${token.organization_id || null},
+            ${token.user_id}, ${token.token_hash}, ${token.is_active}, ${token.expires_at || null}
+          )
+          ON CONFLICT (id) DO UPDATE SET 
+            key = EXCLUDED.key,
+            user_id = EXCLUDED.user_id,
+            is_active = EXCLUDED.is_active
+        `;
+        authDemoTokens++;
+      }
+      console.log(`      ✅ ${authDemoTokens} auth demo tokens`);
+    } catch (e) {
+      console.log(`      ⏭️ auth-demo-tokens.json not found, skipping`);
+    }
+
     // Users
     console.log('   └─ Users...');
     for (const u of rentalData.users || []) {
@@ -126,7 +155,48 @@ async function importSeeds(): Promise<void> {
       `;
       translations++;
     }
-    console.log(`      ✅ ${translations} translations\n`);
+    console.log(`      ✅ ${translations} translations`);
+
+    // Nav Policies (for API-driven navigation)
+    console.log('   └─ Nav Policies...');
+    let navPoliciesCount = 0;
+    try {
+      const navPoliciesData = JSON.parse(
+        readFileSync(join(__dirname, 'nav-policies.json'), 'utf-8')
+      );
+      for (const policy of navPoliciesData) {
+        await sql`
+          INSERT INTO saas.nav_policies (
+            app, nav_item_key, route_key, required_roles, required_modules,
+            required_features, label_key, icon_key, parent_key, section, contexts, "order"
+          )
+          VALUES (
+            ${policy.app}, ${policy.navItemKey}, ${policy.routeKey || null},
+            ${JSON.stringify(policy.requiredRoles || [])}::jsonb,
+            ${JSON.stringify(policy.requiredModules || [])}::jsonb,
+            ${JSON.stringify(policy.requiredFeatures || [])}::jsonb,
+            ${policy.labelKey}, ${policy.iconKey || null}, ${policy.parentKey || null},
+            ${policy.section || null}, ${JSON.stringify(policy.contexts || [])}::jsonb,
+            ${policy.order || 0}
+          )
+          ON CONFLICT (app, nav_item_key) DO UPDATE SET 
+            route_key = EXCLUDED.route_key,
+            required_roles = EXCLUDED.required_roles,
+            required_modules = EXCLUDED.required_modules,
+            required_features = EXCLUDED.required_features,
+            label_key = EXCLUDED.label_key,
+            icon_key = EXCLUDED.icon_key,
+            section = EXCLUDED.section,
+            contexts = EXCLUDED.contexts,
+            "order" = EXCLUDED."order"
+        `;
+        navPoliciesCount++;
+      }
+      console.log(`      ✅ ${navPoliciesCount} nav policies`);
+    } catch (e) {
+      console.log(`      ⏭️ nav-policies.json not found, skipping`);
+    }
+    console.log('');
 
     // ========== DOMAIN ==========
     console.log('📦 Phase 2: Domain Seeds\n' + '-'.repeat(40));

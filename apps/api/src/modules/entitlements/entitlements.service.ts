@@ -485,6 +485,8 @@ export class EntitlementsService {
         routeKey: policy.routeKey as RouteKey | undefined,
         iconKey: policy.iconKey || undefined,
         parentKey: policy.parentKey as NavItemKey | undefined,
+        section: (policy as any).section || undefined,
+        contexts: ((policy as any).contexts as string[]) || [],
         order: policy.order,
       };
 

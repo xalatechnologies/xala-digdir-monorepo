@@ -22,6 +22,7 @@ import {
   SearchIcon,
   type SearchResultItem,
   type SearchResultGroup,
+  DashboardContent,
 } from '@xala/ds';
 import { useT } from '@xala/i18n';
 import { Sidebar } from './Sidebar';
@@ -293,19 +294,12 @@ export function AppLayout() {
           </div>
         )}
 
-        <main
-          style={{
-            flex: 1,
-            overflow: 'auto',
-            padding: isMobile ? 'var(--ds-spacing-4)' : 'var(--ds-spacing-8)',
-            // Add padding at bottom for bottom navigation on mobile
-            paddingBottom: isMobile ? 'calc(64px + var(--ds-spacing-4) + env(safe-area-inset-bottom))' : 'var(--ds-spacing-8)',
-          }}
+        <DashboardContent
+          hasBottomNav={isMobile}
+          data-testid="minside-content"
         >
-          <div style={{ maxWidth: '1400px' }}>
-            <Outlet />
-          </div>
-        </main>
+          <Outlet />
+        </DashboardContent>
       </div>
 
       {/* Bottom Navigation - Mobile only */}

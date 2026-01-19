@@ -21,7 +21,7 @@ import {
   CalendarIcon,
   ClockIcon,
   Link,
-  PageHeader,
+  DashboardPageHeader,
   StatCard,
   ListToolbar,
   EmptyState,
@@ -184,11 +184,11 @@ export function BookingsPage() {
         </Card>
       )}
 
-      {/* Page Header - Using DS PageHeader */}
-      <PageHeader
+      {/* Page Header - Using DS DashboardPageHeader */}
+      <DashboardPageHeader
         title={t('minside.myBookings')}
         subtitle={t('minside.myBookingsDesc')}
-        actions={!isMobile ? primaryAction : undefined}
+        primaryAction={!isMobile ? primaryAction : undefined}
       />
 
       {/* Mobile primary action */}

@@ -16,6 +16,7 @@ import {
   Spinner,
   Table,
   BookingStatusBadge,
+  DashboardPageHeader,
 } from '@xala/ds';
 import { useT, useLocale } from '@xala/i18n';
 import { NavLink } from 'react-router-dom';
@@ -68,17 +69,16 @@ export function OrganizationBookingsPage() {
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--ds-spacing-6)' }}>
-      {/* Header */}
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
-        <div>
+      {/* Header - Using DashboardPageHeader */}
+      <DashboardPageHeader
+        title={t('org.bookings')}
+        subtitle={t('org.bookingsDesc') || ''}
+        breadcrumb={
           <NavLink to="/org" style={{ color: 'var(--ds-color-accent-text-default)', textDecoration: 'none', fontSize: 'var(--ds-font-size-sm)' }}>
             ← {t('org.backToDashboard')}
           </NavLink>
-          <Heading level={1} data-size="lg" style={{ margin: 0, marginTop: 'var(--ds-spacing-2)' }}>
-            {t('org.bookings')}
-          </Heading>
-        </div>
-      </div>
+        }
+      />
 
       {/* Filters */}
       <div style={{ display: 'flex', gap: 'var(--ds-spacing-2)', overflowX: 'auto' }}>

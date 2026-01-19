@@ -10,7 +10,7 @@
 
 import { Outlet, useLocation } from 'react-router-dom';
 import { useState, useEffect } from 'react';
-import { BottomNavigation, type BottomNavigationItem, HomeIcon, SearchIcon, BookOpenIcon } from '@xala/ds';
+import { BottomNavigation, type BottomNavigationItem, DashboardContent, HomeIcon, SearchIcon, BookOpenIcon } from '@xala/ds';
 import { useT } from '@xala/i18n';
 import { DocsSidebar } from './DocsSidebar';
 import { DocsHeader } from './DocsHeader';
@@ -68,16 +68,12 @@ export function DocsLayout() {
       <div className={styles.contentArea}>
         <DocsHeader />
 
-        <main
-          className={styles.mainContent}
-          style={{
-            paddingBottom: isMobile ? 'calc(64px + var(--ds-spacing-4) + env(safe-area-inset-bottom))' : undefined,
-          }}
+        <DashboardContent
+          hasBottomNav={isMobile}
+          data-testid="docs-content"
         >
-          <div className={styles.maxWidthWrapper}>
-            <Outlet />
-          </div>
-        </main>
+          <Outlet />
+        </DashboardContent>
       </div>
 
       {/* Bottom Navigation - Mobile only */}

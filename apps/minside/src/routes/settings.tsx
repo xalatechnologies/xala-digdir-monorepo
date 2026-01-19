@@ -29,6 +29,7 @@ import {
   SettingsIcon,
   MapPinIcon,
   HomeIcon,
+  DashboardPageHeader,
 } from '@xala/ds';
 import {
   useCurrentUser,
@@ -262,28 +263,24 @@ export function SettingsPage() {
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--ds-spacing-5)' }}>
-      {/* Header */}
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
-        <div>
-          <Heading level={1} data-size="lg" style={{ margin: 0 }}>
-            Innstillinger
-          </Heading>
-          <Paragraph
-            data-size="sm"
-            style={{ color: 'var(--ds-color-neutral-text-subtle)', marginTop: 'var(--ds-spacing-1)', marginBottom: 0 }}
-          >
-            Administrer din konto og preferanser
-          </Paragraph>
-        </div>
-        {saveSuccess && (
-          <Alert style={{ maxWidth: '400px' }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--ds-spacing-2)' }}>
-              <CheckCircleIcon />
-              Endringene ble lagret
-            </div>
-          </Alert>
-        )}
-      </div>
+      {/* Header - Using DashboardPageHeader */}
+      <DashboardPageHeader
+        title={t('minside.settings') || 'Innstillinger'}
+        subtitle={t('settings.profile.pageDesc') || 'Administrer din konto og preferanser'}
+        primaryAction={
+          <Button type="button" variant="primary" onClick={handleSaveProfile} disabled={isSaving}>
+            {isSaving ? t('state.saving') : t('settings.profile.save')}
+          </Button>
+        }
+      />
+      {saveSuccess && (
+        <Alert style={{ maxWidth: '400px', marginTop: 'var(--ds-spacing-4)' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--ds-spacing-2)' }}>
+            <CheckCircleIcon />
+            {t('settings.profile.changesSaved') || 'Endringene ble lagret'}
+          </div>
+        </Alert>
+      )}
 
       {/* Tabs */}
       <div style={{

@@ -94,6 +94,7 @@ import { StorageService } from './modules/storage/storage.service';
 import scannerRoutes from './routes/scanners.routes';
 // i18n
 import { i18nRoutes } from './routes/i18n.routes';
+import { navigationRoutes } from './routes/navigation.routes';
 // Translations (from DB)
 import { TranslationsController } from './modules/translations/translations.controller';
 
@@ -387,8 +388,9 @@ async function bootstrap() {
   await app.register(favoritesRoutes, { prefix: '/api' });
   await app.register(featuresRoutes, { prefix: '/api' });
   await app.register(i18nRoutes, { prefix: '/api' });
+  await app.register(navigationRoutes, { prefix: '/api' });
   await app.register(scannerRoutes);
-  console.log('✓ Fastify plugin routes registered (amenities, addons, favorites, features, i18n, scanners)');
+  console.log('✓ Fastify plugin routes registered (amenities, addons, favorites, features, i18n, navigation, scanners)');
 
   // Register WebSocket routes for real-time events
   await registerWebSocketRoutes(app);

@@ -13,6 +13,7 @@ import {
   Spinner,
   Table,
   Badge,
+  DashboardPageHeader,
 } from '@xala/ds';
 import { useOrgInvoices, useDownloadOrgInvoice } from '@digilist/client-sdk';
 import { useT, useLocale } from '@xala/i18n';
@@ -85,15 +86,16 @@ export function OrganizationInvoicesPage() {
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--ds-spacing-6)' }}>
-      {/* Header */}
-      <div>
-        <NavLink to="/org" style={{ color: 'var(--ds-color-accent-text-default)', textDecoration: 'none', fontSize: 'var(--ds-font-size-sm)' }}>
-          ← {t('org.backToDashboard')}
-        </NavLink>
-        <Heading level={1} data-size="lg" style={{ margin: 0, marginTop: 'var(--ds-spacing-2)' }}>
-          {t('org.invoices')}
-        </Heading>
-      </div>
+      {/* Header - Using DashboardPageHeader */}
+      <DashboardPageHeader
+        title={t('org.invoices')}
+        subtitle={t('org.invoicesDesc') || ''}
+        breadcrumb={
+          <NavLink to="/org" style={{ color: 'var(--ds-color-accent-text-default)', textDecoration: 'none', fontSize: 'var(--ds-font-size-sm)' }}>
+            ← {t('org.backToDashboard')}
+          </NavLink>
+        }
+      />
 
       {/* Filters */}
       <div style={{ display: 'flex', gap: 'var(--ds-spacing-2)', overflowX: 'auto' }}>

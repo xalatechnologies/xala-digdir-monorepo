@@ -20,6 +20,8 @@ import {
   Link,
   TrashIcon,
   ExternalLinkIcon,
+  DashboardPageHeader,
+  Badge,
 } from '@xala/ds';
 import {
   useFavorites,
@@ -118,36 +120,19 @@ export function FavoritesPage() {
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--ds-spacing-6)' }}>
-      {/* Header */}
-      <div style={{
-        display: 'flex',
-        flexDirection: isMobile ? 'column' : 'row',
-        justifyContent: 'space-between',
-        alignItems: isMobile ? 'flex-start' : 'center',
-        gap: isMobile ? 'var(--ds-spacing-4)' : '0',
-      }}>
-        <div>
-          <Heading level={1} data-size="lg" style={{ margin: 0 }}>
-            {t('favorites.page.title')}
-          </Heading>
-          <Paragraph style={{ color: 'var(--ds-color-neutral-text-subtle)', marginTop: 'var(--ds-spacing-2)', marginBottom: 0 }}>
-            {t('favorites.description')}
-          </Paragraph>
-        </div>
-        <div style={{
-          display: 'flex',
-          alignItems: 'center',
-          gap: 'var(--ds-spacing-2)',
-          padding: 'var(--ds-spacing-3) var(--ds-spacing-4)',
-          backgroundColor: 'var(--ds-color-brand-1-surface-default)',
-          borderRadius: 'var(--ds-border-radius-md)',
-        }}>
-          <HeartIcon style={{ color: 'var(--ds-color-brand-1-base-default)' }} />
-          <Paragraph data-size="sm" style={{ margin: 0, fontWeight: 'var(--ds-font-weight-semibold)' }}>
-            {totalCount} {t('favorites.saved')}
-          </Paragraph>
-        </div>
-      </div>
+      {/* Header - Using DashboardPageHeader */}
+      <DashboardPageHeader
+        title={t('favorites.page.title')}
+        subtitle={t('favorites.description')}
+        badge={<Badge data-color="brand1">{totalCount} {t('favorites.saved')}</Badge>}
+        primaryAction={
+          <Link href={WEB_APP_URL} target="_blank" rel="noopener noreferrer">
+            <Button type="button" variant="primary">
+              {t('favorites.browseRentalObjects')}
+            </Button>
+          </Link>
+        }
+      />
 
       {/* Empty state */}
       {favorites.length === 0 ? (

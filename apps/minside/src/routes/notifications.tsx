@@ -18,6 +18,8 @@ import {
   Select,
   Badge,
   Spinner,
+  BellIcon,
+  DashboardPageHeader,
 } from '@xala/ds';
 import { useT, useLocale } from '@xala/i18n';
 import {
@@ -100,25 +102,23 @@ export function NotificationsPage() {
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--ds-spacing-6)' }}>
-      {/* Header */}
-      <div style={{
-        display: 'flex',
-        flexDirection: isMobile ? 'column' : 'row',
-        justifyContent: 'space-between',
-        alignItems: isMobile ? 'flex-start' : 'center',
-        gap: 'var(--ds-spacing-4)',
-      }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--ds-spacing-3)' }}>
-          <Heading level={1} data-size="lg" style={{ margin: 0 }}>
-            {t('notifications.page.title')}
-          </Heading>
-          {unreadCount > 0 && (
-            <Badge data-testid="notification-badge" style={{ backgroundColor: 'var(--ds-color-danger-surface-default)', color: 'var(--ds-color-danger-text-default)' }}>
-              {unreadCount} {t('notifications.unread')}
-            </Badge>
-          )}
-        </div>
-        <div style={{ display: 'flex', gap: 'var(--ds-spacing-2)' }}>
+      {/* Header - Using DashboardPageHeader */}
+      <DashboardPageHeader
+        title={t('notifications.page.title')}
+        subtitle={t('notifications.description') || ''}
+        badge={unreadCount > 0 ? <Badge data-color="danger">{unreadCount} {t('notifications.unread')}</Badge> : undefined}
+        primaryAction={
+          <Button
+            type="button"
+            variant="secondary"
+            data-size="md"
+            onClick={handleMarkAllAsRead}
+            disabled={unreadCount === 0 || markAllAsReadMutation.isPending}
+          >
+            {t('notifications.markAllRead')}
+          </Button>
+        }
+        secondaryAction={
           <Select
             value={typeFilter}
             onChange={(e) => setTypeFilter(e.target.value as NotificationType)}
@@ -130,18 +130,8 @@ export function NotificationsPage() {
             <option value="reminder">{t('notifications.reminders')}</option>
             <option value="system">{t('notifications.system')}</option>
           </Select>
-          <Button
-            type="button"
-            variant="secondary"
-            data-size="md"
-            onClick={handleMarkAllAsRead}
-            disabled={unreadCount === 0 || markAllAsReadMutation.isPending}
-            style={{ minHeight: '44px' }}
-          >
-            {t('notifications.markAllRead')}
-          </Button>
-        </div>
-      </div>
+        }
+      />
 
       {/* Notifications List */}
       <Card style={{ padding: 'var(--ds-spacing-5)' }}>

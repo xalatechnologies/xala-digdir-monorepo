@@ -221,3 +221,6 @@ export {
 
 export { DashboardHeader } from './DashboardHeader';
 export type { DashboardHeaderProps, DashboardHeaderUser } from './DashboardHeader';
+
+export { DashboardPageHeader } from './DashboardPageHeader';
+export type { DashboardPageHeaderProps, PageHeaderMetaItem, PageHeaderTab } from './DashboardPageHeader';

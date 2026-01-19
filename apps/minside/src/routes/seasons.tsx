@@ -1,5 +1,5 @@
 import { useState, useMemo } from 'react';
-import { Container, Heading, Paragraph, Card, Button, Spinner } from '@xala/ds';
+import { Heading, Paragraph, Card, Button, Spinner, DashboardPageHeader } from '@xala/ds';
 import { useSeasons } from '@digilist/client-sdk/hooks';
 import type { SeasonStatus } from '@digilist/client-sdk/types';
 import { useAccountContext } from '../providers/AccountContextProvider';
@@ -77,7 +77,7 @@ export function SeasonsPage() {
   }, [seasons]);
 
   return (
-    <Container style={{ padding: 'var(--ds-spacing-8)' }}>
+    <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--ds-spacing-6)' }}>
       {/* Account Context Banner */}
       {accountType === 'organization' && selectedOrganization && (
         <Card
@@ -116,15 +116,11 @@ export function SeasonsPage() {
         </Card>
       )}
 
-      {/* Page Header */}
-      <div style={{ marginBottom: 'var(--ds-spacing-6)' }}>
-        <Heading level={1} data-size="lg" style={{ margin: 0, marginBottom: 'var(--ds-spacing-2)' }}>
-          {t('seasons.seasonBooking')}
-        </Heading>
-        <Paragraph style={{ margin: 0, color: 'var(--ds-color-neutral-text-subtle)', maxWidth: '800px' }}>
-          {t('seasons.seasonBookingDesc')}
-        </Paragraph>
-      </div>
+      {/* Page Header - Using DashboardPageHeader */}
+      <DashboardPageHeader
+        title={t('seasons.seasonBooking')}
+        subtitle={t('seasons.seasonBookingDesc')}
+      />
 
       {/* Season Status Cards Grid */}
       <div
@@ -315,6 +311,6 @@ export function SeasonsPage() {
           ))}
         </div>
       )}
-    </Container>
+    </div>
   );
 }

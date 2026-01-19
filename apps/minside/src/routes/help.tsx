@@ -16,6 +16,8 @@ import {
   Button,
   Input,
   Textarea,
+  InfoIcon,
+  DashboardPageHeader,
 } from '@xala/ds';
 import { useT } from '@xala/i18n';
 
@@ -108,15 +110,11 @@ export function HelpPage() {
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--ds-spacing-6)' }}>
-      {/* Header */}
-      <div>
-        <Heading level={1} data-size="lg" style={{ margin: 0 }}>
-          {t('help.page.title')}
-        </Heading>
-        <Paragraph style={{ color: 'var(--ds-color-neutral-text-subtle)', marginTop: 'var(--ds-spacing-2)', marginBottom: 0 }}>
-          {t('help.description')}
-        </Paragraph>
-      </div>
+      {/* Header - Using DashboardPageHeader */}
+      <DashboardPageHeader
+        title={t('help.page.title')}
+        subtitle={t('help.description')}
+      />
 
       {/* Search */}
       <Card style={{ padding: 'var(--ds-spacing-4)' }}>

@@ -5,6 +5,7 @@
  * Adapts tenant-admin Sidebar pattern for documentation.
  */
 
+import { useMemo } from 'react';
 import { NavLink, useLocation } from 'react-router-dom';
 import {
   Paragraph,
@@ -24,6 +25,7 @@ import {
 import { useT } from '@xala/i18n';
 import { useFeatureFlags } from '@digilist/client-sdk';
 import { isSectionEnabled, DOCS_FEATURE_FLAGS } from '../../lib/feature-flags';
+import { useNavigationItems, type NavItemFromApi } from '../../hooks/useNavigation';
 import type { DocsNavItem, DocsNavSection } from '../../types';
 import styles from './DocsSidebar.module.css';
 
@@ -76,14 +78,63 @@ function getIcon(iconName?: string): React.ReactNode {
   return icons[iconName || 'book'] || <BookOpenIcon />;
 }
 
+/**
+ * Transform API navigation items to DocsNavSection format
+ */
+function transformApiNavToSections(
+  items: NavItemFromApi[],
+  t: (key: string) => string
+): DocsNavSection[] {
+  if (!items.length) return [];
+
+  const sectionMap = new Map<string | null, DocsNavItem[]>();
+
+  for (const item of items) {
+    const sectionKey = item.section || null;
+    if (!sectionMap.has(sectionKey)) {
+      sectionMap.set(sectionKey, []);
+    }
+
+    const navItem: DocsNavItem = {
+      id: item.key,
+      label: t(item.labelKey),
+      description: t(`${item.labelKey}Desc`),
+      href: item.routeKey || '/',
+      icon: item.iconKey,
+    };
+
+    sectionMap.get(sectionKey)!.push(navItem);
+  }
+
+  const sections: DocsNavSection[] = [];
+  for (const [sectionKey, sectionItems] of sectionMap) {
+    sections.push({
+      title: sectionKey ? t(sectionKey) : undefined,
+      items: sectionItems,
+    });
+  }
+
+  return sections;
+}
+
 export function DocsSidebar() {
   const t = useT();
   const flags = useFeatureFlags();
+  const { items: apiNavItems } = useNavigationItems();
   
   // Use default flags if SDK hasn't loaded yet
   const activeFlags = Object.keys(flags).length > 0 ? flags : { ...DOCS_FEATURE_FLAGS, 'docs.enabled': true };
 
-  const navSections: DocsNavSection[] = [
+  // Transform API items to sections
+  const apiSections = useMemo(() => {
+    if (apiNavItems.length > 0) {
+      return transformApiNavToSections(apiNavItems, t);
+    }
+    return null;
+  }, [apiNavItems, t]);
+
+  // Static fallback navigation
+  const staticNavSections: DocsNavSection[] = [
     {
       items: [
         {
@@ -204,8 +255,8 @@ export function DocsSidebar() {
     },
   ];
 
-  // Filter items based on feature flags
-  const filteredSections = navSections
+  // Filter static items based on feature flags (fallback only)
+  const filteredStaticSections = staticNavSections
     .map((section) => ({
       ...section,
       items: section.items.filter((item) => {
@@ -214,6 +265,9 @@ export function DocsSidebar() {
       }),
     }))
     .filter((section) => section.items.length > 0);
+
+  // Use API sections if available, otherwise fall back to static
+  const filteredSections = apiSections || filteredStaticSections;
 
   return (
     <aside className={styles.sidebar}>

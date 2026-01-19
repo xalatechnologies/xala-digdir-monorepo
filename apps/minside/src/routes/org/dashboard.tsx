@@ -16,6 +16,7 @@ import {
   Button,
   Spinner,
   Badge,
+  DashboardPageHeader,
 } from '@xala/ds';
 import {
   useOrganization,
@@ -103,30 +104,18 @@ export function OrganizationDashboardPage() {
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--ds-spacing-6)' }}>
-      {/* Header */}
-      <div style={{
-        display: 'flex',
-        flexDirection: isMobile ? 'column' : 'row',
-        justifyContent: 'space-between',
-        alignItems: isMobile ? 'flex-start' : 'center',
-        gap: 'var(--ds-spacing-4)',
-      }}>
-        <div>
-          <Heading level={1} data-size="lg" style={{ margin: 0 }}>
-            {org?.name || t('org.dashboard')}
-          </Heading>
-          <Paragraph style={{ color: 'var(--ds-color-neutral-text-subtle)', marginTop: 'var(--ds-spacing-2)', marginBottom: 0 }}>
-            {t('org.dashboardDesc')}
-          </Paragraph>
-        </div>
-        <div style={{ display: 'flex', gap: 'var(--ds-spacing-2)' }}>
+      {/* Header - Using DashboardPageHeader */}
+      <DashboardPageHeader
+        title={org?.name || t('org.dashboard')}
+        subtitle={t('org.dashboardDesc')}
+        primaryAction={
           <NavLink to="/org/settings">
-            <Button type="button" variant="secondary" data-size="md">
+            <Button type="button" variant="secondary">
               {t('org.settings')}
             </Button>
           </NavLink>
-        </div>
-      </div>
+        }
+      />
 
       {/* KPI Cards */}
       <div style={{

@@ -19,6 +19,7 @@ import {
   Select,
   Label,
   useDialog,
+  DashboardPageHeader,
 } from '@xala/ds';
 import {
   useOrganizationMembers,
@@ -95,35 +96,25 @@ export function OrganizationMembersPage() {
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--ds-spacing-6)' }}>
-      {/* Header */}
-      <div style={{
-        display: 'flex',
-        flexDirection: isMobile ? 'column' : 'row',
-        justifyContent: 'space-between',
-        alignItems: isMobile ? 'flex-start' : 'center',
-        gap: 'var(--ds-spacing-4)',
-      }}>
-        <div>
+      {/* Header - Using DashboardPageHeader */}
+      <DashboardPageHeader
+        title={t('org.members')}
+        subtitle={t('org.membersDesc')}
+        breadcrumb={
           <NavLink to="/org" style={{ color: 'var(--ds-color-accent-text-default)', textDecoration: 'none', fontSize: 'var(--ds-font-size-sm)' }}>
             ← {t('org.backToDashboard')}
           </NavLink>
-          <Heading level={1} data-size="lg" style={{ margin: 0, marginTop: 'var(--ds-spacing-2)' }}>
-            {t('org.members')}
-          </Heading>
-          <Paragraph style={{ color: 'var(--ds-color-neutral-text-subtle)', marginTop: 'var(--ds-spacing-2)', marginBottom: 0 }}>
-            {t('org.membersDesc')}
-          </Paragraph>
-        </div>
-        <Button
-          type="button"
-          variant="primary"
-          data-size="md"
-          onClick={() => setShowInviteForm(!showInviteForm)}
-          style={{ width: isMobile ? '100%' : 'auto', minHeight: '44px' }}
-        >
-          {t('org.inviteMember')}
-        </Button>
-      </div>
+        }
+        primaryAction={
+          <Button
+            type="button"
+            variant="primary"
+            onClick={() => setShowInviteForm(!showInviteForm)}
+          >
+            {t('org.inviteMember')}
+          </Button>
+        }
+      />
 
       {/* Invite Form */}
       {showInviteForm && (

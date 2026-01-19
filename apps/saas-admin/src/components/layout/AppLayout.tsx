@@ -12,13 +12,12 @@ import { useState, useEffect } from 'react';
 import {
   BottomNavigation,
   type BottomNavigationItem,
+  DashboardContent,
   HomeIcon,
   BuildingIcon,
   ChartIcon,
-  ShieldIcon,
   UsersIcon,
   SettingsIcon,
-  SparklesIcon,
 } from '@xala/ds';
 import { useT } from '@xala/i18n';
 import { Sidebar } from './Sidebar';
@@ -106,16 +105,12 @@ export function AppLayout() {
       <div className={styles.main}>
         <Header title={title} />
 
-        <main
-          className={styles.content}
-          style={{
-            paddingBottom: isMobile ? 'calc(64px + var(--ds-spacing-4) + env(safe-area-inset-bottom))' : undefined,
-          }}
+        <DashboardContent
+          hasBottomNav={isMobile}
+          data-testid="saas-admin-content"
         >
-          <div className={styles.contentContainer}>
-            <Outlet />
-          </div>
-        </main>
+          <Outlet />
+        </DashboardContent>
       </div>
 
       {/* Bottom Navigation - Mobile only */}

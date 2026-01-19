@@ -127,7 +127,7 @@ export function AccountSwitcher() {
           display: 'flex',
           alignItems: 'center',
           gap: 'var(--ds-spacing-2)',
-          minWidth: '180px',
+          minWidth: '220px',
         }}
       >
         <div
@@ -172,7 +172,7 @@ export function AccountSwitcher() {
             position: 'absolute',
             top: 'calc(100% + var(--ds-spacing-2))',
             left: 0,
-            width: '280px',
+            width: '340px',
             backgroundColor: 'var(--ds-color-neutral-background-default)',
             border: '1px solid var(--ds-color-neutral-border-default)',
             borderRadius: 'var(--ds-border-radius-md)',

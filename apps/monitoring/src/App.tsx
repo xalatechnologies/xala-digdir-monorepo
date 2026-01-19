@@ -1,6 +1,6 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { DesignsystemetProvider, DialogProvider, ErrorBoundary } from '@xala/ds';
-import { LazyI18nProvider } from '@xala/i18n';
+import { I18nProvider } from '@xala/i18n';
 import { useState, useCallback, createContext, useContext } from 'react';
 
 import { AuthProvider, useOAuthCallback } from '@xala/auth';
@@ -112,7 +112,7 @@ function AppWithTheme() {
   const { colorScheme } = useTheme();
   
   return (
-    <LazyI18nProvider>
+    <I18nProvider initialLocale="nb">
       <DesignsystemetProvider theme="digilist" colorScheme={colorScheme} size="md">
       <DialogProvider>
       <ErrorBoundary>
@@ -178,6 +178,6 @@ function AppWithTheme() {
       </ErrorBoundary>
       </DialogProvider>
       </DesignsystemetProvider>
-    </LazyI18nProvider>
+    </I18nProvider>
   );
 }

@@ -3,10 +3,8 @@
 /* Design Token Extensions */
 @import './extensions.css';
 
-/* Typography is handled by the design system via DesignsystemetProvider */
-/* Do not override font-family here as it conflicts with DS typography tokens */
-
 :root {
+  font-family: 'Inter', system-ui, Avenir, Helvetica, Arial, sans-serif;
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;

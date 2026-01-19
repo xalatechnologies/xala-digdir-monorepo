@@ -17,6 +17,8 @@ import {
   Spinner,
   Table,
   Badge,
+  CreditCardIcon,
+  DashboardPageHeader,
 } from '@xala/ds';
 import {
   useBillingSummary,
@@ -112,15 +114,11 @@ export function BillingPage() {
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--ds-spacing-6)' }}>
-      {/* Header */}
-      <div>
-        <Heading level={1} data-size="lg" style={{ margin: 0 }}>
-          {t('minside.billing')}
-        </Heading>
-        <Paragraph style={{ color: 'var(--ds-color-neutral-text-subtle)', marginTop: 'var(--ds-spacing-2)', marginBottom: 0 }}>
-          {t('minside.billingDesc')}
-        </Paragraph>
-      </div>
+      {/* Header - Using DashboardPageHeader */}
+      <DashboardPageHeader
+        title={t('minside.billing')}
+        subtitle={t('minside.billingDesc')}
+      />
 
       {/* Summary Cards */}
       {summaryLoading ? (

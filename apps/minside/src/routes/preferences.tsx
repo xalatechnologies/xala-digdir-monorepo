@@ -17,6 +17,7 @@ import {
   Button,
   Switch,
   Select,
+  DashboardPageHeader,
 } from '@xala/ds';
 import { useT } from '@xala/i18n';
 
@@ -78,33 +79,21 @@ export function UserPreferencesPage() {
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--ds-spacing-6)' }}>
-      {/* Header */}
-      <div style={{
-        display: 'flex',
-        flexDirection: isMobile ? 'column' : 'row',
-        justifyContent: 'space-between',
-        alignItems: isMobile ? 'flex-start' : 'center',
-        gap: 'var(--ds-spacing-4)',
-      }}>
-        <div>
-          <Heading level={1} data-size="lg" style={{ margin: 0 }}>
-            {t('settings.preferences')}
-          </Heading>
-          <Paragraph style={{ color: 'var(--ds-color-neutral-text-subtle)', marginTop: 'var(--ds-spacing-2)', marginBottom: 0 }}>
-            {t('settings.preferencesDesc')}
-          </Paragraph>
-        </div>
-        <Button 
-          type="button" 
-          variant="primary" 
-          data-size="md" 
-          onClick={handleSave}
-          disabled={isSaving}
-          style={{ minHeight: '44px' }}
-        >
-          {isSaving ? t('state.saving') : t('action.save')}
-        </Button>
-      </div>
+      {/* Header - Using DashboardPageHeader */}
+      <DashboardPageHeader
+        title={t('settings.preferences')}
+        subtitle={t('settings.preferencesDesc')}
+        primaryAction={
+          <Button 
+            type="button" 
+            variant="primary" 
+            onClick={handleSave}
+            disabled={isSaving}
+          >
+            {isSaving ? t('state.saving') : t('action.save')}
+          </Button>
+        }
+      />
 
       {/* Notifications */}
       <Card style={{ padding: 'var(--ds-spacing-5)' }}>

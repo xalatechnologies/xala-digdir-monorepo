@@ -1,5 +1,5 @@
 import { useState, useMemo } from 'react';
-import { Card, Heading, Paragraph, Button, Spinner, ChevronLeftIcon, ChevronRightIcon } from '@xala/ds';
+import { Card, Heading, Paragraph, Button, Spinner, ChevronLeftIcon, ChevronRightIcon, CalendarIcon, DashboardPageHeader } from '@xala/ds';
 import { useMyBookings, type Booking, formatWeekRange } from '@digilist/client-sdk';
 import { useT, useLocale } from '@xala/i18n';
 
@@ -80,15 +80,16 @@ export function CalendarPage() {
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--ds-spacing-6)', height: 'calc(100vh - 200px)' }}>
-      {/* Header */}
-      <div>
-        <Heading level={1} data-size="lg" style={{ margin: 0 }}>
-          {t('minside.myCalendar')}
-        </Heading>
-        <Paragraph style={{ color: 'var(--ds-color-neutral-text-subtle)', marginTop: 'var(--ds-spacing-2)', marginBottom: 0 }}>
-          {t('minside.myCalendarDesc')}
-        </Paragraph>
-      </div>
+      {/* Header - Using DashboardPageHeader */}
+      <DashboardPageHeader
+        title={t('minside.myCalendar')}
+        subtitle={t('minside.myCalendarDesc')}
+        primaryAction={
+          <Button type="button" variant="secondary" onClick={goToToday}>
+            {t('calendar.today')}
+          </Button>
+        }
+      />
 
       {/* Calendar Controls */}
       <Card style={{ padding: 'var(--ds-spacing-4)' }}>

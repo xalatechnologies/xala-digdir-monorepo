@@ -23,7 +23,7 @@ import {
   HomeIcon,
   CheckCircleIcon,
   BookingStatusBadge,
-  PageHeader,
+  DashboardPageHeader,
   StatCard,
   QuickActionCard,
   EmptyState,
@@ -114,10 +114,19 @@ export function DashboardPage() {
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--ds-spacing-6)' }}>
-      {/* Welcome Section - Using DS PageHeader */}
-      <PageHeader
+      {/* Welcome Section - Using DS DashboardPageHeader */}
+      <DashboardPageHeader
         title={`${t('minside.welcome')}, ${user?.name?.split(' ')[0] || 'Bruker'}!`}
         subtitle={t('minside.dashboardDesc')}
+        primaryAction={
+          <Button
+            type="button"
+            variant="primary"
+            onClick={() => window.open(WEB_APP_URL, '_blank')}
+          >
+            {t('minside.newBooking')}
+          </Button>
+        }
       />
 
       {/* Quick Stats - Using DS StatCard */}

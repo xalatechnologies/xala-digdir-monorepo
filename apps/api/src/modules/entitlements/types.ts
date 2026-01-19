@@ -175,6 +175,8 @@ export interface NavItem {
   routeKey?: RouteKey;
   iconKey?: string;
   parentKey?: NavItemKey;
+  section?: string;
+  contexts: string[];
   order: number;
 }
 
@@ -251,5 +253,7 @@ export interface NavPolicy {
   labelKey: string;
   iconKey?: string;
   parentKey?: NavItemKey;
+  section?: string;
+  contexts: string[];
   order: number;
 }
