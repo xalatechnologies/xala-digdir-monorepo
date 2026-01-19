@@ -3,107 +3,39 @@
  * Exact same experience as web frontend with all view modes
  */
 
-import React from 'react';
+import { useState, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
   Button,
-  Checkbox,
   FilterIcon,
   Drawer,
   DrawerSection,
   DrawerItem,
-  ContentLayout,
-  RentalObjectCard,
-  RentalObjectListItem,
-  RentalObjectGrid,
-  RentalObjectToolbar,
-  RentalObjectTableView,
   Stack,
   Text,
   HeaderSearch,
-  Card,
   PlusIcon,
   Heading,
+  Paragraph,
+  ChevronLeftIcon,
+  ChevronRightIcon,
 } from '@xala/ds';
-import type { ViewMode } from '@xala/ds';
 import {
   useRentalObjects,
-  type ListingCardProjectionDTO,
+  type RentalObjectStatus,
 } from '@digilist/client-sdk';
-import { useQueryClient } from '@tanstack/react-query';
 import { useT } from '@xala/i18n';
-import { motion, AnimatePresence } from 'framer-motion';
-import { useRentalObjectPermissions } from '../hooks/useRentalObjectPermissions';
+import { useRentalObjectPermissions } from '@/features/rental-objects/hooks/useRentalObjectPermissions';
+import { useRentalObjectFilters, getSortOptions, STATUS_OPTIONS } from '@/features/rental-objects/hooks/useRentalObjectFilters';
+import { RentalObjectsGrid } from '@/features/rental-objects/components/list/RentalObjectsGrid';
+import { RentalObjectsTable } from '@/features/rental-objects/components/list/RentalObjectsTable';
+import { BulkCustodyModal } from '@/features/rental-objects/components/BulkCustodyModal';
 
-// Mapbox token
-const MAPBOX_TOKEN = import.meta.env.VITE_MAPBOX_TOKEN;
-
-// Category options
-const CATEGORY_OPTIONS = [
-  { id: 'ALL', key: 'ALL', labelKey: 'listings.category.all' },
-  { id: 'LOKALER_OG_BANER', key: 'LOKALER_OG_BANER', labelKey: 'sdk.rentalObject.category.LOKALER_OG_BANER' },
-  { id: 'UTSTYR_OG_INVENTAR', key: 'UTSTYR_OG_INVENTAR', labelKey: 'sdk.rentalObject.category.UTSTYR_OG_INVENTAR' },
-  { id: 'KJORETOY_OG_TRANSPORT', key: 'KJORETOY_OG_TRANSPORT', labelKey: 'sdk.rentalObject.category.KJORETOY_OG_TRANSPORT' },
-  { id: 'OPPLEVELSER_OG_ARRANGEMENT', key: 'OPPLEVELSER_OG_ARRANGEMENT', labelKey: 'sdk.rentalObject.category.OPPLEVELSER_OG_ARRANGEMENT' },
-];
-
-const DISABLED_CATEGORIES = ['KJORETOY_OG_TRANSPORT'];
-
-// Capacity filter options
-const CAPACITY_OPTIONS = [
-  { id: 'all', labelKey: 'listings.filter.capacity.all', min: 0, max: Infinity },
-  { id: '1-5', labelKey: 'listings.filter.capacity.1-5', min: 1, max: 5 },
-  { id: '6-10', labelKey: 'listings.filter.capacity.6-10', min: 6, max: 10 },
-  { id: '11-20', labelKey: 'listings.filter.capacity.11-20', min: 11, max: 20 },
-  { id: '21-50', labelKey: 'listings.filter.capacity.21-50', min: 21, max: 50 },
-  { id: '50+', labelKey: 'listings.filter.capacity.50+', min: 50, max: Infinity },
-];
-
-const PRICE_UNIT_LABELS: Record<string, string> = {
-  'day': 'dag',
-  'hour': 'time',
-  'week': 'uke',
-  'month': 'måned',
-  'year': 'år',
-};
-
-// Filter Chip Component
-const FilterChip = ({ label, onRemove }: { label: string; onRemove: () => void }) => (
-  <motion.button
-    type="button"
-    onClick={onRemove}
-    initial={{ scale: 0.9, opacity: 0 }}
-    animate={{ scale: 1, opacity: 1 }}
-    exit={{ scale: 0.9, opacity: 0 }}
-    whileHover={{ scale: 1.05 }}
-    whileTap={{ scale: 0.95 }}
-    style={{
-      display: 'inline-flex',
-      alignItems: 'center',
-      gap: 'var(--ds-spacing-2)',
-      padding: 'var(--ds-spacing-2) var(--ds-spacing-4)',
-      borderRadius: 'var(--ds-border-radius-full)',
-      backgroundColor: 'var(--ds-color-neutral-background-subtle)',
-      border: '1px solid var(--ds-color-neutral-border-default)',
-      fontSize: 'var(--ds-font-size-sm)',
-      color: 'var(--ds-color-neutral-text-default)',
-      cursor: 'pointer',
-      whiteSpace: 'nowrap',
-    }}
-  >
-    {label}
-    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-      <line x1="18" y1="6" x2="6" y2="18"></line>
-      <line x1="6" y1="6" x2="18" y2="18"></line>
-    </svg>
-  </motion.button>
-);
 
 export function RentalObjectsListView() {
   const navigate = useNavigate();
   const { permissions } = useRentalObjectPermissions();
   const t = useT();
-  const queryClient = useQueryClient();
   
   // Get options using factory functions with translation
   const SORT_OPTIONS = getSortOptions(t);
