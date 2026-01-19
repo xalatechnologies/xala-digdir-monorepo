@@ -472,17 +472,27 @@ export class AvailabilityService extends BaseService {
  */
 class ExtendedBookingService extends BookingService {
   /**
-   * Approve booking (caseworker/admin only)
+   * Submit booking for approval
+   * Transitions from pending → pending_approval
    */
-  async approve(id: string, reason?: string): Promise<SingleResponse<Booking>> {
-    return this.client.post(this.buildPath(`/${id}/approve`), { reason });
+  async submit(id: string, notes?: string): Promise<SingleResponse<Booking>> {
+    return this.client.post(this.buildPath(`/${id}/submit`), { notes });
   }
 
   /**
-   * Reject/Deny booking (caseworker/admin only)
+   * Approve booking (caseworker/admin only)
+   * Transitions from pending_approval → approved
+   */
+  async approve(id: string, notes?: string): Promise<SingleResponse<Booking>> {
+    return this.client.post(this.buildPath(`/${id}/approve`), { notes });
+  }
+
+  /**
+   * Reject booking (caseworker/admin only)
+   * Transitions from pending_approval → rejected
    */
   async reject(id: string, reason: string): Promise<SingleResponse<Booking>> {
-    return this.client.post(this.buildPath(`/${id}/deny`), { reason });
+    return this.client.post(this.buildPath(`/${id}/reject`), { reason });
   }
 }
 

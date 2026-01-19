@@ -18,11 +18,14 @@ import {
 // =============================================================================
 
 export const BookingStatusSchema = z.enum([
-  'pending',
-  'confirmed',
-  'cancelled',
-  'completed',
-  'rejected',
+  'pending',           // Initial state
+  'pending_approval',  // Submitted, awaiting decision
+  'approved',          // Approved by caseworker
+  'confirmed',         // Confirmed booking
+  'rejected',          // Rejected with reason
+  'cancelled',         // Cancelled by user/admin
+  'completed',         // Booking fulfilled
+  'expired',           // Reservation expired
 ]);
 
 export type BookingStatus = z.infer<typeof BookingStatusSchema>;

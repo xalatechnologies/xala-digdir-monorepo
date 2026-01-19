@@ -78,9 +78,12 @@ const calculateDuration = (startTime: string, endTime: string): string => {
 const STATUS_TABS = [
   { id: 'all', labelKey: 'bookings.status.all', icon: 'FileIcon', color: 'neutral' },
   { id: 'pending', labelKey: 'bookings.status.pending', icon: '⏳', color: 'warning' },
+  { id: 'pending_approval', labelKey: 'bookings.status.pendingApproval', icon: '⏳', color: 'warning' },
+  { id: 'approved', labelKey: 'bookings.status.approved', icon: '✓', color: 'success' },
   { id: 'confirmed', labelKey: 'bookings.status.confirmed', icon: '✓', color: 'success' },
-  { id: 'completed', labelKey: 'bookings.status.completed', icon: '✓', color: 'info' },
+  { id: 'rejected', labelKey: 'bookings.status.rejected', icon: '✕', color: 'danger' },
   { id: 'cancelled', labelKey: 'bookings.status.cancelled', icon: '✕', color: 'danger' },
+  { id: 'completed', labelKey: 'bookings.status.completed', icon: '✓', color: 'info' },
 ] as const;
 
 // Payment status filter options (labels are i18n keys)
@@ -355,7 +358,7 @@ export function BookingsPage() {
       description: t('bookings.bulk.confirmApprove', { count: selectedIds.length }),
       confirmText: t('bookings.bulk.approveAll'),
       cancelText: t('common.abort'),
-      variant: 'primary',
+      variant: 'info',
     });
     if (confirmed) {
       for (const id of selectedIds) {
@@ -925,7 +928,7 @@ export function BookingsPage() {
                         </Table.Cell>
                         <Table.Cell onClick={(e) => e.stopPropagation()}>
                           <div style={{ display: 'flex', gap: 'var(--ds-spacing-1)' }}>
-                            {booking.status === 'pending' && (
+                            {(booking.status === 'pending' || booking.status === 'pending_approval') && (
                               <>
                                 <Button
                                   data-testid="approve-button"
@@ -941,13 +944,13 @@ export function BookingsPage() {
                                   <CheckIcon />
                                 </Button>
                                 <Button
-                                  data-testid="deny-button"
+                                  data-testid="reject-button"
                                   type="button"
                                   variant="secondary"
                                   data-color="danger"
                                   data-size="md"
-                                  onClick={() => handleCancel(booking.id)}
-                                  disabled={cancelBooking.isPending}
+                                  onClick={() => handleReject(booking.id)}
+                                  disabled={rejectBooking.isPending}
                                   aria-label={t('bookings.action.reject')}
                                   title={t('bookings.action.rejectBooking')}
                                 >

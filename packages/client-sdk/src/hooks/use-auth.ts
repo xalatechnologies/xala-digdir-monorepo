@@ -185,3 +185,40 @@ export function useVippsCallback() {
     },
   });
 }
+
+// ============================================================================
+// Demo Login Hook
+// ============================================================================
+
+export type DemoRoleKey = 'admin' | 'case_handler' | 'org_admin' | 'org_member';
+
+/**
+ * Demo login mutation - one-click login by role
+ * 
+ * Security: Only available in demo/staging environments or when explicitly enabled.
+ * 
+ * @example
+ * ```tsx
+ * const demoLogin = useDemoLogin();
+ * 
+ * const handleRoleSelect = (key: DemoRoleKey) => {
+ *   demoLogin.mutate({ key }, {
+ *     onSuccess: (data) => {
+ *       window.location.href = data.data.redirectUrl;
+ *     }
+ *   });
+ * };
+ * ```
+ */
+export function useDemoLogin() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: ({ key, returnTo }: { key: DemoRoleKey; returnTo?: string }) =>
+      authService.demoExchange(key, returnTo),
+    onSuccess: (response) => {
+      // Cookie-based auth - cookies are set by Set-Cookie headers
+      queryClient.setQueryData(queryKeys.auth.session(), response);
+    },
+  });
+}

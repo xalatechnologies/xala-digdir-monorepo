@@ -143,6 +143,14 @@ export type {
   DemoLoginFormData
 } from './DemoLoginDialog';
 
+// Demo Role Switcher (one-click demo login by role)
+export { DemoRoleSwitcher } from './DemoRoleSwitcher';
+export type {
+  DemoRoleSwitcherProps,
+  DemoRoleKey,
+  DemoRoleOption
+} from './DemoRoleSwitcher';
+
 // Global Search
 export { GlobalSearch } from './GlobalSearch';
 
@@ -196,4 +204,8 @@ export type {
   FilterValues,
 } from './TableFilter';
 export type { FilterConfig as TableFilterDef, FilterOption as TableFilterOption } from './TableFilter';
+
+// UserMenu Component
+export { UserMenu } from './UserMenu';
+export type { UserMenuProps, UserMenuItem, UserMenuUser } from './UserMenu';
 

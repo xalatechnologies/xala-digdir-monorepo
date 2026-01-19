@@ -561,6 +561,173 @@ export class AuthController {
   }
 
   /**
+   * POST /api/auth/demo/exchange - Demo role-based login
+   * Authenticates user using a role key for one-click demo login
+   * Sets HTTP-only cookies with access token, refresh token, and CSRF token
+   * 
+   * Security: Disabled in production unless DEMO_LOGIN_ENABLED=true
+   * Rate limited to prevent abuse
+   */
+  @Post('/demo/exchange')
+  async demoExchange(request: AuthRequest, reply: FastifyReply) {
+    reply.header('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate');
+    reply.header('Pragma', 'no-cache');
+    reply.header('Expires', '0');
+
+    const body = request.body as { key?: string; returnTo?: string };
+    const db = container.resolve<any>('Database');
+    const { sessionService } = await import('./session.service');
+    const { COOKIE_CONFIG, getCookieOptions } = await import('../../config/cookies');
+    const { randomBytes } = await import('crypto');
+    const { authDemoTokens } = await import('../../database/schema/index');
+    const { and, isNull } = await import('drizzle-orm');
+
+    // Check if demo login is enabled
+    const isProduction = process.env.NODE_ENV === 'production';
+    const demoEnabled = process.env.DEMO_LOGIN_ENABLED === 'true';
+    
+    if (isProduction && !demoEnabled) {
+      reply.code(403);
+      return {
+        type: 'https://api.digilist.no/problems/forbidden',
+        title: 'Demo login disabled',
+        status: 403,
+        detail: 'Demo login is not available in production environment',
+      };
+    }
+
+    // Validate key
+    const validKeys = ['admin', 'case_handler', 'org_admin', 'org_member'];
+    if (!body.key || !validKeys.includes(body.key)) {
+      reply.code(400);
+      return {
+        type: 'https://api.digilist.no/problems/bad-request',
+        title: 'Invalid role key',
+        status: 400,
+        detail: `Role key must be one of: ${validKeys.join(', ')}`,
+      };
+    }
+
+    // Look up the demo token by key
+    const tokenResult = await db
+      .select({
+        token: authDemoTokens,
+        user: users,
+      })
+      .from(authDemoTokens)
+      .innerJoin(users, eq(authDemoTokens.userId, users.id))
+      .where(
+        and(
+          eq(authDemoTokens.key, body.key),
+          eq(authDemoTokens.isActive, true)
+        )
+      )
+      .limit(1);
+
+    if (!tokenResult.length) {
+      reply.code(404);
+      return {
+        type: 'https://api.digilist.no/problems/not-found',
+        title: 'Demo role not found',
+        status: 404,
+        detail: `No active demo configuration for role: ${body.key}`,
+      };
+    }
+
+    const { token: demoToken, user } = tokenResult[0];
+
+    // Check if token has expired
+    if (demoToken.expiresAt && new Date(demoToken.expiresAt) < new Date()) {
+      reply.code(400);
+      return {
+        type: 'https://api.digilist.no/problems/expired',
+        title: 'Demo token expired',
+        status: 400,
+        detail: 'This demo role configuration has expired',
+      };
+    }
+
+    // Check if user is active
+    if (user.status?.toUpperCase() !== 'ACTIVE') {
+      reply.code(401);
+      return createErrorResponse(request, 'UNAUTHORIZED', 'auth.user_inactive');
+    }
+
+    // Create session with access and refresh tokens
+    const session = await sessionService.createSession({
+      userId: user.id,
+      tenantId: user.tenantId,
+      userAgent: request.headers['user-agent'],
+      ipAddress: request.ip,
+    });
+
+    // Generate CSRF token
+    const csrfToken = randomBytes(32).toString('base64url');
+
+    // Set three HTTP-only cookies
+    reply
+      .setCookie(
+        COOKIE_CONFIG.ACCESS.name,
+        session.accessToken,
+        getCookieOptions('ACCESS', isProduction)
+      )
+      .setCookie(
+        COOKIE_CONFIG.REFRESH.name,
+        session.refreshToken,
+        getCookieOptions('REFRESH', isProduction)
+      )
+      .setCookie(
+        COOKIE_CONFIG.CSRF.name,
+        csrfToken,
+        getCookieOptions('CSRF', isProduction)
+      );
+
+    // Update last login
+    await db.update(users).set({ lastLoginAt: new Date() }).where(eq(users.id, user.id));
+
+    // Audit demo exchange login event
+    getAuditService().log({
+      tenantId: user.tenantId,
+      userId: user.id,
+      action: 'login',
+      resource: 'auth',
+      resourceId: user.id,
+      ipAddress: request.ip,
+      userAgent: request.headers['user-agent'],
+      metadata: {
+        email: user.email,
+        method: 'demo-exchange',
+        roleKey: body.key,
+        sessionId: session.sessionId,
+      },
+    });
+
+    // Determine redirect URL based on role
+    const redirectPaths: Record<string, string> = {
+      admin: '/',
+      case_handler: '/bookings',
+      org_admin: '/organization',
+      org_member: '/bookings',
+    };
+    const redirectUrl = body.returnTo || redirectPaths[body.key] || '/';
+
+    // Return user data + redirect URL
+    return {
+      data: {
+        redirectUrl,
+        expiresAt: session.expiresAt.toISOString(),
+        user: {
+          id: user.id,
+          email: user.email,
+          name: user.name,
+          role: user.role,
+          tenantId: user.tenantId,
+        },
+      },
+    };
+  }
+
+  /**
    * POST /api/auth/email - Email/password login
    */
   @Post('/email')

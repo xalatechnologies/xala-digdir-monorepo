@@ -13,6 +13,8 @@ import {
   CancelBookingSchema,
   ApproveBookingSchema,
   DenyBookingSchema,
+  SubmitBookingSchema,
+  RejectBookingSchema,
 } from '../../schemas/booking.schema';
 import { requirePermission, type SystemRole } from '../../core/middleware/rbac.middleware';
 import { ForbiddenError } from '../../core/errors/problem-details';
@@ -64,7 +66,7 @@ export class BookingController {
   @Get('/:id')
   async findById(request: FastifyRequest<{ Params: { id: string } }>, reply: FastifyReply) {
     const booking = await this.service.findByIdOrFail(request.params.id);
-    return { booking };
+    return { data: booking };
   }
 
   /**
@@ -76,39 +78,101 @@ export class BookingController {
     const userId = getOptionalUserId(request);
     const data = validate(CreateBookingSchema, request.body);
     const booking = await this.service.create(tenantId, userId, data);
-    return reply.status(201).send({ booking });
+    return reply.status(201).send({ data: booking });
+  }
+
+  /**
+   * POST /api/bookings/:id/confirm - Confirm booking (canonical)
+   */
+  @Post('/:id/confirm')
+  async confirm(request: FastifyRequest<{ Params: { id: string } }>, reply: FastifyReply) {
+    const booking = await this.service.confirm(request.params.id);
+    return { data: booking };
   }
 
   /**
    * PUT /api/bookings/:id/confirm - Confirm booking
+   * @deprecated Use POST /api/bookings/:id/confirm instead
    */
   @Put('/:id/confirm')
-  async confirm(request: FastifyRequest<{ Params: { id: string } }>, reply: FastifyReply) {
+  async confirmWithPut(request: FastifyRequest<{ Params: { id: string } }>, reply: FastifyReply) {
+    reply.header('Deprecation', 'true');
+    reply.header('Sunset', 'Sat, 19 Apr 2026 00:00:00 GMT');
+    reply.header('Link', '</api/bookings/' + request.params.id + '/confirm>; rel="successor-version"');
     const booking = await this.service.confirm(request.params.id);
-    return { booking };
+    return { data: booking };
+  }
+
+  /**
+   * POST /api/bookings/:id/cancel - Cancel booking (canonical)
+   */
+  @Post('/:id/cancel')
+  async cancel(request: FastifyRequest<{ Params: { id: string } }>, reply: FastifyReply) {
+    const data = validate(CancelBookingSchema, request.body || {});
+    const booking = await this.service.cancel(request.params.id, data);
+    return { data: booking };
   }
 
   /**
    * PUT /api/bookings/:id/cancel - Cancel booking
+   * @deprecated Use POST /api/bookings/:id/cancel instead
    */
   @Put('/:id/cancel')
-  async cancel(request: FastifyRequest<{ Params: { id: string } }>, reply: FastifyReply) {
+  async cancelWithPut(request: FastifyRequest<{ Params: { id: string } }>, reply: FastifyReply) {
+    reply.header('Deprecation', 'true');
+    reply.header('Sunset', 'Sat, 19 Apr 2026 00:00:00 GMT');
+    reply.header('Link', '</api/bookings/' + request.params.id + '/cancel>; rel="successor-version"');
     const data = validate(CancelBookingSchema, request.body || {});
     const booking = await this.service.cancel(request.params.id, data);
-    return { booking };
+    return { data: booking };
+  }
+
+  /**
+   * POST /api/bookings/:id/complete - Complete booking (canonical)
+   */
+  @Post('/:id/complete')
+  async complete(request: FastifyRequest<{ Params: { id: string } }>, reply: FastifyReply) {
+    const booking = await this.service.complete(request.params.id);
+    return { data: booking };
   }
 
   /**
    * PUT /api/bookings/:id/complete - Complete booking
+   * @deprecated Use POST /api/bookings/:id/complete instead
    */
   @Put('/:id/complete')
-  async complete(request: FastifyRequest<{ Params: { id: string } }>, reply: FastifyReply) {
+  async completeWithPut(request: FastifyRequest<{ Params: { id: string } }>, reply: FastifyReply) {
+    reply.header('Deprecation', 'true');
+    reply.header('Sunset', 'Sat, 19 Apr 2026 00:00:00 GMT');
+    reply.header('Link', '</api/bookings/' + request.params.id + '/complete>; rel="successor-version"');
     const booking = await this.service.complete(request.params.id);
-    return { booking };
+    return { data: booking };
+  }
+
+  /**
+   * POST /api/bookings/:id/submit - Submit booking for approval
+   * Transitions from pending → pending_approval
+   *
+   * Request body:
+   * - notes: Optional notes for case handler
+   */
+  @Post('/:id/submit')
+  async submit(request: TenantRequest, reply: FastifyReply) {
+    const { id } = request.params as { id: string };
+    const userId = request.userId || (request.headers['x-user-id'] as string);
+
+    if (!userId) {
+      throw new ForbiddenError('User authentication required');
+    }
+
+    const data = validate(SubmitBookingSchema, request.body || {});
+    const booking = await this.service.submit(id, userId, data);
+    return { data: booking };
   }
 
   /**
    * POST /api/bookings/:id/approve - Approve booking (case handler action)
+   * Transitions from pending_approval → approved
    * Requires bookings:approve permission
    *
    * Request body:
@@ -129,12 +193,41 @@ export class BookingController {
     }
 
     const data = validate(ApproveBookingSchema, request.body || {});
-    const booking = await this.service.approve(id, userId, data);
+    const booking = await this.service.approve(id, userId, data.notes);
+    return { data: booking };
+  }
+
+  /**
+   * POST /api/bookings/:id/reject - Reject booking (case handler action)
+   * Transitions from pending_approval → rejected
+   * Canonical endpoint (preferred over /deny)
+   *
+   * Request body:
+   * - reason: Required rejection reason
+   *
+   * Scope enforcement:
+   * - admin/COMMUNE_ADMIN: Can reject any booking in tenant
+   * - saksbehandler: Can reject bookings within assigned scope (if permitted)
+   * - ORG_ADMIN: Can reject bookings for org's rental objects
+   * - ORG_CASE_HANDLER: Cannot reject (approve only per PERMISSION_MATRIX)
+   */
+  @Post('/:id/reject')
+  async reject(request: TenantRequest, reply: FastifyReply) {
+    const { id } = request.params as { id: string };
+    const userId = request.userId || (request.headers['x-user-id'] as string);
+
+    if (!userId) {
+      throw new ForbiddenError('User authentication required');
+    }
+
+    const data = validate(RejectBookingSchema, request.body || {});
+    const booking = await this.service.deny(id, userId, data);
     return { data: booking };
   }
 
   /**
    * POST /api/bookings/:id/deny - Deny booking (case handler action)
+   * @deprecated Use POST /api/bookings/:id/reject instead
    * Requires bookings:deny permission
    *
    * Request body:
@@ -325,9 +418,15 @@ export class BookingController {
 
   /**
    * PUT /api/bookings/:id/approve - Approve booking (caseworker/admin only)
+   * @deprecated Use POST /api/bookings/:id/approve instead
    */
   @Put('/:id/approve')
   async approveWithPut(request: FastifyRequest<{ Params: { id: string } }>, reply: FastifyReply) {
+    // Add deprecation headers per RFC 8594
+    reply.header('Deprecation', 'true');
+    reply.header('Sunset', 'Sat, 19 Apr 2026 00:00:00 GMT');
+    reply.header('Link', '</api/bookings/' + request.params.id + '/approve>; rel="successor-version"');
+    
     const { reason } = request.body as { reason?: string };
     const user = request.user as any;
     
@@ -355,44 +454,28 @@ export class BookingController {
   }
 
   /**
-   * PATCH /api/bookings/:id/reject - Reject booking (caseworker/admin only)
+   * PUT /api/bookings/:id/reject - Reject booking (caseworker/admin only)
+   * @deprecated Use POST /api/bookings/:id/reject instead
    */
   @Put('/:id/reject')
-  async reject(request: FastifyRequest<{ Params: { id: string } }>, reply: FastifyReply) {
-    const { reason } = request.body as { reason: string };
-    const user = request.user as any;
+  async rejectWithPut(request: TenantRequest, reply: FastifyReply) {
+    // Add deprecation headers per RFC 8594
+    reply.header('Deprecation', 'true');
+    reply.header('Sunset', 'Sat, 19 Apr 2026 00:00:00 GMT');
+    reply.header('Link', '</api/bookings/' + (request.params as { id: string }).id + '/reject>; rel="successor-version"');
     
-    if (!user || !user.userId) {
-      return reply.status(401).send({
-        type: 'https://api.digilist.no/errors/unauthorized',
-        title: 'Unauthorized',
-        status: 401,
-        detail: 'Authentication required',
-      });
+    const { id } = request.params as { id: string };
+    const userId = request.userId || (request.headers['x-user-id'] as string);
+
+    if (!userId) {
+      throw new ForbiddenError('User authentication required');
     }
-    
-    // Check role (caseworker or admin)
-    if (user.role !== 'CASEWORKER' && user.role !== 'ADMIN' && user.role !== 'SAAS_ADMIN') {
-      return reply.status(403).send({
-        type: 'https://api.digilist.no/errors/forbidden',
-        title: 'Forbidden',
-        status: 403,
-        detail: 'This action requires CASEWORKER or ADMIN role',
-      });
-    }
-    
-    if (!reason || reason.trim().length === 0) {
-      return reply.status(400).send({
-        type: 'https://api.digilist.no/errors/validation-error',
-        title: 'Validation Error',
-        status: 400,
-        detail: 'Rejection reason is required',
-      });
-    }
-    
-    const booking = await this.service.reject(request.params.id, user.userId, reason);
+
+    const data = validate(RejectBookingSchema, request.body || {});
+    const booking = await this.service.deny(id, userId, data);
     return { data: booking };
   }
+
 }
 
 /**

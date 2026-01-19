@@ -96,10 +96,23 @@ export function BookingsPage() {
     const allBookings = allData?.data ?? [];
     if (!statusFilter) return allBookings;
     
-    // Handle status mapping: 'confirmed' filter should match 'approved' and 'confirmed'
+    // Handle status mapping for canonical states
     if (statusFilter === 'confirmed') {
+      // 'confirmed' filter shows both approved and confirmed bookings
       return allBookings.filter(b => 
         b.status === 'confirmed' || (b.status as string) === 'approved'
+      );
+    }
+    if (statusFilter === 'pending') {
+      // 'pending' filter shows both pending and pending_approval bookings
+      return allBookings.filter(b => 
+        b.status === 'pending' || (b.status as string) === 'pending_approval'
+      );
+    }
+    if (statusFilter === 'cancelled') {
+      // 'cancelled' filter shows both cancelled and rejected bookings
+      return allBookings.filter(b => 
+        b.status === 'cancelled' || (b.status as string) === 'rejected'
       );
     }
     return allBookings.filter(b => b.status === statusFilter);
@@ -126,13 +139,17 @@ export function BookingsPage() {
     const allBookings = allData?.data ?? [];
     const total = allBookings.length;
     
-    // Count by actual status values from API (handles 'approved', 'confirmed', etc.)
-    // Type assertion needed because API may return 'approved' which isn't in BookingStatus type
+    // Count by actual status values from API (handles canonical states)
+    // Type assertion needed because API may return statuses not in strict BookingStatus type
     const confirmed = allBookings.filter(b => 
       b.status === 'confirmed' || (b.status as string) === 'approved'
     ).length;
-    const pending = allBookings.filter(b => b.status === 'pending').length;
-    const cancelled = allBookings.filter(b => b.status === 'cancelled').length;
+    const pending = allBookings.filter(b => 
+      b.status === 'pending' || (b.status as string) === 'pending_approval'
+    ).length;
+    const cancelled = allBookings.filter(b => 
+      b.status === 'cancelled' || (b.status as string) === 'rejected'
+    ).length;
     
     return { total, confirmed, pending, cancelled };
   }, [allData]);

@@ -4,7 +4,7 @@
  */
 import { useEffect, useCallback, useRef } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { LoginPage as LoginPageComponent } from '@xala/ds';
+import { LoginPage as LoginPageComponent, DemoRoleSwitcher } from '@xala/ds';
 import { minsideAuthConfig } from '@xala/auth';
 import {
   PlatformIcon,
@@ -37,7 +37,18 @@ export function LoginPage(): React.ReactElement {
   const t = useT();
 
   const flowRestorationProcessed = useRef(false);
-  const { showDialog, openDemoLogin, closeDemoLogin, handleDemoLogin } = useDemoLogin();
+  const {
+    showDialog,
+    openDemoLogin,
+    closeDemoLogin,
+    handleDemoLogin,
+    showRoleSwitcher,
+    openRoleSwitcher,
+    closeRoleSwitcher,
+    handleRoleSelect,
+    loadingRole,
+    error: demoError,
+  } = useDemoLogin();
 
   const from = (location.state as { from?: { pathname: string } })?.from?.pathname || '/';
 
@@ -145,19 +156,33 @@ export function LoginPage(): React.ReactElement {
   ];
 
   return (
-    <LoginPageComponent
-      config={minsideAuthConfig}
-      brandConfig={brandConfig}
-      panelConfig={panelConfig}
-      footerLinks={footerLinks}
-      onProviderClick={handleProviderClick}
-      isAuthenticated={isAuthenticated}
-      isLoading={isLoading}
-      demoLoginOpen={showDialog}
-      onDemoLoginOpen={openDemoLogin}
-      onDemoLoginClose={closeDemoLogin}
-      onDemoLoginSubmit={handleDemoLogin}
-    />
+    <>
+      <LoginPageComponent
+        config={minsideAuthConfig}
+        brandConfig={brandConfig}
+        panelConfig={panelConfig}
+        footerLinks={footerLinks}
+        onProviderClick={handleProviderClick}
+        isAuthenticated={isAuthenticated}
+        isLoading={isLoading}
+        demoLoginOpen={showDialog}
+        onDemoLoginOpen={openRoleSwitcher}
+        onDemoLoginClose={closeDemoLogin}
+        onDemoLoginSubmit={handleDemoLogin}
+      />
+      
+      {/* Demo Role Switcher - one-click demo login */}
+      <DemoRoleSwitcher
+        open={showRoleSwitcher}
+        onClose={closeRoleSwitcher}
+        onRoleSelect={handleRoleSelect}
+        loadingRole={loadingRole}
+        error={demoError}
+        title={t('auth.demoLogin')}
+        description={t('auth.demoLoginDescription')}
+        cancelText={t('common.cancel')}
+      />
+    </>
   );
 }
 

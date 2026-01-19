@@ -62,6 +62,7 @@ export {
   accessGrants,
   permissionAssignments,
   caseHandlerScopes,
+  authDemoTokens,
   type Session,
   type NewSession,
   type OrgMembership,
@@ -72,6 +73,8 @@ export {
   type NewPermissionAssignment,
   type CaseHandlerScope,
   type NewCaseHandlerScope,
+  type AuthDemoToken,
+  type NewAuthDemoToken,
 } from '@digilist/database-schema';
 
 // SaaS tables (entitlements)

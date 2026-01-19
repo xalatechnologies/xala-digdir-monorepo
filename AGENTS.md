@@ -805,11 +805,178 @@ packages/client-sdk/src/hooks/           89 React Query hooks
 packages/client-sdk/src/types/           Type definitions
 ```
 
-### Design System
+### Design System (`@xala/ds`)
 ```
-packages/ds/src/components/              150+ components
-packages/ds/src/tokens/                  Design tokens
+packages/ds/src/primitives/              14+ primitives (Container, Stack, Badge, etc.)
+packages/ds/src/composed/                38+ composed (PageHeader, DataTable, Drawer, etc.)
+packages/ds/src/blocks/                  68+ blocks (StatusBadges, RentalObjectCard, etc.)
+packages/ds/src/shells/                  4 shells (AppShell, AppLayout)
 ```
+
+**📚 Documentation:**
+- [Component Inventory](docs/design-system/component-inventory.md)
+- [Usage Guidelines](docs/design-system/component-usage-guidelines.md)
+- [Gaps & Plan](docs/design-system/component-gaps-and-plan.md)
+- [App Audit](docs/design-system/app-shared-components-audit.md)
+
+---
+
+## 🎨 **UI COMPONENT REUSE-FIRST RULES (MANDATORY)**
+
+> **⚠️ CRITICAL: ALL developers and AI agents MUST follow these rules.**
+
+### **Rule 1: Search Before Creating**
+
+Before creating ANY new UI component:
+
+1. ✅ Search `docs/design-system/component-inventory.md`
+2. ✅ Check if pattern exists in `@xala/ds`  
+3. ✅ Reuse the existing component
+4. ❌ Only if missing: add to design system, document it, then use everywhere
+
+**Example:**
+```bash
+# Find existing components
+grep -r "PageHeader\|DataTable\|EmptyState" docs/design-system/
+```
+
+### **Rule 2: Import from `@xala/ds` ONLY**
+
+```typescript
+// ✅ CORRECT - Always import from design system
+import { 
+  Button, 
+  DataTable, 
+  PageHeader, 
+  EmptyState,
+  Dialog,
+  Drawer 
+} from '@xala/ds';
+
+// ❌ WRONG - App-local components
+import { ProtectedRoute } from '../components/ProtectedRoute';
+
+// ❌ WRONG - Direct Digdir import
+import { Button } from '@digdir/designsystemet-react';
+```
+
+### **Rule 3: No Raw HTML for Common Patterns**
+
+| Pattern | ❌ Don't Use | ✅ Use Instead |
+|---------|-------------|----------------|
+| Page headers | `<div><h1>Title</h1></div>` | `<PageHeader title="Title" />` |
+| Cards | `<div className="card">` | `<Card>` |
+| Tables | `<table>` | `<DataTable columns={} data={} />` |
+| Empty states | `<div>No items</div>` | `<EmptyState title="" />` |
+| Buttons | `<button>` | `<Button>` |
+| Modals | `<div className="modal">` | `<Dialog>` or `<ConfirmDialog>` |
+| Drawers | Custom slide-out | `<Drawer>` |
+| Loading | Custom spinner | `<Spinner>` or `<Skeleton>` |
+
+### **Rule 4: Tables MUST Use DataTable**
+
+```typescript
+// ✅ CORRECT - Use DataTable
+import { DataTable, TableFilter, StatusTabs } from '@xala/ds';
+
+<DataTable 
+  data={bookings} 
+  columns={columns}
+  getRowKey={(b) => b.id}
+  onSort={handleSort}
+  isLoading={isLoading}
+  emptyMessage={<EmptyState title={t('empty.title')} />}
+  data-testid="bookings-table"
+/>
+
+// ❌ WRONG - Raw HTML table
+<table>
+  <thead>...</thead>
+  <tbody>...</tbody>
+</table>
+```
+
+### **Rule 5: Page Headers MUST Use PageHeader**
+
+```typescript
+// ✅ CORRECT
+import { PageHeader, ContentLayout } from '@xala/ds';
+
+<PageHeader 
+  title={t('page.title')}
+  breadcrumbs={[...]}
+  actions={<Button>Create</Button>}
+/>
+<ContentLayout>
+  {/* Page content */}
+</ContentLayout>
+
+// ❌ WRONG - Raw HTML
+<div className="page-header">
+  <h1>My Page</h1>
+</div>
+```
+
+### **Rule 6: All Interactive Elements Need `data-testid`**
+
+```typescript
+// ✅ CORRECT
+<Button data-testid="submit-booking-btn">Submit</Button>
+<DataTable data-testid="bookings-table" ... />
+<Dialog data-testid="confirm-delete-dialog" ... />
+
+// ❌ WRONG - Missing testid
+<Button>Submit</Button>
+```
+
+### **Rule 7: All Text Must Be i18n-Ready**
+
+```typescript
+// ✅ CORRECT
+import { useT } from '@xala/i18n';
+const t = useT();
+
+<PageHeader title={t('bookings.title')} />
+<EmptyState title={t('bookings.empty.title')} />
+
+// ❌ WRONG - Hardcoded strings
+<PageHeader title="Bookings" />
+```
+
+### **Rule 8: Use Design Tokens, Not Hardcoded Values**
+
+```css
+/* ✅ CORRECT - Design tokens */
+.component {
+  padding: var(--ds-spacing-4);
+  background: var(--ds-color-neutral-surface-default);
+  border-radius: var(--ds-border-radius-md);
+}
+
+/* ❌ WRONG - Hardcoded values */
+.component {
+  padding: 16px;
+  background: #f5f5f5;
+  border-radius: 8px;
+}
+```
+
+### **Quick Reference: Key Components**
+
+| Need | Use This Component |
+|------|-------------------|
+| Page layout | `AppShell` + `ContentLayout` |
+| Page header | `PageHeader` |
+| Section | `ContentSection` |
+| Data table | `DataTable` + `TableFilter` |
+| Status filters | `StatusTabs` |
+| Empty state | `EmptyState` |
+| Loading | `Spinner`, `Skeleton`, `LoadingScreen` |
+| Modal | `Dialog`, `ConfirmDialog` |
+| Side panel | `Drawer` |
+| Status display | `BookingStatusBadge`, `PaymentStatusBadge`, etc. |
+| Stepper | `Wizard`, `WizardStepper` |
+| Navigation | `Navigation`, `Breadcrumb`, `MobileNav` |
 
 ---
 
@@ -838,6 +1005,121 @@ packages/ds/src/tokens/                  Design tokens
 ❌ Skip error handling  
 ❌ Forget Norwegian translations  
 ❌ Use deprecated patterns  
+
+---
+
+## 📅 **BOOKING SYSTEM RULES (MANDATORY)**
+
+> **⚠️ CRITICAL: All booking-related code MUST follow these rules.**
+> These rules were established after the **2026-01-19 Full Booking Audit**.
+> See: `docs/booking/` for comprehensive documentation.
+
+### **Rule B1: Server-Driven Calendar**
+
+All calendar displays MUST use the design system calendar component with server data.
+
+```typescript
+// ✅ CORRECT - Use DS calendar with API data
+import { RentalObjectAvailabilityCalendar } from '@xala/ds';
+
+const { data: availability } = useRentalObjectAvailability(rentalObjectId, from, to);
+
+<RentalObjectAvailabilityCalendar
+  mode={config.granularity}
+  cells={availability.cells}
+  onCellClick={handleCellClick}
+  isLoading={isLoading}
+/>
+
+// ❌ WRONG - Custom calendar grid with local slot generation
+const slots = generateTimeSlots(openingHours); // NO!
+<CustomCalendarGrid slots={slots} />
+```
+
+### **Rule B2: SDK-Only Integration**
+
+All booking operations MUST go through the client SDK. Never call API directly.
+
+```typescript
+// ✅ CORRECT - Use SDK service
+import { useCreateBooking, useApproveBooking } from '@digilist/client-sdk';
+
+const createBooking = useCreateBooking();
+await createBooking.mutateAsync(bookingData);
+
+// ❌ WRONG - Direct fetch
+await fetch('/api/bookings', { method: 'POST', body: JSON.stringify(data) });
+```
+
+### **Rule B3: Canonical Booking Status Enum**
+
+Use the **8 canonical statuses** across all layers:
+
+```typescript
+type BookingStatus =
+  | 'pending'           // Initial draft
+  | 'pending_approval'  // Submitted, awaiting decision
+  | 'approved'          // Approved by caseworker
+  | 'confirmed'         // Confirmed booking
+  | 'rejected'          // Rejected (NOT 'denied')
+  | 'cancelled'         // Cancelled by user/admin
+  | 'completed'         // Fulfilled
+  | 'expired';          // Timed out
+```
+
+⚠️ **Use `rejected` NOT `denied`** - Terminology must be consistent.
+
+### **Rule B4: POST for State Transitions**
+
+Use POST (not PUT) for all booking state changes.
+
+```typescript
+// ✅ CORRECT - POST for commands
+POST /api/bookings/:id/approve
+POST /api/bookings/:id/reject
+POST /api/bookings/:id/cancel
+POST /api/bookings/:id/confirm
+
+// ❌ DEPRECATED - PUT endpoints
+PUT /api/bookings/:id/approve  // Use POST instead
+PUT /api/bookings/:id/reject   // Use POST instead
+```
+
+### **Rule B5: Calendar Mode Mapping**
+
+Booking modes MUST map to calendar granularities correctly:
+
+| Booking Mode | Calendar Granularity |
+|--------------|---------------------|
+| `SINGLE_SLOT`, `RECURRING`, `IN_GAME` | `TIME_SLOTS` |
+| `ALL_DAY` | `ALL_DAY` |
+| `RANGE`, `SEASON_RENTAL` | `MULTI_DAY` |
+
+### **Rule B6: Conflict Detection Before Confirmation**
+
+Always check slot availability before showing booking dialog.
+
+### **Rule B7: Recurring Booking Preview Required**
+
+For recurring bookings, ALWAYS show preview before creation.
+
+### **Rule B8: Response Format Consistency**
+
+All booking endpoints MUST return `{ data: T }` or RFC7807 errors.
+
+### **Booking Documentation Reference**
+
+| Document | Purpose |
+|----------|---------|
+| `docs/booking/audit-summary.md` | Complete system audit |
+| `docs/booking/inventory-rental-object-types.md` | Category and type specs |
+| `docs/booking/inventory-booking-modes-and-rules.md` | Mode and rule details |
+| `docs/booking/inventory-calendars-and-views.md` | Calendar component specs |
+| `docs/booking/flow-public-web-to-checkout.md` | User flow documentation |
+| `docs/booking/flow-details-and-tabs-matrix.md` | Detail page structure |
+| `docs/booking/gaps-and-fix-plan.md` | Known gaps and priorities |
+| `docs/booking-approvals/state-machine.md` | Status transitions |
+| `docs/booking-approvals/endpoint-inventory.md` | Canonical API endpoints |
 
 ---
 

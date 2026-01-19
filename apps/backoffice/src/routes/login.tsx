@@ -4,7 +4,7 @@
  */
 import { useEffect, useCallback, useRef } from 'react';
 import { useNavigate, useLocation, useSearchParams } from 'react-router-dom';
-import { LoginPage as LoginPageComponent } from '@xala/ds';
+import { LoginPage as LoginPageComponent, DemoRoleSwitcher } from '@xala/ds';
 import { backofficeAuthConfig } from '@xala/auth';
 import {
   PlatformIcon,
@@ -35,7 +35,18 @@ export function LoginPage(): React.ReactElement {
   const t = useT();
 
   const flowRestorationProcessed = useRef(false);
-  const { showDialog, openDemoLogin, closeDemoLogin, handleDemoLogin } = useDemoLogin();
+  const {
+    showDialog,
+    openDemoLogin,
+    closeDemoLogin,
+    handleDemoLogin,
+    showRoleSwitcher,
+    openRoleSwitcher,
+    closeRoleSwitcher,
+    handleRoleSelect,
+    loadingRole,
+    error: demoError,
+  } = useDemoLogin();
   const { selectedRole } = useBackofficeRole();
   const needsRoleSelection = useNeedsRoleSelection();
 
@@ -181,9 +192,21 @@ export function LoginPage(): React.ReactElement {
         isAuthenticated={isAuthenticated}
         isLoading={isLoading}
         demoLoginOpen={showDialog}
-        onDemoLoginOpen={openDemoLogin}
+        onDemoLoginOpen={openRoleSwitcher}
         onDemoLoginClose={closeDemoLogin}
         onDemoLoginSubmit={handleDemoLogin}
+      />
+      
+      {/* Demo Role Switcher - one-click demo login */}
+      <DemoRoleSwitcher
+        open={showRoleSwitcher}
+        onClose={closeRoleSwitcher}
+        onRoleSelect={handleRoleSelect}
+        loadingRole={loadingRole}
+        error={demoError}
+        title={t('auth.demoLogin')}
+        description={t('auth.demoLoginDescription')}
+        cancelText={t('common.cancel')}
       />
     </>
   );

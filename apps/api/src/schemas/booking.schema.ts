@@ -5,9 +5,18 @@
 import { z } from 'zod';
 
 /**
- * Booking Status Enum
+ * Booking Status Enum (canonical states)
  */
-export const BookingStatusSchema = z.enum(['pending', 'confirmed', 'cancelled', 'completed', 'approved', 'denied']);
+export const BookingStatusSchema = z.enum([
+  'pending',           // Initial state
+  'pending_approval',  // Submitted, awaiting decision
+  'approved',          // Approved by caseworker
+  'confirmed',         // Confirmed booking
+  'rejected',          // Rejected with reason
+  'cancelled',         // Cancelled by user/admin
+  'completed',         // Booking fulfilled
+  'expired',           // Reservation expired
+]);
 export type BookingStatus = z.infer<typeof BookingStatusSchema>;
 
 /**
@@ -86,12 +95,31 @@ export type ApproveBookingDTO = z.infer<typeof ApproveBookingSchema>;
 
 /**
  * Deny Booking DTO
+ * @deprecated Use RejectBookingSchema instead
  */
 export const DenyBookingSchema = z.object({
   reason: z.string().max(1000).optional(),
 });
 
 export type DenyBookingDTO = z.infer<typeof DenyBookingSchema>;
+
+/**
+ * Submit Booking DTO (for approval)
+ */
+export const SubmitBookingSchema = z.object({
+  notes: z.string().max(1000).optional(),
+});
+
+export type SubmitBookingDTO = z.infer<typeof SubmitBookingSchema>;
+
+/**
+ * Reject Booking DTO
+ */
+export const RejectBookingSchema = z.object({
+  reason: z.string().min(1, 'Rejection reason is required').max(1000),
+});
+
+export type RejectBookingDTO = z.infer<typeof RejectBookingSchema>;
 
 /**
  * Booking Query Params

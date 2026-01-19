@@ -294,6 +294,68 @@ async complete(id: string, version?: number): Promise<Booking> {
   }
 
   /**
+   * Submit booking for approval
+   * Transitions from pending → pending_approval
+   */
+  async submit(id: string, userId: string, data: { notes?: string } = {}): Promise<Booking> {
+    const existing = await this.findByIdOrFail(id);
+
+    // Validate state transition
+    if (existing.status !== 'pending') {
+      throw new ForbiddenError(
+        `Cannot submit booking with status '${existing.status}'. Only pending bookings can be submitted for approval.`
+      );
+    }
+
+    // Verify user owns the booking
+    if (existing.userId !== userId) {
+      throw new ForbiddenError('You can only submit your own bookings for approval.');
+    }
+
+    const updateData: Record<string, unknown> = {
+      status: 'pending_approval',
+      submittedAt: new Date(),
+    };
+
+    if (data.notes) {
+      updateData.notes = existing.notes
+        ? `${existing.notes}\n[User notes] ${data.notes}`
+        : data.notes;
+    }
+
+    const booking = await this.repository.update(id, updateData);
+    this.adapters?.log?.info('Booking submitted for approval', { id, userId });
+
+    getAuditService().log({
+      tenantId: booking.tenantId,
+      userId,
+      action: 'submit',
+      resource: 'booking',
+      resourceId: id,
+      metadata: {
+        previousStatus: existing.status,
+        newStatus: 'pending_approval',
+        notes: data.notes,
+      },
+    });
+
+    // Broadcast booking event for real-time updates
+    broadcastBookingEvent({
+      type: 'updated',
+      bookingId: booking.id,
+      rentalObjectId: booking.rentalObjectId,
+      tenantId: booking.tenantId,
+      startTime: booking.startTime,
+      endTime: booking.endTime,
+      userId: booking.userId,
+      version: (booking as any).version,
+      metadata: { action: 'submitted', newStatus: 'pending_approval' },
+    });
+
+    return booking as unknown as Booking;
+  }
+
+  /**
    * Check if a case handler has scope for the given rental object
    * Case handlers (saksbehandler role) must have an active case_handler_scopes entry
    * to approve/deny bookings for a specific rental object.
@@ -1204,7 +1266,7 @@ async complete(id: string, version?: number): Promise<Booking> {
       startTime: booking.startTime,
       endTime: booking.endTime,
       userId,
-      version: updated.version,
+      version: (updated as any).version ?? 1,
       metadata: { approvedBy: userId, reason },
     });
 
@@ -1259,7 +1321,7 @@ async complete(id: string, version?: number): Promise<Booking> {
       startTime: booking.startTime,
       endTime: booking.endTime,
       userId,
-      version: updated.version,
+      version: (updated as any).version ?? 1,
       metadata: { rejectedBy: userId, reason },
     });
 

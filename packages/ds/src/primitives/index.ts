@@ -129,3 +129,6 @@ export type { ProgressProps } from './progress';
 
 export { CodeBlock } from './CodeBlock';
 export type { CodeBlockProps } from './CodeBlock';
+
+export { FilterChip } from './FilterChip';
+export type { FilterChipProps } from './FilterChip';

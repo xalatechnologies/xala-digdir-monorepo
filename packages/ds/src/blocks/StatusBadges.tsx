@@ -111,13 +111,25 @@ export function StatusTag({
 // Booking Status Badge
 // =============================================================================
 
-export type BookingStatusType = 'pending' | 'confirmed' | 'cancelled' | 'completed';
+export type BookingStatusType = 
+  | 'pending'
+  | 'pending_approval'
+  | 'approved'
+  | 'confirmed'
+  | 'rejected'
+  | 'cancelled'
+  | 'completed'
+  | 'expired';
 
 const bookingStatusConfig: Record<BookingStatusType, StatusBadgeConfig> = {
   pending: { color: 'warning', label: 'Venter' },
+  pending_approval: { color: 'warning', label: 'Venter på godkjenning' },
+  approved: { color: 'success', label: 'Godkjent' },
   confirmed: { color: 'success', label: 'Bekreftet' },
+  rejected: { color: 'danger', label: 'Avslått' },
   cancelled: { color: 'neutral', label: 'Kansellert' },
   completed: { color: 'info', label: 'Fullført' },
+  expired: { color: 'neutral', label: 'Utløpt' },
 };
 
 export interface BookingStatusBadgeProps {

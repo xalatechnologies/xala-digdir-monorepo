@@ -262,6 +262,31 @@ export class AuthService extends BaseService {
   }
 
   /**
+   * Demo Exchange - One-click demo login by role
+   * Authenticates using a role key without manual token entry.
+   * 
+   * Security: Only available in demo/staging environments or when explicitly enabled.
+   * 
+   * @param key - Role key: 'admin' | 'case_handler' | 'org_admin' | 'org_member'
+   * @param returnTo - Optional URL to redirect after login
+   * @returns Session data with redirectUrl
+   * 
+   * @example
+   * ```typescript
+   * const result = await authService.demoExchange('admin');
+   * if (result.data?.redirectUrl) {
+   *   window.location.href = result.data.redirectUrl;
+   * }
+   * ```
+   */
+  async demoExchange(
+    key: 'admin' | 'case_handler' | 'org_admin' | 'org_member',
+    returnTo?: string
+  ): Promise<SingleResponse<AuthSession & { redirectUrl: string }>> {
+    return this.client.post(this.buildPath('/demo/exchange'), { key, returnTo });
+  }
+
+  /**
    * Handle OAuth callback
    * Exchanges authorization code for session with HTTP-only cookies
    *

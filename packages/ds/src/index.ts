@@ -99,6 +99,7 @@ export {
   ConfirmDialog,
   AlertDialog,
   DemoLoginDialog,
+  DemoRoleSwitcher,
   GlobalSearch,
   ProtectedRoute,
   // Data Page Components
@@ -195,6 +196,9 @@ export type {
   DialogVariant,
   DemoLoginDialogProps,
   DemoLoginFormData,
+  DemoRoleSwitcherProps,
+  DemoRoleKey,
+  DemoRoleOption,
 } from './composed';
 
 // Primitives - Low-level building blocks

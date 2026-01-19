@@ -15,7 +15,9 @@ export {
   useLogin,
   useEmailLogin,
   useLogout,
-  useRefreshToken
+  useRefreshToken,
+  useDemoLogin,
+  type DemoRoleKey,
 } from './use-auth';
 
 // Current User hook (alias for useSession)

@@ -269,11 +269,33 @@ export function usePaymentHistory(bookingId: string) {
 }
 
 // ============================================================================
-// Caseworker/Admin Hooks
+// Booking State Transition Hooks
 // ============================================================================
 
 /**
+ * Submit booking for approval
+ * Transitions from pending → pending_approval
+ */
+export function useSubmitBooking() {
+  const queryClient = useQueryClient();
+  
+  return useMutation({
+    mutationFn: async ({ id, notes }: { id: string; notes?: string }) => {
+      const response = await bookingService.submit(id, notes);
+      return response;
+    },
+    onSuccess: (response) => {
+      queryClient.invalidateQueries({ queryKey: queryKeys.bookings.all });
+      if (response?.data?.id) {
+        queryClient.invalidateQueries({ queryKey: queryKeys.bookings.detail(response.data.id) });
+      }
+    },
+  });
+}
+
+/**
  * Approve booking (caseworker/admin only)
+ * Transitions from pending_approval → approved
  */
 export function useApproveBooking() {
   const queryClient = useQueryClient();

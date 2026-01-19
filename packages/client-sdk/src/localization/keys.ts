@@ -53,9 +53,13 @@ export const PRICING_UNIT_KEYS = {
 
 export const BOOKING_STATUS_KEYS = {
   pending: 'sdk.booking.status.pending',
+  pending_approval: 'sdk.booking.status.pendingApproval',
+  approved: 'sdk.booking.status.approved',
   confirmed: 'sdk.booking.status.confirmed',
+  rejected: 'sdk.booking.status.rejected',
   cancelled: 'sdk.booking.status.cancelled',
   completed: 'sdk.booking.status.completed',
+  expired: 'sdk.booking.status.expired',
 } as const;
 
 // =============================================================================

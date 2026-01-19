@@ -102,7 +102,15 @@ export const BOOKING_TIME_MODE_LABELS = BOOKING_TIME_MODE_LABEL_KEYS;
 // =============================================================================
 
 export type ListingStatus = 'draft' | 'published' | 'archived' | 'maintenance';
-export type BookingStatus = 'pending' | 'confirmed' | 'cancelled' | 'completed';
+export type BookingStatus = 
+  | 'pending'           // Initial state
+  | 'pending_approval'  // Submitted, awaiting decision
+  | 'approved'          // Approved by caseworker
+  | 'confirmed'         // Confirmed booking
+  | 'rejected'          // Rejected with reason
+  | 'cancelled'         // Cancelled by user/admin
+  | 'completed'         // Booking fulfilled
+  | 'expired';          // Reservation expired
 export type PaymentStatus = 'unpaid' | 'paid' | 'partial' | 'refunded';
 export type AllocationStatus = 'confirmed' | 'pending' | 'blocked' | 'maintenance';
 export type SeasonalLeaseStatus = 'draft' | 'pending' | 'approved' | 'active' | 'expired' | 'cancelled';
