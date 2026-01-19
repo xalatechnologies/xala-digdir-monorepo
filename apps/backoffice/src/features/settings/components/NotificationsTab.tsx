@@ -18,10 +18,8 @@ import { useNotificationSettings } from '../hooks/useNotificationSettings';
 import { useT } from '@xala/i18n';
 
 export function NotificationsTab() {
-  // Translation function available for future localization
-  const _t = useT(); // eslint-disable-line @typescript-eslint/no-unused-vars
-  const {
   const t = useT();
+  const {
     notificationData,
     updateField,
     saveNotificationSettings,

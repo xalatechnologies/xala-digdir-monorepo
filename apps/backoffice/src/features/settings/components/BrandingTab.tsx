@@ -17,10 +17,8 @@ import { useBrandingSettings } from '../hooks/useBrandingSettings';
 import { useT } from '@xala/i18n';
 
 export function BrandingTab() {
-  // Translation function available for future localization
-  const _t = useT(); // eslint-disable-line @typescript-eslint/no-unused-vars
-  const {
   const t = useT();
+  const {
     brandingData,
     updateField,
     saveBrandingSettings,

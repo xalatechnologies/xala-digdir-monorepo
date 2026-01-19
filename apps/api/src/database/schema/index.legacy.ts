@@ -392,6 +392,7 @@ export const bookings = domainSchema.table('bookings', {
   currency: varchar('currency', { length: 3 }).notNull().default('NOK'),
   notes: text('notes'),
   metadata: jsonb('metadata').default({}),
+  version: integer('version').notNull().default(1),
   createdAt: timestamp('created_at').notNull().defaultNow(),
   updatedAt: timestamp('updated_at').notNull().defaultNow(),
 }, (table) => ({

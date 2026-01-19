@@ -1035,5 +1035,8 @@
   "del_bookinghistorikk_med_organisasjonen": "Del bookinghistorikk med organisasjonen",
   "anonyme_analyser": "Anonyme analyser",
   "hjelp_oss_forbedre_tjenesten": "Hjelp oss forbedre tjenesten",
-  "folg_system": "Følg system"
+  "folg_system": "Følg system",
+  "processing": "Behandler...",
+  "free": "Gratis",
+  "email": "E-post"
 }

@@ -150,29 +150,39 @@ export function useCapabilities(): UseCapabilitiesReturn {
 
   const requireCapability = (capability: Capability): void => {
     if (!hasCapability(capability)) {
-      throw new Error(`Capability denied: ${capability}`t('common.return_hascapability_hasanycapability_hasallcapabilities') ```tsx
- * function CreateButton() {
- *   const canCreate = useHasCapability('CAP_LISTING_CREATE');
- *
- *   if (!canCreate) return null;
- *
- *   return <Button>{t('common.create_listing')}</Button>;
- * }
- * ```
- t('common.export_function_usehascapabilitycapability_capability') ```tsx
- * function FullAdminPanel() {
- *   const hasFullAdmin = useHasAllCapabilities([
- *     'CAP_USER_ADMIN',
- *     'CAP_SETTINGS_ADMIN',
- *     'CAP_ORG_ADMIN',
- *   ]);
- *
- *   if (!hasFullAdmin) return <LimitedPanel />;
- *
- *   return <FullAdminPanel />;
- * }
- * ```
- t('common.export_function_usehasallcapabilitiescapabilities_capability') ```t('common.tsx_function_listingactions_const') ```
+      throw new Error(t('error.capabilityDenied', { capability }));
+    }
+  };
+
+  return {
+    hasCapability,
+    hasAnyCapability,
+    hasAllCapabilities,
+    requireCapability,
+    capabilities,
+    effectiveRole,
+  };
+}
+
+/**
+ * Convenience hook to check a single capability.
+ * Returns true if the current role has the specified capability.
+ */
+export function useHasCapability(capability: Capability): boolean {
+  const { hasCapability } = useCapabilities();
+  return hasCapability(capability);
+}
+
+/**
+ * Convenience hook to check if the current role has all specified capabilities.
+ */
+export function useHasAllCapabilities(capabilities: Capability[]): boolean {
+  const { hasAllCapabilities } = useCapabilities();
+  return hasAllCapabilities(capabilities);
+}
+
+/**
+ * Convenience hook to check if the current role has any of the specified capabilities.
  */
 export function useHasAnyCapability(capabilities: Capability[]): boolean {
   const { hasAnyCapability } = useCapabilities();

@@ -160,6 +160,7 @@ function PendingTasksWidget() {
  */
 function CalendarPreviewWidget() {
   const navigate = useNavigate();
+  const t = useT();
   
   // Mock events - in production would come from scoped API
   const todayEvents: CalendarEvent[] = [

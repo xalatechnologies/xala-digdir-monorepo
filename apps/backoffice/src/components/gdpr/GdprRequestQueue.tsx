@@ -43,7 +43,6 @@ function calculateDaysRemaining(requestedAt: string): number {
 
 // Helper to get urgency color based on days remaining
 function getUrgencyColor(daysRemaining: number): string {
-  const t = useT();
   if (daysRemaining <= 3) return 'var(--ds-color-danger-base)';
   if (daysRemaining <= 7) return 'var(--ds-color-warning-base)';
   return 'var(--ds-color-neutral-text-default)';
@@ -61,11 +60,11 @@ function getStatusColor(status: GdprRequestStatus): 'success' | 'warning' | 'inf
 }
 
 // Helper to get status label
-function getStatusLabel(status: GdprRequestStatus): string {
+function getStatusLabel(status: GdprRequestStatus, t: (key: string) => string): string {
   const labelMap: Record<GdprRequestStatus, string> = {
-    pending: t("status.pending"),
+    pending: t('status.pending'),
     processing: 'Behandles',
-    completed: t("status.completed"),
+    completed: t('status.completed'),
     rejected: 'Avslått',
   };
   return labelMap[status];
@@ -88,21 +87,21 @@ const CopyIcon = ({ size = 14, style }: { size?: number; style?: React.CSSProper
   </svg>
 );
 
-// Sort options
-const SORT_OPTIONS = [
-  { id: 'urgency-asc', label: t('common.mest_haster_forst'), field: 'daysRemaining', order: 'asc' },
-  { id: 'urgency-desc', label: t('common.minst_haster_forst'), field: 'daysRemaining', order: 'desc' },
-  { id: 'date-desc', label: t('common.nyeste_forst'), field: 'requestedAt', order: 'desc' },
-  { id: 'date-asc', label: t('common.eldste_forst'), field: 'requestedAt', order: 'asc' },
-];
-
 interface GdprRequestQueueProps {
   onRequestClick?: (request: GdprRequest) => void;
 }
 
 export function GdprRequestQueue({ onRequestClick }: GdprRequestQueueProps) {
-  // Translation function available for future localization
-  const _t = useT(); // eslint-disable-line @typescript-eslint/no-unused-vars
+  const t = useT();
+
+  // Sort options defined inside component to access t
+  const SORT_OPTIONS = [
+    { id: 'urgency-asc', label: t('common.mest_haster_forst'), field: 'daysRemaining', order: 'asc' },
+    { id: 'urgency-desc', label: t('common.minst_haster_forst'), field: 'daysRemaining', order: 'desc' },
+    { id: 'date-desc', label: t('common.nyeste_forst'), field: 'requestedAt', order: 'desc' },
+    { id: 'date-asc', label: t('common.eldste_forst'), field: 'requestedAt', order: 'asc' },
+  ];
+
   // State
   const [searchValue, setSearchValue] = useState('');
   const [searchQuery, setSearchQuery] = useState('');
@@ -380,7 +379,7 @@ export function GdprRequestQueue({ onRequestClick }: GdprRequestQueueProps) {
                   </Table.Cell>
                   <Table.Cell>
                     <Badge data-color={getStatusColor(request.status)} data-size="sm">
-                      {getStatusLabel(request.status)}
+                      {getStatusLabel(request.status, t)}
                     </Badge>
                   </Table.Cell>
                   <Table.Cell>

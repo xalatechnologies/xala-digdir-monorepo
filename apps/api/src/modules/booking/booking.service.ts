@@ -132,7 +132,7 @@ export class BookingService {
       startTime: booking.startTime,
       endTime: booking.endTime,
       userId: booking.userId,
-      version: booking.version,
+      version: (booking as any).version,
     });
 
     return booking as unknown as Booking;
@@ -154,10 +154,35 @@ export class BookingService {
 
   /**
    * List bookings with filters
+   * Enriches bookings with user names from platform.users table
    */
   async findAll(tenantId: string, params: BookingQueryParams): Promise<PaginatedResult<Booking>> {
     const validated = validate(BookingQuerySchema, params);
-    return this.repository.findWithFilters(tenantId, { ...validated, page: validated.page ?? 1, limit: validated.limit ?? 20 }) as unknown as Promise<PaginatedResult<Booking>>;
+    const result = await this.repository.findWithFilters(tenantId, { ...validated, page: validated.page ?? 1, limit: validated.limit ?? 20 });
+    
+    // Enrich bookings with user names
+    if (result.data.length > 0) {
+      const userIds = [...new Set(result.data.map(b => b.userId).filter(Boolean))];
+      if (userIds.length > 0) {
+        const db = container.resolve('db') as any;
+        const userResults = await db
+          .select({ id: users.id, name: users.name, email: users.email })
+          .from(users)
+          .where(or(...userIds.map((id: string) => eq(users.id, id))));
+        
+        const userMap = new Map<string, { name: string; email: string }>(
+          userResults.map((u: { id: string; name: string; email: string }) => [u.id, { name: u.name, email: u.email }])
+        );
+        
+        result.data = result.data.map((booking: any) => ({
+          ...booking,
+          userName: userMap.get(booking.userId)?.name || null,
+          userEmail: userMap.get(booking.userId)?.email || null,
+        }));
+      }
+    }
+    
+    return result as unknown as Promise<PaginatedResult<Booking>>;
   }
 
   /**
@@ -168,14 +193,14 @@ export class BookingService {
       ? await this.repository.updateWithVersion(id, version, { status: 'confirmed' })
       : await this.repository.update(id, { status: 'confirmed' });
 
-    this.adapters?.log?.info('Booking confirmed', { id, version: booking.version });
+    this.adapters?.log?.info('Booking confirmed', { id, version: (booking as any).version });
 
     getAuditService().log({
       tenantId: booking.tenantId,
       action: 'confirm',
       resource: 'booking',
       resourceId: id,
-      metadata: { previousStatus: 'pending', newStatus: 'confirmed', version: booking.version },
+      metadata: { previousStatus: 'pending', newStatus: 'confirmed', version: (booking as any).version },
     });
 
     // Broadcast booking event for real-time updates
@@ -187,7 +212,7 @@ export class BookingService {
       startTime: booking.startTime,
       endTime: booking.endTime,
       userId: booking.userId,
-      version: booking.version,
+      version: (booking as any).version,
     });
 
     return booking as unknown as Booking;
@@ -208,7 +233,7 @@ export class BookingService {
       ? await this.repository.updateWithVersion(id, version, updateData)
       : await this.repository.update(id, updateData);
 
-    this.adapters?.log?.warn('Booking cancelled', { id, reason: validated.reason, version: booking.version });
+    this.adapters?.log?.warn('Booking cancelled', { id, reason: validated.reason, version: (booking as any).version });
 
     getAuditService().log({
       tenantId: booking.tenantId,
@@ -216,7 +241,7 @@ export class BookingService {
       resource: 'booking',
       resourceId: id,
       severity: 'warning',
-      metadata: { reason: validated.reason, version: booking.version },
+      metadata: { reason: validated.reason, version: (booking as any).version },
     });
 
     // Broadcast booking event for real-time updates
@@ -228,7 +253,7 @@ export class BookingService {
       startTime: booking.startTime,
       endTime: booking.endTime,
       userId: booking.userId,
-      version: booking.version,
+      version: (booking as any).version,
       metadata: { reason: validated.reason },
     });
 
@@ -243,14 +268,14 @@ async complete(id: string, version?: number): Promise<Booking> {
       ? await this.repository.updateWithVersion(id, version, { status: 'completed' })
       : await this.repository.update(id, { status: 'completed' });
 
-    this.adapters?.log?.info('Booking completed', { id, version: booking.version });
+    this.adapters?.log?.info('Booking completed', { id, version: (booking as any).version });
 
     getAuditService().log({
       tenantId: booking.tenantId,
       action: 'complete',
       resource: 'booking',
       resourceId: id,
-      metadata: { newStatus: 'completed', version: booking.version },
+      metadata: { newStatus: 'completed', version: (booking as any).version },
     });
 
     // Broadcast booking event for real-time updates
@@ -262,7 +287,7 @@ async complete(id: string, version?: number): Promise<Booking> {
       startTime: booking.startTime,
       endTime: booking.endTime,
       userId: booking.userId,
-      version: booking.version,
+      version: (booking as any).version,
     });
 
     return booking as unknown as Booking;
@@ -394,14 +419,14 @@ async complete(id: string, version?: number): Promise<Booking> {
 
     // Broadcast booking event for real-time updates
     broadcastBookingEvent({
-      type: 'denied',
+      type: 'rejected',
       bookingId: booking.id,
       rentalObjectId: booking.rentalObjectId,
       tenantId: booking.tenantId,
       startTime: booking.startTime,
       endTime: booking.endTime,
       userId: booking.userId,
-      version: booking.version,
+      version: (booking as any).version,
       metadata: { deniedBy: userId, reason: validated.reason },
     });
 
@@ -444,7 +469,7 @@ async complete(id: string, version?: number): Promise<Booking> {
       action: 'update',
       resource: 'booking',
       resourceId: id,
-      metadata: { changes: Object.keys(updateData), version: booking.version },
+      metadata: { changes: Object.keys(updateData), version: (booking as any).version },
     });
 
     // Broadcast booking event for real-time updates
@@ -456,7 +481,7 @@ async complete(id: string, version?: number): Promise<Booking> {
       startTime: booking.startTime,
       endTime: booking.endTime,
       userId: booking.userId,
-      version: booking.version,
+      version: (booking as any).version,
       metadata: { changes: Object.keys(updateData) },
     });
 
@@ -471,14 +496,14 @@ async complete(id: string, version?: number): Promise<Booking> {
       ? await this.repository.updateWithVersion(id, version, { status })
       : await this.repository.update(id, { status });
 
-    this.adapters?.log?.info('Booking status updated', { id, status, version: booking.version });
+    this.adapters?.log?.info('Booking status updated', { id, status, version: (booking as any).version });
 
     getAuditService().log({
       tenantId: booking.tenantId,
       action: 'update_status',
       resource: 'booking',
       resourceId: id,
-      metadata: { status, version: booking.version },
+      metadata: { status, version: (booking as any).version },
     });
 
     // Broadcast booking event for real-time updates
@@ -490,7 +515,7 @@ async complete(id: string, version?: number): Promise<Booking> {
       startTime: booking.startTime,
       endTime: booking.endTime,
       userId: booking.userId,
-      version: booking.version,
+      version: (booking as any).version,
       metadata: { status },
     });
 
@@ -1143,16 +1168,19 @@ async complete(id: string, version?: number): Promise<Booking> {
       throw new ForbiddenError(`Cannot approve booking with status '${booking.status}'. Only pending bookings can be approved.`);
     }
     
-    // Update status to approved
-    const existingMetadata = (booking.metadata && typeof booking.metadata === 'object') ? booking.metadata : {};
+    // Update status to approved - ensure metadata is a clean JSON object
+    const existingMetadata = (booking.metadata && typeof booking.metadata === 'object') 
+      ? JSON.parse(JSON.stringify(booking.metadata)) 
+      : {};
+    const newMetadata = {
+      ...existingMetadata,
+      approvedBy: userId,
+      approvedAt: new Date().toISOString(),
+      approvalReason: reason || '',
+    };
     const updated = await this.repository.update(id, {
       status: 'approved',
-      metadata: {
-        ...existingMetadata,
-        approvedBy: userId,
-        approvedAt: new Date().toISOString(),
-        approvalReason: reason || '',
-      },
+      metadata: newMetadata,
     });
 
     this.adapters?.log?.info('Booking approved', { id, userId, reason });
@@ -1194,15 +1222,19 @@ async complete(id: string, version?: number): Promise<Booking> {
       throw new ForbiddenError('Rejection reason is required');
     }
     
-    // Update status to rejected
+    // Update status to rejected - ensure metadata is a clean JSON object
+    const existingMetadata = (booking.metadata && typeof booking.metadata === 'object') 
+      ? JSON.parse(JSON.stringify(booking.metadata)) 
+      : {};
+    const rejectedMetadata = {
+      ...existingMetadata,
+      rejectedBy: userId,
+      rejectedAt: new Date().toISOString(),
+      rejectionReason: reason,
+    };
     const updated = await this.repository.update(id, {
       status: 'rejected',
-      metadata: {
-        ...(booking.metadata as any),
-        rejectedBy: userId,
-        rejectedAt: new Date().toISOString(),
-        rejectionReason: reason,
-      },
+      metadata: rejectedMetadata,
     });
 
     this.adapters?.log?.warn('Booking rejected', { id, userId, reason });

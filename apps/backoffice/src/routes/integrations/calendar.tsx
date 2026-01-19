@@ -51,7 +51,6 @@ const SEND_TYPE_LABELS: Record<CalendarSend['type'], string> = {
 function formatTimestamp(timestamp: string): string {
   const date = new Date(timestamp);
   return date.toLocaleDateString('nb-NO', { 
-  const t = useT();
     day: 'numeric', 
     month: 'short', 
     year: 'numeric',
@@ -60,7 +59,7 @@ function formatTimestamp(timestamp: string): string {
   });
 }
 
-function getStatusBadge(status: CalendarSend['status']): React.ReactElement {
+function getStatusBadge(status: CalendarSend['status'], t: (key: string) => string): React.ReactElement {
   switch (status) {
     case 'sent':
       return <Badge color="success">{t('integrations.text.sendt')}</Badge>;
@@ -73,6 +72,7 @@ function getStatusBadge(status: CalendarSend['status']): React.ReactElement {
 }
 
 export function CalendarIntegrationPage(): React.ReactElement {
+  const t = useT();
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [icsEnabled, setIcsEnabled] = useState(true);
   const [resourceCalendarEnabled, setResourceCalendarEnabled] = useState(false);
@@ -296,7 +296,7 @@ export function CalendarIntegrationPage(): React.ReactElement {
                       </div>
                     </td>
                     <td>
-                      {getStatusBadge(send.status)}
+                      {getStatusBadge(send.status, t)}
                     </td>
                     <td>
                       {formatTimestamp(send.timestamp)}

@@ -422,7 +422,7 @@ export function SavedFilters({
                 </Text>
                 <input
                   type="text"
-                  placeholder={t('common.filternavn_feks')}Ventende bookinger denne uken')"
+                  placeholder={t('common.filternamn')}
                   value={newFilterName}
                   onChange={(e) => setNewFilterName(e.target.value)}
                   onKeyDown={(e) => {

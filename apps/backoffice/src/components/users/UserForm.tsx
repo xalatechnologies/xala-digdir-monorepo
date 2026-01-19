@@ -22,15 +22,13 @@ interface UserFormProps {
 }
 
 const roleOptions = [
-  { value: 'admin', label: 'Administrator', description: t('common.full_tilgang_til_alle') },
-  { value: 'saksbehandler', label: 'Saksbehandler', description: t('common.behandle_bookinger_og_foresporsler') },
+  { value: 'admin', label: 'Administrator', description: 'Full tilgang til alle funksjoner' },
+  { value: 'saksbehandler', label: 'Saksbehandler', description: 'Behandle bookinger og forespørsler' },
 ];
 
 export function UserForm({ user, onSubmit, onCancel }: UserFormProps) {
-  // Translation function available for future localization
-  const _t = useT(); // eslint-disable-line @typescript-eslint/no-unused-vars
-  const [formData, setFormData] = useState<CreateUserDTO>({
   const t = useT();
+  const [formData, setFormData] = useState<CreateUserDTO>({
     name: '',
     email: '',
     phone: '',

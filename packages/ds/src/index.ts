@@ -111,6 +111,9 @@ export {
   Wizard,
   WizardStepper,
   WizardNavigation,
+  // DataTable Components
+  DataTable,
+  TableFilter,
 } from './composed';
 export type {
   ProtectedRouteProps,
@@ -126,12 +129,20 @@ export type {
   FilterChip,
   DataPageHeaderProps,
   DataPageToolbarProps,
-  FilterConfig,
+  DataPageFilterConfig,
   ViewMode,
   WizardProps,
   WizardStep,
   WizardStepperProps,
   WizardNavigationProps,
+  // DataTable Types
+  DataTableProps,
+  ColumnDef,
+  SortDirection,
+  TableFilterProps,
+  TableFilterDef,
+  TableFilterOption,
+  FilterValues,
 } from './composed';
 export { mockFilterData } from './composed';
 
@@ -168,7 +179,6 @@ export type {
   FacilitiesFilter,
   DateTimeFilter,
   FilterState,
-  FilterConfig,
   DrawerProps,
   DrawerPosition,
   DrawerSize,

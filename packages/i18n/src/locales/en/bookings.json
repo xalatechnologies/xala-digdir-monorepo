@@ -90,5 +90,21 @@
   "mode.in_game.description": "Quick booking with short notice",
   "mode.recurring.description": "Weekly or monthly pattern",
   "created_for": "Booking created for {{name}}",
-  "created": "A new booking was created"
+  "created": "A new booking was created",
+  "approveConfirmTitle": "Approve booking",
+  "approveConfirmDescription": "Are you sure you want to approve this booking?",
+  "user": "User",
+  "date": "Date",
+  "time": "Time",
+  "price": "Price",
+  "approveSuccess": "Booking approved",
+  "approveFailed": "Failed to approve booking",
+  "rejectSuccess": "Booking rejected",
+  "rejectFailed": "Failed to reject booking",
+  "cancelSuccess": "Booking cancelled",
+  "cancelFailed": "Failed to cancel booking",
+  "notFound": "Booking not found",
+  "bookingDetails": "Booking details",
+  "bookingInfo": "Booking information",
+  "notes": "Notes"
 }

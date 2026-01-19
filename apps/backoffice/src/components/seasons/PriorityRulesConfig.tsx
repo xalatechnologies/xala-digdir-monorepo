@@ -100,9 +100,9 @@ interface PriorityRulesConfigProps {
 const ruleTypeLabels: Record<RuleType, string> = {
   youth_priority: 'Ungdomsprioritet',
   senior_priority: 'Seniorprioritet',
-  local_priority: t('common.lokal_prioritet'),
-  regional_priority: t('common.regional_prioritet'),
-  custom: t('common.tilpasset_regel'),
+  local_priority: 'Lokal prioritet',
+  regional_priority: 'Regional prioritet',
+  custom: 'Tilpasset regel',
 };
 
 const ruleTypeDescriptions: Record<RuleType, string> = {
@@ -481,7 +481,7 @@ export function PriorityRulesConfig({ seasonId, canEdit }: PriorityRulesConfigPr
                 label="Navn"
                 value={formData.name}
                 onChange={(e: ChangeEvent<HTMLInputElement>) => setFormData({ ...formData, name: e.target.value })}
-                placeholder={t('common.feks')}Ungdomsprioritet 2024'"
+                placeholder="f.eks. Ungdomsprioritet 2024"
               />
 
               {!editingRule && (

@@ -56,6 +56,7 @@ export class BookingRepository extends BaseRepository<
       return this.findWithOrgFilter(tenantId, params);
     }
 
+    // Use base findMany for simple queries
     return this.findMany(conditions, {
       page: params.page,
       limit: params.limit,

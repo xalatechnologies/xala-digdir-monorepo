@@ -34,15 +34,13 @@ const weekdayOptions = [
   { value: 3, label: 'Onsdag' },
   { value: 4, label: 'Torsdag' },
   { value: 5, label: 'Fredag' },
-  { value: 6, label: t('common.lordag') },
-  { value: 0, label: t('common.sondag') },
+  { value: 6, label: 'Lørdag' },
+  { value: 0, label: 'Søndag' },
 ];
 
 export function SeasonalLeaseForm({ lease, onSubmit, onCancel }: SeasonalLeaseFormProps) {
-  // Translation function available for future localization
-  const _t = useT(); // eslint-disable-line @typescript-eslint/no-unused-vars
-  const [formData, setFormData] = useState<CreateSeasonalLeaseDTO>({
   const t = useT();
+  const [formData, setFormData] = useState<CreateSeasonalLeaseDTO>({
     listingId: '',
     organizationId: '',
     startDate: '',

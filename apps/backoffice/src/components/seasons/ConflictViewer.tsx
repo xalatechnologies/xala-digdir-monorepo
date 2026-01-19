@@ -52,7 +52,6 @@ type ConflictSummary = {
 
 const useSeasonConflicts = (_seasonId: string) => ({
   data: { data: { conflicts: [] as ApplicationConflict[], summary: null as ConflictSummary | null } },
-  const t = useT();
   isLoading: false,
 });
 
@@ -80,8 +79,7 @@ const overlapTypeLabels: Record<ApplicationConflict['overlapType'], string> = {
 };
 
 export function ConflictViewer({ seasonId }: ConflictViewerProps) {
-  // Translation function available for future localization
-  const _t = useT(); // eslint-disable-line @typescript-eslint/no-unused-vars
+  const t = useT();
   // Queries
   const { data: conflictsData, isLoading } = useSeasonConflicts(seasonId);
   const conflicts = conflictsData?.data?.conflicts ?? [];

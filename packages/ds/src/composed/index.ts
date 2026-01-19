@@ -175,8 +175,25 @@ export type {
   FilterChip,
   DataPageHeaderProps,
   DataPageToolbarProps,
-  FilterConfig,
+  FilterConfig as DataPageFilterConfig,
   ViewMode,
   WizardProps,
   WizardNavigationProps,
 } from './data-page';
+
+// DataTable Components
+export { DataTable } from './DataTable';
+export type {
+  DataTableProps,
+  ColumnDef,
+  SortDirection,
+} from './DataTable';
+
+// TableFilter Component
+export { TableFilter } from './TableFilter';
+export type {
+  TableFilterProps,
+  FilterValues,
+} from './TableFilter';
+export type { FilterConfig as TableFilterDef, FilterOption as TableFilterOption } from './TableFilter';
+

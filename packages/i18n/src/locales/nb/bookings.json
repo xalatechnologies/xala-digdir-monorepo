@@ -90,5 +90,21 @@
   "mode.in_game.description": "Rask booking med kort varsel",
   "mode.recurring.description": "Ukentlig eller månedlig mønster",
   "created_for": "Booking opprettet for {{name}}",
-  "created": "En ny booking ble opprettet"
+  "created": "En ny booking ble opprettet",
+  "approveConfirmTitle": "Godkjenn booking",
+  "approveConfirmDescription": "Er du sikker på at du vil godkjenne denne bookingen?",
+  "user": "Bruker",
+  "date": "Dato",
+  "time": "Tidspunkt",
+  "price": "Pris",
+  "approveSuccess": "Booking godkjent",
+  "approveFailed": "Kunne ikke godkjenne booking",
+  "rejectSuccess": "Booking avvist",
+  "rejectFailed": "Kunne ikke avvise booking",
+  "cancelSuccess": "Booking kansellert",
+  "cancelFailed": "Kunne ikke kansellere booking",
+  "notFound": "Booking ikke funnet",
+  "bookingDetails": "Bookingdetaljer",
+  "bookingInfo": "Bookinginformasjon",
+  "notes": "Notater"
 }
