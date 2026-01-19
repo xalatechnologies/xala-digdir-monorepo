@@ -2,6 +2,7 @@
  * NotificationsPage
  *
  * User portal notifications center
+ * - Fetches real data from API
  * - All notifications list
  * - Mark as read/unread
  * - Filter by type
@@ -19,54 +20,23 @@ import {
   Spinner,
 } from '@xala/ds';
 import { useT, useLocale } from '@xala/i18n';
+import {
+  useMyNotifications,
+  useNotificationUnreadCount,
+  useMarkNotificationRead,
+  useMarkAllNotificationsRead,
+  type Notification,
+} from '@digilist/client-sdk';
 
 const MOBILE_BREAKPOINT = 768;
 
-type NotificationType = 'booking' | 'system' | 'message' | 'reminder';
+type NotificationType = 'booking' | 'system' | 'message' | 'reminder' | 'all';
 
 export function NotificationsPage() {
   const t = useT();
   const { locale } = useLocale();
 
-  // Mock notifications - using i18n keys
-  const getMockNotifications = () => [
-    {
-      id: 'notif-001',
-      type: 'booking' as NotificationType,
-      title: t('notifications.bookingConfirmed'),
-      message: t('notifications.bookingConfirmedDesc'),
-      read: false,
-      createdAt: '2026-01-14T15:00:00Z',
-    },
-    {
-      id: 'notif-002',
-      type: 'reminder' as NotificationType,
-      title: t('notifications.reminderTitle'),
-      message: t('notifications.reminderDesc'),
-      read: false,
-      createdAt: '2026-01-14T10:00:00Z',
-    },
-    {
-      id: 'notif-003',
-      type: 'message' as NotificationType,
-      title: t('notifications.newMessage'),
-      message: t('notifications.newMessageDesc'),
-      read: true,
-      createdAt: '2026-01-13T14:30:00Z',
-    },
-    {
-      id: 'notif-004',
-      type: 'system' as NotificationType,
-      title: t('notifications.maintenance'),
-      message: t('notifications.maintenanceDesc'),
-      read: true,
-      createdAt: '2026-01-12T09:00:00Z',
-    },
-  ];
-
-  const [notifications, setNotifications] = useState(getMockNotifications());
-  const [typeFilter, setTypeFilter] = useState<NotificationType | 'all'>('all');
-  const [isLoading] = useState(false);
+  const [typeFilter, setTypeFilter] = useState<NotificationType>('all');
   const [isMobile, setIsMobile] = useState(
     typeof window !== 'undefined' ? window.innerWidth < MOBILE_BREAKPOINT : false
   );
@@ -77,11 +47,19 @@ export function NotificationsPage() {
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
-  const filteredNotifications = typeFilter === 'all'
-    ? notifications
-    : notifications.filter(n => n.type === typeFilter);
+  // Fetch notifications from API
+  const { data: notificationsData, isLoading, refetch } = useMyNotifications(
+    typeFilter !== 'all' ? { type: typeFilter } : undefined
+  );
+  const notifications = notificationsData?.data ?? [];
 
-  const unreadCount = notifications.filter(n => !n.read).length;
+  // Get unread count
+  const { data: unreadCountData } = useNotificationUnreadCount();
+  const unreadCount = unreadCountData?.count ?? 0;
+
+  // Mutations
+  const markAsReadMutation = useMarkNotificationRead();
+  const markAllAsReadMutation = useMarkAllNotificationsRead();
 
   const formatRelativeTime = (dateStr: string) => {
     const date = new Date(dateStr);
@@ -96,29 +74,28 @@ export function NotificationsPage() {
     return date.toLocaleDateString(locale === 'en' ? 'en-US' : 'nb-NO');
   };
 
-  const getTypeLabel = (type: NotificationType) => {
+  const getTypeLabel = (type: string) => {
     return t(`notifications.type.${type}`);
   };
 
-  const getTypeColor = (type: NotificationType) => {
+  const getTypeColor = (type: string) => {
     switch (type) {
       case 'booking': return { bg: 'var(--ds-color-success-surface-default)', text: 'var(--ds-color-success-text-default)' };
       case 'system': return { bg: 'var(--ds-color-info-surface-default)', text: 'var(--ds-color-info-text-default)' };
       case 'message': return { bg: 'var(--ds-color-accent-surface-default)', text: 'var(--ds-color-accent-text-default)' };
       case 'reminder': return { bg: 'var(--ds-color-warning-surface-default)', text: 'var(--ds-color-warning-text-default)' };
+      default: return { bg: 'var(--ds-color-neutral-surface-default)', text: 'var(--ds-color-neutral-text-default)' };
     }
   };
 
-  const markAsRead = (id: string) => {
-    setNotifications(prev => prev.map(n => n.id === id ? { ...n, read: true } : n));
+  const handleMarkAsRead = async (id: string) => {
+    await markAsReadMutation.mutateAsync(id);
+    refetch();
   };
 
-  const markAllAsRead = () => {
-    setNotifications(prev => prev.map(n => ({ ...n, read: true })));
-  };
-
-  const clearAll = () => {
-    setNotifications([]);
+  const handleMarkAllAsRead = async () => {
+    await markAllAsReadMutation.mutateAsync();
+    refetch();
   };
 
   return (
@@ -144,7 +121,7 @@ export function NotificationsPage() {
         <div style={{ display: 'flex', gap: 'var(--ds-spacing-2)' }}>
           <Select
             value={typeFilter}
-            onChange={(e) => setTypeFilter(e.target.value as NotificationType | 'all')}
+            onChange={(e) => setTypeFilter(e.target.value as NotificationType)}
             style={{ minWidth: '120px' }}
           >
             <option value="all">{t('notifications.all')}</option>
@@ -153,11 +130,15 @@ export function NotificationsPage() {
             <option value="reminder">{t('notifications.reminders')}</option>
             <option value="system">{t('notifications.system')}</option>
           </Select>
-          <Button type="button" variant="secondary" data-size="md" onClick={markAllAsRead} disabled={unreadCount === 0} style={{ minHeight: '44px' }}>
+          <Button
+            type="button"
+            variant="secondary"
+            data-size="md"
+            onClick={handleMarkAllAsRead}
+            disabled={unreadCount === 0 || markAllAsReadMutation.isPending}
+            style={{ minHeight: '44px' }}
+          >
             {t('notifications.markAllRead')}
-          </Button>
-          <Button type="button" variant="tertiary" data-size="md" onClick={clearAll} disabled={notifications.length === 0} style={{ minHeight: '44px' }}>
-            {t('notifications.clear')}
           </Button>
         </div>
       </div>
@@ -168,7 +149,7 @@ export function NotificationsPage() {
           <div style={{ display: 'flex', justifyContent: 'center', padding: 'var(--ds-spacing-8)' }}>
             <Spinner aria-label={t('state.loading')} data-size="lg" />
           </div>
-        ) : filteredNotifications.length === 0 ? (
+        ) : notifications.length === 0 ? (
           <div style={{ padding: 'var(--ds-spacing-8)', textAlign: 'center' }}>
             <Paragraph style={{ color: 'var(--ds-color-neutral-text-subtle)', margin: 0 }}>
               {t('notifications.empty')}
@@ -176,22 +157,24 @@ export function NotificationsPage() {
           </div>
         ) : (
           <div data-testid="notification-dropdown" style={{ display: 'flex', flexDirection: 'column', gap: 'var(--ds-spacing-2)' }}>
-            {filteredNotifications.map((notif) => {
-              const color = getTypeColor(notif.type);
+            {notifications.map((notif: Notification) => {
+              const color = getTypeColor(notif.type || 'system');
+              const isRead = notif.readAt !== null;
               return (
                 <button
                   key={notif.id}
                   data-testid={`notification-item-${notif.id}`}
                   type="button"
-                  onClick={() => markAsRead(notif.id)}
+                  onClick={() => !isRead && handleMarkAsRead(notif.id)}
+                  disabled={markAsReadMutation.isPending}
                   style={{
                     display: 'flex',
                     gap: 'var(--ds-spacing-4)',
                     padding: 'var(--ds-spacing-4)',
                     borderRadius: 'var(--ds-border-radius-md)',
-                    backgroundColor: notif.read ? 'var(--ds-color-neutral-surface-default)' : 'var(--ds-color-neutral-surface-hover)',
-                    border: notif.read ? '1px solid var(--ds-color-neutral-border-subtle)' : '2px solid var(--ds-color-accent-border-default)',
-                    cursor: 'pointer',
+                    backgroundColor: isRead ? 'var(--ds-color-neutral-surface-default)' : 'var(--ds-color-neutral-surface-hover)',
+                    border: isRead ? '1px solid var(--ds-color-neutral-border-subtle)' : '2px solid var(--ds-color-accent-border-default)',
+                    cursor: isRead ? 'default' : 'pointer',
                     textAlign: 'left',
                     width: '100%',
                   }}
@@ -199,26 +182,30 @@ export function NotificationsPage() {
                   <div style={{
                     width: '8px',
                     borderRadius: 'var(--ds-border-radius-full)',
-                    backgroundColor: notif.read ? 'transparent' : 'var(--ds-color-accent-base-default)',
+                    backgroundColor: isRead ? 'transparent' : 'var(--ds-color-accent-base-default)',
                     flexShrink: 0,
                   }} />
                   <div style={{ flex: 1 }}>
                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: 'var(--ds-spacing-2)' }}>
-                      <Paragraph data-size="sm" style={{ margin: 0, fontWeight: notif.read ? 500 : 700 }}>
+                      <Paragraph data-size="sm" style={{ margin: 0, fontWeight: isRead ? 500 : 700 }}>
                         {notif.title}
                       </Paragraph>
                       <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--ds-spacing-2)' }}>
-                        <Badge data-testid="notification-type" data-type={notif.type} style={{ backgroundColor: color.bg, color: color.text }}>
-                          {getTypeLabel(notif.type)}
-                        </Badge>
+                        {notif.type && (
+                          <Badge data-testid="notification-type" data-type={notif.type} style={{ backgroundColor: color.bg, color: color.text }}>
+                            {getTypeLabel(notif.type)}
+                          </Badge>
+                        )}
                         <Paragraph data-size="xs" style={{ margin: 0, color: 'var(--ds-color-neutral-text-subtle)' }}>
                           {formatRelativeTime(notif.createdAt)}
                         </Paragraph>
                       </div>
                     </div>
-                    <Paragraph data-size="sm" style={{ margin: 0, marginTop: 'var(--ds-spacing-1)', color: 'var(--ds-color-neutral-text-subtle)' }}>
-                      {notif.message}
-                    </Paragraph>
+                    {notif.body && (
+                      <Paragraph data-size="sm" style={{ margin: 0, marginTop: 'var(--ds-spacing-1)', color: 'var(--ds-color-neutral-text-subtle)' }}>
+                        {notif.body}
+                      </Paragraph>
+                    )}
                   </div>
                 </button>
               );

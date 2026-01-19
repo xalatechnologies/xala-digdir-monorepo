@@ -2,13 +2,14 @@
  * SeasonRentalPage
  *
  * Organization portal page for applying for seasonal rentals
+ * - Fetches real data from API
  * - Season selection
  * - Time slot preferences
  * - Organization details
  * - Application submission
  */
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import {
   Card,
   Heading,
@@ -18,24 +19,18 @@ import {
   Textarea,
   Select,
   Badge,
+  Spinner,
 } from '@xala/ds';
 import { useLocale, useT } from '@xala/i18n';
+import {
+  useSeasons,
+  useRentalObjects,
+  useCreateSeasonApplication,
+  type Season,
+  type RentalObject,
+} from '@digilist/client-sdk';
 
 const MOBILE_BREAKPOINT = 768;
-
-// Mock seasons - use plain strings since t() is not available at module level
-const mockSeasons = [
-  { id: 'season-001', name: 'Vår 2026', startDate: '2026-02-01', endDate: '2026-06-30', status: 'open' },
-  { id: 'season-002', name: 'Høst 2026', startDate: '2026-08-01', endDate: '2026-12-31', status: 'upcoming' },
-];
-
-// Mock resources - use plain strings since t() is not available at module level
-const resources = [
-  { id: 'res-001', name: 'Idrettshall A', category: 'Idrettshall' },
-  { id: 'res-002', name: 'Idrettshall B', category: 'Idrettshall' },
-  { id: 'res-003', name: 'Fotballbane 1', category: 'Utendørs' },
-  { id: 'res-004', name: 'Fotballbane 2', category: 'Utendørs' },
-];
 
 type WizardStep = 'season' | 'slots' | 'details' | 'review';
 
@@ -50,7 +45,6 @@ export function SeasonRentalPage() {
   const { locale } = useLocale();
   const t = useT();
   const [currentStep, setCurrentStep] = useState<WizardStep>('season');
-  const [isSubmitting, setIsSubmitting] = useState(false);
   const [isMobile, setIsMobile] = useState(
     typeof window !== 'undefined' ? window.innerWidth < MOBILE_BREAKPOINT : false
   );
@@ -62,6 +56,17 @@ export function SeasonRentalPage() {
   const [contactName, setContactName] = useState('');
   const [contactPhone, setContactPhone] = useState('');
 
+  // Fetch seasons from API
+  const { data: seasonsData, isLoading: isSeasonsLoading } = useSeasons();
+  const seasons = seasonsData?.data ?? [];
+
+  // Fetch rental objects (venues) from API
+  const { data: rentalObjectsData, isLoading: isResourcesLoading } = useRentalObjects({ limit: 50 });
+  const resources = rentalObjectsData?.data ?? [];
+
+  // Create season application mutation
+  const createApplication = useCreateSeasonApplication();
+
   useEffect(() => {
     const handleResize = () => setIsMobile(window.innerWidth < MOBILE_BREAKPOINT);
     window.addEventListener('resize', handleResize);
@@ -69,7 +74,7 @@ export function SeasonRentalPage() {
   }, []);
 
   // Translation-aware arrays
-  const DAYS = [
+  const DAYS = useMemo(() => [
     t('common.monday'),
     t('common.tuesday'),
     t('common.wednesday'),
@@ -77,17 +82,17 @@ export function SeasonRentalPage() {
     t('common.friday'),
     t('common.saturday'),
     t('common.sunday'),
-  ];
+  ], [t]);
 
-  const STEPS: { id: WizardStep; label: string }[] = [
+  const STEPS: { id: WizardStep; label: string }[] = useMemo(() => [
     { id: 'season', label: t('org.seasonRental.steps.season') },
     { id: 'slots', label: t('org.seasonRental.steps.slots') },
     { id: 'details', label: t('org.seasonRental.steps.details') },
     { id: 'review', label: t('org.seasonRental.steps.review') },
-  ];
+  ], [t]);
 
   const currentStepIndex = STEPS.findIndex(s => s.id === currentStep);
-  const selectedSeasonData = mockSeasons.find(s => s.id === selectedSeason);
+  const selectedSeasonData = seasons.find((s: Season) => s.id === selectedSeason);
 
   const handleNext = () => {
     const nextStep = STEPS[currentStepIndex + 1];
@@ -104,7 +109,13 @@ export function SeasonRentalPage() {
   };
 
   const addSlot = () => {
-    setSlots([...slots, { day: DAYS[0], startTime: '18:00', endTime: '20:00', resourceId: resources[0].id }]);
+    const firstResource = resources[0] as RentalObject | undefined;
+    setSlots([...slots, { 
+      day: DAYS[0] || 'Monday', 
+      startTime: '18:00', 
+      endTime: '20:00', 
+      resourceId: firstResource?.id || '' 
+    }]);
   };
 
   const updateSlot = (index: number, field: keyof TimeSlot, value: string) => {
@@ -123,16 +134,41 @@ export function SeasonRentalPage() {
   };
 
   const handleSubmit = async () => {
-    setIsSubmitting(true);
-    await new Promise(resolve => setTimeout(resolve, 1500));
-    setIsSubmitting(false);
-    // Would redirect to success page
-    alert(t('org.seasonRental.applicationSent'));
+    try {
+      await createApplication.mutateAsync({
+        seasonId: selectedSeason,
+        slots: slots.map(slot => ({
+          dayOfWeek: slot.day,
+          startTime: slot.startTime,
+          endTime: slot.endTime,
+          rentalObjectId: slot.resourceId,
+        })),
+        contactName,
+        contactPhone,
+        notes,
+      });
+      // Success - would redirect to success page
+      alert(t('org.seasonRental.applicationSent'));
+    } catch (error) {
+      console.error('Failed to submit application:', error);
+    }
   };
 
   const formatDate = (dateStr: string) => {
     return new Date(dateStr).toLocaleDateString(locale === 'en' ? 'en-US' : 'nb-NO');
   };
+
+  const getSeasonStatus = (season: Season) => {
+    const now = new Date();
+    const startDate = new Date(season.startDate);
+    const endDate = new Date(season.endDate);
+    
+    if (now < startDate) return 'upcoming';
+    if (now > endDate) return 'closed';
+    return 'open';
+  };
+
+  const isLoading = isSeasonsLoading || isResourcesLoading;
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--ds-spacing-6)' }}>
@@ -201,175 +237,197 @@ export function SeasonRentalPage() {
 
       {/* Step Content */}
       <Card style={{ padding: 'var(--ds-spacing-6)' }}>
-        {currentStep === 'season' && (
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--ds-spacing-5)' }}>
-            <Heading level={2} data-size="sm" style={{ margin: 0 }}>{t('org.seasonRental.selectSeason')}</Heading>
-            
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--ds-spacing-3)' }}>
-              {mockSeasons.map(season => (
-                <button
-                  key={season.id}
-                  type="button"
-                  onClick={() => setSelectedSeason(season.id)}
-                  style={{
-                    display: 'flex',
-                    justifyContent: 'space-between',
-                    alignItems: 'center',
-                    padding: 'var(--ds-spacing-4)',
-                    borderRadius: 'var(--ds-border-radius-md)',
-                    border: selectedSeason === season.id
-                      ? '2px solid var(--ds-color-accent-border-default)'
-                      : '1px solid var(--ds-color-neutral-border-default)',
-                    backgroundColor: selectedSeason === season.id
-                      ? 'var(--ds-color-accent-surface-default)'
-                      : 'var(--ds-color-neutral-surface-default)',
-                    cursor: season.status === 'open' ? 'pointer' : 'not-allowed',
-                    opacity: season.status === 'open' ? 1 : 0.6,
-                    textAlign: 'left',
-                  }}
-                  disabled={season.status !== 'open'}
-                >
+        {isLoading ? (
+          <div style={{ display: 'flex', justifyContent: 'center', padding: 'var(--ds-spacing-8)' }}>
+            <Spinner aria-label={t('state.loading')} data-size="lg" />
+          </div>
+        ) : (
+          <>
+            {currentStep === 'season' && (
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--ds-spacing-5)' }}>
+                <Heading level={2} data-size="sm" style={{ margin: 0 }}>{t('org.seasonRental.selectSeason')}</Heading>
+                
+                {seasons.length === 0 ? (
+                  <div style={{ padding: 'var(--ds-spacing-8)', textAlign: 'center' }}>
+                    <Paragraph style={{ color: 'var(--ds-color-neutral-text-subtle)', margin: 0 }}>
+                      {t('org.seasonRental.noSeasons')}
+                    </Paragraph>
+                  </div>
+                ) : (
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--ds-spacing-3)' }}>
+                    {seasons.map((season: Season) => {
+                      const status = getSeasonStatus(season);
+                      return (
+                        <button
+                          key={season.id}
+                          type="button"
+                          onClick={() => setSelectedSeason(season.id)}
+                          style={{
+                            display: 'flex',
+                            justifyContent: 'space-between',
+                            alignItems: 'center',
+                            padding: 'var(--ds-spacing-4)',
+                            borderRadius: 'var(--ds-border-radius-md)',
+                            border: selectedSeason === season.id
+                              ? '2px solid var(--ds-color-accent-border-default)'
+                              : '1px solid var(--ds-color-neutral-border-default)',
+                            backgroundColor: selectedSeason === season.id
+                              ? 'var(--ds-color-accent-surface-default)'
+                              : 'var(--ds-color-neutral-surface-default)',
+                            cursor: status === 'open' ? 'pointer' : 'not-allowed',
+                            opacity: status === 'open' ? 1 : 0.6,
+                            textAlign: 'left',
+                          }}
+                          disabled={status !== 'open'}
+                        >
+                          <div>
+                            <Paragraph data-size="md" style={{ margin: 0, fontWeight: 600 }}>
+                              {season.name}
+                            </Paragraph>
+                            <Paragraph data-size="sm" style={{ margin: 0, marginTop: 'var(--ds-spacing-1)', color: 'var(--ds-color-neutral-text-subtle)' }}>
+                              {formatDate(season.startDate)} - {formatDate(season.endDate)}
+                            </Paragraph>
+                          </div>
+                          <Badge style={{
+                            backgroundColor: status === 'open' ? 'var(--ds-color-success-surface-default)' : 'var(--ds-color-neutral-surface-default)',
+                            color: status === 'open' ? 'var(--ds-color-success-text-default)' : 'var(--ds-color-neutral-text-default)',
+                          }}>
+                            {status === 'open' ? t('org.seasonRental.open') : status === 'upcoming' ? t('org.seasonRental.upcoming') : t('org.seasonRental.closed')}
+                          </Badge>
+                        </button>
+                      );
+                    })}
+                  </div>
+                )}
+              </div>
+            )}
+
+            {currentStep === 'slots' && (
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--ds-spacing-5)' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                  <Heading level={2} data-size="sm" style={{ margin: 0 }}>{t('org.seasonRental.desiredTimes')}</Heading>
+                  <Button type="button" variant="secondary" data-size="sm" onClick={addSlot} disabled={resources.length === 0}>
+                    {t('org.seasonRental.addTime')}
+                  </Button>
+                </div>
+
+                {slots.length === 0 ? (
+                  <div style={{ padding: 'var(--ds-spacing-8)', textAlign: 'center', backgroundColor: 'var(--ds-color-neutral-surface-hover)', borderRadius: 'var(--ds-border-radius-md)' }}>
+                    <Paragraph style={{ margin: 0, color: 'var(--ds-color-neutral-text-subtle)' }}>
+                      {t('org.seasonRental.addTimeHint')}
+                    </Paragraph>
+                  </div>
+                ) : (
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--ds-spacing-3)' }}>
+                    {slots.map((slot, index) => (
+                      <div key={index} style={{
+                        display: 'grid',
+                        gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr 1fr 1fr auto',
+                        gap: 'var(--ds-spacing-3)',
+                        padding: 'var(--ds-spacing-4)',
+                        backgroundColor: 'var(--ds-color-neutral-surface-hover)',
+                        borderRadius: 'var(--ds-border-radius-md)',
+                        alignItems: 'end',
+                      }}>
+                        <div>
+                          <label style={{ display: 'block', marginBottom: 'var(--ds-spacing-1)', fontSize: 'var(--ds-font-size-sm)' }}>{t('common.day')}</label>
+                          <Select value={slot.day} onChange={(e) => updateSlot(index, 'day', e.target.value)} style={{ width: '100%' }}>
+                            {DAYS.map(day => <option key={day} value={day}>{day}</option>)}
+                          </Select>
+                        </div>
+                        <div>
+                          <label style={{ display: 'block', marginBottom: 'var(--ds-spacing-1)', fontSize: 'var(--ds-font-size-sm)' }}>{t('common.from')}</label>
+                          <Input type="time" value={slot.startTime} onChange={(e) => updateSlot(index, 'startTime', e.target.value)} style={{ width: '100%' }} />
+                        </div>
+                        <div>
+                          <label style={{ display: 'block', marginBottom: 'var(--ds-spacing-1)', fontSize: 'var(--ds-font-size-sm)' }}>{t('common.to')}</label>
+                          <Input type="time" value={slot.endTime} onChange={(e) => updateSlot(index, 'endTime', e.target.value)} style={{ width: '100%' }} />
+                        </div>
+                        <div>
+                          <label style={{ display: 'block', marginBottom: 'var(--ds-spacing-1)', fontSize: 'var(--ds-font-size-sm)' }}>{t('common.venue')}</label>
+                          <Select value={slot.resourceId} onChange={(e) => updateSlot(index, 'resourceId', e.target.value)} style={{ width: '100%' }}>
+                            {resources.map((r: RentalObject) => <option key={r.id} value={r.id}>{r.name}</option>)}
+                          </Select>
+                        </div>
+                        <Button type="button" variant="tertiary" data-size="sm" onClick={() => removeSlot(index)} style={{ minHeight: '44px' }}>
+                          {t('action.remove')}
+                        </Button>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+            )}
+
+            {currentStep === 'details' && (
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--ds-spacing-5)' }}>
+                <Heading level={2} data-size="sm" style={{ margin: 0 }}>{t('org.seasonRental.contactInfo')}</Heading>
+
+                <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr', gap: 'var(--ds-spacing-4)' }}>
                   <div>
-                    <Paragraph data-size="md" style={{ margin: 0, fontWeight: 600 }}>
-                      {season.name}
-                    </Paragraph>
-                    <Paragraph data-size="sm" style={{ margin: 0, marginTop: 'var(--ds-spacing-1)', color: 'var(--ds-color-neutral-text-subtle)' }}>
-                      {formatDate(season.startDate)} - {formatDate(season.endDate)}
-                    </Paragraph>
+                    <label style={{ display: 'block', marginBottom: 'var(--ds-spacing-2)', fontWeight: 500 }}>{t('org.seasonRental.contactPerson')}</label>
+                    <Input
+                      value={contactName}
+                      onChange={(e) => setContactName(e.target.value)}
+                      placeholder={t('org.seasonRental.contactPersonPlaceholder')}
+                      style={{ width: '100%' }}
+                    />
                   </div>
-                  <Badge style={{
-                    backgroundColor: season.status === 'open' ? 'var(--ds-color-success-surface-default)' : 'var(--ds-color-neutral-surface-default)',
-                    color: season.status === 'open' ? 'var(--ds-color-success-text-default)' : 'var(--ds-color-neutral-text-default)',
-                  }}>
-                    {season.status === 'open' ? t('org.seasonRental.open') : t('org.seasonRental.upcoming')}
-                  </Badge>
-                </button>
-              ))}
-            </div>
-          </div>
-        )}
-
-        {currentStep === 'slots' && (
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--ds-spacing-5)' }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-              <Heading level={2} data-size="sm" style={{ margin: 0 }}>{t('org.seasonRental.desiredTimes')}</Heading>
-              <Button type="button" variant="secondary" data-size="sm" onClick={addSlot}>
-                {t('org.seasonRental.addTime')}
-              </Button>
-            </div>
-
-            {slots.length === 0 ? (
-              <div style={{ padding: 'var(--ds-spacing-8)', textAlign: 'center', backgroundColor: 'var(--ds-color-neutral-surface-hover)', borderRadius: 'var(--ds-border-radius-md)' }}>
-                <Paragraph style={{ margin: 0, color: 'var(--ds-color-neutral-text-subtle)' }}>
-                  {t('org.seasonRental.addTimeHint')}
-                </Paragraph>
-              </div>
-            ) : (
-              <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--ds-spacing-3)' }}>
-                {slots.map((slot, index) => (
-                  <div key={index} style={{
-                    display: 'grid',
-                    gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr 1fr 1fr auto',
-                    gap: 'var(--ds-spacing-3)',
-                    padding: 'var(--ds-spacing-4)',
-                    backgroundColor: 'var(--ds-color-neutral-surface-hover)',
-                    borderRadius: 'var(--ds-border-radius-md)',
-                    alignItems: 'end',
-                  }}>
-                    <div>
-                      <label style={{ display: 'block', marginBottom: 'var(--ds-spacing-1)', fontSize: 'var(--ds-font-size-sm)' }}>{t('common.day')}</label>
-                      <Select value={slot.day} onChange={(e) => updateSlot(index, 'day', e.target.value)} style={{ width: '100%' }}>
-                        {DAYS.map(day => <option key={day} value={day}>{day}</option>)}
-                      </Select>
-                    </div>
-                    <div>
-                      <label style={{ display: 'block', marginBottom: 'var(--ds-spacing-1)', fontSize: 'var(--ds-font-size-sm)' }}>{t('common.from')}</label>
-                      <Input type="time" value={slot.startTime} onChange={(e) => updateSlot(index, 'startTime', e.target.value)} style={{ width: '100%' }} />
-                    </div>
-                    <div>
-                      <label style={{ display: 'block', marginBottom: 'var(--ds-spacing-1)', fontSize: 'var(--ds-font-size-sm)' }}>{t('common.to')}</label>
-                      <Input type="time" value={slot.endTime} onChange={(e) => updateSlot(index, 'endTime', e.target.value)} style={{ width: '100%' }} />
-                    </div>
-                    <div>
-                      <label style={{ display: 'block', marginBottom: 'var(--ds-spacing-1)', fontSize: 'var(--ds-font-size-sm)' }}>{t('common.venue')}</label>
-                      <Select value={slot.resourceId} onChange={(e) => updateSlot(index, 'resourceId', e.target.value)} style={{ width: '100%' }}>
-                        {resources.map(r => <option key={r.id} value={r.id}>{r.name}</option>)}
-                      </Select>
-                    </div>
-                    <Button type="button" variant="tertiary" data-size="sm" onClick={() => removeSlot(index)} style={{ minHeight: '44px' }}>
-                      {t('action.remove')}
-                    </Button>
+                  <div>
+                    <label style={{ display: 'block', marginBottom: 'var(--ds-spacing-2)', fontWeight: 500 }}>{t('label.phone')}</label>
+                    <Input
+                      value={contactPhone}
+                      onChange={(e) => setContactPhone(e.target.value)}
+                      placeholder={t('org.seasonRental.phonePlaceholder')}
+                      style={{ width: '100%' }}
+                    />
                   </div>
-                ))}
+                </div>
+
+                <div>
+                  <label style={{ display: 'block', marginBottom: 'var(--ds-spacing-2)', fontWeight: 500 }}>{t('org.seasonRental.applicationNote')}</label>
+                  <Textarea
+                    value={notes}
+                    onChange={(e) => setNotes(e.target.value)}
+                    placeholder={t('org.seasonRental.applicationNotePlaceholder')}
+                    rows={4}
+                    style={{ width: '100%' }}
+                  />
+                </div>
               </div>
             )}
-          </div>
-        )}
 
-        {currentStep === 'details' && (
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--ds-spacing-5)' }}>
-            <Heading level={2} data-size="sm" style={{ margin: 0 }}>{t('org.seasonRental.contactInfo')}</Heading>
+            {currentStep === 'review' && (
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--ds-spacing-5)' }}>
+                <Heading level={2} data-size="sm" style={{ margin: 0 }}>{t('org.seasonRental.summary')}</Heading>
 
-            <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr', gap: 'var(--ds-spacing-4)' }}>
-              <div>
-                <label style={{ display: 'block', marginBottom: 'var(--ds-spacing-2)', fontWeight: 500 }}>{t('org.seasonRental.contactPerson')}</label>
-                <Input
-                  value={contactName}
-                  onChange={(e) => setContactName(e.target.value)}
-                  placeholder={t('org.seasonRental.contactPersonPlaceholder')}
-                  style={{ width: '100%' }}
-                />
-              </div>
-              <div>
-                <label style={{ display: 'block', marginBottom: 'var(--ds-spacing-2)', fontWeight: 500 }}>{t('label.phone')}</label>
-                <Input
-                  value={contactPhone}
-                  onChange={(e) => setContactPhone(e.target.value)}
-                  placeholder={t('org.seasonRental.phonePlaceholder')}
-                  style={{ width: '100%' }}
-                />
-              </div>
-            </div>
-
-            <div>
-              <label style={{ display: 'block', marginBottom: 'var(--ds-spacing-2)', fontWeight: 500 }}>{t('org.seasonRental.applicationNote')}</label>
-              <Textarea
-                value={notes}
-                onChange={(e) => setNotes(e.target.value)}
-                placeholder={t('org.seasonRental.applicationNotePlaceholder')}
-                rows={4}
-                style={{ width: '100%' }}
-              />
-            </div>
-          </div>
-        )}
-
-        {currentStep === 'review' && (
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--ds-spacing-5)' }}>
-            <Heading level={2} data-size="sm" style={{ margin: 0 }}>{t('org.seasonRental.summary')}</Heading>
-
-            <Card style={{ padding: 'var(--ds-spacing-4)', backgroundColor: 'var(--ds-color-neutral-surface-hover)' }}>
-              <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--ds-spacing-3)' }}>
-                <div><strong>{t('org.seasonRental.season')}:</strong> {selectedSeasonData?.name || '-'}</div>
-                <div><strong>{t('org.seasonRental.numberOfTimes')}:</strong> {slots.length}</div>
-                <div><strong>{t('org.seasonRental.contact')}:</strong> {contactName} ({contactPhone})</div>
-                {notes && <div><strong>{t('org.seasonRental.note')}:</strong> {notes}</div>}
-              </div>
-            </Card>
-
-            {slots.length > 0 && (
-              <Card style={{ padding: 'var(--ds-spacing-4)' }}>
-                <Paragraph data-size="sm" style={{ margin: 0, fontWeight: 600, marginBottom: 'var(--ds-spacing-3)' }}>
-                  {t('org.seasonRental.desiredTimes')}
-                </Paragraph>
-                {slots.map((slot, i) => (
-                  <div key={i} style={{ padding: 'var(--ds-spacing-2)', borderBottom: i < slots.length - 1 ? '1px solid var(--ds-color-neutral-border-subtle)' : undefined }}>
-                    {slot.day} {slot.startTime}-{slot.endTime} - {resources.find(r => r.id === slot.resourceId)?.name}
+                <Card style={{ padding: 'var(--ds-spacing-4)', backgroundColor: 'var(--ds-color-neutral-surface-hover)' }}>
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--ds-spacing-3)' }}>
+                    <div><strong>{t('org.seasonRental.season')}:</strong> {selectedSeasonData?.name || '-'}</div>
+                    <div><strong>{t('org.seasonRental.numberOfTimes')}:</strong> {slots.length}</div>
+                    <div><strong>{t('org.seasonRental.contact')}:</strong> {contactName} ({contactPhone})</div>
+                    {notes && <div><strong>{t('org.seasonRental.note')}:</strong> {notes}</div>}
                   </div>
-                ))}
-              </Card>
+                </Card>
+
+                {slots.length > 0 && (
+                  <Card style={{ padding: 'var(--ds-spacing-4)' }}>
+                    <Paragraph data-size="sm" style={{ margin: 0, fontWeight: 600, marginBottom: 'var(--ds-spacing-3)' }}>
+                      {t('org.seasonRental.desiredTimes')}
+                    </Paragraph>
+                    {slots.map((slot, i) => {
+                      const resource = resources.find((r: RentalObject) => r.id === slot.resourceId);
+                      return (
+                        <div key={i} style={{ padding: 'var(--ds-spacing-2)', borderBottom: i < slots.length - 1 ? '1px solid var(--ds-color-neutral-border-subtle)' : undefined }}>
+                          {slot.day} {slot.startTime}-{slot.endTime} - {resource?.name || slot.resourceId}
+                        </div>
+                      );
+                    })}
+                  </Card>
+                )}
+              </div>
             )}
-          </div>
+          </>
         )}
       </Card>
 
@@ -391,10 +449,10 @@ export function SeasonRentalPage() {
             variant="primary"
             data-size="md"
             onClick={handleSubmit}
-            disabled={isSubmitting || slots.length === 0}
+            disabled={createApplication.isPending || slots.length === 0}
             style={{ minHeight: '44px' }}
           >
-            {isSubmitting ? t('org.seasonRental.sending') : t('org.seasonRental.sendApplication')}
+            {createApplication.isPending ? t('org.seasonRental.sending') : t('org.seasonRental.sendApplication')}
           </Button>
         ) : (
           <Button

@@ -2,13 +2,14 @@
  * OrganizationActivityPage
  *
  * Organization portal activity log
+ * - Fetches real data from audit API
  * - Recent booking activity
  * - Member actions
  * - Invoice events
  * - Season application status
  */
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import {
   Card,
   Heading,
@@ -19,60 +20,36 @@ import {
   Spinner,
 } from '@xala/ds';
 import { useLocale, useT } from '@xala/i18n';
+import { useAuditLog, type AuditLogEntry } from '@digilist/client-sdk';
 
 const MOBILE_BREAKPOINT = 768;
 
-type ActivityType = 'booking' | 'member' | 'invoice' | 'season';
+type ActivityType = 'booking' | 'member' | 'invoice' | 'season' | 'all';
 
-// Mock activity data - hardcoded Norwegian strings to avoid module-level t() calls
-const mockActivities = [
-  {
-    id: 'act-001',
-    type: 'booking' as ActivityType,
-    title: 'Ny booking opprettet',
-    description: 'Idrettshall A - 22. januar',
-    user: 'Ola Nordmann',
-    timestamp: '2026-01-14T15:30:00Z',
-  },
-  {
-    id: 'act-002',
-    type: 'member' as ActivityType,
-    title: 'Nytt medlem invitert',
-    description: 'kari@example.com ble invitert som medlem',
-    user: 'Admin',
-    timestamp: '2026-01-14T14:00:00Z',
-  },
-  {
-    id: 'act-003',
-    type: 'invoice' as ActivityType,
-    title: 'Faktura betalt',
-    description: 'Faktura F2026-001 er betalt',
-    user: 'System',
-    timestamp: '2026-01-14T10:15:00Z',
-  },
-  {
-    id: 'act-004',
-    type: 'season' as ActivityType,
-    title: 'Sesongsøknad sendt',
-    description: 'Søknad for vår 2026',
-    user: 'Ola Nordmann',
-    timestamp: '2026-01-13T16:45:00Z',
-  },
-  {
-    id: 'act-005',
-    type: 'booking' as ActivityType,
-    title: 'Booking kansellert',
-    description: 'Fotballbane 1 - 20. januar',
-    user: 'Kari Hansen',
-    timestamp: '2026-01-13T11:00:00Z',
-  },
-];
+// Map audit resources to activity types
+const getActivityTypeFromResource = (resource: string): ActivityType => {
+  switch (resource) {
+    case 'booking':
+    case 'allocation':
+      return 'booking';
+    case 'user':
+    case 'organization':
+      return 'member';
+    case 'invoice':
+    case 'payment':
+      return 'invoice';
+    case 'season':
+    case 'season_application':
+      return 'season';
+    default:
+      return 'booking'; // Default fallback
+  }
+};
 
 export function OrganizationActivityPage() {
   const { locale } = useLocale();
   const t = useT();
-  const [typeFilter, setTypeFilter] = useState<ActivityType | 'all'>('all');
-  const [isLoading] = useState(false);
+  const [typeFilter, setTypeFilter] = useState<ActivityType>('all');
   const [isMobile, setIsMobile] = useState(
     typeof window !== 'undefined' ? window.innerWidth < MOBILE_BREAKPOINT : false
   );
@@ -83,9 +60,41 @@ export function OrganizationActivityPage() {
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
-  const filteredActivities = typeFilter === 'all' 
-    ? mockActivities 
-    : mockActivities.filter(a => a.type === typeFilter);
+  // Build resource filter based on type selection
+  const resourceFilter = useMemo(() => {
+    switch (typeFilter) {
+      case 'booking':
+        return 'booking';
+      case 'member':
+        return 'user';
+      case 'invoice':
+        return 'invoice';
+      case 'season':
+        return 'season';
+      default:
+        return undefined;
+    }
+  }, [typeFilter]);
+
+  // Fetch audit logs from API
+  const { data: auditData, isLoading } = useAuditLog(
+    resourceFilter ? { resource: resourceFilter, limit: 50 } : { limit: 50 }
+  );
+  const activities = auditData?.data ?? [];
+
+  // Calculate stats
+  const stats = useMemo(() => {
+    const now = new Date();
+    const todayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate()).getTime();
+    const weekStart = todayStart - 7 * 24 * 60 * 60 * 1000;
+
+    const today = activities.filter((a: AuditLogEntry) => new Date(a.createdAt).getTime() >= todayStart).length;
+    const thisWeek = activities.filter((a: AuditLogEntry) => new Date(a.createdAt).getTime() >= weekStart).length;
+    const bookings = activities.filter((a: AuditLogEntry) => a.resource === 'booking').length;
+    const members = activities.filter((a: AuditLogEntry) => a.resource === 'user').length;
+
+    return { today, thisWeek, bookings, members };
+  }, [activities]);
 
   const formatRelativeTime = (dateStr: string) => {
     const date = new Date(dateStr);
@@ -106,6 +115,7 @@ export function OrganizationActivityPage() {
       case 'member': return t('org.activity.typeMember');
       case 'invoice': return t('org.activity.typeInvoice');
       case 'season': return t('org.activity.typeSeason');
+      default: return t('org.activity.typeBooking');
     }
   };
 
@@ -115,7 +125,21 @@ export function OrganizationActivityPage() {
       case 'member': return { bg: 'var(--ds-color-info-surface-default)', text: 'var(--ds-color-info-text-default)' };
       case 'invoice': return { bg: 'var(--ds-color-success-surface-default)', text: 'var(--ds-color-success-text-default)' };
       case 'season': return { bg: 'var(--ds-color-warning-surface-default)', text: 'var(--ds-color-warning-text-default)' };
+      default: return { bg: 'var(--ds-color-neutral-surface-default)', text: 'var(--ds-color-neutral-text-default)' };
     }
+  };
+
+  const getActivityTitle = (entry: AuditLogEntry) => {
+    const action = entry.action;
+    const resource = entry.resource;
+    return t(`audit.${resource}.${action}`, { defaultValue: `${action} ${resource}` });
+  };
+
+  const getActivityDescription = (entry: AuditLogEntry) => {
+    if (entry.details) {
+      return typeof entry.details === 'string' ? entry.details : JSON.stringify(entry.details);
+    }
+    return entry.resourceId || '';
   };
 
   return (
@@ -139,7 +163,7 @@ export function OrganizationActivityPage() {
         <div style={{ display: 'flex', gap: 'var(--ds-spacing-3)', alignItems: 'center' }}>
           <Select
             value={typeFilter}
-            onChange={(e) => setTypeFilter(e.target.value as ActivityType | 'all')}
+            onChange={(e) => setTypeFilter(e.target.value as ActivityType)}
             style={{ minWidth: '150px' }}
           >
             <option value="all">{t('org.activity.allTypes')}</option>
@@ -162,19 +186,19 @@ export function OrganizationActivityPage() {
       }}>
         <Card style={{ padding: 'var(--ds-spacing-4)' }}>
           <Paragraph data-size="sm" style={{ color: 'var(--ds-color-neutral-text-subtle)', margin: 0 }}>{t('org.activity.today')}</Paragraph>
-          <Heading level={2} data-size="xl" style={{ margin: 0 }}>12</Heading>
+          <Heading level={2} data-size="xl" style={{ margin: 0 }}>{stats.today}</Heading>
         </Card>
         <Card style={{ padding: 'var(--ds-spacing-4)' }}>
           <Paragraph data-size="sm" style={{ color: 'var(--ds-color-neutral-text-subtle)', margin: 0 }}>{t('org.activity.thisWeek')}</Paragraph>
-          <Heading level={2} data-size="xl" style={{ margin: 0 }}>47</Heading>
+          <Heading level={2} data-size="xl" style={{ margin: 0 }}>{stats.thisWeek}</Heading>
         </Card>
         <Card style={{ padding: 'var(--ds-spacing-4)' }}>
           <Paragraph data-size="sm" style={{ color: 'var(--ds-color-neutral-text-subtle)', margin: 0 }}>{t('org.activity.bookings')}</Paragraph>
-          <Heading level={2} data-size="xl" style={{ margin: 0 }}>23</Heading>
+          <Heading level={2} data-size="xl" style={{ margin: 0 }}>{stats.bookings}</Heading>
         </Card>
         <Card style={{ padding: 'var(--ds-spacing-4)' }}>
           <Paragraph data-size="sm" style={{ color: 'var(--ds-color-neutral-text-subtle)', margin: 0 }}>{t('org.activity.members')}</Paragraph>
-          <Heading level={2} data-size="xl" style={{ margin: 0 }}>8</Heading>
+          <Heading level={2} data-size="xl" style={{ margin: 0 }}>{stats.members}</Heading>
         </Card>
       </div>
 
@@ -184,7 +208,7 @@ export function OrganizationActivityPage() {
           <div style={{ display: 'flex', justifyContent: 'center', padding: 'var(--ds-spacing-8)' }}>
             <Spinner aria-label={t('state.loading')} data-size="lg" />
           </div>
-        ) : filteredActivities.length === 0 ? (
+        ) : activities.length === 0 ? (
           <div style={{ padding: 'var(--ds-spacing-8)', textAlign: 'center' }}>
             <Paragraph style={{ color: 'var(--ds-color-neutral-text-subtle)', margin: 0 }}>
               {t('org.activity.noActivity')}
@@ -192,8 +216,9 @@ export function OrganizationActivityPage() {
           </div>
         ) : (
           <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--ds-spacing-3)' }}>
-            {filteredActivities.map((activity) => {
-              const color = getTypeColor(activity.type);
+            {activities.map((activity: AuditLogEntry) => {
+              const activityType = getActivityTypeFromResource(activity.resource);
+              const color = getTypeColor(activityType);
               return (
                 <div
                   key={activity.id}
@@ -215,18 +240,18 @@ export function OrganizationActivityPage() {
                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: 'var(--ds-spacing-2)' }}>
                       <div>
                         <Paragraph data-size="sm" style={{ margin: 0, fontWeight: 600 }}>
-                          {activity.title}
+                          {getActivityTitle(activity)}
                         </Paragraph>
                         <Paragraph data-size="xs" style={{ margin: 0, marginTop: 'var(--ds-spacing-1)', color: 'var(--ds-color-neutral-text-subtle)' }}>
-                          {activity.description}
+                          {getActivityDescription(activity)}
                         </Paragraph>
                       </div>
                       <Badge style={{ backgroundColor: color.bg, color: color.text }}>
-                        {getTypeLabel(activity.type)}
+                        {getTypeLabel(activityType)}
                       </Badge>
                     </div>
                     <Paragraph data-size="xs" style={{ margin: 0, marginTop: 'var(--ds-spacing-2)', color: 'var(--ds-color-neutral-text-subtle)' }}>
-                      {activity.user} • {formatRelativeTime(activity.timestamp)}
+                      {activity.userName || activity.userId || 'System'} • {formatRelativeTime(activity.createdAt)}
                     </Paragraph>
                   </div>
                 </div>

@@ -2,6 +2,7 @@
  * OrganizationBookingsPage
  *
  * Organization bookings list for Minside app
+ * - Fetches real data from API
  * - Filterable by status
  * - Mobile responsive
  */
@@ -18,39 +19,23 @@ import {
 } from '@xala/ds';
 import { useT, useLocale } from '@xala/i18n';
 import { NavLink } from 'react-router-dom';
+import {
+  useBookings,
+  type BookingStatus,
+  type Booking,
+  formatDate,
+  formatTime,
+} from '@digilist/client-sdk';
 
 const MOBILE_BREAKPOINT = 768;
-
-// Mock org bookings
-const mockOrgBookings = [
-  {
-    id: 'org-booking-1',
-    listingName: 'Idrettshall A',
-    startTime: '2026-01-20T18:00:00Z',
-    endTime: '2026-01-20T20:00:00Z',
-    status: 'confirmed',
-    bookedBy: 'Erik Hansen',
-    totalPrice: 1500,
-  },
-  {
-    id: 'org-booking-2',
-    listingName: 'Fotballbane 1',
-    startTime: '2026-01-22T16:00:00Z',
-    endTime: '2026-01-22T18:00:00Z',
-    status: 'pending',
-    bookedBy: 'Kari Olsen',
-    totalPrice: 1200,
-  },
-];
 
 export function OrganizationBookingsPage() {
   const t = useT();
   const { locale } = useLocale();
-  const [statusFilter, setStatusFilter] = useState<string | undefined>(undefined);
+  const [statusFilter, setStatusFilter] = useState<BookingStatus | undefined>(undefined);
   const [isMobile, setIsMobile] = useState(
     typeof window !== 'undefined' ? window.innerWidth < MOBILE_BREAKPOINT : false
   );
-  const [isLoading] = useState(false);
 
   useEffect(() => {
     const handleResize = () => setIsMobile(window.innerWidth < MOBILE_BREAKPOINT);
@@ -58,19 +43,23 @@ export function OrganizationBookingsPage() {
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
-  const bookings = statusFilter 
-    ? mockOrgBookings.filter(b => b.status === statusFilter)
-    : mockOrgBookings;
+  // Fetch bookings from API with status filter
+  const { data: bookingsData, isLoading } = useBookings(
+    statusFilter ? { status: statusFilter } : undefined
+  );
+  const bookings = bookingsData?.data ?? [];
 
-  const formatDate = (dateStr: string) => {
-    return new Date(dateStr).toLocaleDateString(locale === 'en' ? 'en-US' : 'nb-NO');
-  };
+  // Fetch counts for each status
+  const { data: allData } = useBookings();
+  const { data: confirmedData } = useBookings({ status: 'confirmed' });
+  const { data: pendingData } = useBookings({ status: 'pending' });
+  const { data: cancelledData } = useBookings({ status: 'cancelled' });
 
-  const formatTime = (dateStr: string) => {
-    return new Date(dateStr).toLocaleTimeString(locale === 'en' ? 'en-US' : 'nb-NO', { 
-      hour: '2-digit', 
-      minute: '2-digit' 
-    });
+  const stats = {
+    total: allData?.meta?.total ?? 0,
+    confirmed: confirmedData?.meta?.total ?? 0,
+    pending: pendingData?.meta?.total ?? 0,
+    cancelled: cancelledData?.meta?.total ?? 0,
   };
 
   const formatCurrency = (amount: number) => {
@@ -93,18 +82,42 @@ export function OrganizationBookingsPage() {
 
       {/* Filters */}
       <div style={{ display: 'flex', gap: 'var(--ds-spacing-2)', overflowX: 'auto' }}>
-        {['all', 'confirmed', 'pending', 'cancelled'].map((filter) => (
-          <Button
-            key={filter}
-            type="button"
-            variant={(filter === 'all' && !statusFilter) || statusFilter === filter ? 'primary' : 'tertiary'}
-            data-size="sm"
-            onClick={() => setStatusFilter(filter === 'all' ? undefined : filter)}
-            style={{ minHeight: '44px', whiteSpace: 'nowrap' }}
-          >
-            {filter === 'all' ? t('bookings.all') : t(`booking.${filter}`)}
-          </Button>
-        ))}
+        <Button
+          type="button"
+          variant={statusFilter === undefined ? 'primary' : 'tertiary'}
+          data-size="sm"
+          onClick={() => setStatusFilter(undefined)}
+          style={{ minHeight: '44px', whiteSpace: 'nowrap' }}
+        >
+          {t('bookings.all')} ({stats.total})
+        </Button>
+        <Button
+          type="button"
+          variant={statusFilter === 'confirmed' ? 'primary' : 'tertiary'}
+          data-size="sm"
+          onClick={() => setStatusFilter('confirmed')}
+          style={{ minHeight: '44px', whiteSpace: 'nowrap' }}
+        >
+          {t('booking.confirmed')} ({stats.confirmed})
+        </Button>
+        <Button
+          type="button"
+          variant={statusFilter === 'pending' ? 'primary' : 'tertiary'}
+          data-size="sm"
+          onClick={() => setStatusFilter('pending')}
+          style={{ minHeight: '44px', whiteSpace: 'nowrap' }}
+        >
+          {t('requests.pending')} ({stats.pending})
+        </Button>
+        <Button
+          type="button"
+          variant={statusFilter === 'cancelled' ? 'primary' : 'tertiary'}
+          data-size="sm"
+          onClick={() => setStatusFilter('cancelled')}
+          style={{ minHeight: '44px', whiteSpace: 'nowrap' }}
+        >
+          {t('state.cancelled')} ({stats.cancelled})
+        </Button>
       </div>
 
       {/* Bookings List */}
@@ -121,7 +134,7 @@ export function OrganizationBookingsPage() {
           </div>
         ) : isMobile ? (
           <div style={{ display: 'flex', flexDirection: 'column' }}>
-            {bookings.map((booking) => (
+            {bookings.map((booking: Booking) => (
               <div
                 key={booking.id}
                 style={{
@@ -131,18 +144,20 @@ export function OrganizationBookingsPage() {
               >
                 <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 'var(--ds-spacing-2)' }}>
                   <Paragraph data-size="sm" style={{ margin: 0, fontWeight: 'var(--ds-font-weight-semibold)' }}>
-                    {booking.listingName}
+                    {booking.listingName || booking.listingId}
                   </Paragraph>
-                  <BookingStatusBadge status={booking.status as string} />
+                  <BookingStatusBadge status={booking.status} />
                 </div>
                 <Paragraph data-size="xs" style={{ margin: 0, color: 'var(--ds-color-neutral-text-subtle)' }}>
                   {formatDate(booking.startTime)} • {formatTime(booking.startTime)} - {formatTime(booking.endTime)}
                 </Paragraph>
-                <Paragraph data-size="xs" style={{ margin: 0, marginTop: 'var(--ds-spacing-1)', color: 'var(--ds-color-neutral-text-subtle)' }}>
-                  {t('org.bookedBy')}: {booking.bookedBy}
-                </Paragraph>
+                {booking.userName && (
+                  <Paragraph data-size="xs" style={{ margin: 0, marginTop: 'var(--ds-spacing-1)', color: 'var(--ds-color-neutral-text-subtle)' }}>
+                    {t('org.bookedBy')}: {booking.userName}
+                  </Paragraph>
+                )}
                 <Paragraph data-size="md" style={{ margin: 0, marginTop: 'var(--ds-spacing-2)', fontWeight: 'var(--ds-font-weight-semibold)' }}>
-                  {formatCurrency(booking.totalPrice)}
+                  {formatCurrency(booking.totalPrice ?? 0)}
                 </Paragraph>
               </div>
             ))}
@@ -159,10 +174,12 @@ export function OrganizationBookingsPage() {
               </Table.Row>
             </Table.Head>
             <Table.Body>
-              {bookings.map((booking) => (
+              {bookings.map((booking: Booking) => (
                 <Table.Row key={booking.id}>
                   <Table.Cell>
-                    <span style={{ fontWeight: 'var(--ds-font-weight-medium)' }}>{booking.listingName}</span>
+                    <span style={{ fontWeight: 'var(--ds-font-weight-medium)' }}>
+                      {booking.listingName || booking.listingId}
+                    </span>
                   </Table.Cell>
                   <Table.Cell>
                     <div>
@@ -172,11 +189,11 @@ export function OrganizationBookingsPage() {
                       </Paragraph>
                     </div>
                   </Table.Cell>
-                  <Table.Cell>{booking.bookedBy}</Table.Cell>
+                  <Table.Cell>{booking.userName || '-'}</Table.Cell>
                   <Table.Cell>
-                    <BookingStatusBadge status={booking.status as string} />
+                    <BookingStatusBadge status={booking.status} />
                   </Table.Cell>
-                  <Table.Cell>{formatCurrency(booking.totalPrice)}</Table.Cell>
+                  <Table.Cell>{formatCurrency(booking.totalPrice ?? 0)}</Table.Cell>
                 </Table.Row>
               ))}
             </Table.Body>
