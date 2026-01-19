@@ -39,5 +39,42 @@ if [ -n "$STAGED_FILES" ]; then
   echo "✅ No hardcoded strings found in staged files!"
 fi
 
+# Architecture Quality Checks
+echo "🏗️  Running architecture quality checks..."
+
+# Check for CSS modules in apps
+if git diff --cached --name-only | grep -E "^apps/.+\.module\.css$|^apps/.+\.css$" | grep -v node_modules; then
+  echo "❌ ERROR: CSS modules not allowed in apps"
+  echo "   Use @xala/ds tokens instead"
+  echo "   See: docs/QUALITY/GAP_MATRIX.md"
+  exit 1
+fi
+
+# Check for RBAC logic in apps
+STAGED_APP_FILES=$(git diff --cached --name-only | grep -E "^apps/.+\.(ts|tsx)$" | grep -v test | grep -v node_modules || true)
+if [ -n "$STAGED_APP_FILES" ]; then
+  for FILE in $STAGED_APP_FILES; do
+    if grep -q "ROLE_PERMISSIONS" "$FILE" 2>/dev/null; then
+      echo "❌ ERROR: RBAC logic not allowed in apps: $FILE"
+      echo "   Use capabilities API instead"
+      echo "   See: docs/QUALITY/GAP_MATRIX.md section 3.1"
+      exit 1
+    fi
+  done
+fi
+
+# Check for direct @digdir imports
+if [ -n "$STAGED_APP_FILES" ]; then
+  for FILE in $STAGED_APP_FILES; do
+    if grep -q "from '@digdir/designsystemet-react'" "$FILE" 2>/dev/null; then
+      echo "❌ ERROR: Direct @digdir imports not allowed: $FILE"
+      echo "   Import from @xala/ds instead"
+      exit 1
+    fi
+  done
+fi
+
+echo "✅ Architecture checks passed"
+
 # Run lint-staged for other checks
 npx lint-staged

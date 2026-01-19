@@ -8,6 +8,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- **Architecture Quality Gates (2026-01-19 - Phase 0 Complete)**: Automated enforcement of DS-First / Thin Apps
+  - `.github/workflows/architecture-quality.yml` - CI checks for architecture violations
+  - Enhanced `.husky/pre-commit` - Pre-commit architecture checks
+  - `scripts/quality/verify-sdk-coverage.js` - SDK coverage verification tool
+  - `docs/QUALITY/REPO_MAP.md` - Complete repository inventory (7,093 lines audit docs)
+  - `docs/QUALITY/MODULES_AND_DEPENDENCIES.md` - 72 modules, 11 layers, zero circular dependencies
+  - `docs/QUALITY/CONTRACT_COVERAGE.md` - 92% alignment across all layers
+  - `docs/QUALITY/GAP_MATRIX.md` - 81 gaps identified with remediation guidance
+  - `docs/QUALITY/REMEDIATION_PLAN.md` - Phased 10-12 week action plan
+  - `docs/QUALITY/TEST_GAPS.md` - 415+ test files analyzed
+  - `docs/QUALITY/FINAL_REPORT.md` - Platform health score: 80/100
+  - `docs/QUALITY/PHASE_0_SUMMARY.md` - CI/CD gates implementation summary
 - **DS-First + Thin Apps Baseline (2026-01-19)**: Architecture enforcement foundation
   - `docs/ARCH/ds-single-source-of-truth.md` - DS as single source for UI patterns
   - `docs/ARCH/thin-app-policy.md` - Apps contain only routes/wrappers
@@ -33,6 +45,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Migration: Update client code to access `response.data` instead of `response.booking`
 - Booking status enum now uses 8 canonical values: `pending`, `pending_approval`, `approved`, `confirmed`, `rejected`, `cancelled`, `completed`, `expired`
 - Canonical rejection endpoint is now `/reject` (not `/deny`)
+
+### Removed
+- **RBAC Logic from Apps (2026-01-19 - Security Fix)**: Removed duplicate RBAC logic
+  - Deleted `apps/backoffice/src/hooks/useRBAC.ts` (83 lines)
+  - Deleted `apps/minside/src/hooks/useRBAC.ts` (81 lines)
+  - Rationale: RBAC must be server-authoritative only (security requirement)
+  - Apps now use `useCapabilities()` which calls server capabilities API
 
 ### Deprecated
 - PUT endpoints for booking state transitions now return RFC 8594 deprecation headers:

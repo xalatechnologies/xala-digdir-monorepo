@@ -2,7 +2,8 @@ import type { Preview, Decorator } from '@storybook/react';
 import React from 'react';
 
 import '@digdir/designsystemet-css';
-import '@digdir/designsystemet-theme';
+import './public/themes/digilist.css';
+import './public/themes/digilist-extensions.css';
 
 import { ThemeProvider, useTheme } from '../src/ThemeProvider';
 
