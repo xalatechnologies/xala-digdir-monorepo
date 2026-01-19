@@ -255,7 +255,7 @@ module.exports = {
       watch: false,
       max_memory_restart: '1G',
       env: {
-        NODE_ENV: 'staging',
+        NODE_ENV: 'production',
         API_PORT: 4001,
         API_HOST: '0.0.0.0',
         API_BASE_URL: 'https://api-staging.digilist.no',
