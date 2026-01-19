@@ -211,6 +211,40 @@ ENDSSH
 log_info "Schema permissions granted"
 echo ""
 
+# Step 6.6: Create missing platform tables
+echo "🔧 Step 6.6: Creating missing platform tables..."
+ssh ${VPS_USER}@${VPS_HOST} << ENDSSH
+set -e
+PGPASSWORD='${DB_PASSWORD}' psql -h ${DB_HOST} -p ${DB_PORT} -U ${DB_USER} -d ${DB_NAME} << 'EOF'
+-- Create modules table if missing
+CREATE TABLE IF NOT EXISTS platform.modules (
+  key VARCHAR(50) PRIMARY KEY,
+  name VARCHAR(100) NOT NULL,
+  description TEXT,
+  is_core BOOLEAN NOT NULL DEFAULT false,
+  created_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW(),
+  updated_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW()
+);
+
+-- Create tenant_modules table if missing
+CREATE TABLE IF NOT EXISTS platform.tenant_modules (
+  tenant_id UUID NOT NULL,
+  module_key VARCHAR(50) NOT NULL,
+  is_enabled BOOLEAN NOT NULL DEFAULT false,
+  created_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW(),
+  updated_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW(),
+  updated_by UUID,
+  PRIMARY KEY (tenant_id, module_key)
+);
+
+CREATE INDEX IF NOT EXISTS tenant_modules_tenant_idx ON platform.tenant_modules(tenant_id);
+CREATE INDEX IF NOT EXISTS tenant_modules_module_key_idx ON platform.tenant_modules(module_key);
+CREATE INDEX IF NOT EXISTS tenant_modules_enabled_idx ON platform.tenant_modules(tenant_id, is_enabled);
+EOF
+ENDSSH
+log_info "Missing platform tables created"
+echo ""
+
 # Step 7: Deploy storage files (seed images) - Skip if already uploaded
 echo "📸 Step 7: Checking storage files..."
 ssh ${VPS_USER}@${VPS_HOST} "mkdir -p /var/www/digilist-storage-staging/uploads"
