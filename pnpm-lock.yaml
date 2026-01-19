@@ -229,6 +229,9 @@ importers:
       date-fns:
         specifier: ^4.1.0
         version: 4.1.0
+      framer-motion:
+        specifier: ^12.26.2
+        version: 12.26.2(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       react:
         specifier: ^18.3.1
         version: 18.3.1
@@ -9843,7 +9846,7 @@ snapshots:
       pathe: 1.1.2
       picocolors: 1.1.1
       sirv: 2.0.4
-      vitest: 1.6.1(@types/node@22.19.5)(@vitest/ui@1.6.1)(happy-dom@13.10.1)(jsdom@27.4.0)(terser@5.44.1)
+      vitest: 1.6.1(@types/node@25.0.6)(@vitest/ui@1.6.1)(happy-dom@13.10.1)(jsdom@23.2.0)(terser@5.44.1)
     optional: true
 
   '@vitest/ui@4.0.17(vitest@4.0.17)':
