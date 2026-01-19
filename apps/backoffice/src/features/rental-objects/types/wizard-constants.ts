@@ -53,6 +53,7 @@ export const ALL_WIZARD_STEPS: WizardStepId[] = [
   'details',
   'resources',
   'availability',
+  'booking-settings',
   'packages',
   'media',
   'content',
@@ -71,8 +72,9 @@ export const WIZARD_STEPS_BY_CATEGORY: Record<RentalObjectCategory, WizardStepId
   LOKALER_OG_BANER: [
     'category',
     'basics',
-    'details', // location + capacity
-    'availability', // opening-hours + booking
+    'details',           // location + capacity
+    'availability',      // opening-hours + schedule
+    'booking-settings',  // pricing + policies + timing
     'media',
     'content',
     'review',
@@ -80,8 +82,9 @@ export const WIZARD_STEPS_BY_CATEGORY: Record<RentalObjectCategory, WizardStepId
   UTSTYR_OG_INVENTAR: [
     'category',
     'basics',
-    'resources', // inventory + pickup
-    'availability',
+    'resources',         // inventory + pickup
+    'availability',      // opening-hours + schedule
+    'booking-settings',  // pricing + policies + timing
     'media',
     'content',
     'review',
@@ -89,8 +92,9 @@ export const WIZARD_STEPS_BY_CATEGORY: Record<RentalObjectCategory, WizardStepId
   KJORETOY_OG_TRANSPORT: [
     'category',
     'basics',
-    'resources', // inventory + pickup + requirements
-    'availability',
+    'resources',         // inventory + pickup + requirements
+    'availability',      // opening-hours + schedule
+    'booking-settings',  // pricing + policies + timing
     'media',
     'content',
     'review',
@@ -98,9 +102,10 @@ export const WIZARD_STEPS_BY_CATEGORY: Record<RentalObjectCategory, WizardStepId
   OPPLEVELSER_OG_ARRANGEMENT: [
     'category',
     'basics',
-    'details', // location + capacity
-    'packages', // keep packages separate as it's complex
-    'availability', // schedule + booking
+    'details',           // location + capacity
+    'packages',          // keep packages separate as it's complex
+    'availability',      // schedule
+    'booking-settings',  // pricing + policies + timing
     'media',
     'content',
     'review',

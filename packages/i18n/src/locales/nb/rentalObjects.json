@@ -6,6 +6,8 @@
   "wizardDescription": "Bruk veiviseren for å opprette eller redigere utleieobjekt",
   "noResults": "Ingen utleieobjekter funnet",
   "confirmDelete": "Er du sikker på at du vil slette {{name}}?",
+  "deleteConfirmTitle": "Slett utleieobjekt",
+  "deleteConfirmMessage": "Er du sikker på at du vil slette {{name}}?",
   "category.LOKALER-OG-BANER": "Lokaler og baner",
   "category.UTSTYR-OG-INVENTAR": "Utstyr og inventar",
   "category.KJORETOY-OG-TRANSPORT": "Kjøretøy og transport",

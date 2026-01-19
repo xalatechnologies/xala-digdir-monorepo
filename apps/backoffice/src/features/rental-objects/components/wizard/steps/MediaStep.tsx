@@ -15,6 +15,7 @@ import {
   Textfield,
   Spinner,
   Stack,
+  ImageIcon,
 } from '@xala/ds';
 import type { UseRentalObjectWizardReturn } from '../../../hooks/useRentalObjectWizard';
 
@@ -268,6 +269,15 @@ export function MediaStep({ wizard }: MediaStepProps) {
           }}
           onClick={handleBrowseClick}
         >
+          <ImageIcon 
+            aria-hidden 
+            style={{ 
+              width: '3rem', 
+              height: '3rem', 
+              marginBottom: 'var(--ds-spacing-3)',
+              color: 'var(--ds-color-neutral-text-subtle)'
+            }} 
+          />
           <Heading level={4} data-size="xs" style={{ marginBottom: 'var(--ds-spacing-2)' }}>
             {t('media.dropzone.page.title')}
           </Heading>

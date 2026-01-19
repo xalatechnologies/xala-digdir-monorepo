@@ -20,13 +20,13 @@ import type { WizardStep } from '../../types';
 export interface RentalObjectWizardProps {
   /** Rental object slug for edit mode */
   slug?: string | undefined;
-  /** Rental object ID to clone from */
-  cloneFromId?: string | undefined;
+  /** Rental object slug to clone from */
+  cloneFromSlug?: string | undefined;
 }
 
-export function RentalObjectWizard({ slug, cloneFromId }: RentalObjectWizardProps) {
+export function RentalObjectWizard({ slug, cloneFromSlug }: RentalObjectWizardProps) {
   const t = useT();
-  const wizard = useRentalObjectWizard({ slug, cloneFromId });
+  const wizard = useRentalObjectWizard({ slug, cloneFromSlug });
 
   if (wizard.isLoading) {
     return (
@@ -161,6 +161,7 @@ export function RentalObjectWizard({ slug, cloneFromId }: RentalObjectWizardProp
 import { DetailsStep } from './steps/DetailsStep';
 import { ResourcesStep } from './steps/ResourcesStep';
 import { AvailabilityStep } from './steps/AvailabilityStep';
+import { BookingSettingsStep } from './steps/BookingSettingsStep';
 
 function renderStep(step: WizardStep, wizard: ReturnType<typeof useRentalObjectWizard>) {
   switch (step.id) {
@@ -174,6 +175,8 @@ function renderStep(step: WizardStep, wizard: ReturnType<typeof useRentalObjectW
       return <ResourcesStep wizard={wizard} />;
     case 'availability':
       return <AvailabilityStep wizard={wizard} />;
+    case 'booking-settings':
+      return <BookingSettingsStep wizard={wizard} />;
     case 'packages':
       return <PackagesStep wizard={wizard} />;
     case 'media':

@@ -24,9 +24,9 @@ export function RentalObjectsPage() {
 export function RentalObjectEditPage() {
   const { slug } = useParams<{ slug: string }>();
   const [searchParams] = useSearchParams();
-  const cloneFromId = searchParams.get('cloneFrom');
+  const cloneFromSlug = searchParams.get('cloneFrom');
 
-  return <RentalObjectWizard slug={slug} cloneFromId={cloneFromId || undefined} />;
+  return <RentalObjectWizard slug={slug} cloneFromSlug={cloneFromSlug || undefined} />;
 }
 
 /**

@@ -51,7 +51,9 @@
     "logout": "Logg ut",
     "signup": "Registrer deg",
     "clone": "Klon",
-    "archive": "Arkiver"
+    "archive": "Arkiver",
+    "publish": "Publiser",
+    "unpublish": "Avpubliser"
   },
   
   "state": {

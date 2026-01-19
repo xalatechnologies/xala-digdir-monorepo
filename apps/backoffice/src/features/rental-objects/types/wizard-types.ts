@@ -16,9 +16,10 @@ export type RentalObject = ContractRentalObject;
 export type WizardStepId =
   | 'category'
   | 'basics'
-  | 'details'      // Location + Capacity
-  | 'resources'    // Inventory + Pickup + Requirements
-  | 'availability' // Opening Hours + Schedule + Booking
+  | 'details'           // Location + Capacity
+  | 'resources'         // Inventory + Pickup + Requirements
+  | 'availability'      // Opening Hours + Schedule
+  | 'booking-settings'  // Pricing + Policies + Timing (interactive)
   | 'packages'
   | 'media'
   | 'content'

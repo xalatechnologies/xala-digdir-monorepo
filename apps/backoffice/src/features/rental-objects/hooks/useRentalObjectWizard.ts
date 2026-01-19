@@ -29,8 +29,8 @@ import { useT } from '@xala/i18n';
 export interface UseRentalObjectWizardOptions {
   /** Rental object slug for edit mode */
   slug?: string | undefined;
-  /** Rental object ID to clone from */
-  cloneFromId?: string | undefined;
+  /** Rental object slug to clone from */
+  cloneFromSlug?: string | undefined;
   /** Initial category (for create mode) */
   initialCategory?: RentalObjectCategory | undefined;
   /** Callback when wizard completes */
@@ -99,17 +99,15 @@ export function useRentalObjectWizard(
 ): UseRentalObjectWizardReturn {
   // Translation function available for future localization
   const t = useT();
-  const { slug, cloneFromId, initialCategory, onComplete } = options;
+  const { slug, cloneFromSlug, initialCategory, onComplete } = options;
   const navigate = useNavigate();
-  const isEditMode = !!slug;
-  const isCloneMode = !!cloneFromId;
+  const isEditMode = !!slug && !cloneFromSlug;
+  const isCloneMode = !!cloneFromSlug;
 
   // SDK hooks - fetch by slug for edit mode or clone mode
-  console.log('[useRentalObjectWizard] Clone debug:', { slug, cloneFromId, isEditMode, isCloneMode });
-  const { data: existingObject, isLoading: isLoadingObject } = useRentalObjectBySlug(slug || cloneFromId || '', {
-    enabled: isEditMode || isCloneMode,
-  });
-  console.log('[useRentalObjectWizard] Existing object:', existingObject);
+  // Use cloneFromSlug when cloning, otherwise use slug for editing
+  const fetchSlug = cloneFromSlug || slug;
+  const { data: existingObject, isLoading: isLoadingObject } = useRentalObjectBySlug(fetchSlug);
   const createMutation = useCreateRentalObject();
   const updateMutation = useUpdateRentalObject();
 
@@ -138,33 +136,64 @@ export function useRentalObjectWizard(
 
   // Load existing rental object data in edit mode or clone mode
   useEffect(() => {
-    console.log('[useRentalObjectWizard] useEffect triggered:', { isEditMode, isCloneMode, hasData: !!existingObject?.data });
     if ((isEditMode || isCloneMode) && existingObject?.data) {
       const obj = existingObject.data as any; // Cast to any to avoid type mismatches with outdated contracts
-      console.log('[useRentalObjectWizard] Loading data from object:', obj);
-      setFormData({
+      
+      // Deep clone all data to ensure we get everything
+      // Cast to any since form data has additional fields not in RentalObject type
+      const clonedData: any = {
         // For clone mode, don't include id and slug (create new object)
         ...(isEditMode && { id: obj.id, slug: obj.slug }),
-        name: isCloneMode ? `${obj.name} (Copy)` : obj.name,
+        
+        // Basic info
+        name: isCloneMode ? `${obj.name} (Kopi)` : obj.name,
+        description: obj.description,
+        
+        // Category system
         category: obj.category as RentalObjectCategory,
         subcategory: obj.subcategory,
-        status: 'draft', // Always start as draft for clones
-        images: obj.images,
-        pricing: obj.pricing,
-        description: obj.description,
+        tags: obj.tags ? [...obj.tags] : [],
+        
+        // Status - always draft for clones
+        status: isCloneMode ? 'draft' : obj.status,
+        
+        // Media
+        images: obj.images ? [...obj.images] : [],
+        
+        // Pricing - deep clone
+        pricing: obj.pricing ? { ...obj.pricing } : undefined,
+        
+        // Booking configuration
         timeMode: obj.timeMode,
+        bookingFeatures: obj.bookingFeatures ? { ...obj.bookingFeatures } : undefined,
+        bookingConfig: obj.bookingConfig ? { ...obj.bookingConfig } : undefined,
+        
+        // Capacity
         capacity: obj.capacity,
-        // Load category-specific fields from metadata or direct fields
-        location: obj.location,
-        openingHours: obj.openingHours,
-        inventory: obj.inventory,
-        pickup: obj.pickup,
-        requirements: obj.requirements,
-        packages: obj.packages,
-        schedule: obj.schedule,
-        content: obj.content,
-        bookingConfig: obj.bookingConfig,
-      });
+        
+        // Location
+        fixedLocation: obj.fixedLocation,
+        location: obj.location ? { ...obj.location } : undefined,
+        
+        // Rules
+        rules: obj.rules ? { ...obj.rules } : undefined,
+        
+        // Opening hours - deep clone
+        openingHours: obj.openingHours ? JSON.parse(JSON.stringify(obj.openingHours)) : undefined,
+        
+        // Category-specific fields - deep clone all
+        inventory: obj.inventory ? JSON.parse(JSON.stringify(obj.inventory)) : undefined,
+        pickup: obj.pickup ? { ...obj.pickup } : undefined,
+        requirements: obj.requirements ? JSON.parse(JSON.stringify(obj.requirements)) : undefined,
+        packages: obj.packages ? JSON.parse(JSON.stringify(obj.packages)) : undefined,
+        schedule: obj.schedule ? JSON.parse(JSON.stringify(obj.schedule)) : undefined,
+        content: obj.content ? JSON.parse(JSON.stringify(obj.content)) : undefined,
+        
+        // Metadata - deep clone everything
+        metadata: obj.metadata ? JSON.parse(JSON.stringify(obj.metadata)) : undefined,
+      };
+      
+      setFormData(clonedData);
       setIsDirty(false);
     }
   }, [isEditMode, isCloneMode, existingObject]);

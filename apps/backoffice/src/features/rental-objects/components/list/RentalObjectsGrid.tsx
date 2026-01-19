@@ -15,8 +15,13 @@ import {
   TrashIcon,
   CopyIcon,
   InboxIcon,
+  CheckIcon,
+  EyeIcon,
+  Dialog,
 } from '@xala/ds';
+import { useState } from 'react';
 import type { RentalObject } from '@digilist/client-sdk/types';
+import { usePublishRentalObject, useUnpublishRentalObject, useArchiveRentalObject } from '@digilist/client-sdk/hooks';
 
 export interface RentalObjectsGridProps {
   rentalObjects: RentalObject[];
@@ -35,6 +40,13 @@ export function RentalObjectsGrid({
 }: RentalObjectsGridProps) {
   const t = useT();
   const navigate = useNavigate();
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [itemToDelete, setItemToDelete] = useState<RentalObject | null>(null);
+  
+  // SDK mutations for publish/unpublish/archive
+  const publishMutation = usePublishRentalObject();
+  const unpublishMutation = useUnpublishRentalObject();
+  const archiveMutation = useArchiveRentalObject();
 
   if (isLoading) {
     return (
@@ -67,14 +79,47 @@ export function RentalObjectsGrid({
     navigate(`/rental-objects/create?cloneFrom=${slug || id}`);
   };
 
-  const handleArchive = (id: string) => {
-    // TODO: Implement archive functionality with confirmation
-    console.log('Archive rental object:', id);
+  const handleArchive = async (id: string) => {
+    try {
+      await archiveMutation.mutateAsync(id);
+      if (_onRefresh) _onRefresh();
+    } catch (error) {
+      console.error('Failed to archive:', error);
+    }
   };
 
-  const handleDelete = (id: string) => {
-    // TODO: Implement delete functionality with confirmation
-    console.log('Delete rental object:', id);
+  const handleDelete = (item: RentalObject) => {
+    setItemToDelete(item);
+    setDeleteDialogOpen(true);
+  };
+
+  const confirmDelete = async () => {
+    if (!itemToDelete) return;
+    
+    try {
+      // TODO: Call SDK delete method
+      console.log('Deleting rental object:', itemToDelete.id);
+      // await sdk.rentalObjects.delete(itemToDelete.id);
+      setDeleteDialogOpen(false);
+      setItemToDelete(null);
+      // Refresh list if callback provided
+      if (_onRefresh) _onRefresh();
+    } catch (error) {
+      console.error('Failed to delete:', error);
+    }
+  };
+
+  const handlePublish = async (id: string, currentlyPublished: boolean) => {
+    try {
+      if (currentlyPublished) {
+        await unpublishMutation.mutateAsync(id);
+      } else {
+        await publishMutation.mutateAsync(id);
+      }
+      if (_onRefresh) _onRefresh();
+    } catch (error) {
+      console.error('Failed to publish/unpublish:', error);
+    }
   };
 
   const PRICE_UNIT_LABELS: Record<string, string> = {
@@ -86,6 +131,7 @@ export function RentalObjectsGrid({
   };
 
   return (
+    <>
     <div style={{
       display: 'grid',
       gridTemplateColumns: 'repeat(auto-fill, minmax(350px, 1fr))',
@@ -93,10 +139,15 @@ export function RentalObjectsGrid({
       padding: 'var(--ds-spacing-4)'
     }}>
       {rentalObjects.map((item) => {
-        const primaryImage = item.primaryImageUrl || item.images?.[0] || 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="400" height="300"%3E%3Crect fill="%23ddd" width="400" height="300"/%3E%3Ctext fill="%23999" x="50%25" y="50%25" dominant-baseline="middle" text-anchor="middle" font-family="sans-serif" font-size="18"%3EIngen bilde%3C/text%3E%3C/svg%3E';
-        const priceAmount = item.pricing ? item.pricing.basePrice / 100 : 0;
-        const priceUnit = item.pricing ? PRICE_UNIT_LABELS[item.pricing.unit] || item.pricing.unit : 'time';
-        const locationFormatted = item.location?.city || t('rentalObjects.noLocation');
+        // Cast to any to access projection fields that may not be in RentalObject type
+        const projection = item as any;
+        
+        const primaryImage = projection.primaryImageUrl || item.images?.[0] || 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="400" height="300"%3E%3Crect fill="%23ddd" width="400" height="300"/%3E%3Ctext fill="%23999" x="50%25" y="50%25" dominant-baseline="middle" text-anchor="middle" font-family="sans-serif" font-size="18"%3EIngen bilde%3C/text%3E%3C/svg%3E';
+        const priceAmount = projection.priceAmount ? projection.priceAmount / 100 : (item.pricing ? item.pricing.basePrice / 100 : 0);
+        const priceUnit = projection.priceUnit || (item.pricing ? PRICE_UNIT_LABELS[item.pricing.unit] || item.pricing.unit : 'time');
+        const locationFormatted = projection.city || projection.locationFormatted || item.location?.city || t('rentalObjects.noLocation');
+        // isAvailable is true when status is 'published' - from card projection
+        const isPublished = projection.isAvailable === true;
 
         return (
           <Card
@@ -162,6 +213,34 @@ export function RentalObjectsGrid({
 
               {/* Action Buttons */}
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 'var(--ds-spacing-2)', marginTop: 'var(--ds-spacing-4)' }}>
+                {isPublished ? (
+                  <Button
+                    variant="tertiary"
+                    data-size="sm"
+                    data-color="danger"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handlePublish(item.id, isPublished);
+                    }}
+                    style={{ gridColumn: '1 / -1' }}
+                  >
+                    <EyeIcon aria-hidden style={{ width: '1rem', height: '1rem', marginRight: 'var(--ds-spacing-1)' }} />
+                    {t('action.unpublish')}
+                  </Button>
+                ) : (
+                  <Button
+                    variant="primary"
+                    data-size="sm"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handlePublish(item.id, isPublished);
+                    }}
+                    style={{ gridColumn: '1 / -1' }}
+                  >
+                    <CheckIcon aria-hidden style={{ width: '1rem', height: '1rem', marginRight: 'var(--ds-spacing-1)' }} />
+                    {t('action.publish')}
+                  </Button>
+                )}
                 <Button
                   variant="secondary"
                   data-size="sm"
@@ -200,7 +279,7 @@ export function RentalObjectsGrid({
                   data-size="sm"
                   onClick={(e) => {
                     e.stopPropagation();
-                    handleDelete(item.id);
+                    handleDelete(item);
                   }}
                 >
                   <TrashIcon aria-hidden style={{ width: '1rem', height: '1rem', marginRight: 'var(--ds-spacing-1)' }} />
@@ -212,5 +291,43 @@ export function RentalObjectsGrid({
         );
       })}
     </div>
+
+    {/* Delete Confirmation Dialog */}
+    <Dialog.TriggerContext>
+      <Dialog
+        open={deleteDialogOpen}
+        onClose={() => setDeleteDialogOpen(false)}
+      >
+        <Dialog.Block>
+          <Heading level={2} data-size="sm" style={{ marginBottom: 'var(--ds-spacing-2)' }}>
+            {t('rentalObjects.deleteConfirmTitle')}
+          </Heading>
+          <Paragraph>
+            {t('rentalObjects.deleteConfirmMessage', { name: itemToDelete?.name || '' })}
+          </Paragraph>
+          <Paragraph data-size="sm" style={{ color: 'var(--ds-color-danger-text-default)', marginTop: 'var(--ds-spacing-2)' }}>
+            {t('common.actionCannotBeUndone')}
+          </Paragraph>
+        </Dialog.Block>
+        <Dialog.Block>
+          <div style={{ display: 'flex', gap: 'var(--ds-spacing-2)', justifyContent: 'flex-end' }}>
+            <Button
+              variant="secondary"
+              onClick={() => setDeleteDialogOpen(false)}
+            >
+              {t('action.cancel')}
+            </Button>
+            <Button
+              variant="primary"
+              onClick={confirmDelete}
+              style={{ backgroundColor: 'var(--ds-color-danger-background-default)' }}
+            >
+              {t('action.delete')}
+            </Button>
+          </div>
+        </Dialog.Block>
+      </Dialog>
+    </Dialog.TriggerContext>
+    </>
   );
 }

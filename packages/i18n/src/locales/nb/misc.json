@@ -1075,6 +1075,7 @@
   "wizard.step.packages": "Pakker",
   "wizard.step.schedule": "Timeplan",
   "wizard.step.booking": "Booking",
+  "wizard.step.bookingSettings": "Bookinginnstillinger",
   "wizard.step.content": "Innhold",
   "wizard.step.review": "Gjennomgang",
   "wizard.saveDraft": "Lagre utkast",
