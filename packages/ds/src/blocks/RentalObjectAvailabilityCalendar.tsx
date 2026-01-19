@@ -423,11 +423,12 @@ function TimeSlotsCell({
       aria-label={`${dayName} ${dayNumber} kl ${timeLabel} - ${statusConfig.label}${isSelected ? ' (valgt)' : ''}`}
       title={tooltipText}
       style={{
-        padding: 'var(--ds-spacing-2)',
+        padding: 'var(--ds-spacing-1) var(--ds-spacing-2)',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
-        minHeight: '40px',
+        minHeight: '36px',
+        width: '100%',
         backgroundColor: getCellBackgroundColor(status, isSelected),
         color: getCellTextColor(status, isSelected),
         fontSize: 'var(--ds-font-size-xs)',
@@ -435,7 +436,7 @@ function TimeSlotsCell({
         cursor: canClick ? 'pointer' : 'default',
         transition: 'all 0.15s ease',
         borderRadius: 'var(--ds-border-radius-sm)',
-        border: isSelected ? '2px solid var(--ds-color-accent-base-default)' : '1px solid transparent',
+        border: isSelected ? '2px solid var(--ds-color-accent-base-default)' : 'none',
       }}
     >
       {timeLabel}
@@ -1037,7 +1038,7 @@ export function RentalObjectAvailabilityCalendar({
                     <div
                       key={dayIndex}
                       style={{
-                        padding: '2px',
+                        padding: '1px',
                         display: 'flex',
                         alignItems: 'center',
                         justifyContent: 'center',
@@ -1066,7 +1067,7 @@ export function RentalObjectAvailabilityCalendar({
                   <div
                     key={dayIndex}
                     style={{
-                      padding: '2px',
+                      padding: '1px',
                       display: 'flex',
                       alignItems: 'center',
                       justifyContent: 'center',
