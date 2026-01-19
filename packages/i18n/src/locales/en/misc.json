@@ -1064,6 +1064,7 @@
   "wizard.step.schedule": "Schedule",
   "wizard.step.booking": "Booking",
   "wizard.step.bookingSettings": "Booking Settings",
+  "wizard.step.booking-settings": "Booking Settings",
   "wizard.step.content": "Content",
   "wizard.step.review": "Review",
   "wizard.saveDraft": "Save draft",
