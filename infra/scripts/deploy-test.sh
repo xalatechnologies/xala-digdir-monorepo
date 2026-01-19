@@ -203,24 +203,29 @@ echo ""
 echo "📸 Step 7: Checking storage files..."
 ssh ${VPS_USER}@${VPS_HOST} "mkdir -p /var/www/digilist-storage/uploads"
 
-# Check if storage files already exist
-FILE_COUNT=$(ssh ${VPS_USER}@${VPS_HOST} "find /var/www/digilist-storage/uploads -type f 2>/dev/null | wc -l" || echo "0")
-
-if [ "$FILE_COUNT" -gt "10" ]; then
-  echo "⏭️  Storage files already exist ($FILE_COUNT files), skipping upload"
-  log_info "Storage upload skipped - files already present"
+# Check if storage marker file exists (more reliable than counting files)
+if ssh ${VPS_USER}@${VPS_HOST} "test -f /var/www/digilist-storage/.storage-uploaded"; then
+  echo "⏭️  Storage files already uploaded (marker file exists), skipping"
+  log_info "Storage upload skipped - already uploaded"
 else
   echo "📤 Uploading storage files..."
   rsync -avz packages/database-schema/seeds/storage/ ${VPS_USER}@${VPS_HOST}:/var/www/digilist-storage/uploads/
   ssh ${VPS_USER}@${VPS_HOST} "chown -R www-data:www-data /var/www/digilist-storage 2>/dev/null || chown -R root:root /var/www/digilist-storage"
-  log_info "Storage files deployed to /var/www/digilist-storage/uploads"
+  # Create marker file to prevent future uploads
+  ssh ${VPS_USER}@${VPS_HOST} "touch /var/www/digilist-storage/.storage-uploaded"
+  log_info "Storage files deployed and marker file created"
 fi
 echo ""
 
-# Step 8: Seed database
-echo "🌱 Step 8: Seeding database..."
-ssh ${VPS_USER}@${VPS_HOST} "cd ${DEPLOY_PATH} && DATABASE_URL='postgresql://${DB_USER}:${DB_PASSWORD}@${DB_HOST}:${DB_PORT}/${DB_NAME}' pnpm --filter @digilist/database-schema seed"
-log_info "Database seeded"
+# Step 8: Seed database (optional - set SKIP_SEED=true to skip)
+if [ "${SKIP_SEED}" = "true" ]; then
+  echo "⏭️  Step 8: Skipping database seeding (SKIP_SEED=true)"
+  log_info "Database seeding skipped"
+else
+  echo "🌱 Step 8: Seeding database..."
+  ssh ${VPS_USER}@${VPS_HOST} "cd ${DEPLOY_PATH} && DATABASE_URL='postgresql://${DB_USER}:${DB_PASSWORD}@${DB_HOST}:${DB_PORT}/${DB_NAME}' pnpm --filter @digilist/database-schema seed"
+  log_info "Database seeded"
+fi
 echo ""
 
 # Step 9: Deploy PM2 configuration
