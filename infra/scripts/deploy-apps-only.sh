@@ -25,7 +25,7 @@ NC='\033[0m' # No Color
 
 # Configuration
 VPS_HOST="72.61.23.56"
-VPS_USER="digilist"
+VPS_USER="root"
 DEPLOY_PATH="/home/digilist/digilist-platform"
 
 # Parse arguments
