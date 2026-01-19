@@ -5,7 +5,7 @@
  */
 
 import * as React from 'react';
-import { Heading, Paragraph, Button } from '@digdir/designsystemet-react';
+import { Heading, Paragraph, Button } from '@xala/ds';
 import type { FlowSelectedSlot, FlowBookingMode } from '@digilist/client-sdk';
 import { useT } from '@xala/i18n';
 import { BookingVisibilitySelector, type BookingVisibility } from './BookingVisibilitySelector';

@@ -4,7 +4,7 @@
  */
 
 import * as React from 'react';
-import { Heading, Paragraph, Alert } from '@digdir/designsystemet-react';
+import { Heading, Paragraph, Alert } from '@xala/ds';
 import { InfoIcon } from '@xala/ds';
 import { useT } from '@xala/i18n';
 

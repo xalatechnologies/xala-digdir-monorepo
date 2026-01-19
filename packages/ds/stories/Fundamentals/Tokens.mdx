@@ -1,0 +1,185 @@
+{/* Fundamentals/Tokens.mdx */}
+import { Meta } from '@storybook/blocks';
+
+<Meta title="Fundamentals/Tokens" />
+
+# Design Tokens
+
+Design tokens are the foundational values of the design system. They define colors, spacing, typography, and other visual properties.
+
+## Token Categories
+
+### Spacing
+
+```css
+--ds-spacing-0: 0;
+--ds-spacing-1: 0.25rem;  /* 4px */
+--ds-spacing-2: 0.5rem;   /* 8px */
+--ds-spacing-3: 0.75rem;  /* 12px */
+--ds-spacing-4: 1rem;     /* 16px */
+--ds-spacing-5: 1.25rem;  /* 20px */
+--ds-spacing-6: 1.5rem;   /* 24px */
+--ds-spacing-8: 2rem;     /* 32px */
+--ds-spacing-10: 2.5rem;  /* 40px */
+--ds-spacing-12: 3rem;    /* 48px */
+```
+
+### Sizing
+
+```css
+--ds-sizing-1: 0.25rem;   /* 4px */
+--ds-sizing-2: 0.5rem;    /* 8px */
+--ds-sizing-4: 1rem;      /* 16px */
+--ds-sizing-5: 1.25rem;   /* 20px */
+--ds-sizing-6: 1.5rem;    /* 24px */
+--ds-sizing-8: 2rem;      /* 32px */
+--ds-sizing-10: 2.5rem;   /* 40px */
+--ds-sizing-12: 3rem;     /* 48px */
+--ds-sizing-20: 5rem;     /* 80px */
+--ds-sizing-40: 10rem;    /* 160px */
+```
+
+### Colors
+
+#### Neutral Colors
+```css
+--ds-color-neutral-text-default
+--ds-color-neutral-text-subtle
+--ds-color-neutral-background-default
+--ds-color-neutral-background-subtle
+--ds-color-neutral-surface-default
+--ds-color-neutral-surface-hover
+--ds-color-neutral-border-default
+--ds-color-neutral-border-subtle
+```
+
+#### Accent Colors
+```css
+--ds-color-accent-base-default
+--ds-color-accent-text-default
+--ds-color-accent-surface-default
+--ds-color-accent-surface-subtle
+--ds-color-accent-border-default
+```
+
+#### Semantic Colors
+```css
+/* Success */
+--ds-color-success-base-default
+--ds-color-success-text-default
+--ds-color-success-surface-default
+
+/* Warning */
+--ds-color-warning-base-default
+--ds-color-warning-text-default
+--ds-color-warning-surface-default
+
+/* Danger */
+--ds-color-danger-base-default
+--ds-color-danger-text-default
+--ds-color-danger-surface-default
+
+/* Info */
+--ds-color-info-base-default
+--ds-color-info-text-default
+--ds-color-info-surface-default
+```
+
+### Typography
+
+```css
+/* Font Families */
+--ds-font-family-default
+--ds-font-family-mono
+
+/* Font Sizes */
+--ds-font-size-xs: 0.75rem;   /* 12px */
+--ds-font-size-sm: 0.875rem;  /* 14px */
+--ds-font-size-md: 1rem;      /* 16px */
+--ds-font-size-lg: 1.125rem;  /* 18px */
+--ds-font-size-xl: 1.25rem;   /* 20px */
+--ds-font-size-2xl: 1.5rem;   /* 24px */
+--ds-font-size-3xl: 1.875rem; /* 30px */
+
+/* Font Weights */
+--ds-font-weight-normal: 400;
+--ds-font-weight-medium: 500;
+--ds-font-weight-semibold: 600;
+--ds-font-weight-bold: 700;
+```
+
+### Border Radius
+
+```css
+--ds-border-radius-sm: 0.25rem;   /* 4px */
+--ds-border-radius-md: 0.5rem;    /* 8px */
+--ds-border-radius-lg: 0.75rem;   /* 12px */
+--ds-border-radius-xl: 1rem;      /* 16px */
+--ds-border-radius-full: 9999px;
+```
+
+### Border Width
+
+```css
+--ds-border-width-default: 1px;
+--ds-border-width-lg: 2px;
+```
+
+### Shadows
+
+```css
+--ds-shadow-sm
+--ds-shadow-md
+--ds-shadow-lg
+--ds-shadow-xl
+```
+
+## Usage Examples
+
+### Inline Styles
+
+```tsx
+<div style={{
+  padding: 'var(--ds-spacing-4)',
+  backgroundColor: 'var(--ds-color-neutral-surface-default)',
+  borderRadius: 'var(--ds-border-radius-md)',
+  boxShadow: 'var(--ds-shadow-sm)',
+}}>
+  Content
+</div>
+```
+
+### CSS Classes
+
+```css
+.my-component {
+  padding: var(--ds-spacing-4);
+  color: var(--ds-color-neutral-text-default);
+  font-size: var(--ds-font-size-md);
+}
+```
+
+## Do and Don't
+
+### Do
+
+- Use design tokens for all styling
+- Reference semantic color tokens (success, danger, etc.) for status
+- Use spacing tokens for consistent rhythm
+
+### Don't
+
+- Use raw CSS values (px, rem, hex colors)
+- Create custom color variables
+- Override token values
+
+## Token Generation
+
+Tokens are generated from Digdir Designsystemet. To rebuild:
+
+```bash
+# From the packages/ds-themes directory
+pnpm tokens:build
+```
+
+See the [Digdir Designsystemet documentation](https://designsystemet.no/en/fundamentals/themebuilder/own-theme/) for customization.

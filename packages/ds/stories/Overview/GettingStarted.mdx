@@ -1,0 +1,221 @@
+{/* Overview/GettingStarted.mdx */}
+import { Meta } from '@storybook/blocks';
+
+<Meta title="Overview/Getting Started" />
+
+# Getting Started
+
+This guide walks you through setting up and using the Xala Design System in your application.
+
+## Installation
+
+The DS is a workspace package in the monorepo:
+
+```bash
+# The DS is already available as a workspace dependency
+# In your app's package.json:
+{
+  "dependencies": {
+    "@xala/ds": "workspace:*"
+  }
+}
+```
+
+## Setup
+
+### 1. Import Styles
+
+Import the DS styles **once** in your application entry point:
+
+```tsx
+// main.tsx or App.tsx
+import '@xala/ds/styles';
+```
+
+This imports:
+- Digdir Designsystemet CSS
+- DS theme tokens
+- Component styles
+
+### 2. Add Providers
+
+Wrap your application with the required providers:
+
+```tsx
+import { ThemeProvider } from '@xala/ds';
+
+function App() {
+  return (
+    <ThemeProvider>
+      <RouterProvider router={router} />
+    </ThemeProvider>
+  );
+}
+```
+
+### 3. Use Components
+
+Import and use DS components:
+
+```tsx
+import { 
+  AppShell, 
+  PageHeader, 
+  DataTable, 
+  Button 
+} from '@xala/ds';
+
+function UsersPage() {
+  return (
+    <AppShell title="Admin">
+      <PageHeader 
+        title="Users" 
+        actions={<Button>Add User</Button>}
+      />
+      <DataTable columns={columns} data={users} />
+    </AppShell>
+  );
+}
+```
+
+## Theme Configuration
+
+### Light/Dark Mode
+
+The DS supports light, dark, and auto (system) themes:
+
+```tsx
+import { useTheme } from '@xala/ds';
+
+function ThemeToggle() {
+  const { isDark, toggleTheme } = useTheme();
+  
+  return (
+    <Button onClick={toggleTheme}>
+      {isDark ? 'Light Mode' : 'Dark Mode'}
+    </Button>
+  );
+}
+```
+
+### Using Tokens
+
+Always use design tokens for styling:
+
+```tsx
+// Spacing
+style={{ padding: 'var(--ds-spacing-4)' }}
+
+// Colors
+style={{ color: 'var(--ds-color-neutral-text-default)' }}
+
+// Typography
+style={{ fontSize: 'var(--ds-font-size-md)' }}
+
+// Borders
+style={{ borderRadius: 'var(--ds-border-radius-md)' }}
+```
+
+## Component Layers
+
+### When to Use Each Layer
+
+| Layer | Use When |
+|-------|----------|
+| **Primitives** | Building custom layouts or low-level UI |
+| **Composed** | Assembling standard page sections |
+| **Blocks** | Implementing business features |
+| **Shells** | Creating application scaffolding |
+
+### Example: Building a Dashboard
+
+```tsx
+import {
+  // Shell
+  AppShell,
+  DashboardSidebar,
+  
+  // Composed
+  PageHeader,
+  DataTable,
+  
+  // Blocks
+  StatCard,
+  ActivityFeed,
+  
+  // Primitives
+  Grid,
+  Card,
+} from '@xala/ds';
+
+function Dashboard() {
+  return (
+    <AppShell sidebar={<DashboardSidebar items={navItems} />}>
+      <PageHeader title="Dashboard" />
+      
+      <Grid columns={4} gap="var(--ds-spacing-4)">
+        <StatCard title="Revenue" value="$12,345" />
+        <StatCard title="Users" value="1,234" />
+        <StatCard title="Orders" value="567" />
+        <StatCard title="Growth" value="+12%" />
+      </Grid>
+      
+      <Grid columns={2} gap="var(--ds-spacing-4)">
+        <Card>
+          <DataTable columns={columns} data={recentOrders} />
+        </Card>
+        <Card>
+          <ActivityFeed items={activities} />
+        </Card>
+      </Grid>
+    </AppShell>
+  );
+}
+```
+
+## Testing
+
+### data-testid Convention
+
+Every interactive DS component exposes `data-testid` props:
+
+```tsx
+<Button data-testid="submit-button">Submit</Button>
+<DataTable data-testid="users-table" />
+```
+
+### E2E Testing
+
+```tsx
+// Playwright example
+await page.getByTestId('submit-button').click();
+await expect(page.getByTestId('users-table')).toBeVisible();
+```
+
+## Troubleshooting
+
+### Styles Not Loading
+
+Ensure you import styles in your entry point:
+
+```tsx
+import '@xala/ds/styles';
+```
+
+### Theme Not Working
+
+Verify ThemeProvider wraps your app:
+
+```tsx
+<ThemeProvider>
+  <App />
+</ThemeProvider>
+```
+
+### TypeScript Errors
+
+The DS exports all types. Import them explicitly:
+
+```tsx
+import type { ButtonProps, DataTableProps } from '@xala/ds';
+```

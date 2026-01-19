@@ -1,0 +1,80 @@
+name: DS Quality Checks
+
+on:
+  pull_request:
+    paths:
+      - 'packages/ds/**'
+      - 'docs/ds/**'
+
+jobs:
+  quality-checks:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v2
+        with:
+          version: 9
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: TypeScript check
+        run: pnpm -F @xala/ds typecheck
+
+      - name: Build Storybook
+        run: pnpm -F @xala/ds storybook:build
+
+      - name: Check docs coverage
+        run: pnpm -F @xala/ds docs:coverage
+        continue-on-error: true
+
+      - name: Check for raw CSS values
+        run: |
+          echo "Checking for raw CSS values in DS components..."
+          
+          # Check for hardcoded pixels
+          if grep -rn "style={{" packages/ds/src --include="*.tsx" | grep -E ":\s*['\"]?[0-9]+px['\"]?" | grep -v "var(--"; then
+            echo "ERROR: Found hardcoded pixel values. Use tokens instead."
+            exit 1
+          fi
+          
+          # Check for hardcoded colors
+          if grep -rn "style={{" packages/ds/src --include="*.tsx" | grep -E ":\s*['\"]?#[0-9a-fA-F]{3,6}['\"]?" | grep -v "var(--"; then
+            echo "ERROR: Found hardcoded color values. Use tokens instead."
+            exit 1
+          fi
+          
+          echo "No raw CSS values found!"
+
+      - name: Check for emojis
+        run: |
+          echo "Checking for emojis in DS components..."
+          
+          # Check for common emoji ranges
+          if grep -rn $'[\U0001F300-\U0001F9FF]' packages/ds/src --include="*.tsx" --include="*.ts"; then
+            echo "ERROR: Found emojis. Use DS icons instead."
+            exit 1
+          fi
+          
+          echo "No emojis found!"
+
+      - name: Check for direct @digdir imports in apps
+        run: |
+          echo "Checking for direct @digdir imports in apps..."
+          
+          for app in apps/backoffice apps/minside apps/web; do
+            if [ -d "$app" ]; then
+              if grep -rn "from '@digdir/" "$app/src" --include="*.tsx" --include="*.ts" 2>/dev/null; then
+                echo "ERROR: Found direct @digdir imports in $app. Import from @xala/ds instead."
+                exit 1
+              fi
+            fi
+          done
+          
+          echo "No direct @digdir imports found in apps!"

@@ -510,3 +510,147 @@ export type {
   FormFieldProps,
   FormDividerProps,
 } from './FormLayout';
+
+// Avatar Group (Rich version with status indicators)
+export { 
+  AvatarItem as RichAvatarItem, 
+  AvatarGroup as RichAvatarGroup 
+} from './AvatarGroup';
+export type {
+  AvatarItemProps as RichAvatarItemProps,
+  AvatarGroupProps as RichAvatarGroupProps,
+  AvatarSize as RichAvatarSize,
+} from './AvatarGroup';
+
+// Badge & Tag
+export { Badge, Tag, NotificationBadge } from './Badge';
+export type {
+  BadgeProps,
+  BadgeVariant,
+  BadgeSize,
+  TagProps,
+  NotificationBadgeProps,
+} from './Badge';
+
+// Tooltip
+export { Tooltip } from './Tooltip';
+export type {
+  TooltipProps,
+  TooltipPosition,
+} from './Tooltip';
+
+// Popover
+export { Popover, PopoverHeader, PopoverBody, PopoverFooter } from './Popover';
+export type {
+  PopoverProps,
+  PopoverPosition,
+  PopoverTrigger,
+  PopoverHeaderProps,
+  PopoverBodyProps,
+  PopoverFooterProps,
+} from './Popover';
+
+// Skeleton Loading
+export { Skeleton, SkeletonText, SkeletonCard, SkeletonTable, SkeletonAvatar } from './Skeleton';
+export type {
+  SkeletonProps,
+  SkeletonTextProps,
+  SkeletonCardProps,
+  SkeletonTableProps,
+  SkeletonAvatarProps,
+} from './Skeleton';
+
+// Progress
+export { ProgressBar, ProgressRing, ProgressSteps } from './Progress';
+export type {
+  ProgressBarProps,
+  ProgressRingProps,
+  ProgressStepsProps,
+  ProgressVariant,
+  ProgressSize,
+} from './Progress';
+
+// Accordion & Collapsible
+export { Accordion, Collapsible } from './Accordion';
+export type {
+  AccordionProps,
+  AccordionItem,
+  CollapsibleProps,
+} from './Accordion';
+
+// KeyValue Display
+export { KeyValue, KeyValueList, DefinitionList } from './KeyValue';
+export type {
+  KeyValueProps,
+  KeyValueListProps,
+  KeyValuePair,
+  DefinitionListProps,
+} from './KeyValue';
+
+// Slider & RangeSlider
+export { Slider, RangeSlider } from './Slider';
+export type {
+  SliderProps,
+  RangeSliderProps,
+  SliderMark,
+} from './Slider';
+
+// Rating
+export { Rating, RatingDisplay } from './Rating';
+export type {
+  RatingProps,
+  RatingDisplayProps,
+} from './Rating';
+
+// ColorPicker
+export { ColorPicker, ColorSwatch } from './ColorPicker';
+export type {
+  ColorPickerProps,
+  ColorSwatchProps,
+} from './ColorPicker';
+
+// SortableList
+export { SortableList } from './SortableList';
+export type {
+  SortableListProps,
+  SortableItem,
+} from './SortableList';
+
+// ActionMenu & ContextMenu
+export { ActionMenu, ContextMenu } from './ActionMenu';
+export type {
+  ActionMenuProps,
+  ContextMenuProps,
+  MenuItem,
+  MenuGroup,
+} from './ActionMenu';
+
+// InfiniteScroll & VirtualList
+export { InfiniteScroll, VirtualList, useInfiniteScroll } from './InfiniteScroll';
+export type {
+  InfiniteScrollProps,
+  VirtualListProps,
+} from './InfiniteScroll';
+
+// Spotlight & HighlightText
+export { HighlightText, Spotlight, SearchHighlight, TextTruncate } from './Spotlight';
+export type {
+  HighlightTextProps,
+  SpotlightProps,
+  SearchHighlightProps,
+  TextTruncateProps,
+} from './Spotlight';
+
+// NumberInput
+export { NumberInput } from './NumberInput';
+export type {
+  NumberInputProps,
+} from './NumberInput';
+
+// CodeBlock & CopyButton
+export { CopyButton, CodeBlock, InlineCode } from './CodeBlock';
+export type {
+  CopyButtonProps,
+  CodeBlockProps,
+  InlineCodeProps,
+} from './CodeBlock';

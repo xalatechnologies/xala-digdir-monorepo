@@ -1,0 +1,237 @@
+{/* Fundamentals/Accessibility.mdx */}
+import { Meta } from '@storybook/blocks';
+
+<Meta title="Fundamentals/Accessibility" />
+
+# Accessibility
+
+The Xala Design System is built with accessibility as a core requirement. All components must meet WCAG 2.1 AA standards.
+
+## Core Principles
+
+### 1. Perceivable
+
+- All non-text content has text alternatives
+- Color is not the only means of conveying information
+- Content is distinguishable (sufficient contrast)
+
+### 2. Operable
+
+- All functionality is keyboard accessible
+- Users have enough time to read and use content
+- Content does not cause seizures
+- Users can navigate and find content
+
+### 3. Understandable
+
+- Text is readable and understandable
+- Pages appear and operate in predictable ways
+- Users are helped to avoid and correct mistakes
+
+### 4. Robust
+
+- Content is compatible with assistive technologies
+- Semantic HTML is used correctly
+- ARIA is used appropriately
+
+## Keyboard Navigation
+
+All interactive components must support keyboard navigation:
+
+| Key | Action |
+|-----|--------|
+| `Tab` | Move focus to next focusable element |
+| `Shift + Tab` | Move focus to previous focusable element |
+| `Enter` / `Space` | Activate focused element |
+| `Escape` | Close modals, dropdowns, popovers |
+| `Arrow keys` | Navigate within components (menus, tabs, etc.) |
+
+### Focus Management
+
+```tsx
+// Focus indicators must be visible
+// DS components include focus styles by default
+
+// For custom focus management:
+import { useFocus } from '@xala/ds';
+
+function MyComponent() {
+  const { ref, focus } = useFocus();
+  
+  return <input ref={ref} />;
+}
+```
+
+## Color Contrast
+
+Minimum contrast ratios:
+
+| Element | Minimum Ratio |
+|---------|---------------|
+| Normal text | 4.5:1 |
+| Large text (18pt+) | 3:1 |
+| UI components | 3:1 |
+| Graphics | 3:1 |
+
+### Testing Contrast
+
+Use the Storybook a11y addon to check contrast:
+
+1. Select a story
+2. Open the "Accessibility" panel
+3. Review any contrast violations
+
+## ARIA Usage
+
+### Semantic HTML First
+
+Always prefer semantic HTML over ARIA:
+
+```tsx
+// Preferred - semantic HTML
+<button onClick={handleClick}>Submit</button>
+
+// Avoid - ARIA on non-semantic element
+<div role="button" onClick={handleClick}>Submit</div>
+```
+
+### ARIA Patterns
+
+Common ARIA patterns used in DS:
+
+```tsx
+// Modals
+<div role="dialog" aria-modal="true" aria-labelledby="title">
+  <h2 id="title">Dialog Title</h2>
+</div>
+
+// Tabs
+<div role="tablist">
+  <button role="tab" aria-selected="true">Tab 1</button>
+  <button role="tab" aria-selected="false">Tab 2</button>
+</div>
+
+// Live regions
+<div role="status" aria-live="polite">
+  {statusMessage}
+</div>
+```
+
+## Screen Reader Support
+
+### Announcements
+
+Use live regions for dynamic content:
+
+```tsx
+// Polite - waits for user to finish
+<div role="status" aria-live="polite">
+  {notification}
+</div>
+
+// Assertive - interrupts immediately
+<div role="alert" aria-live="assertive">
+  {error}
+</div>
+```
+
+### Hidden Content
+
+```tsx
+// Visually hidden but accessible
+<span className="sr-only">Additional context for screen readers</span>
+
+// Hidden from screen readers
+<Icon aria-hidden="true" />
+```
+
+## Form Accessibility
+
+### Labels
+
+Every form input must have an associated label:
+
+```tsx
+// Using DS FormField (preferred)
+<FormField label="Email" error={errors.email}>
+  <Input type="email" />
+</FormField>
+
+// Manual association
+<label htmlFor="email">Email</label>
+<input id="email" type="email" />
+```
+
+### Error Messages
+
+Connect errors to inputs:
+
+```tsx
+<input 
+  id="email"
+  aria-invalid={hasError}
+  aria-describedby="email-error"
+/>
+<span id="email-error" role="alert">
+  Please enter a valid email
+</span>
+```
+
+## Testing Checklist
+
+For every component, verify:
+
+- [ ] Keyboard navigation works correctly
+- [ ] Focus order is logical
+- [ ] Focus indicators are visible
+- [ ] Color contrast meets minimums
+- [ ] Screen reader announces content correctly
+- [ ] ARIA roles and properties are correct
+- [ ] No accessibility violations in automated testing
+
+## Automated Testing
+
+### Storybook a11y Addon
+
+The a11y addon runs axe-core checks on every story:
+
+```tsx
+// Stories automatically checked
+export const Default: Story = {
+  args: {
+    // ...
+  },
+};
+
+// Disable specific rules if needed (with justification)
+Default.parameters = {
+  a11y: {
+    config: {
+      rules: [
+        { id: 'color-contrast', enabled: false }, // Reason: ...
+      ],
+    },
+  },
+};
+```
+
+### Integration Tests
+
+```tsx
+// Playwright a11y testing
+import { test, expect } from '@playwright/test';
+import AxeBuilder from '@axe-core/playwright';
+
+test('page has no accessibility violations', async ({ page }) => {
+  await page.goto('/dashboard');
+  
+  const results = await new AxeBuilder({ page }).analyze();
+  expect(results.violations).toEqual([]);
+});
+```
+
+## Resources
+
+- [Designsystemet Accessibility](https://designsystemet.no/en/fundamentals/introduction/accessibility/)
+- [WCAG 2.1 Guidelines](https://www.w3.org/WAI/WCAG21/quickref/)
+- [ARIA Authoring Practices](https://www.w3.org/WAI/ARIA/apg/)

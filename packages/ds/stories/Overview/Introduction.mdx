@@ -1,0 +1,108 @@
+{/* Overview/Introduction.mdx */}
+import { Meta } from '@storybook/blocks';
+
+<Meta title="Overview/Introduction" />
+
+# Xala Design System
+
+The Xala Design System (DS) is a production-ready component library built on top of [Digdir Designsystemet](https://designsystemet.no). It provides a comprehensive set of components, blocks, and patterns for building consistent, accessible, and maintainable applications.
+
+## Architecture
+
+The DS follows a layered component hierarchy:
+
+| Layer | Description | Examples |
+|-------|-------------|----------|
+| **Primitives** | Low-level building blocks | Container, Grid, Stack, Icon, Button |
+| **Components** | Reusable UI components | Card, Badge, Input, Select |
+| **Composed** | Mid-level compositions | PageHeader, DataTable, ListToolbar |
+| **Blocks** | Business logic components | RentalObjectCard, BookingSection, StatusBadges |
+| **Shells** | Application-level layouts | AppShell, DashboardSidebar |
+
+## Design Principles
+
+### Token-First Styling
+
+All styling must use DS tokens. No raw CSS values or inline styles are permitted.
+
+```tsx
+// Correct - uses tokens
+<div style={{ padding: 'var(--ds-spacing-4)' }}>
+
+// Incorrect - raw CSS values
+<div style={{ padding: '16px' }}>
+```
+
+### Thin Apps, Rich DS
+
+Applications should be thin wrappers around DS blocks. All UI logic, styling, and patterns live in the DS package.
+
+```tsx
+// App code - thin wrapper
+import { RentalObjectGrid, AppShell } from '@xala/ds';
+
+function ListingsPage() {
+  const { data } = useListings();
+  return (
+    <AppShell>
+      <RentalObjectGrid items={data} />
+    </AppShell>
+  );
+}
+```
+
+### Accessibility First
+
+Every component must meet WCAG 2.1 AA standards:
+
+- Keyboard navigable
+- Screen reader compatible
+- Sufficient color contrast
+- Focus indicators visible
+
+### No Emojis
+
+Use DS icon registry only. Emojis are not permitted in any DS component or documentation.
+
+## Getting Started
+
+```tsx
+// 1. Import styles once in your app entry
+import '@xala/ds/styles';
+
+// 2. Wrap your app with providers
+import { ThemeProvider } from '@xala/ds';
+
+function App() {
+  return (
+    <ThemeProvider>
+      <YourApp />
+    </ThemeProvider>
+  );
+}
+
+// 3. Use DS components
+import { Button, Card, PageHeader } from '@xala/ds';
+```
+
+## Package Structure
+
+```
+@xala/ds/
+  src/
+    primitives/     # Low-level components
+    components/     # Reusable UI components
+    composed/       # Mid-level compositions
+    blocks/         # Business logic components
+    shells/         # Application layouts
+    tokens/         # Design tokens
+    hooks/          # Utility hooks
+    types/          # TypeScript types
+    utils/          # Utility functions
+```
+
+## Related Resources
+
+- [Designsystemet Documentation](https://designsystemet.no)
+- [Accessibility Guidelines](https://designsystemet.no/en/fundamentals/introduction/accessibility/)
+- [Best Practices](https://designsystemet.no/en/best-practices/)

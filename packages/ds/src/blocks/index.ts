@@ -269,9 +269,13 @@ export type {
 
 // GDPR Components
 export {
+  ConsentManager,
   ConsentPopup,
   ConsentSettings,
+  DataExportCard,
+  DeleteAccountCard,
   DataSubjectRequestForm,
+  // RequestStatusBadge exported from StatusBadges as GdprRequestStatusBadge
 } from './gdpr';
 
 // Help System Components
@@ -307,3 +311,8 @@ export type {
   UserInviteFormProps,
   InviteUserFormData,
 } from './admin';
+
+
+// Season Blocks
+export { SeasonCard } from './seasons';
+export type { SeasonCardProps, SeasonCardData, SeasonStatus } from './seasons';

@@ -8,6 +8,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- **DS-First + Thin Apps Baseline (2026-01-19)**: Architecture enforcement foundation
+  - `docs/ARCH/ds-single-source-of-truth.md` - DS as single source for UI patterns
+  - `docs/ARCH/thin-app-policy.md` - Apps contain only routes/wrappers
+  - `docs/ARCH/block-contract-standards.md` - Block props interface standards
+  - `docs/ARCH/ds-adoption-report.md` - Violations audit and migration plan
 - **MinSide Pattern Consolidation (2026-01-19)**: Baseline for consistent citizen dashboard
   - New `ListToolbar` component in `@xala/ds` for search/filter/sort toolbars
   - `docs/DESIGN/minside-ui-patterns.md` - Canonical UI patterns for MinSide

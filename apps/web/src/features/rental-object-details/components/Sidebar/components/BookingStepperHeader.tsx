@@ -5,7 +5,7 @@
  */
 
 import * as React from 'react';
-import { Heading, Paragraph } from '@digdir/designsystemet-react';
+import { Heading, Paragraph } from '@xala/ds';
 import { useT } from '@xala/i18n';
 
 // Step Icons

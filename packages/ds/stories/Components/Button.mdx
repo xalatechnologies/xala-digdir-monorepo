@@ -1,0 +1,116 @@
+{/* Components/Button.mdx */}
+import { Meta, Canvas, Controls, Story } from '@storybook/blocks';
+import * as ButtonStories from './Button.stories';
+
+<Meta of={ButtonStories} />
+
+# Button
+
+Buttons allow users to take actions with a single click or tap.
+
+<Canvas of={ButtonStories.Default} />
+
+## Props
+
+<Controls of={ButtonStories.Default} />
+
+## Variants
+
+Use variants to indicate the importance of an action:
+
+- **Primary**: Main action on the page
+- **Secondary**: Alternative or less important actions
+- **Tertiary**: Lowest emphasis actions
+
+<Canvas of={ButtonStories.Variants} />
+
+## Sizes
+
+Three sizes are available to fit different contexts:
+
+<Canvas of={ButtonStories.Sizes} />
+
+## With Icons
+
+Icons can be added to provide visual context. Always use DS icons from the icon registry.
+
+<Canvas of={ButtonStories.WithIcons} />
+
+## States
+
+### Disabled
+
+Use sparingly. Prefer explaining why an action is unavailable.
+
+<Canvas of={ButtonStories.Disabled} />
+
+### Loading
+
+Show loading state during async operations.
+
+<Canvas of={ButtonStories.Loading} />
+
+## Danger Variant
+
+For destructive actions like delete or remove.
+
+<Canvas of={ButtonStories.Danger} />
+
+## Accessibility
+
+### Keyboard Interaction
+
+| Key | Action |
+|-----|--------|
+| `Tab` | Move focus to button |
+| `Enter` | Activate button |
+| `Space` | Activate button |
+
+### Screen Reader
+
+Buttons are announced as "button" role. Include descriptive text.
+
+```tsx
+// Good - clear action
+<Button>Save Changes</Button>
+
+// Avoid - unclear
+<Button>Click Here</Button>
+```
+
+### Focus
+
+Focus ring is visible on keyboard focus. Do not remove or hide it.
+
+## Do and Don't
+
+### Do
+
+- Use action verbs (Save, Submit, Delete)
+- Keep text concise (2-3 words)
+- Use Primary for the main action
+- Add icons for visual clarity
+
+### Don't
+
+- Use multiple Primary buttons in one section
+- Disable without explanation
+- Use vague text like "Click Here"
+- Mix button styles inconsistently
+
+## data-testid Convention
+
+```tsx
+<Button data-testid="save-button">Save</Button>
+<Button data-testid="delete-button">Delete</Button>
+<Button data-testid="cancel-button">Cancel</Button>
+```
+
+## Migration Notes
+
+If migrating from custom buttons:
+
+1. Replace custom button components with DS `Button`
+2. Map old variants to `primary`, `secondary`, `tertiary`
+3. Replace custom icons with DS icon registry
+4. Remove any inline color styles
