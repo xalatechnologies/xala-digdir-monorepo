@@ -11,7 +11,7 @@ import type { RateLimitPluginOptions } from '@fastify/rate-limit';
  * Higher limits in development/test environments for easier testing
  */
 export const globalRateLimitConfig: RateLimitPluginOptions = {
-  max: process.env.NODE_ENV === 'production' ? 100 : 1000, // 1000 req/min in dev/test
+  max: process.env.NODE_ENV === 'production' ? 100 : 10000, // 10000 req/min in dev/test
   timeWindow: '1 minute',
   cache: 10000, // Maximum number of clients in cache
   allowList: [], // IPs/functions that bypass rate limiting
@@ -44,7 +44,7 @@ export const globalRateLimitConfig: RateLimitPluginOptions = {
  * Higher limits in development/test environments for easier testing
  */
 export const authRateLimitConfig: RateLimitPluginOptions = {
-  max: process.env.NODE_ENV === 'production' ? 5 : 50, // 50 req/min in dev/test
+  max: process.env.NODE_ENV === 'production' ? 5 : 500, // 500 req/min in dev/test
   timeWindow: '1 minute',
   cache: 5000,
   allowList: [],
