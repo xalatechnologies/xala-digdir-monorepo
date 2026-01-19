@@ -130,20 +130,28 @@ ssh ${VPS_USER}@${VPS_HOST} "cd ${DEPLOY_PATH} && pnpm install --force"
 log_info "Fresh dependencies installed"
 echo ""
 
-# Step 5: Setup database
-echo "🗄️  Step 5: Setting up fresh database..."
-ssh ${VPS_USER}@${VPS_HOST} << 'ENDSSH'
+# Step 5: Setup database (idempotent - only create if not exists)
+echo "🗄️  Step 5: Setting up database..."
+ssh ${VPS_USER}@${VPS_HOST} << ENDSSH
 set -e
+sudo -u postgres psql << 'EOF'
+-- Create user if not exists
+DO \$\$
+BEGIN
+  IF NOT EXISTS (SELECT FROM pg_user WHERE usename = 'digilist_dev') THEN
+    CREATE USER digilist_dev WITH PASSWORD 'dev_password_2026';
+  END IF;
+END
+\$\$;
 
-echo "Creating database and user..."
-sudo -u postgres psql << EOF
-CREATE USER digilist_dev WITH PASSWORD 'dev_password_2026';
-CREATE DATABASE digilist_dev OWNER digilist_dev;
+-- Create database if not exists
+SELECT 'CREATE DATABASE digilist_dev OWNER digilist_dev'
+WHERE NOT EXISTS (SELECT FROM pg_database WHERE datname = 'digilist_dev')\gexec
+
+-- Grant privileges
 GRANT ALL PRIVILEGES ON DATABASE digilist_dev TO digilist_dev;
 EOF
-echo "✓ Database created"
-
-echo "✓ Database user created (permissions will be granted after migration)"
+echo "✓ Database ready (created or already exists)"
 ENDSSH
 log_info "Database setup complete"
 echo ""
