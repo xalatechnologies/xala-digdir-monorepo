@@ -123,7 +123,7 @@ export function ReviewStep({ wizard }: ReviewStepProps) {
 
         {/* Status Alert */}
         {hasErrors ? (
-          <Alert severity="danger">
+          <Alert data-color="danger">
             <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--ds-spacing-2)' }}>
               <AlertTriangleIcon
                 style={{ width: '1.25rem', height: '1.25rem' }}
@@ -133,7 +133,7 @@ export function ReviewStep({ wizard }: ReviewStepProps) {
             </div>
           </Alert>
         ) : (
-          <Alert severity="success">
+          <Alert data-color="success">
             <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--ds-spacing-2)' }}>
               <CheckCircleIcon
                 style={{ width: '1.25rem', height: '1.25rem' }}

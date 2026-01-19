@@ -79,7 +79,7 @@ export function ScheduleStep({ wizard }: ScheduleStepProps) {
 
         {/* Error Display */}
         {currentStepErrors.length > 0 && (
-          <Alert severity="danger">
+          <Alert data-color="danger">
             <ul style={{ margin: 0, paddingLeft: 'var(--ds-spacing-4)' }}>
               {currentStepErrors.map((error, i) => (
                 <li key={i}>{error}</li>

@@ -60,13 +60,7 @@ export function CategorySelector({ wizard }: CategorySelectorProps) {
   const { currentCategory, setCategory, isEditMode } = wizard;
 
   return (
-    <Card
-      style={{
-        padding: 'var(--ds-spacing-6)',
-        backgroundColor: 'var(--ds-color-neutral-surface-default)',
-      }}
-    >
-      <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--ds-spacing-6)' }}>
+    <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--ds-spacing-6)', width: '100%' }}>
         {/* Header */}
         <div>
           <Heading level={2} data-size="md" style={{ margin: 0, marginBottom: 'var(--ds-spacing-2)' }}>
@@ -193,7 +187,6 @@ export function CategorySelector({ wizard }: CategorySelectorProps) {
             </Paragraph>
           </div>
         )}
-      </div>
-    </Card>
+    </div>
   );
 }

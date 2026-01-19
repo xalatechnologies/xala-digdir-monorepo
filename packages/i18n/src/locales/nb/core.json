@@ -233,5 +233,23 @@
     "search": "Søk",
     "loading": "Laster innhold",
     "required": "Påkrevd felt"
+  },
+  
+  "wizard": {
+    "step": {
+      "category": "Kategori",
+      "basics": "Grunnleggende",
+      "details": "Detaljer",
+      "resources": "Ressurser",
+      "availability": "Tilgjengelighet",
+      "images": "Bilder",
+      "content": "Innhold",
+      "review": "Gjennomgang"
+    },
+    "stepProgress": "Steg {{current}} av {{total}}",
+    "goToPreviousStep": "Gå til forrige steg",
+    "goToNextStep": "Gå til neste steg",
+    "saveDraft": "Lagre utkast",
+    "saveAndPublish": "Lagre og publiser"
   }
 }

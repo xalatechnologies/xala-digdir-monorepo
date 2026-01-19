@@ -29,9 +29,6 @@ export function WizardFooter({ wizard }: WizardFooterProps) {
   return (
     <div
       style={{
-        backgroundColor: 'var(--ds-color-neutral-surface-default)',
-        borderTop: '1px solid var(--ds-color-neutral-border-default)',
-        padding: 'var(--ds-spacing-6) var(--ds-spacing-8)',
         display: 'flex',
         justifyContent: 'space-between',
         alignItems: 'center',

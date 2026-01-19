@@ -71,5 +71,6 @@
   "assigned": "Objekter din organisasjon har fått tildelt ansvar for.",
   "noAssigned": "Ingen utleieobjekter tildelt din organisasjon ennå.",
   "goToOverview": "Gå til oversikt",
-  "basicInfo": "Grunnleggende informasjon"
+  "basicInfo": "Grunnleggende informasjon",
+  "selectCategoryDescription": "Velg hvilken type utleieobjekt du vil opprette"
 }

@@ -233,5 +233,23 @@
     "search": "Search",
     "loading": "Loading content",
     "required": "Required field"
+  },
+  
+  "wizard": {
+    "step": {
+      "category": "Category",
+      "basics": "Basics",
+      "details": "Details",
+      "resources": "Resources",
+      "availability": "Availability",
+      "images": "Images",
+      "content": "Content",
+      "review": "Review"
+    },
+    "stepProgress": "Step {{current}} of {{total}}",
+    "goToPreviousStep": "Go to previous step",
+    "goToNextStep": "Go to next step",
+    "saveDraft": "Save draft",
+    "saveAndPublish": "Save and publish"
   }
 }

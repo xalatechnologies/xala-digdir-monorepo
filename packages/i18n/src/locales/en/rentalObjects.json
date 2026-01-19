@@ -71,5 +71,6 @@
   "assigned": "Objects your organization has been assigned responsibility for.",
   "noAssigned": "No rental objects assigned to your organization yet.",
   "goToOverview": "Go to overview",
-  "basicInfo": "Basic information"
+  "basicInfo": "Basic information",
+  "selectCategoryDescription": "Select which type of rental object you want to create"
 }
