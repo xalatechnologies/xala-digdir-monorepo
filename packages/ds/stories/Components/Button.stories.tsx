@@ -118,6 +118,18 @@ export const Disabled: Story = {
 };
 
 /**
+ * Loading state button
+ */
+export const Loading: Story = {
+  render: () => (
+    <div style={{ display: 'flex', gap: 'var(--ds-spacing-3)', alignItems: 'center' }}>
+      <Button variant="primary" loading>Loading...</Button>
+      <Button variant="secondary" loading>Processing</Button>
+    </div>
+  ),
+};
+
+/**
  * Button as link
  */
 export const AsLink: Story = {

@@ -1,117 +1,84 @@
 /**
- * AMENITIES SERVICE (Client SDK)
- * 
- * Type-safe service for Amenities API endpoints.
- * Used by React Query hooks.
+ * Amenities Service
+ * Handles amenity/feature management for rental objects
  */
 
 import { BaseService } from './base.service';
-
-// Define types locally since they don't exist in contracts yet
-export interface AmenityDTO {
-  id: string;
-  code: string;
-  name: string;
-  description?: string;
-  groupCode?: string;
-  iconKey?: string;
-  isActive?: boolean;
-  createdAt: string;
-  updatedAt: string;
-}
-
-export interface AmenityGroupDTO {
-  code: string;
-  name: string;
-  description?: string;
-  amenities: AmenityDTO[];
-}
-
-export interface CreateAmenityRequest {
-  code: string;
-  name: string;
-  description?: string;
-  groupCode?: string;
-  iconKey?: string;
-  isActive?: boolean;
-}
-
-export interface UpdateAmenityRequest {
-  name?: string;
-  description?: string;
-  groupCode?: string;
-  iconKey?: string;
-  isActive?: boolean;
-}
-
-export interface AssignAmenitiesRequest {
-  amenityIds: string[];
-}
+import type {
+  Amenity,
+  CreateAmenityDTO,
+  UpdateAmenityDTO,
+  AmenityQueryParams,
+  PaginatedResponse,
+  SingleResponse,
+} from '../types';
 
 export class AmenitiesService extends BaseService {
   constructor() {
-    super('/amenities');
+    super('/api/amenities');
   }
 
   /**
-   * List all amenities
+   * Get all amenities with optional filtering
    */
-  async list(): Promise<{ data: AmenityDTO[]; meta: { total: number } }> {
-    return this.client.get<{ data: AmenityDTO[]; meta: { total: number } }>('');
+  async getAll(params?: AmenityQueryParams): Promise<PaginatedResponse<Amenity>> {
+    return this.client.get(this.buildPath(), { params: params as Record<string, string | number | boolean> });
   }
 
   /**
-   * List amenities grouped by category
+   * Get single amenity by ID
    */
-  async listGrouped(): Promise<{ data: AmenityGroupDTO[] }> {
-    return this.client.get<{ data: AmenityGroupDTO[] }>('/grouped');
+  async getById(id: string): Promise<SingleResponse<Amenity>> {
+    return this.client.get(this.buildPath(`/${id}`));
   }
 
   /**
-   * Get single amenity
+   * Get amenities by category
    */
-  async getById(id: string): Promise<{ data: AmenityDTO }> {
-    return this.client.get<{ data: AmenityDTO }>(`/${id}`);
+  async getByCategory(category: string): Promise<PaginatedResponse<Amenity>> {
+    return this.client.get(this.buildPath(), { 
+      params: { category } 
+    });
   }
 
   /**
-   * Create amenity (admin only)
+   * Create new amenity
    */
-  async create(data: CreateAmenityRequest): Promise<{ data: AmenityDTO }> {
-    return this.client.post<{ data: AmenityDTO }>('' , data);
+  async create(data: CreateAmenityDTO): Promise<SingleResponse<Amenity>> {
+    return this.client.post(this.buildPath(), data);
   }
 
   /**
-   * Update amenity (admin only)
+   * Update existing amenity
    */
-  async update(id: string, data: UpdateAmenityRequest): Promise<{ data: AmenityDTO }> {
-    return this.client.put<{ data: AmenityDTO }>(`/${id}`, data);
+  async update(id: string, data: UpdateAmenityDTO): Promise<SingleResponse<Amenity>> {
+    return this.client.put(this.buildPath(`/${id}`), data);
   }
 
   /**
-   * Delete amenity (admin only)
+   * Delete amenity
    */
-  async deleteById(id: string): Promise<void> {
-    return this.client.delete(`/${id}`);
+  async delete(id: string): Promise<void> {
+    return this.client.delete(this.buildPath(`/${id}`));
   }
 
   /**
-   * Get amenities for rental object
+   * Get popular amenities (most used)
    */
-  async getForRentalObject(rentalObjectId: string): Promise<{ data: AmenityDTO[] }> {
-    return this.client.get<{ data: AmenityDTO[] }>(`/rental-objects/${rentalObjectId}/amenities`);
+  async getPopular(limit = 10): Promise<PaginatedResponse<Amenity>> {
+    return this.client.get(this.buildPath('/popular'), { 
+      params: { limit } 
+    });
   }
 
   /**
-   * Assign amenities to rental object (admin only)
+   * Search amenities by name
    */
-  async assignToRentalObject(
-    rentalObjectId: string,
-    data: AssignAmenitiesRequest
-  ): Promise<void> {
-    return this.client.post(`/rental-objects/${rentalObjectId}/amenities/assign`, data);
+  async search(query: string): Promise<PaginatedResponse<Amenity>> {
+    return this.client.get(this.buildPath('/search'), { 
+      params: { q: query } 
+    });
   }
 }
 
-// Export singleton instance
 export const amenitiesService = new AmenitiesService();

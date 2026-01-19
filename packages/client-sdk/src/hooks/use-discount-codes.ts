@@ -1,15 +1,20 @@
 /**
- * Discount Code Hooks
- * Single Responsibility: React Query hooks for discount codes and validation
+ * Discount Codes Hooks
+ * React Query hooks for discount/promo code management
  */
 
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { queryKeys } from './query-keys';
-import { discountCodeService } from '../services/discount-code.service';
-import type { DiscountCodeQueryParams, CreateDiscountCodeDTO, DiscountCode } from '../services/discount-code.service';
+import { discountCodesService } from '../services/discount-codes.service';
+import type { 
+  DiscountCodeQueryParams,
+  CreateDiscountCodeDTO,
+  UpdateDiscountCodeDTO,
+  ValidateDiscountCodeDTO,
+} from '../types';
 
 // ============================================================================
-// Discount Code Hooks
+// Query Hooks
 // ============================================================================
 
 /**
@@ -18,7 +23,7 @@ import type { DiscountCodeQueryParams, CreateDiscountCodeDTO, DiscountCode } fro
 export function useDiscountCodes(params?: DiscountCodeQueryParams) {
   return useQuery({
     queryKey: queryKeys.discountCodes.list(params),
-    queryFn: () => discountCodeService.getAll(params),
+    queryFn: () => discountCodesService.getAll(params),
   });
 }
 
@@ -28,19 +33,41 @@ export function useDiscountCodes(params?: DiscountCodeQueryParams) {
 export function useDiscountCode(id: string, options?: { enabled?: boolean }) {
   return useQuery({
     queryKey: queryKeys.discountCodes.detail(id),
-    queryFn: () => discountCodeService.getById(id),
+    queryFn: () => discountCodesService.getById(id),
     enabled: !!id && (options?.enabled ?? true),
   });
 }
 
 /**
- * Validate a discount code
+ * Get discount code by code string
  */
-export function useValidateCode(code: string, rentalObjectId?: string, options?: { enabled?: boolean }) {
+export function useDiscountCodeByCode(code: string, options?: { enabled?: boolean }) {
   return useQuery({
-    queryKey: [...queryKeys.discountCodes.all, 'validate', code, rentalObjectId] as const,
-    queryFn: () => discountCodeService.validate(code, rentalObjectId),
+    queryKey: queryKeys.discountCodes.byCode(code),
+    queryFn: () => discountCodesService.getByCode(code),
     enabled: !!code && (options?.enabled ?? true),
+  });
+}
+
+/**
+ * Validate discount code
+ */
+export function useValidateDiscountCode(data: ValidateDiscountCodeDTO, options?: { enabled?: boolean }) {
+  return useQuery({
+    queryKey: queryKeys.discountCodes.validate(data),
+    queryFn: () => discountCodesService.validate(data),
+    enabled: !!data.code && (options?.enabled ?? true),
+  });
+}
+
+/**
+ * Get discount code usage stats
+ */
+export function useDiscountCodeStats(id: string, options?: { enabled?: boolean }) {
+  return useQuery({
+    queryKey: queryKeys.discountCodes.stats(id),
+    queryFn: () => discountCodesService.getUsageStats(id),
+    enabled: !!id && (options?.enabled ?? true),
   });
 }
 
@@ -49,232 +76,91 @@ export function useValidateCode(code: string, rentalObjectId?: string, options?:
 // ============================================================================
 
 /**
- * Create discount code mutation with optimistic updates
+ * Create discount code mutation
  */
 export function useCreateDiscountCode() {
   const queryClient = useQueryClient();
-
+  
   return useMutation({
-    mutationFn: (data: CreateDiscountCodeDTO) => discountCodeService.create(data),
-    onMutate: async (newDiscountCode) => {
-      // Cancel outgoing refetches to prevent overwriting optimistic update
-      await queryClient.cancelQueries({ queryKey: queryKeys.discountCodes.lists() });
-
-      // Snapshot previous value
-      const previousDiscountCodes = queryClient.getQueryData(queryKeys.discountCodes.lists());
-
-      // Optimistically update to the new value
-      queryClient.setQueryData(queryKeys.discountCodes.lists(), (old: { data: DiscountCode[] } | undefined) => {
-        if (!old?.data) return old;
-
-        // Create optimistic discount code with temporary ID
-        const optimisticCode: DiscountCode = {
-          id: `temp-${Date.now()}`,
-          tenantId: '',
-          code: newDiscountCode.code,
-          type: newDiscountCode.type,
-          value: newDiscountCode.value,
-          currency: newDiscountCode.type === 'fixed' ? 'NOK' : undefined,
-          description: newDiscountCode.description,
-          validFrom: newDiscountCode.validFrom,
-          validUntil: newDiscountCode.validUntil,
-          usageLimit: newDiscountCode.usageLimit,
-          usageCount: 0,
-          minBookingValue: newDiscountCode.minBookingValue,
-          applicableRentalObjects: newDiscountCode.applicableRentalObjects,
-          isActive: newDiscountCode.isActive ?? true,
-          createdAt: new Date().toISOString(),
-          updatedAt: new Date().toISOString(),
-        };
-
-        return {
-          ...old,
-          data: [optimisticCode, ...old.data],
-        };
-      });
-
-      // Return context with snapshot
-      return { previousDiscountCodes };
-    },
-    onError: (err, newDiscountCode, context) => {
-      // Rollback to previous state on error
-      if (context?.previousDiscountCodes) {
-        queryClient.setQueryData(queryKeys.discountCodes.lists(), context.previousDiscountCodes);
-      }
-    },
+    mutationFn: (data: CreateDiscountCodeDTO) => discountCodesService.create(data),
     onSuccess: () => {
-      // Invalidate and refetch to get actual data from server
       queryClient.invalidateQueries({ queryKey: queryKeys.discountCodes.all });
     },
   });
 }
 
 /**
- * Update discount code mutation with optimistic updates
+ * Update discount code mutation
  */
 export function useUpdateDiscountCode() {
   const queryClient = useQueryClient();
-
+  
   return useMutation({
-    mutationFn: ({ id, data }: { id: string; data: Partial<CreateDiscountCodeDTO> }) =>
-      discountCodeService.update(id, data),
-    onMutate: async ({ id, data }) => {
-      // Cancel outgoing refetches to prevent overwriting optimistic update
-      await queryClient.cancelQueries({ queryKey: queryKeys.discountCodes.lists() });
-      await queryClient.cancelQueries({ queryKey: queryKeys.discountCodes.detail(id) });
-
-      // Snapshot previous values
-      const previousDiscountCodes = queryClient.getQueryData(queryKeys.discountCodes.lists());
-      const previousDiscountCode = queryClient.getQueryData(queryKeys.discountCodes.detail(id));
-
-      // Optimistically update list
-      queryClient.setQueryData(queryKeys.discountCodes.lists(), (old: { data: DiscountCode[] } | undefined) => {
-        if (!old?.data) return old;
-
-        return {
-          ...old,
-          data: old.data.map((code: DiscountCode) =>
-            code.id === id
-              ? { ...code, ...data, updatedAt: new Date().toISOString() }
-              : code
-          ),
-        };
-      });
-
-      // Optimistically update detail
-      queryClient.setQueryData(queryKeys.discountCodes.detail(id), (old: { data: DiscountCode } | undefined) => {
-        if (!old?.data) return old;
-
-        return {
-          ...old,
-          data: { ...old.data, ...data, updatedAt: new Date().toISOString() },
-        };
-      });
-
-      // Return context with snapshots
-      return { previousDiscountCodes, previousDiscountCode };
-    },
-    onError: (err, { id }, context) => {
-      // Rollback to previous state on error
-      if (context?.previousDiscountCodes) {
-        queryClient.setQueryData(queryKeys.discountCodes.lists(), context.previousDiscountCodes);
-      }
-      if (context?.previousDiscountCode) {
-        queryClient.setQueryData(queryKeys.discountCodes.detail(id), context.previousDiscountCode);
-      }
-    },
-    onSuccess: () => {
-      // Invalidate and refetch to get actual data from server
-      queryClient.invalidateQueries({ queryKey: queryKeys.discountCodes.all });
+    mutationFn: ({ id, data }: { id: string; data: UpdateDiscountCodeDTO }) => 
+      discountCodesService.update(id, data),
+    onSuccess: (_, variables) => {
+      queryClient.invalidateQueries({ queryKey: queryKeys.discountCodes.detail(variables.id) });
+      queryClient.invalidateQueries({ queryKey: queryKeys.discountCodes.lists() });
     },
   });
 }
 
 /**
- * Delete discount code mutation with optimistic updates
+ * Delete discount code mutation
  */
 export function useDeleteDiscountCode() {
   const queryClient = useQueryClient();
-
+  
   return useMutation({
-    mutationFn: (id: string) => discountCodeService.deleteById(id),
-    onMutate: async (id) => {
-      // Cancel outgoing refetches to prevent overwriting optimistic update
-      await queryClient.cancelQueries({ queryKey: queryKeys.discountCodes.lists() });
-      await queryClient.cancelQueries({ queryKey: queryKeys.discountCodes.detail(id) });
-
-      // Snapshot previous values
-      const previousDiscountCodes = queryClient.getQueryData(queryKeys.discountCodes.lists());
-      const previousDiscountCode = queryClient.getQueryData(queryKeys.discountCodes.detail(id));
-
-      // Optimistically remove from list
-      queryClient.setQueryData(queryKeys.discountCodes.lists(), (old: { data: DiscountCode[] } | undefined) => {
-        if (!old?.data) return old;
-
-        return {
-          ...old,
-          data: old.data.filter((code: DiscountCode) => code.id !== id),
-        };
-      });
-
-      // Optimistically remove detail
-      queryClient.removeQueries({ queryKey: queryKeys.discountCodes.detail(id) });
-
-      // Return context with snapshots
-      return { previousDiscountCodes, previousDiscountCode };
-    },
-    onError: (err, id, context) => {
-      // Rollback to previous state on error
-      if (context?.previousDiscountCodes) {
-        queryClient.setQueryData(queryKeys.discountCodes.lists(), context.previousDiscountCodes);
-      }
-      if (context?.previousDiscountCode) {
-        queryClient.setQueryData(queryKeys.discountCodes.detail(id), context.previousDiscountCode);
-      }
-    },
+    mutationFn: (id: string) => discountCodesService.delete(id),
     onSuccess: () => {
-      // Invalidate and refetch to get actual data from server
       queryClient.invalidateQueries({ queryKey: queryKeys.discountCodes.all });
     },
   });
 }
 
 /**
- * Toggle discount code active status with optimistic updates
+ * Apply discount code to booking mutation
  */
-export function useToggleActive() {
+export function useApplyDiscountCode() {
   const queryClient = useQueryClient();
-
+  
   return useMutation({
-    mutationFn: (id: string) => discountCodeService.toggleActive(id),
-    onMutate: async (id) => {
-      // Cancel outgoing refetches to prevent overwriting optimistic update
-      await queryClient.cancelQueries({ queryKey: queryKeys.discountCodes.lists() });
-      await queryClient.cancelQueries({ queryKey: queryKeys.discountCodes.detail(id) });
-
-      // Snapshot previous values
-      const previousDiscountCodes = queryClient.getQueryData(queryKeys.discountCodes.lists());
-      const previousDiscountCode = queryClient.getQueryData(queryKeys.discountCodes.detail(id));
-
-      // Optimistically toggle in list
-      queryClient.setQueryData(queryKeys.discountCodes.lists(), (old: { data: DiscountCode[] } | undefined) => {
-        if (!old?.data) return old;
-
-        return {
-          ...old,
-          data: old.data.map((code: DiscountCode) =>
-            code.id === id
-              ? { ...code, isActive: !code.isActive, updatedAt: new Date().toISOString() }
-              : code
-          ),
-        };
-      });
-
-      // Optimistically toggle in detail
-      queryClient.setQueryData(queryKeys.discountCodes.detail(id), (old: { data: DiscountCode } | undefined) => {
-        if (!old?.data) return old;
-
-        return {
-          ...old,
-          data: { ...old.data, isActive: !old.data.isActive, updatedAt: new Date().toISOString() },
-        };
-      });
-
-      // Return context with snapshots
-      return { previousDiscountCodes, previousDiscountCode };
-    },
-    onError: (err, id, context) => {
-      // Rollback to previous state on error
-      if (context?.previousDiscountCodes) {
-        queryClient.setQueryData(queryKeys.discountCodes.lists(), context.previousDiscountCodes);
-      }
-      if (context?.previousDiscountCode) {
-        queryClient.setQueryData(queryKeys.discountCodes.detail(id), context.previousDiscountCode);
-      }
-    },
-    onSuccess: () => {
-      // Invalidate and refetch to get actual data from server
+    mutationFn: ({ code, bookingId }: { code: string; bookingId: string }) => 
+      discountCodesService.apply(code, bookingId),
+    onSuccess: (_, variables) => {
+      queryClient.invalidateQueries({ queryKey: queryKeys.bookings.detail(variables.bookingId) });
       queryClient.invalidateQueries({ queryKey: queryKeys.discountCodes.all });
+    },
+  });
+}
+
+/**
+ * Deactivate discount code mutation
+ */
+export function useDeactivateDiscountCode() {
+  const queryClient = useQueryClient();
+  
+  return useMutation({
+    mutationFn: (id: string) => discountCodesService.deactivate(id),
+    onSuccess: (_, id) => {
+      queryClient.invalidateQueries({ queryKey: queryKeys.discountCodes.detail(id) });
+      queryClient.invalidateQueries({ queryKey: queryKeys.discountCodes.lists() });
+    },
+  });
+}
+
+/**
+ * Activate discount code mutation
+ */
+export function useActivateDiscountCode() {
+  const queryClient = useQueryClient();
+  
+  return useMutation({
+    mutationFn: (id: string) => discountCodesService.activate(id),
+    onSuccess: (_, id) => {
+      queryClient.invalidateQueries({ queryKey: queryKeys.discountCodes.detail(id) });
+      queryClient.invalidateQueries({ queryKey: queryKeys.discountCodes.lists() });
     },
   });
 }

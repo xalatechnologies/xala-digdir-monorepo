@@ -1,17 +1,11 @@
 /**
- * SeasonCard Block
- *
- * Pure display component for season information.
- * No SDK dependencies - receives data via props.
+ * SeasonCard Block - Reusable DS Component
  */
-
-import { Card, Heading, Paragraph, Button, GenericStatusBadge, CalendarIcon, ClockIcon, BuildingIcon } from '../..';
+import { Card, Heading, Paragraph, Button, Badge } from '@digdir/designsystemet-react';
 import { useT } from '@xala/i18n';
 
-/** Season status type for display */
 export type SeasonStatus = 'draft' | 'open' | 'closed' | 'cancelled' | 'completed';
 
-/** Season data for display */
 export interface SeasonCardData {
   id: string;
   name: string;
@@ -25,15 +19,10 @@ export interface SeasonCardData {
 }
 
 export interface SeasonCardProps {
-  /** Season data to display */
   season: SeasonCardData;
-  /** Show action buttons */
   showActions?: boolean;
-  /** View details callback */
-  onViewDetails?: (seasonId: string) => void;
-  /** Apply callback */
-  onApply?: (seasonId: string) => void;
-  /** Test ID */
+  onViewDetails?: (id: string) => void;
+  onApply?: (id: string) => void;
   'data-testid'?: string;
 }
 
@@ -45,195 +34,28 @@ const STATUS_CONFIG: Record<SeasonStatus, { label: string; color: 'info' | 'succ
   completed: { label: 'Fullført', color: 'info' },
 };
 
-export function SeasonCard({
-  season,
-  showActions = true,
-  onViewDetails,
-  onApply,
-  'data-testid': testId = 'season-card',
-}: SeasonCardProps) {
+export function SeasonCard({ season, showActions = true, onViewDetails, onApply, 'data-testid': testId = 'season-card' }: SeasonCardProps) {
   const t = useT();
-
-  const formatDate = (dateString: string) => {
-    const date = new Date(dateString);
-    return date.toLocaleDateString('no-NO', { day: 'numeric', month: 'short', year: 'numeric' });
-  };
-
-  const statusConfig = STATUS_CONFIG[season.status] || STATUS_CONFIG.draft;
-  const isOpen = season.status === 'open';
+  const formatDate = (d: string) => new Date(d).toLocaleDateString('no-NO', { day: 'numeric', month: 'short', year: 'numeric' });
+  const cfg = STATUS_CONFIG[season.status] || STATUS_CONFIG.draft;
 
   return (
-    <Card
-      data-testid={testId}
-      style={{
-        padding: 0,
-        transition: 'all 0.2s',
-        border: '1px solid var(--ds-color-neutral-border-default)',
-        height: '100%',
-        display: 'flex',
-        flexDirection: 'column',
-      }}
-    >
-      {/* Header */}
-      <div
-        style={{
-          padding: 'var(--ds-spacing-6)',
-          borderBottom: '1px solid var(--ds-color-neutral-border-subtle)',
-          display: 'flex',
-          alignItems: 'flex-start',
-          justifyContent: 'space-between',
-          gap: 'var(--ds-spacing-4)',
-        }}
-      >
-        <div style={{ flex: 1, minWidth: 0 }}>
-          <Heading level={3} data-size="sm" style={{ margin: 0, marginBottom: 'var(--ds-spacing-2)' }}>
-            {season.name}
-          </Heading>
-          {season.description && (
-            <Paragraph
-              data-size="sm"
-              style={{
-                margin: 0,
-                color: 'var(--ds-color-neutral-text-subtle)',
-                display: '-webkit-box',
-                WebkitLineClamp: 2,
-                WebkitBoxOrient: 'vertical',
-                overflow: 'hidden',
-              }}
-            >
-              {season.description}
-            </Paragraph>
-          )}
+    <Card data-testid={testId} style={{ padding: 0, border: '1px solid var(--ds-color-neutral-border-default)', height: '100%', display: 'flex', flexDirection: 'column' }}>
+      <div style={{ padding: 'var(--ds-spacing-6)', borderBottom: '1px solid var(--ds-color-neutral-border-subtle)', display: 'flex', justifyContent: 'space-between', gap: 'var(--ds-spacing-4)' }}>
+        <div style={{ flex: 1 }}>
+          <Heading level={3} data-size="sm" style={{ margin: 0 }}>{season.name}</Heading>
+          {season.description && <Paragraph data-size="sm" style={{ margin: 0, color: 'var(--ds-color-neutral-text-subtle)' }}>{season.description}</Paragraph>}
         </div>
-        <GenericStatusBadge status={statusConfig.label} color={statusConfig.color} size="sm" />
+        <Badge data-color={cfg.color} data-size="sm">{cfg.label}</Badge>
       </div>
-
-      {/* Details Grid */}
-      <div
-        style={{
-          padding: 'var(--ds-spacing-6)',
-          display: 'grid',
-          gap: 'var(--ds-spacing-5)',
-          flex: 1,
-        }}
-      >
-        {/* Date Range */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--ds-spacing-3)' }}>
-          <div
-            style={{
-              width: '32px',
-              height: '32px',
-              borderRadius: 'var(--ds-border-radius-md)',
-              backgroundColor: 'var(--ds-color-accent-surface-default)',
-              color: 'var(--ds-color-accent-base-default)',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              flexShrink: 0,
-            }}
-          >
-            <CalendarIcon size={16} />
-          </div>
-          <div>
-            <Paragraph data-size="xs" style={{ margin: 0, color: 'var(--ds-color-neutral-text-subtle)' }}>
-              {t('seasons.card.period')}
-            </Paragraph>
-            <Paragraph data-size="sm" style={{ margin: 0, fontWeight: 'var(--ds-font-weight-medium)' }}>
-              {formatDate(season.startDate)} - {formatDate(season.endDate)}
-            </Paragraph>
-          </div>
-        </div>
-
-        {/* Application Deadline */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--ds-spacing-3)' }}>
-          <div
-            style={{
-              width: '32px',
-              height: '32px',
-              borderRadius: 'var(--ds-border-radius-md)',
-              backgroundColor: 'var(--ds-color-warning-surface-default)',
-              color: 'var(--ds-color-warning-base-default)',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              flexShrink: 0,
-            }}
-          >
-            <ClockIcon size={16} />
-          </div>
-          <div>
-            <Paragraph data-size="xs" style={{ margin: 0, color: 'var(--ds-color-neutral-text-subtle)' }}>
-              {t('seasons.card.applicationDeadline')}
-            </Paragraph>
-            <Paragraph data-size="sm" style={{ margin: 0, fontWeight: 'var(--ds-font-weight-medium)' }}>
-              {formatDate(season.applicationDeadline)}
-            </Paragraph>
-          </div>
-        </div>
-
-        {/* Statistics */}
-        {(season.totalApplications !== undefined || season.approvedApplications !== undefined) && (
-          <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--ds-spacing-3)' }}>
-            <div
-              style={{
-                width: '32px',
-                height: '32px',
-                borderRadius: 'var(--ds-border-radius-md)',
-                backgroundColor: 'var(--ds-color-success-surface-default)',
-                color: 'var(--ds-color-success-base-default)',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                flexShrink: 0,
-              }}
-            >
-              <BuildingIcon size={16} />
-            </div>
-            <div>
-              <Paragraph data-size="xs" style={{ margin: 0, color: 'var(--ds-color-neutral-text-subtle)' }}>
-                {t('seasons.card.applications')}
-              </Paragraph>
-              <Paragraph data-size="sm" style={{ margin: 0, fontWeight: 'var(--ds-font-weight-medium)' }}>
-                {t('seasons.card.applicationsTotal', { count: season.totalApplications ?? 0 })}
-                {season.approvedApplications !== undefined && ` • ${t('seasons.card.applicationsApproved', { count: season.approvedApplications })}`}
-              </Paragraph>
-            </div>
-          </div>
-        )}
+      <div style={{ padding: 'var(--ds-spacing-6)', flex: 1 }}>
+        <Paragraph data-size="sm" style={{ margin: 0 }}>{t('seasons.card.period')}: {formatDate(season.startDate)} - {formatDate(season.endDate)}</Paragraph>
+        <Paragraph data-size="sm" style={{ margin: 0 }}>{t('seasons.card.applicationDeadline')}: {formatDate(season.applicationDeadline)}</Paragraph>
       </div>
-
-      {/* Actions */}
       {showActions && (
-        <div
-          style={{
-            padding: 'var(--ds-spacing-5) var(--ds-spacing-6)',
-            borderTop: '1px solid var(--ds-color-neutral-border-subtle)',
-            backgroundColor: 'var(--ds-color-neutral-background-subtle)',
-            display: 'flex',
-            gap: 'var(--ds-spacing-3)',
-            justifyContent: 'flex-end',
-          }}
-        >
-          <Button
-            type="button"
-            variant="tertiary"
-            data-size="sm"
-            onClick={() => onViewDetails?.(season.id)}
-            data-testid={`${testId}-view-details`}
-          >
-            {t('seasons.card.viewDetails')}
-          </Button>
-          {isOpen && onApply && (
-            <Button
-              type="button"
-              variant="primary"
-              data-size="sm"
-              onClick={() => onApply(season.id)}
-              data-testid={`${testId}-apply`}
-            >
-              {t('seasons.card.applyNow')}
-            </Button>
-          )}
+        <div style={{ padding: 'var(--ds-spacing-5) var(--ds-spacing-6)', borderTop: '1px solid var(--ds-color-neutral-border-subtle)', display: 'flex', gap: 'var(--ds-spacing-3)', justifyContent: 'flex-end' }}>
+          <Button type="button" variant="tertiary" data-size="sm" onClick={() => onViewDetails?.(season.id)}>{t('seasons.card.viewDetails')}</Button>
+          {season.status === 'open' && onApply && <Button type="button" variant="primary" data-size="sm" onClick={() => onApply(season.id)}>{t('seasons.card.applyNow')}</Button>}
         </div>
       )}
     </Card>

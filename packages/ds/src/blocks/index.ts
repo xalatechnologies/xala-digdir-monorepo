@@ -310,3 +310,7 @@ export type {
 } from './admin';
 
 
+
+// Season Blocks
+export { SeasonCard } from './seasons';
+export type { SeasonCardProps, SeasonCardData, SeasonStatus } from './seasons';

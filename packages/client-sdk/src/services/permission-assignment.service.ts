@@ -1,201 +1,114 @@
 /**
  * Permission Assignment Service
- * Single Responsibility: Handle permission assignment operations for RBAC
- *
- * Permission assignments grant specific per-rental-object permissions to org members.
- * Only Org Admins can create/update/revoke permission assignments.
- * Permission assignments require an active access grant to the rental object.
+ * Handles RBAC permission assignment and management
  */
 
 import { BaseService } from './base.service';
 import type {
   PermissionAssignment,
-  PermissionAssignmentWithDetails,
-  AssignPermissionsDTO,
+  CreatePermissionAssignmentDTO,
+  UpdatePermissionAssignmentDTO,
   PermissionAssignmentQueryParams,
-  RentalObjectPermission,
-} from '../types/rbac';
-import type { PaginatedResponse, SingleResponse, SuccessResponse } from '../types/enums';
+  PaginatedResponse,
+  SingleResponse,
+} from '../types';
 
 export class PermissionAssignmentService extends BaseService {
   constructor() {
-    super('/api/permission-assignments');
+    super('/api/permission-assignment');
   }
 
   /**
-   * Get paginated permission assignments
-   * Org Admin: sees all assignments for their organization
+   * Get all permission assignments
    */
-  async getAll(params?: PermissionAssignmentQueryParams): Promise<PaginatedResponse<PermissionAssignmentWithDetails>> {
+  async getAll(params?: PermissionAssignmentQueryParams): Promise<PaginatedResponse<PermissionAssignment>> {
     return this.client.get(this.buildPath(), { params: params as Record<string, string | number | boolean> });
   }
 
   /**
-   * Get single permission assignment by ID
+   * Get permission assignments for a user
    */
-  async getById(id: string): Promise<SingleResponse<PermissionAssignmentWithDetails>> {
-    return this.client.get(this.buildPath(`/${id}`));
+  async getForUser(userId: string): Promise<PaginatedResponse<PermissionAssignment>> {
+    return this.client.get(this.buildPath(`/user/${userId}`));
   }
 
   /**
-   * Get permission assignments for a specific organization
+   * Get permission assignments for an organization
    */
-  async getByOrganization(organizationId: string, params?: PermissionAssignmentQueryParams): Promise<PaginatedResponse<PermissionAssignmentWithDetails>> {
-    return this.client.get(this.buildPath(), {
-      params: { ...params, organizationId } as Record<string, string | number | boolean>,
-    });
+  async getForOrganization(organizationId: string): Promise<PaginatedResponse<PermissionAssignment>> {
+    return this.client.get(this.buildPath(`/organization/${organizationId}`));
   }
 
   /**
-   * Get permission assignments for a specific user
+   * Create permission assignment
    */
-  async getByUser(userId: string, params?: PermissionAssignmentQueryParams): Promise<PaginatedResponse<PermissionAssignmentWithDetails>> {
-    return this.client.get(this.buildPath(), {
-      params: { ...params, userId } as Record<string, string | number | boolean>,
-    });
-  }
-
-  /**
-   * Get permission assignments for a specific rental object
-   */
-  async getByRentalObject(rentalObjectId: string, params?: PermissionAssignmentQueryParams): Promise<PaginatedResponse<PermissionAssignmentWithDetails>> {
-    return this.client.get(this.buildPath(), {
-      params: { ...params, rentalObjectId } as Record<string, string | number | boolean>,
-    });
-  }
-
-  /**
-   * Get permission assignment for a specific user on a rental object
-   * Uses the nested API path: /api/organizations/:orgId/rental-objects/:roId/permissions/:userId
-   */
-  async getByMember(
-    organizationId: string,
-    rentalObjectId: string,
-    userId: string
-  ): Promise<SingleResponse<PermissionAssignmentWithDetails>> {
-    return this.client.get(`/api/organizations/${organizationId}/rental-objects/${rentalObjectId}/permissions/${userId}`);
-  }
-
-  /**
-   * Assign or update permissions for a user on a rental object (Org Admin only)
-   * Creates a new assignment or updates existing permissions
-   * Requires an active access grant for the organization to the rental object
-   */
-  async assign(data: AssignPermissionsDTO): Promise<SingleResponse<PermissionAssignment>> {
-    return this.client.put(
-      `/api/organizations/${data.organizationId}/rental-objects/${data.rentalObjectId}/permissions/${data.userId}`,
-      { permissions: data.permissions }
-    );
-  }
-
-  /**
-   * Create permission assignment (Org Admin only)
-   * Alternative method using the base path
-   */
-  async create(data: AssignPermissionsDTO): Promise<SingleResponse<PermissionAssignment>> {
+  async create(data: CreatePermissionAssignmentDTO): Promise<SingleResponse<PermissionAssignment>> {
     return this.client.post(this.buildPath(), data);
   }
 
   /**
-   * Update permission assignment (Org Admin only)
+   * Update permission assignment
    */
-  async update(id: string, permissions: RentalObjectPermission[]): Promise<SingleResponse<PermissionAssignment>> {
-    return this.client.patch(this.buildPath(`/${id}`), { permissions });
+  async update(id: string, data: UpdatePermissionAssignmentDTO): Promise<SingleResponse<PermissionAssignment>> {
+    return this.client.put(this.buildPath(`/${id}`), data);
   }
 
   /**
-   * Revoke all permissions for a user on a rental object (Org Admin only)
-   * Soft-deletes the assignment, preserving audit trail
+   * Delete permission assignment
    */
-  async revoke(
-    organizationId: string,
-    rentalObjectId: string,
-    userId: string,
-    reason?: string
-  ): Promise<SuccessResponse> {
-    return this.client.delete(
-      `/api/organizations/${organizationId}/rental-objects/${rentalObjectId}/permissions/${userId}`,
-      { body: { reason } }
-    );
-  }
-
-  /**
-   * Delete permission assignment by ID (Org Admin only)
-   */
-  async deleteById(id: string): Promise<SuccessResponse> {
+  async delete(id: string): Promise<void> {
     return this.client.delete(this.buildPath(`/${id}`));
   }
 
   /**
-   * Get available permissions that can be assigned
-   * Returns the list of RentalObjectPermission values with descriptions
+   * Bulk assign permissions to user
    */
-  async getAvailablePermissions(): Promise<SingleResponse<{
-    permission: RentalObjectPermission;
-    name: string;
-    description: string;
-    requiresAdmin: boolean;
-  }[]>> {
-    return this.client.get(this.buildPath('/available'));
+  async bulkAssign(userId: string, permissions: string[]): Promise<SingleResponse<{
+    assigned: number;
+    failed: string[];
+  }>> {
+    return this.client.post(this.buildPath('/bulk'), { userId, permissions });
   }
 
   /**
-   * Check if a user has specific permission on a rental object
+   * Revoke all permissions for user
    */
-  async checkPermission(
-    organizationId: string,
-    userId: string,
-    rentalObjectId: string,
-    permission: RentalObjectPermission
-  ): Promise<SingleResponse<{ hasPermission: boolean; assignment?: PermissionAssignment }>> {
-    return this.client.get(this.buildPath('/check'), {
-      params: { organizationId, userId, rentalObjectId, permission },
-    });
+  async revokeAll(userId: string): Promise<SingleResponse<void>> {
+    return this.client.post(this.buildPath(`/user/${userId}/revoke-all`), {});
   }
 
   /**
-   * Get all permissions for a user across all rental objects in an organization
+   * Get effective permissions for user (including inherited)
    */
-  async getUserPermissionsSummary(
-    organizationId: string,
-    userId: string
-  ): Promise<SingleResponse<{
-    rentalObjectId: string;
-    rentalObjectName: string;
-    permissions: RentalObjectPermission[];
-  }[]>> {
-    return this.client.get(`/api/organizations/${organizationId}/members/${userId}/permissions`);
+  async getEffectivePermissions(userId: string): Promise<SingleResponse<{
+    direct: string[];
+    inherited: string[];
+    effective: string[];
+  }>> {
+    return this.client.get(this.buildPath(`/user/${userId}/effective`));
   }
 
   /**
-   * Bulk assign permissions to multiple users on a rental object (Org Admin only)
+   * Check if user has specific permission
    */
-  async bulkAssign(
-    organizationId: string,
-    rentalObjectId: string,
-    assignments: { userId: string; permissions: RentalObjectPermission[] }[]
-  ): Promise<SingleResponse<PermissionAssignment[]>> {
-    return this.client.post(
-      `/api/organizations/${organizationId}/rental-objects/${rentalObjectId}/permissions/bulk`,
-      { assignments }
-    );
+  async checkPermission(userId: string, permission: string): Promise<SingleResponse<{
+    hasPermission: boolean;
+    source: 'direct' | 'inherited' | 'none';
+  }>> {
+    return this.client.post(this.buildPath('/check'), { userId, permission });
   }
 
   /**
-   * Copy permissions from one user to another on a rental object (Org Admin only)
+   * Get permission audit log
    */
-  async copyPermissions(
-    organizationId: string,
-    rentalObjectId: string,
-    fromUserId: string,
-    toUserId: string
-  ): Promise<SingleResponse<PermissionAssignment>> {
-    return this.client.post(
-      `/api/organizations/${organizationId}/rental-objects/${rentalObjectId}/permissions/copy`,
-      { fromUserId, toUserId }
-    );
+  async getAuditLog(userId: string): Promise<PaginatedResponse<{
+    action: 'granted' | 'revoked';
+    permission: string;
+    grantedBy: string;
+    timestamp: string;
+  }>> {
+    return this.client.get(this.buildPath(`/user/${userId}/audit`));
   }
 }
 
-// Singleton instance
 export const permissionAssignmentService = new PermissionAssignmentService();

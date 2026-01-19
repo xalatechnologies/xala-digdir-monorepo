@@ -28,6 +28,94 @@ export default meta;
 type Story = StoryObj;
 
 /**
+ * Font families used in the design system
+ */
+export const FontFamilies: Story = {
+  render: () => (
+    <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--ds-spacing-6)' }}>
+      <div>
+        <Label style={{ marginBottom: 'var(--ds-spacing-2)' }}>Default Font (Inter)</Label>
+        <div style={{ 
+          fontFamily: 'var(--ds-font-family-default, Inter, system-ui, sans-serif)',
+          fontSize: 'var(--ds-font-size-5)',
+          padding: 'var(--ds-spacing-4)',
+          backgroundColor: 'var(--ds-color-neutral-surface-hover)',
+          borderRadius: 'var(--ds-border-radius-md)',
+        }}>
+          <p style={{ marginBottom: 'var(--ds-spacing-2)' }}>ABCDEFGHIJKLMNOPQRSTUVWXYZ</p>
+          <p style={{ marginBottom: 'var(--ds-spacing-2)' }}>abcdefghijklmnopqrstuvwxyz</p>
+          <p style={{ marginBottom: 'var(--ds-spacing-2)' }}>0123456789</p>
+          <p>Digilist – Booking for alle</p>
+        </div>
+        <code style={{ fontSize: 'var(--ds-font-size-xs)', color: 'var(--ds-color-neutral-text-subtle)', marginTop: 'var(--ds-spacing-2)', display: 'block' }}>
+          font-family: var(--ds-font-family-default)
+        </code>
+      </div>
+      
+      <div>
+        <Label style={{ marginBottom: 'var(--ds-spacing-2)' }}>Monospace Font (Code)</Label>
+        <div style={{ 
+          fontFamily: 'var(--ds-font-family-mono, ui-monospace, monospace)',
+          fontSize: 'var(--ds-font-size-3)',
+          padding: 'var(--ds-spacing-4)',
+          backgroundColor: 'var(--ds-color-neutral-surface-hover)',
+          borderRadius: 'var(--ds-border-radius-md)',
+        }}>
+          <p style={{ marginBottom: 'var(--ds-spacing-2)' }}>ABCDEFGHIJKLMNOPQRSTUVWXYZ</p>
+          <p style={{ marginBottom: 'var(--ds-spacing-2)' }}>abcdefghijklmnopqrstuvwxyz</p>
+          <p style={{ marginBottom: 'var(--ds-spacing-2)' }}>0123456789</p>
+          <p>{`const booking = await createBooking(data);`}</p>
+        </div>
+        <code style={{ fontSize: 'var(--ds-font-size-xs)', color: 'var(--ds-color-neutral-text-subtle)', marginTop: 'var(--ds-spacing-2)', display: 'block' }}>
+          font-family: var(--ds-font-family-mono)
+        </code>
+      </div>
+      
+      <div style={{ 
+        padding: 'var(--ds-spacing-4)', 
+        backgroundColor: 'var(--ds-color-info-surface-default)',
+        borderRadius: 'var(--ds-border-radius-md)',
+        borderLeft: '4px solid var(--ds-color-info-border-default)',
+      }}>
+        <Paragraph data-size="sm">
+          <strong>Note:</strong> Inter is loaded via Google Fonts or self-hosted. 
+          The system falls back to system-ui for optimal performance if Inter is unavailable.
+        </Paragraph>
+      </div>
+    </div>
+  ),
+};
+
+/**
+ * Font weights
+ */
+export const FontWeights: Story = {
+  render: () => (
+    <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--ds-spacing-3)' }}>
+      {[
+        { weight: 400, name: 'Regular', variable: '--ds-font-weight-regular' },
+        { weight: 500, name: 'Medium', variable: '--ds-font-weight-medium' },
+        { weight: 600, name: 'Semibold', variable: '--ds-font-weight-semibold' },
+        { weight: 700, name: 'Bold', variable: '--ds-font-weight-bold' },
+      ].map(({ weight, name, variable }) => (
+        <div key={weight} style={{ display: 'flex', alignItems: 'baseline', gap: 'var(--ds-spacing-4)' }}>
+          <span style={{ 
+            fontWeight: weight, 
+            fontSize: 'var(--ds-font-size-5)',
+            minWidth: '200px',
+          }}>
+            {name} ({weight})
+          </span>
+          <code style={{ fontSize: 'var(--ds-font-size-xs)', color: 'var(--ds-color-neutral-text-subtle)' }}>
+            {variable}
+          </code>
+        </div>
+      ))}
+    </div>
+  ),
+};
+
+/**
  * Heading sizes from 2xl to 2xs
  */
 export const Headings: Story = {

@@ -629,3 +629,7 @@ export type {
  * must import '@xala/ds/styles' exactly once in their entry point to ensure
  * proper theme switching and prevent CSS duplication.
  */
+
+// Season Blocks
+export { SeasonCard } from './blocks/seasons';
+export type { SeasonCardProps, SeasonCardData, SeasonStatus } from './blocks/seasons';

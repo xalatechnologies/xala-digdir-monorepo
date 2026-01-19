@@ -1,181 +1,109 @@
 /**
  * Settings Service
- * Tenant and user settings management
+ * Handles application settings and configuration management
  */
-import { getClient } from '../core/client-factory';
 
-export interface TenantSettings {
-  general: {
-    name: string;
-    locale: string;
-    timezone: string;
-    currency: string;
-    dateFormat: string;
-    timeFormat: string;
-  };
-  booking: {
-    autoConfirm: boolean;
-    requireApproval: boolean;
-    allowCancellation: boolean;
-    cancellationDeadlineHours: number;
-    maxAdvanceBookingDays: number;
-    minAdvanceBookingHours: number;
-    bufferTimeMinutes: number;
-  };
-  notifications: {
-    emailEnabled: boolean;
-    smsEnabled: boolean;
-    pushEnabled: boolean;
-    bookingConfirmation: boolean;
-    bookingReminder: boolean;
-    reminderHoursBefore: number;
-  };
-  integrations: {
-    calendarSync: boolean;
-    paymentGateway: string | null;
-    accessControlProvider: string | null;
-  };
-  branding: {
-    logo?: string;
-    primaryColor?: string;
-    secondaryColor?: string;
-    favicon?: string;
-  };
-}
+import { BaseService } from './base.service';
+import type {
+  AppSettings,
+  UpdateSettingsDTO,
+  SettingCategory,
+  PaginatedResponse,
+  SingleResponse,
+} from '../types';
 
-export interface UserSettings {
-  notifications: {
-    email: boolean;
-    push: boolean;
-    sms: boolean;
-  };
-  preferences: {
-    locale: string;
-    timezone: string;
-    theme: 'light' | 'dark' | 'system';
-  };
-  privacy: {
-    shareBookingHistory: boolean;
-    showProfilePublicly: boolean;
-  };
-}
-
-export interface UpdateSettingsDTO {
-  [key: string]: unknown;
-}
-
-class SettingsService {
-  private basePath = '/api/settings';
-
-  /**
-   * Get tenant settings
-   * @returns Complete tenant settings including general, booking, notifications, integrations, and branding
-   */
-  async getTenantSettings(): Promise<{ data: TenantSettings }> {
-    return getClient().get<{ data: TenantSettings }>(`${this.basePath}/tenant`);
+export class SettingsService extends BaseService {
+  constructor() {
+    super('/api/settings');
   }
 
   /**
-   * Update tenant settings
-   * @param data - Partial tenant settings to update
-   * @returns Updated complete tenant settings
-   * @example
-   * ```typescript
-   * // Update general tenant settings
-   * const settings = await settingsService.updateTenantSettings({
-   *   general: {
-   *     name: 'My Rental Company',
-   *     locale: 'nb-NO',
-   *     timezone: 'Europe/Oslo',
-   *     currency: 'NOK'
-   *   }
-   * });
-   * console.log(`Updated tenant: ${settings.data.general.name}`);
-   * ```
+   * Get all settings
    */
-  async updateTenantSettings(data: Partial<TenantSettings>): Promise<{ data: TenantSettings }> {
-    return getClient().put<{ data: TenantSettings }>(`${this.basePath}/tenant`, data);
+  async getAll(): Promise<SingleResponse<AppSettings>> {
+    return this.client.get(this.buildPath());
   }
 
   /**
-   * Get user settings
-   * @returns User settings including notifications, preferences, and privacy
+   * Get settings by category
    */
-  async getUserSettings(): Promise<{ data: UserSettings }> {
-    return getClient().get<{ data: UserSettings }>(`${this.basePath}/user`);
+  async getByCategory(category: SettingCategory): Promise<SingleResponse<Partial<AppSettings>>> {
+    return this.client.get(this.buildPath(`/category/${category}`));
   }
 
   /**
-   * Update user settings
-   * @param data - Partial user settings to update
-   * @returns Updated complete user settings
+   * Update settings (full or partial)
    */
-  async updateUserSettings(data: Partial<UserSettings>): Promise<{ data: UserSettings }> {
-    return getClient().put<{ data: UserSettings }>(`${this.basePath}/user`, data);
+  async update(data: UpdateSettingsDTO): Promise<SingleResponse<AppSettings>> {
+    return this.client.put(this.buildPath(), data);
   }
 
   /**
-   * Get booking policy settings
-   * @returns Booking policy configuration (auto-confirm, approval, cancellation, timing rules)
+   * Update single setting value
    */
-  async getBookingPolicy(): Promise<{ data: TenantSettings['booking'] }> {
-    return getClient().get<{ data: TenantSettings['booking'] }>(`${this.basePath}/booking-policy`);
-  }
-
-  /**
-   * Update booking policy
-   * @param data - Partial booking policy settings to update
-   * @returns Updated complete booking policy configuration
-   * @example
-   * ```typescript
-   * // Enable auto-confirmation and set cancellation policy
-   * const policy = await settingsService.updateBookingPolicy({
-   *   autoConfirm: true,
-   *   allowCancellation: true,
-   *   cancellationDeadlineHours: 24,
-   *   minAdvanceBookingHours: 2
-   * });
-   * console.log(`Cancellation deadline: ${policy.data.cancellationDeadlineHours}h`);
-   * ```
-   */
-  async updateBookingPolicy(data: Partial<TenantSettings['booking']>): Promise<{ data: TenantSettings['booking'] }> {
-    return getClient().put<{ data: TenantSettings['booking'] }>(`${this.basePath}/booking-policy`, data);
-  }
-
-  /**
-   * Get branding settings
-   * @returns Branding configuration (logo, colors, favicon)
-   */
-  async getBranding(): Promise<{ data: TenantSettings['branding'] }> {
-    return getClient().get<{ data: TenantSettings['branding'] }>(`${this.basePath}/branding`);
-  }
-
-  /**
-   * Update branding settings
-   * @param data - Partial branding settings to update
-   * @returns Updated complete branding configuration
-   * @example
-   * ```typescript
-   * // Update company branding colors and logo
-   * const branding = await settingsService.updateBranding({
-   *   logo: 'https://cdn.example.com/logo.png',
-   *   primaryColor: '#0066CC',
-   *   secondaryColor: '#FF6600'
-   * });
-   * console.log(`Branding updated with primary color: ${branding.data.primaryColor}`);
-   * ```
-   */
-  async updateBranding(data: Partial<TenantSettings['branding']>): Promise<{ data: TenantSettings['branding'] }> {
-    return getClient().put<{ data: TenantSettings['branding'] }>(`${this.basePath}/branding`, data);
+  async updateSetting(key: string, value: unknown): Promise<SingleResponse<{ key: string; value: unknown }>> {
+    return this.client.put(this.buildPath(`/${key}`), { value });
   }
 
   /**
    * Reset settings to defaults
-   * @param scope - Scope of settings to reset (tenant or user)
-   * @returns Success status of reset operation
    */
-  async resetToDefaults(scope: 'tenant' | 'user'): Promise<{ success: boolean }> {
-    return getClient().post<{ success: boolean }>(`${this.basePath}/reset`, { scope });
+  async reset(category?: SettingCategory): Promise<SingleResponse<AppSettings>> {
+    return this.client.post(this.buildPath('/reset'), { category });
+  }
+
+  /**
+   * Get notification settings
+   */
+  async getNotificationSettings(): Promise<SingleResponse<{
+    email: boolean;
+    sms: boolean;
+    push: boolean;
+    inApp: boolean;
+  }>> {
+    return this.client.get(this.buildPath('/notifications'));
+  }
+
+  /**
+   * Update notification settings
+   */
+  async updateNotificationSettings(settings: {
+    email?: boolean;
+    sms?: boolean;
+    push?: boolean;
+    inApp?: boolean;
+  }): Promise<SingleResponse<void>> {
+    return this.client.put(this.buildPath('/notifications'), settings);
+  }
+
+  /**
+   * Get privacy settings
+   */
+  async getPrivacySettings(): Promise<SingleResponse<{
+    profileVisible: boolean;
+    showEmail: boolean;
+    showPhone: boolean;
+  }>> {
+    return this.client.get(this.buildPath('/privacy'));
+  }
+
+  /**
+   * Export settings as JSON
+   */
+  async export(): Promise<Blob> {
+    const response = await this.client.get(this.buildPath('/export'), {
+      responseType: 'blob',
+    });
+    return response as unknown as Blob;
+  }
+
+  /**
+   * Import settings from JSON
+   */
+  async import(file: File): Promise<SingleResponse<AppSettings>> {
+    const formData = new FormData();
+    formData.append('settings', file);
+    return this.client.post(this.buildPath('/import'), formData);
   }
 }
 
