@@ -39,6 +39,7 @@
   "time.minutes": "{{count}} min",
   "time.hours": "{{count}} t",
   "filter.title": "Filter og sortering",
+  "filter.page.title": "Bookinger",
   "filter.showingCount": "Viser {{count}} bookinger",
   "filter.reset": "Nullstill",
   "filter.apply": "Bruk filter",

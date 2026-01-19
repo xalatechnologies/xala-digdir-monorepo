@@ -88,16 +88,22 @@ export function BookingsPage() {
     return () => clearTimeout(timer);
   }, [updateScrollIndicators, isMobile]);
 
-  // Fetch user's own bookings with offline support
-  const { data: bookingsData, isLoading, isOffline, isCached } = useOfflineBookings(
-    statusFilter ? { status: statusFilter } : undefined
-  );
-  const bookings = bookingsData?.data ?? [];
-
-  // Fetch counts for each status for filter badges (with offline support)
-  const { data: pendingData } = useOfflineBookings({ status: 'pending' });
-  const { data: confirmedData } = useOfflineBookings({ status: 'confirmed' });
-  const { data: cancelledData } = useOfflineBookings({ status: 'cancelled' });
+  // Fetch all bookings once - we'll filter client-side for reliability
+  const { data: allData, isLoading, isOffline, isCached } = useOfflineBookings();
+  
+  // Filter bookings client-side based on statusFilter
+  const bookings = useMemo(() => {
+    const allBookings = allData?.data ?? [];
+    if (!statusFilter) return allBookings;
+    
+    // Handle status mapping: 'confirmed' filter should match 'approved' and 'confirmed'
+    if (statusFilter === 'confirmed') {
+      return allBookings.filter(b => 
+        b.status === 'confirmed' || (b.status as string) === 'approved'
+      );
+    }
+    return allBookings.filter(b => b.status === statusFilter);
+  }, [allData, statusFilter]);
 
   const cancelBooking = useCancelBooking();
   const { confirm } = useDialog();
@@ -111,23 +117,25 @@ export function BookingsPage() {
       variant: 'danger',
     });
     if (confirmed) {
-      await cancelBooking.mutateAsync(id);
+      await cancelBooking.mutateAsync({ id });
     }
   };
 
-  // Calculate stats from API data
+  // Calculate stats from actual booking data - count by status from the response
   const stats = useMemo(() => {
-    const pendingCount = pendingData?.meta?.total ?? 0;
-    const confirmedCount = confirmedData?.meta?.total ?? 0;
-    const cancelledCount = cancelledData?.meta?.total ?? 0;
-
-    return {
-      total: pendingCount + confirmedCount + cancelledCount,
-      confirmed: confirmedCount,
-      pending: pendingCount,
-      cancelled: cancelledCount,
-    };
-  }, [pendingData, confirmedData, cancelledData]);
+    const allBookings = allData?.data ?? [];
+    const total = allBookings.length;
+    
+    // Count by actual status values from API (handles 'approved', 'confirmed', etc.)
+    // Type assertion needed because API may return 'approved' which isn't in BookingStatus type
+    const confirmed = allBookings.filter(b => 
+      b.status === 'confirmed' || (b.status as string) === 'approved'
+    ).length;
+    const pending = allBookings.filter(b => b.status === 'pending').length;
+    const cancelled = allBookings.filter(b => b.status === 'cancelled').length;
+    
+    return { total, confirmed, pending, cancelled };
+  }, [allData]);
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--ds-spacing-6)' }}>
@@ -322,7 +330,7 @@ export function BookingsPage() {
               flexShrink: 0,
             }}
           >
-            {t('state.cancelled')}
+            {t('state.cancelled')} ({stats.cancelled})
           </Button>
         </div>
       </div>

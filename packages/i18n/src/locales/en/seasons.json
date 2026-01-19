@@ -97,5 +97,6 @@
   "noDescriptionAdded": "No description added",
   "confirmOpenSeason": "Are you sure you want to open the season for applications?",
   "confirmCloseSeason": "Are you sure you want to close the season? No more applications will be accepted.",
-  "mustAddVenues": "You must add at least one venue before the season can be opened."
+  "mustAddVenues": "You must add at least one venue before the season can be opened.",
+  "couldNotLoadSeasons": "Could not load seasons. Please try again later."
 }

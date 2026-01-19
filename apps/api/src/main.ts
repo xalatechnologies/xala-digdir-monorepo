@@ -60,6 +60,7 @@ import { ShareController } from './modules/share/share.controller';
 import { HelpController } from './modules/help/help.controller';
 import { IdPortenAuthController } from './modules/auth/idporten.controller';
 import { NotificationsController } from './modules/notifications/notifications.controller';
+import { UserBillingController, UserInvoicesController, OrgBillingController, OrgInvoicesController } from './modules/billing/billing.controller';
 import { registerWebSocketRoutes } from './modules/websocket/websocket.controller';
 // Phase 4: Pricing, User Groups, Backoffice
 import { PricingController } from './modules/pricing/pricing.controller';
@@ -316,8 +317,13 @@ async function bootstrap() {
     ShareController,
     // BankID / ID-porten authentication (REST API)
     IdPortenAuthController,
-    // TODO: Notifications (disabled until schema tables are added)
-    // NotificationsController,
+    // Notifications (uses mock data)
+    NotificationsController,
+    // Billing (uses mock data)
+    UserBillingController,
+    UserInvoicesController,
+    OrgBillingController,
+    OrgInvoicesController,
     // Phase 4: Pricing, User Groups, Backoffice
     PricingController,
     UserGroupController,

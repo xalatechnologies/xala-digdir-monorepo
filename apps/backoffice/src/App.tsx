@@ -25,6 +25,7 @@ const RentalObjectEditPage = React.lazy(() => import('./routes/rental-objects').
 const RentalObjectDetailPage = React.lazy(() => import('./routes/rental-objects').then(m => ({ default: m.RentalObjectDetailPage })));
 const CalendarPage = React.lazy(() => import('./routes/calendar').then(m => ({ default: m.CalendarPage })));
 const BookingsPage = React.lazy(() => import('./routes/bookings').then(m => ({ default: m.BookingsPage })));
+const BookingDetailPage = React.lazy(() => import('./routes/bookings/detail'));
 const PendingBookingsPage = React.lazy(() => import('./routes/bookings/pending'));
 const SeasonsListPage = React.lazy(() => import('./routes/seasons').then(m => ({ default: m.SeasonsListPage })));
 const SeasonDetailPage = React.lazy(() => import('./routes/seasons').then(m => ({ default: m.SeasonDetailPage })));
@@ -157,6 +158,7 @@ function AppContent() {
               <Route path="requests" element={<Navigate to="/bookings" replace />} />
               <Route path="bookings" element={<BookingsPage />} />
               <Route path="bookings/pending" element={<PendingBookingsPage />} />
+              <Route path="bookings/:id" element={<BookingDetailPage />} />
               <Route path="seasons" element={<SeasonsListPage />} />
               <Route path="seasons/new" element={<SeasonFormPage />} />
               <Route path="seasons/:id" element={<SeasonDetailPage />} />

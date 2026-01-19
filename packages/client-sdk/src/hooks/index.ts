@@ -128,6 +128,8 @@ export {
   useCancelBooking,
   useCompleteBooking,
   useDeleteBooking,
+  useApproveBooking,
+  useRejectBooking,
   useCalendarEvents,
   useAvailabilitySlots,
   useAllocations,

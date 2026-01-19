@@ -1,0 +1,1341 @@
+{
+  "metadata": {
+    "scanDate": "2026-01-19T11:01:35.459Z",
+    "outputFormat": "json",
+    "appFilter": "docs-learning",
+    "includePackages": false
+  },
+  "summary": {
+    "totalFiles": 23,
+    "filesWithTranslations": 10,
+    "filesWithHardcodedStrings": 0,
+    "totalTranslationKeys": 87,
+    "totalHardcodedStrings": 0,
+    "uniqueTranslationKeys": {
+      "form.docs.search.placeholder": 2,
+      "docs.search.label": 2,
+      "docs.search.button": 1,
+      "docs.nav.home": 5,
+      "docs.nav.search": 2,
+      "docs.nav.guides": 1,
+      "docs.nav.homeDesc": 1,
+      "docs.nav.searchDesc": 1,
+      "docs.nav.sections": 1,
+      "docs.nav.booking": 1,
+      "docs.nav.bookingDesc": 1,
+      "docs.nav.rbac": 1,
+      "docs.nav.rbacDesc": 1,
+      "docs.nav.payments": 1,
+      "docs.nav.paymentsDesc": 1,
+      "docs.nav.admin": 1,
+      "docs.nav.adminDesc": 1,
+      "docs.nav.api": 1,
+      "docs.nav.apiDesc": 1,
+      "docs.nav.integrations": 1,
+      "docs.nav.integrationsDesc": 1,
+      "docs.nav.faq": 1,
+      "docs.nav.faqDesc": 1,
+      "docs.nav.roleGuides": 2,
+      "docs.nav.roleEndUser": 1,
+      "docs.nav.roleOrgMember": 1,
+      "docs.nav.roleOrgAdmin": 1,
+      "docs.nav.releases": 1,
+      "docs.nav.releasesDesc": 1,
+      "common.text.digilist": 1,
+      "docs.page.title": 1,
+      "docs.toc.label": 1,
+      "docs.toc.page.title": 1,
+      "common.opprett_en_booking": 1,
+      "common.stegforsteg_guide_til_opprettelse": 1,
+      "common.trinn_1_velg_lokale": 1,
+      "common.trinn_2_velg_dato": 1,
+      "common.ekstra_alternativer": 1,
+      "common.trinn_3_bekreft_booking": 1,
+      "common.ofte_stilte_sporsmaal": 1,
+      "docs.sections.${section}.title": 3,
+      "docs.updatedAt": 2,
+      "common.text.introduksjon": 1,
+      "common.denne_guiden_viser_deg": 1,
+      "common.start_med_aa_logge": 1,
+      "common.naar_du_har_valgt": 1,
+      "common.text.ekstraAlternativer": 1,
+      "common.du_kan_ogsaa_legge": 1,
+      "common.sjekk_at_alle_detaljer": 1,
+      "common.text.ofteStilteSporsmal": 1,
+      "docs.home.page.title": 1,
+      "docs.home.page.description": 1,
+      "docs.sections.${section}.description": 2,
+      "docs.home.quickLinks": 1,
+      "docs.home.forEndUsers": 1,
+      "docs.home.forEndUsersDesc": 1,
+      "docs.home.forOrgAdmins": 1,
+      "docs.home.forOrgAdminsDesc": 1,
+      "docs.home.searchDocs": 1,
+      "docs.home.searchDocsDesc": 1,
+      "docs.releases.page.title": 1,
+      "docs.releases.page.description": 1,
+      "docs.releases.latest": 1,
+      "docs.search.page.title": 1,
+      "docs.search.results": 1,
+      "docs.sections.${result.section}.title": 1,
+      "docs.search.noResults": 1,
+      "docs.noArticles": 1,
+      "docs.roleGuide.guideFor": 1,
+      "docs.roleGuide.gettingStarted": 1,
+      "docs.roleGuide.relevantArticles": 1,
+      "docs.article.gettingStartedBooking": 1,
+      "docs.article.gettingStartedBookingDesc": 1,
+      "docs.article.paymentMethods": 1,
+      "docs.article.paymentMethodsDesc": 1
+    },
+    "uniqueNamespaces": {
+      "form": 2,
+      "docs": 69,
+      "common": 16
+    }
+  },
+  "files": [
+    {
+      "path": "apps/docs-learning/src/App.tsx",
+      "usesTranslation": false,
+      "translationKeyCount": 0,
+      "hardcodedStringCount": 0,
+      "translationKeys": [],
+      "hardcodedStrings": []
+    },
+    {
+      "path": "apps/docs-learning/src/components/layout/DocsHeader.tsx",
+      "usesTranslation": true,
+      "translationKeyCount": 3,
+      "hardcodedStringCount": 0,
+      "translationKeys": [
+        {
+          "key": "form.docs.search.placeholder",
+          "file": "apps/docs-learning/src/components/layout/DocsHeader.tsx",
+          "type": "direct",
+          "line": 42
+        },
+        {
+          "key": "docs.search.label",
+          "file": "apps/docs-learning/src/components/layout/DocsHeader.tsx",
+          "type": "direct",
+          "line": 46
+        },
+        {
+          "key": "docs.search.button",
+          "file": "apps/docs-learning/src/components/layout/DocsHeader.tsx",
+          "type": "direct",
+          "line": 50
+        }
+      ],
+      "hardcodedStrings": []
+    },
+    {
+      "path": "apps/docs-learning/src/components/layout/DocsLayout.tsx",
+      "usesTranslation": true,
+      "translationKeyCount": 3,
+      "hardcodedStringCount": 0,
+      "translationKeys": [
+        {
+          "key": "docs.nav.home",
+          "file": "apps/docs-learning/src/components/layout/DocsLayout.tsx",
+          "type": "direct",
+          "line": 42
+        },
+        {
+          "key": "docs.nav.search",
+          "file": "apps/docs-learning/src/components/layout/DocsLayout.tsx",
+          "type": "direct",
+          "line": 49
+        },
+        {
+          "key": "docs.nav.guides",
+          "file": "apps/docs-learning/src/components/layout/DocsLayout.tsx",
+          "type": "direct",
+          "line": 56
+        }
+      ],
+      "hardcodedStrings": []
+    },
+    {
+      "path": "apps/docs-learning/src/components/layout/DocsSidebar.tsx",
+      "usesTranslation": true,
+      "translationKeyCount": 27,
+      "hardcodedStringCount": 0,
+      "translationKeys": [
+        {
+          "key": "docs.nav.home",
+          "file": "apps/docs-learning/src/components/layout/DocsSidebar.tsx",
+          "type": "direct",
+          "line": 91
+        },
+        {
+          "key": "docs.nav.homeDesc",
+          "file": "apps/docs-learning/src/components/layout/DocsSidebar.tsx",
+          "type": "direct",
+          "line": 92
+        },
+        {
+          "key": "docs.nav.search",
+          "file": "apps/docs-learning/src/components/layout/DocsSidebar.tsx",
+          "type": "direct",
+          "line": 98
+        },
+        {
+          "key": "docs.nav.searchDesc",
+          "file": "apps/docs-learning/src/components/layout/DocsSidebar.tsx",
+          "type": "direct",
+          "line": 99
+        },
+        {
+          "key": "docs.nav.sections",
+          "file": "apps/docs-learning/src/components/layout/DocsSidebar.tsx",
+          "type": "direct",
+          "line": 107
+        },
+        {
+          "key": "docs.nav.booking",
+          "file": "apps/docs-learning/src/components/layout/DocsSidebar.tsx",
+          "type": "direct",
+          "line": 111
+        },
+        {
+          "key": "docs.nav.bookingDesc",
+          "file": "apps/docs-learning/src/components/layout/DocsSidebar.tsx",
+          "type": "direct",
+          "line": 112
+        },
+        {
+          "key": "docs.nav.rbac",
+          "file": "apps/docs-learning/src/components/layout/DocsSidebar.tsx",
+          "type": "direct",
+          "line": 119
+        },
+        {
+          "key": "docs.nav.rbacDesc",
+          "file": "apps/docs-learning/src/components/layout/DocsSidebar.tsx",
+          "type": "direct",
+          "line": 120
+        },
+        {
+          "key": "docs.nav.payments",
+          "file": "apps/docs-learning/src/components/layout/DocsSidebar.tsx",
+          "type": "direct",
+          "line": 127
+        },
+        {
+          "key": "docs.nav.paymentsDesc",
+          "file": "apps/docs-learning/src/components/layout/DocsSidebar.tsx",
+          "type": "direct",
+          "line": 128
+        },
+        {
+          "key": "docs.nav.admin",
+          "file": "apps/docs-learning/src/components/layout/DocsSidebar.tsx",
+          "type": "direct",
+          "line": 135
+        },
+        {
+          "key": "docs.nav.adminDesc",
+          "file": "apps/docs-learning/src/components/layout/DocsSidebar.tsx",
+          "type": "direct",
+          "line": 136
+        },
+        {
+          "key": "docs.nav.api",
+          "file": "apps/docs-learning/src/components/layout/DocsSidebar.tsx",
+          "type": "direct",
+          "line": 143
+        },
+        {
+          "key": "docs.nav.apiDesc",
+          "file": "apps/docs-learning/src/components/layout/DocsSidebar.tsx",
+          "type": "direct",
+          "line": 144
+        },
+        {
+          "key": "docs.nav.integrations",
+          "file": "apps/docs-learning/src/components/layout/DocsSidebar.tsx",
+          "type": "direct",
+          "line": 151
+        },
+        {
+          "key": "docs.nav.integrationsDesc",
+          "file": "apps/docs-learning/src/components/layout/DocsSidebar.tsx",
+          "type": "direct",
+          "line": 152
+        },
+        {
+          "key": "docs.nav.faq",
+          "file": "apps/docs-learning/src/components/layout/DocsSidebar.tsx",
+          "type": "direct",
+          "line": 159
+        },
+        {
+          "key": "docs.nav.faqDesc",
+          "file": "apps/docs-learning/src/components/layout/DocsSidebar.tsx",
+          "type": "direct",
+          "line": 160
+        },
+        {
+          "key": "docs.nav.roleGuides",
+          "file": "apps/docs-learning/src/components/layout/DocsSidebar.tsx",
+          "type": "direct",
+          "line": 168
+        },
+        {
+          "key": "docs.nav.roleEndUser",
+          "file": "apps/docs-learning/src/components/layout/DocsSidebar.tsx",
+          "type": "direct",
+          "line": 172
+        },
+        {
+          "key": "docs.nav.roleOrgMember",
+          "file": "apps/docs-learning/src/components/layout/DocsSidebar.tsx",
+          "type": "direct",
+          "line": 179
+        },
+        {
+          "key": "docs.nav.roleOrgAdmin",
+          "file": "apps/docs-learning/src/components/layout/DocsSidebar.tsx",
+          "type": "direct",
+          "line": 186
+        },
+        {
+          "key": "docs.nav.releases",
+          "file": "apps/docs-learning/src/components/layout/DocsSidebar.tsx",
+          "type": "direct",
+          "line": 197
+        },
+        {
+          "key": "docs.nav.releasesDesc",
+          "file": "apps/docs-learning/src/components/layout/DocsSidebar.tsx",
+          "type": "direct",
+          "line": 198
+        },
+        {
+          "key": "common.text.digilist",
+          "file": "apps/docs-learning/src/components/layout/DocsSidebar.tsx",
+          "type": "direct",
+          "line": 225
+        },
+        {
+          "key": "docs.page.title",
+          "file": "apps/docs-learning/src/components/layout/DocsSidebar.tsx",
+          "type": "direct",
+          "line": 226
+        }
+      ],
+      "hardcodedStrings": []
+    },
+    {
+      "path": "apps/docs-learning/src/components/layout/index.ts",
+      "usesTranslation": false,
+      "translationKeyCount": 0,
+      "hardcodedStringCount": 0,
+      "translationKeys": [],
+      "hardcodedStrings": []
+    },
+    {
+      "path": "apps/docs-learning/src/components/toc/DocsRightTOC.tsx",
+      "usesTranslation": true,
+      "translationKeyCount": 2,
+      "hardcodedStringCount": 0,
+      "translationKeys": [
+        {
+          "key": "docs.toc.label",
+          "file": "apps/docs-learning/src/components/toc/DocsRightTOC.tsx",
+          "type": "direct",
+          "line": 109
+        },
+        {
+          "key": "docs.toc.page.title",
+          "file": "apps/docs-learning/src/components/toc/DocsRightTOC.tsx",
+          "type": "direct",
+          "line": 111
+        }
+      ],
+      "hardcodedStrings": []
+    },
+    {
+      "path": "apps/docs-learning/src/components/toc/index.ts",
+      "usesTranslation": false,
+      "translationKeyCount": 0,
+      "hardcodedStringCount": 0,
+      "translationKeys": [],
+      "hardcodedStrings": []
+    },
+    {
+      "path": "apps/docs-learning/src/lib/feature-flags.ts",
+      "usesTranslation": false,
+      "translationKeyCount": 0,
+      "hardcodedStringCount": 0,
+      "translationKeys": [],
+      "hardcodedStrings": []
+    },
+    {
+      "path": "apps/docs-learning/src/lib/index.ts",
+      "usesTranslation": false,
+      "translationKeyCount": 0,
+      "hardcodedStringCount": 0,
+      "translationKeys": [],
+      "hardcodedStrings": []
+    },
+    {
+      "path": "apps/docs-learning/src/main.tsx",
+      "usesTranslation": false,
+      "translationKeyCount": 0,
+      "hardcodedStringCount": 0,
+      "translationKeys": [],
+      "hardcodedStrings": []
+    },
+    {
+      "path": "apps/docs-learning/src/providers/ToastProvider.tsx",
+      "usesTranslation": false,
+      "translationKeyCount": 0,
+      "hardcodedStringCount": 0,
+      "translationKeys": [],
+      "hardcodedStrings": []
+    },
+    {
+      "path": "apps/docs-learning/src/providers/index.ts",
+      "usesTranslation": false,
+      "translationKeyCount": 0,
+      "hardcodedStringCount": 0,
+      "translationKeys": [],
+      "hardcodedStrings": []
+    },
+    {
+      "path": "apps/docs-learning/src/routes/DocsArticlePage.tsx",
+      "usesTranslation": true,
+      "translationKeyCount": 18,
+      "hardcodedStringCount": 0,
+      "translationKeys": [
+        {
+          "key": "common.opprett_en_booking",
+          "file": "apps/docs-learning/src/routes/DocsArticlePage.tsx",
+          "type": "direct",
+          "line": 24
+        },
+        {
+          "key": "common.stegforsteg_guide_til_opprettelse",
+          "file": "apps/docs-learning/src/routes/DocsArticlePage.tsx",
+          "type": "direct",
+          "line": 25
+        },
+        {
+          "key": "common.trinn_1_velg_lokale",
+          "file": "apps/docs-learning/src/routes/DocsArticlePage.tsx",
+          "type": "direct",
+          "line": 29
+        },
+        {
+          "key": "common.trinn_2_velg_dato",
+          "file": "apps/docs-learning/src/routes/DocsArticlePage.tsx",
+          "type": "direct",
+          "line": 30
+        },
+        {
+          "key": "common.ekstra_alternativer",
+          "file": "apps/docs-learning/src/routes/DocsArticlePage.tsx",
+          "type": "direct",
+          "line": 31
+        },
+        {
+          "key": "common.trinn_3_bekreft_booking",
+          "file": "apps/docs-learning/src/routes/DocsArticlePage.tsx",
+          "type": "direct",
+          "line": 32
+        },
+        {
+          "key": "common.ofte_stilte_sporsmaal",
+          "file": "apps/docs-learning/src/routes/DocsArticlePage.tsx",
+          "type": "direct",
+          "line": 33
+        },
+        {
+          "key": "docs.sections.${section}.title",
+          "file": "apps/docs-learning/src/routes/DocsArticlePage.tsx",
+          "type": "direct",
+          "line": 42
+        },
+        {
+          "key": "docs.nav.home",
+          "file": "apps/docs-learning/src/routes/DocsArticlePage.tsx",
+          "type": "direct",
+          "line": 45
+        },
+        {
+          "key": "docs.updatedAt",
+          "file": "apps/docs-learning/src/routes/DocsArticlePage.tsx",
+          "type": "direct",
+          "line": 62
+        },
+        {
+          "key": "common.text.introduksjon",
+          "file": "apps/docs-learning/src/routes/DocsArticlePage.tsx",
+          "type": "direct",
+          "line": 69
+        },
+        {
+          "key": "common.denne_guiden_viser_deg",
+          "file": "apps/docs-learning/src/routes/DocsArticlePage.tsx",
+          "type": "direct",
+          "line": 71
+        },
+        {
+          "key": "common.start_med_aa_logge",
+          "file": "apps/docs-learning/src/routes/DocsArticlePage.tsx",
+          "type": "direct",
+          "line": 78
+        },
+        {
+          "key": "common.naar_du_har_valgt",
+          "file": "apps/docs-learning/src/routes/DocsArticlePage.tsx",
+          "type": "direct",
+          "line": 90
+        },
+        {
+          "key": "common.text.ekstraAlternativer",
+          "file": "apps/docs-learning/src/routes/DocsArticlePage.tsx",
+          "type": "direct",
+          "line": 93
+        },
+        {
+          "key": "common.du_kan_ogsaa_legge",
+          "file": "apps/docs-learning/src/routes/DocsArticlePage.tsx",
+          "type": "direct",
+          "line": 95
+        },
+        {
+          "key": "common.sjekk_at_alle_detaljer",
+          "file": "apps/docs-learning/src/routes/DocsArticlePage.tsx",
+          "type": "direct",
+          "line": 107
+        },
+        {
+          "key": "common.text.ofteStilteSporsmal",
+          "file": "apps/docs-learning/src/routes/DocsArticlePage.tsx",
+          "type": "direct",
+          "line": 118
+        }
+      ],
+      "hardcodedStrings": []
+    },
+    {
+      "path": "apps/docs-learning/src/routes/DocsHomePage.tsx",
+      "usesTranslation": true,
+      "translationKeyCount": 11,
+      "hardcodedStringCount": 0,
+      "translationKeys": [
+        {
+          "key": "docs.home.page.title",
+          "file": "apps/docs-learning/src/routes/DocsHomePage.tsx",
+          "type": "direct",
+          "line": 39
+        },
+        {
+          "key": "docs.home.page.description",
+          "file": "apps/docs-learning/src/routes/DocsHomePage.tsx",
+          "type": "direct",
+          "line": 42
+        },
+        {
+          "key": "docs.sections.${section}.title",
+          "file": "apps/docs-learning/src/routes/DocsHomePage.tsx",
+          "type": "direct",
+          "line": 59
+        },
+        {
+          "key": "docs.sections.${section}.description",
+          "file": "apps/docs-learning/src/routes/DocsHomePage.tsx",
+          "type": "direct",
+          "line": 62
+        },
+        {
+          "key": "docs.home.quickLinks",
+          "file": "apps/docs-learning/src/routes/DocsHomePage.tsx",
+          "type": "direct",
+          "line": 73
+        },
+        {
+          "key": "docs.home.forEndUsers",
+          "file": "apps/docs-learning/src/routes/DocsHomePage.tsx",
+          "type": "direct",
+          "line": 80
+        },
+        {
+          "key": "docs.home.forEndUsersDesc",
+          "file": "apps/docs-learning/src/routes/DocsHomePage.tsx",
+          "type": "direct",
+          "line": 83
+        },
+        {
+          "key": "docs.home.forOrgAdmins",
+          "file": "apps/docs-learning/src/routes/DocsHomePage.tsx",
+          "type": "direct",
+          "line": 91
+        },
+        {
+          "key": "docs.home.forOrgAdminsDesc",
+          "file": "apps/docs-learning/src/routes/DocsHomePage.tsx",
+          "type": "direct",
+          "line": 94
+        },
+        {
+          "key": "docs.home.searchDocs",
+          "file": "apps/docs-learning/src/routes/DocsHomePage.tsx",
+          "type": "direct",
+          "line": 102
+        },
+        {
+          "key": "docs.home.searchDocsDesc",
+          "file": "apps/docs-learning/src/routes/DocsHomePage.tsx",
+          "type": "direct",
+          "line": 105
+        }
+      ],
+      "hardcodedStrings": []
+    },
+    {
+      "path": "apps/docs-learning/src/routes/DocsReleasesPage.tsx",
+      "usesTranslation": false,
+      "translationKeyCount": 3,
+      "hardcodedStringCount": 0,
+      "translationKeys": [
+        {
+          "key": "docs.releases.page.title",
+          "file": "apps/docs-learning/src/routes/DocsReleasesPage.tsx",
+          "type": "direct",
+          "line": 38
+        },
+        {
+          "key": "docs.releases.page.description",
+          "file": "apps/docs-learning/src/routes/DocsReleasesPage.tsx",
+          "type": "direct",
+          "line": 40
+        },
+        {
+          "key": "docs.releases.latest",
+          "file": "apps/docs-learning/src/routes/DocsReleasesPage.tsx",
+          "type": "direct",
+          "line": 50
+        }
+      ],
+      "hardcodedStrings": []
+    },
+    {
+      "path": "apps/docs-learning/src/routes/DocsSearchPage.tsx",
+      "usesTranslation": true,
+      "translationKeyCount": 6,
+      "hardcodedStringCount": 0,
+      "translationKeys": [
+        {
+          "key": "docs.search.page.title",
+          "file": "apps/docs-learning/src/routes/DocsSearchPage.tsx",
+          "type": "direct",
+          "line": 48
+        },
+        {
+          "key": "docs.search.label",
+          "file": "apps/docs-learning/src/routes/DocsSearchPage.tsx",
+          "type": "direct",
+          "line": 54
+        },
+        {
+          "key": "form.docs.search.placeholder",
+          "file": "apps/docs-learning/src/routes/DocsSearchPage.tsx",
+          "type": "direct",
+          "line": 55
+        },
+        {
+          "key": "docs.search.results",
+          "file": "apps/docs-learning/src/routes/DocsSearchPage.tsx",
+          "type": "direct",
+          "line": 66
+        },
+        {
+          "key": "docs.sections.${result.section}.title",
+          "file": "apps/docs-learning/src/routes/DocsSearchPage.tsx",
+          "type": "direct",
+          "line": 78
+        },
+        {
+          "key": "docs.search.noResults",
+          "file": "apps/docs-learning/src/routes/DocsSearchPage.tsx",
+          "type": "direct",
+          "line": 89
+        }
+      ],
+      "hardcodedStrings": []
+    },
+    {
+      "path": "apps/docs-learning/src/routes/DocsSectionPage.tsx",
+      "usesTranslation": true,
+      "translationKeyCount": 5,
+      "hardcodedStringCount": 0,
+      "translationKeys": [
+        {
+          "key": "docs.sections.${section}.title",
+          "file": "apps/docs-learning/src/routes/DocsSectionPage.tsx",
+          "type": "direct",
+          "line": 57
+        },
+        {
+          "key": "docs.nav.home",
+          "file": "apps/docs-learning/src/routes/DocsSectionPage.tsx",
+          "type": "direct",
+          "line": 60
+        },
+        {
+          "key": "docs.sections.${section}.description",
+          "file": "apps/docs-learning/src/routes/DocsSectionPage.tsx",
+          "type": "direct",
+          "line": 73
+        },
+        {
+          "key": "docs.updatedAt",
+          "file": "apps/docs-learning/src/routes/DocsSectionPage.tsx",
+          "type": "direct",
+          "line": 97
+        },
+        {
+          "key": "docs.noArticles",
+          "file": "apps/docs-learning/src/routes/DocsSectionPage.tsx",
+          "type": "direct",
+          "line": 104
+        }
+      ],
+      "hardcodedStrings": []
+    },
+    {
+      "path": "apps/docs-learning/src/routes/RoleGuidePage.tsx",
+      "usesTranslation": false,
+      "translationKeyCount": 9,
+      "hardcodedStringCount": 0,
+      "translationKeys": [
+        {
+          "key": "docs.nav.home",
+          "file": "apps/docs-learning/src/routes/RoleGuidePage.tsx",
+          "type": "direct",
+          "line": 39
+        },
+        {
+          "key": "docs.nav.roleGuides",
+          "file": "apps/docs-learning/src/routes/RoleGuidePage.tsx",
+          "type": "direct",
+          "line": 40
+        },
+        {
+          "key": "docs.roleGuide.guideFor",
+          "file": "apps/docs-learning/src/routes/RoleGuidePage.tsx",
+          "type": "direct",
+          "line": 61
+        },
+        {
+          "key": "docs.roleGuide.gettingStarted",
+          "file": "apps/docs-learning/src/routes/RoleGuidePage.tsx",
+          "type": "direct",
+          "line": 66
+        },
+        {
+          "key": "docs.roleGuide.relevantArticles",
+          "file": "apps/docs-learning/src/routes/RoleGuidePage.tsx",
+          "type": "direct",
+          "line": 83
+        },
+        {
+          "key": "docs.article.gettingStartedBooking",
+          "file": "apps/docs-learning/src/routes/RoleGuidePage.tsx",
+          "type": "direct",
+          "line": 87
+        },
+        {
+          "key": "docs.article.gettingStartedBookingDesc",
+          "file": "apps/docs-learning/src/routes/RoleGuidePage.tsx",
+          "type": "direct",
+          "line": 88
+        },
+        {
+          "key": "docs.article.paymentMethods",
+          "file": "apps/docs-learning/src/routes/RoleGuidePage.tsx",
+          "type": "direct",
+          "line": 93
+        },
+        {
+          "key": "docs.article.paymentMethodsDesc",
+          "file": "apps/docs-learning/src/routes/RoleGuidePage.tsx",
+          "type": "direct",
+          "line": 94
+        }
+      ],
+      "hardcodedStrings": []
+    },
+    {
+      "path": "apps/docs-learning/src/routes/index.ts",
+      "usesTranslation": false,
+      "translationKeyCount": 0,
+      "hardcodedStringCount": 0,
+      "translationKeys": [],
+      "hardcodedStrings": []
+    },
+    {
+      "path": "apps/docs-learning/src/types/docs.ts",
+      "usesTranslation": false,
+      "translationKeyCount": 0,
+      "hardcodedStringCount": 0,
+      "translationKeys": [],
+      "hardcodedStrings": []
+    },
+    {
+      "path": "apps/docs-learning/src/types/index.ts",
+      "usesTranslation": false,
+      "translationKeyCount": 0,
+      "hardcodedStringCount": 0,
+      "translationKeys": [],
+      "hardcodedStrings": []
+    },
+    {
+      "path": "apps/docs-learning/src/vite-env.d.ts",
+      "usesTranslation": false,
+      "translationKeyCount": 0,
+      "hardcodedStringCount": 0,
+      "translationKeys": [],
+      "hardcodedStrings": []
+    },
+    {
+      "path": "apps/docs-learning/vite.config.ts",
+      "usesTranslation": false,
+      "translationKeyCount": 0,
+      "hardcodedStringCount": 0,
+      "translationKeys": [],
+      "hardcodedStrings": []
+    }
+  ],
+  "translationKeys": [
+    {
+      "key": "form.docs.search.placeholder",
+      "file": "apps/docs-learning/src/components/layout/DocsHeader.tsx",
+      "type": "direct",
+      "line": 42
+    },
+    {
+      "key": "docs.search.label",
+      "file": "apps/docs-learning/src/components/layout/DocsHeader.tsx",
+      "type": "direct",
+      "line": 46
+    },
+    {
+      "key": "docs.search.button",
+      "file": "apps/docs-learning/src/components/layout/DocsHeader.tsx",
+      "type": "direct",
+      "line": 50
+    },
+    {
+      "key": "docs.nav.home",
+      "file": "apps/docs-learning/src/components/layout/DocsLayout.tsx",
+      "type": "direct",
+      "line": 42
+    },
+    {
+      "key": "docs.nav.search",
+      "file": "apps/docs-learning/src/components/layout/DocsLayout.tsx",
+      "type": "direct",
+      "line": 49
+    },
+    {
+      "key": "docs.nav.guides",
+      "file": "apps/docs-learning/src/components/layout/DocsLayout.tsx",
+      "type": "direct",
+      "line": 56
+    },
+    {
+      "key": "docs.nav.home",
+      "file": "apps/docs-learning/src/components/layout/DocsSidebar.tsx",
+      "type": "direct",
+      "line": 91
+    },
+    {
+      "key": "docs.nav.homeDesc",
+      "file": "apps/docs-learning/src/components/layout/DocsSidebar.tsx",
+      "type": "direct",
+      "line": 92
+    },
+    {
+      "key": "docs.nav.search",
+      "file": "apps/docs-learning/src/components/layout/DocsSidebar.tsx",
+      "type": "direct",
+      "line": 98
+    },
+    {
+      "key": "docs.nav.searchDesc",
+      "file": "apps/docs-learning/src/components/layout/DocsSidebar.tsx",
+      "type": "direct",
+      "line": 99
+    },
+    {
+      "key": "docs.nav.sections",
+      "file": "apps/docs-learning/src/components/layout/DocsSidebar.tsx",
+      "type": "direct",
+      "line": 107
+    },
+    {
+      "key": "docs.nav.booking",
+      "file": "apps/docs-learning/src/components/layout/DocsSidebar.tsx",
+      "type": "direct",
+      "line": 111
+    },
+    {
+      "key": "docs.nav.bookingDesc",
+      "file": "apps/docs-learning/src/components/layout/DocsSidebar.tsx",
+      "type": "direct",
+      "line": 112
+    },
+    {
+      "key": "docs.nav.rbac",
+      "file": "apps/docs-learning/src/components/layout/DocsSidebar.tsx",
+      "type": "direct",
+      "line": 119
+    },
+    {
+      "key": "docs.nav.rbacDesc",
+      "file": "apps/docs-learning/src/components/layout/DocsSidebar.tsx",
+      "type": "direct",
+      "line": 120
+    },
+    {
+      "key": "docs.nav.payments",
+      "file": "apps/docs-learning/src/components/layout/DocsSidebar.tsx",
+      "type": "direct",
+      "line": 127
+    },
+    {
+      "key": "docs.nav.paymentsDesc",
+      "file": "apps/docs-learning/src/components/layout/DocsSidebar.tsx",
+      "type": "direct",
+      "line": 128
+    },
+    {
+      "key": "docs.nav.admin",
+      "file": "apps/docs-learning/src/components/layout/DocsSidebar.tsx",
+      "type": "direct",
+      "line": 135
+    },
+    {
+      "key": "docs.nav.adminDesc",
+      "file": "apps/docs-learning/src/components/layout/DocsSidebar.tsx",
+      "type": "direct",
+      "line": 136
+    },
+    {
+      "key": "docs.nav.api",
+      "file": "apps/docs-learning/src/components/layout/DocsSidebar.tsx",
+      "type": "direct",
+      "line": 143
+    },
+    {
+      "key": "docs.nav.apiDesc",
+      "file": "apps/docs-learning/src/components/layout/DocsSidebar.tsx",
+      "type": "direct",
+      "line": 144
+    },
+    {
+      "key": "docs.nav.integrations",
+      "file": "apps/docs-learning/src/components/layout/DocsSidebar.tsx",
+      "type": "direct",
+      "line": 151
+    },
+    {
+      "key": "docs.nav.integrationsDesc",
+      "file": "apps/docs-learning/src/components/layout/DocsSidebar.tsx",
+      "type": "direct",
+      "line": 152
+    },
+    {
+      "key": "docs.nav.faq",
+      "file": "apps/docs-learning/src/components/layout/DocsSidebar.tsx",
+      "type": "direct",
+      "line": 159
+    },
+    {
+      "key": "docs.nav.faqDesc",
+      "file": "apps/docs-learning/src/components/layout/DocsSidebar.tsx",
+      "type": "direct",
+      "line": 160
+    },
+    {
+      "key": "docs.nav.roleGuides",
+      "file": "apps/docs-learning/src/components/layout/DocsSidebar.tsx",
+      "type": "direct",
+      "line": 168
+    },
+    {
+      "key": "docs.nav.roleEndUser",
+      "file": "apps/docs-learning/src/components/layout/DocsSidebar.tsx",
+      "type": "direct",
+      "line": 172
+    },
+    {
+      "key": "docs.nav.roleOrgMember",
+      "file": "apps/docs-learning/src/components/layout/DocsSidebar.tsx",
+      "type": "direct",
+      "line": 179
+    },
+    {
+      "key": "docs.nav.roleOrgAdmin",
+      "file": "apps/docs-learning/src/components/layout/DocsSidebar.tsx",
+      "type": "direct",
+      "line": 186
+    },
+    {
+      "key": "docs.nav.releases",
+      "file": "apps/docs-learning/src/components/layout/DocsSidebar.tsx",
+      "type": "direct",
+      "line": 197
+    },
+    {
+      "key": "docs.nav.releasesDesc",
+      "file": "apps/docs-learning/src/components/layout/DocsSidebar.tsx",
+      "type": "direct",
+      "line": 198
+    },
+    {
+      "key": "common.text.digilist",
+      "file": "apps/docs-learning/src/components/layout/DocsSidebar.tsx",
+      "type": "direct",
+      "line": 225
+    },
+    {
+      "key": "docs.page.title",
+      "file": "apps/docs-learning/src/components/layout/DocsSidebar.tsx",
+      "type": "direct",
+      "line": 226
+    },
+    {
+      "key": "docs.toc.label",
+      "file": "apps/docs-learning/src/components/toc/DocsRightTOC.tsx",
+      "type": "direct",
+      "line": 109
+    },
+    {
+      "key": "docs.toc.page.title",
+      "file": "apps/docs-learning/src/components/toc/DocsRightTOC.tsx",
+      "type": "direct",
+      "line": 111
+    },
+    {
+      "key": "common.opprett_en_booking",
+      "file": "apps/docs-learning/src/routes/DocsArticlePage.tsx",
+      "type": "direct",
+      "line": 24
+    },
+    {
+      "key": "common.stegforsteg_guide_til_opprettelse",
+      "file": "apps/docs-learning/src/routes/DocsArticlePage.tsx",
+      "type": "direct",
+      "line": 25
+    },
+    {
+      "key": "common.trinn_1_velg_lokale",
+      "file": "apps/docs-learning/src/routes/DocsArticlePage.tsx",
+      "type": "direct",
+      "line": 29
+    },
+    {
+      "key": "common.trinn_2_velg_dato",
+      "file": "apps/docs-learning/src/routes/DocsArticlePage.tsx",
+      "type": "direct",
+      "line": 30
+    },
+    {
+      "key": "common.ekstra_alternativer",
+      "file": "apps/docs-learning/src/routes/DocsArticlePage.tsx",
+      "type": "direct",
+      "line": 31
+    },
+    {
+      "key": "common.trinn_3_bekreft_booking",
+      "file": "apps/docs-learning/src/routes/DocsArticlePage.tsx",
+      "type": "direct",
+      "line": 32
+    },
+    {
+      "key": "common.ofte_stilte_sporsmaal",
+      "file": "apps/docs-learning/src/routes/DocsArticlePage.tsx",
+      "type": "direct",
+      "line": 33
+    },
+    {
+      "key": "docs.sections.${section}.title",
+      "file": "apps/docs-learning/src/routes/DocsArticlePage.tsx",
+      "type": "direct",
+      "line": 42
+    },
+    {
+      "key": "docs.nav.home",
+      "file": "apps/docs-learning/src/routes/DocsArticlePage.tsx",
+      "type": "direct",
+      "line": 45
+    },
+    {
+      "key": "docs.updatedAt",
+      "file": "apps/docs-learning/src/routes/DocsArticlePage.tsx",
+      "type": "direct",
+      "line": 62
+    },
+    {
+      "key": "common.text.introduksjon",
+      "file": "apps/docs-learning/src/routes/DocsArticlePage.tsx",
+      "type": "direct",
+      "line": 69
+    },
+    {
+      "key": "common.denne_guiden_viser_deg",
+      "file": "apps/docs-learning/src/routes/DocsArticlePage.tsx",
+      "type": "direct",
+      "line": 71
+    },
+    {
+      "key": "common.start_med_aa_logge",
+      "file": "apps/docs-learning/src/routes/DocsArticlePage.tsx",
+      "type": "direct",
+      "line": 78
+    },
+    {
+      "key": "common.naar_du_har_valgt",
+      "file": "apps/docs-learning/src/routes/DocsArticlePage.tsx",
+      "type": "direct",
+      "line": 90
+    },
+    {
+      "key": "common.text.ekstraAlternativer",
+      "file": "apps/docs-learning/src/routes/DocsArticlePage.tsx",
+      "type": "direct",
+      "line": 93
+    },
+    {
+      "key": "common.du_kan_ogsaa_legge",
+      "file": "apps/docs-learning/src/routes/DocsArticlePage.tsx",
+      "type": "direct",
+      "line": 95
+    },
+    {
+      "key": "common.sjekk_at_alle_detaljer",
+      "file": "apps/docs-learning/src/routes/DocsArticlePage.tsx",
+      "type": "direct",
+      "line": 107
+    },
+    {
+      "key": "common.text.ofteStilteSporsmal",
+      "file": "apps/docs-learning/src/routes/DocsArticlePage.tsx",
+      "type": "direct",
+      "line": 118
+    },
+    {
+      "key": "docs.home.page.title",
+      "file": "apps/docs-learning/src/routes/DocsHomePage.tsx",
+      "type": "direct",
+      "line": 39
+    },
+    {
+      "key": "docs.home.page.description",
+      "file": "apps/docs-learning/src/routes/DocsHomePage.tsx",
+      "type": "direct",
+      "line": 42
+    },
+    {
+      "key": "docs.sections.${section}.title",
+      "file": "apps/docs-learning/src/routes/DocsHomePage.tsx",
+      "type": "direct",
+      "line": 59
+    },
+    {
+      "key": "docs.sections.${section}.description",
+      "file": "apps/docs-learning/src/routes/DocsHomePage.tsx",
+      "type": "direct",
+      "line": 62
+    },
+    {
+      "key": "docs.home.quickLinks",
+      "file": "apps/docs-learning/src/routes/DocsHomePage.tsx",
+      "type": "direct",
+      "line": 73
+    },
+    {
+      "key": "docs.home.forEndUsers",
+      "file": "apps/docs-learning/src/routes/DocsHomePage.tsx",
+      "type": "direct",
+      "line": 80
+    },
+    {
+      "key": "docs.home.forEndUsersDesc",
+      "file": "apps/docs-learning/src/routes/DocsHomePage.tsx",
+      "type": "direct",
+      "line": 83
+    },
+    {
+      "key": "docs.home.forOrgAdmins",
+      "file": "apps/docs-learning/src/routes/DocsHomePage.tsx",
+      "type": "direct",
+      "line": 91
+    },
+    {
+      "key": "docs.home.forOrgAdminsDesc",
+      "file": "apps/docs-learning/src/routes/DocsHomePage.tsx",
+      "type": "direct",
+      "line": 94
+    },
+    {
+      "key": "docs.home.searchDocs",
+      "file": "apps/docs-learning/src/routes/DocsHomePage.tsx",
+      "type": "direct",
+      "line": 102
+    },
+    {
+      "key": "docs.home.searchDocsDesc",
+      "file": "apps/docs-learning/src/routes/DocsHomePage.tsx",
+      "type": "direct",
+      "line": 105
+    },
+    {
+      "key": "docs.releases.page.title",
+      "file": "apps/docs-learning/src/routes/DocsReleasesPage.tsx",
+      "type": "direct",
+      "line": 38
+    },
+    {
+      "key": "docs.releases.page.description",
+      "file": "apps/docs-learning/src/routes/DocsReleasesPage.tsx",
+      "type": "direct",
+      "line": 40
+    },
+    {
+      "key": "docs.releases.latest",
+      "file": "apps/docs-learning/src/routes/DocsReleasesPage.tsx",
+      "type": "direct",
+      "line": 50
+    },
+    {
+      "key": "docs.search.page.title",
+      "file": "apps/docs-learning/src/routes/DocsSearchPage.tsx",
+      "type": "direct",
+      "line": 48
+    },
+    {
+      "key": "docs.search.label",
+      "file": "apps/docs-learning/src/routes/DocsSearchPage.tsx",
+      "type": "direct",
+      "line": 54
+    },
+    {
+      "key": "form.docs.search.placeholder",
+      "file": "apps/docs-learning/src/routes/DocsSearchPage.tsx",
+      "type": "direct",
+      "line": 55
+    },
+    {
+      "key": "docs.search.results",
+      "file": "apps/docs-learning/src/routes/DocsSearchPage.tsx",
+      "type": "direct",
+      "line": 66
+    },
+    {
+      "key": "docs.sections.${result.section}.title",
+      "file": "apps/docs-learning/src/routes/DocsSearchPage.tsx",
+      "type": "direct",
+      "line": 78
+    },
+    {
+      "key": "docs.search.noResults",
+      "file": "apps/docs-learning/src/routes/DocsSearchPage.tsx",
+      "type": "direct",
+      "line": 89
+    },
+    {
+      "key": "docs.sections.${section}.title",
+      "file": "apps/docs-learning/src/routes/DocsSectionPage.tsx",
+      "type": "direct",
+      "line": 57
+    },
+    {
+      "key": "docs.nav.home",
+      "file": "apps/docs-learning/src/routes/DocsSectionPage.tsx",
+      "type": "direct",
+      "line": 60
+    },
+    {
+      "key": "docs.sections.${section}.description",
+      "file": "apps/docs-learning/src/routes/DocsSectionPage.tsx",
+      "type": "direct",
+      "line": 73
+    },
+    {
+      "key": "docs.updatedAt",
+      "file": "apps/docs-learning/src/routes/DocsSectionPage.tsx",
+      "type": "direct",
+      "line": 97
+    },
+    {
+      "key": "docs.noArticles",
+      "file": "apps/docs-learning/src/routes/DocsSectionPage.tsx",
+      "type": "direct",
+      "line": 104
+    },
+    {
+      "key": "docs.nav.home",
+      "file": "apps/docs-learning/src/routes/RoleGuidePage.tsx",
+      "type": "direct",
+      "line": 39
+    },
+    {
+      "key": "docs.nav.roleGuides",
+      "file": "apps/docs-learning/src/routes/RoleGuidePage.tsx",
+      "type": "direct",
+      "line": 40
+    },
+    {
+      "key": "docs.roleGuide.guideFor",
+      "file": "apps/docs-learning/src/routes/RoleGuidePage.tsx",
+      "type": "direct",
+      "line": 61
+    },
+    {
+      "key": "docs.roleGuide.gettingStarted",
+      "file": "apps/docs-learning/src/routes/RoleGuidePage.tsx",
+      "type": "direct",
+      "line": 66
+    },
+    {
+      "key": "docs.roleGuide.relevantArticles",
+      "file": "apps/docs-learning/src/routes/RoleGuidePage.tsx",
+      "type": "direct",
+      "line": 83
+    },
+    {
+      "key": "docs.article.gettingStartedBooking",
+      "file": "apps/docs-learning/src/routes/RoleGuidePage.tsx",
+      "type": "direct",
+      "line": 87
+    },
+    {
+      "key": "docs.article.gettingStartedBookingDesc",
+      "file": "apps/docs-learning/src/routes/RoleGuidePage.tsx",
+      "type": "direct",
+      "line": 88
+    },
+    {
+      "key": "docs.article.paymentMethods",
+      "file": "apps/docs-learning/src/routes/RoleGuidePage.tsx",
+      "type": "direct",
+      "line": 93
+    },
+    {
+      "key": "docs.article.paymentMethodsDesc",
+      "file": "apps/docs-learning/src/routes/RoleGuidePage.tsx",
+      "type": "direct",
+      "line": 94
+    }
+  ],
+  "hardcodedStrings": [],
+  "violations": []
+}

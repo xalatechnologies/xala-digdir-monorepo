@@ -33,7 +33,8 @@ import {
 
 import {
   useBookings,
-  useConfirmBooking,
+  useApproveBooking,
+  useRejectBooking,
   useCancelBooking,
   useRentalObjects,
   useUsers,
@@ -52,13 +53,34 @@ const CopyIcon = ({ size = 14, style }: { size?: number; style?: React.CSSProper
   </svg>
 );
 
+// Helper function to calculate duration between two times
+const calculateDuration = (startTime: string, endTime: string): string => {
+  try {
+    const start = new Date(startTime);
+    const end = new Date(endTime);
+    const diffMs = end.getTime() - start.getTime();
+    const diffHours = Math.floor(diffMs / (1000 * 60 * 60));
+    const diffMinutes = Math.floor((diffMs % (1000 * 60 * 60)) / (1000 * 60));
+    
+    if (diffHours > 0 && diffMinutes > 0) {
+      return `${diffHours}t ${diffMinutes}m`;
+    } else if (diffHours > 0) {
+      return `${diffHours}t`;
+    } else {
+      return `${diffMinutes}m`;
+    }
+  } catch {
+    return '-';
+  }
+};
+
 // Status tabs for main navigation (labels are i18n keys)
 const STATUS_TABS = [
+  { id: 'all', labelKey: 'bookings.status.all', icon: 'FileIcon', color: 'neutral' },
   { id: 'pending', labelKey: 'bookings.status.pending', icon: '⏳', color: 'warning' },
   { id: 'confirmed', labelKey: 'bookings.status.confirmed', icon: '✓', color: 'success' },
   { id: 'completed', labelKey: 'bookings.status.completed', icon: '✓', color: 'info' },
   { id: 'cancelled', labelKey: 'bookings.status.cancelled', icon: '✕', color: 'danger' },
-  { id: 'all', labelKey: 'bookings.status.all', icon: 'FileIcon', color: 'neutral' },
 ] as const;
 
 // Payment status filter options (labels are i18n keys)
@@ -90,9 +112,15 @@ export function BookingsPage() {
   const [searchValue, setSearchValue] = useState('');
   const [searchQuery, setSearchQuery] = useState('');
   const [copiedId, setCopiedId] = useState<string | null>(null);
+  
+  // Approve dialog state
+  const [approveDialogOpen, setApproveDialogOpen] = useState(false);
+  const [bookingToApprove, setBookingToApprove] = useState<Booking | null>(null);
+  const [isApproving, setIsApproving] = useState(false);
+  const [statusMessage, setStatusMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
 
-  // Filter state - default to 'pending' to show actionable items first
-  const [activeTab, setActiveTab] = useState<string>('pending');
+  // Filter state - default to 'all' to show all bookings first
+  const [activeTab, setActiveTab] = useState<string>('all');
   const [selectedPayment, setSelectedPayment] = useState<string>('all');
   const [selectedSort, setSelectedSort] = useState<string>('date-desc');
   const [dateFrom, setDateFrom] = useState('');
@@ -138,17 +166,38 @@ export function BookingsPage() {
     return map;
   }, [usersData, t]);
 
-  // Fetch bookings
-  const { data: bookingsData, isLoading } = useBookings(bookingParams);
+  // For 'confirmed' tab, we need to fetch all and filter client-side to include 'approved'
+  // because the API doesn't support multiple status values
+  const fetchParams = useMemo(() => {
+    if (activeTab === 'confirmed') {
+      // Fetch all, will filter client-side
+      const params: { from?: string; to?: string } = {};
+      if (dateFrom) params.from = dateFrom;
+      if (dateTo) params.to = dateTo;
+      return Object.keys(params).length > 0 ? params : undefined;
+    }
+    return bookingParams;
+  }, [activeTab, bookingParams, dateFrom, dateTo]);
 
-  // Filter bookings client-side by search query
+  // Fetch bookings
+  const { data: bookingsData, isLoading } = useBookings(fetchParams);
+
+  // Filter bookings client-side by search query AND status for 'confirmed' tab
   const bookings = useMemo(() => {
-    const data = bookingsData?.data ?? [];
+    let data = bookingsData?.data ?? [];
+    
+    // For 'confirmed' tab, filter to include both 'confirmed' and 'approved' statuses
+    if (activeTab === 'confirmed') {
+      data = data.filter((booking: Booking) => 
+        booking.status === 'confirmed' || (booking.status as string) === 'approved'
+      );
+    }
+    
     if (!searchQuery.trim()) return data;
 
     const query = searchQuery.toLowerCase();
     return data.filter((booking: Booking) => {
-      const listingName = booking.listingName || listingNameMap.get(booking.listingId) || '';
+      const listingName = booking.listingName || listingNameMap.get(booking.rentalObjectId) || '';
       const userName = booking.userName || '';
       const orgName = booking.organizationName || '';
       const bookingId = booking.id.toLowerCase();
@@ -160,23 +209,27 @@ export function BookingsPage() {
         bookingId.includes(query)
       );
     });
-  }, [bookingsData, searchQuery, listingNameMap]);
+  }, [bookingsData, searchQuery, listingNameMap, activeTab]);
 
   // Fetch counts for all status tabs
   const { data: pendingData } = useBookings({ status: 'pending' });
   const { data: confirmedData } = useBookings({ status: 'confirmed' });
+  const { data: approvedData } = useBookings({ status: 'approved' as BookingStatus });
   const { data: completedData } = useBookings({ status: 'completed' });
   const { data: cancelledData } = useBookings({ status: 'cancelled' });
   const { data: allData } = useBookings();
 
-  const confirmBooking = useConfirmBooking();
+  const approveBooking = useApproveBooking();
+  const rejectBooking = useRejectBooking();
   const cancelBooking = useCancelBooking();
   const { confirm } = useDialog();
 
-  // Tab counts
+  // Tab counts - combine 'confirmed' and 'approved' for the confirmed tab
+  const confirmedCount = (confirmedData?.meta?.total ?? confirmedData?.data?.length ?? 0) + 
+                        (approvedData?.meta?.total ?? approvedData?.data?.length ?? 0);
   const tabCounts: Record<string, number> = {
     pending: pendingData?.meta?.total ?? pendingData?.data?.length ?? 0,
-    confirmed: confirmedData?.meta?.total ?? confirmedData?.data?.length ?? 0,
+    confirmed: confirmedCount,
     completed: completedData?.meta?.total ?? completedData?.data?.length ?? 0,
     cancelled: cancelledData?.meta?.total ?? cancelledData?.data?.length ?? 0,
     all: allData?.meta?.total ?? allData?.data?.length ?? 0,
@@ -193,8 +246,48 @@ export function BookingsPage() {
     setSearchQuery(value || '');
   }, []);
 
-  const handleConfirm = async (id: string) => {
-    await confirmBooking.mutateAsync(id);
+  const handleApprove = async (booking: Booking) => {
+    setBookingToApprove(booking);
+    setApproveDialogOpen(true);
+  };
+
+  const confirmApprove = async () => {
+    if (!bookingToApprove) return;
+    
+    setIsApproving(true);
+    setStatusMessage(null);
+    
+    try {
+      await approveBooking.mutateAsync({ id: bookingToApprove.id });
+      setStatusMessage({ type: 'success', text: t('bookings.approveSuccess') });
+      setApproveDialogOpen(false);
+      setBookingToApprove(null);
+      // Auto-hide success message after 3 seconds
+      setTimeout(() => setStatusMessage(null), 3000);
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : t('bookings.approveFailed');
+      setStatusMessage({ type: 'error', text: errorMessage });
+    } finally {
+      setIsApproving(false);
+    }
+  };
+
+  const cancelApprove = () => {
+    setApproveDialogOpen(false);
+    setBookingToApprove(null);
+  };
+
+  const handleReject = async (id: string) => {
+    const confirmed = await confirm({
+      title: t('bookings.action.rejectBooking'),
+      description: t('bookings.confirmCancel'),
+      confirmText: t('bookings.action.reject'),
+      cancelText: t('common.abort'),
+      variant: 'danger',
+    });
+    if (confirmed) {
+      await rejectBooking.mutateAsync({ id, reason: 'Rejected by admin' });
+    }
   };
 
   const handleCancel = async (id: string) => {
@@ -266,7 +359,7 @@ export function BookingsPage() {
     });
     if (confirmed) {
       for (const id of selectedIds) {
-        await confirmBooking.mutateAsync(id);
+        await approveBooking.mutateAsync({ id });
       }
       setSelectedIds([]);
     }
@@ -295,7 +388,7 @@ export function BookingsPage() {
       [t('bookings.csv.id'), t('bookings.csv.listing'), t('bookings.csv.user'), t('bookings.csv.startTime'), t('bookings.csv.endTime'), t('bookings.csv.status'), t('bookings.csv.price')].join(','),
       ...selectedBookings.map(b => [
         b.id,
-        b.listingName || b.listingId,
+        b.listingName || b.rentalObjectId,
         b.userName || b.userId,
         b.startTime,
         b.endTime,
@@ -313,7 +406,7 @@ export function BookingsPage() {
 
   // Get display values for a booking (with user/listing name resolution)
   const getBookingDisplayValues = (booking: Booking) => {
-    const listingName = booking.listingName || listingNameMap.get(booking.listingId) || booking.listingId;
+    const listingName = booking.listingName || listingNameMap.get(booking.rentalObjectId) || booking.rentalObjectId;
 
     // Resolve user name from map if not present in booking
     const userFromMap = userNameMap.get(booking.userId);
@@ -591,7 +684,7 @@ export function BookingsPage() {
                     variant="tertiary"
                     data-size="sm"
                     onClick={handleBulkConfirm}
-                    disabled={confirmBooking.isPending}
+                    disabled={approveBooking.isPending}
                     style={{ color: 'var(--ds-color-success-text-default)' }}
                   >
                     <CheckIcon /> {t('action.approve')}
@@ -840,8 +933,8 @@ export function BookingsPage() {
                                   variant="secondary"
                                   data-color="brand1"
                                   data-size="md"
-                                  onClick={() => handleConfirm(booking.id)}
-                                  disabled={confirmBooking.isPending}
+                                  onClick={() => handleApprove(booking)}
+                                  disabled={approveBooking.isPending}
                                   aria-label={t('action.approve')}
                                   title={t('bookings.action.approveBooking')}
                                 >
@@ -899,6 +992,158 @@ export function BookingsPage() {
           )}
         </div>
       </div> {/* End Main Content Area */}
+
+      {/* Status Message Toast */}
+      {statusMessage && (
+        <div
+          style={{
+            position: 'fixed',
+            bottom: 'var(--ds-spacing-6)',
+            right: 'var(--ds-spacing-6)',
+            padding: 'var(--ds-spacing-4)',
+            borderRadius: 'var(--ds-border-radius-md)',
+            backgroundColor: statusMessage.type === 'success' 
+              ? 'var(--ds-color-success-surface-default)' 
+              : 'var(--ds-color-danger-surface-default)',
+            color: statusMessage.type === 'success'
+              ? 'var(--ds-color-success-text-default)'
+              : 'var(--ds-color-danger-text-default)',
+            boxShadow: 'var(--ds-shadow-md)',
+            zIndex: 1000,
+            display: 'flex',
+            alignItems: 'center',
+            gap: 'var(--ds-spacing-2)',
+          }}
+        >
+          {statusMessage.type === 'success' ? <CheckIcon /> : <CloseIcon />}
+          <span>{statusMessage.text}</span>
+          <Button
+            variant="tertiary"
+            data-size="sm"
+            onClick={() => setStatusMessage(null)}
+            style={{ marginLeft: 'var(--ds-spacing-2)' }}
+          >
+            <CloseIcon />
+          </Button>
+        </div>
+      )}
+
+      {/* Approve Confirmation Dialog */}
+      {approveDialogOpen && bookingToApprove && (
+        <div
+          style={{
+            position: 'fixed',
+            inset: 0,
+            backgroundColor: 'rgba(0, 0, 0, 0.5)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            zIndex: 999,
+          }}
+          onClick={cancelApprove}
+        >
+          <div
+            onClick={(e) => e.stopPropagation()}
+            style={{
+              backgroundColor: 'var(--ds-color-neutral-background-default)',
+              borderRadius: 'var(--ds-border-radius-lg)',
+              padding: 'var(--ds-spacing-6)',
+              maxWidth: '500px',
+              width: '90%',
+              boxShadow: 'var(--ds-shadow-lg)',
+            }}
+          >
+            <div style={{ marginBottom: 'var(--ds-spacing-4)' }}>
+              <h2 style={{ fontSize: 'var(--ds-font-size-lg)', fontWeight: 600, marginBottom: 'var(--ds-spacing-2)', margin: 0 }}>
+                {t('bookings.approveConfirmTitle')}
+              </h2>
+              <Paragraph style={{ color: 'var(--ds-color-neutral-text-subtle)' }}>
+                {t('bookings.approveConfirmDescription')}
+              </Paragraph>
+            </div>
+
+            {/* Booking Details */}
+            <div
+              style={{
+                backgroundColor: 'var(--ds-color-neutral-surface-default)',
+                borderRadius: 'var(--ds-border-radius-md)',
+                padding: 'var(--ds-spacing-4)',
+                marginBottom: 'var(--ds-spacing-4)',
+              }}
+            >
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--ds-spacing-3)' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                  <Text style={{ color: 'var(--ds-color-neutral-text-subtle)' }}>{t('bookings.user')}</Text>
+                  <Text style={{ fontWeight: 500 }}>
+                    {getBookingDisplayValues(bookingToApprove).userName}
+                  </Text>
+                </div>
+                <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                  <Text style={{ color: 'var(--ds-color-neutral-text-subtle)' }}>{t('bookings.resource')}</Text>
+                  <Text style={{ fontWeight: 500 }}>
+                    {getBookingDisplayValues(bookingToApprove).listingName}
+                  </Text>
+                </div>
+                <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                  <Text style={{ color: 'var(--ds-color-neutral-text-subtle)' }}>{t('bookings.date')}</Text>
+                  <Text style={{ fontWeight: 500 }}>
+                    {formatDate(bookingToApprove.startTime)}
+                  </Text>
+                </div>
+                <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                  <Text style={{ color: 'var(--ds-color-neutral-text-subtle)' }}>{t('bookings.time')}</Text>
+                  <Text style={{ fontWeight: 500 }}>
+                    {formatTime(bookingToApprove.startTime)} - {formatTime(bookingToApprove.endTime)}
+                  </Text>
+                </div>
+                <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                  <Text style={{ color: 'var(--ds-color-neutral-text-subtle)' }}>{t('bookings.price')}</Text>
+                  <Text style={{ fontWeight: 600, color: 'var(--ds-color-brand1-text-default)' }}>
+                    {bookingToApprove.totalPrice ? `${bookingToApprove.totalPrice} ${bookingToApprove.currency}` : t('common.free')}
+                  </Text>
+                </div>
+              </div>
+            </div>
+
+            {/* Error Message in Dialog */}
+            {statusMessage?.type === 'error' && (
+              <div
+                style={{
+                  backgroundColor: 'var(--ds-color-danger-surface-default)',
+                  color: 'var(--ds-color-danger-text-default)',
+                  padding: 'var(--ds-spacing-3)',
+                  borderRadius: 'var(--ds-border-radius-md)',
+                  marginBottom: 'var(--ds-spacing-4)',
+                }}
+              >
+                {statusMessage.text}
+              </div>
+            )}
+
+            {/* Actions */}
+            <div style={{ display: 'flex', gap: 'var(--ds-spacing-3)', justifyContent: 'flex-end' }}>
+              <Button
+                variant="secondary"
+                onClick={cancelApprove}
+                disabled={isApproving}
+              >
+                {t('common.cancel')}
+              </Button>
+              <Button
+                variant="primary"
+                data-color="success"
+                onClick={confirmApprove}
+                disabled={isApproving}
+              >
+                {isApproving ? <Spinner data-size="sm" aria-hidden="true" /> : <CheckIcon />}
+                <span style={{ marginLeft: 'var(--ds-spacing-1)' }}>
+                  {isApproving ? t('common.processing') : t('bookings.action.approve')}
+                </span>
+              </Button>
+            </div>
+          </div>
+        </div>
+      )}
     </>
   );
 }

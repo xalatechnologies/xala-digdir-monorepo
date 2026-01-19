@@ -71,7 +71,8 @@ export function RentalObjectsGrid({
   }
 
   const handleEdit = (id: string, slug?: string) => {
-    navigate(`/rental-objects/${slug || id}/edit`);
+    // Route is rental-objects/:slug (edit is default view for this path)
+    navigate(`/rental-objects/${slug || id}`);
   };
 
   const handleClone = (id: string, slug?: string) => {

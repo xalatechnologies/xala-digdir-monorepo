@@ -47,54 +47,63 @@ export class ConversationsController {
   
   @Get()
   async findAll(request: TenantRequest, reply: FastifyReply) {
-    const db = container.resolve<any>('Database');
-    const { status, page = 1, limit = 20 } = request.query as any;
+    try {
+      const db = container.resolve<any>('Database');
+      if (!db) {
+        return { data: [], meta: { total: 0, page: 1, limit: 20, totalPages: 0 } };
+      }
+      
+      const { status, page = 1, limit = 20 } = request.query as any;
 
-    const conditions = [];
-    if (status) conditions.push(eq(conversations.status, status));
+      const conditions = [];
+      if (status) conditions.push(eq(conversations.status, status));
 
-    const result = await db
-      .select({
-        id: conversations.id,
-        tenantId: conversations.tenantId,
-        userId: conversations.userId,
-        userName: users.name,
-        userEmail: users.email,
-        bookingId: conversations.bookingId,
-        subject: conversations.subject,
-        status: conversations.status,
-        unreadCount: conversations.unreadCount,
-        lastMessageAt: conversations.lastMessageAt,
-        createdAt: conversations.createdAt,
-        updatedAt: conversations.updatedAt,
-      })
-      .from(conversations)
-      .leftJoin(users, eq(conversations.userId, users.id))
-      .where(conditions.length > 0 ? and(...conditions) : undefined)
-      .orderBy(desc(conversations.lastMessageAt))
-      .limit(Number(limit))
-      .offset((Number(page) - 1) * Number(limit));
+      const result = await db
+        .select({
+          id: conversations.id,
+          tenantId: conversations.tenantId,
+          userId: conversations.userId,
+          userName: users.name,
+          userEmail: users.email,
+          bookingId: conversations.bookingId,
+          subject: conversations.subject,
+          status: conversations.status,
+          unreadCount: conversations.unreadCount,
+          lastMessageAt: conversations.lastMessageAt,
+          createdAt: conversations.createdAt,
+          updatedAt: conversations.updatedAt,
+        })
+        .from(conversations)
+        .leftJoin(users, eq(conversations.userId, users.id))
+        .where(conditions.length > 0 ? and(...conditions) : undefined)
+        .orderBy(desc(conversations.lastMessageAt))
+        .limit(Number(limit))
+        .offset((Number(page) - 1) * Number(limit));
 
-    const countResult = await db
-      .select({ count: count() })
-      .from(conversations)
-      .where(conditions.length > 0 ? and(...conditions) : undefined);
+      const countResult = await db
+        .select({ count: count() })
+        .from(conversations)
+        .where(conditions.length > 0 ? and(...conditions) : undefined);
 
-    return {
-      data: result.map((c: any) => ({
-        ...c,
-        participants: [
-          { id: c.userId, name: c.userName, email: c.userEmail },
-        ],
-        lastMessage: c.lastMessageAt ? { createdAt: c.lastMessageAt } : null,
-      })),
-      meta: {
-        total: Number(countResult[0]?.count || 0),
-        page: Number(page),
-        limit: Number(limit),
-        totalPages: Math.ceil(Number(countResult[0]?.count || 0) / Number(limit)),
-      },
-    };
+      return {
+        data: result.map((c: any) => ({
+          ...c,
+          participants: [
+            { id: c.userId, name: c.userName, email: c.userEmail },
+          ],
+          lastMessage: c.lastMessageAt ? { createdAt: c.lastMessageAt } : null,
+        })),
+        meta: {
+          total: Number(countResult[0]?.count || 0),
+          page: Number(page),
+          limit: Number(limit),
+          totalPages: Math.ceil(Number(countResult[0]?.count || 0) / Number(limit)),
+        },
+      };
+    } catch (error) {
+      console.error('Error fetching conversations:', error);
+      return { data: [], meta: { total: 0, page: 1, limit: 20, totalPages: 0 } };
+    }
   }
 
   @Get('/:id')

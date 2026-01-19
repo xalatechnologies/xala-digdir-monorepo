@@ -39,6 +39,7 @@
   "time.minutes": "{{count}} min",
   "time.hours": "{{count}} h",
   "filter.title": "Filter and sorting",
+  "filter.page.title": "Bookings",
   "filter.showingCount": "Showing {{count}} bookings",
   "filter.reset": "Reset",
   "filter.apply": "Apply filter",

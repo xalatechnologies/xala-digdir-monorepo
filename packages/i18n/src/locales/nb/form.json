@@ -207,5 +207,6 @@
   "review.editSection": "Rediger {{section}}",
   "phone_number": "Telefonnummer",
   "street_address": "Gateadresse",
-  "postal_code": "Poststed"
+  "postal_code": "Poststed",
+  "bookings.search.placeholder": "Søk etter lokale, bruker, booking-ID..."
 }

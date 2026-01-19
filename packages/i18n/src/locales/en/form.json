@@ -206,5 +206,6 @@
   "review.editSection": "Edit {{section}}",
   "phone_number": "Phone number",
   "street_address": "Street address",
-  "postal_code": "Postal code"
+  "postal_code": "Postal code",
+  "bookings.search.placeholder": "Search for listing, user, booking ID..."
 }

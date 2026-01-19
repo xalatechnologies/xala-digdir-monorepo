@@ -475,14 +475,14 @@ class ExtendedBookingService extends BookingService {
    * Approve booking (caseworker/admin only)
    */
   async approve(id: string, reason?: string): Promise<SingleResponse<Booking>> {
-    return this.client.patch(this.buildPath(`/${id}/approve`), { reason });
+    return this.client.post(this.buildPath(`/${id}/approve`), { reason });
   }
 
   /**
-   * Reject booking (caseworker/admin only)
+   * Reject/Deny booking (caseworker/admin only)
    */
   async reject(id: string, reason: string): Promise<SingleResponse<Booking>> {
-    return this.client.patch(this.buildPath(`/${id}/reject`), { reason });
+    return this.client.post(this.buildPath(`/${id}/deny`), { reason });
   }
 }
 

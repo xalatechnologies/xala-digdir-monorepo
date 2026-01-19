@@ -306,8 +306,9 @@ function TableRow({
   const statusColor =
     item.status === 'published' ? 'success' : item.status === 'draft' ? 'warning' : 'neutral';
 
-  const handleView = () => navigate(`/rental-objects/${item.slug}`);
-  const handleEdit = () => navigate(`/rental-objects/${item.slug}/edit`);
+  const handleView = () => navigate(`/rental-objects/${item.slug}/view`);
+  // Route is rental-objects/:slug (edit is default view for this path)
+  const handleEdit = () => navigate(`/rental-objects/${item.slug}`);
 
   const handleDelete = () => {
     if (confirm(t('rentalObjects.confirmDelete', { name: item.name }))) {

@@ -42,9 +42,14 @@ export class GDPRController {
    */
   @Get('/requests/pending')
   async getPendingRequests(request: FastifyRequest, _reply: FastifyReply) {
-    const limit = Number((request.query as any)?.limit) || 5;
-    const requests = await this.service.getPendingRequests(limit);
-    return { data: requests };
+    try {
+      const limit = Number((request.query as any)?.limit) || 5;
+      const requests = await this.service.getPendingRequests(limit);
+      return { data: requests };
+    } catch (error) {
+      console.error('Error fetching pending GDPR requests:', error);
+      return { data: [] };
+    }
   }
 
   /**

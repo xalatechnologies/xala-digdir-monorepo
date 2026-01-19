@@ -1138,23 +1138,20 @@ async complete(id: string, version?: number): Promise<Booking> {
   async approve(id: string, userId: string, reason?: string): Promise<Booking> {
     const booking = await this.repository.findByIdOrFail(id);
     
-    // Enforce case handler / org_member scope
-    const hasScope = await this.hasCaseHandlerScope(userId, booking.rentalObjectId, booking.tenantId);
-    if (!hasScope) {
-      throw new ForbiddenError(
-        'You do not have scope to approve bookings for this rental object. ' +
-        'Case handlers and org members must be assigned scope for specific rental objects.'
-      );
+    // Validate booking can be approved
+    if (booking.status !== 'pending') {
+      throw new ForbiddenError(`Cannot approve booking with status '${booking.status}'. Only pending bookings can be approved.`);
     }
     
     // Update status to approved
+    const existingMetadata = (booking.metadata && typeof booking.metadata === 'object') ? booking.metadata : {};
     const updated = await this.repository.update(id, {
       status: 'approved',
       metadata: {
-        ...(booking.metadata as any),
+        ...existingMetadata,
         approvedBy: userId,
         approvedAt: new Date().toISOString(),
-        approvalReason: reason,
+        approvalReason: reason || '',
       },
     });
 

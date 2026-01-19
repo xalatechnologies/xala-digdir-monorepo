@@ -27,59 +27,87 @@ export class DashboardController {
     const startOfWeek = new Date(startOfDay.getTime() - startOfDay.getDay() * 24 * 60 * 60 * 1000);
     const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
 
-    // Count active rentalObjects using Drizzle
+    // Build tenant filter condition for bookings
+    const bookingTenantFilter = tenantId ? eq(bookings.tenantId, tenantId) : undefined;
+    const rentalObjectTenantFilter = tenantId ? eq(rentalObjects.tenantId, tenantId) : undefined;
+
+    // Count active rentalObjects using Drizzle - filtered by tenant
     const activeListingsResult = await db
       .select({ count: count() })
       .from(rentalObjects)
-      .where(eq(rentalObjects.status, 'published'));
+      .where(tenantId 
+        ? and(eq(rentalObjects.status, 'published'), rentalObjectTenantFilter)
+        : eq(rentalObjects.status, 'published')
+      );
     const activeListings = Number(activeListingsResult[0]?.count || 0);
 
-    // Count pending requests
+    // Count pending requests - filtered by tenant
     const pendingResult = await db
       .select({ count: count() })
       .from(bookings)
-      .where(eq(bookings.status, 'pending'));
+      .where(tenantId 
+        ? and(eq(bookings.status, 'pending'), bookingTenantFilter)
+        : eq(bookings.status, 'pending')
+      );
     const pendingRequests = Number(pendingResult[0]?.count || 0);
 
-    // Today's confirmed bookings
+    // Today's confirmed bookings - filtered by tenant
     const todayResult = await db
       .select({ count: count() })
       .from(bookings)
       .where(
-        and(
-          gte(bookings.startTime, startOfDay),
-          lte(bookings.startTime, endOfDay)
-        )
+        tenantId
+          ? and(
+              gte(bookings.startTime, startOfDay),
+              lte(bookings.startTime, endOfDay),
+              bookingTenantFilter
+            )
+          : and(
+              gte(bookings.startTime, startOfDay),
+              lte(bookings.startTime, endOfDay)
+            )
       );
     const todayBookings = Number(todayResult[0]?.count || 0);
 
-    // This week's bookings
+    // This week's bookings - filtered by tenant
     const weekResult = await db
       .select({ count: count() })
       .from(bookings)
       .where(
-        and(
-          gte(bookings.startTime, startOfWeek),
-          lte(bookings.startTime, endOfDay)
-        )
+        tenantId
+          ? and(
+              gte(bookings.startTime, startOfWeek),
+              lte(bookings.startTime, endOfDay),
+              bookingTenantFilter
+            )
+          : and(
+              gte(bookings.startTime, startOfWeek),
+              lte(bookings.startTime, endOfDay)
+            )
       );
     const weekBookings = Number(weekResult[0]?.count || 0);
 
-    // Month revenue
+    // Month revenue - filtered by tenant
     const monthRevenueResult = await db
       .select({ revenue: sql<number>`COALESCE(SUM(total_price), 0)` })
       .from(bookings)
-      .where(gte(bookings.createdAt, startOfMonth));
+      .where(tenantId 
+        ? and(gte(bookings.createdAt, startOfMonth), bookingTenantFilter)
+        : gte(bookings.createdAt, startOfMonth)
+      );
     const monthRevenue = Number(monthRevenueResult[0]?.revenue || 0);
 
-    // Cancelled bookings count
+    // Cancelled bookings count - filtered by tenant
     const cancelledResult = await db
       .select({ count: count() })
       .from(bookings)
-      .where(eq(bookings.status, 'cancelled'));
+      .where(tenantId 
+        ? and(eq(bookings.status, 'cancelled'), bookingTenantFilter)
+        : eq(bookings.status, 'cancelled')
+      );
     const cancelledBookings = Number(cancelledResult[0]?.count || 0);
 
-    // Top rentalObjects by bookings
+    // Top rentalObjects by bookings - filtered by tenant
     const topListingsResult = await db
       .select({
         id: rentalObjects.id,
@@ -89,6 +117,7 @@ export class DashboardController {
       })
       .from(rentalObjects)
       .leftJoin(bookings, eq(rentalObjects.id, bookings.rentalObjectId))
+      .where(rentalObjectTenantFilter)
       .groupBy(rentalObjects.id, rentalObjects.name)
       .orderBy(sql`COUNT(${bookings.id}) DESC`)
       .limit(5);
@@ -114,16 +143,22 @@ export class DashboardController {
   @Get('/stats')
   async getBookingStats(request: TenantRequest, reply: FastifyReply) {
     const db = container.resolve<any>('Database');
+    const tenantId = request.tenantId;
 
-    // Get all bookings grouped by status
-    const result = await db
+    // Get bookings grouped by status - filtered by tenant if available
+    let query = db
       .select({
         status: bookings.status,
         count: count(),
         revenue: sql<number>`COALESCE(SUM(total_price), 0)`,
       })
-      .from(bookings)
-      .groupBy(bookings.status);
+      .from(bookings);
+    
+    if (tenantId) {
+      query = query.where(eq(bookings.tenantId, tenantId));
+    }
+    
+    const result = await query.groupBy(bookings.status);
 
     const stats: Record<string, { count: number; revenue: number }> = {};
     for (const row of result) {
@@ -145,24 +180,28 @@ export class DashboardController {
   @Get('/pending')
   async getPendingBookings(request: TenantRequest, reply: FastifyReply) {
     const db = container.resolve<any>('Database');
-    const limit = Number((request.query as any)?.limit) || 5;
+    const limitNum = Number((request.query as any)?.limit) || 5;
 
-    const result = await db
-      .select({
-        id: bookings.id,
-        title: bookings.title,
-        status: bookings.status,
-        startTime: bookings.startTime,
-        endTime: bookings.endTime,
-        userName: users.name,
-      })
-      .from(bookings)
-      .leftJoin(users, eq(bookings.userId, users.id))
-      .where(eq(bookings.status, 'pending'))
-      .orderBy(desc(bookings.createdAt))
-      .limit(limit);
+    try {
+      // Simple query - just get pending bookings
+      const result = await db
+        .select({
+          id: bookings.id,
+          status: bookings.status,
+          startTime: bookings.startTime,
+          endTime: bookings.endTime,
+          rentalObjectId: bookings.rentalObjectId,
+        })
+        .from(bookings)
+        .where(eq(bookings.status, 'pending'))
+        .orderBy(desc(bookings.createdAt))
+        .limit(limitNum);
 
-    return { data: result };
+      return { data: result ?? [], bookings: result?.length ?? 0 };
+    } catch (error) {
+      console.error('Error fetching pending bookings:', error);
+      return { data: [], bookings: 0, error: String(error) };
+    }
   }
 
   @Get('/activity')

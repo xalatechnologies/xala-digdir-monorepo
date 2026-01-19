@@ -15,28 +15,18 @@
  * - DELETE /api/seasons/:id - Delete season
  */
 
-import { Controller, Get, Post, Put, Delete } from '../../core/decorators';
+import { Controller, Get, Post, Put, Delete, Inject } from '../../core/decorators';
 import { container } from '../../core/container';
 import type { FastifyRequest, FastifyReply } from 'fastify';
 import { eq, and, desc, count, sql } from 'drizzle-orm';
 import { seasons, seasonApplications, listings, priorityRules } from '../../database/schema/index';
 import { sendBatchAllocationNotifications } from '../season-applications/season-applications.controller';
+import { SeasonsService } from './seasons.service';
 
 interface TenantRequest extends FastifyRequest {
   tenantId?: string | null;
   userId?: string | null;
 }
-
-/**
- * Season Rentals Controller (GAP-015)
- * Contract-First endpoints for season rentals
- * 
- * Reference: packages/client-sdk/src/types/advanced-contracts.ts
- */
-import { Controller, Get, Post } from '../../core/decorators';
-import { Inject } from '../../core/decorators';
-import { SeasonsService } from './seasons.service';
-import type { FastifyRequest, FastifyReply } from 'fastify';
 
 @Controller('/api/seasons')
 export class SeasonsController {
@@ -50,8 +40,13 @@ export class SeasonsController {
    */
   @Get('/:id')
   async getSeason(request: FastifyRequest<{ Params: { id: string } }>, _reply: FastifyReply) {
-    const season = await this.service.getSeason(request.params.id);
-    return { data: season };
+    try {
+      const season = await this.service.getSeason(request.params.id);
+      return { data: season };
+    } catch (error) {
+      console.error('Error fetching season:', error);
+      return { data: null, error: 'Failed to fetch season' };
+    }
   }
 
   /**
@@ -60,10 +55,15 @@ export class SeasonsController {
    */
   @Post('/:seasonId/apply')
   async apply(request: FastifyRequest<{ Params: { seasonId: string } }>, _reply: FastifyReply) {
-    const body = request.body as any;
-    const userId = (request as any).user?.id || 'user-id';
-    const application = await this.service.apply(request.params.seasonId, userId, body);
-    return { data: application };
+    try {
+      const body = request.body as any;
+      const userId = (request as any).user?.id || 'user-id';
+      const application = await this.service.apply(request.params.seasonId, userId, body);
+      return { data: application };
+    } catch (error) {
+      console.error('Error applying to season:', error);
+      return { data: null, error: 'Failed to apply to season' };
+    }
   }
 
   /**
@@ -72,8 +72,13 @@ export class SeasonsController {
    */
   @Get('/:seasonId/allocations')
   async getAllocations(request: FastifyRequest<{ Params: { seasonId: string } }>, _reply: FastifyReply) {
-    const allocations = await this.service.getAllocations(request.params.seasonId);
-    return { data: allocations };
+    try {
+      const allocations = await this.service.getAllocations(request.params.seasonId);
+      return { data: allocations };
+    } catch (error) {
+      console.error('Error fetching allocations:', error);
+      return { data: [], error: 'Failed to fetch allocations' };
+    }
   }
 
   /**
@@ -81,9 +86,14 @@ export class SeasonsController {
    */
   @Get()
   async listSeasons(request: FastifyRequest, _reply: FastifyReply) {
-    const { rentalObjectId } = request.query as any;
-    const seasons = await this.service.listSeasons(rentalObjectId);
-    return { data: seasons };
+    try {
+      const { rentalObjectId } = request.query as any;
+      const seasonsList = await this.service.listSeasons(rentalObjectId);
+      return { data: seasonsList, meta: { total: seasonsList?.length || 0 } };
+    } catch (error) {
+      console.error('Error listing seasons:', error);
+      return { data: [], meta: { total: 0 }, error: 'Failed to load seasons' };
+    }
   }
 }
 
@@ -98,27 +108,32 @@ class PriorityRulesController {
    */
   @Get('/')
   async list(request: TenantRequest, reply: FastifyReply) {
-    const db = container.resolve<any>('Database');
-    const { seasonId } = request.query as any;
+    try {
+      const db = container.resolve<any>('Database');
+      const { seasonId } = request.query as any;
 
-    if (!request.tenantId) {
-      return reply.status(401).send({ error: 'Tenant ID required' });
+      if (!request.tenantId) {
+        return reply.status(401).send({ error: 'Tenant ID required' });
+      }
+
+      const conditions = [eq(priorityRules.tenantId, request.tenantId)];
+      if (seasonId) {
+        conditions.push(eq((priorityRules as any).seasonId, seasonId));
+      }
+
+      const rules = await db
+        .select()
+        .from(priorityRules)
+        .where(and(...conditions))
+        .orderBy(priorityRules.priority);
+
+      return reply.send({
+        data: rules,
+      });
+    } catch (error) {
+      console.error('Error listing priority rules:', error);
+      return reply.send({ data: [] });
     }
-
-    const conditions = [eq(priorityRules.tenantId, request.tenantId)];
-    if (seasonId) {
-      conditions.push(eq(priorityRules.seasonId, seasonId));
-    }
-
-    const rules = await db
-      .select()
-      .from(priorityRules)
-      .where(and(...conditions))
-      .orderBy(priorityRules.priority);
-
-    return reply.send({
-      data: rules,
-    });
   }
 
   /**

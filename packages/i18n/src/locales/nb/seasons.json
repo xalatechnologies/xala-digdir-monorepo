@@ -97,5 +97,6 @@
   "noDescriptionAdded": "Ingen beskrivelse lagt til",
   "confirmOpenSeason": "Er du sikker på at du vil åpne sesongen for søknader?",
   "confirmCloseSeason": "Er du sikker på at du vil lukke sesongen? Ingen flere søknader vil bli akseptert.",
-  "mustAddVenues": "Du må legge til minst ett lokale før sesongen kan åpnes."
+  "mustAddVenues": "Du må legge til minst ett lokale før sesongen kan åpnes.",
+  "couldNotLoadSeasons": "Kunne ikke laste sesonger. Prøv igjen senere."
 }
