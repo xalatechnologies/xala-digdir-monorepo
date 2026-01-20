@@ -10,6 +10,12 @@ export default defineConfig({
     environment: 'happy-dom',
     setupFiles: ['./vitest.setup.ts', './src/setup/vitest.setup.ts'],
     
+    // Environment variables for tests
+    env: {
+      API_URL: 'http://localhost:4000',
+      WS_URL: 'ws://localhost:4000',
+    },
+    
     // Include all test suites
     include: [
       'suites/**/*.{test,spec}.{ts,tsx}',

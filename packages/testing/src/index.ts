@@ -26,3 +26,4 @@ export * from './utils/index.js';
 
 // Setup
 export * from './setup/index.js';
+export * from './config/test-config';

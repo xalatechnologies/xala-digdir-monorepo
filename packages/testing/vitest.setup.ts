@@ -35,6 +35,35 @@ vi.mock('@xala/i18n', () => ({
   LocaleProvider: ({ children }: { children: React.ReactNode }) => children,
 }));
 
+// Mock @xala/ds icon components that cause undefined errors in GlobalSearch.tsx
+// These icons are used in composed components and need stubs for test rendering
+vi.mock('@xala/ds', async (importOriginal) => {
+  const actual = await importOriginal();
+  // Simple function component mocks - return null to avoid rendering issues
+  const MockIcon = () => null;
+  const MockComponent = ({ children }: { children?: React.ReactNode }) => children || null;
+  return {
+    ...(actual as object),
+    // Icon stubs
+    SearchIcon: MockIcon,
+    CalendarIcon: MockIcon,
+    BuildingIcon: MockIcon,
+    PeopleIcon: MockIcon,
+    // Other commonly used icons
+    SunIcon: MockIcon,
+    MoonIcon: MockIcon,
+    GlobeIcon: MockIcon,
+    UserIcon: MockIcon,
+    FilterIcon: MockIcon,
+    GridIcon: MockIcon,
+    ListIcon: MockIcon,
+    MapIcon: MockIcon,
+    MapPinIcon: MockIcon,
+    // Composed component stubs
+    HeaderSearch: MockComponent,
+  };
+});
+
 // Check if real API is available and start mock server if needed
 let useMockServer = false;
 
