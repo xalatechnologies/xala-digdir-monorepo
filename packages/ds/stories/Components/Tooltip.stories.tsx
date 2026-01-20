@@ -31,7 +31,7 @@ type Story = StoryObj;
 export const Default: Story = {
   render: () => (
     <Tooltip content="This is a tooltip">
-      <Button>Hover me</Button>
+      <Button type="button">Hover me</Button>
     </Tooltip>
   ),
 };
@@ -47,21 +47,21 @@ export const Placements: Story = {
     }}>
       <div />
       <Tooltip content="Top tooltip" placement="top">
-        <Button variant="secondary">Top</Button>
+        <Button variant="secondary" type="button">Top</Button>
       </Tooltip>
       <div />
       
       <Tooltip content="Left tooltip" placement="left">
-        <Button variant="secondary">Left</Button>
+        <Button variant="secondary" type="button">Left</Button>
       </Tooltip>
       <div />
       <Tooltip content="Right tooltip" placement="right">
-        <Button variant="secondary">Right</Button>
+        <Button variant="secondary" type="button">Right</Button>
       </Tooltip>
       
       <div />
       <Tooltip content="Bottom tooltip" placement="bottom">
-        <Button variant="secondary">Bottom</Button>
+        <Button variant="secondary" type="button">Bottom</Button>
       </Tooltip>
       <div />
     </div>
@@ -74,7 +74,7 @@ export const OnIcon: Story = {
       <Button
         variant="tertiary"
         data-size="sm"
-        aria-label="Information"
+        aria-label="Information" type="button"
       >
         ℹ️
       </Button>

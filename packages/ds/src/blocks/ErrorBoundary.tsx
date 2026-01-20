@@ -5,7 +5,7 @@
  * and displays a user-friendly error screen with recovery options.
  *
  * This is a class component as required by React's error boundary API.
- * 
+ *
  * Supports optional Sentry integration and audit logging for compliance tracking.
  */
 import { Component, type ErrorInfo, type ReactNode } from 'react';
@@ -58,38 +58,36 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
     // Log error to console for development debugging
     console.error('ErrorBoundary caught an error:', error, errorInfo);
 
-    // Optional Sentry integration
+    // Optional Sentry integration using dynamic import
     if (this.props.enableSentry) {
-      try {
-        // Dynamic import to avoid requiring @sentry/react as a dependency
-        // eslint-disable-next-line @typescript-eslint/no-require-imports
-        const Sentry = require('@sentry/react');
-        Sentry.captureException(error, {
-          contexts: {
-            react: {
-              componentStack: errorInfo.componentStack,
+      import('@sentry/react')
+        .then((Sentry) => {
+          Sentry.captureException(error, {
+            contexts: {
+              react: {
+                componentStack: errorInfo.componentStack,
+              },
             },
-          },
+          });
+        })
+        .catch(() => {
+          // Sentry not available, skip silently
+          console.warn('Sentry integration requested but @sentry/react not available');
         });
-      } catch (e) {
-        // Sentry not available, skip silently
-        console.warn('Sentry integration requested but @sentry/react not available');
-      }
     }
 
-    // Optional audit logging
+    // Optional audit logging using dynamic import
     if (this.props.enableAuditLogging) {
-      try {
-        // Dynamic import to avoid requiring @digilist/client-sdk as a dependency
-        // eslint-disable-next-line @typescript-eslint/no-require-imports
-        const { auditService } = require('@digilist/client-sdk');
-        auditService.logError('react_error_boundary', 'application', error, {
-          componentStack: errorInfo.componentStack,
+      import('@digilist/client-sdk')
+        .then(({ auditService }) => {
+          auditService.logError('react_error_boundary', 'application', error, {
+            componentStack: errorInfo.componentStack,
+          });
+        })
+        .catch(() => {
+          // Audit service not available, skip silently
+          console.warn('Audit logging requested but @digilist/client-sdk auditService not available');
         });
-      } catch (e) {
-        // Audit service not available, skip silently
-        console.warn('Audit logging requested but @digilist/client-sdk auditService not available');
-      }
     }
 
     // Call the onError callback if provided (for error tracking services)

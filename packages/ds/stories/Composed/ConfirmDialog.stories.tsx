@@ -40,7 +40,7 @@ export const Default: Story = {
     const [open, setOpen] = useState(false);
     return (
       <>
-        <Button onClick={() => setOpen(true)}>Open Dialog</Button>
+        <Button onClick={() => setOpen(true)} type="button">Open Dialog</Button>
         <ConfirmDialog
           isOpen={open}
           onClose={() => setOpen(false)}
@@ -64,7 +64,7 @@ export const Danger: Story = {
     const [open, setOpen] = useState(false);
     return (
       <>
-        <Button variant="primary" data-color="danger" onClick={() => setOpen(true)}>
+        <Button variant="primary" data-color="danger" onClick={() => setOpen(true)} type="button">
           Delete Item
         </Button>
         <ConfirmDialog
@@ -93,7 +93,7 @@ export const Warning: Story = {
     const [open, setOpen] = useState(false);
     return (
       <>
-        <Button variant="secondary" onClick={() => setOpen(true)}>
+        <Button variant="secondary" onClick={() => setOpen(true)} type="button">
           Leave Page
         </Button>
         <ConfirmDialog
@@ -122,7 +122,7 @@ export const Success: Story = {
     const [open, setOpen] = useState(false);
     return (
       <>
-        <Button variant="primary" onClick={() => setOpen(true)}>
+        <Button variant="primary" onClick={() => setOpen(true)} type="button">
           Publish
         </Button>
         <ConfirmDialog
@@ -160,7 +160,7 @@ export const WithLoading: Story = {
 
     return (
       <>
-        <Button onClick={() => setOpen(true)}>Save Changes</Button>
+        <Button onClick={() => setOpen(true)} type="button">Save Changes</Button>
         <ConfirmDialog
           isOpen={open}
           onClose={() => !loading && setOpen(false)}
@@ -183,7 +183,7 @@ export const ActionDialogExample: Story = {
     const [open, setOpen] = useState(false);
     return (
       <>
-        <Button onClick={() => setOpen(true)}>Open Form Dialog</Button>
+        <Button onClick={() => setOpen(true)} type="button">Open Form Dialog</Button>
         <ActionDialog
           isOpen={open}
           onClose={() => setOpen(false)}
@@ -192,8 +192,8 @@ export const ActionDialogExample: Story = {
           size="md"
           footer={
             <>
-              <Button variant="secondary" onClick={() => setOpen(false)}>Cancel</Button>
-              <Button variant="primary" onClick={() => setOpen(false)}>Save</Button>
+              <Button variant="secondary" onClick={() => setOpen(false)} type="button">Cancel</Button>
+              <Button variant="primary" onClick={() => setOpen(false)} type="button">Save</Button>
             </>
           }
         >

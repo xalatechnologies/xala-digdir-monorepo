@@ -61,10 +61,10 @@ export const Stepper: Story = {
         <div style={{ padding: 'var(--ds-spacing-6)', textAlign: 'center' }}>
           <Paragraph>Current step: {sampleSteps[currentStep]?.label}</Paragraph>
           <div style={{ display: 'flex', gap: 'var(--ds-spacing-2)', justifyContent: 'center', marginTop: 'var(--ds-spacing-4)' }}>
-            <Button variant="secondary" disabled={currentStep === 0} onClick={() => setCurrentStep(s => s - 1)}>
+            <Button variant="secondary" disabled={currentStep === 0} onClick={() => setCurrentStep(s => s - 1)} type="button">
               Previous
             </Button>
-            <Button variant="primary" disabled={currentStep >= sampleSteps.length - 1} onClick={() => setCurrentStep(s => s + 1)}>
+            <Button variant="primary" disabled={currentStep >= sampleSteps.length - 1} onClick={() => setCurrentStep(s => s + 1)} type="button">
               Next
             </Button>
           </div>

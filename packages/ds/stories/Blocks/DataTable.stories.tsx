@@ -150,8 +150,8 @@ export const WithRowActions: Story = {
         header: 'Actions',
         cell: (_value: unknown, row: unknown) => (
           <div style={{ display: 'flex', gap: 'var(--ds-spacing-2)' }}>
-            <Button variant="secondary" data-size="sm" onClick={() => console.log('Edit', (row as User).id)}>Edit</Button>
-            <Button variant="tertiary" data-size="sm" data-color="danger" onClick={() => console.log('Delete', (row as User).id)}>Delete</Button>
+            <Button variant="secondary" data-size="sm" onClick={() => console.log('Edit', (row as User).id)} type="button">Edit</Button>
+            <Button variant="tertiary" data-size="sm" data-color="danger" onClick={() => console.log('Delete', (row as User).id)} type="button">Delete</Button>
           </div>
         ),
       },

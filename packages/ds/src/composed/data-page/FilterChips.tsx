@@ -6,7 +6,8 @@
  */
 
 import React from 'react';
-import { Button, Paragraph, CloseIcon } from '@xala/ds';
+import { CloseIcon } from '../../primitives';
+import { Button, Paragraph } from '@digdir/designsystemet-react';
 import { cn } from '../../utils';
 
 export interface FilterChip {
@@ -40,7 +41,7 @@ export function FilterChips({
   activeFiltersLabel,
   className,
   style,
-}: FilterChipsProps): React.ReactElement {
+}: FilterChipsProps): React.ReactElement | null {
   if (chips.length === 0) {
     return null;
   }
@@ -95,7 +96,7 @@ export function FilterChips({
           }}
         >
           {chip.label}
-          <CloseIcon size={14} />
+          <CloseIcon style={{ width: 14, height: 14 }} />
         </button>
       ))}
       <Button

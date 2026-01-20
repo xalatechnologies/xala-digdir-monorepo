@@ -39,20 +39,20 @@ export default meta;
 type Story = StoryObj;
 
 function ToastDemo() {
-  const { toast, success, error, warning, info } = useToast();
+  const { success, error, warning, info } = useToast();
 
   return (
     <div style={{ display: 'flex', flexWrap: 'wrap', gap: 'var(--ds-spacing-2)' }}>
-      <Button onClick={() => info('Info', 'This is an informational message')}>
+      <Button onClick={() => info('Info', 'This is an informational message')} type="button">
         Info Toast
       </Button>
-      <Button onClick={() => success('Success', 'Your action was completed successfully')}>
+      <Button onClick={() => success('Success', 'Your action was completed successfully')} type="button">
         Success Toast
       </Button>
-      <Button onClick={() => warning('Warning', 'Please review before continuing')}>
+      <Button onClick={() => warning('Warning', 'Please review before continuing')} type="button">
         Warning Toast
       </Button>
-      <Button onClick={() => error('Error', 'Something went wrong. Please try again.')}>
+      <Button onClick={() => error('Error', 'Something went wrong. Please try again.')} type="button">
         Error Toast
       </Button>
     </div>
@@ -81,7 +81,7 @@ function ToastWithAction() {
             onClick: () => console.log('Undo clicked'),
           },
         })
-      }
+      } type="button"
     >
       Toast with Action
     </Button>
@@ -107,7 +107,7 @@ function ToastDuration() {
             description: 'Disappears in 2 seconds',
             duration: 2000,
           })
-        }
+        } type="button"
       >
         2s Duration
       </Button>
@@ -118,7 +118,7 @@ function ToastDuration() {
             description: 'Stays for 10 seconds',
             duration: 10000,
           })
-        }
+        } type="button"
       >
         10s Duration
       </Button>
@@ -145,7 +145,7 @@ function MultipleToasts() {
     setTimeout(() => error(`Error ${counter.current}`, 'Something went wrong'), 600);
   };
 
-  return <Button onClick={showAll}>Show Multiple Toasts</Button>;
+  return <Button onClick={showAll} type="button">Show Multiple Toasts</Button>;
 }
 
 /**

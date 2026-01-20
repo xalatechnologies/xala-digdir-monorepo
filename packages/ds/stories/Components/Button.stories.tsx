@@ -108,9 +108,9 @@ export const Default: Story = {
 export const Variants: Story = {
   render: () => (
     <div style={{ display: 'flex', gap: 'var(--ds-spacing-3)', alignItems: 'center' }}>
-      <Button variant="primary">Primary</Button>
-      <Button variant="secondary">Secondary</Button>
-      <Button variant="tertiary">Tertiary</Button>
+      <Button variant="primary" type="button">Primary</Button>
+      <Button variant="secondary" type="button">Secondary</Button>
+      <Button variant="tertiary" type="button">Tertiary</Button>
     </div>
   ),
 };
@@ -121,9 +121,9 @@ export const Variants: Story = {
 export const WithDataSize: Story = {
   render: () => (
     <div style={{ display: 'flex', gap: 'var(--ds-spacing-3)', alignItems: 'center' }}>
-      <Button data-size="sm">Small</Button>
-      <Button data-size="md">Medium</Button>
-      <Button data-size="lg">Large</Button>
+      <Button data-size="sm" type="button">Small</Button>
+      <Button data-size="md" type="button">Medium</Button>
+      <Button data-size="lg" type="button">Large</Button>
     </div>
   ),
 };
@@ -134,15 +134,15 @@ export const WithDataSize: Story = {
 export const WithIcons: Story = {
   render: () => (
     <div style={{ display: 'flex', gap: 'var(--ds-spacing-3)', alignItems: 'center' }}>
-      <Button variant="primary">
+      <Button variant="primary" type="button">
         <PlusIcon />
         Add Item
       </Button>
-      <Button variant="secondary">
+      <Button variant="secondary" type="button">
         <SaveIcon />
         Save
       </Button>
-      <Button variant="tertiary" data-color="danger">
+      <Button variant="tertiary" data-color="danger" type="button">
         <TrashIcon />
         Delete
       </Button>
@@ -184,8 +184,8 @@ export const Disabled: Story = {
 export const Loading: Story = {
   render: () => (
     <div style={{ display: 'flex', gap: 'var(--ds-spacing-3)', alignItems: 'center' }}>
-      <Button variant="primary" loading>Loading...</Button>
-      <Button variant="secondary" loading>Processing</Button>
+      <Button variant="primary" loading type="button">Loading...</Button>
+      <Button variant="secondary" loading type="button">Processing</Button>
     </div>
   ),
 };
@@ -199,7 +199,7 @@ export const AsLink: Story = {
     asChild: true,
   },
   render: (args) => (
-    <Button {...args}>
+    <Button {...args} type="button">
       <a href="#">Go to Page</a>
     </Button>
   ),
@@ -211,9 +211,9 @@ export const AsLink: Story = {
 export const Danger: Story = {
   render: () => (
     <div style={{ display: 'flex', gap: 'var(--ds-spacing-3)', alignItems: 'center' }}>
-      <Button variant="primary" data-color="danger">Delete</Button>
-      <Button variant="secondary" data-color="danger">Remove</Button>
-      <Button variant="tertiary" data-color="danger">Cancel</Button>
+      <Button variant="primary" data-color="danger" type="button">Delete</Button>
+      <Button variant="secondary" data-color="danger" type="button">Remove</Button>
+      <Button variant="tertiary" data-color="danger" type="button">Cancel</Button>
     </div>
   ),
 };
@@ -224,13 +224,13 @@ export const Danger: Story = {
 export const IconOnly: Story = {
   render: () => (
     <div style={{ display: 'flex', gap: 'var(--ds-spacing-3)', alignItems: 'center' }}>
-      <Button icon aria-label="Add item">
+      <Button icon aria-label="Add item" type="button">
         <PlusIcon />
       </Button>
-      <Button icon variant="secondary" aria-label="Save">
+      <Button icon variant="secondary" aria-label="Save" type="button">
         <SaveIcon />
       </Button>
-      <Button icon variant="tertiary" data-color="danger" aria-label="Delete">
+      <Button icon variant="tertiary" data-color="danger" aria-label="Delete" type="button">
         <TrashIcon />
       </Button>
     </div>

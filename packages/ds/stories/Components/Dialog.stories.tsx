@@ -45,17 +45,17 @@ export const Default: Story = {
     const dialogRef = useRef<HTMLDialogElement>(null);
     return (
       <>
-        <Button onClick={() => dialogRef.current?.showModal()}>
+        <Button onClick={() => dialogRef.current?.showModal()} type="button">
           Open Dialog
         </Button>
         <Dialog ref={dialogRef}>
           <Heading level={2} data-size="sm">Dialog Title</Heading>
           <Paragraph>This is the dialog content. You can put any content here.</Paragraph>
           <div style={{ display: 'flex', gap: 'var(--ds-spacing-2)', marginTop: 'var(--ds-spacing-4)' }}>
-            <Button variant="secondary" onClick={() => dialogRef.current?.close()}>
+            <Button variant="secondary" onClick={() => dialogRef.current?.close()} type="button">
               Cancel
             </Button>
-            <Button variant="primary" onClick={() => dialogRef.current?.close()}>
+            <Button variant="primary" onClick={() => dialogRef.current?.close()} type="button">
               Confirm
             </Button>
           </div>
@@ -95,17 +95,17 @@ export const Confirmation: Story = {
     const dialogRef = useRef<HTMLDialogElement>(null);
     return (
       <>
-        <Button data-color="danger" onClick={() => dialogRef.current?.showModal()}>
+        <Button data-color="danger" onClick={() => dialogRef.current?.showModal()} type="button">
           Delete Item
         </Button>
         <Dialog ref={dialogRef}>
           <Heading level={2} data-size="sm">Delete Confirmation</Heading>
           <Paragraph>Are you sure you want to delete this item? This action cannot be undone.</Paragraph>
           <div style={{ display: 'flex', gap: 'var(--ds-spacing-2)', marginTop: 'var(--ds-spacing-4)' }}>
-            <Button variant="secondary" onClick={() => dialogRef.current?.close()}>
+            <Button variant="secondary" onClick={() => dialogRef.current?.close()} type="button">
               Cancel
             </Button>
-            <Button data-color="danger" onClick={() => dialogRef.current?.close()}>
+            <Button data-color="danger" onClick={() => dialogRef.current?.close()} type="button">
               Delete
             </Button>
           </div>
@@ -120,14 +120,14 @@ export const Information: Story = {
     const dialogRef = useRef<HTMLDialogElement>(null);
     return (
       <>
-        <Button variant="secondary" onClick={() => dialogRef.current?.showModal()}>
+        <Button variant="secondary" onClick={() => dialogRef.current?.showModal()} type="button">
           Show Info
         </Button>
         <Dialog ref={dialogRef}>
           <Heading level={2} data-size="sm">Information</Heading>
           <Paragraph>Your booking has been successfully created. You will receive a confirmation email shortly.</Paragraph>
           <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: 'var(--ds-spacing-4)' }}>
-            <Button variant="primary" onClick={() => dialogRef.current?.close()}>
+            <Button variant="primary" onClick={() => dialogRef.current?.close()} type="button">
               OK
             </Button>
           </div>

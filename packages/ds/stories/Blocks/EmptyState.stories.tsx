@@ -35,7 +35,7 @@ function EmptyState({ icon, title, description, action }: EmptyStateProps) {
           style={{
             marginBottom: 'var(--ds-spacing-4)',
             color: 'var(--ds-color-neutral-text-subtle)',
-            fontSize: '3rem',
+            fontSize: 'var(--ds-font-size-9)',
           }}
         >
           {icon}
@@ -95,7 +95,7 @@ export const NoResults: Story = {
     icon: <SearchIcon />,
     title: 'No results found',
     description: 'Try adjusting your search or filter criteria to find what you are looking for.',
-    action: <Button variant="secondary">Clear Filters</Button>,
+    action: <Button variant="secondary" type="button">Clear Filters</Button>,
   },
 };
 
@@ -107,7 +107,7 @@ export const EmptyList: Story = {
     title: 'No items yet',
     description: 'Get started by creating your first item.',
     action: (
-      <Button variant="primary">
+      <Button variant="primary" type="button">
         <PlusIcon />
         Create Item
       </Button>
@@ -122,7 +122,7 @@ export const NoBookings: Story = {
   args: {
     title: 'No bookings',
     description: 'You have no upcoming bookings. Browse available listings to make a reservation.',
-    action: <Button variant="primary">Browse Listings</Button>,
+    action: <Button variant="primary" type="button">Browse Listings</Button>,
   },
 };
 
@@ -133,7 +133,7 @@ export const Error: Story = {
   args: {
     title: 'Something went wrong',
     description: 'We encountered an error loading the data. Please try again.',
-    action: <Button variant="secondary">Retry</Button>,
+    action: <Button variant="secondary" type="button">Retry</Button>,
   },
 };
 
@@ -146,8 +146,8 @@ export const FirstTimeUser: Story = {
     description: 'This is where your bookings will appear. Start by exploring available listings.',
     action: (
       <div style={{ display: 'flex', gap: 'var(--ds-spacing-2)' }}>
-        <Button variant="secondary">Take a Tour</Button>
-        <Button variant="primary">Get Started</Button>
+        <Button variant="secondary" type="button">Take a Tour</Button>
+        <Button variant="primary" type="button">Get Started</Button>
       </div>
     ),
   },

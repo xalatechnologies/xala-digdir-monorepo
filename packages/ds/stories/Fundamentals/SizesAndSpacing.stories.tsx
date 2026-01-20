@@ -38,7 +38,7 @@ export const SizeModes: Story = {
       <div data-size="sm">
         <h4 style={{ marginBottom: 'var(--ds-spacing-2)' }}>Small (data-size="sm")</h4>
         <div style={{ display: 'flex', gap: 'var(--ds-spacing-2)', alignItems: 'center' }}>
-          <button className="ds-button" data-variant="primary">Button</button>
+          <button className="ds-button" data-variant="primary" type="button">Button</button>
           <input type="text" placeholder="Input field" style={{ padding: 'var(--ds-spacing-2)', borderRadius: 'var(--ds-border-radius-md)' }} />
           <span style={{ padding: 'var(--ds-spacing-1) var(--ds-spacing-2)', backgroundColor: 'var(--ds-color-accent-surface-default)', borderRadius: 'var(--ds-border-radius-sm)', fontSize: 'var(--ds-font-size-sm)' }}>Tag</span>
         </div>
@@ -47,7 +47,7 @@ export const SizeModes: Story = {
       <div data-size="md">
         <h4 style={{ marginBottom: 'var(--ds-spacing-2)' }}>Medium (data-size="md") - Default</h4>
         <div style={{ display: 'flex', gap: 'var(--ds-spacing-2)', alignItems: 'center' }}>
-          <button className="ds-button" data-variant="primary">Button</button>
+          <button className="ds-button" data-variant="primary" type="button">Button</button>
           <input type="text" placeholder="Input field" style={{ padding: 'var(--ds-spacing-2)', borderRadius: 'var(--ds-border-radius-md)' }} />
           <span style={{ padding: 'var(--ds-spacing-1) var(--ds-spacing-2)', backgroundColor: 'var(--ds-color-accent-surface-default)', borderRadius: 'var(--ds-border-radius-sm)', fontSize: 'var(--ds-font-size-sm)' }}>Tag</span>
         </div>
@@ -56,7 +56,7 @@ export const SizeModes: Story = {
       <div data-size="lg">
         <h4 style={{ marginBottom: 'var(--ds-spacing-2)' }}>Large (data-size="lg")</h4>
         <div style={{ display: 'flex', gap: 'var(--ds-spacing-2)', alignItems: 'center' }}>
-          <button className="ds-button" data-variant="primary">Button</button>
+          <button className="ds-button" data-variant="primary" type="button">Button</button>
           <input type="text" placeholder="Input field" style={{ padding: 'var(--ds-spacing-2)', borderRadius: 'var(--ds-border-radius-md)' }} />
           <span style={{ padding: 'var(--ds-spacing-1) var(--ds-spacing-2)', backgroundColor: 'var(--ds-color-accent-surface-default)', borderRadius: 'var(--ds-border-radius-sm)', fontSize: 'var(--ds-font-size-sm)' }}>Tag</span>
         </div>
@@ -92,7 +92,7 @@ export const SpacingScale: Story = {
 
     return (
       <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--ds-spacing-1)' }}>
-        <div style={{ display: 'grid', gridTemplateColumns: '180px 1fr 120px', gap: 'var(--ds-spacing-2)', padding: 'var(--ds-spacing-2)', backgroundColor: 'var(--ds-color-neutral-surface-hover)', borderRadius: 'var(--ds-border-radius-md)', fontWeight: 600, fontSize: 'var(--ds-font-size-sm)' }}>
+        <div style={{ display: 'grid', gridTemplateColumns: '180px 1fr 120px', gap: 'var(--ds-spacing-2)', padding: 'var(--ds-spacing-2)', backgroundColor: 'var(--ds-color-neutral-surface-hover)', borderRadius: 'var(--ds-border-radius-md)', fontWeight: 'var(--ds-font-weight-semibold)', fontSize: 'var(--ds-font-size-sm)' }}>
           <span>Token</span>
           <span>Visual</span>
           <span>Value</span>
@@ -333,7 +333,7 @@ export const CardLayoutExample: Story = {
             borderRadius: 'var(--ds-border-radius-md)',
             fontSize: 'var(--ds-font-size-2)',
             cursor: 'pointer',
-          }}>
+          }} type="button">
             Action
           </button>
         </div>

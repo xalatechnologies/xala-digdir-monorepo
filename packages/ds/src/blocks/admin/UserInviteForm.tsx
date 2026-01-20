@@ -17,22 +17,20 @@
  * ```
  */
 import React, { useState } from 'react';
+import { Card } from '../../primitives';
 import {
-  Card,
   Heading,
   Paragraph,
   Button,
   Textfield,
+  Textarea,
   Select,
   Checkbox,
   Alert,
   Label,
 } from '@digdir/designsystemet-react';
-import { Stack } from '../../primitives';
 import {
   MailIcon,
-  UserIcon,
-  BuildingIcon,
   ShieldIcon,
   CheckIcon,
 } from '../../primitives/icons';
@@ -150,7 +148,7 @@ export function UserInviteForm({
   };
 
   // Handlers
-  const handleChange = (field: keyof InviteUserFormData, value: any) => {
+  const handleChange = (field: keyof InviteUserFormData, value: unknown) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
     setTouched((prev) => ({ ...prev, [field]: true }));
 
@@ -194,23 +192,22 @@ export function UserInviteForm({
   const selectedRole = availableRoles.find((r) => r.id === formData.role);
 
   return (
-    <Card
-      as="form"
+    <form
       onSubmit={handleSubmit}
       style={{
         backgroundColor: 'var(--ds-color-neutral-surface-default)',
       }}
     >
-      <Stack gap={4}>
+      <Card style={{ display: 'flex', flexDirection: 'column', gap: 'var(--ds-spacing-4)' }}>
         {/* Header */}
         <div>
           <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--ds-spacing-3)' }}>
             <MailIcon style={{ color: 'var(--ds-color-accent-base-default)' }} />
-            <Heading size="sm" style={{ margin: 0 }}>
+            <Heading data-size="sm" style={{ margin: 0 }}>
               Invite User
             </Heading>
           </div>
-          <Paragraph size="sm" style={{ margin: 0, marginTop: 'var(--ds-spacing-2)', color: 'var(--ds-color-neutral-text-subtle)' }}>
+          <Paragraph data-size="sm" style={{ margin: 0, marginTop: 'var(--ds-spacing-2)', color: 'var(--ds-color-neutral-text-subtle)' }}>
             Send an invitation to join your organization
           </Paragraph>
         </div>
@@ -228,11 +225,11 @@ export function UserInviteForm({
             onChange={(e) => handleChange('email', e.target.value)}
             onBlur={() => handleBlur('email')}
             disabled={loading}
-            error={touched.email && errors.email}
+            error={touched.email ? errors.email : undefined}
             style={{ width: '100%' }}
           />
           {touched.email && errors.email && (
-            <Paragraph size="sm" style={{ margin: 0, marginTop: 'var(--ds-spacing-1)', color: 'var(--ds-color-danger-text-default)' }}>
+            <Paragraph data-size="sm" style={{ margin: 0, marginTop: 'var(--ds-spacing-1)', color: 'var(--ds-color-danger-text-default)' }}>
               {errors.email}
             </Paragraph>
           )}
@@ -259,12 +256,12 @@ export function UserInviteForm({
             ))}
           </Select>
           {touched.role && errors.role && (
-            <Paragraph size="sm" style={{ margin: 0, marginTop: 'var(--ds-spacing-1)', color: 'var(--ds-color-danger-text-default)' }}>
+            <Paragraph data-size="sm" style={{ margin: 0, marginTop: 'var(--ds-spacing-1)', color: 'var(--ds-color-danger-text-default)' }}>
               {errors.role}
             </Paragraph>
           )}
           {selectedRole && (
-            <Alert variant="info" size="sm" style={{ marginTop: 'var(--ds-spacing-2)' }}>
+            <Alert data-color="info" data-size="sm" style={{ marginTop: 'var(--ds-spacing-2)' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--ds-spacing-2)' }}>
                 <ShieldIcon />
                 <div>
@@ -295,7 +292,7 @@ export function UserInviteForm({
                 </option>
               ))}
             </Select>
-            <Paragraph size="sm" style={{ margin: 0, marginTop: 'var(--ds-spacing-1)', color: 'var(--ds-color-neutral-text-subtle)' }}>
+            <Paragraph data-size="sm" style={{ margin: 0, marginTop: 'var(--ds-spacing-1)', color: 'var(--ds-color-neutral-text-subtle)' }}>
               Assign the user to an organization
             </Paragraph>
           </div>
@@ -307,12 +304,11 @@ export function UserInviteForm({
             <Label htmlFor="message">
               Custom Message (Optional)
             </Label>
-            <Textfield
+            <Textarea
               id="message"
-              as="textarea"
               placeholder="Add a personalized message to the invitation email..."
               value={formData.message}
-              onChange={(e) => handleChange('message', e.target.value)}
+              onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => handleChange('message', e.target.value)}
               disabled={loading}
               rows={4}
               style={{ width: '100%' }}
@@ -326,42 +322,49 @@ export function UserInviteForm({
             padding: 'var(--ds-spacing-4)',
             backgroundColor: 'var(--ds-color-neutral-surface-subtle)',
             borderRadius: 'var(--ds-border-radius-md)',
+            display: 'flex',
+            flexDirection: 'column',
+            gap: 'var(--ds-spacing-3)',
           }}
         >
-          <Stack gap={3}>
+          <div style={{ display: 'flex', alignItems: 'flex-start', gap: 'var(--ds-spacing-3)' }}>
             <Checkbox
+              id="sendEmail"
               checked={formData.sendEmail}
-              onChange={(e) => handleChange('sendEmail', e.target.checked)}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleChange('sendEmail', e.target.checked)}
               disabled={loading}
-              label={
-                <div>
-                  <div style={{ fontWeight: 'var(--ds-font-weight-semibold)' }}>
-                    Send invitation email
-                  </div>
-                  <Paragraph size="sm" style={{ margin: 0, color: 'var(--ds-color-neutral-text-subtle)' }}>
-                    User will receive an email with a link to set up their account
-                  </Paragraph>
-                </div>
-              }
+              value="sendEmail"
+              aria-labelledby="sendEmail-label"
             />
-            {showScopeOption && (
+            <label id="sendEmail-label" htmlFor="sendEmail" style={{ cursor: 'pointer' }}>
+              <div style={{ fontWeight: 'var(--ds-font-weight-semibold)' }}>
+                Send invitation email
+              </div>
+              <Paragraph data-size="sm" style={{ margin: 0, color: 'var(--ds-color-neutral-text-subtle)' }}>
+                User will receive an email with a link to set up their account
+              </Paragraph>
+            </label>
+          </div>
+          {showScopeOption && (
+            <div style={{ display: 'flex', alignItems: 'flex-start', gap: 'var(--ds-spacing-3)' }}>
               <Checkbox
+                id="assignScope"
                 checked={formData.assignScope}
-                onChange={(e) => handleChange('assignScope', e.target.checked)}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleChange('assignScope', e.target.checked)}
                 disabled={loading}
-                label={
-                  <div>
-                    <div style={{ fontWeight: 'var(--ds-font-weight-semibold)' }}>
-                      Configure scope after invitation
-                    </div>
-                    <Paragraph size="sm" style={{ margin: 0, color: 'var(--ds-color-neutral-text-subtle)' }}>
-                      Proceed to scope assignment after creating the user
-                    </Paragraph>
-                  </div>
-                }
+                value="assignScope"
+                aria-labelledby="assignScope-label"
               />
-            )}
-          </Stack>
+              <label id="assignScope-label" htmlFor="assignScope" style={{ cursor: 'pointer' }}>
+                <div style={{ fontWeight: 'var(--ds-font-weight-semibold)' }}>
+                  Configure scope after invitation
+                </div>
+                <Paragraph data-size="sm" style={{ margin: 0, color: 'var(--ds-color-neutral-text-subtle)' }}>
+                  Proceed to scope assignment after creating the user
+                </Paragraph>
+              </label>
+            </div>
+          )}
         </div>
 
         {/* Actions */}
@@ -396,7 +399,7 @@ export function UserInviteForm({
             )}
           </Button>
         </div>
-      </Stack>
-    </Card>
+      </Card>
+    </form>
   );
 }

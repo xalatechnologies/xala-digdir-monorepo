@@ -120,7 +120,7 @@ export const WithPrimaryAction: Story = {
     resultsCount: 42,
     resultsLabel: 'listings',
     primaryAction: (
-      <Button variant="primary">
+      <Button variant="primary" type="button">
         <PlusIcon />
         Add Listing
       </Button>
@@ -146,7 +146,7 @@ export const FullFeatured: Story = {
     resultsCount: 42,
     resultsLabel: 'listings',
     primaryAction: (
-      <Button variant="primary">
+      <Button variant="primary" type="button">
         <PlusIcon />
         Add New
       </Button>

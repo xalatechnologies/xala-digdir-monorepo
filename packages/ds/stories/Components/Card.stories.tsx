@@ -62,8 +62,8 @@ export const WithActions: Story = {
         John Doe has requested to book Meeting Room A for December 15, 2024.
       </Paragraph>
       <div style={{ display: 'flex', gap: 'var(--ds-spacing-2)', marginTop: 'var(--ds-spacing-4)' }}>
-        <Button variant="secondary">Decline</Button>
-        <Button variant="primary">Approve</Button>
+        <Button variant="secondary" type="button">Decline</Button>
+        <Button variant="primary" type="button">Approve</Button>
       </div>
     </Card>
   ),

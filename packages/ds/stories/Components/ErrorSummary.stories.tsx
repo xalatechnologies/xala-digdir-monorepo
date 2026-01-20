@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import { ErrorSummary, Heading } from '../../src';
+import { ErrorSummary } from '../../src';
 
 const meta: Meta = {
   title: 'Components/ErrorSummary',

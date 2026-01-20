@@ -1,7 +1,8 @@
 /**
  * VenueCard Block - Reusable DS Component
  */
-import { Card, Heading, Paragraph, Button, Badge } from '@digdir/designsystemet-react';
+import { Card, Badge } from '../../primitives';
+import { Heading, Paragraph, Button } from '@digdir/designsystemet-react';
 import { useT } from '@xala/i18n';
 
 export interface VenueCardData {
@@ -34,8 +35,8 @@ export function VenueCard({ venue, onApply, showApplyButton = true, 'data-testid
         {venue.address && <Paragraph data-size="sm" style={{ margin: 0, color: 'var(--ds-color-neutral-text-subtle)' }}>{venue.address.street}, {venue.address.city}</Paragraph>}
         {venue.description && <Paragraph data-size="sm" style={{ margin: 0, color: 'var(--ds-color-neutral-text-subtle)' }}>{venue.description}</Paragraph>}
         <div style={{ display: 'flex', gap: 'var(--ds-spacing-2)', marginTop: 'auto' }}>
-          {venue.capacity && <Badge data-size="sm">{t('common.capacity')}: {venue.capacity}</Badge>}
-          {categories.slice(0, 2).map((c, i) => <Badge key={i} data-size="sm">{c}</Badge>)}
+          {venue.capacity && <Badge size="sm">{t('common.capacity')}: {venue.capacity}</Badge>}
+          {categories.slice(0, 2).map((c, i) => <Badge key={i} size="sm">{c}</Badge>)}
         </div>
       </div>
       {showApplyButton && onApply && (

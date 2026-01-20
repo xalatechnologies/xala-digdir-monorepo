@@ -9,7 +9,8 @@
  */
 
 import { useState } from 'react';
-import { Card, Heading, Paragraph, Button } from '@xala/ds';
+import { Card } from '../../primitives';
+import { Heading, Paragraph, Button } from '@digdir/designsystemet-react';
 import { useMyGdprRequests, useCreateGdprRequest, useCancelGdprRequest } from '@digilist/client-sdk/hooks';
 import type { GdprRequest } from '@digilist/client-sdk/types';
 import { useT } from '@xala/i18n';

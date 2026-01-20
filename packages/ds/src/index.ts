@@ -420,6 +420,10 @@ export {
   ConsentPopup,
   ConsentSettings,
   DataSubjectRequestForm,
+  // Account Management Components
+  AccountSwitcher,
+  AccountSelector,
+  AccountSelectionModal,
 } from './blocks';
 export type {
   RentalObjectCardProps,

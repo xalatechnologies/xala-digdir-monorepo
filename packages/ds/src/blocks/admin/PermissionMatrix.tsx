@@ -4,7 +4,8 @@
  * Will be enhanced in Phase 3 when actively used
  */
 import React from 'react';
-import { Card, Heading, Paragraph, Alert } from '@digdir/designsystemet-react';
+import { Card } from '../../primitives';
+import { Heading, Paragraph, Alert } from '@digdir/designsystemet-react';
 
 export interface Permission {
   id: string;
@@ -34,9 +35,9 @@ export interface PermissionMatrixProps {
 export function PermissionMatrix(props: PermissionMatrixProps) {
   return (
     <Card style={{ padding: 'var(--ds-spacing-4)' }}>
-      <Heading size="sm">Permission Matrix</Heading>
+      <Heading data-size="sm">Permission Matrix</Heading>
       <Paragraph>Role permissions grid - To be implemented in Phase 3</Paragraph>
-      <Alert variant="info">
+      <Alert data-color="info">
         This component will be fully implemented when tenant admin features are activated in Phase 3.
       </Alert>
     </Card>

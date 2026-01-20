@@ -66,7 +66,7 @@ export const Sizes: Story = {
 export const WithButton: Story = {
   render: () => (
     <div style={{ position: 'relative', display: 'inline-block' }}>
-      <Button variant="secondary">
+      <Button variant="secondary" type="button">
         Notifications
       </Button>
       <div style={{ position: 'absolute', top: 'calc(-1 * var(--ds-spacing-2))', right: 'calc(-1 * var(--ds-spacing-2))' }}>

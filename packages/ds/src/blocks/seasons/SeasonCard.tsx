@@ -1,7 +1,8 @@
 /**
  * SeasonCard Block - Reusable DS Component
  */
-import { Card, Heading, Paragraph, Button, Badge } from '@digdir/designsystemet-react';
+import { Card, Badge } from '../../primitives';
+import { Heading, Paragraph, Button } from '@digdir/designsystemet-react';
 import { useT } from '@xala/i18n';
 
 export type SeasonStatus = 'draft' | 'open' | 'closed' | 'cancelled' | 'completed';
@@ -46,7 +47,7 @@ export function SeasonCard({ season, showActions = true, onViewDetails, onApply,
           <Heading level={3} data-size="sm" style={{ margin: 0 }}>{season.name}</Heading>
           {season.description && <Paragraph data-size="sm" style={{ margin: 0, color: 'var(--ds-color-neutral-text-subtle)' }}>{season.description}</Paragraph>}
         </div>
-        <Badge data-color={cfg.color} data-size="sm">{cfg.label}</Badge>
+        <Badge variant={cfg.color} size="sm">{cfg.label}</Badge>
       </div>
       <div style={{ padding: 'var(--ds-spacing-6)', flex: 1 }}>
         <Paragraph data-size="sm" style={{ margin: 0 }}>{t('seasons.card.period')}: {formatDate(season.startDate)} - {formatDate(season.endDate)}</Paragraph>

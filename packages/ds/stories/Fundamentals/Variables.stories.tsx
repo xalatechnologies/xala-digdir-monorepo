@@ -294,7 +294,7 @@ export const UsageExample: Story = {
           borderRadius: 'var(--ds-border-radius-md)',
           fontSize: 'var(--ds-font-size-2)',
           cursor: 'pointer',
-        }}>
+        }} type="button">
           Action
         </button>
       </div>

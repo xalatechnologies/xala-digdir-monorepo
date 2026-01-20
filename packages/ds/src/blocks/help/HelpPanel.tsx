@@ -17,23 +17,14 @@
  * ```
  */
 import React, { useState } from 'react';
-import {
-  Card,
-  Heading,
-  Paragraph,
-  Button,
-  Badge,
-  Alert,
-  Link,
-} from '@digdir/designsystemet-react';
-import { Stack } from '../../primitives';
+import { Card, Badge, Heading, Paragraph, Button, Alert, Link } from '@xala/ds';
 import {
   InfoIcon,
   BookOpenIcon,
   ChevronRightIcon,
   ChevronLeftIcon,
   CloseIcon,
-} from '../../primitives/icons';
+} from '@xala/ds';
 
 export type HelpLevel = 1 | 2 | 3;
 
@@ -128,7 +119,7 @@ function TooltipHelp({
           border: '1px solid var(--ds-color-neutral-border-default)',
         }}
       >
-        <Stack gap={3}>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--ds-spacing-3)' }}>
           <div style={{ display: 'flex', alignItems: 'flex-start', gap: 'var(--ds-spacing-3)' }}>
             <InfoIcon
               style={{
@@ -137,7 +128,7 @@ function TooltipHelp({
               }}
             />
             <Paragraph
-              size="sm"
+              data-size="sm"
               style={{
                 margin: 0,
                 flex: 1,
@@ -147,8 +138,9 @@ function TooltipHelp({
             </Paragraph>
             {closeable && onClose && (
               <Button
+                type="button"
                 variant="tertiary"
-                size="sm"
+                data-size="sm"
                 onClick={onClose}
                 style={{
                   padding: 'var(--ds-spacing-2)',
@@ -160,11 +152,11 @@ function TooltipHelp({
             )}
           </div>
           {content.learnMoreUrl && (
-            <Link href={content.learnMoreUrl} size="sm">
+            <Link href={content.learnMoreUrl} data-size="sm">
               Learn more →
             </Link>
           )}
-        </Stack>
+        </div>
       </Card>
     </div>
   );
@@ -205,27 +197,27 @@ function GuideHelp({
         backgroundColor: 'var(--ds-color-neutral-surface-default)',
       }}
     >
-      <Stack gap={4}>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--ds-spacing-4)' }}>
         {/* Header */}
         <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between' }}>
           <div style={{ flex: 1 }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--ds-spacing-3)', marginBottom: 'var(--ds-spacing-2)' }}>
               <BookOpenIcon style={{ color: 'var(--ds-color-accent-base-default)' }} />
-              <Heading size="sm" style={{ margin: 0 }}>
+              <Heading data-size="sm" style={{ margin: 0 }}>
                 {title}
               </Heading>
             </div>
-            <Paragraph size="sm" style={{ margin: 0, color: 'var(--ds-color-neutral-text-subtle)' }}>
+            <Paragraph data-size="sm" style={{ margin: 0, color: 'var(--ds-color-neutral-text-subtle)' }}>
               {description}
             </Paragraph>
             {estimatedTime && (
-              <Badge size="sm" style={{ marginTop: 'var(--ds-spacing-2)' }}>
+              <Badge data-size="sm" style={{ marginTop: 'var(--ds-spacing-2)' }}>
                 {estimatedTime}
               </Badge>
             )}
           </div>
           {closeable && onClose && (
-            <Button variant="tertiary" size="sm" onClick={onClose}>
+            <Button type="button" variant="tertiary" data-size="sm" onClick={onClose}>
               <CloseIcon />
             </Button>
           )}
@@ -251,44 +243,46 @@ function GuideHelp({
         </div>
 
         {/* Step content */}
-        <div>
-          <Badge size="sm">
-            Step {currentStep + 1} of {steps.length}
-          </Badge>
-          <Heading size="xs" style={{ marginTop: 'var(--ds-spacing-3)', marginBottom: 'var(--ds-spacing-3)' }}>
-            {step.title}
-          </Heading>
-          <Paragraph style={{ marginBottom: 'var(--ds-spacing-4)' }}>
-            {step.content}
-          </Paragraph>
+        {step && (
+          <div>
+            <Badge data-size="sm">
+              Step {currentStep + 1} of {steps.length}
+            </Badge>
+            <Heading data-size="xs" style={{ marginTop: 'var(--ds-spacing-3)', marginBottom: 'var(--ds-spacing-3)' }}>
+              {step.title}
+            </Heading>
+            <Paragraph style={{ marginBottom: 'var(--ds-spacing-4)' }}>
+              {step.content}
+            </Paragraph>
 
-          {step.screenshot && (
-            <img
-              src={step.screenshot}
-              alt={`Step ${currentStep + 1} screenshot`}
-              style={{
-                width: '100%',
-                borderRadius: 'var(--ds-border-radius-md)',
-                marginBottom: 'var(--ds-spacing-4)',
-              }}
-            />
-          )}
+            {step.screenshot && (
+              <img
+                src={step.screenshot}
+                alt={`Step ${currentStep + 1} screenshot`}
+                style={{
+                  width: '100%',
+                  borderRadius: 'var(--ds-border-radius-md)',
+                  marginBottom: 'var(--ds-spacing-4)',
+                }}
+              />
+            )}
 
-          {step.code && (
-            <div
-              style={{
-                padding: 'var(--ds-spacing-4)',
-                backgroundColor: 'var(--ds-color-neutral-surface-subtle)',
-                borderRadius: 'var(--ds-border-radius-md)',
-                fontFamily: 'var(--ds-font-family-mono)',
-                fontSize: 'var(--ds-font-size-sm)',
-                overflowX: 'auto',
-              }}
-            >
-              <code>{step.code}</code>
-            </div>
-          )}
-        </div>
+            {step.code && (
+              <div
+                style={{
+                  padding: 'var(--ds-spacing-4)',
+                  backgroundColor: 'var(--ds-color-neutral-surface-subtle)',
+                  borderRadius: 'var(--ds-border-radius-md)',
+                  fontFamily: 'var(--ds-font-family-mono)',
+                  fontSize: 'var(--ds-font-size-sm)',
+                  overflowX: 'auto',
+                }}
+              >
+                <code>{step.code}</code>
+              </div>
+            )}
+          </div>
+        )}
 
         {/* Navigation */}
         <div
@@ -300,23 +294,25 @@ function GuideHelp({
           }}
         >
           <Button
+            type="button"
             variant="secondary"
-            size="sm"
+            data-size="sm"
             onClick={handlePrevious}
             disabled={currentStep === 0}
           >
             <ChevronLeftIcon /> Previous
           </Button>
           <Button
+            type="button"
             variant="primary"
-            size="sm"
+            data-size="sm"
             onClick={handleNext}
             disabled={currentStep === steps.length - 1}
           >
             {currentStep === steps.length - 1 ? 'Done' : 'Next'} <ChevronRightIcon />
           </Button>
         </div>
-      </Stack>
+      </div>
     </Card>
   );
 }
@@ -377,19 +373,19 @@ function FAQHelp({
         backgroundColor: 'var(--ds-color-neutral-surface-default)',
       }}
     >
-      <Stack gap={4}>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--ds-spacing-4)' }}>
         {/* Header */}
         <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between' }}>
           <div>
-            <Heading size="sm" style={{ margin: 0 }}>
+            <Heading data-size="sm" style={{ margin: 0 }}>
               Frequently Asked Questions
             </Heading>
-            <Paragraph size="sm" style={{ margin: 0, marginTop: 'var(--ds-spacing-2)', color: 'var(--ds-color-neutral-text-subtle)' }}>
+            <Paragraph data-size="sm" style={{ margin: 0, marginTop: 'var(--ds-spacing-2)', color: 'var(--ds-color-neutral-text-subtle)' }}>
               Find answers to common questions
             </Paragraph>
           </div>
           {closeable && onClose && (
-            <Button variant="tertiary" size="sm" onClick={onClose}>
+            <Button type="button" variant="tertiary" data-size="sm" onClick={onClose}>
               <CloseIcon />
             </Button>
           )}
@@ -413,10 +409,10 @@ function FAQHelp({
         {/* FAQ Items */}
         {Object.entries(categorizedFAQs).map(([cat, faqs]) => (
           <div key={cat}>
-            <Heading size="xs" style={{ marginBottom: 'var(--ds-spacing-3)', textTransform: 'capitalize' }}>
+            <Heading data-size="xs" style={{ marginBottom: 'var(--ds-spacing-3)', textTransform: 'capitalize' }}>
               {cat} ({faqs.length})
             </Heading>
-            <Stack gap={2}>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--ds-spacing-2)' }}>
               {faqs.map((faq, index) => {
                 const globalIndex = content.indexOf(faq);
                 const isExpanded = expandedItems.has(globalIndex);
@@ -431,6 +427,7 @@ function FAQHelp({
                     }}
                   >
                     <button
+                      type="button"
                       onClick={() => toggleItem(globalIndex)}
                       style={{
                         width: '100%',
@@ -459,7 +456,7 @@ function FAQHelp({
                         {faq.tags && faq.tags.length > 0 && (
                           <div style={{ display: 'flex', gap: 'var(--ds-spacing-2)', marginTop: 'var(--ds-spacing-3)' }}>
                             {faq.tags.map((tag) => (
-                              <Badge key={tag} size="sm">
+                              <Badge key={tag} data-size="sm">
                                 {tag}
                               </Badge>
                             ))}
@@ -470,16 +467,16 @@ function FAQHelp({
                   </div>
                 );
               })}
-            </Stack>
+            </div>
           </div>
         ))}
 
         {filteredFAQs.length === 0 && (
-          <Alert variant="info">
+          <Alert data-color="info">
             No help articles found. Try a different search term or category.
           </Alert>
         )}
-      </Stack>
+      </div>
     </Card>
   );
 }

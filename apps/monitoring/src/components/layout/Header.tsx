@@ -20,7 +20,7 @@ import { useNotificationUnreadCount } from '@digilist/client-sdk';
 import { useAuth } from '@xala/auth';
 import { useTheme } from '@xala/ds';
 import { useNotificationCenter } from '../../App';
-import { AccountSwitcher } from '../AccountSwitcher';
+import { AccountSwitcher } from '@xala/ds';
 
 interface HeaderProps {
   title?: string;

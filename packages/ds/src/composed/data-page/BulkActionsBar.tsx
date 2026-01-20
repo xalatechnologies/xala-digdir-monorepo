@@ -1,12 +1,13 @@
 /**
  * BulkActionsBar Component
- * 
+ *
  * Action bar that appears when items are selected for bulk operations
  * Generalizes pattern from apps/backoffice/src/features/rental-objects/components/list/BulkActionsBar.tsx
  */
 
 import React from 'react';
-import { Button, Badge, Stack } from '@xala/ds';
+import { Badge } from '../../primitives';
+import { Button } from '@digdir/designsystemet-react';
 import { cn } from '../../utils';
 
 export interface BulkAction {
@@ -15,7 +16,7 @@ export interface BulkAction {
   /** Action handler */
   onClick: () => void;
   /** Button variant */
-  variant?: 'primary' | 'secondary' | 'tertiary' | 'danger';
+  variant?: 'primary' | 'secondary' | 'tertiary';
   /** Whether action is disabled */
   disabled?: boolean;
   /** Optional icon */
@@ -50,7 +51,7 @@ export function BulkActionsBar({
   position = 'fixed',
   className,
   style,
-}: BulkActionsBarProps): React.ReactElement {
+}: BulkActionsBarProps): React.ReactElement | null {
   if (selectedCount === 0) {
     return null;
   }
@@ -87,7 +88,7 @@ export function BulkActionsBar({
     <>
       <div className={cn('bulk-actions-bar', className)} style={{ ...containerStyle, ...style }}>
         {/* Selected Count Badge */}
-        <Badge color="accent" size="lg">
+        <Badge variant="info" size="lg">
           {selectedLabel.replace('{{count}}', selectedCount.toString())}
         </Badge>
 
@@ -101,12 +102,13 @@ export function BulkActionsBar({
         />
 
         {/* Action Buttons */}
-        <Stack direction="row" gap={3}>
+        <div style={{ display: 'flex', gap: 'var(--ds-spacing-3)' }}>
           {actions.map((action, index) => (
             <Button
               key={index}
+              type="button"
               variant={action.variant || 'secondary'}
-              size="sm"
+              data-size="sm"
               onClick={action.onClick}
               disabled={action.disabled}
             >
@@ -114,7 +116,7 @@ export function BulkActionsBar({
               {action.label}
             </Button>
           ))}
-        </Stack>
+        </div>
 
         {/* Divider */}
         <div
@@ -126,7 +128,7 @@ export function BulkActionsBar({
         />
 
         {/* Clear Selection */}
-        <Button variant="tertiary" size="sm" onClick={onClear}>
+        <Button type="button" variant="tertiary" data-size="sm" onClick={onClear}>
           {clearLabel}
         </Button>
       </div>

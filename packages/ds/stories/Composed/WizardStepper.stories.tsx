@@ -92,14 +92,14 @@ export const Interactive: Story = {
           <Button
             variant="secondary"
             onClick={() => setCurrentStep(Math.max(0, currentStep - 1))}
-            disabled={currentStep === 0}
+            disabled={currentStep === 0} type="button"
           >
             Forrige
           </Button>
           <Button
             variant="primary"
             onClick={() => setCurrentStep(Math.min(wizardSteps.length - 1, currentStep + 1))}
-            disabled={currentStep === wizardSteps.length - 1}
+            disabled={currentStep === wizardSteps.length - 1} type="button"
           >
             Neste
           </Button>

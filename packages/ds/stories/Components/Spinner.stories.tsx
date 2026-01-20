@@ -57,7 +57,7 @@ export const Colors: Story = {
 
 export const InButton: Story = {
   render: () => (
-    <Button loading disabled>
+    <Button loading disabled type="button">
       Loading...
     </Button>
   ),

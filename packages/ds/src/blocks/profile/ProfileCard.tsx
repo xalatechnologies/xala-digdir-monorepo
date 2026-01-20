@@ -25,7 +25,7 @@ export function ProfileCard({ profile, onEdit, compact = false, 'data-testid': t
   return (
     <Card data-testid={testId} style={{ padding: 'var(--ds-spacing-6)', border: '1px solid var(--ds-color-neutral-border-default)' }}>
       <div style={{ display: 'flex', gap: 'var(--ds-spacing-5)', alignItems: compact ? 'center' : 'flex-start', flexDirection: compact ? 'row' : 'column' }}>
-        <Avatar aria-label={profile.name} size={compact ? 'md' : 'lg'} style={{ backgroundColor: 'var(--ds-color-brand-1-surface-default)', color: 'var(--ds-color-brand-1-text-default)' }}>
+        <Avatar aria-label={profile.name} data-size={compact ? 'md' : 'lg'} style={{ backgroundColor: 'var(--ds-color-brand-1-surface-default)', color: 'var(--ds-color-brand-1-text-default)' }}>
           {profile.avatarUrl ? <img src={profile.avatarUrl} alt={profile.name} /> : profile.name.charAt(0).toUpperCase()}
         </Avatar>
         <div style={{ flex: 1 }}>

@@ -83,11 +83,11 @@ export const WithActions: Story = {
     subtitle: 'Manage your rental listings',
     actions: (
       <>
-        <Button variant="secondary">
+        <Button variant="secondary" type="button">
           <DownloadIcon />
           Export
         </Button>
-        <Button variant="primary">
+        <Button variant="primary" type="button">
           <PlusIcon />
           Add Listing
         </Button>
@@ -112,9 +112,9 @@ export const FullFeatured: Story = {
     ),
     actions: (
       <div style={{ display: 'flex', gap: 'var(--ds-spacing-2)' }}>
-        <Button variant="tertiary">Cancel</Button>
-        <Button variant="secondary">Edit</Button>
-        <Button variant="primary">Confirm</Button>
+        <Button variant="tertiary" type="button">Cancel</Button>
+        <Button variant="secondary" type="button">Edit</Button>
+        <Button variant="primary" type="button">Confirm</Button>
       </div>
     ),
   },

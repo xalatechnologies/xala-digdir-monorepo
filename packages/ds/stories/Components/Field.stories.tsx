@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import { Field, Label, Input, Textarea, Select, Checkbox, ValidationMessage } from '../../src';
+import { Field, Label, Input, Textarea, Select, ValidationMessage } from '../../src';
 
 const meta: Meta = {
   title: 'Components/Field',
