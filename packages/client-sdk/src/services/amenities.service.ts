@@ -58,8 +58,8 @@ export class AmenitiesService extends BaseService {
   /**
    * Delete amenity
    */
-  async delete(id: string): Promise<void> {
-    return this.client.delete(this.buildPath(`/${id}`));
+  async deleteAmenity(id: string): Promise<void> {
+    await this.client.delete(this.buildPath(`/${id}`));
   }
 
   /**

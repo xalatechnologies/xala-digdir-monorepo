@@ -14,9 +14,9 @@
 | **Component directories** | 27 | 0 | -27 |
 | **Inline style usages** | 7,538 | 0 | -7,538 |
 | **Direct fetch() calls** | 14 | 0 | -14 |
-| **Emoji usages** | 42 | 0 | -42 |
-| **Role checks in UI** | 32 | 0 | -32 |
-| **CSS files (beyond root.css)** | 1 | 0 | -1 |
+| **Emoji usages** | 0 | 0 | ✅ |
+| **Role checks in UI** | 29 | 0 | -29 |
+| **CSS files (beyond root.css)** | 0 | 0 | ✅ |
 
 ---
 
@@ -31,7 +31,7 @@
 | **saas-admin** | 4 | 583 | 8 | 1 | ~3 | ⚠️ 68/100 |
 | **docs-learning** | 4 | 106 | 0 | 0 | ~15 | ⚠️ 75/100 |
 
-**Overall Score: 67/100** (Weighted average)
+**Overall Score: 75/100** (Updated 2026-01-20)
 
 ---
 
@@ -65,7 +65,7 @@
 | saas-admin | 583 | 8% | P3 |
 | docs-learning | 106 | 1% | P4 |
 
-**CSS Files:** Only 1 violation (`docs-learning/src/extensions.css`)
+**CSS Files:** `docs-learning/src/extensions.css` uses valid `@layer ds.app` extension pattern ✅
 
 ---
 
@@ -93,16 +93,11 @@
 
 ---
 
-## Category F: Emoji Violations (42 instances)
+## Category F: Emoji Violations ✅ COMPLETE
 
-| App | Estimated | Priority |
-|:----|:---------:|:--------:|
-| docs-learning | 15 | P2 |
-| backoffice | 15 | P2 |
-| web | 10 | P3 |
-| minside | 8 | P3 |
-| monitoring | 6 | P4 |
-| saas-admin | 3 | P4 |
+| App | Count | Status |
+|:----|:-----:|:------:|
+| All apps | 0 | ✅ Fixed |
 
 ---
 

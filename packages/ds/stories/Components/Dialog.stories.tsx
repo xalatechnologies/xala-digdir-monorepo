@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
+import { expect, userEvent, within, waitFor } from 'storybook/test';
 import { Dialog, Button, Paragraph, Heading } from '@digdir/designsystemet-react';
 import { useRef } from 'react';
 
@@ -31,6 +32,14 @@ Dialog (Modal) for important interactions requiring user attention.
 export default meta;
 type Story = StoryObj;
 
+/**
+ * Default dialog with open/close interaction test.
+ *
+ * This story tests:
+ * - Dialog opens when trigger button is clicked
+ * - Dialog contains expected content
+ * - Dialog closes when Cancel or Confirm is clicked
+ */
 export const Default: Story = {
   render: function Render() {
     const dialogRef = useRef<HTMLDialogElement>(null);
@@ -53,6 +62,31 @@ export const Default: Story = {
         </Dialog>
       </>
     );
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+
+    // Click button to open dialog
+    const openButton = canvas.getByRole('button', { name: 'Open Dialog' });
+    await userEvent.click(openButton);
+
+    // Wait for dialog to be visible (use document.body since dialog is portal)
+    const body = within(document.body);
+    await waitFor(() => {
+      expect(body.getByRole('dialog')).toBeVisible();
+    });
+
+    // Verify dialog content
+    expect(body.getByRole('heading', { name: 'Dialog Title' })).toBeInTheDocument();
+
+    // Close dialog with Cancel
+    const cancelButton = body.getByRole('button', { name: 'Cancel' });
+    await userEvent.click(cancelButton);
+
+    // Dialog should be closed
+    await waitFor(() => {
+      expect(body.queryByRole('dialog')).not.toBeVisible();
+    });
   },
 };
 

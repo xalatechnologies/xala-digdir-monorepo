@@ -47,6 +47,7 @@ export {
 
 // Core types
 export * from './enums';
+export * from './amenity';
 
 // Feature flags & tenant controls
 export * from './feature-flags';
@@ -209,6 +210,9 @@ export type {
   // Discount Codes
   DiscountCode,
   CreateDiscountCodeDTO,
+  UpdateDiscountCodeDTO,
+  DiscountCodeQueryParams,
+  ValidateDiscountCodeDTO,
   ValidateDiscountResult,
   // Calendar Blocks
   BlockType,

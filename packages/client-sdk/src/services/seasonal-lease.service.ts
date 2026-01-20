@@ -134,6 +134,35 @@ export class SeasonalLeaseService extends BaseService {
   }): Promise<SingleResponse<SeasonalLease>> {
     return this.client.post(this.buildPath(`/${id}/terminate`), data);
   }
+
+  /**
+   * Approve seasonal lease
+   */
+  async approve(id: string): Promise<SingleResponse<SeasonalLease>> {
+    return this.client.post(this.buildPath(`/${id}/approve`), {});
+  }
+
+  /**
+   * Reject seasonal lease
+   */
+  async reject(id: string, reason?: string): Promise<SingleResponse<SeasonalLease>> {
+    return this.client.post(this.buildPath(`/${id}/reject`), { reason });
+  }
+
+  /**
+   * Delete seasonal lease (draft only)
+   */
+  async deleteById(id: string): Promise<void> {
+    await this.client.delete(this.buildPath(`/${id}`));
+  }
+
+  /**
+   * Generate allocations from seasonal lease
+   */
+  async generateAllocations(id: string): Promise<SingleResponse<{ count: number }>> {
+    return this.client.post(this.buildPath(`/${id}/generate-allocations`), {});
+  }
 }
 
 export const seasonalLeaseService = new SeasonalLeaseService();
+

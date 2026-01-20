@@ -8,10 +8,9 @@ import {
   Heading,
   Paragraph,
   Button,
-  Stack,
-  FormField,
   Select,
 } from '@digdir/designsystemet-react';
+import { Stack, FormField } from '../../primitives';
 import { useT } from '@xala/i18n';
 
 export interface PreferencesTabProps {
@@ -30,10 +29,10 @@ export function PreferencesTab({
   const t = useT();
 
   return (
-    <Stack spacing={6} data-testid={testId}>
+    <Stack spacing="var(--ds-spacing-6)" data-testid={testId}>
       {/* Language */}
       <Card>
-        <Stack spacing={4}>
+        <Stack spacing="var(--ds-spacing-4)">
           <div>
             <Heading level={3} data-size="sm" style={{ marginBottom: 'var(--ds-spacing-2)' }}>
               {t('common.spraak') || 'Språk'}
@@ -55,7 +54,7 @@ export function PreferencesTab({
 
       {/* Display Settings */}
       <Card>
-        <Stack spacing={4}>
+        <Stack spacing="var(--ds-spacing-4)">
           <div>
             <Heading level={3} data-size="sm" style={{ marginBottom: 'var(--ds-spacing-2)' }}>
               {t('common.utseende') || 'Utseende'}
@@ -79,7 +78,7 @@ export function PreferencesTab({
 
       {/* Session & Security */}
       <Card>
-        <Stack spacing={4}>
+        <Stack spacing="var(--ds-spacing-4)">
           <div>
             <Heading level={3} data-size="sm" style={{ marginBottom: 'var(--ds-spacing-2)' }}>
               {t('common.okt.og.sikkerhet') || 'Økt og sikkerhet'}

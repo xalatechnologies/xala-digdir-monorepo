@@ -298,6 +298,23 @@ export interface PermissionAssignmentQueryParams extends BaseQueryParams {
   rentalObjectId?: string;
 }
 
+/**
+ * Create permission assignment request (Org Admin only)
+ */
+export interface CreatePermissionAssignmentDTO {
+  organizationId: string;
+  userId: string;
+  rentalObjectId: string;
+  permissions: RentalObjectPermission[];
+}
+
+/**
+ * Update permission assignment request
+ */
+export interface UpdatePermissionAssignmentDTO {
+  permissions?: RentalObjectPermission[];
+}
+
 // =============================================================================
 // Case Handler Scope Entity & DTOs
 // =============================================================================

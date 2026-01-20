@@ -57,6 +57,31 @@ export interface TenantSettings {
   };
 }
 
+/**
+ * Setting category enum
+ */
+export type SettingCategory = 'general' | 'booking' | 'notification' | 'payment' | 'integration' | 'branding';
+
+/**
+ * Application settings (alias for TenantSettings)
+ */
+export type AppSettings = TenantSettings;
+
+/**
+ * Update settings DTO
+ */
+export interface UpdateSettingsDTO {
+  displayName?: string;
+  logo?: string;
+  primaryColor?: string;
+  timezone?: string;
+  currency?: string;
+  language?: string;
+  bookingSettings?: Partial<BookingSettingsConfig>;
+  notificationSettings?: Partial<NotificationSettings>;
+  paymentSettings?: Partial<PaymentSettings>;
+}
+
 // =============================================================================
 // Integration Settings
 // =============================================================================

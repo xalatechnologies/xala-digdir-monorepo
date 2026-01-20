@@ -1,4 +1,6 @@
 import type { Preview, Decorator } from '@storybook/react-vite';
+import { INITIAL_VIEWPORTS, MINIMAL_VIEWPORTS } from 'storybook/viewport';
+import { withThemeByDataAttribute } from '@storybook/addon-themes';
 import React from 'react';
 
 // Inter font from Google Fonts
@@ -11,7 +13,7 @@ import '@fontsource/inter/700.css';
 import './public/themes/digilist.css';
 import './public/themes/digilist-extensions.css';
 
-import { ThemeProvider, useTheme } from '../src/ThemeProvider';
+import { ThemeProvider } from '../src/ThemeProvider';
 import { I18nProvider } from '@xala/i18n';
 
 // Suppress React 18 act() warnings and WebSocket HMR noise in Storybook
@@ -62,19 +64,16 @@ if (typeof window !== 'undefined') {
 }
 
 /**
- * Theme decorator that wraps all stories with DS theme provider
- * Enables theme switching via Storybook toolbar
+ * Base decorator that wraps all stories with DS providers
+ * Theme switching handled by addon-themes
  */
-const withTheme: Decorator = (Story, context) => {
-  const theme = context.globals.theme || 'light';
-
+const withProviders: Decorator = (Story) => {
   return (
     <I18nProvider initialLocale="nb">
       <ThemeProvider>
-        <div 
-          data-color-scheme={theme} 
+        <div
           data-size="md"
-          style={{ 
+          style={{
             padding: 'var(--ds-spacing-4)',
             fontFamily: 'Inter, system-ui, sans-serif',
           }}
@@ -86,6 +85,20 @@ const withTheme: Decorator = (Story, context) => {
   );
 };
 
+/**
+ * Theme decorator using addon-themes for better toolbar integration
+ * Switches theme via data-color-scheme attribute
+ */
+const themeDecorator = withThemeByDataAttribute({
+  themes: {
+    light: 'light',
+    dark: 'dark',
+    auto: 'auto',
+  },
+  defaultTheme: 'light',
+  attributeName: 'data-color-scheme',
+});
+
 const preview: Preview = {
   parameters: {
     controls: {
@@ -93,6 +106,7 @@ const preview: Preview = {
         color: /(background|color)$/i,
         date: /Date$/i,
       },
+      expanded: true, // Show all controls expanded by default
     },
     docs: {
       toc: true,
@@ -106,38 +120,51 @@ const preview: Preview = {
     backgrounds: {
       disabled: true,
     },
+    viewport: {
+      viewports: {
+        ...MINIMAL_VIEWPORTS,
+        ...INITIAL_VIEWPORTS,
+        // Custom Norwegian municipal viewports
+        mobileNorway: {
+          name: 'Mobile (Norway standard)',
+          styles: { width: '375px', height: '667px' },
+          type: 'mobile',
+        },
+        tabletNorway: {
+          name: 'Tablet (Norway standard)',
+          styles: { width: '768px', height: '1024px' },
+          type: 'tablet',
+        },
+        desktopNorway: {
+          name: 'Desktop (Norway standard)',
+          styles: { width: '1280px', height: '800px' },
+          type: 'desktop',
+        },
+        accessibleLarge: {
+          name: 'Accessible (Large text)',
+          styles: { width: '1920px', height: '1080px' },
+          type: 'desktop',
+        },
+      },
+    },
     options: {
       storySort: {
         order: [
           'Overview',
           ['Introduction', 'Getting Started', 'Principles'],
           'Fundamentals',
-          ['Tokens', 'Typography', 'Colors', 'Spacing', 'Accessibility'],
+          ['Tokens', 'Typography', 'Colors', 'Spacing', 'Accessibility', 'Best Practices', 'Patterns', 'Theme Builder'],
           'Components',
+          'Composed',
           'Blocks',
+          'Primitives',
           'Patterns',
           'Contributing',
         ],
       },
     },
   },
-  globalTypes: {
-    theme: {
-      name: 'Theme',
-      description: 'Global theme for components',
-      defaultValue: 'light',
-      toolbar: {
-        icon: 'paintbrush',
-        items: [
-          { value: 'light', title: 'Light', icon: 'sun' },
-          { value: 'dark', title: 'Dark', icon: 'moon' },
-          { value: 'auto', title: 'Auto (System)', icon: 'browser' },
-        ],
-        dynamicTitle: true,
-      },
-    },
-  },
-  decorators: [withTheme],
+  decorators: [withProviders, themeDecorator],
   tags: ['autodocs'],
 };
 

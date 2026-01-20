@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
+import { expect, userEvent, within } from 'storybook/test';
 import { Textfield } from '@digdir/designsystemet-react';
 
 /**
@@ -37,12 +38,32 @@ export default meta;
 type Story = StoryObj;
 
 /**
- * Default text input
+ * Default text input with typing interaction test.
+ *
+ * This story tests:
+ * - Input can be focused
+ * - User can type into input
+ * - Value updates correctly
  */
 export const Default: Story = {
   render: () => (
     <Textfield label="Name" placeholder="Enter your name" />
   ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+
+    // Find the input by label
+    const input = canvas.getByLabelText('Name');
+
+    // Verify placeholder
+    await expect(input).toHaveAttribute('placeholder', 'Enter your name');
+
+    // Type into the input
+    await userEvent.type(input, 'Ola Nordmann');
+
+    // Verify value was typed
+    await expect(input).toHaveValue('Ola Nordmann');
+  },
 };
 
 /**

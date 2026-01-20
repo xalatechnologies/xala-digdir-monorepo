@@ -14,7 +14,7 @@ import type { ReportQueryParams, AuditQueryParams } from '../types/additional';
 import type { ReviewQueryParams } from '../types/review';
 import type { EconomyQueryParams } from '../types/economy';
 import type { SearchParams, TypeaheadParams, SavedFilterQueryParams, RecentSearchQueryParams } from '../types/search';
-import type { DiscountCodeQueryParams } from '../services/discount-code.service';
+import type { DiscountCodeQueryParams, ValidateDiscountCodeDTO } from '../types/additional';
 
 /**
  * Strongly-typed query key factory
@@ -295,6 +295,9 @@ export const queryKeys = {
       [...queryKeys.discountCodes.lists(), params] as const,
     details: () => [...queryKeys.discountCodes.all, 'detail'] as const,
     detail: (id: string) => [...queryKeys.discountCodes.details(), id] as const,
+    byCode: (code: string) => [...queryKeys.discountCodes.all, 'byCode', code] as const,
+    validate: (data: ValidateDiscountCodeDTO) => [...queryKeys.discountCodes.all, 'validate', data] as const,
+    stats: (id: string) => [...queryKeys.discountCodes.all, 'stats', id] as const,
   },
 
   // =========================================================================

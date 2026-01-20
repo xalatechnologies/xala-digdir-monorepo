@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
+import { fn, expect, userEvent, within } from 'storybook/test';
 import { Button } from '@digdir/designsystemet-react';
 import { PlusIcon, SaveIcon, TrashIcon } from '../../src/primitives';
 
@@ -32,15 +33,37 @@ Use \`data-testid="action-button"\` for E2E testing.
       },
     },
   },
+  args: {
+    // Use fn() to create a spy function for tracking clicks
+    onClick: fn(),
+  },
   argTypes: {
     variant: {
       control: 'select',
       options: ['primary', 'secondary', 'tertiary'],
       description: 'Visual style of the button',
+      table: {
+        defaultValue: { summary: 'primary' },
+      },
     },
     disabled: {
       control: 'boolean',
       description: 'Disables the button',
+      table: {
+        defaultValue: { summary: 'false' },
+      },
+    },
+    children: {
+      control: 'text',
+      description: 'Button content (text or elements)',
+    },
+    type: {
+      control: 'select',
+      options: ['button', 'submit', 'reset'],
+      description: 'HTML button type',
+      table: {
+        defaultValue: { summary: 'button' },
+      },
     },
   },
   tags: ['autodocs'],
@@ -50,12 +73,32 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 /**
- * Default button with primary variant
+ * Default button with primary variant.
+ *
+ * This story includes an interaction test that verifies:
+ * - Button is rendered and visible
+ * - Button can be clicked
+ * - Click handler is called
  */
 export const Default: Story = {
   args: {
     children: 'Button',
     variant: 'primary',
+  },
+  play: async ({ canvasElement, args }) => {
+    const canvas = within(canvasElement);
+
+    // Find the button
+    const button = canvas.getByRole('button', { name: 'Button' });
+
+    // Verify button is visible
+    await expect(button).toBeVisible();
+
+    // Click the button
+    await userEvent.click(button);
+
+    // Verify onClick was called
+    await expect(args.onClick).toHaveBeenCalledTimes(1);
   },
 };
 
@@ -108,12 +151,30 @@ export const WithIcons: Story = {
 };
 
 /**
- * Disabled state
+ * Disabled state.
+ *
+ * This story tests that disabled buttons:
+ * - Have the disabled attribute
+ * - Do not fire onClick when clicked
  */
 export const Disabled: Story = {
   args: {
     children: 'Disabled Button',
     disabled: true,
+  },
+  play: async ({ canvasElement, args }) => {
+    const canvas = within(canvasElement);
+
+    const button = canvas.getByRole('button', { name: 'Disabled Button' });
+
+    // Verify button has disabled attribute
+    await expect(button).toBeDisabled();
+
+    // Try to click the button (should not trigger onClick)
+    await userEvent.click(button);
+
+    // onClick should NOT have been called because button is disabled
+    await expect(args.onClick).not.toHaveBeenCalled();
   },
 };
 

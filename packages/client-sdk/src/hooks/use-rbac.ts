@@ -329,7 +329,7 @@ export function usePermissionAssignmentsByUser(
 ) {
   return useQuery({
     queryKey: queryKeys.permissionAssignments.byUser(userId),
-    queryFn: () => permissionAssignmentService.getByUser(userId, params),
+    queryFn: () => permissionAssignmentService.getByUser(userId),
     enabled: !!userId,
   });
 }
@@ -344,10 +344,7 @@ export function usePermissionAssignmentsByRentalObject(
 ) {
   return useQuery({
     queryKey: queryKeys.permissionAssignments.byRentalObject(organizationId, rentalObjectId),
-    queryFn: () => permissionAssignmentService.getByRentalObject(rentalObjectId, {
-      ...params,
-      organizationId,
-    }),
+    queryFn: () => permissionAssignmentService.getByRentalObject(organizationId, rentalObjectId),
     enabled: !!organizationId && !!rentalObjectId,
   });
 }
@@ -363,7 +360,7 @@ export function useMemberPermissions(
 ) {
   return useQuery({
     queryKey: queryKeys.permissionAssignments.forOrgRentalObject(organizationId, rentalObjectId, userId),
-    queryFn: () => permissionAssignmentService.getByMember(organizationId, rentalObjectId, userId),
+    queryFn: () => permissionAssignmentService.getByMember(organizationId, userId),
     enabled: !!organizationId && !!rentalObjectId && !!userId && (options?.enabled ?? true),
   });
 }
@@ -374,7 +371,7 @@ export function useMemberPermissions(
 export function useUserPermissionsSummary(organizationId: string, userId: string) {
   return useQuery({
     queryKey: [...queryKeys.permissionAssignments.byUser(userId), 'summary', organizationId],
-    queryFn: () => permissionAssignmentService.getUserPermissionsSummary(organizationId, userId),
+    queryFn: () => permissionAssignmentService.getUserPermissionsSummary(userId),
     enabled: !!organizationId && !!userId,
   });
 }
@@ -435,7 +432,7 @@ export function useUpdatePermissionAssignment() {
 
   return useMutation({
     mutationFn: ({ id, permissions }: { id: string; permissions: RentalObjectPermission[] }) =>
-      permissionAssignmentService.update(id, permissions),
+      permissionAssignmentService.update(id, { permissions }),
     onSuccess: (_, { id }) => {
       queryClient.invalidateQueries({ queryKey: queryKeys.permissionAssignments.detail(id) });
       queryClient.invalidateQueries({ queryKey: queryKeys.permissionAssignments.lists() });
@@ -452,26 +449,9 @@ export function useRevokePermissions() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: ({
-      organizationId,
-      rentalObjectId,
-      userId,
-      reason,
-    }: {
-      organizationId: string;
-      rentalObjectId: string;
-      userId: string;
-      reason?: string;
-    }) => permissionAssignmentService.revoke(organizationId, rentalObjectId, userId, reason),
-    onSuccess: (_, variables) => {
+    mutationFn: (id: string) => permissionAssignmentService.revoke(id),
+    onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: queryKeys.permissionAssignments.all });
-      queryClient.invalidateQueries({
-        queryKey: queryKeys.permissionAssignments.forOrgRentalObject(
-          variables.organizationId,
-          variables.rentalObjectId,
-          variables.userId
-        ),
-      });
       queryClient.invalidateQueries({ queryKey: queryKeys.rbac.capabilities() });
     },
   });
@@ -512,12 +492,7 @@ export function useCheckRentalObjectPermission(
       permission,
     ],
     queryFn: () =>
-      permissionAssignmentService.checkPermission(
-        organizationId,
-        userId,
-        rentalObjectId,
-        permission
-      ),
+      permissionAssignmentService.checkPermission(userId, permission.toString()),
     enabled:
       !!organizationId &&
       !!userId &&
@@ -534,7 +509,7 @@ export function useBulkAssignPermissions() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: ({
+    mutationFn: async ({
       organizationId,
       rentalObjectId,
       assignments,
@@ -542,7 +517,15 @@ export function useBulkAssignPermissions() {
       organizationId: string;
       rentalObjectId: string;
       assignments: { userId: string; permissions: RentalObjectPermission[] }[];
-    }) => permissionAssignmentService.bulkAssign(organizationId, rentalObjectId, assignments),
+    }) => {
+      // Process assignments sequentially for each user
+      const results = await Promise.all(
+        assignments.map(a => 
+          permissionAssignmentService.bulkAssign(a.userId, a.permissions.map(p => p.toString()))
+        )
+      );
+      return results[0];
+    },
     onSuccess: (_, variables) => {
       queryClient.invalidateQueries({ queryKey: queryKeys.permissionAssignments.lists() });
       queryClient.invalidateQueries({
@@ -577,12 +560,11 @@ export function useCopyPermissions() {
       fromUserId: string;
       toUserId: string;
     }) =>
-      permissionAssignmentService.copyPermissions(
-        organizationId,
-        rentalObjectId,
-        fromUserId,
-        toUserId
-      ),
+      permissionAssignmentService.copyPermissions({
+        sourceUserId: fromUserId,
+        targetUserId: toUserId,
+        orgId: organizationId,
+      }),
     onSuccess: (_, variables) => {
       queryClient.invalidateQueries({ queryKey: queryKeys.permissionAssignments.lists() });
       queryClient.invalidateQueries({

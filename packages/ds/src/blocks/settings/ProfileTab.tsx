@@ -9,13 +9,9 @@ import {
   Heading,
   Paragraph,
   Button,
-  Stack,
-  FormField,
   Textfield,
-  SaveIcon,
-  UserIcon,
-  CameraIcon,
 } from '@digdir/designsystemet-react';
+import { Stack, FormField, SaveIcon, UserIcon, CameraIcon } from '../../primitives';
 import { useT } from '@xala/i18n';
 import type { Address } from '@digilist/client-sdk/types';
 
@@ -66,10 +62,10 @@ export function ProfileTab({
   };
 
   return (
-    <Stack spacing={6} data-testid={testId}>
+    <Stack spacing="var(--ds-spacing-6)" data-testid={testId}>
       {/* Avatar Section */}
       <Card>
-        <Stack spacing={5}>
+        <Stack spacing="var(--ds-spacing-5)">
           <div>
             <Heading level={3} data-size="sm" style={{ marginBottom: 'var(--ds-spacing-3)' }}>
               {t('common.profilbilde') || 'Profilbilde'}
@@ -106,7 +102,7 @@ export function ProfileTab({
               )}
             </div>
 
-            <Stack spacing={2}>
+            <Stack spacing="var(--ds-spacing-2)">
               <input
                 ref={fileInputRef}
                 type="file"
@@ -135,7 +131,7 @@ export function ProfileTab({
 
       {/* Personal Information */}
       <Card>
-        <Stack spacing={5}>
+        <Stack spacing="var(--ds-spacing-5)">
           <div>
             <Heading level={3} data-size="sm" style={{ marginBottom: 'var(--ds-spacing-3)' }}>
               {t('common.personlig.informasjon') || 'Personlig informasjon'}
@@ -145,7 +141,7 @@ export function ProfileTab({
             </Paragraph>
           </div>
 
-          <Stack spacing={4}>
+          <Stack spacing="var(--ds-spacing-4)">
             <FormField label={t('common.fullt_navn') || 'Fullt navn'} required>
               <Textfield
                 value={profileData.name}

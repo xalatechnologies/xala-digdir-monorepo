@@ -18,9 +18,14 @@
   "scripts": {
     "build": "echo 'DS package is source-only, consumed directly by bundlers'",
     "typecheck": "tsc --noEmit",
-    "storybook": "storybook dev -p 6006",
+    "storybook": "storybook dev -p 6100",
     "storybook:build": "storybook build -o storybook-static",
     "storybook:test": "test-storybook",
+    "storybook:test:ci": "test-storybook --ci",
+    "test": "vitest",
+    "test:run": "vitest run",
+    "test:coverage": "vitest run --coverage",
+    "test:a11y": "test-storybook --url http://localhost:6100 --config-dir .storybook",
     "docs:coverage": "node scripts/check-docs-coverage.js"
   },
   "dependencies": {
@@ -42,12 +47,15 @@
     "@storybook/addon-a11y": "^10.1.11",
     "@storybook/addon-docs": "^10.1.11",
     "@storybook/addon-links": "^10.1.11",
+    "@storybook/addon-themes": "^10.1.11",
+    "@storybook/addon-vitest": "^10.1.11",
     "@storybook/react": "^10.1.11",
     "@storybook/react-vite": "^10.1.11",
     "@storybook/test-runner": "^0.24.2",
     "@types/mapbox-gl": "^3.4.1",
     "@types/react": "^18.3.5",
     "@types/react-dom": "^18.3.0",
+    "@vitest/browser-playwright": "^4.0.17",
     "eslint-plugin-storybook": "^10.1.11",
     "storybook": "^10.1.11"
   }

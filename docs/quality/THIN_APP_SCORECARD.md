@@ -38,7 +38,7 @@
 | Role checks in UI | 29 | High | -2.5 |
 | Direct fetch calls | 14 | High | -2 |
 | Emoji usages | 0 | Low | 0 |
-| CSS files | 1 | Medium | -0.5 |
+| CSS files | 0 | Medium | 0 |
 
 ---
 

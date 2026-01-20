@@ -89,3 +89,15 @@ See: `docs/operations/SCRIPTS_CLEANUP_2026-01-20.md`
 **Status:** ✅ Complete  
 **Impact:** None (only organization change)  
 **Breaking Changes:** Update paths if scripts are referenced externally
+
+---
+
+## Related Cleanups
+
+This is part of a larger repository organization effort:
+
+1. ✅ **Scripts Cleanup** (this document) - Moved 8 scripts to `scripts/`
+2. ✅ **Documentation Cleanup** - Moved 21 documentation files to `docs/`
+   - See: `docs/operations/DOCUMENTATION_CLEANUP_2026-01-20.md`
+
+**Result:** Clean, organized root directory following project standards

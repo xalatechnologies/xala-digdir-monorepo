@@ -66,12 +66,9 @@ export interface OrganizationQueryParams extends BaseQueryParams {
 // User Entity
 // =============================================================================
 
-export interface Address {
-  street?: string;
-  city?: string;
-  postalCode?: string;
-  country?: string;
-}
+// Re-export Address from auth.ts (canonical location)
+import type { Address } from './auth';
+export type { Address };
 
 export interface User extends TenantEntity {
   email: string;

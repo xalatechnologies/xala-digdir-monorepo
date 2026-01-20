@@ -368,6 +368,31 @@ export interface CreateDiscountCodeDTO {
   actorTypes?: string[];
 }
 
+export interface UpdateDiscountCodeDTO {
+  description?: string;
+  value?: number;
+  minBookingValue?: number;
+  maxUses?: number;
+  validFrom?: string;
+  validUntil?: string;
+  rentalObjectIds?: string[];
+  actorTypes?: string[];
+  isActive?: boolean;
+}
+
+export interface DiscountCodeQueryParams extends BaseQueryParams {
+  isActive?: boolean;
+  type?: DiscountType;
+  search?: string;
+}
+
+export interface ValidateDiscountCodeDTO {
+  code: string;
+  rentalObjectId?: string;
+  bookingValue?: number;
+  actorType?: string;
+}
+
 export interface ValidateDiscountResult {
   valid: boolean;
   code?: DiscountCode;
