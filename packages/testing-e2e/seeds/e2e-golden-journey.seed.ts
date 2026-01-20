@@ -17,7 +17,7 @@
 import { drizzle } from 'drizzle-orm/postgres-js';
 import postgres from 'postgres';
 import { eq, and } from 'drizzle-orm';
-import * as schema from '@digilist/database-schema';
+import { tenants, users, rentalObjects, bookings, blocks } from '@digilist/database-schema';
 import { randomUUID } from 'crypto';
 
 // =============================================================================
@@ -30,21 +30,18 @@ const E2E_LISTING_KEY = 'E2E_LISTING_1';
 const E2E_USERS = {
   citizen: {
     email: 'e2e.citizen@example.com',
-    firstName: 'E2E',
-    lastName: 'Citizen',
-    role: 'CITIZEN' as const,
+    name: 'E2E Citizen',
+    role: 'member' as const,
   },
   caseHandler: {
     email: 'e2e.casehandler@example.com',
-    firstName: 'E2E',
-    lastName: 'Case Handler',
-    role: 'CASE_HANDLER' as const,
+    name: 'E2E Case Handler',
+    role: 'case_handler' as const,
   },
   admin: {
     email: 'e2e.admin@example.com',
-    firstName: 'E2E',
-    lastName: 'Admin',
-    role: 'TENANT_ADMIN' as const,
+    name: 'E2E Admin',
+    role: 'tenant_admin' as const,
   },
 } as const;
 
@@ -167,8 +164,8 @@ async function createE2ETenant(db: any) {
   // Check if tenant exists
   const existing = await db
     .select()
-    .from(schema.tenants)
-    .where(eq(schema.tenants.slug, E2E_TENANT_KEY))
+    .from(tenants)
+    .where(eq(tenants.slug, E2E_TENANT_KEY))
     .limit(1);
   
   if (existing.length > 0) {
@@ -178,21 +175,21 @@ async function createE2ETenant(db: any) {
   
   // Create new tenant
   const [tenant] = await db
-    .insert(schema.tenants)
+    .insert(tenants)
     .values({
       id: randomUUID(),
       name: 'E2E Test Tenant',
       slug: E2E_TENANT_KEY,
-      status: 'ACTIVE',
-      featureFlags: {
-        booking: true,
-        messaging: true,
-        approvalWorkflow: true,
-        auditLog: true,
-      },
+      status: 'active',
       metadata: {
         purpose: 'e2e-testing',
         createdBy: 'e2e-seed-script',
+        featureFlags: {
+          booking: true,
+          messaging: true,
+          approvalWorkflow: true,
+          auditLog: true,
+        },
       },
     })
     .returning();
@@ -207,11 +204,11 @@ async function createTestUsers(db: any, tenantId: string) {
     // Check if user exists
     const existing = await db
       .select()
-      .from(schema.users)
+      .from(users)
       .where(
         and(
-          eq(schema.users.email, userData.email),
-          eq(schema.users.tenantId, tenantId)
+          eq(users.email, userData.email),
+          eq(users.tenantId, tenantId)
         )
       )
       .limit(1);
@@ -224,16 +221,14 @@ async function createTestUsers(db: any, tenantId: string) {
     
     // Create new user
     const [user] = await db
-      .insert(schema.users)
+      .insert(users)
       .values({
         id: randomUUID(),
         tenantId,
         email: userData.email,
-        firstName: userData.firstName,
-        lastName: userData.lastName,
+        name: userData.name,
         role: userData.role,
-        status: 'ACTIVE',
-        emailVerified: true,
+        status: 'active',
       })
       .returning();
     
@@ -247,11 +242,11 @@ async function createTestRentalObject(db: any, tenantId: string) {
   // Check if rental object exists
   const existing = await db
     .select()
-    .from(schema.rentalObjects)
+    .from(rentalObjects)
     .where(
       and(
-        eq(schema.rentalObjects.tenantId, tenantId),
-        eq(schema.rentalObjects.metadata, { testKey: E2E_LISTING_KEY })
+        eq(rentalObjects.tenantId, tenantId),
+        eq(rentalObjects.metadata, { testKey: E2E_LISTING_KEY } as any)
       )
     )
     .limit(1);
@@ -263,7 +258,7 @@ async function createTestRentalObject(db: any, tenantId: string) {
   
   // Create new rental object
   const [rentalObject] = await db
-    .insert(schema.rentalObjects)
+    .insert(rentalObjects)
     .values({
       id: randomUUID(),
       tenantId,
@@ -271,26 +266,26 @@ async function createTestRentalObject(db: any, tenantId: string) {
       slug: 'e2e-test-hall',
       description: 'Test rental object for E2E Golden Journey tests',
       categoryKey: 'SPORTS_HALL',
-      status: 'PUBLISHED',
+      status: 'published',
       requiresApproval: true,
-      bookingTimeMode: 'SLOT',
+      timeMode: 'SLOT',
       features: {
         hasCalendar: true,
         supportsSingleSlot: true,
         supportsRecurring: true,
       },
-      openingHours: {
-        1: { open: '08:00', close: '22:00' }, // Monday
-        2: { open: '08:00', close: '22:00' }, // Tuesday
-        3: { open: '08:00', close: '22:00' }, // Wednesday
-        4: { open: '08:00', close: '22:00' }, // Thursday
-        5: { open: '08:00', close: '22:00' }, // Friday
-        6: { open: '10:00', close: '18:00' }, // Saturday
-        0: { open: '10:00', close: '18:00' }, // Sunday
-      },
       metadata: {
         testKey: E2E_LISTING_KEY,
         purpose: 'e2e-golden-journey',
+        openingHours: {
+          1: { open: '08:00', close: '22:00' }, // Monday
+          2: { open: '08:00', close: '22:00' }, // Tuesday
+          3: { open: '08:00', close: '22:00' }, // Wednesday
+          4: { open: '08:00', close: '22:00' }, // Thursday
+          5: { open: '08:00', close: '22:00' }, // Friday
+          6: { open: '10:00', close: '18:00' }, // Saturday
+          0: { open: '10:00', close: '18:00' }, // Sunday
+        },
       },
     })
     .returning();
@@ -305,26 +300,26 @@ async function createTestSlots(db: any, tenantId: string, rentalObjectId: string
   
   // Clean up existing test slots for this rental object
   await db
-    .delete(schema.bookings)
+    .delete(bookings)
     .where(
       and(
-        eq(schema.bookings.tenantId, tenantId),
-        eq(schema.bookings.rentalObjectId, rentalObjectId)
+        eq(bookings.tenantId, tenantId),
+        eq(bookings.rentalObjectId, rentalObjectId)
       )
     );
   
   await db
-    .delete(schema.blocks)
+    .delete(blocks)
     .where(
       and(
-        eq(schema.blocks.tenantId, tenantId),
-        eq(schema.blocks.rentalObjectId, rentalObjectId)
+        eq(blocks.tenantId, tenantId),
+        eq(blocks.rentalObjectId, rentalObjectId)
       )
     );
   
   // Create booked slot
   const [bookedSlot] = await db
-    .insert(schema.bookings)
+    .insert(bookings)
     .values({
       id: randomUUID(),
       tenantId,
@@ -333,26 +328,28 @@ async function createTestSlots(db: any, tenantId: string, rentalObjectId: string
       status: 'confirmed',
       startTime: bookedSlotTimes.startTime,
       endTime: bookedSlotTimes.endTime,
-      bookingMode: 'SINGLE_SLOT',
-      totalPrice: 500,
+      totalPrice: '500.00',
       currency: 'NOK',
       metadata: {
         purpose: 'e2e-booked-slot',
+        bookingMode: 'SINGLE_SLOT',
       },
     })
     .returning();
   
   // Create blocked slot
   const [blockedSlot] = await db
-    .insert(schema.blocks)
+    .insert(blocks)
     .values({
       id: randomUUID(),
       tenantId,
       rentalObjectId,
-      startTime: blockedSlotTimes.startTime,
-      endTime: blockedSlotTimes.endTime,
+      title: 'E2E Test Block',
       reason: 'E2E test blocked slot',
-      blockType: 'MAINTENANCE',
+      startDate: blockedSlotTimes.startTime,
+      endDate: blockedSlotTimes.endTime,
+      status: 'active',
+      visibility: 'public',
       metadata: {
         purpose: 'e2e-blocked-slot',
       },
@@ -362,12 +359,12 @@ async function createTestSlots(db: any, tenantId: string, rentalObjectId: string
   return {
     freeSlot: freeSlotTimes,
     bookedSlot: {
-      ...bookedSlot,
+      id: bookedSlot.id,
       startTime: bookedSlotTimes.startTime,
       endTime: bookedSlotTimes.endTime,
     },
     blockedSlot: {
-      ...blockedSlot,
+      id: blockedSlot.id,
       startTime: blockedSlotTimes.startTime,
       endTime: blockedSlotTimes.endTime,
     },

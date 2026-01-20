@@ -16,7 +16,14 @@
     "test:auth": "playwright test suites/auth",
     "test:accessibility": "playwright test suites/accessibility",
     "test:scenarios": "playwright test suites/scenarios",
-    "report": "playwright show-report"
+    "test:golden-journey": "playwright test --config=playwright-golden-journey.config.ts",
+    "test:golden-journey:approve": "playwright test --config=playwright-golden-journey.config.ts golden-journey-full.spec.ts",
+    "test:golden-journey:reject": "playwright test --config=playwright-golden-journey.config.ts golden-journey-reject.spec.ts",
+    "test:golden-journey:ui": "playwright test --config=playwright-golden-journey.config.ts --ui",
+    "test:golden-journey:debug": "playwright test --config=playwright-golden-journey.config.ts --debug",
+    "seed:e2e": "tsx seeds/e2e-golden-journey.seed.ts",
+    "report": "playwright show-report",
+    "report:golden-journey": "playwright show-report test-results/html"
   },
   "dependencies": {
     "@digilist/api": "workspace:*"
@@ -25,7 +32,14 @@
     "@playwright/test": "^1.40.0",
     "@types/node": "^20.19.30",
     "axe-core": "^4.8.0",
+    "drizzle-orm": "^0.36.4",
     "msw": "^2.12.7",
+    "postgres": "^3.4.5",
+    "tsx": "^4.19.2",
     "typescript": "^5.7.2"
+  },
+  "dependencies": {
+    "@digilist/api": "workspace:*",
+    "@digilist/database-schema": "workspace:*"
   }
 }
