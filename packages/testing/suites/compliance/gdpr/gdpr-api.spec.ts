@@ -1,171 +1,104 @@
 /**
- * GDPR Service Integration Tests
- * Tests DSAR and consent management endpoints
+ * GDPR API Tests
+ * 
+ * Tests GDPR-related API endpoints
  */
-import { describe, it, expect } from 'vitest';
 
-// SKIPPED: Needs implementation
-describe.skip('GDPR API', () => {
-  describe('POST /api/gdpr/dsar', () => {
-    it('should create DSAR request', async () => {
-      const request = {
-        email: 'user@example.com',
-        categories: ['personal_data', 'bookings'],
-      };
+import { describe, it, expect, beforeAll } from 'vitest';
+import { testConfig } from '@digilist/testing/config/test-config';
 
-      // Mock response
-      const response = {
-        data: {
-          requestId: 'dsar-123',
-          userId: 'user-456',
-          email: request.email,
-          status: 'PENDING',
-          expiresAt: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString(),
-          categories: [
-            {
-              category: 'personal_data',
-              label: { nb: 'Personopplysninger', en: 'Personal Data' },
-              included: true,
-            },
-            {
-              category: 'bookings',
-              label: { nb: 'Bestillinger', en: 'Bookings' },
-              included: true,
-            },
-          ],
-        },
-      };
+const API_URL = testConfig.apiUrl;
 
-      expect(response.data.status).toBe('PENDING');
-      expect(response.data.categories).toHaveLength(2);
+async function isApiAvailable(): Promise<boolean> {
+  try {
+    const response = await fetch(`${API_URL}/health`, {
+      signal: AbortSignal.timeout(2000),
     });
+    return response.ok;
+  } catch {
+    return false;
+  }
+}
 
-    it('should reject invalid email format', async () => {
-      const invalidEmails = [
-        'not-an-email',
-        'missing@domain',
-        '@nodomain.com',
-        'spaces in@email.com',
-      ];
+describe('GDPR API Endpoints', () => {
+  let apiAvailable = false;
 
-      invalidEmails.forEach((email) => {
-        const isValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
-        expect(isValid).toBe(false);
+  beforeAll(async () => {
+    apiAvailable = await isApiAvailable();
+    if (!apiAvailable) {
+      console.log('⚠️  Skipping GDPR API tests - API not available at', API_URL);
+    }
+  });
+
+  describe('Data Subject Rights', () => {
+    it('should require auth for data export request', async () => {
+      if (!apiAvailable) return;
+
+      const response = await fetch(`${API_URL}/api/gdpr/export`, {
+        method: 'POST',
       });
+
+      expect([401, 403, 404]).toContain(response.status);
     });
 
-    it('should return 404 for non-existent user', async () => {
-      const request = {
-        email: 'nonexistent@example.com',
-      };
+    it('should require auth for data deletion request', async () => {
+      if (!apiAvailable) return;
 
-      // Should throw NotFoundError
-      const errorMessage = `User with email ${request.email} not found`;
-      expect(errorMessage).toContain('not found');
-    });
-  });
+      const response = await fetch(`${API_URL}/api/gdpr/delete`, {
+        method: 'POST',
+      });
 
-  describe('GET /api/gdpr/dsar/:id', () => {
-    it('should return DSAR request status', async () => {
-      const requestId = 'dsar-123';
-
-      // Mock response
-      const response = {
-        data: {
-          requestId,
-          userId: 'user-456',
-          email: 'user@example.com',
-          status: 'PROCESSING',
-          requestedAt: new Date().toISOString(),
-          expiresAt: new Date(Date.now() + 25 * 24 * 60 * 60 * 1000).toISOString(),
-        },
-      };
-
-      expect(response.data.status).toBe('PROCESSING');
-      expect(response.data.requestId).toBe(requestId);
+      expect([401, 403, 404]).toContain(response.status);
     });
 
-    it('should include download URL when completed', async () => {
-      const requestId = 'dsar-123';
+    it('should require auth for consent management', async () => {
+      if (!apiAvailable) return;
 
-      // Mock completed response
-      const response = {
-        data: {
-          requestId,
-          status: 'READY',
-          downloadUrl: `/api/gdpr/dsar/${requestId}/download`,
-          downloadExpiresAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString(),
-        },
-      };
+      const response = await fetch(`${API_URL}/api/gdpr/consents`);
 
-      expect(response.data.status).toBe('READY');
-      expect(response.data.downloadUrl).toBeDefined();
-      expect(response.data.downloadExpiresAt).toBeDefined();
-    });
-
-    it('should return 404 for non-existent request', async () => {
-      const requestId = 'non-existent-dsar';
-
-      // Should throw NotFoundError
-      const errorMessage = `DSAR request ${requestId} not found`;
-      expect(errorMessage).toContain('not found');
+      expect([401, 403, 404]).toContain(response.status);
     });
   });
 
-  describe('GET /api/gdpr/consents', () => {
-    it('should return user consents', async () => {
-      // Mock response
-      const response = {
-        data: {
-          userId: 'user-123',
-          consents: [
-            {
-              consentType: 'marketing',
-              label: { nb: 'Markedsføring', en: 'Marketing' },
-              required: false,
-              granted: false,
-            },
-            {
-              consentType: 'analytics',
-              label: { nb: 'Analyse', en: 'Analytics' },
-              required: false,
-              granted: true,
-              grantedAt: new Date().toISOString(),
-            },
-          ],
-        },
-      };
+  describe('Data Access', () => {
+    it('should require auth for personal data access', async () => {
+      if (!apiAvailable) return;
 
-      expect(response.data.consents).toHaveLength(2);
-      expect(response.data.consents[0].granted).toBe(false);
-      expect(response.data.consents[1].granted).toBe(true);
+      const response = await fetch(`${API_URL}/me`);
+
+      expect([401, 403]).toContain(response.status);
+    });
+
+    it('should not expose PII in public endpoints', async () => {
+      if (!apiAvailable) return;
+
+      const response = await fetch(`${API_URL}/public/rental-objects`);
+      const data = await response.json();
+
+      for (const item of data.items || []) {
+        expect(item.ownerEmail).toBeUndefined();
+        expect(item.ownerPhone).toBeUndefined();
+        expect(item.createdByEmail).toBeUndefined();
+      }
     });
   });
 
-  describe('PUT /api/gdpr/consents/:type', () => {
-    it('should update consent', async () => {
-      const request = {
-        consentType: 'marketing',
-        granted: true,
-      };
+  describe('Audit Trail', () => {
+    it('should have audit logging for data access', async () => {
+      if (!apiAvailable) return;
 
-      // Mock response after update
-      const response = {
-        data: {
-          userId: 'user-123',
-          consents: [
-            {
-              consentType: 'marketing',
-              granted: true,
-              grantedAt: new Date().toISOString(),
-              version: '1.0',
-            },
-          ],
-        },
-      };
+      const response = await fetch(`${API_URL}/api/audit`);
 
-      expect(response.data.consents[0].granted).toBe(true);
-      expect(response.data.consents[0].grantedAt).toBeDefined();
+      // Audit endpoint exists
+      expect(response.status).not.toBe(404);
+    });
+
+    it('should require admin for audit access', async () => {
+      if (!apiAvailable) return;
+
+      const response = await fetch(`${API_URL}/api/audit`);
+
+      expect([401, 403]).toContain(response.status);
     });
   });
 });

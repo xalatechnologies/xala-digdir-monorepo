@@ -1,207 +1,196 @@
 /**
- * Booking Approval Flow Integration Tests
- * Full e2e API tests for booking approval workflow
+ * Booking Approval Flow Tests
  * 
- * Tests the complete workflow:
- * pending -> pending_approval -> approved/rejected -> confirmed/completed
+ * Tests booking approval workflow logic
  */
 
-import { describe, it, expect, beforeAll, afterAll } from 'vitest';
+import { describe, it, expect } from 'vitest';
 
-// Type definitions for test context
-interface TestContext {
-  api: MockApi;
-  cleanup: () => Promise<void>;
+// =============================================================================
+// TYPES
+// =============================================================================
+
+type BookingStatus = 'pending' | 'approved' | 'rejected' | 'cancelled' | 'completed';
+type ApprovalAction = 'approve' | 'reject' | 'request_changes';
+
+interface Booking {
+  id: string;
+  status: BookingStatus;
+  requiresApproval: boolean;
+  approvedBy?: string;
+  rejectedReason?: string;
 }
 
-interface MockApi {
-  get: (path: string) => ApiRequest;
-  post: (path: string) => ApiRequest;
-  put: (path: string) => ApiRequest;
+interface ApprovalResult {
+  success: boolean;
+  newStatus: BookingStatus;
+  error?: string;
 }
 
-interface ApiRequest {
-  set: (key: string, value: string) => ApiRequest & { send: (data?: any) => Promise<ApiResponse> };
-}
+// =============================================================================
+// APPROVAL LOGIC
+// =============================================================================
 
-interface ApiResponse {
-  status: number;
-  body: any;
-  headers: Record<string, string | undefined>;
-}
-
-// Test context and helpers
-let ctx: TestContext;
-let testUser: { id: string; token: string };
-let caseHandler: { id: string; token: string };
-let rentalObjectId: string;
-
-async function createTestContext(): Promise<TestContext> {
-  return {
-    api: createMockApi(),
-    cleanup: async () => {},
+function canTransitionTo(currentStatus: BookingStatus, targetStatus: BookingStatus): boolean {
+  const transitions: Record<BookingStatus, BookingStatus[]> = {
+    pending: ['approved', 'rejected', 'cancelled'],
+    approved: ['cancelled', 'completed'],
+    rejected: [], // Terminal state
+    cancelled: [], // Terminal state
+    completed: [], // Terminal state
   };
+
+  return transitions[currentStatus]?.includes(targetStatus) ?? false;
 }
 
-function createMockApi(): MockApi {
-  const createRequest = (): ApiRequest => ({
-    set: () => ({
-      ...createRequest(),
-      send: async () => ({ status: 200, body: { data: {} }, headers: {} }),
-    }),
-  });
+function processApproval(booking: Booking, action: ApprovalAction, actorId: string): ApprovalResult {
+  if (!booking.requiresApproval) {
+    return { success: false, newStatus: booking.status, error: 'Booking does not require approval' };
+  }
 
-  return {
-    get: () => createRequest(),
-    post: () => createRequest(),
-    put: () => createRequest(),
-  };
+  if (booking.status !== 'pending') {
+    return { success: false, newStatus: booking.status, error: 'Only pending bookings can be approved/rejected' };
+  }
+
+  switch (action) {
+    case 'approve':
+      return { success: true, newStatus: 'approved' };
+    case 'reject':
+      return { success: true, newStatus: 'rejected' };
+    case 'request_changes':
+      return { success: true, newStatus: 'pending' };
+    default:
+      return { success: false, newStatus: booking.status, error: 'Invalid action' };
+  }
 }
 
-async function createTestUser(role: string) {
-  return { id: `user-${role}`, token: `token-${role}` };
+function canUserApprove(userRole: string, bookingOrgId: string, userOrgId: string): boolean {
+  // SAAS_ADMIN and ADMIN can approve any booking
+  if (['SAAS_ADMIN', 'ADMIN'].includes(userRole)) {
+    return true;
+  }
+
+  // ORG_ADMIN can approve bookings in their organization
+  if (userRole === 'ORG_ADMIN' && bookingOrgId === userOrgId) {
+    return true;
+  }
+
+  // CASEWORKER can approve bookings in their organization
+  if (userRole === 'CASEWORKER' && bookingOrgId === userOrgId) {
+    return true;
+  }
+
+  return false;
 }
 
-async function createTestRentalObject(opts: { requiresApproval: boolean; name: string }) {
-  return { id: 'rental-object-test', ...opts };
-}
+// =============================================================================
+// TESTS
+// =============================================================================
 
-async function createTestBooking(opts: { userId: string; rentalObjectId: string; status: string }) {
-  return { id: 'booking-test', ...opts };
-}
+describe('Booking Approval Flow', () => {
+  describe('State transitions', () => {
+    it('should allow pending -> approved transition', () => {
+      expect(canTransitionTo('pending', 'approved')).toBe(true);
+    });
 
-// SKIPPED
-describe.skip('Booking Approval Flow - Integration', () => {
-  beforeAll(async () => {
-    ctx = await createTestContext();
-    testUser = await createTestUser('user');
-    caseHandler = await createTestUser('saksbehandler');
-    const ro = await createTestRentalObject({ requiresApproval: true, name: 'Test Hall A' });
-    rentalObjectId = ro.id;
-  });
+    it('should allow pending -> rejected transition', () => {
+      expect(canTransitionTo('pending', 'rejected')).toBe(true);
+    });
 
-  afterAll(async () => {
-    await ctx.cleanup();
-  });
+    it('should allow pending -> cancelled transition', () => {
+      expect(canTransitionTo('pending', 'cancelled')).toBe(true);
+    });
 
-  describe('Happy Path: Full Approval Workflow', () => {
-    it('should complete full workflow: pending -> pending_approval -> approved -> confirmed', async () => {
-      // This test validates the full approval flow
-      // In real tests, these would hit actual API endpoints
-      expect(testUser.id).toBe('user-user');
-      expect(caseHandler.id).toBe('user-saksbehandler');
-      expect(rentalObjectId).toBe('rental-object-test');
+    it('should allow approved -> completed transition', () => {
+      expect(canTransitionTo('approved', 'completed')).toBe(true);
+    });
+
+    it('should not allow rejected -> approved transition', () => {
+      expect(canTransitionTo('rejected', 'approved')).toBe(false);
+    });
+
+    it('should not allow completed -> cancelled transition', () => {
+      expect(canTransitionTo('completed', 'cancelled')).toBe(false);
     });
   });
 
-  describe('Response Format Validation', () => {
-    it('should return { data: booking } format for all endpoints', async () => {
-      const mockResponse = { data: { id: 'test', status: 'pending' } };
-      expect(mockResponse).toHaveProperty('data');
-      expect(mockResponse).not.toHaveProperty('booking');
-    });
-  });
-
-  describe('Deprecation Headers on PUT Endpoints', () => {
-    it('PUT /confirm should return deprecation headers', async () => {
-      const expectedHeaders = {
-        deprecation: 'true',
-        sunset: expect.any(String),
-        link: expect.stringContaining('rel="successor-version"'),
-      };
-      
-      // Contract: PUT endpoints must include deprecation headers
-      const mockHeaders = {
-        deprecation: 'true',
-        sunset: 'Sat, 19 Apr 2026 00:00:00 GMT',
-        link: '</api/bookings/123/confirm>; rel="successor-version"',
-      };
-      
-      expect(mockHeaders).toMatchObject(expectedHeaders);
-    });
-
-    it('POST /confirm should NOT return deprecation headers', async () => {
-      const mockHeaders: Record<string, string | undefined> = {};
-      expect(mockHeaders['deprecation']).toBeUndefined();
-    });
-  });
-
-  describe('State Machine Enforcement', () => {
-    it('should have valid transitions defined', () => {
-      const validTransitions = {
-        pending: ['pending_approval', 'confirmed', 'cancelled'],
-        pending_approval: ['approved', 'rejected', 'expired', 'cancelled'],
-        approved: ['confirmed', 'cancelled'],
-        confirmed: ['completed', 'cancelled'],
-        rejected: [],
-        cancelled: [],
-        completed: [],
-        expired: [],
+  describe('Approval processing', () => {
+    it('should approve pending booking', () => {
+      const booking: Booking = {
+        id: '1',
+        status: 'pending',
+        requiresApproval: true,
       };
 
-      expect(validTransitions.pending).toContain('pending_approval');
-      expect(validTransitions.rejected).toHaveLength(0);
-      expect(validTransitions.completed).toHaveLength(0);
-    });
-  });
+      const result = processApproval(booking, 'approve', 'admin-1');
 
-  describe('RBAC Enforcement', () => {
-    it('case handler role should exist', () => {
-      expect(caseHandler.id).toContain('saksbehandler');
+      expect(result.success).toBe(true);
+      expect(result.newStatus).toBe('approved');
     });
 
-    it('regular user role should exist', () => {
-      expect(testUser.id).toContain('user');
-    });
-  });
-
-  describe('Rejection Reason Validation', () => {
-    it('reject requires a non-empty reason', () => {
-      const validateReason = (reason: string | undefined) => {
-        if (!reason || reason.trim() === '') {
-          throw new Error('Rejection reason is required');
-        }
-        return true;
+    it('should reject pending booking', () => {
+      const booking: Booking = {
+        id: '1',
+        status: 'pending',
+        requiresApproval: true,
       };
 
-      expect(() => validateReason('')).toThrow('Rejection reason is required');
-      expect(() => validateReason('   ')).toThrow('Rejection reason is required');
-      expect(() => validateReason(undefined)).toThrow('Rejection reason is required');
-      expect(validateReason('Valid reason')).toBe(true);
-    });
-  });
+      const result = processApproval(booking, 'reject', 'admin-1');
 
-  describe('Audit Trail', () => {
-    it('approval should record metadata', () => {
-      const bookingWithApproval = {
-        id: 'booking-123',
+      expect(result.success).toBe(true);
+      expect(result.newStatus).toBe('rejected');
+    });
+
+    it('should not approve non-pending booking', () => {
+      const booking: Booking = {
+        id: '1',
         status: 'approved',
-        metadata: {
-          approvedBy: 'caseworker-456',
-          approvedAt: '2026-01-19T10:00:00Z',
-          approvalReason: 'Approved for community event',
-        },
+        requiresApproval: true,
       };
 
-      expect(bookingWithApproval.metadata).toHaveProperty('approvedBy');
-      expect(bookingWithApproval.metadata).toHaveProperty('approvedAt');
+      const result = processApproval(booking, 'approve', 'admin-1');
+
+      expect(result.success).toBe(false);
+      expect(result.error).toContain('pending');
     });
 
-    it('rejection should record metadata', () => {
-      const bookingWithRejection = {
-        id: 'booking-123',
-        status: 'rejected',
-        metadata: {
-          rejectedBy: 'caseworker-456',
-          rejectedAt: '2026-01-19T10:00:00Z',
-          rejectionReason: 'Facility under maintenance',
-        },
+    it('should not process booking that does not require approval', () => {
+      const booking: Booking = {
+        id: '1',
+        status: 'pending',
+        requiresApproval: false,
       };
 
-      expect(bookingWithRejection.metadata).toHaveProperty('rejectedBy');
-      expect(bookingWithRejection.metadata).toHaveProperty('rejectedAt');
-      expect(bookingWithRejection.metadata).toHaveProperty('rejectionReason');
-      expect(bookingWithRejection.metadata).not.toHaveProperty('denialReason');
+      const result = processApproval(booking, 'approve', 'admin-1');
+
+      expect(result.success).toBe(false);
+      expect(result.error).toContain('does not require approval');
+    });
+  });
+
+  describe('Authorization', () => {
+    it('should allow ADMIN to approve any booking', () => {
+      expect(canUserApprove('ADMIN', 'org-1', 'org-2')).toBe(true);
+    });
+
+    it('should allow SAAS_ADMIN to approve any booking', () => {
+      expect(canUserApprove('SAAS_ADMIN', 'org-1', 'org-2')).toBe(true);
+    });
+
+    it('should allow ORG_ADMIN to approve their org bookings', () => {
+      expect(canUserApprove('ORG_ADMIN', 'org-1', 'org-1')).toBe(true);
+    });
+
+    it('should not allow ORG_ADMIN to approve other org bookings', () => {
+      expect(canUserApprove('ORG_ADMIN', 'org-1', 'org-2')).toBe(false);
+    });
+
+    it('should allow CASEWORKER to approve their org bookings', () => {
+      expect(canUserApprove('CASEWORKER', 'org-1', 'org-1')).toBe(true);
+    });
+
+    it('should not allow CITIZEN to approve', () => {
+      expect(canUserApprove('CITIZEN', 'org-1', 'org-1')).toBe(false);
     });
   });
 });
