@@ -168,7 +168,7 @@ export const HeaderDefault: Story = {
       title="Utleieobjekter"
       count={42}
       countLabel="{{count}} objekter"
-      description="Administrer kommunens utleieobjekter"
+      subtitle="Administrer kommunens utleieobjekter"
     />
   ),
 };
@@ -182,7 +182,7 @@ export const HeaderWithActions: Story = {
       title="Bookinger"
       count={128}
       countLabel="{{count}} bookinger"
-      description="Se og administrer alle bookinger"
+      subtitle="Se og administrer alle bookinger"
       actions={
         <div style={{ display: 'flex', gap: 'var(--ds-spacing-2)' }}>
           <Button variant="secondary" data-size="sm">
@@ -206,7 +206,7 @@ export const HeaderNoCount: Story = {
   render: () => (
     <DataPageHeader
       title="Innstillinger"
-      description="Konfigurer systeminnstillinger"
+      subtitle="Konfigurer systeminnstillinger"
     />
   ),
 };
@@ -522,7 +522,7 @@ export const CompleteDataPage: Story = {
           title="Utleieobjekter"
           count={156}
           countLabel="{{count}} objekter"
-          description="Administrer kommunens utleieobjekter"
+          subtitle="Administrer kommunens utleieobjekter"
           actions={
             <Button variant="primary" data-size="sm">
               <PlusIcon />

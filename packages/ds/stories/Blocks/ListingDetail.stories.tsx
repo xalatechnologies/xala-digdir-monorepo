@@ -15,7 +15,7 @@ import { LocationCard } from '../../src/blocks/LocationCard';
 import { OpeningHoursCard } from '../../src/blocks/OpeningHoursCard';
 import { CapacityCard } from '../../src/blocks/CapacityCard';
 import { FacilityChips } from '../../src/blocks/FacilityChips';
-import type { GalleryImage } from '../../src/types/listing-detail';
+import type { GalleryImage, Facility } from '../../src/types/listing-detail';
 
 /**
  * Listing detail components for rental object detail pages.
@@ -90,15 +90,15 @@ const sampleImages: GalleryImage[] = [
   },
 ];
 
-const sampleFacilities = [
-  { id: '1', name: 'Garderobe', icon: '🚿' },
-  { id: '2', name: 'Dusj', icon: '🚿' },
-  { id: '3', name: 'WiFi', icon: '📶' },
-  { id: '4', name: 'Parkering', icon: '🅿️' },
-  { id: '5', name: 'Kafeteria', icon: '☕' },
-  { id: '6', name: 'Rullestol', icon: '♿' },
-  { id: '7', name: 'Heis', icon: '🛗' },
-  { id: '8', name: 'Projektor', icon: '📽️' },
+const sampleFacilities: Facility[] = [
+  { id: '1', label: 'Garderobe', icon: '🚿' },
+  { id: '2', label: 'Dusj', icon: '🚿' },
+  { id: '3', label: 'WiFi', icon: '📶' },
+  { id: '4', label: 'Parkering', icon: '🅿️' },
+  { id: '5', label: 'Kafeteria', icon: '☕' },
+  { id: '6', label: 'Rullestol', icon: '♿' },
+  { id: '7', label: 'Heis', icon: '🛗' },
+  { id: '8', label: 'Projektor', icon: '📽️' },
 ];
 
 // =============================================================================
@@ -169,7 +169,7 @@ export const SliderDefault: Story = {
     <ImageSlider
       images={sampleImages}
       showCounter={true}
-      showNavigation={true}
+      showArrows={true}
       height={400}
     />
   ),
@@ -182,8 +182,7 @@ export const SliderAutoplay: Story = {
   render: () => (
     <ImageSlider
       images={sampleImages}
-      autoPlay={true}
-      autoPlayInterval={3000}
+      autoPlay={3000}
       height={400}
     />
   ),
@@ -200,11 +199,11 @@ export const ContactInfo: Story = {
   render: () => (
     <div style={{ maxWidth: '400px' }}>
       <ContactInfoCard
-        name="Oslo Idrettshall"
+        contactName="Oslo Idrettshall"
         phone="+47 22 33 44 55"
         email="booking@osloidrettshall.no"
         website="https://osloidrettshall.no"
-        organizationName="Oslo Kommune"
+        title="Oslo Kommune"
       />
     </div>
   ),
@@ -217,7 +216,7 @@ export const ContactInfoMinimal: Story = {
   render: () => (
     <div style={{ maxWidth: '400px' }}>
       <ContactInfoCard
-        name="Kontaktperson"
+        contactName="Kontaktperson"
         email="kontakt@example.no"
       />
     </div>
@@ -235,12 +234,9 @@ export const Location: Story = {
   render: () => (
     <div style={{ maxWidth: '400px' }}>
       <LocationCard
-        address="Sonja Henies plass 2"
-        city="Oslo"
-        postalCode="0185"
+        address="Sonja Henies plass 2, 0185 Oslo"
         latitude={59.9075}
         longitude={10.7530}
-        showMap={true}
       />
     </div>
   ),
@@ -253,10 +249,8 @@ export const LocationNoMap: Story = {
   render: () => (
     <div style={{ maxWidth: '400px' }}>
       <LocationCard
-        address="Bryggen 5"
-        city="Bergen"
-        postalCode="5003"
-        showMap={false}
+        address="Bryggen 5, 5003 Bergen"
+        showExpandLink={false}
       />
     </div>
   ),
@@ -297,7 +291,7 @@ export const OpeningHours24_7: Story = {
         hours={[
           { day: 'Mandag - Søndag', hours: 'Døgnåpent' },
         ]}
-        note="Tilgang med nøkkelkort hele døgnet"
+        title="Åpningstider (Tilgang med nøkkelkort hele døgnet)"
       />
     </div>
   ),
@@ -314,12 +308,8 @@ export const Capacity: Story = {
   render: () => (
     <div style={{ maxWidth: '400px' }}>
       <CapacityCard
-        capacity={500}
-        seatedCapacity={300}
-        standingCapacity={500}
-        wheelchairAccessible={true}
-        hearingLoop={true}
-        accessibleParking={true}
+        maxCapacity={500}
+        label="MAKS TILLATT"
       />
     </div>
   ),
@@ -332,7 +322,7 @@ export const CapacitySimple: Story = {
   render: () => (
     <div style={{ maxWidth: '400px' }}>
       <CapacityCard
-        capacity={20}
+        maxCapacity={20}
       />
     </div>
   ),
@@ -348,7 +338,7 @@ export const CapacitySimple: Story = {
 export const Facilities: Story = {
   render: () => (
     <FacilityChips
-      facilities={sampleFacilities.map(f => f.name)}
+      facilities={sampleFacilities}
     />
   ),
 };
@@ -359,8 +349,8 @@ export const Facilities: Story = {
 export const FacilitiesLimited: Story = {
   render: () => (
     <FacilityChips
-      facilities={sampleFacilities.map(f => f.name)}
-      maxDisplay={4}
+      facilities={sampleFacilities}
+      maxVisible={4}
     />
   ),
 };
@@ -392,9 +382,7 @@ export const CompleteDetailSidebar: Story = {
 
       {/* Capacity */}
       <CapacityCard
-        capacity={500}
-        seatedCapacity={300}
-        wheelchairAccessible={true}
+        maxCapacity={500}
       />
 
       {/* Facilities */}
@@ -402,14 +390,12 @@ export const CompleteDetailSidebar: Story = {
         <Heading level={4} data-size="xs" style={{ margin: '0 0 var(--ds-spacing-3) 0' }}>
           Fasiliteter
         </Heading>
-        <FacilityChips facilities={sampleFacilities.map(f => f.name)} maxDisplay={6} />
+        <FacilityChips facilities={sampleFacilities} maxVisible={6} />
       </Card>
 
       {/* Location */}
       <LocationCard
-        address="Sonja Henies plass 2"
-        city="Oslo"
-        postalCode="0185"
+        address="Sonja Henies plass 2, 0185 Oslo"
         latitude={59.9075}
         longitude={10.7530}
       />
@@ -425,10 +411,10 @@ export const CompleteDetailSidebar: Story = {
 
       {/* Contact */}
       <ContactInfoCard
-        name="Oslo Idrettshall"
+        contactName="Oslo Idrettshall"
         phone="+47 22 33 44 55"
         email="booking@osloidrettshall.no"
-        organizationName="Oslo Kommune"
+        title="Oslo Kommune"
       />
     </div>
   ),
@@ -491,7 +477,7 @@ export const CompleteDetailPage: Story = {
           <Heading level={2} data-size="sm" style={{ margin: '0 0 var(--ds-spacing-3) 0' }}>
             Fasiliteter
           </Heading>
-          <FacilityChips facilities={sampleFacilities.map(f => f.name)} />
+          <FacilityChips facilities={sampleFacilities} />
         </div>
       </div>
 
@@ -519,10 +505,10 @@ export const CompleteDetailPage: Story = {
 
         {/* Contact */}
         <ContactInfoCard
-          name="Booking"
+          contactName="Booking"
           phone="+47 22 33 44 55"
           email="booking@osloidrettshall.no"
-          organizationName="Oslo Kommune"
+          title="Oslo Kommune"
         />
 
         {/* Opening Hours */}

@@ -1,23 +1,24 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { Badge, Button } from '@xala/ds';
 
-const meta: Meta = {
+const meta: Meta<typeof Badge> = {
   title: 'Components/Badge',
+  component: Badge,
   parameters: {
     docs: {
       description: {
         component: `
-Badge for displaying counts or status indicators.
+Badge for displaying status, labels, or categories.
 
 ## When to Use
-- Notification counts
 - Status indicators
-- Unread message counts
-- Item counts
+- Category labels
+- Tags and labels
+- Highlight information
 
 ## Accessibility
-- Count announced to screen readers
 - Color not sole indicator of meaning
+- Text content for screen readers
         `,
       },
     },
@@ -26,29 +27,21 @@ Badge for displaying counts or status indicators.
 };
 
 export default meta;
-type Story = StoryObj;
+type Story = StoryObj<typeof Badge>;
 
 export const Default: Story = {
-  render: () => <Badge count={5} />,
-};
-
-export const Counts: Story = {
-  render: () => (
-    <div style={{ display: 'flex', gap: 'var(--ds-spacing-4)', alignItems: 'center' }}>
-      <Badge count={1} />
-      <Badge count={9} />
-      <Badge count={99} />
-      <Badge count={999} maxCount={99} />
-    </div>
-  ),
+  render: () => <Badge>Default</Badge>,
 };
 
 export const Colors: Story = {
   render: () => (
     <div style={{ display: 'flex', gap: 'var(--ds-spacing-4)', alignItems: 'center' }}>
-      <Badge count={5} data-color="neutral" />
-      <Badge count={5} data-color="accent" />
-      <Badge count={5} data-color="danger" />
+      <Badge data-color="neutral">Neutral</Badge>
+      <Badge data-color="accent">Accent</Badge>
+      <Badge data-color="success">Success</Badge>
+      <Badge data-color="warning">Warning</Badge>
+      <Badge data-color="danger">Danger</Badge>
+      <Badge data-color="info">Info</Badge>
     </div>
   ),
 };
@@ -56,32 +49,33 @@ export const Colors: Story = {
 export const Sizes: Story = {
   render: () => (
     <div style={{ display: 'flex', gap: 'var(--ds-spacing-4)', alignItems: 'center' }}>
-      <Badge count={5} data-size="sm" />
-      <Badge count={5} data-size="md" />
-      <Badge count={5} data-size="lg" />
+      <Badge data-size="sm">Small</Badge>
+      <Badge data-size="md">Medium</Badge>
+      <Badge data-size="lg">Large</Badge>
     </div>
   ),
 };
 
 export const WithButton: Story = {
   render: () => (
-    <div style={{ position: 'relative', display: 'inline-block' }}>
+    <div style={{ display: 'flex', gap: 'var(--ds-spacing-4)', alignItems: 'center' }}>
       <Button variant="secondary" type="button">
         Notifications
+        <Badge data-color="danger" data-size="sm" style={{ marginLeft: 'var(--ds-spacing-2)' }}>
+          3
+        </Badge>
       </Button>
-      <div style={{ position: 'absolute', top: 'calc(-1 * var(--ds-spacing-2))', right: 'calc(-1 * var(--ds-spacing-2))' }}>
-        <Badge count={3} data-color="danger" />
-      </div>
     </div>
   ),
 };
 
-export const Standalone: Story = {
+export const StatusBadges: Story = {
   render: () => (
     <div style={{ display: 'flex', gap: 'var(--ds-spacing-4)', alignItems: 'center' }}>
-      <Badge count={1} />
-      <Badge count={5} />
-      <Badge count={10} />
+      <Badge data-color="success">Active</Badge>
+      <Badge data-color="warning">Pending</Badge>
+      <Badge data-color="danger">Cancelled</Badge>
+      <Badge data-color="neutral">Draft</Badge>
     </div>
   ),
 };

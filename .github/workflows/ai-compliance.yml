@@ -1,0 +1,158 @@
+name: AI Compliance Checks
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main, develop]
+
+jobs:
+  thin-app-compliance:
+    name: Thin App Compliance
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: No Provider Imports in Routes
+        run: |
+          echo "Checking for provider imports in routes..."
+          if grep -r "import.*Provider" apps/*/src/routes --include="*.tsx" 2>/dev/null | grep -v "ProtectedRoute"; then
+            echo "❌ ERROR: Provider imports found in routes"
+            echo "Fix: Move providers to RuntimeProvider in main.tsx"
+            exit 1
+          fi
+          echo "✅ No provider imports in routes"
+      
+      - name: No Direct Fetch in Apps
+        run: |
+          echo "Checking for direct fetch calls..."
+          if grep -rE "fetch\(['\"]" apps/*/src --include="*.tsx" --include="*.ts" 2>/dev/null; then
+            echo "❌ ERROR: Direct fetch calls found"
+            echo "Fix: Use SDK hooks from @digilist/client-sdk"
+            exit 1
+          fi
+          echo "✅ No direct fetch calls"
+      
+      - name: No Direct Axios in Apps
+        run: |
+          echo "Checking for axios imports..."
+          if grep -r "import.*axios" apps/*/src --include="*.tsx" --include="*.ts" 2>/dev/null; then
+            echo "❌ ERROR: Axios imports found"
+            echo "Fix: Use SDK hooks from @digilist/client-sdk"
+            exit 1
+          fi
+          echo "✅ No axios imports"
+
+  design-system-compliance:
+    name: Design System Compliance
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: No Direct @digdir Imports
+        run: |
+          echo "Checking for direct @digdir imports in apps..."
+          if grep -r "@digdir/designsystemet-react" apps/*/src --include="*.tsx" 2>/dev/null; then
+            echo "❌ ERROR: Direct @digdir imports found in apps"
+            echo "Fix: Import from @xala/ds instead"
+            exit 1
+          fi
+          echo "✅ No direct @digdir imports"
+
+  runtime-compliance:
+    name: Runtime Compliance
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: RuntimeProvider Used in All Apps
+        run: |
+          echo "Checking RuntimeProvider usage..."
+          APPS="web backoffice minside monitoring saas-admin docs-learning"
+          MISSING=""
+          for app in $APPS; do
+            if [ -f "apps/$app/src/main.tsx" ]; then
+              if ! grep -q "RuntimeProvider" "apps/$app/src/main.tsx"; then
+                MISSING="$MISSING $app"
+              fi
+            fi
+          done
+          if [ -n "$MISSING" ]; then
+            echo "❌ ERROR: Missing RuntimeProvider in:$MISSING"
+            exit 1
+          fi
+          echo "✅ All apps use RuntimeProvider"
+      
+      - name: No QueryClientProvider in Apps
+        run: |
+          echo "Checking for manual QueryClientProvider..."
+          if grep -r "QueryClientProvider" apps/*/src/App.tsx 2>/dev/null; then
+            echo "❌ ERROR: QueryClientProvider found in App.tsx"
+            echo "Fix: Use RuntimeProvider in main.tsx"
+            exit 1
+          fi
+          echo "✅ No manual QueryClientProvider"
+
+  import-compliance:
+    name: Import Compliance
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: No Deep Relative Imports
+        run: |
+          echo "Checking for deep relative imports..."
+          DEEP=$(grep -rE "from ['\"]\.\.\/\.\.\/\.\.\/\.\.\/" apps packages --include="*.ts" --include="*.tsx" 2>/dev/null | wc -l)
+          if [ "$DEEP" -gt 5 ]; then
+            echo "❌ WARNING: $DEEP deep relative imports found"
+            echo "Consider converting to path aliases"
+          fi
+          echo "✅ Deep relative check complete"
+
+  build-check:
+    name: Build All Apps
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      
+      - uses: pnpm/action-setup@v2
+        with:
+          version: 9
+      
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'pnpm'
+      
+      - name: Install Dependencies
+        run: pnpm install
+      
+      - name: Build All Apps
+        run: |
+          for app in web backoffice minside monitoring saas-admin docs-learning; do
+            echo "Building $app..."
+            cd apps/$app
+            npm run build
+            cd ../..
+          done
+
+  storybook-check:
+    name: Storybook Build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      
+      - uses: pnpm/action-setup@v2
+        with:
+          version: 9
+      
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'pnpm'
+      
+      - name: Install Dependencies
+        run: pnpm install
+      
+      - name: Build Storybook
+        run: pnpm --filter @xala/ds build-storybook

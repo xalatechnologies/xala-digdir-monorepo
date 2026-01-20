@@ -98,36 +98,36 @@ const colorPresets = [
 ];
 
 const datePresets = [
-  { label: 'I dag', getValue: () => ({ from: new Date(), to: new Date() }) },
-  { label: 'Siste 7 dager', getValue: () => {
-    const to = new Date();
-    const from = new Date();
-    from.setDate(from.getDate() - 7);
-    return { from, to };
+  { id: 'today', label: 'I dag', getValue: () => ({ start: new Date(), end: new Date() }) },
+  { id: 'last-7', label: 'Siste 7 dager', getValue: () => {
+    const end = new Date();
+    const start = new Date();
+    start.setDate(start.getDate() - 7);
+    return { start, end };
   }},
-  { label: 'Siste 30 dager', getValue: () => {
-    const to = new Date();
-    const from = new Date();
-    from.setDate(from.getDate() - 30);
-    return { from, to };
+  { id: 'last-30', label: 'Siste 30 dager', getValue: () => {
+    const end = new Date();
+    const start = new Date();
+    start.setDate(start.getDate() - 30);
+    return { start, end };
   }},
-  { label: 'Denne måneden', getValue: () => {
+  { id: 'this-month', label: 'Denne måneden', getValue: () => {
     const now = new Date();
-    const from = new Date(now.getFullYear(), now.getMonth(), 1);
-    const to = new Date(now.getFullYear(), now.getMonth() + 1, 0);
-    return { from, to };
+    const start = new Date(now.getFullYear(), now.getMonth(), 1);
+    const end = new Date(now.getFullYear(), now.getMonth() + 1, 0);
+    return { start, end };
   }},
-  { label: 'Forrige måned', getValue: () => {
+  { id: 'last-month', label: 'Forrige måned', getValue: () => {
     const now = new Date();
-    const from = new Date(now.getFullYear(), now.getMonth() - 1, 1);
-    const to = new Date(now.getFullYear(), now.getMonth(), 0);
-    return { from, to };
+    const start = new Date(now.getFullYear(), now.getMonth() - 1, 1);
+    const end = new Date(now.getFullYear(), now.getMonth(), 0);
+    return { start, end };
   }},
-  { label: 'Dette året', getValue: () => {
+  { id: 'this-year', label: 'Dette året', getValue: () => {
     const now = new Date();
-    const from = new Date(now.getFullYear(), 0, 1);
-    const to = new Date(now.getFullYear(), 11, 31);
-    return { from, to };
+    const start = new Date(now.getFullYear(), 0, 1);
+    const end = new Date(now.getFullYear(), 11, 31);
+    return { start, end };
   }},
 ];
 
@@ -246,12 +246,13 @@ export const FileUploaderWithUpload: FileUploaderStory = {
     const [files, setFiles] = useState<UploadedFile[]>([]);
     const [uploading, setUploading] = useState(false);
 
-    const handleUpload = async (filesToUpload: File[]) => {
+    const handleUpload = async (file: File): Promise<string> => {
       setUploading(true);
       // Simulate upload
       await new Promise(resolve => setTimeout(resolve, 2000));
       setUploading(false);
-      console.log('Uploaded files:', filesToUpload.map(f => f.name));
+      console.log('Uploaded file:', file.name);
+      return `https://example.com/uploads/${file.name}`;
     };
 
     return (
@@ -285,7 +286,7 @@ type DateRangePickerStory = StoryObj<typeof DateRangePicker>;
  */
 export const DateRangePickerDefault: DateRangePickerStory = {
   render: () => {
-    const [dateRange, setDateRange] = useState<DateRange | null>(null);
+    const [dateRange, setDateRange] = useState<DateRange | undefined>(undefined);
 
     return (
       <div style={{ maxWidth: '400px' }}>
@@ -305,7 +306,7 @@ export const DateRangePickerDefault: DateRangePickerStory = {
  */
 export const DateRangePickerWithPresets: DateRangePickerStory = {
   render: () => {
-    const [dateRange, setDateRange] = useState<DateRange | null>(null);
+    const [dateRange, setDateRange] = useState<DateRange | undefined>(undefined);
 
     return (
       <div style={{ maxWidth: '400px' }}>
@@ -326,7 +327,7 @@ export const DateRangePickerWithPresets: DateRangePickerStory = {
  */
 export const DateRangePickerConstrained: DateRangePickerStory = {
   render: () => {
-    const [dateRange, setDateRange] = useState<DateRange | null>(null);
+    const [dateRange, setDateRange] = useState<DateRange | undefined>(undefined);
     const today = new Date();
     const minDate = new Date(today.getFullYear(), today.getMonth() - 3, 1);
     const maxDate = new Date(today.getFullYear(), today.getMonth() + 3, 0);
@@ -355,8 +356,8 @@ export const DateRangePickerConstrained: DateRangePickerStory = {
 export const DateRangePickerWithValue: DateRangePickerStory = {
   render: () => {
     const [dateRange, setDateRange] = useState<DateRange>({
-      from: new Date(),
-      to: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
+      start: new Date(),
+      end: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
     });
 
     return (
@@ -382,14 +383,14 @@ type SearchableSelectStory = StoryObj<typeof SearchableSelect>;
  */
 export const SearchableSelectDefault: SearchableSelectStory = {
   render: () => {
-    const [value, setValue] = useState<string | null>(null);
+    const [value, setValue] = useState<string | undefined>(undefined);
 
     return (
       <div style={{ maxWidth: '300px' }}>
         <SearchableSelect
           options={sampleSelectOptions}
           value={value}
-          onChange={(val) => setValue(val as string | null)}
+          onChange={(val) => setValue(val as string | undefined)}
           placeholder="Velg kommune..."
         />
       </div>
@@ -402,14 +403,14 @@ export const SearchableSelectDefault: SearchableSelectStory = {
  */
 export const SearchableSelectGrouped: SearchableSelectStory = {
   render: () => {
-    const [value, setValue] = useState<string | null>(null);
+    const [value, setValue] = useState<string | undefined>(undefined);
 
     return (
       <div style={{ maxWidth: '300px' }}>
         <SearchableSelect
           options={groupedSelectOptions}
           value={value}
-          onChange={(val) => setValue(val as string | null)}
+          onChange={(val) => setValue(val as string | undefined)}
           placeholder="Velg kommune..."
         />
       </div>
@@ -448,14 +449,14 @@ export const SearchableSelectMultiple: SearchableSelectStory = {
  */
 export const SearchableSelectClearable: SearchableSelectStory = {
   render: () => {
-    const [value, setValue] = useState<string | null>('oslo');
+    const [value, setValue] = useState<string | undefined>('oslo');
 
     return (
       <div style={{ maxWidth: '300px' }}>
         <SearchableSelect
           options={sampleSelectOptions}
           value={value}
-          onChange={(val) => setValue(val as string | null)}
+          onChange={(val) => setValue(val as string | undefined)}
           clearable
           placeholder="Velg kommune..."
         />
@@ -469,11 +470,11 @@ export const SearchableSelectClearable: SearchableSelectStory = {
  */
 export const SearchableSelectCreatable: SearchableSelectStory = {
   render: () => {
-    const [value, setValue] = useState<string | null>(null);
+    const [value, setValue] = useState<string | undefined>(undefined);
     const [options, setOptions] = useState(categoryOptions);
 
-    const handleChange = (val: string | string[] | null) => {
-      setValue(val as string | null);
+    const handleChange = (val: string | string[]) => {
+      setValue(val as string | undefined);
     };
 
     const handleCreate = (inputValue: string) => {
@@ -489,7 +490,7 @@ export const SearchableSelectCreatable: SearchableSelectStory = {
           value={value}
           onChange={handleChange}
           creatable
-          onCreateOption={handleCreate}
+          onCreate={handleCreate}
           placeholder="Velg eller opprett kategori..."
         />
       </div>
@@ -502,7 +503,7 @@ export const SearchableSelectCreatable: SearchableSelectStory = {
  */
 export const SearchableSelectLoading: SearchableSelectStory = {
   render: () => {
-    const [value, setValue] = useState<string | null>(null);
+    const [value, setValue] = useState<string | undefined>(undefined);
     const [loading, setLoading] = useState(false);
     const [options, setOptions] = useState<SelectOption[]>([]);
 
@@ -528,9 +529,9 @@ export const SearchableSelectLoading: SearchableSelectStory = {
         <SearchableSelect
           options={options}
           value={value}
-          onChange={(val) => setValue(val as string | null)}
+          onChange={(val) => setValue(val as string | undefined)}
           loading={loading}
-          onInputChange={handleSearch}
+          onSearch={handleSearch}
           placeholder="Søk etter kommune..."
         />
         <Paragraph data-size="xs" style={{ marginTop: 'var(--ds-spacing-2)', color: 'var(--ds-color-neutral-text-subtle)' }}>
@@ -717,8 +718,8 @@ export const ColorPickerTheme: ColorPickerStory = {
 export const CompleteFormExample: StoryObj = {
   render: () => {
     const [files, setFiles] = useState<UploadedFile[]>([]);
-    const [dateRange, setDateRange] = useState<DateRange | null>(null);
-    const [category, setCategory] = useState<string | null>(null);
+    const [dateRange, setDateRange] = useState<DateRange | undefined>(undefined);
+    const [category, setCategory] = useState<string | undefined>(undefined);
     const [locations, setLocations] = useState<string[]>([]);
     const [brandColor, setBrandColor] = useState('#0062BA');
 
@@ -745,7 +746,7 @@ export const CompleteFormExample: StoryObj = {
               <SearchableSelect
                 options={categoryOptions}
                 value={category}
-                onChange={(val) => setCategory(val as string | null)}
+                onChange={(val) => setCategory(val as string | undefined)}
                 placeholder="Velg kategori..."
               />
             </div>
@@ -830,7 +831,7 @@ export const CompleteFormExample: StoryObj = {
  */
 export const BookingFilterForm: StoryObj = {
   render: () => {
-    const [dateRange, setDateRange] = useState<DateRange | null>(null);
+    const [dateRange, setDateRange] = useState<DateRange | undefined>(undefined);
     const [categories, setCategories] = useState<string[]>([]);
     const [locations, setLocations] = useState<string[]>([]);
 
@@ -839,7 +840,7 @@ export const BookingFilterForm: StoryObj = {
     };
 
     const handleClearFilters = () => {
-      setDateRange(null);
+      setDateRange(undefined);
       setCategories([]);
       setLocations([]);
     };

@@ -70,17 +70,18 @@ export const WithActions: Story = {
 };
 
 /**
- * Card as link
+ * Card as clickable
  */
-export const AsLink: Story = {
+export const AsClickable: Story = {
   render: () => (
-    <Card asChild style={{ cursor: 'pointer' }}>
-      <a href="#" style={{ textDecoration: 'none', color: 'inherit' }}>
-        <Heading level={3} data-size="sm">Click to View Details</Heading>
-        <Paragraph>
-          This entire card is clickable and acts as a link.
-        </Paragraph>
-      </a>
+    <Card
+      style={{ cursor: 'pointer' }}
+      onClick={() => console.log('Card clicked')}
+    >
+      <Heading level={3} data-size="sm">Click to View Details</Heading>
+      <Paragraph>
+        This entire card is clickable. Use onClick for interactivity.
+      </Paragraph>
     </Card>
   ),
 };

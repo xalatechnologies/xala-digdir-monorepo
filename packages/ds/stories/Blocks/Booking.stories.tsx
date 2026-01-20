@@ -67,25 +67,25 @@ type Story = StoryObj<typeof BookingFormModal>;
 
 const sampleTimeSlots: TimeSlot[] = [
   {
-    date: new Date().toISOString(),
+    id: 'slot-1',
+    date: new Date(),
     startTime: '10:00',
     endTime: '11:00',
-    available: true,
-    price: 450,
+    status: 'selected',
   },
   {
-    date: new Date().toISOString(),
+    id: 'slot-2',
+    date: new Date(),
     startTime: '11:00',
     endTime: '12:00',
-    available: true,
-    price: 450,
+    status: 'selected',
   },
   {
-    date: new Date().toISOString(),
+    id: 'slot-3',
+    date: new Date(),
     startTime: '12:00',
     endTime: '13:00',
-    available: true,
-    price: 450,
+    status: 'selected',
   },
 ];
 

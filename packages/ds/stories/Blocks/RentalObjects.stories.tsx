@@ -458,6 +458,7 @@ export const ListingTypes: Story = {
         {listingTypes.map((item, i) => (
           <RentalObjectCard
             key={i}
+            id={`type-${i}`}
             name={item.name}
             type={item.description}
             listingType={item.type}

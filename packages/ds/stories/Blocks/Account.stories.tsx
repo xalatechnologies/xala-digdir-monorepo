@@ -66,28 +66,34 @@ type Story = StoryObj<typeof AccountSwitcher>;
 const sampleOrganizations = [
   {
     id: 'org-1',
+    tenantId: 'tenant-1',
     name: 'Oslo Kommune',
     organizationNumber: '958935420',
-    type: 'MUNICIPALITY' as const,
-    status: 'ACTIVE' as const,
+    actorType: 'municipality' as const,
+    status: 'active' as const,
+    verified: true,
     createdAt: new Date().toISOString(),
     updatedAt: new Date().toISOString(),
   },
   {
     id: 'org-2',
+    tenantId: 'tenant-2',
     name: 'Bergen Kommune',
     organizationNumber: '964338531',
-    type: 'MUNICIPALITY' as const,
-    status: 'ACTIVE' as const,
+    actorType: 'municipality' as const,
+    status: 'active' as const,
+    verified: true,
     createdAt: new Date().toISOString(),
     updatedAt: new Date().toISOString(),
   },
   {
     id: 'org-3',
+    tenantId: 'tenant-3',
     name: 'Trondheim Kommune',
     organizationNumber: '942110464',
-    type: 'MUNICIPALITY' as const,
-    status: 'ACTIVE' as const,
+    actorType: 'municipality' as const,
+    status: 'active' as const,
+    verified: true,
     createdAt: new Date().toISOString(),
     updatedAt: new Date().toISOString(),
   },
@@ -205,9 +211,9 @@ export const ManyOrganizations: Story = {
   render: () => {
     const manyOrgs = [
       ...sampleOrganizations,
-      { ...sampleOrganizations[0]!, id: 'org-4', name: 'Stavanger Kommune', organizationNumber: '964965226' },
-      { ...sampleOrganizations[0]!, id: 'org-5', name: 'Kristiansand Kommune', organizationNumber: '964965226' },
-      { ...sampleOrganizations[0]!, id: 'org-6', name: 'Tromsø Kommune', organizationNumber: '940101808' },
+      { ...sampleOrganizations[0]!, id: 'org-4', tenantId: 'tenant-4', name: 'Stavanger Kommune', organizationNumber: '964965226' },
+      { ...sampleOrganizations[0]!, id: 'org-5', tenantId: 'tenant-5', name: 'Kristiansand Kommune', organizationNumber: '964965227' },
+      { ...sampleOrganizations[0]!, id: 'org-6', tenantId: 'tenant-6', name: 'Tromsø Kommune', organizationNumber: '940101808' },
     ];
 
     const [accountType, setAccountType] = useState<AccountType>('personal');

@@ -1,10 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { useState } from 'react';
 import {
-  UserInviteForm,
-  PermissionMatrix,
-  ScopeSelector,
-  EffectivePermissionsView,
   Card,
   Heading,
   Paragraph,
@@ -13,8 +9,13 @@ import {
   Alert,
 } from '@xala/ds';
 import { UserIcon, ShieldIcon, BuildingIcon, CheckIcon } from '@xala/ds';
+import { UserInviteForm } from '../../src/blocks/admin/UserInviteForm';
+import { PermissionMatrix } from '../../src/blocks/admin/PermissionMatrix';
+import { ScopeSelector } from '../../src/blocks/admin/ScopeSelector';
+import { EffectivePermissionsView } from '../../src/blocks/admin/EffectivePermissionsView';
 import type { InviteUserFormData } from '../../src/blocks/admin/UserInviteForm';
 import type { Role, Permission } from '../../src/blocks/admin/PermissionMatrix';
+import type { ScopeAssignment } from '../../src/blocks/admin/ScopeSelector';
 
 /**
  * Admin components for user and permission management.
@@ -132,7 +133,7 @@ export const Default: Story = {
   args: {
     availableRoles: sampleRoles,
     availableOrganizations: sampleOrganizations,
-    onSubmit: async (data) => {
+    onSubmit: async (data: InviteUserFormData) => {
       console.log('Invite submitted:', data);
       await new Promise(resolve => setTimeout(resolve, 1000));
     },
@@ -155,7 +156,7 @@ export const WithDefaultValues: Story = {
         sendEmail: true,
         message: 'Velkommen til teamet!',
       }}
-      onSubmit={async (data) => {
+      onSubmit={async (data: InviteUserFormData) => {
         console.log('Updated:', data);
         await new Promise(resolve => setTimeout(resolve, 1000));
       }}
@@ -172,7 +173,7 @@ export const WithoutOrganization: Story = {
     <UserInviteForm
       availableRoles={sampleRoles}
       showOrganization={false}
-      onSubmit={async (data) => {
+      onSubmit={async (data: InviteUserFormData) => {
         console.log('Invite:', data);
       }}
     />
@@ -188,7 +189,7 @@ export const WithScopeOption: Story = {
       availableRoles={sampleRoles}
       availableOrganizations={sampleOrganizations}
       showScopeOption={true}
-      onSubmit={async (data) => {
+      onSubmit={async (data: InviteUserFormData) => {
         console.log('Invite with scope:', data);
       }}
       onCancel={() => console.log('Cancelled')}
@@ -205,7 +206,7 @@ export const Minimal: Story = {
       availableRoles={sampleRoles}
       showOrganization={false}
       showMessageField={false}
-      onSubmit={async (data) => {
+      onSubmit={async (data: InviteUserFormData) => {
         console.log('Minimal invite:', data);
       }}
     />
@@ -309,7 +310,7 @@ export const PermissionMatrixPreview: Story = {
         permissions={samplePermissions}
         showRiskIndicators={true}
         groupByCategory={true}
-        onPermissionToggle={(roleId, permId, enabled) =>
+        onPermissionToggle={(roleId: string, permId: string, enabled: boolean) =>
           console.log('Toggle:', { roleId, permId, enabled })
         }
       />
@@ -342,7 +343,7 @@ export const ScopeSelectorPreview: Story = {
         availableOrganizations={[
           { id: 'org-1', name: 'Oslo Kommune', rentalObjectCount: 15 },
         ]}
-        onScopeChange={(scope) => console.log('Scope changed:', scope)}
+        onScopeChange={(scope: ScopeAssignment) => console.log('Scope changed:', scope)}
       />
     </div>
   ),
@@ -443,7 +444,7 @@ export const AdminDashboard: Story = {
             availableRoles={sampleRoles}
             availableOrganizations={sampleOrganizations}
             showScopeOption={true}
-            onSubmit={async (data) => {
+            onSubmit={async (data: InviteUserFormData) => {
               console.log('Invite:', data);
               await new Promise(resolve => setTimeout(resolve, 1000));
             }}

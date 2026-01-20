@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { Drawer, DrawerSection, DrawerItem, DrawerEmptyState } from '@xala/ds';
 import { Button, Checkbox, Paragraph } from '@xala/ds';
 import { FilterIcon, ShoppingCartIcon, BellIcon, SearchIcon, SettingsIcon, CalendarIcon } from '@xala/ds';
@@ -59,14 +59,20 @@ type Story = StoryObj<typeof Drawer>;
 // Interactive wrapper for stories
 const DrawerDemo = ({
   buttonText = 'Open Drawer',
+  children,
   ...props
-}: Partial<React.ComponentProps<typeof Drawer>> & { buttonText?: string }) => {
+}: Omit<Partial<React.ComponentProps<typeof Drawer>>, 'children'> & {
+  buttonText?: string;
+  children?: React.ReactNode;
+}) => {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
     <div style={{ padding: 'var(--ds-spacing-6)' }}>
       <Button onClick={() => setIsOpen(true)}>{buttonText}</Button>
-      <Drawer isOpen={isOpen} onClose={() => setIsOpen(false)} {...props} />
+      <Drawer isOpen={isOpen} onClose={() => setIsOpen(false)} {...props}>
+        {children}
+      </Drawer>
     </div>
   );
 };
@@ -158,25 +164,25 @@ export const FilterPanel: Story = {
     >
       <DrawerSection title="Type anlegg" collapsible>
         <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--ds-spacing-2)' }}>
-          <Checkbox>Idrettshall</Checkbox>
-          <Checkbox>Svømmehall</Checkbox>
-          <Checkbox>Fotballbane</Checkbox>
-          <Checkbox>Tennisbane</Checkbox>
+          <Checkbox aria-label="Idrettshall">Idrettshall</Checkbox>
+          <Checkbox aria-label="Svømmehall">Svømmehall</Checkbox>
+          <Checkbox aria-label="Fotballbane">Fotballbane</Checkbox>
+          <Checkbox aria-label="Tennisbane">Tennisbane</Checkbox>
         </div>
       </DrawerSection>
       <DrawerSection title="Tilgjengelighet" collapsible defaultCollapsed>
         <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--ds-spacing-2)' }}>
-          <Checkbox>Handicap-tilpasset</Checkbox>
-          <Checkbox>Parkering</Checkbox>
-          <Checkbox>Garderobe</Checkbox>
+          <Checkbox aria-label="Handicap-tilpasset">Handicap-tilpasset</Checkbox>
+          <Checkbox aria-label="Parkering">Parkering</Checkbox>
+          <Checkbox aria-label="Garderobe">Garderobe</Checkbox>
         </div>
       </DrawerSection>
       <DrawerSection title="Pris" collapsible>
         <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--ds-spacing-2)' }}>
-          <Checkbox>Gratis</Checkbox>
-          <Checkbox>Under 500 kr/time</Checkbox>
-          <Checkbox>500-1000 kr/time</Checkbox>
-          <Checkbox>Over 1000 kr/time</Checkbox>
+          <Checkbox aria-label="Gratis">Gratis</Checkbox>
+          <Checkbox aria-label="Under 500 kr/time">Under 500 kr/time</Checkbox>
+          <Checkbox aria-label="500-1000 kr/time">500-1000 kr/time</Checkbox>
+          <Checkbox aria-label="Over 1000 kr/time">Over 1000 kr/time</Checkbox>
         </div>
       </DrawerSection>
     </DrawerDemo>
@@ -357,8 +363,8 @@ export const SettingsDrawer: Story = {
       </DrawerSection>
       <DrawerSection title="Personvern" collapsible>
         <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--ds-spacing-2)' }}>
-          <Checkbox defaultChecked>Del anonymisert bruksdata</Checkbox>
-          <Checkbox>Motta nyhetsbrev</Checkbox>
+          <Checkbox aria-label="Del anonymisert bruksdata" defaultChecked>Del anonymisert bruksdata</Checkbox>
+          <Checkbox aria-label="Motta nyhetsbrev">Motta nyhetsbrev</Checkbox>
         </div>
       </DrawerSection>
     </DrawerDemo>

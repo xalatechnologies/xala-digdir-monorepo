@@ -99,14 +99,14 @@ export const TabLayoutDefault: Story = {
           label="Visningsnavn"
           description="Dette navnet vises for andre brukere"
         >
-          <Textfield placeholder="Ola Nordmann" />
+          <Textfield aria-label="Visningsnavn" placeholder="Ola Nordmann" />
         </SettingsField>
 
         <SettingsField
           label="E-postadresse"
           description="Din primære e-postadresse for varsler"
         >
-          <Textfield type="email" placeholder="ola@example.no" />
+          <Textfield aria-label="E-postadresse" type="email" placeholder="ola@example.no" />
         </SettingsField>
       </SettingsTabLayout>
     </div>
@@ -127,7 +127,7 @@ export const TabLayoutWithSections: Story = {
           label="E-postvarsler"
           description="Motta varsler på e-post"
         >
-          <Switch defaultChecked />
+          <Switch aria-label="E-postvarsler" defaultChecked />
         </SettingsField>
 
         <SettingsSection title="Push-varsler">
@@ -135,21 +135,21 @@ export const TabLayoutWithSections: Story = {
             label="Nye bookinger"
             description="Varsle når noen booker en av dine ressurser"
           >
-            <Switch defaultChecked />
+            <Switch aria-label="Nye bookinger" defaultChecked />
           </SettingsField>
 
           <SettingsField
             label="Avbestillinger"
             description="Varsle ved avbestillinger"
           >
-            <Switch defaultChecked />
+            <Switch aria-label="Avbestillinger" defaultChecked />
           </SettingsField>
 
           <SettingsField
             label="Meldinger"
             description="Varsle når du mottar nye meldinger"
           >
-            <Switch defaultChecked />
+            <Switch aria-label="Meldinger" defaultChecked />
           </SettingsField>
         </SettingsSection>
 
@@ -158,7 +158,7 @@ export const TabLayoutWithSections: Story = {
             label="Aktivér SMS"
             description="Motta viktige varsler på SMS"
           >
-            <Switch />
+            <Switch aria-label="Aktivér SMS" />
           </SettingsField>
         </SettingsSection>
       </SettingsTabLayout>
@@ -351,21 +351,21 @@ export const CompleteSettingsPage: Story = {
                   label="E-postvarsler"
                   description="Motta varsler på e-post"
                 >
-                  <Switch defaultChecked />
+                  <Switch aria-label="E-postvarsler" defaultChecked />
                 </SettingsField>
 
                 <SettingsField
                   label="Push-varsler"
                   description="Motta varsler i nettleseren"
                 >
-                  <Switch defaultChecked />
+                  <Switch aria-label="Push-varsler" defaultChecked />
                 </SettingsField>
 
                 <SettingsField
                   label="SMS-varsler"
                   description="Motta viktige varsler på SMS"
                 >
-                  <Switch />
+                  <Switch aria-label="SMS-varsler" />
                 </SettingsField>
 
                 <SettingsSection title="Varseltyper">
@@ -373,21 +373,21 @@ export const CompleteSettingsPage: Story = {
                     label="Nye bookinger"
                     description="Varsle når noen booker en av dine ressurser"
                   >
-                    <Switch defaultChecked />
+                    <Switch aria-label="Nye bookinger" defaultChecked />
                   </SettingsField>
 
                   <SettingsField
                     label="Avbestillinger"
                     description="Varsle ved avbestillinger"
                   >
-                    <Switch defaultChecked />
+                    <Switch aria-label="Avbestillinger" defaultChecked />
                   </SettingsField>
 
                   <SettingsField
                     label="Meldinger"
                     description="Varsle når du mottar nye meldinger"
                   >
-                    <Switch defaultChecked />
+                    <Switch aria-label="Meldinger" defaultChecked />
                   </SettingsField>
                 </SettingsSection>
               </SettingsTabLayout>
@@ -402,7 +402,7 @@ export const CompleteSettingsPage: Story = {
                   label="To-faktor autentisering"
                   description="Øk sikkerheten med ekstra verifisering"
                 >
-                  <Switch />
+                  <Switch aria-label="To-faktor autentisering" />
                 </SettingsField>
 
                 <SettingsSection title="Aktive økter">
@@ -464,7 +464,7 @@ export const FieldExamples: Story = {
             label="Tekstfelt"
             description="Standard tekstfelt for input"
           >
-            <Textfield placeholder="Skriv her..." />
+            <Textfield aria-label="Tekstfelt" placeholder="Skriv her..." />
           </SettingsField>
 
           <SettingsField
@@ -483,7 +483,7 @@ export const FieldExamples: Story = {
             label="Bryter"
             description="Slå av eller på en funksjon"
           >
-            <Switch />
+            <Switch aria-label="Bryter" />
           </SettingsField>
         </div>
       </Card>

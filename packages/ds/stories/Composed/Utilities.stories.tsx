@@ -709,19 +709,19 @@ export const DrawerRight: DrawerStory = {
         >
           <DrawerSection title="Valgte anlegg">
             <DrawerItem
-              left={<Checkbox checked />}
+              left={<Checkbox aria-label="Idrettshall A" checked />}
               right="250 kr"
             >
               Idrettshall A - 15. jan 10:00-12:00
             </DrawerItem>
             <DrawerItem
-              left={<Checkbox checked />}
+              left={<Checkbox aria-label="Svømmehall" checked />}
               right="300 kr"
             >
               Svømmehall - 16. jan 14:00-16:00
             </DrawerItem>
             <DrawerItem
-              left={<Checkbox checked />}
+              left={<Checkbox aria-label="Møterom B" checked />}
               right="150 kr"
             >
               Møterom B - 17. jan 09:00-10:00
@@ -752,26 +752,26 @@ export const DrawerLeftFilters: DrawerStory = {
         >
           <DrawerSection title="Type anlegg" collapsible>
             <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--ds-spacing-2)' }}>
-              <Checkbox value="idrettshall">Idrettshall</Checkbox>
-              <Checkbox value="svommehall">Svømmehall</Checkbox>
-              <Checkbox value="kulturhus">Kulturhus</Checkbox>
-              <Checkbox value="motelokale">Møtelokale</Checkbox>
+              <Checkbox aria-label="Idrettshall" value="idrettshall">Idrettshall</Checkbox>
+              <Checkbox aria-label="Svømmehall" value="svommehall">Svømmehall</Checkbox>
+              <Checkbox aria-label="Kulturhus" value="kulturhus">Kulturhus</Checkbox>
+              <Checkbox aria-label="Møtelokale" value="motelokale">Møtelokale</Checkbox>
             </div>
           </DrawerSection>
           <DrawerSection title="Pris" collapsible defaultCollapsed>
             <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--ds-spacing-2)' }}>
-              <Checkbox value="free">Gratis</Checkbox>
-              <Checkbox value="low">Under 500 kr</Checkbox>
-              <Checkbox value="medium">500 - 1000 kr</Checkbox>
-              <Checkbox value="high">Over 1000 kr</Checkbox>
+              <Checkbox aria-label="Gratis" value="free">Gratis</Checkbox>
+              <Checkbox aria-label="Under 500 kr" value="low">Under 500 kr</Checkbox>
+              <Checkbox aria-label="500 - 1000 kr" value="medium">500 - 1000 kr</Checkbox>
+              <Checkbox aria-label="Over 1000 kr" value="high">Over 1000 kr</Checkbox>
             </div>
           </DrawerSection>
           <DrawerSection title="Fasiliteter" collapsible defaultCollapsed>
             <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--ds-spacing-2)' }}>
-              <Checkbox value="wifi">WiFi</Checkbox>
-              <Checkbox value="parking">Parkering</Checkbox>
-              <Checkbox value="accessible">Rullestoltilpasset</Checkbox>
-              <Checkbox value="kitchen">Kjøkken</Checkbox>
+              <Checkbox aria-label="WiFi" value="wifi">WiFi</Checkbox>
+              <Checkbox aria-label="Parkering" value="parking">Parkering</Checkbox>
+              <Checkbox aria-label="Rullestoltilpasset" value="accessible">Rullestoltilpasset</Checkbox>
+              <Checkbox aria-label="Kjøkken" value="kitchen">Kjøkken</Checkbox>
             </div>
           </DrawerSection>
         </Drawer>
@@ -1102,9 +1102,9 @@ export const CombinedDashboard: StoryObj = {
         >
           <DrawerSection title="Kategori" collapsible>
             <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--ds-spacing-2)' }}>
-              <Checkbox value="all" checked>Alle</Checkbox>
-              <Checkbox value="sports">Idrett</Checkbox>
-              <Checkbox value="culture">Kultur</Checkbox>
+              <Checkbox aria-label="Alle" value="all" checked>Alle</Checkbox>
+              <Checkbox aria-label="Idrett" value="sports">Idrett</Checkbox>
+              <Checkbox aria-label="Kultur" value="culture">Kultur</Checkbox>
             </div>
           </DrawerSection>
         </Drawer>

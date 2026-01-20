@@ -110,19 +110,15 @@ const sampleSearchResults: SearchResultGroup[] = [
   },
 ];
 
-// Sample breadcrumb
+// Sample breadcrumb items
+const sampleBreadcrumbItems = [
+  { label: 'Hjem', href: '/' },
+  { label: 'Bookinger', href: '/bookings' },
+  { label: 'Detaljer' },
+];
+
 const SampleBreadcrumb = () => (
-  <Breadcrumb>
-    <Breadcrumb.Item>
-      <a href="/">Hjem</a>
-    </Breadcrumb.Item>
-    <Breadcrumb.Item>
-      <a href="/bookings">Bookinger</a>
-    </Breadcrumb.Item>
-    <Breadcrumb.Item>
-      Detaljer
-    </Breadcrumb.Item>
-  </Breadcrumb>
+  <Breadcrumb items={sampleBreadcrumbItems} />
 );
 
 /**

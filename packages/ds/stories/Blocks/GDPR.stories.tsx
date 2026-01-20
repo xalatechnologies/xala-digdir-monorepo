@@ -8,15 +8,14 @@ import {
   Switch,
   Alert,
   Badge,
-  RequestStatusBadge,
   ShieldIcon,
   DownloadIcon,
   TrashIcon,
   CheckIcon,
   ClockIcon,
 } from '@xala/ds';
-import type { RequestStatusBadgeProps } from '../../src/blocks/gdpr/RequestStatusBadge';
-import type { GdprRequestStatus } from '@digilist/client-sdk/types';
+import { GdprRequestStatusBadge as RequestStatusBadge } from '../../src/blocks/StatusBadges';
+import type { GdprRequestStatusType as GdprRequestStatus } from '../../src/blocks/StatusBadges';
 
 /**
  * GDPR components for privacy management and data subject rights.
@@ -857,6 +856,7 @@ export const PrivacyCenter: Story = {
                     <Paragraph data-size="xs" style={{ margin: 0, color: 'var(--ds-color-neutral-text-subtle)' }}>{item.desc}</Paragraph>
                   </div>
                   <Switch
+                    aria-label={item.label}
                     checked={item.checked}
                     disabled={item.disabled}
                     onChange={item.disabled ? undefined : (e) => {
