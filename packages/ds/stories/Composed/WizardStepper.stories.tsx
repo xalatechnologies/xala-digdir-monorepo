@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import { WizardStepper } from '../../src/composed/WizardStepper';
-import { Button } from '../../src';
+import { WizardStepper } from '@xala/ds/composed/WizardStepper';
+import { Button } from '@xala/ds';
 import { useState } from 'react';
 
 const meta: Meta<typeof WizardStepper> = {

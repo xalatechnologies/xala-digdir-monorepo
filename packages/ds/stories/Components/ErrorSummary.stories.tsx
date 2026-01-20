@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import { ErrorSummary } from '../../src';
+import { ErrorSummary } from '@xala/ds';
 
 const meta: Meta = {
   title: 'Components/ErrorSummary',

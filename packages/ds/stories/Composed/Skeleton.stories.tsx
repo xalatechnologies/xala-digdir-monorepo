@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import { Skeleton, SkeletonText, SkeletonCard, SkeletonTable } from '../../src/composed/Skeleton';
+import { Skeleton, SkeletonText, SkeletonCard, SkeletonTable } from '@xala/ds/composed/Skeleton';
 
 const meta: Meta<typeof Skeleton> = {
   title: 'Composed/Skeleton',

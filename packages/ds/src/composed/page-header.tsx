@@ -7,11 +7,11 @@
 import React, { forwardRef } from 'react';
 import { Heading } from '@digdir/designsystemet-react';
 
-export interface PageHeaderProps extends React.HTMLAttributes<HTMLDivElement> {
+export interface PageHeaderProps extends Omit<React.HTMLAttributes<HTMLDivElement>, 'title'> {
   /**
-   * The page title
+   * The page title (can be string or React element for complex titles)
    */
-  title: string;
+  title: React.ReactNode;
   
   /**
    * Optional subtitle or description

@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import { Alert } from '../../src';
+import { Alert } from '@xala/ds';
 
 /**
  * Alert component from Digdir Designsystemet.

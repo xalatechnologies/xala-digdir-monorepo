@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import { List } from '../../src';
+import { List } from '@xala/ds';
 
 const meta: Meta = {
   title: 'Components/List',

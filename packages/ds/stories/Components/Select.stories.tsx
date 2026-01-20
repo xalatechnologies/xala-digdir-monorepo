@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import { Select, Label, Field, ValidationMessage } from '../../src';
+import { Select, Label, Field, ValidationMessage } from '@xala/ds';
 
 const meta: Meta = {
   title: 'Components/Select',

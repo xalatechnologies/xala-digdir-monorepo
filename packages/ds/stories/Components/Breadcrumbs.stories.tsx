@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import { Breadcrumbs } from '../../src';
+import { Breadcrumbs } from '@xala/ds';
 
 const meta: Meta = {
   title: 'Components/Breadcrumbs',

@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import { Table } from '../../src';
+import { Table } from '@xala/ds';
 
 const meta: Meta = {
   title: 'Components/Table',

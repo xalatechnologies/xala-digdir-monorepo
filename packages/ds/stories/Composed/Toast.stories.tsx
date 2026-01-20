@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { useRef } from 'react';
-import { ToastProvider, useToast } from '../../src/composed/Toast';
-import { Button } from '../../src';
+import { ToastProvider, useToast } from '@xala/ds/composed/Toast';
+import { Button } from '@xala/ds';
 
 const meta: Meta = {
   title: 'Composed/Toast',

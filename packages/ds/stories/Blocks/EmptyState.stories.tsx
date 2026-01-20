@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import { Button, Heading, Paragraph } from '../../src';
-import { SearchIcon, PlusIcon } from '../../src/primitives';
+import { Button, Heading, Paragraph } from '@xala/ds';
+import { SearchIcon, PlusIcon } from '@xala/ds/primitives';
 
 /**
  * EmptyState patterns for displaying when no data is available.

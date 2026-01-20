@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import { Link, Paragraph } from '../../src';
+import { Link, Paragraph } from '@xala/ds';
 
 const meta: Meta = {
   title: 'Components/Link',

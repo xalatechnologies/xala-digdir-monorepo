@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import { Search } from '../../src';
+import { Search } from '@xala/ds';
 
 const meta: Meta = {
   title: 'Components/Search',

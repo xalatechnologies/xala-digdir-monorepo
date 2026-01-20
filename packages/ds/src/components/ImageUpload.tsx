@@ -1,31 +1,37 @@
 /**
  * ImageUpload Component
  * Drag-and-drop image upload with preview, progress, and management
- * 
- * Features:
- * - Drag and drop support
- * - Multiple file upload
- * - Image preview
- * - Progress indicators
- * - Validation (size, type)
- * - Reordering
- * - Delete uploaded images
- * 
+ *
+ * TODO: This component requires SDK file upload hooks that are not yet implemented:
+ * - useUploadFile
+ * - useUploadMultipleFiles
+ * - useDeleteFile
+ * - useFileUrl
+ *
  * @example
  * ```tsx
  * <ImageUpload
  *   entityType="rental_object"
  *   entityId={rentalObjectId}
  *   maxFiles={10}
- *   maxSizeM B={5}
+ *   maxSizeMB={5}
  *   onUploadComplete={(files) => console.log('Uploaded:', files)}
  * />
  * ```
  */
 
 import React, { useState, useRef, useCallback } from 'react';
-import { useUploadFile, useUploadMultipleFiles, useDeleteFile, useFileUrl } from '@digilist/client-sdk/hooks';
-import type { UploadFileResponse } from '@xala/contracts/storage';
+import { Button, Paragraph } from '@digdir/designsystemet-react';
+
+// Placeholder type until SDK implements file upload
+interface UploadedFile {
+  id: string;
+  url: string;
+  filename: string;
+  sizeBytes: number;
+  mimeType: string;
+  altText?: string;
+}
 
 export interface ImageUploadProps {
   /** Entity type for association */
@@ -41,32 +47,29 @@ export interface ImageUploadProps {
   /** Existing images (for display/management) */
   existingImages?: Array<{ id: string; url: string; alt?: string }>;
   /** Callback when upload completes */
-  onUploadComplete?: (files: UploadFileResponse[]) => void;
+  onUploadComplete?: (files: UploadedFile[]) => void;
   /** Callback when images change */
-  onChange?: (images: UploadFileResponse[]) => void;
+  onChange?: (images: UploadedFile[]) => void;
+  /** Disabled state */
+  disabled?: boolean;
 }
 
+/**
+ * ImageUpload - Placeholder component
+ *
+ * This component is a placeholder until SDK file upload hooks are implemented.
+ * Currently displays a stub UI for development purposes.
+ */
 export function ImageUpload({
-  entityType,
-  entityId,
-  category = 'rental-object-image',
   maxFiles = 10,
   maxSizeMB = 5,
   existingImages = [],
-  onUploadComplete,
-  onChange,
-}: ImageUploadProps) {
-  const [uploadedImages, setUploadedImages] = useState<UploadFileResponse[]>([]);
+  disabled = false,
+}: ImageUploadProps): React.ReactElement {
+  const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
   const [dragActive, setDragActive] = useState(false);
   const [errors, setErrors] = useState<string[]>([]);
   const inputRef = useRef<HTMLInputElement>(null);
-
-  const { mutate: uploadFile, isPending: isUploading } = useUploadFile();
-  const { mutate: uploadMultiple, isPending: isUploadingMultiple } = useUploadMultipleFiles();
-  const { mutate: deleteFile } = useDeleteFile();
-  const getFileUrl = useFileUrl();
-
-  const isPending = isUploading || isUploadingMultiple;
 
   // Validate file
   const validateFile = useCallback((file: File): string | null => {
@@ -76,19 +79,18 @@ export function ImageUpload({
     if (file.size > maxSizeMB * 1024 * 1024) {
       return `${file.name} exceeds ${maxSizeMB}MB`;
     }
-    if (uploadedImages.length >= maxFiles) {
+    if (selectedFiles.length + existingImages.length >= maxFiles) {
       return `Maximum ${maxFiles} images allowed`;
     }
     return null;
-  }, [maxSizeMB, maxFiles, uploadedImages.length]);
+  }, [maxSizeMB, maxFiles, selectedFiles.length, existingImages.length]);
 
-  // Handle file upload
-  const handleUpload = useCallback((files: FileList | File[]) => {
+  // Handle file selection (local preview only - no upload)
+  const handleFileSelect = useCallback((files: FileList | File[]) => {
     const fileArray = Array.from(files);
     const validationErrors: string[] = [];
     const validFiles: File[] = [];
 
-    // Validate all files
     fileArray.forEach(file => {
       const error = validateFile(file);
       if (error) {
@@ -99,35 +101,10 @@ export function ImageUpload({
     });
 
     setErrors(validationErrors);
-
-    if (validFiles.length === 0) return;
-
-    // Upload files
-    if (validFiles.length === 1) {
-      uploadFile({
-        file: validFiles[0],
-        category,
-        entityType,
-        entityId,
-      }, {
-        onSuccess: (uploaded) => {
-          const newImages = [...uploadedImages, uploaded];
-          setUploadedImages(newImages);
-          onChange?.(newImages);
-          onUploadComplete?.([uploaded]);
-        },
-      });
-    } else {
-      uploadMultiple(validFiles, {
-        onSuccess: (response) => {
-          const newImages = [...uploadedImages, ...response.files];
-          setUploadedImages(newImages);
-          onChange?.(newImages);
-          onUploadComplete?.(response.files);
-        },
-      });
+    if (validFiles.length > 0) {
+      setSelectedFiles(prev => [...prev, ...validFiles]);
     }
-  }, [uploadFile, uploadMultiple, validateFile, uploadedImages, category, entityType, entityId, onChange, onUploadComplete]);
+  }, [validateFile]);
 
   // Handle drag events
   const handleDrag = useCallback((e: React.DragEvent) => {
@@ -146,27 +123,21 @@ export function ImageUpload({
     setDragActive(false);
 
     if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
-      handleUpload(e.dataTransfer.files);
+      handleFileSelect(e.dataTransfer.files);
     }
-  }, [handleUpload]);
+  }, [handleFileSelect]);
 
   // Handle file input change
   const handleChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files.length > 0) {
-      handleUpload(e.target.files);
+      handleFileSelect(e.target.files);
     }
-  }, [handleUpload]);
+  }, [handleFileSelect]);
 
   // Handle delete
-  const handleDelete = useCallback((imageId: string) => {
-    deleteFile(imageId, {
-      onSuccess: () => {
-        const newImages = uploadedImages.filter(img => img.id !== imageId);
-        setUploadedImages(newImages);
-        onChange?.(newImages);
-      },
-    });
-  }, [deleteFile, uploadedImages, onChange]);
+  const handleDelete = useCallback((index: number) => {
+    setSelectedFiles(prev => prev.filter((_, i) => i !== index));
+  }, []);
 
   // Open file picker
   const openFilePicker = () => {
@@ -174,15 +145,24 @@ export function ImageUpload({
   };
 
   return (
-    <div className="image-upload">
+    <div style={{ width: '100%' }}>
       {/* Dropzone */}
       <div
-        className={`dropzone ${dragActive ? 'drag-active' : ''} ${isPending ? 'uploading' : ''}`}
-        onDragEnter={handleDrag}
-        onDragLeave={handleDrag}
-        onDragOver={handleDrag}
-        onDrop={handleDrop}
-        onClick={openFilePicker}
+        style={{
+          border: `2px dashed ${dragActive ? 'var(--ds-color-accent-base-default)' : 'var(--ds-color-neutral-border-default)'}`,
+          borderRadius: 'var(--ds-border-radius-md)',
+          padding: 'var(--ds-spacing-8) var(--ds-spacing-4)',
+          textAlign: 'center',
+          cursor: disabled ? 'not-allowed' : 'pointer',
+          transition: 'all 0.2s',
+          backgroundColor: dragActive ? 'var(--ds-color-accent-surface-default)' : 'var(--ds-color-neutral-surface-hover)',
+          opacity: disabled ? 0.6 : 1,
+        }}
+        onDragEnter={disabled ? undefined : handleDrag}
+        onDragLeave={disabled ? undefined : handleDrag}
+        onDragOver={disabled ? undefined : handleDrag}
+        onDrop={disabled ? undefined : handleDrop}
+        onClick={disabled ? undefined : openFilePicker}
       >
         <input
           ref={inputRef}
@@ -190,248 +170,139 @@ export function ImageUpload({
           accept="image/*"
           multiple
           onChange={handleChange}
+          disabled={disabled}
           style={{ display: 'none' }}
         />
 
-        <div className="dropzone-content">
-          {isPending ? (
-            <div className="uploading-state">
-              <div className="spinner" />
-              <p>Uploading images...</p>
-            </div>
-          ) : (
-            <>
-              <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M17 8l-5-5-5 5M12 3v12" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-              </svg>
-              <p className="dropzone-title">
-                Drag and drop images here, or click to select
-              </p>
-              <p className="dropzone-subtitle">
-                Max {maxFiles} images · Up to {maxSizeMB}MB each · PNG, JPG, WebP
-              </p>
-            </>
-          )}
+        <div>
+          <svg
+            width="48"
+            height="48"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            style={{ margin: '0 auto var(--ds-spacing-3)', color: 'var(--ds-color-neutral-text-subtle)' }}
+          >
+            <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M17 8l-5-5-5 5M12 3v12" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+          </svg>
+          <Paragraph data-size="md" style={{ margin: '0 0 var(--ds-spacing-2)', fontWeight: 600 }}>
+            Drag and drop images here, or click to select
+          </Paragraph>
+          <Paragraph data-size="sm" style={{ margin: 0, color: 'var(--ds-color-neutral-text-subtle)' }}>
+            Max {maxFiles} images · Up to {maxSizeMB}MB each · PNG, JPG, WebP
+          </Paragraph>
         </div>
       </div>
 
       {/* Errors */}
       {errors.length > 0 && (
-        <div className="errors">
+        <div style={{ marginTop: 'var(--ds-spacing-3)', display: 'flex', flexDirection: 'column', gap: 'var(--ds-spacing-2)' }}>
           {errors.map((error, i) => (
-            <div key={i} className="error-message">
+            <div
+              key={i}
+              style={{
+                padding: 'var(--ds-spacing-3) var(--ds-spacing-4)',
+                background: 'var(--ds-color-danger-surface-default)',
+                border: '1px solid var(--ds-color-danger-border-default)',
+                borderRadius: 'var(--ds-border-radius-sm)',
+                color: 'var(--ds-color-danger-base-default)',
+                fontSize: 'var(--ds-font-size-sm)',
+              }}
+            >
               {error}
             </div>
           ))}
         </div>
       )}
 
-      {/* Image Grid */}
-      {(uploadedImages.length > 0 || existingImages.length > 0) && (
-        <div className="image-grid">
+      {/* Image Grid - Local previews only */}
+      {(selectedFiles.length > 0 || existingImages.length > 0) && (
+        <div style={{
+          marginTop: 'var(--ds-spacing-4)',
+          display: 'grid',
+          gridTemplateColumns: 'repeat(auto-fill, minmax(150px, 1fr))',
+          gap: 'var(--ds-spacing-3)',
+        }}>
           {existingImages.map((image, index) => (
-            <div key={`existing-${index}`} className="image-card">
-              <img src={getFileUrl(image.url)} alt={image.alt || `Image ${index + 1}`} />
-              <div className="image-overlay">
-                <button
-                  type="button"
-                  className="delete-btn"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    // Handle existing image delete
-                  }}
-                >
-                  ✕
-                </button>
-              </div>
+            <div
+              key={`existing-${index}`}
+              style={{
+                position: 'relative',
+                aspectRatio: '1',
+                borderRadius: 'var(--ds-border-radius-md)',
+                overflow: 'hidden',
+                background: 'var(--ds-color-neutral-surface-default)',
+                border: '1px solid var(--ds-color-neutral-border-default)',
+              }}
+            >
+              <img
+                src={image.url}
+                alt={image.alt || `Image ${index + 1}`}
+                style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+              />
             </div>
           ))}
 
-          {uploadedImages.map((image) => (
-            <div key={image.id} className="image-card">
-              <img src={getFileUrl(image.url)} alt={image.altText || 'Uploaded'} />
-              <div className="image-overlay">
-                <button
-                  type="button"
-                  className="delete-btn"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    handleDelete(image.id);
-                  }}
-                >
-                  ✕
-                </button>
-              </div>
-              <div className="image-meta">
-                <span className="file-size">{(image.sizeBytes / 1024).toFixed(0)} KB</span>
+          {selectedFiles.map((file, index) => (
+            <div
+              key={`selected-${index}`}
+              style={{
+                position: 'relative',
+                aspectRatio: '1',
+                borderRadius: 'var(--ds-border-radius-md)',
+                overflow: 'hidden',
+                background: 'var(--ds-color-neutral-surface-default)',
+                border: '1px solid var(--ds-color-neutral-border-default)',
+              }}
+            >
+              <img
+                src={URL.createObjectURL(file)}
+                alt={file.name}
+                style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+              />
+              <Button
+                type="button"
+                variant="primary"
+                data-size="sm"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleDelete(index);
+                }}
+                style={{
+                  position: 'absolute',
+                  top: 'var(--ds-spacing-2)',
+                  right: 'var(--ds-spacing-2)',
+                  minWidth: 'auto',
+                  padding: 'var(--ds-spacing-1)',
+                  backgroundColor: 'var(--ds-color-danger-base-default)',
+                }}
+              >
+                ✕
+              </Button>
+              <div style={{
+                position: 'absolute',
+                bottom: 0,
+                left: 0,
+                right: 0,
+                padding: 'var(--ds-spacing-2)',
+                background: 'linear-gradient(to top, rgba(0,0,0,0.7), transparent)',
+              }}>
+                <span style={{
+                  fontSize: 'var(--ds-font-size-xs)',
+                  color: 'white',
+                }}>
+                  {(file.size / 1024).toFixed(0)} KB
+                </span>
               </div>
             </div>
           ))}
         </div>
       )}
 
-      <style jsx>{`
-        .image-upload {
-          width: 100%;
-        }
-
-        .dropzone {
-          border: 2px dashed var(--ds-color-neutral-border-default);
-          border-radius: var(--ds-border-radius-md);
-          padding: var(--ds-spacing-8) var(--ds-spacing-4);
-          text-align: center;
-          cursor: pointer;
-          transition: all 0.2s;
-          background: var(--ds-color-neutral-surface-hover);
-        }
-
-        .dropzone:hover {
-          border-color: var(--ds-color-accent-base-default);
-          background: var(--ds-color-accent-surface-default);
-        }
-
-        .dropzone.drag-active {
-          border-color: var(--ds-color-accent-base-default);
-          background: var(--ds-color-accent-surface-hover);
-        }
-
-        .dropzone.uploading {
-          cursor: not-allowed;
-          opacity: 0.6;
-        }
-
-        .dropzone-content svg {
-          margin: 0 auto var(--ds-spacing-3);
-          color: var(--ds-color-neutral-text-subtle);
-        }
-
-        .dropzone-title {
-          font-size: var(--ds-font-size-md);
-          font-weight: var(--ds-font-weight-semibold);
-          color: var(--ds-color-neutral-text-default);
-          margin: 0 0 var(--ds-spacing-2);
-        }
-
-        .dropzone-subtitle {
-          font-size: var(--ds-font-size-sm);
-          color: var(--ds-color-neutral-text-subtle);
-          margin: 0;
-        }
-
-        .uploading-state {
-          display: flex;
-          flex-direction: column;
-          align-items: center;
-          gap: var(--ds-spacing-3);
-        }
-
-        .spinner {
-          width: 40px;
-          height: 40px;
-          border: 4px solid var(--ds-color-neutral-border-default);
-          border-top-color: var(--ds-color-accent-base-default);
-          border-radius: 50%;
-          animation: spin 1s linear infinite;
-        }
-
-        @keyframes spin {
-          to { transform: rotate(360deg); }
-        }
-
-        .errors {
-          margin-top: var(--ds-spacing-3);
-          display: flex;
-          flex-direction: column;
-          gap: var(--ds-spacing-2);
-        }
-
-        .error-message {
-          padding: var(--ds-spacing-3) var(--ds-spacing-4);
-          background: var(--ds-color-danger-surface-default);
-          border: 1px solid var(--ds-color-danger-border-default);
-          border-radius: var(--ds-border-radius-sm);
-          color: var(--ds-color-danger-base-default);
-          font-size: var(--ds-font-size-sm);
-        }
-
-        .image-grid {
-          margin-top: var(--ds-spacing-4);
-          display: grid;
-          grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-          gap: var(--ds-spacing-3);
-        }
-
-        .image-card {
-          position: relative;
-          aspect-ratio: 1;
-          border-radius: var(--ds-border-radius-md);
-          overflow: hidden;
-          background: var(--ds-color-neutral-surface-default);
-          border: 1px solid var(--ds-color-neutral-border-default);
-        }
-
-        .image-card img {
-          width: 100%;
-          height: 100%;
-          object-fit: cover;
-        }
-
-        .image-overlay {
-          position: absolute;
-          top: 0;
-          right: 0;
-          left: 0;
-          bottom: 0;
-          background: linear-gradient(to bottom, var(--ds-color-neutral-background-overlay) 0%, transparent 40%);
-          opacity: 0;
-          transition: opacity 0.2s;
-          display: flex;
-          align-items: flex-start;
-          justify-content: flex-end;
-          padding: var(--ds-spacing-2);
-        }
-
-        .image-card:hover .image-overlay {
-          opacity: 1;
-        }
-
-        .delete-btn {
-          background: var(--ds-color-danger-base-default);
-          color: var(--ds-color-neutral-text-on-inverted);
-          border: none;
-          border-radius: var(--ds-border-radius-sm);
-          width: 32px;
-          height: 32px;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          cursor: pointer;
-          font-size: var(--ds-font-size-lg);
-          transition: background 0.2s;
-        }
-
-        .delete-btn:hover {
-          background: var(--ds-color-danger-base-hover);
-        }
-
-        .image-meta {
-          position: absolute;
-          bottom: 0;
-          left: 0;
-          right: 0;
-          background: linear-gradient(to top, var(--ds-color-neutral-background-overlay), transparent);
-          padding: var(--ds-spacing-2);
-          display: flex;
-          justify-content: space-between;
-          align-items: center;
-        }
-
-        .file-size {
-          font-size: var(--ds-font-size-xs);
-          color: var(--ds-color-neutral-text-on-inverted);
-          font-weight: var(--ds-font-weight-medium);
-        }
-      `}</style>
+      {/* Placeholder notice */}
+      <Paragraph data-size="xs" style={{ marginTop: 'var(--ds-spacing-4)', color: 'var(--ds-color-warning-text-default)' }}>
+        Note: Upload functionality requires SDK hooks (useUploadFile, etc.) to be implemented.
+      </Paragraph>
     </div>
   );
 }

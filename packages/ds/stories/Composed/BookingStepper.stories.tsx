@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import { BookingStepper } from '../../src/composed/BookingStepper';
-import { Button } from '../../src';
+import { BookingStepper } from '@xala/ds/composed/BookingStepper';
+import { Button } from '@xala/ds';
 import { useState } from 'react';
 
 const meta: Meta<typeof BookingStepper> = {

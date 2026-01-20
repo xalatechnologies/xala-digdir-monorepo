@@ -6,7 +6,8 @@
  */
 
 import React, { forwardRef } from 'react';
-import { Heading, Badge } from '@xala/ds';
+import { Heading } from '@digdir/designsystemet-react';
+import { Badge } from '../../primitives';
 import { PageHeader, PageHeaderProps } from '../page-header';
 
 export interface DataPageHeaderProps extends Omit<PageHeaderProps, 'title'> {
@@ -24,7 +25,7 @@ export const DataPageHeader = forwardRef<HTMLDivElement, DataPageHeaderProps>(
       <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--ds-spacing-2)' }}>
         <span>{title}</span>
         {count > 0 && (
-          <Badge color="neutral" size="sm">
+          <Badge variant="neutral" size="sm">
             {countLabel.replace('{{count}}', count.toString())}
           </Badge>
         )}

@@ -213,29 +213,25 @@ MobileNavToggle.displayName = 'MobileNavToggle';
  * </MobileNav>
  * ```
  */
-export const MobileNav = forwardRef<HTMLDivElement, MobileNavProps>(
-  (
-    {
-      isOpen,
-      onClose,
-      items,
-      sections,
-      children,
-      header,
-      footer,
-      title = 'Meny',
-      position = 'left',
-      size = 'sm',
-      closeOnItemClick = true,
-      closeOnOverlayClick = true,
-      closeOnEscape = true,
-      overlay = true,
-      mobilePosition = 'left',
-      mobileSize = 'lg',
-      ...drawerProps
-    },
-    ref
-  ) => {
+export function MobileNav({
+  isOpen,
+  onClose,
+  items,
+  sections,
+  children,
+  header,
+  footer,
+  title = 'Meny',
+  position = 'left',
+  size = 'sm',
+  closeOnItemClick = true,
+  closeOnOverlayClick = true,
+  closeOnEscape = true,
+  overlay = true,
+  mobilePosition = 'left',
+  mobileSize = 'lg',
+  ...drawerProps
+}: MobileNavProps): React.ReactElement {
     const handleItemClick = useCallback(
       (item: MobileNavItem) => {
         if (item.disabled) return;
@@ -396,7 +392,6 @@ export const MobileNav = forwardRef<HTMLDivElement, MobileNavProps>(
 
     return (
       <Drawer
-        ref={ref}
         isOpen={isOpen}
         onClose={onClose}
         position={position}
@@ -426,9 +421,6 @@ export const MobileNav = forwardRef<HTMLDivElement, MobileNavProps>(
         {content}
       </Drawer>
     );
-  }
-);
-
-MobileNav.displayName = 'MobileNav';
+}
 
 export default MobileNav;

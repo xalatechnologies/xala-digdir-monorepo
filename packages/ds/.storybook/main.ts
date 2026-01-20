@@ -54,6 +54,8 @@ export default defineMain({
         alias: {
           ...config.resolve?.alias,
           '@xala/ds': new URL('../src', import.meta.url).pathname,
+          // Storybook 10 exports blocks from addon-docs, not standalone @storybook/blocks
+          '@storybook/blocks': '@storybook/addon-docs/blocks',
         },
       },
     };

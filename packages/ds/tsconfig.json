@@ -8,8 +8,13 @@
     "composite": true,
     "declaration": true,
     "declarationMap": true,
-    "outDir": "./dist"
+    "outDir": "./dist",
+    "baseUrl": ".",
+    "paths": {
+      "@xala/ds": ["./src/index.ts"],
+      "@xala/ds/*": ["./src/*"]
+    }
   },
-  "include": ["src/**/*"],
+  "include": ["src/**/*", "stories/**/*"],
   "exclude": ["node_modules", "dist", "src/**/*.test.tsx", "src/**/*.test.ts", "src/__tests__"]
 }

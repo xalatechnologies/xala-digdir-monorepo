@@ -142,8 +142,12 @@ export function SearchableSelect({
     const ungrouped: SelectOption[] = [];
     filteredOptions.forEach((opt) => {
       if (opt.group) {
-        if (!groups[opt.group]) groups[opt.group] = [];
-        groups[opt.group].push(opt);
+        const groupArray = groups[opt.group];
+        if (!groupArray) {
+          groups[opt.group] = [opt];
+        } else {
+          groupArray.push(opt);
+        }
       } else {
         ungrouped.push(opt);
       }

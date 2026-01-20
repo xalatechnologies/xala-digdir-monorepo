@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { useState } from 'react';
-import { ConfirmDialog, ActionDialog } from '../../src/composed/ConfirmDialog';
-import { Button } from '../../src';
+import { ConfirmDialog, ActionDialog } from '@xala/ds/composed/ConfirmDialog';
+import { Button } from '@xala/ds';
 
 const meta: Meta<typeof ConfirmDialog> = {
   title: 'Composed/ConfirmDialog',

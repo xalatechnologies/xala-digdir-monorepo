@@ -845,6 +845,9 @@ importers:
       '@xala/i18n':
         specifier: workspace:*
         version: link:../i18n
+      date-fns:
+        specifier: ^4.1.0
+        version: 4.1.0
       mapbox-gl:
         specifier: ^3.17.0
         version: 3.17.0
@@ -1011,6 +1014,40 @@ importers:
       yaml:
         specifier: ^2.3.4
         version: 2.8.2
+
+  packages/runtime:
+    dependencies:
+      '@digdir/designsystemet-react':
+        specifier: 1.2.0
+        version: 1.2.0(@types/react@18.3.27)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      '@digilist/client-sdk':
+        specifier: workspace:*
+        version: link:../client-sdk
+      '@tanstack/react-query':
+        specifier: ^5.62.16
+        version: 5.90.16(react@18.3.1)
+      '@xala/auth':
+        specifier: workspace:*
+        version: link:../auth
+      '@xala/ds':
+        specifier: workspace:*
+        version: link:../ds
+      '@xala/i18n':
+        specifier: workspace:*
+        version: link:../i18n
+      react:
+        specifier: ^18.3.1
+        version: 18.3.1
+      react-dom:
+        specifier: ^18.3.1
+        version: 18.3.1(react@18.3.1)
+    devDependencies:
+      '@types/react':
+        specifier: ^18.3.27
+        version: 18.3.27
+      typescript:
+        specifier: ^5.3.0
+        version: 5.9.3
 
   packages/sdk-core:
     dependencies:
@@ -1817,6 +1854,12 @@ packages:
 
   '@digdir/designsystemet-css@1.9.0':
     resolution: {integrity: sha512-0vnCjgncLrGT1ldXzyc0qJ3rZpf/iin/2ZP7hCxxkgfP/BKgb3UBpnc6ZzkC8vvrFq1s3LMEy9udCTD4LVtQZQ==}
+
+  '@digdir/designsystemet-react@1.2.0':
+    resolution: {integrity: sha512-SKs9aaGuocG/ge16cOtky1w62o5UpDxQ2hI+bo45T826KfnOs/cXzAgv9hc+BOA1HVeYdPWiPRhuMPk6/NTpwg==}
+    peerDependencies:
+      react: ^18.3.1
+      react-dom: ^18.3.1
 
   '@digdir/designsystemet-react@1.9.0':
     resolution: {integrity: sha512-/RapjnOUUy4pzLXnDi5qMp3xiAaFCwb8v8/STFNDhA8SFDGSjsanRzNb8YNFZSqE9bXh/ZhAdVMZM2RJu9b7AQ==}
@@ -3664,6 +3707,9 @@ packages:
   '@typescript-eslint/visitor-keys@8.52.0':
     resolution: {integrity: sha512-ink3/Zofus34nmBsPjow63FP5M7IGff0RKAgqR6+CFpdk22M7aLwC9gOcLGYqr7MczLPzZVERW9hRog3O4n1sQ==}
     engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
+
+  '@u-elements/u-combobox@0.0.20':
+    resolution: {integrity: sha512-M3vVdXX8FKQssTwOyWNJtBwgG5JT4JgTckquFkoFjHUE5lcFsoBR3L+X48nCK+wv7UC2DOxuEL7OqMbmXtWh1Q==}
 
   '@u-elements/u-combobox@1.0.5':
     resolution: {integrity: sha512-43c9Z9DIKxK+xcLhUVDZCzRRPCZNMJlFrNwF6jaCUw119RcyGMAt38Lc0giXqxvkrxKIBVBTYwMiTA+iDEvm6g==}
@@ -9594,6 +9640,22 @@ snapshots:
 
   '@digdir/designsystemet-css@1.9.0(patch_hash=k25c72zgxe3xdvgjnjvmmamjhu)': {}
 
+  '@digdir/designsystemet-react@1.2.0(@types/react@18.3.27)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)':
+    dependencies:
+      '@floating-ui/dom': 1.7.4
+      '@floating-ui/react': 0.26.23(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      '@navikt/aksel-icons': 7.38.0
+      '@radix-ui/react-slot': 1.2.4(@types/react@18.3.27)(react@18.3.1)
+      '@tanstack/react-virtual': 3.13.18(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      '@u-elements/u-combobox': 0.0.20
+      '@u-elements/u-datalist': 1.0.14
+      '@u-elements/u-details': 0.1.5
+      clsx: 2.1.1
+      react: 18.3.1
+      react-dom: 18.3.1(react@18.3.1)
+    transitivePeerDependencies:
+      - '@types/react'
+
   '@digdir/designsystemet-react@1.9.0(@types/react@18.3.27)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)':
     dependencies:
       '@digdir/designsystemet-types': 1.9.0
@@ -11447,6 +11509,8 @@ snapshots:
     dependencies:
       '@typescript-eslint/types': 8.52.0
       eslint-visitor-keys: 4.2.1
+
+  '@u-elements/u-combobox@0.0.20': {}
 
   '@u-elements/u-combobox@1.0.5': {}
 

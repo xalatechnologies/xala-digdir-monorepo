@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import { Heading, Paragraph, Label } from '../../src';
+import { Heading, Paragraph, Label } from '@xala/ds';
 
 const meta: Meta = {
   title: 'Fundamentals/Typography',

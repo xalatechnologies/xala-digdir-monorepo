@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { fn, expect, userEvent, within } from 'storybook/test';
-import { Button } from '../../src';
-import { PlusIcon, SaveIcon, TrashIcon } from '../../src/primitives';
+import { Button } from '@xala/ds';
+import { PlusIcon, SaveIcon, TrashIcon } from '@xala/ds/primitives';
 
 /**
  * Button component from Digdir Designsystemet.

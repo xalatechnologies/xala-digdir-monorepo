@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import { RentalObjectCard } from '../../src/blocks/RentalObjectCard';
+import { RentalObjectCard } from '@xala/ds/blocks/RentalObjectCard';
 
 const meta: Meta<typeof RentalObjectCard> = {
   title: 'Blocks/RentalObjectCard',

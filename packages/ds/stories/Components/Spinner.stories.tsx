@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import { Button, Spinner } from '../../src';
+import { Button, Spinner } from '@xala/ds';
 
 const meta: Meta = {
   title: 'Components/Spinner',

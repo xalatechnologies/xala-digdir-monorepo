@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { useState } from 'react';
-import { WizardStepper, WizardNavigation } from '../../src/composed/data-page/Wizard';
-import { Button, Paragraph } from '../../src';
+import { WizardStepper, WizardNavigation } from '@xala/ds/composed/data-page/Wizard';
+import { Button, Paragraph } from '@xala/ds';
 
 const meta: Meta = {
   title: 'Composed/Wizard',

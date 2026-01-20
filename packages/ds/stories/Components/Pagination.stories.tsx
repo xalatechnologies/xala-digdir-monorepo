@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import { Pagination } from '../../src';
-import { usePagination } from '../../src';
+import { Pagination } from '@xala/ds';
+import { usePagination } from '@xala/ds';
 
 const meta: Meta = {
   title: 'Components/Pagination',

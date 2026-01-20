@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import { PageHeader } from '../../src/composed';
-import { Button, Breadcrumbs } from '../../src';
-import { PlusIcon, DownloadIcon } from '../../src/primitives';
+import { PageHeader } from '@xala/ds/composed';
+import { Button, Breadcrumbs } from '@xala/ds';
+import { PlusIcon, DownloadIcon } from '@xala/ds/primitives';
 
 /**
  * PageHeader provides a consistent header for pages with title, breadcrumbs, and actions.

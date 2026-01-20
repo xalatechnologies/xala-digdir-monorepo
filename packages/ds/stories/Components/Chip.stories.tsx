@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import { Chip } from '../../src';
+import { Chip } from '@xala/ds';
 import { useState } from 'react';
 
 const meta: Meta = {

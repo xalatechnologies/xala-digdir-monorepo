@@ -23,7 +23,10 @@ export default defineConfig({
   },
   resolve: {
     alias: {
+      '@xala/runtime': path.resolve(__dirname, '../../packages/runtime/src'),
       '@xala/ds': path.resolve(__dirname, '../../packages/ds/src'),
+      '@xala/i18n': path.resolve(__dirname, '../../packages/i18n/src'),
+      '@xala/auth': path.resolve(__dirname, '../../packages/auth/src'),
       '@digdir/designsystemet-css': path.resolve(__dirname, '../../node_modules/@digdir/designsystemet-css'),
       '@digilist/client-sdk': path.resolve(__dirname, '../../packages/client-sdk/src'),
       '@digilist/client-sdk/hooks': path.resolve(__dirname, '../../packages/client-sdk/src/hooks'),

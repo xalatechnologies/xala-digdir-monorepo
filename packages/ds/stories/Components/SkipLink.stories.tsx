@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import { SkipLink, Paragraph } from '../../src';
+import { SkipLink, Paragraph } from '@xala/ds';
 
 const meta: Meta = {
   title: 'Components/SkipLink',

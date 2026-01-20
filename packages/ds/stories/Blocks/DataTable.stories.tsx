@@ -1,6 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import { DataTable, type ColumnDef } from '../../src/composed';
-import { Badge, Button } from '../../src/primitives';
+import { DataTable, Badge, Button, type ColumnDef } from '@xala/ds';
 
 interface User {
   id: string;

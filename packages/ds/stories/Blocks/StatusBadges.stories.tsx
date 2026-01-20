@@ -20,7 +20,7 @@ import {
   IntegrationStatusBadge,
   GdprRequestStatusBadge,
   BlockStatusBadge,
-} from '../../src/blocks/StatusBadges';
+} from '@xala/ds/blocks/StatusBadges';
 
 const meta: Meta = {
   title: 'Blocks/StatusBadges',

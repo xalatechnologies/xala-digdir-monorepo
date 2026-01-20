@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import { Container } from '../../src/primitives/container';
-import { Grid } from '../../src/primitives/grid';
-import { Stack } from '../../src/primitives/stack';
+import { Container } from '@xala/ds/primitives/container';
+import { Grid } from '@xala/ds/primitives/grid';
+import { Stack } from '@xala/ds/primitives/stack';
 
 const meta: Meta = {
   title: 'Primitives/Layout',

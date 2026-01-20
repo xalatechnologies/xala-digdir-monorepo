@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import { Stepper, useWizard } from '../../src/composed/Stepper';
-import { Button, Paragraph } from '../../src';
+import { Stepper, useWizard } from '@xala/ds/composed/Stepper';
+import { Button, Paragraph } from '@xala/ds';
 
 const meta: Meta<typeof Stepper> = {
   title: 'Composed/Stepper',

@@ -152,23 +152,34 @@ export function ProtectedRoute({
   const hasStoredContext = useRef(false);
 
   // Get tenant ID from props, environment, or fallback
-  const resolvedTenantId = tenantId
-    ?? import.meta.env.VITE_TENANT_ID
-    ?? 'app';
+  // Note: import.meta.env requires Vite types which may not be available in DS package
+  const getEnvTenantId = (): string | undefined => {
+    try {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const env = (import.meta as any)?.env;
+      return env?.VITE_TENANT_ID as string | undefined;
+    } catch {
+      return undefined;
+    }
+  };
+  const resolvedTenantId = tenantId ?? getEnvTenantId() ?? 'app';
 
   // Use custom checkRole or default from auth hook
   const checkRoleFn = customCheckRole || authCheckRole || (() => false);
 
   // Check role access
+  // Note: checkRoleFn may expect specific UserRole type, cast string as needed
   const hasRequiredRole = useMemo(() => {
     if (!requiredRole) return true;
-    
+
     if (Array.isArray(requiredRole)) {
       // User needs ANY of the roles
-      return requiredRole.some((role) => checkRoleFn(role));
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      return requiredRole.some((role) => checkRoleFn(role as any));
     }
-    
-    return checkRoleFn(requiredRole);
+
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    return checkRoleFn(requiredRole as any);
   }, [requiredRole, checkRoleFn]);
 
   // Check capability access

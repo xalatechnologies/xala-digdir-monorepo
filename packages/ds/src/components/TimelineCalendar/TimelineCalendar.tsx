@@ -215,7 +215,7 @@ export const TimelineCalendar: React.FC<TimelineCalendarProps> = ({
         <div className="timeline-content">
           {/* Time labels */}
           <div className="timeline-time-column">
-            {hours.map(hour => (
+            {hours.map((hour: Date) => (
               <div key={hour.toISOString()} className="timeline-hour-label">
                 {format(hour, 'HH:mm', { locale: nb })}
               </div>
@@ -226,7 +226,7 @@ export const TimelineCalendar: React.FC<TimelineCalendarProps> = ({
           {rentalObjects.map(ro => (
             <div key={ro.id} className="timeline-resource-column">
               {/* Hour grid */}
-              {hours.map(hour => (
+              {hours.map((hour: Date) => (
                 <div
                   key={hour.toISOString()}
                   className="timeline-hour-slot"

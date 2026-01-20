@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import { Radio, Fieldset, ValidationMessage } from '../../src';
+import { Radio, Fieldset, ValidationMessage } from '@xala/ds';
 
 const meta: Meta = {
   title: 'Components/Radio',

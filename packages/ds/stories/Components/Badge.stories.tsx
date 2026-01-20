@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import { Badge, Button } from '../../src';
+import { Badge, Button } from '@xala/ds';
 
 const meta: Meta = {
   title: 'Components/Badge',

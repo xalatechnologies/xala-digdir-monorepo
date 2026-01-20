@@ -311,7 +311,7 @@ export function RentalObjectCalendar({
         {Array.from(slotsByDate.entries()).map(([dateKey, dateSlots]) => (
           <div key={dateKey} className="calendar-day">
             <div className="day-header">
-              <span className="day-date">{formatDate(dateSlots[0].startTime, locale)}</span>
+              <span className="day-date">{dateSlots[0] && formatDate(dateSlots[0].startTime, locale)}</span>
             </div>
             <div className="day-slots">
               {dateSlots.map(slot => (

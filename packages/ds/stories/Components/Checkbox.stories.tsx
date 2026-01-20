@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import { Checkbox, Fieldset, ValidationMessage } from '../../src';
+import { Checkbox, Fieldset, ValidationMessage } from '@xala/ds';
 
 const meta: Meta = {
   title: 'Components/Checkbox',
