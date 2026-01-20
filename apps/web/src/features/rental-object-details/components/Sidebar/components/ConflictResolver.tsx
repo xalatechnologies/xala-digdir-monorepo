@@ -376,7 +376,7 @@ function ConflictCard({
                 color: 'var(--ds-color-neutral-text-subtle)',
               }}
             >
-              Ingen tilgjengelige alternativer funnet for denne datoen.
+              {t('booking.conflict.noAlternatives')}
             </Paragraph>
           )}
 
@@ -389,7 +389,7 @@ function ConflictCard({
               onClick={onSkip}
               style={{ width: '100%' }}
             >
-              t('actions.hopp_over_denne_datoen')
+              {t('action.skipDate')}
             </Button>
           </div>
         </div>
@@ -404,7 +404,7 @@ function ConflictCard({
           onClick={onSkip} // We reuse onSkip to reset, will be handled in parent
           style={{ width: '100%' }}
         >
-          t('actions.angre_valg')
+          {t('action.undo')}
         </Button>
       )}
     </Card>

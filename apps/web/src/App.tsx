@@ -135,7 +135,7 @@ function MainLayout() {
                 onClick={() => {
                   // TODO: Open notification center modal
                 }}
-                aria-label={`Varsler${unreadCount > 0 ? ` (${unreadCount} uleste)` : ''}`}
+                aria-label={unreadCount > 0 ? t('notifications.bellWithUnread', { count: unreadCount }) : t('notifications.bell')}
               />
             )}
             {isAuthenticated && user ? (

@@ -107,7 +107,7 @@ export function ReviewList({
         }}
       >
         <Text size="md" color="var(--ds-color-danger-text-default)">
-          Kunne ikke laste anmeldelser. Prøv igjen senere.
+          {t('reviews.error.loadFailed')}
         </Text>
       </div>
     );

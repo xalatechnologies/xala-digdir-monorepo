@@ -227,7 +227,7 @@ export function PaymentSection({
               {Icons.info}
             </span>
             <Paragraph data-size="sm" style={{ margin: 0, color: 'var(--ds-color-danger-text-default)' }}>
-              Kunne ikke starte betaling. Vennligst prøv igjen.
+              {t('payment.error.initiateFailed')}
             </Paragraph>
           </div>
         )}

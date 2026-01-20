@@ -6,112 +6,15 @@
  */
 
 import * as React from 'react';
-import { Heading, Paragraph, Button } from '@xala/ds';
+import { Heading, Paragraph, Button, CheckCircleIcon, XCircleIcon, AlertTriangleIcon, ExternalLinkIcon } from '@xala/ds';
 import type {
   RecurringBookingResultProjectionDTO,
   RecurringOccurrenceResultDTO,
 } from '@digilist/client-sdk';
+import { formatDate, formatTime } from '@digilist/client-sdk';
 import { useT } from '@xala/i18n';
 
-// =============================================================================
-// Icons
-// =============================================================================
-
-function CheckCircleIcon({ size = 16 }: { size?: number }): React.ReactElement {
-  return (
-    <svg
-      width={size}
-      height={size}
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
-      <polyline points="22 4 12 14.01 9 11.01" />
-    </svg>
-  );
-}
-
-function XCircleIcon({ size = 16 }: { size?: number }): React.ReactElement {
-  return (
-    <svg
-      width={size}
-      height={size}
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <circle cx="12" cy="12" r="10" />
-      <line x1="15" y1="9" x2="9" y2="15" />
-      <line x1="9" y1="9" x2="15" y2="15" />
-    </svg>
-  );
-}
-
-function AlertTriangleIcon({ size = 16 }: { size?: number }): React.ReactElement {
-  return (
-    <svg
-      width={size}
-      height={size}
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z" />
-      <line x1="12" y1="9" x2="12" y2="13" />
-      <line x1="12" y1="17" x2="12.01" y2="17" />
-    </svg>
-  );
-}
-
-function CalendarCheckIcon({ size = 18 }: { size?: number }): React.ReactElement {
-  return (
-    <svg
-      width={size}
-      height={size}
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
-      <line x1="16" y1="2" x2="16" y2="6" />
-      <line x1="8" y1="2" x2="8" y2="6" />
-      <line x1="3" y1="10" x2="21" y2="10" />
-      <path d="M9 16l2 2 4-4" />
-    </svg>
-  );
-}
-
-function ExternalLinkIcon({ size = 14 }: { size?: number }): React.ReactElement {
-  return (
-    <svg
-      width={size}
-      height={size}
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
-      <polyline points="15 3 21 3 21 9" />
-      <line x1="10" y1="14" x2="21" y2="3" />
-    </svg>
-  );
-}
+// Icons are imported from @xala/ds above
 
 // =============================================================================
 // Types
@@ -145,51 +48,28 @@ type ResultType = 'success' | 'partial' | 'failure';
 // Constants
 // =============================================================================
 
-/**
- * Norwegian weekday names
- */
-const WEEKDAY_NAMES = ['Søndag', 'Mandag', 'Tirsdag', 'Onsdag', 'Torsdag', 'Fredag', 'Lørdag'];
-
-/**
- * Norwegian month names
- */
-const MONTH_NAMES = ['jan', 'feb', 'mar', 'apr', 'mai', 'jun', 'jul', 'aug', 'sep', 'okt', 'nov', 'des'];
-
-/**
- * Reason key to Norwegian label mapping
- */
-const REASON_LABELS: Record<string, string> = {
-  'booking.conflict.existingBooking': 'Kolliderer med eksisterende booking',
-  'booking.conflict.reserved': 'Reservert av annen bruker',
-  'booking.conflict.blocked': 'Blokkert av administrator',
-  'booking.conflict.blackout': 'Stengt periode',
-  'booking.conflict.closed': 'Stengt',
-  'booking.conflict.unavailable': 'Ikke tilgjengelig',
-};
-
 // =============================================================================
 // Helper Functions
 // =============================================================================
 
 /**
- * Format date for display (Norwegian format)
+ * Format date for display with weekday (using i18n)
  */
-function formatDate(dateString: string): string {
+function formatDateLocal(dateString: string, t: (key: string) => string): string {
   const date = new Date(dateString);
-  const weekday = WEEKDAY_NAMES[date.getDay()] ?? '';
-  const day = date.getDate();
-  const month = MONTH_NAMES[date.getMonth()] ?? '';
-  return `${weekday} ${day}. ${month}`;
+  const weekdayKey = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'][date.getDay()] ?? 'sunday';
+  const weekday = t(`weekdays.long.${weekdayKey}`);
+  const formattedDate = formatDate(dateString, { day: 'numeric', month: 'short' });
+  return `${weekday} ${formattedDate}`;
 }
 
 /**
- * Format time for display (HH:MM format)
+ * Get reason label using i18n
  */
-function formatTime(dateString: string): string {
-  const date = new Date(dateString);
-  const hours = date.getHours().toString().padStart(2, '0');
-  const minutes = date.getMinutes().toString().padStart(2, '0');
-  return `${hours}:${minutes}`;
+function getReasonLabel(reasonKey: string | undefined, t: (key: string) => string): string {
+  if (!reasonKey) return t('booking.conflict.unknownReason');
+  // Use the reasonKey directly as i18n key, or fallback to the key itself
+  return t(reasonKey) !== reasonKey ? t(reasonKey) : reasonKey;
 }
 
 /**
@@ -204,13 +84,7 @@ function formatPrice(price: number, currency: string): string {
   }).format(price);
 }
 
-/**
- * Get human-readable reason from reason key
- */
-function getReasonLabel(reasonKey: string | undefined): string {
-  if (!reasonKey) return 'Ukjent årsak';
-  return REASON_LABELS[reasonKey] ?? reasonKey;
-}
+// getReasonLabel is defined above in helper functions section
 
 /**
  * Determine result type based on summary
@@ -230,7 +104,7 @@ function getResultType(result: RecurringBookingResultProjectionDTO): ResultType 
 /**
  * Get result configuration for display
  */
-function getResultConfig(resultType: ResultType): {
+function getResultConfig(resultType: ResultType, t: (key: string) => string): {
   title: string;
   description: string;
   icon: React.ReactElement;
@@ -243,7 +117,7 @@ function getResultConfig(resultType: ResultType): {
       return {
         title: t('booking.opprettet'),
         description: t('state.booked'),
-        icon: <CheckCircleIcon size={40} />,
+        icon: <CheckCircleIcon width={40} height={40} />,
         color: 'var(--ds-color-success-text-default)',
         backgroundColor: 'var(--ds-color-success-surface-default)',
         borderColor: 'var(--ds-color-success-border-default)',
@@ -252,7 +126,7 @@ function getResultConfig(resultType: ResultType): {
       return {
         title: t('delvis.opprettet'),
         description: t('noen.datoer.kunne.ikke.bookes'),
-        icon: <AlertTriangleIcon size={40} />,
+        icon: <AlertTriangleIcon width={40} height={40} />,
         color: 'var(--ds-color-warning-text-default)',
         backgroundColor: 'var(--ds-color-warning-surface-default)',
         borderColor: 'var(--ds-color-warning-border-default)',
@@ -261,7 +135,7 @@ function getResultConfig(resultType: ResultType): {
       return {
         title: t('booking.mislyktes'),
         description: t('ingen.datoer.kunne.bookes'),
-        icon: <XCircleIcon size={40} />,
+        icon: <XCircleIcon width={40} height={40} />,
         color: 'var(--ds-color-danger-text-default)',
         backgroundColor: 'var(--ds-color-danger-surface-default)',
         borderColor: 'var(--ds-color-danger-border-default)',
@@ -285,7 +159,8 @@ function OccurrenceRow({
   isSuccess,
   onViewBooking,
   padding,
-}: OccurrenceRowProps): React.ReactElement {
+  t,
+}: OccurrenceRowProps & { t: (key: string) => string }): React.ReactElement {
   return (
     <div
       style={{
@@ -308,7 +183,7 @@ function OccurrenceRow({
             : 'var(--ds-color-danger-text-default)',
         }}
       >
-        {isSuccess ? <CheckCircleIcon size={18} /> : <XCircleIcon size={18} />}
+        {isSuccess ? <CheckCircleIcon width={18} height={18} /> : <XCircleIcon width={18} height={18} />}
       </div>
 
       {/* Date */}
@@ -320,7 +195,7 @@ function OccurrenceRow({
             fontWeight: 'var(--ds-font-weight-medium)',
           }}
         >
-          {formatDate(occurrence.startTime)}
+          {formatDateLocal(occurrence.startTime, t)}
         </Paragraph>
       </div>
 
@@ -383,8 +258,8 @@ function OccurrenceRow({
                   whiteSpace: 'nowrap',
                 }}
               >
-                Se booking
-                <ExternalLinkIcon size={12} />
+                {t('booking.viewBooking')}
+                <ExternalLinkIcon width={12} height={12} />
               </button>
             )}
           </>
@@ -403,10 +278,10 @@ function OccurrenceRow({
               fontWeight: 'var(--ds-font-weight-medium)',
               whiteSpace: 'nowrap',
             }}
-            title={getReasonLabel(occurrence.reasonKey)}
+            title={getReasonLabel(occurrence.reasonKey, t)}
           >
-            <XCircleIcon size={12} />
-            {getReasonLabel(occurrence.reasonKey)}
+            <XCircleIcon width={12} height={12} />
+            {getReasonLabel(occurrence.reasonKey, t)}
           </span>
         )}
       </div>
@@ -433,7 +308,7 @@ export function RecurringResultSummary({
   const [showFailed, setShowFailed] = React.useState(true);
 
   const resultType = getResultType(result);
-  const resultConfig = getResultConfig(resultType);
+  const resultConfig = getResultConfig(resultType, t);
 
   // Get padding based on size
   const getPadding = (): string => {
@@ -779,6 +654,7 @@ export function RecurringResultSummary({
                       isSuccess={true}
                       onViewBooking={onViewBooking}
                       padding={getPadding()}
+                      t={t}
                     />
                   ))}
                 </div>
@@ -823,7 +699,7 @@ export function RecurringResultSummary({
                       color: 'var(--ds-color-danger-text-default)',
                     }}
                   >
-                    <XCircleIcon size={16} />
+                    <XCircleIcon width={16} height={16} />
                   </div>
                   <Heading
                     level={3}
@@ -884,6 +760,7 @@ export function RecurringResultSummary({
                       occurrence={occurrence}
                       isSuccess={false}
                       padding={getPadding()}
+                      t={t}
                     />
                   ))}
                 </div>
@@ -919,7 +796,7 @@ export function RecurringResultSummary({
               onClick={onViewAllBookings}
               style={{ flex: 1 }}
             >
-              t('actions.se_alle_bookinger')
+              {t('action.viewAllBookings')}
             </Button>
           )}
           {onNewBooking && (
@@ -930,7 +807,7 @@ export function RecurringResultSummary({
               onClick={onNewBooking}
               style={{ flex: 1 }}
             >
-              Book flere datoer
+              {t('booking.bookMoreDates')}
             </Button>
           )}
         </div>

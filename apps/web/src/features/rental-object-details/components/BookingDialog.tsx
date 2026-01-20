@@ -17,6 +17,7 @@ import {
   Label,
   Select,
   SelectOption,
+  InfoIcon,
 } from '@xala/ds';
 import { useT } from '@xala/i18n';
 import { PaymentSection } from './PaymentSection';
@@ -693,11 +694,7 @@ export function BookingDialog({
                   border: '1px solid var(--ds-color-warning-border-subtle)',
                 }}
               >
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--ds-color-warning-text-default)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                  <circle cx="12" cy="12" r="10" />
-                  <line x1="12" y1="8" x2="12" y2="12" />
-                  <line x1="12" y1="16" x2="12.01" y2="16" />
-                </svg>
+                <InfoIcon width={16} height={16} fill="var(--ds-color-warning-text-default)" />
                 <Paragraph data-size="sm" style={{ margin: 0, color: 'var(--ds-color-warning-text-default)' }}>
                   {t('booking.fillRequiredFields')}
                 </Paragraph>
@@ -749,7 +746,6 @@ export function BookingDialog({
           }
           .drawer-handle {
             display: flex !important;
-import { useT } from '@xala/i18n';
           }
         }
       `}</style>

@@ -40,6 +40,7 @@ interface StarRatingSelectorProps {
 }
 
 function StarRatingSelector({ value, onChange, disabled = false }: StarRatingSelectorProps) {
+  const t = useT();
   const [hoveredRating, setHoveredRating] = React.useState<number | null>(null);
 
   const displayRating = hoveredRating ?? value;
@@ -64,8 +65,27 @@ function StarRatingSelector({ value, onChange, disabled = false }: StarRatingSel
             type="button"
             role="radio"
             aria-checked={isSelected}
-            aria-label={`${star} ${star === 1 ? 'stjerne' : 'stjerner'}`t('common.onclick_onchangestar_onmouseenter_disabled') `${value}/5` : 'Velg vurdering'}
-      </span>
+            aria-label={isSelected ? t('reviews.starSelected', { star, value }) : t('reviews.selectRating')}
+            onClick={() => !disabled && onChange(star)}
+            onMouseEnter={() => !disabled && setHoveredRating(star)}
+            onMouseLeave={() => setHoveredRating(null)}
+            disabled={disabled}
+            style={{
+              background: 'none',
+              border: 'none',
+              padding: 0,
+              cursor: disabled ? 'not-allowed' : 'pointer',
+              opacity: disabled ? 0.5 : 1,
+            }}
+          >
+            <StarIcon
+              width={32}
+              height={32}
+              fill={isActive ? 'var(--ds-color-warning-base-default)' : 'var(--ds-color-neutral-border-default)'}
+            />
+          </button>
+        );
+      })}
     </div>
   );
 }
@@ -168,7 +188,7 @@ export function ReviewForm({
               color: 'var(--ds-color-neutral-text-default)',
             }}
           >
-            Skriv en anmeldelse
+            {t('reviews.writeReview')}
           </Heading>
           <Paragraph
             size="md"
@@ -177,7 +197,7 @@ export function ReviewForm({
               margin: 0,
             }}
           >
-            Del din opplevelse med andre brukere
+            {t('reviews.shareExperience')}
           </Paragraph>
         </div>
 
@@ -193,7 +213,7 @@ export function ReviewForm({
               color: 'var(--ds-color-neutral-text-default)',
             }}
           >
-            Vurdering <span style={{ color: 'var(--ds-color-danger-text-default)' }}>*</span>
+            {t('reviews.rating')} <span style={{ color: 'var(--ds-color-danger-text-default)' }}>*</span>
           </label>
           <StarRatingSelector
             value={rating}
@@ -229,7 +249,7 @@ export function ReviewForm({
               color: 'var(--ds-color-neutral-text-default)',
             }}
           >
-            Din anmeldelse (valgfritt)
+            {t('reviews.comment')} ({t('common.optional')})
           </label>
           <textarea
             id="review-comment"
@@ -259,7 +279,7 @@ export function ReviewForm({
               color: 'var(--ds-color-neutral-text-subtle)',
             }}
           >
-            {comment.length}/1000 tegn
+            {t('reviews.characterCount', { current: comment.length, max: 1000 })}
           </Paragraph>
         </div>
 
@@ -309,7 +329,7 @@ export function ReviewForm({
             variant="primary"
             disabled={isSubmitting || rating === 0}
           >
-            {isSubmitting ? t('common.sender_inn') : 'Send inn anmeldelse'}
+            {isSubmitting ? t('common.sender_inn') : t('reviews.submit')}
           </Button>
         </div>
       </Stack>

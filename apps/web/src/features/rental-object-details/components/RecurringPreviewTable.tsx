@@ -501,7 +501,7 @@ export function RecurringPreviewTable({
                       <Checkbox
                         checked={isSelected}
                         onChange={(e) => handleRowToggle(occurrence.index, e.target.checked)}
-                        aria-label={`Velg ${formatDate(occurrence.startTime, t)}`}
+                        aria-label={t('booking.selectDate', { date: formatDate(occurrence.startTime, t) })}
                       />
                     )}
                   </div>

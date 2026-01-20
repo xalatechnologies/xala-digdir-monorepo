@@ -159,7 +159,7 @@ export function BookingContextSelector({
           color: 'var(--ds-color-neutral-text-default)',
         }}
       >
-        Booker du for deg selv eller en organisasjon?
+        {t('booking.context.question')}
       </Paragraph>
 
       <fieldset
