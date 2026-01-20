@@ -28,7 +28,7 @@ const options = {
 };
 
 // Track changes
-let stats = {
+const stats = {
   filesProcessed: 0,
   filesChanged: 0,
   keysUpdated: 0,
@@ -172,7 +172,7 @@ async function main() {
         while ((match = regex.exec(content)) !== null) {
           allKeys.add(match[1]);
         }
-      } catch (e) {
+      } catch {
         // Skip errors
       }
     }

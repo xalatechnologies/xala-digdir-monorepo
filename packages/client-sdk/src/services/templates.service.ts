@@ -35,7 +35,7 @@ export interface CreateTemplateDTO {
   isActive?: boolean;
 }
 
-export interface UpdateTemplateDTO extends Partial<CreateTemplateDTO> {}
+export type UpdateTemplateDTO = Partial<CreateTemplateDTO>;
 
 export interface TemplatePreviewRequest {
   variables?: Record<string, string>;

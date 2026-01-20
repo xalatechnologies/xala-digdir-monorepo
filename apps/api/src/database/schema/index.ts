@@ -126,10 +126,17 @@ export {
   seasons,
   seasonApplications,
   priorityRules,
-  
-  // Allocations & Blocks (now in database-schema package, but keep legacy for backward compat)
-  // allocations, blocks, seasonalLeases - moved to @digilist/database-schema
-  
+
+  // Notifications & Delivery
+  notifications,
+  deliveryAttempts,
+
+  // Pricing
+  pricingGroups,
+  rentalObjectPricing,
+  userPricingGroups,
+  organizationPricingGroups,
+
   // Amenities
   amenities,
   amenityGroups,

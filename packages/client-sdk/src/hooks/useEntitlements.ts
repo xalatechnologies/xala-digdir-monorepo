@@ -3,6 +3,7 @@
  * React hooks for consuming entitlements in frontend applications
  */
 
+import type { ReactNode } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { sdk } from '../services';
 import { queryKeys } from '../query-keys';
@@ -142,8 +143,8 @@ export function RouteGuard({
   children 
 }: { 
   routeKey: string; 
-  fallback?: React.ReactNode; 
-  children: React.ReactNode;
+  fallback?: ReactNode; 
+  children: ReactNode;
 }) {
   const canAccess = useCanRoute(routeKey);
   const { isLoading } = useEntitlements();
@@ -168,8 +169,8 @@ export function FeatureGuard({
   children 
 }: { 
   featureKey: string; 
-  fallback?: React.ReactNode; 
-  children: React.ReactNode;
+  fallback?: ReactNode; 
+  children: ReactNode;
 }) {
   const isEnabled = useCanFeature(featureKey);
   const { isLoading } = useEntitlements();

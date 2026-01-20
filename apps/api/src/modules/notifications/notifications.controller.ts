@@ -17,7 +17,7 @@
 import { Controller, Get, Post, Delete, Inject } from '../../core/decorators';
 import { NotificationService } from './notification.service';
 import { validate } from '../../core/validation/zod-pipe';
-import { getTenantId, getOptionalUserId, TenantRequest } from '../../core/validation/tenant';
+import { getTenantId, getOptionalUserId, type TenantRequest } from '../../core/validation/tenant';
 import {
   SendNotificationSchema,
   DeliveryReportQuerySchema,

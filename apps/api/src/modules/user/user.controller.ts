@@ -6,7 +6,7 @@ import { Controller, Get, Post, Put, Delete } from '../../core/decorators';
 import { Inject } from '../../core/decorators';
 import { UserService } from './user.service';
 import { validate } from '../../core/validation/zod-pipe';
-import { getTenantId, TenantRequest } from '../../core/validation/tenant';
+import { getTenantId, type TenantRequest } from '../../core/validation/tenant';
 import {
   CreateUserSchema,
   UpdateUserSchema,

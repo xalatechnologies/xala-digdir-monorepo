@@ -6,7 +6,7 @@ import { Controller, Get, Post, Put, Delete } from '../../core/decorators';
 import { Inject } from '../../core/decorators';
 import { BookingService } from './booking.service';
 import { validate } from '../../core/validation/zod-pipe';
-import { getTenantId, getOptionalUserId, TenantRequest } from '../../core/validation/tenant';
+import { getTenantId, getOptionalUserId, type TenantRequest } from '../../core/validation/tenant';
 import {
   CreateBookingSchema,
   BookingQuerySchema,

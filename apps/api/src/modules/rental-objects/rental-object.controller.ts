@@ -9,7 +9,7 @@ import { CustodyScope } from '../custody/types';
 import { RentalObjectService } from './rental-object.service';
 import { toDetailsProjection, toCardProjection } from './rental-object.projections';
 import { validate } from '../../core/validation/zod-pipe';
-import { getOptionalTenantId, getTenantId, TenantRequest } from '../../core/validation/tenant';
+import { getOptionalTenantId, getTenantId, type TenantRequest } from '../../core/validation/tenant';
 import {
   CreateRentalObjectSchema,
   UpdateRentalObjectSchema,

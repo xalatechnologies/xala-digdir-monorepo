@@ -603,8 +603,7 @@ export function mapKey(oldKey: string): string {
   if (parts[0] === 'common' || parts[0] === 'ui' || parts[0] === 'form') {
     const suffix = parts.slice(1).join('.');
     
-    // Check if it's a known core key
-    const coreKey = `core.${suffix}`;
+    // Check known suffix patterns
     if (suffix === 'loading' || suffix === 'laster') return 'state.loading';
     if (suffix === 'saving' || suffix === 'lagrer') return 'state.saving';
     if (suffix === 'error' || suffix === 'feil') return 'error.generic';

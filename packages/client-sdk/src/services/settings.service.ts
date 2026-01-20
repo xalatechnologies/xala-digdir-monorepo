@@ -8,7 +8,6 @@ import type {
   AppSettings,
   UpdateSettingsDTO,
   SettingCategory,
-  PaginatedResponse,
   SingleResponse,
 } from '../types';
 

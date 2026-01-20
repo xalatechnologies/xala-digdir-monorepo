@@ -911,3 +911,118 @@ export const priorityRules = domainSchema.table('priority_rules', {
   createdAt: timestamp('created_at').notNull().defaultNow(),
   updatedAt: timestamp('updated_at').notNull().defaultNow(),
 });
+
+// ============================================================================
+// Notifications & Delivery Tracking
+// ============================================================================
+
+export const notifications = domainSchema.table('notifications', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  tenantId: uuid('tenant_id').notNull().references(() => tenants.id, { onDelete: 'cascade' }),
+  userId: uuid('user_id').references(() => users.id, { onDelete: 'set null' }),
+  type: varchar('type', { length: 50 }).notNull(),
+  channel: varchar('channel', { length: 20 }).notNull().default('in_app'),
+  title: varchar('title', { length: 255 }).notNull(),
+  content: text('content').notNull(),
+  contentHash: varchar('content_hash', { length: 64 }),
+  status: varchar('status', { length: 50 }).notNull().default('pending'),
+  priority: varchar('priority', { length: 20 }).notNull().default('normal'),
+  metadata: jsonb('metadata').default({}),
+  sentAt: timestamp('sent_at'),
+  deliveredAt: timestamp('delivered_at'),
+  failedAt: timestamp('failed_at'),
+  readAt: timestamp('read_at'),
+  createdAt: timestamp('created_at').notNull().defaultNow(),
+  updatedAt: timestamp('updated_at').notNull().defaultNow(),
+}, (table) => ({
+  tenantIdx: index('notifications_tenant_idx').on(table.tenantId),
+  userIdx: index('notifications_user_idx').on(table.userId),
+  statusIdx: index('notifications_status_idx').on(table.status),
+  contentHashIdx: index('notifications_content_hash_idx').on(table.contentHash),
+}));
+
+export const deliveryAttempts = domainSchema.table('delivery_attempts', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  notificationId: uuid('notification_id').notNull().references(() => notifications.id, { onDelete: 'cascade' }),
+  attemptNumber: integer('attempt_number').notNull().default(1),
+  status: varchar('status', { length: 50 }).notNull().default('pending'),
+  channel: varchar('channel', { length: 20 }).notNull(),
+  response: jsonb('response').default({}),
+  errorMessage: text('error_message'),
+  nextRetryAt: timestamp('next_retry_at'),
+  attemptedAt: timestamp('attempted_at').notNull().defaultNow(),
+}, (table) => ({
+  notificationIdx: index('delivery_attempts_notification_idx').on(table.notificationId),
+  statusIdx: index('delivery_attempts_status_idx').on(table.status),
+  nextRetryIdx: index('delivery_attempts_next_retry_idx').on(table.nextRetryAt),
+}));
+
+// ============================================================================
+// Pricing Groups & Rental Object Pricing
+// ============================================================================
+
+export const pricingGroups = domainSchema.table('pricing_groups', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  tenantId: uuid('tenant_id').notNull().references(() => tenants.id, { onDelete: 'cascade' }),
+  code: varchar('code', { length: 50 }).notNull(),
+  name: varchar('name', { length: 255 }).notNull(),
+  description: text('description'),
+  isDefault: boolean('is_default').notNull().default(false),
+  isActive: boolean('is_active').notNull().default(true),
+  sortOrder: integer('sort_order').notNull().default(0),
+  createdAt: timestamp('created_at').notNull().defaultNow(),
+  updatedAt: timestamp('updated_at').notNull().defaultNow(),
+}, (table) => ({
+  tenantIdx: index('pricing_groups_tenant_idx').on(table.tenantId),
+  tenantCodeIdx: unique('pricing_groups_tenant_code').on(table.tenantId, table.code),
+}));
+
+export const rentalObjectPricing = domainSchema.table('rental_object_pricing', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  tenantId: uuid('tenant_id').notNull().references(() => tenants.id, { onDelete: 'cascade' }),
+  rentalObjectId: uuid('rental_object_id').notNull().references(() => rentalObjects.id, { onDelete: 'cascade' }),
+  pricingGroupId: uuid('pricing_group_id').notNull().references(() => pricingGroups.id, { onDelete: 'cascade' }),
+  basePriceCents: integer('base_price_cents').notNull().default(0),
+  currency: varchar('currency', { length: 3 }).notNull().default('NOK'),
+  priceUnit: varchar('price_unit', { length: 20 }).notNull().default('per_hour'),
+  minDuration: integer('min_duration'),
+  maxDuration: integer('max_duration'),
+  isActive: boolean('is_active').notNull().default(true),
+  validFrom: timestamp('valid_from'),
+  validUntil: timestamp('valid_until'),
+  createdAt: timestamp('created_at').notNull().defaultNow(),
+  updatedAt: timestamp('updated_at').notNull().defaultNow(),
+}, (table) => ({
+  tenantIdx: index('rental_object_pricing_tenant_idx').on(table.tenantId),
+  rentalObjectIdx: index('rental_object_pricing_ro_idx').on(table.rentalObjectId),
+  pricingGroupIdx: index('rental_object_pricing_group_idx').on(table.pricingGroupId),
+  uniquePricing: unique('rental_object_pricing_unique').on(table.tenantId, table.rentalObjectId, table.pricingGroupId),
+}));
+
+export const userPricingGroups = domainSchema.table('user_pricing_groups', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  tenantId: uuid('tenant_id').notNull().references(() => tenants.id, { onDelete: 'cascade' }),
+  userId: uuid('user_id').notNull().references(() => users.id, { onDelete: 'cascade' }),
+  pricingGroupId: uuid('pricing_group_id').notNull().references(() => pricingGroups.id, { onDelete: 'cascade' }),
+  validFrom: timestamp('valid_from'),
+  validUntil: timestamp('valid_until'),
+  createdAt: timestamp('created_at').notNull().defaultNow(),
+}, (table) => ({
+  tenantIdx: index('user_pricing_groups_tenant_idx').on(table.tenantId),
+  userIdx: index('user_pricing_groups_user_idx').on(table.userId),
+  uniqueUserGroup: unique('user_pricing_groups_unique').on(table.tenantId, table.userId, table.pricingGroupId),
+}));
+
+export const organizationPricingGroups = domainSchema.table('organization_pricing_groups', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  tenantId: uuid('tenant_id').notNull().references(() => tenants.id, { onDelete: 'cascade' }),
+  organizationId: uuid('organization_id').notNull().references(() => organizations.id, { onDelete: 'cascade' }),
+  pricingGroupId: uuid('pricing_group_id').notNull().references(() => pricingGroups.id, { onDelete: 'cascade' }),
+  validFrom: timestamp('valid_from'),
+  validUntil: timestamp('valid_until'),
+  createdAt: timestamp('created_at').notNull().defaultNow(),
+}, (table) => ({
+  tenantIdx: index('org_pricing_groups_tenant_idx').on(table.tenantId),
+  orgIdx: index('org_pricing_groups_org_idx').on(table.organizationId),
+  uniqueOrgGroup: unique('org_pricing_groups_unique').on(table.tenantId, table.organizationId, table.pricingGroupId),
+}));

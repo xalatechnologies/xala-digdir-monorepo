@@ -94,7 +94,7 @@ export class UserGroupsService extends BaseService {
    * Get groups for a specific user
    */
   async getUserGroups(userId: string): Promise<PaginatedResponse<UserGroup>> {
-    return this.client.get(this.buildPath('/user/${userId}'));
+    return this.client.get(this.buildPath(`/user/${userId}`));
   }
 
   /**
