@@ -21,8 +21,8 @@ export default defineMain({
     getAbsolutePath('@storybook/addon-a11y'),
     getAbsolutePath('@storybook/addon-links'),
     getAbsolutePath('@storybook/addon-docs'),
-    getAbsolutePath('@storybook/addon-vitest'),
-    getAbsolutePath('@storybook/addon-themes'),
+    // '@storybook/addon-vitest' - temporarily disabled, has startup issues
+    '@vueless/storybook-dark-mode',
   ],
   docs: {},
   features: {

@@ -6,6 +6,7 @@ import path from 'node:path';
 export default defineConfig({
   plugins: [
     // Storybook plugin to run stories as component tests
+    // Stories are defined in .storybook/main.ts
     storybookTest({
       configDir: path.resolve(__dirname, '.storybook'),
     }),
@@ -20,10 +21,7 @@ export default defineConfig({
     },
     // Setup file for Storybook integration
     setupFiles: ['.storybook/vitest.setup.ts'],
-    // Include story files
-    include: ['stories/**/*.stories.@(js|jsx|mjs|ts|tsx)'],
-    // Workspace configuration for running alongside other tests
-    workspace: undefined,
+    // Note: test.include is not needed - Storybook plugin uses stories from main.ts
   },
   resolve: {
     alias: {
