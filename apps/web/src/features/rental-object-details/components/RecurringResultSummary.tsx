@@ -237,8 +237,8 @@ function OccurrenceRow({
                 whiteSpace: 'nowrap',
               }}
             >
-              <CheckCircleIcon size={12} />
-              Opprettet
+              <CheckCircleIcon width={12} height={12} />
+              {t('booking.created')}
             </span>
             {occurrence.bookingId && onViewBooking && (
               <button
@@ -442,7 +442,7 @@ export function RecurringResultSummary({
                 color: 'var(--ds-color-neutral-text-subtle)',
               }}
             >
-              Opprettet
+              {t('booking.created')}
             </Paragraph>
             <div
               style={{
@@ -592,7 +592,7 @@ export function RecurringResultSummary({
                       color: 'var(--ds-color-success-text-default)',
                     }}
                   >
-                    <CalendarCheckIcon size={16} />
+                    <CheckCircleIcon width={16} height={16} />
                   </div>
                   <Heading
                     level={3}
@@ -602,7 +602,7 @@ export function RecurringResultSummary({
                       fontWeight: 'var(--ds-font-weight-medium)',
                     }}
                   >
-                    Opprettede bookinger ({created.length})
+                    {t('booking.createdBookings', { count: created.length })}
                   </Heading>
                 </div>
                 <svg
@@ -709,7 +709,7 @@ export function RecurringResultSummary({
                       fontWeight: 'var(--ds-font-weight-medium)',
                     }}
                   >
-                    Mislykkede datoer ({failed.length})
+                    {t('booking.failedDates', { count: failed.length })}
                   </Heading>
                 </div>
                 <svg
