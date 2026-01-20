@@ -6,7 +6,6 @@
 
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { renderWithRuntime, screen, fireEvent, waitFor } from '@digilist/testing';
-screen, fireEvent, waitFor } from '@testing-library/react';
 import { TenantsListPage } from './index';
 import * as hooks from '@digilist/client-sdk/hooks';
 
