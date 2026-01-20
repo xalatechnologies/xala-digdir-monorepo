@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import { Heading, Paragraph, Label } from '@digdir/designsystemet-react';
+import { Heading, Paragraph, Label } from '../../src';
 
 const meta: Meta = {
   title: 'Fundamentals/Typography',
@@ -102,7 +102,7 @@ export const FontWeights: Story = {
           <span style={{ 
             fontWeight: weight, 
             fontSize: 'var(--ds-font-size-5)',
-            minWidth: '200px',
+            minWidth: 'var(--ds-size-50)',
           }}>
             {name} ({weight})
           </span>
@@ -137,7 +137,7 @@ export const Headings: Story = {
  */
 export const BodyText: Story = {
   render: () => (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--ds-spacing-4)', maxWidth: '600px' }}>
+    <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--ds-spacing-4)', maxWidth: 'var(--ds-size-150)' }}>
       <div>
         <Label>Body XL</Label>
         <Paragraph data-size="xl">
@@ -178,7 +178,7 @@ export const BodyText: Story = {
  */
 export const ParagraphVariants: Story = {
   render: () => (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--ds-spacing-6)', maxWidth: '700px' }}>
+    <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--ds-spacing-6)', maxWidth: 'var(--ds-size-175)' }}>
       <div>
         <Label style={{ marginBottom: 'var(--ds-spacing-2)' }}>Short (compact line-height)</Label>
         <Paragraph variant="short">
@@ -204,7 +204,7 @@ export const ParagraphVariants: Story = {
  */
 export const FormTypography: Story = {
   render: () => (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--ds-spacing-4)', maxWidth: '400px' }}>
+    <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--ds-spacing-4)', maxWidth: 'var(--ds-size-100)' }}>
       <div>
         <Label data-size="lg">Large Label</Label>
         <Paragraph data-size="sm" style={{ color: 'var(--ds-color-neutral-text-subtle)' }}>
@@ -288,7 +288,7 @@ export const SemanticColors: Story = {
  */
 export const ArticleExample: Story = {
   render: () => (
-    <article style={{ maxWidth: '700px' }}>
+    <article style={{ maxWidth: 'var(--ds-size-175)' }}>
       <Heading level={1} data-size="xl" style={{ marginBottom: 'var(--ds-spacing-4)' }}>
         Velkommen til Digilist
       </Heading>

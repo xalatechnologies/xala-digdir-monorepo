@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { DataTable, type ColumnDef } from '../../src/composed';
-import { Badge } from '../../src/primitives';
+import { Badge, Button } from '../../src/primitives';
 
 interface User {
   id: string;
@@ -150,8 +150,8 @@ export const WithRowActions: Story = {
         header: 'Actions',
         cell: (_value: unknown, row: unknown) => (
           <div style={{ display: 'flex', gap: 'var(--ds-spacing-2)' }}>
-            <button onClick={() => console.log('Edit', (row as User).id)}>Edit</button>
-            <button onClick={() => console.log('Delete', (row as User).id)}>Delete</button>
+            <Button variant="secondary" data-size="sm" onClick={() => console.log('Edit', (row as User).id)}>Edit</Button>
+            <Button variant="tertiary" data-size="sm" data-color="danger" onClick={() => console.log('Delete', (row as User).id)}>Delete</Button>
           </div>
         ),
       },
@@ -170,7 +170,7 @@ export const StickyHeader: Story = {
     data: sampleData,
     getRowKey: (row: User) => row.id,
     stickyHeader: true,
-    height: '300px',
+    height: 'var(--ds-size-75)',
   },
 };
 

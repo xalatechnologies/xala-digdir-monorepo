@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import { Textarea, Label, Field, ValidationMessage } from '@digdir/designsystemet-react';
+import { Textarea, Label, Field, ValidationMessage } from '../../src';
 
 const meta: Meta = {
   title: 'Components/Textarea',

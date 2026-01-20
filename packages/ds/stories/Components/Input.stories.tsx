@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { expect, userEvent, within } from 'storybook/test';
-import { Textfield } from '@digdir/designsystemet-react';
+import { Textfield } from '../../src';
 
 /**
  * Input/Textfield component from Digdir Designsystemet.

@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import { Button, Heading, Paragraph } from '@digdir/designsystemet-react';
+import { Button, Heading, Paragraph } from '../../src';
 import { SearchIcon, PlusIcon } from '../../src/primitives';
 
 /**

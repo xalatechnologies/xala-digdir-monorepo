@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { expect, userEvent, within, waitFor } from 'storybook/test';
-import { Dialog, Button, Paragraph, Heading } from '@digdir/designsystemet-react';
+import { Dialog, Button, Paragraph, Heading } from '../../src';
 import { useRef } from 'react';
 
 const meta: Meta = {

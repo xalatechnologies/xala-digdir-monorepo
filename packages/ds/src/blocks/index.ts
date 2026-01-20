@@ -330,4 +330,15 @@ export type { NotificationItemProps, NotificationItemData, NotificationListProps
 export { ProfileCard, QuickStat } from './profile';
 export type { ProfileCardProps, ProfileCardData, QuickStatProps } from './profile';
 
+// Account Blocks
+export { AccountSwitcher, AccountSelector, AccountSelectionModal } from './account';
+export type {
+  AccountSwitcherProps,
+  AccountType,
+  ActiveAccount,
+  AccountSelectorProps,
+  AccountSelectionType,
+  AccountSelectionModalProps,
+} from './account';
+
 // Activity Blocks

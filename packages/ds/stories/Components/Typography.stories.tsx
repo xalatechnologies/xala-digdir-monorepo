@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import { Heading, Paragraph, Label, Link } from '@digdir/designsystemet-react';
+import { Heading, Paragraph, Label, Link } from '../../src';
 
 const meta: Meta = {
   title: 'Components/Typography',

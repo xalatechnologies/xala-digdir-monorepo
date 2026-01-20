@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { PageHeader } from '../../src/composed';
-import { Button, Breadcrumbs } from '@digdir/designsystemet-react';
+import { Button, Breadcrumbs } from '../../src';
 import { PlusIcon, DownloadIcon } from '../../src/primitives';
 
 /**

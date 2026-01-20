@@ -7,8 +7,9 @@ import { AuthProvider, useOAuthCallback } from '@xala/auth';
 import { RealtimeProvider } from '@digilist/client-sdk';
 import { ThemeProvider, useTheme } from '@xala/ds';
 import { AccountContextProvider, useAccountContext, type DashboardContext } from './providers/AccountContextProvider';
-import { ProtectedRoute } from '@xala/ds';
-import { AccountSelectionModal } from './components/AccountSelectionModal';
+import { ProtectedRoute, AccountSelectionModal } from '@xala/ds';
+import { useT } from '@xala/i18n';
+import { useNavigate } from 'react-router-dom';
 
 // Dashboard context constants (technical identifiers, not user-facing strings)
 const CONTEXT_PERSONAL: DashboardContext = 'personal';
@@ -78,23 +79,63 @@ function OAuthCallbackHandler() {
  * Displays the AccountSelectionModal when user hasn't selected an account yet
  * and hasn't chosen to remember their choice.
  *
- * Edge case handling:
- * - If rememberChoice is true (from localStorage), the modal is skipped
- * - The persisted context (personal/organization) is automatically restored
- *   by AccountContextProvider when rememberChoice is true
+ * Uses the DS props-based AccountSelectionModal component, wiring context to props.
  */
 function AccountSelectionWrapper({ children }: { children: React.ReactNode }) {
-  const { hasSelectedAccount, rememberChoice } = useAccountContext();
+  const {
+    hasSelectedAccount,
+    rememberChoice,
+    setRememberChoice,
+    organizations,
+    isLoadingOrganizations,
+    switchToPersonal,
+    switchToOrganization,
+    markAccountAsSelected,
+  } = useAccountContext();
+  const t = useT();
+  const navigate = useNavigate();
 
-  // Show modal only if:
-  // 1. User hasn't selected an account yet (hasSelectedAccount = false)
-  // 2. User hasn't chosen to remember their choice (rememberChoice = false)
-  // If rememberChoice is true, skip modal and use persisted context
+  // Show modal only if user hasn't selected an account and hasn't chosen to remember
   const showModal = !hasSelectedAccount && !rememberChoice;
+
+  const handlePersonalSelect = () => {
+    switchToPersonal();
+    markAccountAsSelected();
+    navigate('/');
+  };
+
+  const handleOrganizationSelect = (orgId: string) => {
+    switchToOrganization(orgId);
+    markAccountAsSelected();
+    navigate('/org');
+  };
 
   return (
     <>
-      <AccountSelectionModal open={showModal} />
+      <AccountSelectionModal
+        open={showModal}
+        organizations={organizations}
+        isLoadingOrganizations={isLoadingOrganizations}
+        rememberChoice={rememberChoice}
+        onRememberChoiceChange={setRememberChoice}
+        onPersonalSelect={handlePersonalSelect}
+        onOrganizationSelect={handleOrganizationSelect}
+        labels={{
+          title: t('components.accountModal.page.title'),
+          subtitle: t('components.accountModal.page.description'),
+          selectOrganizationTitle: t('components.accountModal.selectOrganization'),
+          selectOrganizationSubtitle: t('components.accountModal.selectOrganizationSubtitle'),
+          personalAccount: t('components.accountModal.personalAccount'),
+          personalAccountDesc: t('components.accountModal.personalAccountDesc'),
+          organizationAccount: t('components.accountModal.organizationAccount'),
+          organizationAccountDesc: t('components.accountModal.organizationAccountDesc'),
+          noOrganizations: t('components.accountModal.noOrganizations'),
+          orgNumber: t('components.accountModal.orgNumber'),
+          rememberChoice: t('components.accountModal.rememberChoice'),
+          back: t('components.accountModal.back'),
+          continue: t('components.accountModal.continue'),
+        }}
+      />
       {children}
     </>
   );

@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import { Badge } from '@digdir/designsystemet-react';
+import { Badge, Button } from '../../src';
 
 const meta: Meta = {
   title: 'Components/Badge',
@@ -66,15 +66,9 @@ export const Sizes: Story = {
 export const WithButton: Story = {
   render: () => (
     <div style={{ position: 'relative', display: 'inline-block' }}>
-      <button style={{ 
-        padding: 'var(--ds-spacing-2) var(--ds-spacing-4)',
-        borderRadius: 'var(--ds-border-radius-md)',
-        border: '1px solid var(--ds-color-neutral-border-default)',
-        background: 'var(--ds-color-neutral-surface-default)',
-        cursor: 'pointer',
-      }}>
+      <Button variant="secondary">
         Notifications
-      </button>
+      </Button>
       <div style={{ position: 'absolute', top: 'calc(-1 * var(--ds-spacing-2))', right: 'calc(-1 * var(--ds-spacing-2))' }}>
         <Badge count={3} data-color="danger" />
       </div>

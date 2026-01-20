@@ -10,3 +10,7 @@ export type { AccountSwitcherProps, AccountType, ActiveAccount } from './Account
 
 export { AccountSelector } from './AccountSelector';
 export type { AccountSelectorProps, AccountSelectionType } from './AccountSelector';
+
+export { AccountSelectionModal } from './AccountSelectionModal';
+export type { AccountSelectionModalProps } from './AccountSelectionModal';
+

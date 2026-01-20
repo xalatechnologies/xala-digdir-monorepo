@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import { Card, Heading, Paragraph, Button } from '@digdir/designsystemet-react';
+import { Card, Heading, Paragraph, Button } from '../../src';
 
 /**
  * Card component from Digdir Designsystemet.

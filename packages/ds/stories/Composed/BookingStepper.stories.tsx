@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { BookingStepper } from '../../src/composed/BookingStepper';
+import { Button } from '../../src';
 import { useState } from 'react';
 
 const meta: Meta<typeof BookingStepper> = {
@@ -105,18 +106,20 @@ export const Interactive: Story = {
           title="Bookingprosess"
         />
         <div style={{ display: 'flex', gap: 'var(--ds-spacing-2)', justifyContent: 'center' }}>
-          <button 
+          <Button
+            variant="secondary"
             onClick={() => setCurrentStep(Math.max(0, currentStep - 1))}
             disabled={currentStep === 0}
           >
             Forrige
-          </button>
-          <button 
+          </Button>
+          <Button
+            variant="primary"
             onClick={() => setCurrentStep(Math.min(bookingSteps.length - 1, currentStep + 1))}
             disabled={currentStep === bookingSteps.length - 1}
           >
             Neste
-          </button>
+          </Button>
         </div>
       </div>
     );

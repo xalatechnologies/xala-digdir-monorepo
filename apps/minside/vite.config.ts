@@ -31,6 +31,8 @@ export default defineConfig({
   ],
   resolve: {
     alias: {
+      '@xala/ds': path.resolve(__dirname, '../../packages/ds/src'),
+      '@digdir/designsystemet-css': path.resolve(__dirname, '../../node_modules/@digdir/designsystemet-css'),
       '@digilist/client-sdk': path.resolve(__dirname, '../../packages/client-sdk/src'),
       '@digilist/client-sdk/hooks': path.resolve(__dirname, '../../packages/client-sdk/src/hooks'),
       '@digilist/client-sdk/types': path.resolve(__dirname, '../../packages/client-sdk/src/types'),

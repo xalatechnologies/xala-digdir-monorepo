@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import { Spinner } from '@digdir/designsystemet-react';
+import { Button, Spinner } from '../../src';
 
 const meta: Meta = {
   title: 'Components/Spinner',
@@ -57,22 +57,9 @@ export const Colors: Story = {
 
 export const InButton: Story = {
   render: () => (
-    <button 
-      disabled 
-      style={{ 
-        display: 'inline-flex', 
-        alignItems: 'center', 
-        gap: 'var(--ds-spacing-2)',
-        padding: 'var(--ds-spacing-2) var(--ds-spacing-4)',
-        borderRadius: 'var(--ds-border-radius-md)',
-        border: '1px solid var(--ds-color-neutral-border-default)',
-        background: 'var(--ds-color-neutral-surface-default)',
-        cursor: 'not-allowed',
-      }}
-    >
-      <Spinner data-size="sm" aria-label="Loading" />
+    <Button loading disabled>
       Loading...
-    </button>
+    </Button>
   ),
 };
 

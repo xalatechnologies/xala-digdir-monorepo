@@ -26,8 +26,8 @@ const ColorSwatch = ({ variable, label }: { variable: string; label?: string }) 
   <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--ds-spacing-3)', marginBottom: 'var(--ds-spacing-2)' }}>
     <div
       style={{
-        width: '48px',
-        height: '48px',
+        width: 'var(--ds-size-12)',
+        height: 'var(--ds-size-12)',
         backgroundColor: `var(${variable})`,
         borderRadius: 'var(--ds-border-radius-md)',
         border: '1px solid var(--ds-color-neutral-border-default)',
@@ -45,12 +45,12 @@ const SpacingSwatch = ({ variable, size }: { variable: string; size: string }) =
     <div
       style={{
         width: `var(${variable})`,
-        height: '24px',
+        height: 'var(--ds-size-6)',
         backgroundColor: 'var(--ds-color-accent-base-default)',
         borderRadius: 'var(--ds-border-radius-sm)',
       }}
     />
-    <code style={{ fontSize: 'var(--ds-font-size-sm)', minWidth: '180px' }}>{variable}</code>
+    <code style={{ fontSize: 'var(--ds-font-size-sm)', minWidth: 'var(--ds-size-30)' }}>{variable}</code>
     <span style={{ fontSize: 'var(--ds-font-size-xs)', color: 'var(--ds-color-neutral-text-subtle)' }}>{size}</span>
   </div>
 );
@@ -188,8 +188,8 @@ export const BorderRadius: Story = {
         <div key={variable} style={{ textAlign: 'center' }}>
           <div
             style={{
-              width: '80px',
-              height: '80px',
+              width: 'var(--ds-size-20)',
+              height: 'var(--ds-size-20)',
               backgroundColor: 'var(--ds-color-accent-base-default)',
               borderRadius: `var(${variable})`,
               marginBottom: 'var(--ds-spacing-2)',
@@ -212,8 +212,8 @@ export const Shadows: Story = {
         <div key={size} style={{ textAlign: 'center' }}>
           <div
             style={{
-              width: '120px',
-              height: '80px',
+              width: 'var(--ds-size-30)',
+              height: 'var(--ds-size-20)',
               backgroundColor: 'var(--ds-color-neutral-background-default)',
               borderRadius: 'var(--ds-border-radius-md)',
               boxShadow: `var(--ds-shadow-${size})`,

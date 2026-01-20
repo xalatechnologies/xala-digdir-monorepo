@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import { Details, Paragraph } from '@digdir/designsystemet-react';
+import { Details, Paragraph } from '../../src';
 import React from 'react';
 
 const meta: Meta = {

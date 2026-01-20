@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import { Button } from '@digdir/designsystemet-react';
+import { Button } from '../../src';
 import { ListToolbar, type ListToolbarFilter, type ListToolbarSortOption } from '../../src/composed';
 import { PlusIcon } from '../../src/primitives';
 

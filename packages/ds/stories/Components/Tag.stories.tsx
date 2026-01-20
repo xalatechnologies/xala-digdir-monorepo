@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import { Tag } from '@digdir/designsystemet-react';
+import { Tag } from '../../src';
 
 const meta: Meta = {
   title: 'Components/Tag',

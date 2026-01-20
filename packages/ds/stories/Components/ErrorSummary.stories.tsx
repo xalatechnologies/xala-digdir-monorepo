@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import { ErrorSummary, Heading } from '@digdir/designsystemet-react';
+import { ErrorSummary, Heading } from '../../src';
 
 const meta: Meta = {
   title: 'Components/ErrorSummary',

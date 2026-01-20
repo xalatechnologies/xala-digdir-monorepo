@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import { Chip } from '@digdir/designsystemet-react';
+import { Chip } from '../../src';
 import { useState } from 'react';
 
 const meta: Meta = {

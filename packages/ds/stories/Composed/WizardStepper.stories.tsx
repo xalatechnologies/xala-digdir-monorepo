@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { WizardStepper } from '../../src/composed/WizardStepper';
+import { Button } from '../../src';
 import { useState } from 'react';
 
 const meta: Meta<typeof WizardStepper> = {
@@ -88,18 +89,20 @@ export const Interactive: Story = {
           onStepClick={setCurrentStep}
         />
         <div style={{ display: 'flex', gap: 'var(--ds-spacing-2)', justifyContent: 'center' }}>
-          <button 
+          <Button
+            variant="secondary"
             onClick={() => setCurrentStep(Math.max(0, currentStep - 1))}
             disabled={currentStep === 0}
           >
             Forrige
-          </button>
-          <button 
+          </Button>
+          <Button
+            variant="primary"
             onClick={() => setCurrentStep(Math.min(wizardSteps.length - 1, currentStep + 1))}
             disabled={currentStep === wizardSteps.length - 1}
           >
             Neste
-          </button>
+          </Button>
         </div>
       </div>
     );

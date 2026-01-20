@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { Stepper, Wizard, useWizard } from '../../src/composed/Stepper';
-import { Paragraph } from '@digdir/designsystemet-react';
+import { Button, Paragraph } from '../../src';
 
 const meta: Meta<typeof Stepper> = {
   title: 'Composed/Stepper',
@@ -123,8 +123,8 @@ export const Interactive: Story = {
           allowClickPrevious
         />
         <div style={{ display: 'flex', gap: 'var(--ds-spacing-2)', justifyContent: 'center' }}>
-          <button onClick={prevStep} disabled={isFirstStep}>Previous</button>
-          <button onClick={nextStep}>{isLastStep ? 'Complete' : 'Next'}</button>
+          <Button variant="secondary" onClick={prevStep} disabled={isFirstStep}>Previous</Button>
+          <Button variant="primary" onClick={nextStep}>{isLastStep ? 'Complete' : 'Next'}</Button>
         </div>
         <Paragraph style={{ textAlign: 'center' }}>
           Current step: {currentStep + 1} - {defaultSteps[currentStep]?.title}

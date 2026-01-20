@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import { Divider, Paragraph, Heading } from '@digdir/designsystemet-react';
+import { Divider, Paragraph, Heading } from '../../src';
 
 const meta: Meta = {
   title: 'Components/Divider',

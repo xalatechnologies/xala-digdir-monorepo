@@ -11,7 +11,7 @@
  * ```
  */
 import '@digdir/designsystemet-css/dist/src/index.css';
-import '@digdir/designsystemet-css/theme.css';
+import '@digdir/designsystemet-css/dist/theme/designsystemet.css';
 
 /**
  * Theme Loading Strategy:

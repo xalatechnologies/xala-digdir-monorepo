@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import { ToggleGroup } from '@digdir/designsystemet-react';
+import { ToggleGroup } from '../../src';
 
 const meta: Meta = {
   title: 'Components/ToggleGroup',

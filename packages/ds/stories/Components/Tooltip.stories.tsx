@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import { Tooltip, Button } from '@digdir/designsystemet-react';
+import { Tooltip, Button } from '../../src';
 
 const meta: Meta = {
   title: 'Components/Tooltip',
@@ -71,17 +71,13 @@ export const Placements: Story = {
 export const OnIcon: Story = {
   render: () => (
     <Tooltip content="More information about this feature">
-      <button 
-        style={{ 
-          background: 'none', 
-          border: 'none', 
-          cursor: 'pointer',
-          fontSize: '1.5rem',
-        }}
+      <Button
+        variant="tertiary"
+        data-size="sm"
         aria-label="Information"
       >
         ℹ️
-      </button>
+      </Button>
     </Tooltip>
   ),
 };

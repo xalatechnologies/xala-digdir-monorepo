@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import { Table } from '@digdir/designsystemet-react';
+import { Table } from '../../src';
 
 const meta: Meta = {
   title: 'Components/Table',

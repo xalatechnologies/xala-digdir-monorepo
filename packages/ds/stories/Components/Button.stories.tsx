@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { fn, expect, userEvent, within } from 'storybook/test';
-import { Button } from '@digdir/designsystemet-react';
+import { Button } from '../../src';
 import { PlusIcon, SaveIcon, TrashIcon } from '../../src/primitives';
 
 /**
