@@ -5,7 +5,7 @@
 
 import type { ReactNode } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { queryKeys } from '@/query-keys';
+import { queryKeys } from './query-keys';
 
 export interface EffectiveEntitlements {
   tenantId: string;

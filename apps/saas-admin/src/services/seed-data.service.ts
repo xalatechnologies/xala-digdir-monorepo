@@ -123,36 +123,63 @@ export interface ImportResult {
   errors: Array<{
     type: string;
     message: string;
-    item?: any;
+    item?: unknown;
   }>;
 }
 
 /**
  * Validate seed data structure
  */
-export function validateSeedData(data: any): { valid: boolean; errors: string[] } {
+export function validateSeedData(data: unknown): { valid: boolean; errors: string[] } {
+  const seedData = data as Record<string, unknown>;
   const errors: string[] = [];
 
-  if (!data.meta) errors.push('Missing meta information');
-  if (!data.tenants || !Array.isArray(data.tenants)) errors.push('Missing or invalid tenants array');
-  if (!data.organizations || !Array.isArray(data.organizations)) errors.push('Missing or invalid organizations array');
-  if (!data.users || !Array.isArray(data.users)) errors.push('Missing or invalid users array');
-  if (!data.rental_objects || !Array.isArray(data.rental_objects)) errors.push('Missing or invalid rental_objects array');
+  if (!seedData.meta) errors.push('Missing meta information');
+  if (!seedData.tenants || !Array.isArray(seedData.tenants)) errors.push('Missing or invalid tenants array');
+  if (!seedData.organizations || !Array.isArray(seedData.organizations)) errors.push('Missing or invalid organizations array');
+  if (!seedData.users || !Array.isArray(seedData.users)) errors.push('Missing or invalid users array');
+  if (!seedData.rental_objects || !Array.isArray(seedData.rental_objects)) errors.push('Missing or invalid rental_objects array');
 
   // Validate rental objects structure
-  if (data.rental_objects && Array.isArray(data.rental_objects)) {
-  const t = useT();
-    data.rental_objects.forEach((obj: any, index: number) => {
-      if (!obj.id) errors.push(`Rental object ${index}: Missing ID`t('common.if_objname_errorspush')`Rental object ${index}: Missing name`t('common.if_objcategorykey_errorspush')`Rental object ${index}: Missing category_key`t('common.if_objimages_arrayisarrayobjimages_errorspush')`Rental object ${index}: Missing or invalid images`t('common.if_objpricing_errorspush')`Rental object ${index}: Missing pricing`t('common.if_objmetadata_errorspush')`Rental object ${index}: Missing metadata`t('common.return_valid_errorslength_0')`Invalid seed data: ${validation.errors.join(', ')}`));
+  if (seedData.rental_objects && Array.isArray(seedData.rental_objects)) {
+    (seedData.rental_objects as unknown[]).forEach((obj: unknown, index: number) => {
+      const rental = obj as Record<string, unknown>;
+      if (!rental.id) errors.push(`Rental object ${index}: Missing ID`);
+      if (!rental.name) errors.push(`Rental object ${index}: Missing name`);
+      if (!rental.category_key) errors.push(`Rental object ${index}: Missing category_key`);
+      if (!rental.images || !Array.isArray(rental.images)) errors.push(`Rental object ${index}: Missing or invalid images`);
+      if (!rental.pricing) errors.push(`Rental object ${index}: Missing pricing`);
+      if (!rental.metadata) errors.push(`Rental object ${index}: Missing metadata`);
+    });
+  }
+
+  return { valid: errors.length === 0, errors };
+}
+
+/**
+ * Parse seed data from a JSON file
+ */
+export function parseSeedDataFile(file: File): Promise<SeedData> {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+
+    reader.onload = () => {
+      try {
+        const data = JSON.parse(reader.result as string);
+        const validation = validateSeedData(data);
+
+        if (!validation.valid) {
+          reject(new Error(`Invalid seed data: ${validation.errors.join(', ')}`));
           return;
         }
-        
+
         resolve(data as SeedData);
       } catch (error) {
-        reject(new Error(`Failed to parse JSON: ${error.message}`));
+        const err = error as Error;
+        reject(new Error(`Failed to parse JSON: ${err.message}`));
       }
     };
-    
+
     reader.onerror = () => reject(new Error('Failed to read file'));
     reader.readAsText(file);
   });
@@ -182,7 +209,7 @@ export async function importSeedData(
       stage: 'validating',
       current: 0,
       total: 100,
-      message: t('common.validating_seed_data')
+      message: 'Validating seed data...'
     });
 
     const validation = validateSeedData(data);
@@ -195,7 +222,7 @@ export async function importSeedData(
       stage: 'importing',
       current: 0,
       total: data.rental_objects.length + data.users.length + data.organizations.length + data.tenants.length,
-      message: t('common.starting_import')
+      message: 'Starting import...'
     });
 
     let imported = 0;
@@ -218,9 +245,10 @@ export async function importSeedData(
           message: `Imported tenant: ${tenant.name}`
         });
       } catch (error) {
+        const err = error as Error;
         result.errors.push({
           type: 'tenant',
-          message: error.message,
+          message: err.message,
           item: tenant
         });
       }
@@ -243,9 +271,10 @@ export async function importSeedData(
           message: `Imported organization: ${org.name}`
         });
       } catch (error) {
+        const err = error as Error;
         result.errors.push({
           type: 'organization',
-          message: error.message,
+          message: err.message,
           item: org
         });
       }
@@ -268,9 +297,10 @@ export async function importSeedData(
           message: `Imported user: ${user.name}`
         });
       } catch (error) {
+        const err = error as Error;
         result.errors.push({
           type: 'user',
-          message: error.message,
+          message: err.message,
           item: user
         });
       }
@@ -293,9 +323,10 @@ export async function importSeedData(
           message: `Imported: ${obj.name}`
         });
       } catch (error) {
+        const err = error as Error;
         result.errors.push({
           type: 'rental_object',
-          message: error.message,
+          message: err.message,
           item: obj
         });
       }
@@ -306,25 +337,26 @@ export async function importSeedData(
       stage: 'complete',
       current: total,
       total,
-      message: t('common.import_complete')
+      message: 'Import complete'
     });
 
     result.success = result.errors.length === 0;
     return result;
 
   } catch (error) {
+    const err = error as Error;
     onProgress?.({
       stage: 'error',
       current: 0,
       total: 100,
-      message: error.message
+      message: err.message
     });
-    
+
     result.errors.push({
       type: 'general',
-      message: error.message
+      message: err.message
     });
-    
+
     return result;
   }
 }

@@ -154,7 +154,7 @@ IMPORTANT: Return ONLY a valid JSON array. No explanations, no markdown, just th
   /**
    * Call OpenAI API
    */
-  private async callOpenAI(prompt: string, count: number): Promise<any[]> {
+  private async callOpenAI(prompt: string, _count: number): Promise<unknown[]> {
     const response = await fetch(this.apiEndpoint, {
       method: 'POST',
       headers: {
@@ -192,7 +192,7 @@ IMPORTANT: Return ONLY a valid JSON array. No explanations, no markdown, just th
       const parsed = JSON.parse(content);
       // Handle both direct array and object with data property
       return Array.isArray(parsed) ? parsed : parsed.data || parsed.items || [];
-    } catch (e) {
+    } catch {
       throw new Error('Failed to parse AI response as JSON');
     }
   }

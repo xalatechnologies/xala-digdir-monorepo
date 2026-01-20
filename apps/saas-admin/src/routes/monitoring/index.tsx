@@ -66,23 +66,16 @@ const MOCK_SCANNER_RESULTS = {
 
 export function MonitoringPage() {
   const t = useT();
-  const [refreshing, setRefreshing] = useState(false);
-  const [scannerResults, setScannerResults] = useState(MOCK_SCANNER_RESULTS);
+  const [refreshing] = useState(false);
+  const [, setScannerResults] = useState(MOCK_SCANNER_RESULTS);
   const [runningScanner, setRunningScanner] = useState<string | null>(null);
 
   // Queries
   const { data: tenantsData, isLoading: loadingTenants } = useSaasTenants({ limit: 1000 });
   const { data: billingData, isLoading: loadingBilling } = useSaasBillingOverview();
-  
+
   const tenants = tenantsData?.data ?? [];
   const billing = billingData?.data;
-
-  const handleRefresh = async () => {
-    setRefreshing(true);
-    await new Promise((resolve) => setTimeout(resolve, 1000));
-    setRefreshing(false);
-  };
-  // Note: handleRefresh available for future refresh button
 
   const handleRunScanner = async (scanner: 'i18n' | 'designSystem' | 'compliance') => {
     const scannerMap = {
@@ -364,7 +357,7 @@ export function MonitoringPage() {
                 width: '100%',
                 padding: 'var(--ds-spacing-2)',
                 backgroundColor: 'var(--ds-color-accent-base-default)',
-                color: 'white',
+                color: 'var(--ds-color-neutral-text-on-inverted)',
                 border: 'none',
                 borderRadius: 'var(--ds-border-radius-md)',
                 cursor: 'pointer',
@@ -405,7 +398,7 @@ export function MonitoringPage() {
                 width: '100%',
                 padding: 'var(--ds-spacing-2)',
                 backgroundColor: 'var(--ds-color-accent-base-default)',
-                color: 'white',
+                color: 'var(--ds-color-neutral-text-on-inverted)',
                 border: 'none',
                 borderRadius: 'var(--ds-border-radius-md)',
                 cursor: 'pointer',
@@ -446,7 +439,7 @@ export function MonitoringPage() {
                 width: '100%',
                 padding: 'var(--ds-spacing-2)',
                 backgroundColor: 'var(--ds-color-accent-base-default)',
-                color: 'white',
+                color: 'var(--ds-color-neutral-text-on-inverted)',
                 border: 'none',
                 borderRadius: 'var(--ds-border-radius-md)',
                 cursor: 'pointer',

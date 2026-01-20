@@ -3,16 +3,12 @@
  * Platform-wide billing overview with revenue stats and invoice list
  */
 
-import { useState } from 'react';
 import {
   Card,
   Heading,
   Paragraph,
-  Table,
-  Badge,
   Spinner,
   Grid,
-  Text,
   Stack,
 } from '@xala/ds';
 import { useSaasBillingOverview } from '@digilist/client-sdk/hooks';

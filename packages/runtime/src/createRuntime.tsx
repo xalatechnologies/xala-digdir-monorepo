@@ -134,7 +134,7 @@ function MockTenantProvider({ organizations, children }: MockTenantProviderProps
  */
 export function createRuntime(options: CreateRuntimeOptions = {}): RuntimeInstance {
   const {
-    appType = 'web',
+    // appType reserved for future use
     locale = 'nb',
     mockUser = null,
     mockOrganizations = [],

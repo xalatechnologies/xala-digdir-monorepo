@@ -7,7 +7,6 @@ import { useState, useMemo } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import {
   Card,
-  Heading,
   Paragraph,
   Button,
   Badge,
@@ -16,7 +15,6 @@ import {
   Spinner,
   PlusIcon,
   MoreVerticalIcon,
-  FilterIcon,
   EditIcon,
   EyeIcon,
   XCircleIcon,

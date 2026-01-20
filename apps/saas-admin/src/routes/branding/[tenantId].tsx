@@ -4,7 +4,7 @@
  */
 
 import { useState, useEffect } from 'react';
-import { useParams, useNavigate, Link } from 'react-router-dom';
+import { useParams, Link } from 'react-router-dom';
 import {
   Card,
   Heading,
@@ -67,7 +67,6 @@ interface BrandingData {
 export function BrandingEditorPage() {
   const { tenantId } = useParams<{ tenantId: string }>();
   const t = useT();
-  const navigate = useNavigate();
 
   // Form state
   const [branding, setBranding] = useState<BrandingData>({ ...DEFAULT_BRANDING });
@@ -350,7 +349,7 @@ export function BrandingEditorPage() {
                 style={{
                   backgroundColor: branding.primaryColor,
                   padding: 'var(--ds-spacing-4)',
-                  color: 'white',
+                  color: 'var(--ds-color-neutral-text-on-inverted)',
                 }}
               >
                 {branding.logoUrl ? (
@@ -370,7 +369,7 @@ export function BrandingEditorPage() {
               </div>
 
               {/* Preview Content */}
-              <div style={{ padding: 'var(--ds-spacing-4)', backgroundColor: 'white' }}>
+              <div style={{ padding: 'var(--ds-spacing-4)', backgroundColor: 'var(--ds-color-neutral-background-default)' }}>
                 <h3 style={{ fontFamily: branding.headingFont, marginBottom: 'var(--ds-spacing-2)' }}>
                   Overskrift
                 </h3>
@@ -382,7 +381,7 @@ export function BrandingEditorPage() {
                     type="button"
                     style={{
                       backgroundColor: branding.primaryColor,
-                      color: 'white',
+                      color: 'var(--ds-color-neutral-text-on-inverted)',
                       border: 'none',
                       padding: '8px 16px',
                       borderRadius: 'var(--ds-border-radius-sm)',
@@ -395,7 +394,7 @@ export function BrandingEditorPage() {
                     type="button"
                     style={{
                       backgroundColor: branding.secondaryColor,
-                      color: 'white',
+                      color: 'var(--ds-color-neutral-text-on-inverted)',
                       border: 'none',
                       padding: '8px 16px',
                       borderRadius: 'var(--ds-border-radius-sm)',

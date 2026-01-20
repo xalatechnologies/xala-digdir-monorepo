@@ -4,7 +4,7 @@
  */
 
 import { useState, useMemo } from 'react';
-import { useParams, useNavigate, Link } from 'react-router-dom';
+import { useParams, Link } from 'react-router-dom';
 import { useT } from '@xala/i18n';
 import {
   Card,
@@ -26,7 +26,6 @@ import {
   RefreshCwIcon,
   KeyIcon,
   UsersIcon,
-  BuildingIcon,
   CalendarIcon,
   DatabaseIcon,
   ShieldCheckIcon,
@@ -34,8 +33,6 @@ import {
   CreditCardIcon,
   LockIcon,
   ClockIcon,
-  Grid,
-  Text,
   ListIcon,
 } from '@xala/ds';
 import { CategoryEntitlementsTab } from '../../components/CategoryEntitlementsTab';
@@ -52,8 +49,6 @@ import {
 } from '@digilist/client-sdk/hooks';
 import type {
   SaasTenantStatus,
-  TenantFeatureFlag,
-  FeatureFlagCatalogItem,
   FeatureFlagCategory,
 } from '@digilist/client-sdk/types';
 
@@ -79,7 +74,6 @@ const categoryColors: Record<FeatureFlagCategory, 'info' | 'success' | 'warning'
 export function TenantDetailPage() {
   const { id } = useParams<{ id: string }>();
   const t = useT();
-  const navigate = useNavigate();
 
   const statusLabels: Record<SaasTenantStatus, string> = {
     active: t('status.active'),
