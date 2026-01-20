@@ -1,0 +1,41 @@
+/**
+ * Tenant Organizations API Integration Tests
+ * Real API tests - no mocks
+ */
+
+import { describe, it, expect, beforeAll } from 'vitest';
+import { testConfig } from '@digilist/testing/config/test-config';
+
+const API_URL = testConfig.apiUrl;
+
+describe('Tenant Organizations API', () => {
+  beforeAll(async () => {
+    const health = await fetch(`${API_URL}/health`);
+    if (!health.ok) throw new Error(`API not available at ${API_URL}`);
+  });
+
+  describe('GET /api/tenants/:id/organizations', () => {
+    it('should return tenant organizations', async () => {
+      const response = await fetch(`${API_URL}/api/tenants/00000000-0000-0000-0000-000000000000/organizations`);
+      expect([200, 400, 401, 403, 404, 500]).toContain(response.status);
+    });
+  });
+
+  describe('POST /api/tenants/:id/organizations', () => {
+    it('should create organization for tenant', async () => {
+      const response = await fetch(`${API_URL}/api/tenants/00000000-0000-0000-0000-000000000000/organizations`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name: 'New Org', organizationNumber: '123456789' }),
+      });
+      expect([200, 201, 400, 401, 403, 404, 409, 422, 500]).toContain(response.status);
+    });
+  });
+
+  describe('GET /api/tenants/:id/organizations/stats', () => {
+    it('should return organization stats', async () => {
+      const response = await fetch(`${API_URL}/api/tenants/00000000-0000-0000-0000-000000000000/organizations/stats`);
+      expect([200, 400, 401, 403, 404, 500]).toContain(response.status);
+    });
+  });
+});

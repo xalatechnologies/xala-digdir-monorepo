@@ -54,7 +54,47 @@ jobs:
       # ========================================================================
       # Thin Apps Compliance
       # ========================================================================
-      
+
+      - name: Check for direct fetch calls in apps
+        run: |
+          echo "🔍 Checking for direct fetch() calls in apps..."
+          FETCH_COUNT=$(grep -rE "fetch\(|axios\." apps/*/src 2>/dev/null | grep -v node_modules | grep -v '.test.' | grep -v 'mocks' | wc -l || echo "0")
+          if [ "$FETCH_COUNT" -gt 0 ]; then
+            echo "::warning::⚠️ Found $FETCH_COUNT direct fetch/axios calls in apps"
+            echo ""
+            echo "Violations:"
+            grep -rE "fetch\(|axios\." apps/*/src 2>/dev/null | grep -v node_modules | grep -v '.test.' | grep -v 'mocks' | head -20
+            echo ""
+            echo "Fix: Use @digilist/client-sdk hooks instead of direct HTTP calls"
+            echo "See: docs/QUALITY/thin-app-violations.md"
+          else
+            echo "✅ No direct fetch/axios calls in apps"
+          fi
+
+      - name: Check for Provider imports in pages/routes
+        run: |
+          echo "🔍 Checking for Provider imports in pages/routes..."
+          if grep -r "import.*Provider" apps/*/src/routes apps/*/src/pages 2>/dev/null | grep -v node_modules | grep -v '.test.' | grep -v 'RuntimeProvider'; then
+            echo "::error::❌ Provider imports found in pages/routes"
+            echo ""
+            echo "Fix: Providers should only be imported in main.tsx"
+            echo "Use RuntimeProvider from @xala/runtime for all cross-cutting concerns"
+            exit 1
+          fi
+          echo "✅ No Provider imports in pages/routes"
+
+      - name: Check for direct env access in routes
+        run: |
+          echo "🔍 Checking for direct env access in routes..."
+          if grep -r "import\.meta\.env\|process\.env" apps/*/src/routes apps/*/src/pages apps/*/src/components 2>/dev/null | grep -v node_modules | grep -v '.test.'; then
+            echo "::warning::⚠️ Direct env access found in routes/components"
+            echo ""
+            echo "Fix: Use @xala/config for validated env access"
+            echo "Example: const env = validateEnv(import.meta.env) // only in main.tsx"
+          else
+            echo "✅ No direct env access in routes/components"
+          fi
+
       - name: Check for RBAC logic in apps
         run: |
           echo "🔍 Checking for RBAC logic in apps..."
@@ -66,7 +106,7 @@ jobs:
             exit 1
           fi
           echo "✅ No RBAC logic found in apps"
-      
+
       - name: Check for business logic in app hooks
         run: |
           echo "🔍 Checking for business logic patterns in app hooks..."
@@ -120,10 +160,18 @@ jobs:
           echo "- ✅ No direct @digdir imports" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "## Thin Apps Compliance" >> $GITHUB_STEP_SUMMARY
+          echo "- 🔍 Direct fetch() calls check" >> $GITHUB_STEP_SUMMARY
+          echo "- ✅ No Provider imports in pages/routes" >> $GITHUB_STEP_SUMMARY
+          echo "- 🔍 Direct env access check" >> $GITHUB_STEP_SUMMARY
           echo "- ✅ No RBAC logic in apps" >> $GITHUB_STEP_SUMMARY
           echo "- ✅ Business logic check passed" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "## SDK Coverage" >> $GITHUB_STEP_SUMMARY
           echo "- ✅ SDK coverage verified" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
-          echo "See [Gap Matrix](../../docs/QUALITY/GAP_MATRIX.md) for detailed compliance status." >> $GITHUB_STEP_SUMMARY
+          echo "## Config Centralization" >> $GITHUB_STEP_SUMMARY
+          echo "- ✅ @xala/config package available" >> $GITHUB_STEP_SUMMARY
+          echo "- ✅ @xala/runtime for provider composition" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "See [Thin App Violations](../../docs/QUALITY/thin-app-violations.md) for detailed status." >> $GITHUB_STEP_SUMMARY
+          echo "See [Config Design](../../docs/ARCH/target-runtime-config-design.md) for architecture." >> $GITHUB_STEP_SUMMARY

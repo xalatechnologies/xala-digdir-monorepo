@@ -66,32 +66,42 @@ interface RuntimeConfig {
 
 ---
 
-## Env Schema (Future: packages/config)
+## Env Schema ✅ IMPLEMENTED (packages/config)
 
-Environment variables are validated at startup:
+Environment variables are validated at startup using Zod:
 
 ```typescript
-interface EnvSchema {
-  // Required
-  VITE_API_URL: string;         // DK base URL
-  VITE_TENANT_ID: string;       // Tenant identifier
-  VITE_LICENSE_KEY: string;     // SDK license
-  
-  // Optional
-  VITE_WS_URL?: string;         // WebSocket URL
-  VITE_SENTRY_DSN?: string;     // Error tracking
-  VITE_FEATURE_PREVIEW?: boolean; // Preview features
-}
+import { validateEnv, createAppConfig } from '@xala/config';
 
-function assertEnv(env: Partial<EnvSchema>): EnvSchema {
-  if (!env.VITE_API_URL) throw new Error('VITE_API_URL required');
-  if (!env.VITE_TENANT_ID) throw new Error('VITE_TENANT_ID required');
-  // ...validation
-  return env as EnvSchema;
-}
+// Validate environment at startup
+const env = validateEnv(import.meta.env);
+
+// Create all config at once
+const { sdkConfig, runtimeConfig } = createAppConfig('backoffice', env);
 ```
 
-**Planned Location:** `packages/config/src/env/schema.ts`
+**Location:** `packages/config/src/env-schema.ts`
+
+### Validated Variables:
+
+| Variable | Required | Default |
+|----------|----------|---------|
+| VITE_API_URL | Yes | https://api.digilist.no |
+| VITE_WS_URL | No | - |
+| VITE_TENANT_ID | Yes | default |
+| VITE_LICENSE_KEY | Yes | dev-key |
+| VITE_SENTRY_DSN | No | - |
+
+### Usage in Apps:
+
+```typescript
+// Before: 20 lines of duplicate config per app
+// After: 3 lines
+
+import { validateEnv, createAppConfig } from '@xala/config';
+const env = validateEnv(import.meta.env);
+const { sdkConfig, runtimeConfig } = createAppConfig('backoffice', env);
+```
 
 ---
 

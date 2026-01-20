@@ -39,7 +39,7 @@
 
 ---
 
-## 2. Provider Imports Inside Routes/Pages
+## 2. Provider Imports Inside Routes/Pages ✅ RESOLVED
 
 **Rule:** Only app root may import providers
 
@@ -47,14 +47,14 @@
 
 | File | Import |
 |------|--------|
-| `apps/backoffice/src/App.tsx` | ~~Provider imports~~ ⚠️ PENDING |
-| `apps/web/src/App.tsx` | ~~Provider imports~~ ⚠️ PENDING |
+| `apps/backoffice/src/App.tsx` | ✅ FIXED - Routes only |
+| `apps/web/src/App.tsx` | ✅ FIXED - Routes only |
 | `apps/saas-admin/src/App.tsx` | ✅ FIXED - Routes only |
 | `apps/minside/src/App.tsx` | ✅ FIXED - Routes only |
 | `apps/monitoring/src/App.tsx` | ✅ FIXED - Routes only |
 | `apps/docs-learning/src/App.tsx` | ✅ FIXED - Routes only |
 
-**Status:** 4/6 apps fixed, 2 pending
+**Status:** ✅ ALL 6/6 apps fixed
 
 ---
 
@@ -166,7 +166,7 @@
 
 | Violation | Status | Migrated | Remaining |
 |-----------|--------|----------|-----------|
-| Provider sprawl | IN PROGRESS | 4 apps | 2 apps |
+| Provider sprawl | ✅ COMPLETE | 6 apps | 0 apps |
 | Direct fetch | NOT STARTED | 0 | 31 calls |
 | Inline styles | NOT STARTED | 0 | 7,538 |
 | t() props | IDENTIFIED | 0 | 54 blocks |
@@ -175,11 +175,23 @@
 
 ---
 
-## Priority Actions
+## Priority Actions (Updated 2026-01-20)
 
-1. **HIGH:** Migrate web and backoffice to RuntimeProvider
+1. ~~**HIGH:** Migrate web and backoffice to RuntimeProvider~~ ✅ COMPLETE
 2. **HIGH:** Remove 31 direct fetch calls (SDK admin hooks)
 3. **HIGH:** Consolidate 85 backoffice components to DS blocks
 4. **MEDIUM:** Refactor 54 DS blocks to use internal `useT()`
 5. **MEDIUM:** Codemod 7,538 inline styles to DS tokens
 6. **LOW:** Move remaining business logic to packages
+
+### PHASE 2 Focus (Next Steps)
+
+1. Create `packages/config` with:
+   - AppProfile schema with Zod validation
+   - Centralized env parsing
+   - `getAppConfig(appId)` function
+
+2. Enhance `packages/runtime` with:
+   - Centralized SDK initialization
+   - AccountContextProvider consolidation
+   - CI gates for import boundaries

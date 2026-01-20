@@ -14,8 +14,10 @@
 | docs-learning | `main.tsx` | 1 (RuntimeProvider) | 1 | 1 | 0 (in Runtime) | 0 | ✅ MIGRATED |
 | monitoring | `main.tsx` | 1 (RuntimeProvider) | 1 | 1 | 0 (in Runtime) | 0 | ✅ MIGRATED |
 | minside | `main.tsx` | 1 (RuntimeProvider) | 1 | 1 | 0 (in Runtime) | 0 | ✅ MIGRATED |
-| web | `main.tsx` | 8+ | 1 | 1 | 1 | 0 | ⚠️ PENDING |
-| backoffice | `main.tsx` | 10+ | 1 | 1 | 1 | 2 | ⚠️ PENDING |
+| web | `main.tsx` | 1 (RuntimeProvider) | 1 | 1 | 0 (in Runtime) | 0 | ✅ MIGRATED |
+| backoffice | `main.tsx` | 1 (RuntimeProvider) | 1 | 1 | 0 (in Runtime) | 0 | ✅ MIGRATED |
+
+**✅ ALL 6 APPS NOW MIGRATED TO RuntimeProvider** (Updated 2026-01-20)
 
 ---
 
@@ -121,103 +123,92 @@
 
 ---
 
-### 5. web ⚠️ PENDING MIGRATION
+### 5. web ✅ MIGRATED
 
 **Entry:** `apps/web/src/main.tsx`
 
-**Current Provider Tree (8+ levels):**
+```typescript
+<RuntimeProvider config={{ appType: 'web', apiUrl: ... }}>
+  <App />
+</RuntimeProvider>
 ```
-QueryClientProvider
-  └─ ThemeProvider
-      └─ I18nProvider
-          └─ DesignsystemetProvider
-              └─ DialogProvider
-                  └─ ErrorBoundary
-                      └─ BrowserRouter
-                          └─ AuthProvider
-                              └─ RealtimeProvider
-                                  └─ Routes
-```
+
+**Provider Tree:** Single RuntimeProvider composes all
 
 **Env Reading:**
-- `main.tsx` - VITE_API_URL, VITE_TENANT_ID, VITE_LICENSE_KEY, VITE_WS_URL
+- `main.tsx:17-20` - VITE_API_URL, VITE_TENANT_ID, VITE_LICENSE_KEY
 
 **SDK Client Creation:**
-- `main.tsx` - `initializeClient(...)`
-- QueryClient creation with custom options
+- `main.tsx:16-20` - `initializeClient({ baseUrl, tenantId, licenseKey })`
 
-**Local Providers:**
-- None beyond standard DS providers
+**Query Client:** None (managed by RuntimeProvider)
+
+**Local Providers:** None (app-specific providers cleaned up)
 
 ---
 
-### 6. backoffice ⚠️ PENDING MIGRATION
+### 6. backoffice ✅ MIGRATED
 
 **Entry:** `apps/backoffice/src/main.tsx`
 
-**Current Provider Tree (10+ levels):**
+```typescript
+<RuntimeProvider config={{ appType: 'backoffice', apiUrl: ... }}>
+  <App />
+</RuntimeProvider>
 ```
-QueryClientProvider
-  └─ ThemeProvider
-      └─ I18nProvider
-          └─ DesignsystemetProvider
-              └─ DialogProvider
-                  └─ ErrorBoundary
-                      └─ ToastProvider
-                          └─ BrowserRouter
-                              └─ AuthProvider
-                                  └─ BackofficeRoleProvider
-                                      └─ CapabilityProvider
-                                          └─ RealtimeProvider
-                                              └─ Routes
-```
+
+**Provider Tree:** Single RuntimeProvider composes all
 
 **Env Reading:**
-- `main.tsx` - Standard env vars
+- `main.tsx:17-20` - VITE_API_URL, VITE_TENANT_ID, VITE_LICENSE_KEY
 
 **SDK Client Creation:**
-- `main.tsx` - `initializeClient(...)`
+- `main.tsx:16-20` - `initializeClient({ baseUrl, tenantId, licenseKey })`
 
-**Local Providers:**
-- `src/providers/ToastProvider.tsx` - Needs migration to RuntimeProvider
-- `src/providers/BackofficeRoleProvider.tsx` - App-specific, may stay
-- `src/providers/CapabilityProvider.tsx` - App-specific, may move to runtime
+**Query Client:** None (managed by RuntimeProvider)
 
-**RBAC Client-Side Evaluation:**
-- `BackofficeRoleProvider.tsx:L50-80` - Role checks
-- `CapabilityProvider.tsx:L30-60` - Capability evaluation
+**Local Providers (App-Specific - KEPT):**
+- `src/providers/BackofficeRoleProvider.tsx` - App-specific role context (kept)
+- `src/providers/CapabilityProvider.tsx` - App-specific capability checks (kept)
 
 ---
 
 ## Summary Statistics
 
-| Metric | Before | After (4 migrated) | Target |
-|--------|--------|-------------------|--------|
-| Total provider mounts across apps | 48+ | 28 | 6 |
-| Apps with RuntimeProvider | 0 | 4 | 6 |
-| Local provider files | 14 | 6 | 2 |
-| Duplicate QueryClient creations | 6 | 2 | 0 |
+| Metric | Before | After (ALL 6 migrated) | Target |
+|--------|--------|------------------------|--------|
+| Total provider mounts across apps | 48+ | 6 | 6 ✅ |
+| Apps with RuntimeProvider | 0 | 6 | 6 ✅ |
+| Local provider files | 14 | 4 | 2 |
+| Duplicate QueryClient creations | 6 | 0 | 0 ✅ |
 | Env parsers in apps | 6 | 6 | 0 |
 | SDK initializers in apps | 6 | 6 | 0 |
+
+**Remaining Work:**
+- Centralize SDK initialization (move to packages/config)
+- Centralize env parsing (move to packages/config)
+- Move remaining local providers to packages/runtime (4 remain: 2 AccountContext, 2 backoffice-specific)
 
 ---
 
 ## File Path Evidence
 
-### Migrated Apps (RuntimeProvider)
+### All Apps (RuntimeProvider) ✅
 - `apps/saas-admin/src/main.tsx:24-42`
 - `apps/docs-learning/src/main.tsx:24-42`
 - `apps/monitoring/src/main.tsx:28-46`
 - `apps/minside/src/main.tsx:28-46`
-
-### Pending Apps (Old Pattern)
-- `apps/web/src/main.tsx`
-- `apps/web/src/App.tsx`
-- `apps/backoffice/src/main.tsx`
-- `apps/backoffice/src/App.tsx`
+- `apps/web/src/main.tsx:24-42`
+- `apps/backoffice/src/main.tsx:24-42`
 
 ### RuntimeProvider Package
 - `packages/runtime/src/RuntimeProvider.tsx` - Main provider composition
 - `packages/runtime/src/createRuntime.tsx` - Test factory
 - `packages/runtime/src/hooks/` - Hook accessors
 - `packages/runtime/src/types.ts` - Type definitions
+
+### App-Specific Providers (KEPT - Business Logic)
+- `apps/minside/src/providers/AccountContextProvider.tsx` - Account switching
+- `apps/monitoring/src/providers/AccountContextProvider.tsx` - Account switching (duplicate)
+- `apps/backoffice/src/providers/BackofficeRoleProvider.tsx` - Role context
+- `apps/backoffice/src/providers/CapabilityProvider.tsx` - Capability checks

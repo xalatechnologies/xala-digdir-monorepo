@@ -1,11 +1,18 @@
 /**
  * saas-admin Entry Point
  *
+ * Uses @xala/config for centralized configuration validation.
  * Uses @xala/runtime for unified provider management.
- * This replaces manual provider composition with a single RuntimeProvider.
+ *
+ * @example Configuration Flow
+ * 1. validateEnv() validates and parses environment variables
+ * 2. createAppConfig() creates SDK and RuntimeProvider configs
+ * 3. initializeClient() initializes the SDK
+ * 4. RuntimeProvider provides all cross-cutting concerns
  */
 import React from 'react';
 import ReactDOM from 'react-dom/client';
+import { validateEnv, createAppConfig } from '@xala/config';
 import { RuntimeProvider } from '@xala/runtime';
 import { initializeClient } from '@digilist/client-sdk';
 
@@ -13,31 +20,18 @@ import '@xala/ds/styles';
 import './root.css';
 import { App } from './App';
 
-// Initialize SDK with configuration
-initializeClient({
-  baseUrl: import.meta.env.VITE_API_URL || 'https://api.digilist.no',
-  tenantId: import.meta.env.VITE_TENANT_ID || 'default',
-  licenseKey: import.meta.env.VITE_LICENSE_KEY || 'dev-key',
-});
+// Validate environment at startup (throws on invalid config)
+const env = validateEnv(import.meta.env);
+
+// Create all configuration from centralized profiles
+const { sdkConfig, runtimeConfig } = createAppConfig('saas-admin', env);
+
+// Initialize SDK with validated config
+initializeClient(sdkConfig);
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
-    <RuntimeProvider
-      config={{
-        appType: 'saas-admin',
-        apiUrl: import.meta.env.VITE_API_URL || 'https://api.digilist.no',
-        wsUrl: import.meta.env.VITE_WS_URL,
-        tenantId: import.meta.env.VITE_TENANT_ID || 'default',
-        licenseKey: import.meta.env.VITE_LICENSE_KEY || 'dev-key',
-        locale: 'nb',
-        theme: 'digilist',
-        colorScheme: 'auto',
-        authConfig: {
-          loginPath: '/login',
-          debug: import.meta.env.DEV,
-        },
-      }}
-    >
+    <RuntimeProvider config={runtimeConfig}>
       <App />
     </RuntimeProvider>
   </React.StrictMode>,
