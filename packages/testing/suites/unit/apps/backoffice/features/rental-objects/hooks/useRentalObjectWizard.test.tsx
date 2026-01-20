@@ -4,10 +4,9 @@
  */
 
 import React from 'react';
+import { renderWithRuntime, screen, fireEvent, waitFor } from '@digilist/testing';
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
-import { renderHook, act, waitFor } from '@testing-library/react';
-import { BrowserRouter } from 'react-router-dom';
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+Hook, act, waitFor } from '@testing-library/react';
 import { useRentalObjectWizard } from './useRentalObjectWizard';
 import {
   useRentalObjectBySlug,

@@ -5,11 +5,8 @@
  */
 
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { render, screen, fireEvent, waitFor } from '@testing-library/react';
-import { BrowserRouter } from 'react-router-dom';
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { I18nProvider } from '@xala/i18n';
-import { DesignsystemetProvider } from '@xala/ds';
+import { renderWithRuntime, screen, fireEvent, waitFor } from '@digilist/testing';
+screen, fireEvent, waitFor } from '@testing-library/react';
 import { TenantsListPage } from './index';
 import * as hooks from '@digilist/client-sdk/hooks';
 
@@ -25,26 +22,6 @@ vi.mock('@digilist/client-sdk/hooks', () => ({
 }));
 
 const mockUseSaasTenants = hooks.useSaasTenants as ReturnType<typeof vi.fn>;
-
-// Test wrapper component
-function TestWrapper({ children }: { children: React.ReactNode }) {
-  const queryClient = new QueryClient({
-    defaultOptions: {
-      queries: { retry: false },
-      mutations: { retry: false },
-    },
-  });
-
-  return (
-    <QueryClientProvider client={queryClient}>
-      <I18nProvider>
-        <DesignsystemetProvider theme="digilist" colorScheme="light" size="md">
-          <BrowserRouter>{children}</BrowserRouter>
-        </DesignsystemetProvider>
-      </I18nProvider>
-    </QueryClientProvider>
-  );
-}
 
 describe('TenantsListPage', () => {
   beforeEach(() => {
@@ -83,11 +60,7 @@ describe('TenantsListPage', () => {
         };
       });
 
-      render(
-        <TestWrapper>
-          <TenantsListPage />
-        </TestWrapper>
-      );
+      renderWithRuntime(<TenantsListPage />, { user: 'admin' });
 
       // Wait for data to load
       await waitFor(() => {
@@ -128,11 +101,7 @@ describe('TenantsListPage', () => {
         };
       });
 
-      render(
-        <TestWrapper>
-          <TenantsListPage />
-        </TestWrapper>
-      );
+      renderWithRuntime(<TenantsListPage />, { user: 'admin' });
 
       await waitFor(() => {
         expect(screen.getByText(/all/i)).toBeInTheDocument();
@@ -158,11 +127,7 @@ describe('TenantsListPage', () => {
         isLoading: false,
       });
 
-      render(
-        <TestWrapper>
-          <TenantsListPage />
-        </TestWrapper>
-      );
+      renderWithRuntime(<TenantsListPage />, { user: 'admin' });
 
       await waitFor(() => {
         expect(screen.getByText(/all/i)).toBeInTheDocument();
@@ -197,11 +162,7 @@ describe('TenantsListPage', () => {
         };
       });
 
-      render(
-        <TestWrapper>
-          <TenantsListPage />
-        </TestWrapper>
-      );
+      renderWithRuntime(<TenantsListPage />, { user: 'admin' });
 
       await waitFor(() => {
         expect(screen.getByText(/all/i)).toBeInTheDocument();
@@ -239,11 +200,7 @@ describe('TenantsListPage', () => {
         };
       });
 
-      render(
-        <TestWrapper>
-          <TenantsListPage />
-        </TestWrapper>
-      );
+      renderWithRuntime(<TenantsListPage />, { user: 'admin' });
 
       await waitFor(() => {
         expect(screen.getByText(/all/i)).toBeInTheDocument();
@@ -281,11 +238,7 @@ describe('TenantsListPage', () => {
         isLoading: false,
       });
 
-      render(
-        <TestWrapper>
-          <TenantsListPage />
-        </TestWrapper>
-      );
+      renderWithRuntime(<TenantsListPage />, { user: 'admin' });
 
       await waitFor(() => {
         // Check for empty state title
@@ -300,11 +253,7 @@ describe('TenantsListPage', () => {
         isLoading: false,
       });
 
-      render(
-        <TestWrapper>
-          <TenantsListPage />
-        </TestWrapper>
-      );
+      renderWithRuntime(<TenantsListPage />, { user: 'admin' });
 
       await waitFor(() => {
         // Check for create button in empty state
@@ -332,11 +281,7 @@ describe('TenantsListPage', () => {
         };
       });
 
-      render(
-        <TestWrapper>
-          <TenantsListPage />
-        </TestWrapper>
-      );
+      renderWithRuntime(<TenantsListPage />, { user: 'admin' });
 
       await waitFor(() => {
         expect(screen.getByText(/all/i)).toBeInTheDocument();
@@ -366,11 +311,7 @@ describe('TenantsListPage', () => {
         isLoading: false,
       });
 
-      render(
-        <TestWrapper>
-          <TenantsListPage />
-        </TestWrapper>
-      );
+      renderWithRuntime(<TenantsListPage />, { user: 'admin' });
 
       await waitFor(() => {
         // Status labels should be translated (Norwegian or English based on locale)
@@ -388,11 +329,7 @@ describe('TenantsListPage', () => {
         isLoading: false,
       });
 
-      render(
-        <TestWrapper>
-          <TenantsListPage />
-        </TestWrapper>
-      );
+      renderWithRuntime(<TenantsListPage />, { user: 'admin' });
 
       await waitFor(() => {
         expect(screen.getByText(/all/i)).toBeInTheDocument();
@@ -429,11 +366,7 @@ describe('TenantsListPage', () => {
         isLoading: false,
       });
 
-      render(
-        <TestWrapper>
-          <TenantsListPage />
-        </TestWrapper>
-      );
+      renderWithRuntime(<TenantsListPage />, { user: 'admin' });
 
       await waitFor(() => {
         const statusTabs = screen.getByRole('tablist') || document.querySelector('.status-tabs');

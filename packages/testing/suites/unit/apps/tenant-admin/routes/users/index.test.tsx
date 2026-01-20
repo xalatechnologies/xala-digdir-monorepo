@@ -5,11 +5,8 @@
  */
 
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { render, screen, waitFor } from '@testing-library/react';
-import { BrowserRouter } from 'react-router-dom';
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { I18nProvider } from '@xala/i18n';
-import { DesignsystemetProvider } from '@xala/ds';
+import { renderWithRuntime, screen, fireEvent, waitFor } from '@digilist/testing';
+screen, waitFor } from '@testing-library/react';
 import { UsersPage } from './index';
 import * as hooks from '@digilist/client-sdk/hooks';
 
@@ -51,11 +48,7 @@ describe('UsersPage', () => {
         isLoading: false,
       });
 
-      render(
-        <TestWrapper>
-          <UsersPage />
-        </TestWrapper>
-      );
+      renderWithRuntime(<UsersPage />, { user: 'admin' });
 
       await waitFor(() => {
         const emptyState = screen.queryByText(/no results|ingen resultater/i);
@@ -69,11 +62,7 @@ describe('UsersPage', () => {
         isLoading: false,
       });
 
-      render(
-        <TestWrapper>
-          <UsersPage />
-        </TestWrapper>
-      );
+      renderWithRuntime(<UsersPage />, { user: 'admin' });
 
       await waitFor(() => {
         // Should show "try different filters" when search is active
@@ -96,11 +85,7 @@ describe('UsersPage', () => {
         isLoading: false,
       });
 
-      render(
-        <TestWrapper>
-          <UsersPage />
-        </TestWrapper>
-      );
+      renderWithRuntime(<UsersPage />, { user: 'admin' });
 
       await waitFor(() => {
         // Check if count is displayed (format may vary)
@@ -119,11 +104,7 @@ describe('UsersPage', () => {
         isLoading: false,
       });
 
-      render(
-        <TestWrapper>
-          <UsersPage />
-        </TestWrapper>
-      );
+      renderWithRuntime(<UsersPage />, { user: 'admin' });
 
       await waitFor(() => {
         // Title should be translated

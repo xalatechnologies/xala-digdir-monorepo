@@ -1,7 +1,6 @@
-import { render, screen, fireEvent, waitFor, act } from '@testing-library/react';
+screen, fireEvent, waitFor, act } from '@testing-library/react';
 import { vi, beforeEach, afterEach } from 'vitest';
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { BrowserRouter } from 'react-router-dom';
+import { renderWithRuntime, screen, fireEvent, waitFor } from '@digilist/testing';
 import { CalendarPage } from './calendar';
 import * as clientSDK from '@digilist/client-sdk';
 import { ToastProvider } from '@xala/api/providers/ToastProvider';

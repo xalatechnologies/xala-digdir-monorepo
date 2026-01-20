@@ -39,8 +39,8 @@ export interface MockUser {
   permissions?: string[];
 }
 
-// Preset mock users for common test scenarios
-export const mockUsers: Record<TestUserRole, MockUser> = {
+// Preset test users for common test scenarios
+export const testUsers: Record<TestUserRole, MockUser> = {
   admin: {
     id: 'test-admin-001',
     email: 'admin@test.digilist.no',
@@ -103,8 +103,8 @@ function createTestContext(options: RenderWithRuntimeOptions) {
   
   // Resolve user
   const user: MockUser = typeof options.user === 'string' 
-    ? mockUsers[options.user] 
-    : options.user ?? mockUsers.anonymous;
+    ? testUsers[options.user] 
+    : options.user ?? testUsers.anonymous;
   
   const locale = options.locale ?? 'nb';
   const theme = options.theme ?? 'light';

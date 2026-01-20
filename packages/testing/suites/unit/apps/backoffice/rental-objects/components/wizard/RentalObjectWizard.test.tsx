@@ -4,10 +4,9 @@
  */
 
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { render, screen, waitFor } from '@testing-library/react';
+import { renderWithRuntime, screen, fireEvent, waitFor } from '@digilist/testing';
+screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { BrowserRouter } from 'react-router-dom';
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { RentalObjectWizard } from './RentalObjectWizard';
 import { useRentalObjectWizard } from '@xala/api/hooks/useRentalObjectWizard';
 import { useRentalObjectBySlug, useCreateRentalObject, useUpdateRentalObject } from '@digilist/client-sdk';

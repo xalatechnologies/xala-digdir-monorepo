@@ -4,12 +4,11 @@
  */
 
 import React from 'react';
+import { renderWithRuntime, screen, fireEvent, waitFor } from '@digilist/testing';
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { setupMockApi } from '@xala/backoffice/../../../../mocks/api-server.mock';
-import { render, screen } from '@testing-library/react';
+screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { BrowserRouter } from 'react-router-dom';
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ToastProvider } from '@xala/backoffice/providers/ToastProvider';
 import { RentalObjectsListView } from '@xala/api/components/RentalObjectsListView';
 import { RentalObjectDetailView } from '@xala/api/components/detail/RentalObjectDetailView';

@@ -5,11 +5,8 @@
  */
 
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { render, screen, fireEvent, waitFor } from '@testing-library/react';
-import { BrowserRouter } from 'react-router-dom';
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { I18nProvider } from '@xala/i18n';
-import { DesignsystemetProvider } from '@xala/ds';
+import { renderWithRuntime, screen, fireEvent, waitFor } from '@digilist/testing';
+screen, fireEvent, waitFor } from '@testing-library/react';
 import { PlansListPage } from './index';
 import * as hooks from '@digilist/client-sdk/hooks';
 
@@ -77,11 +74,7 @@ describe('PlansListPage', () => {
         };
       });
 
-      render(
-        <TestWrapper>
-          <PlansListPage />
-        </TestWrapper>
-      );
+      renderWithRuntime(<PlansListPage />, { user: 'admin' });
 
       await waitFor(() => {
         expect(screen.getByText(/all/i)).toBeInTheDocument();
@@ -104,11 +97,7 @@ describe('PlansListPage', () => {
         };
       });
 
-      render(
-        <TestWrapper>
-          <PlansListPage />
-        </TestWrapper>
-      );
+      renderWithRuntime(<PlansListPage />, { user: 'admin' });
 
       await waitFor(() => {
         expect(screen.getByText(/all/i)).toBeInTheDocument();
@@ -130,11 +119,7 @@ describe('PlansListPage', () => {
         isLoading: false,
       });
 
-      render(
-        <TestWrapper>
-          <PlansListPage />
-        </TestWrapper>
-      );
+      renderWithRuntime(<PlansListPage />, { user: 'admin' });
 
       await waitFor(() => {
         const emptyState = screen.queryByText(/no plans|ingen planer/i);
