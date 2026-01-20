@@ -3,27 +3,94 @@ import { Meta } from '@storybook/addon-docs/blocks';
 
 <Meta title="Overview/Introduction" />
 
-# Xala Design System
+# Xala Design System (@xala/ds)
 
-The Xala Design System (DS) is a production-ready component library built on top of [Digdir Designsystemet](https://designsystemet.no). It provides a comprehensive set of components, blocks, and patterns for building consistent, accessible, and maintainable applications.
+> A production-ready component library built on [Digdir Designsystemet](https://designsystemet.no)
 
-## Architecture
+The Xala Design System provides a comprehensive set of components, patterns, and guidelines for building consistent, accessible, and maintainable applications for the Norwegian public sector.
 
-The DS follows a layered component hierarchy:
+## What is Designsystemet?
 
-| Layer | Description | Examples |
-|-------|-------------|----------|
-| **Primitives** | Low-level building blocks | Container, Grid, Stack, Icon, Button |
-| **Components** | Reusable UI components | Card, Badge, Input, Select |
-| **Composed** | Mid-level compositions | PageHeader, DataTable, ListToolbar |
-| **Blocks** | Business logic components | RentalObjectCard, BookingSection, StatusBadges |
-| **Shells** | Application-level layouts | AppShell, DashboardSidebar |
+Designsystemet is Norway's national design system - a shared digital toolbox with fundamental UI components, guidelines, and patterns. It enables efficient product development and holistic user experiences across public services.
+
+**Key Resources:**
+- [Designsystemet Documentation](https://designsystemet.no/no)
+- [Theme Builder](https://theme.designsystemet.no/)
+- [GitHub Repository](https://github.com/digdir/designsystemet)
+- [Slack Community](https://designsystemet.no/slack)
+
+## Why @xala/ds?
+
+`@xala/ds` extends Designsystemet with:
+
+| Feature | Description |
+|---------|-------------|
+| **Facade Pattern** | Single import point for all UI components |
+| **Business Blocks** | Domain-specific components (booking, rental objects, GDPR) |
+| **Application Shells** | Pre-built layouts for common app structures |
+| **Thin App Strategy** | Apps focus on data fetching; DS handles all UI |
+
+## Component Hierarchy
+
+The DS follows a layered architecture, matching the Norwegian design system's approach:
+
+```
+     SHELLS (AppShell, DashboardLayout)
+           ↑
+     BLOCKS (RentalObjectCard, BookingForm)
+           ↑
+     COMPOSED (PageHeader, DataTable, FilterBar)
+           ↑
+     PRIMITIVES (Button, Card, Input, Grid)
+           ↑
+     DESIGNSYSTEMET (@digdir/designsystemet-react)
+```
+
+### Layer 1: Primitives
+Re-exported from `@digdir/designsystemet-react`:
+- **Layout:** Container, Grid, Stack, LayoutGrid
+- **Forms:** Button, Input, Select, Checkbox, Radio, Textarea, Switch
+- **Display:** Card, Badge, Avatar, Progress, Spinner
+- **Typography:** Heading, Paragraph, Label, Text
+- **Feedback:** Alert, Toast, Dialog, Tooltip
+- **Navigation:** Tabs, Breadcrumb, Link, Pagination
+
+### Layer 2: Composed
+Custom mid-level components:
+- **Layout:** ContentLayout, ContentSection, PageHeader
+- **Navigation:** Navigation, NavigationLink, Sidebar, Drawer
+- **Forms:** FilterBar, DataPageToolbar, Wizard, Stepper
+- **Display:** DataTable, ListToolbar, EmptyState, StatusTabs
+
+### Layer 3: Blocks
+Business-domain components:
+- **Rental Objects:** RentalObjectCard, RentalObjectGrid, RentalObjectMap
+- **Booking:** BookingFormModal, BookingStepper, AvailabilityCalendar
+- **Admin:** PermissionMatrix, ScopeSelector, UserInviteForm
+- **GDPR:** ConsentPopup, ConsentSettings, DataSubjectRequestForm
+
+### Layer 4: Shells
+Application-level layouts:
+- **AppShell** - Complete application container
+- **DashboardSidebar** - Navigation sidebar
+- **DashboardContent** - Main content area
 
 ## Design Principles
 
-### Token-First Styling
+### 1. Universell Utforming (Accessibility)
 
-All styling must use DS tokens. No raw CSS values or inline styles are permitted.
+Designsystemet meets WCAG requirements included in Norwegian regulations. Every component is:
+- Keyboard navigable
+- Screen reader compatible
+- WCAG 2.1 AA compliant
+- Tested with axe-core
+
+> "Universell utforming er en del av hele vår arbeidsprosess - fra vi begynner å spesifisere komponenten til den er i produksjon."
+> — Designsystemet
+
+### 2. Token-First Styling
+
+All styling uses design tokens. No raw CSS values are permitted:
 
 ```tsx
 // Correct - uses tokens
@@ -33,9 +100,9 @@ All styling must use DS tokens. No raw CSS values or inline styles are permitted
 <div style={{ padding: '16px' }}>
 ```
 
-### Thin Apps, Rich DS
+### 3. Thin Apps, Rich DS
 
-Applications should be thin wrappers around DS blocks. All UI logic, styling, and patterns live in the DS package.
+Applications should be thin wrappers. All UI logic lives in the DS:
 
 ```tsx
 // App code - thin wrapper
@@ -51,58 +118,43 @@ function ListingsPage() {
 }
 ```
 
-### Accessibility First
+### 4. SDK-Driven Data
 
-Every component must meet WCAG 2.1 AA standards:
-
-- Keyboard navigable
-- Screen reader compatible
-- Sufficient color contrast
-- Focus indicators visible
-
-### No Emojis
-
-Use DS icon registry only. Emojis are not permitted in any DS component or documentation.
-
-## Getting Started
+Components expect data from `@digilist/client-sdk`:
 
 ```tsx
-// 1. Import styles once in your app entry
-import '@xala/ds/styles';
+import { useListings } from '@digilist/client-sdk/hooks';
+import { RentalObjectGrid } from '@xala/ds';
 
-// 2. Wrap your app with providers
-import { ThemeProvider } from '@xala/ds';
-
-function App() {
-  return (
-    <ThemeProvider>
-      <YourApp />
-    </ThemeProvider>
-  );
+function Page() {
+  const { data, isLoading } = useListings();
+  if (isLoading) return <Spinner />;
+  return <RentalObjectGrid items={data} />;
 }
-
-// 3. Use DS components
-import { Button, Card, PageHeader } from '@xala/ds';
 ```
 
-## Package Structure
+## Critical Rules
 
 ```
-@xala/ds/
-  src/
-    primitives/     # Low-level components
-    components/     # Reusable UI components
-    composed/       # Mid-level compositions
-    blocks/         # Business logic components
-    shells/         # Application layouts
-    tokens/         # Design tokens
-    hooks/          # Utility hooks
-    types/          # TypeScript types
-    utils/          # Utility functions
+NEVER import @digdir/* directly in apps
+NEVER use inline styles with raw values
+NEVER create UI components in apps
+ALWAYS import from @xala/ds
+ALWAYS use design tokens
+ALWAYS add Storybook stories for new components
 ```
 
-## Related Resources
+## Getting Help
 
-- [Designsystemet Documentation](https://designsystemet.no)
-- [Accessibility Guidelines](https://designsystemet.no/en/fundamentals/introduction/accessibility/)
-- [Best Practices](https://designsystemet.no/en/best-practices/)
+- **Storybook:** Browse component examples here
+- **Designsystemet:** [designsystemet.no](https://designsystemet.no)
+- **Best Practices:** [designsystemet.no/no/best-practices](https://designsystemet.no/no/best-practices)
+- **Patterns:** [designsystemet.no/no/patterns](https://designsystemet.no/no/patterns)
+
+## Related Documentation
+
+- [Getting Started](/?path=/docs/overview-getting-started--docs)
+- [Accessibility](/?path=/docs/fundamentals-accessibility--docs)
+- [Design Tokens](/?path=/docs/fundamentals-tokens--docs)
+- [Best Practices](/?path=/docs/fundamentals-best-practices--docs)
+- [Patterns](/?path=/docs/fundamentals-patterns--docs)

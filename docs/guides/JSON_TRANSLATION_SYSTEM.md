@@ -205,7 +205,7 @@ pnpm -F @xala/backoffice build
 ### **Method 2: Using Python Script**
 
 ```bash
-python3 create-comprehensive-translations.py
+python3 scripts/create-comprehensive-translations.py
 ```
 
 This script:

@@ -7,7 +7,7 @@ import '@fontsource/inter/500.css';
 import '@fontsource/inter/600.css';
 import '@fontsource/inter/700.css';
 
-import '@digdir/designsystemet-css';
+// CSS loaded via previewHead in main.ts to avoid Storybook 10 module resolution warning
 import './public/themes/digilist.css';
 import './public/themes/digilist-extensions.css';
 

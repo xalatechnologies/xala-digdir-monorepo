@@ -3,17 +3,22 @@ import { Meta } from '@storybook/addon-docs/blocks';
 
 <Meta title="Overview/Getting Started" />
 
-# Getting Started
+# Getting Started with @xala/ds
 
-This guide walks you through setting up and using the Xala Design System in your application.
+This guide walks you through setting up and using the Xala Design System, following the patterns established by [Designsystemet](https://designsystemet.no/no/fundamentals/introduction/get-started).
+
+## Prerequisites
+
+- Node.js 20+
+- pnpm (workspace package manager)
+- TypeScript knowledge
 
 ## Installation
 
 The DS is a workspace package in the monorepo:
 
-```bash
-# The DS is already available as a workspace dependency
-# In your app's package.json:
+```json
+// In your app's package.json
 {
   "dependencies": {
     "@xala/ds": "workspace:*"
@@ -21,201 +26,321 @@ The DS is a workspace package in the monorepo:
 }
 ```
 
-## Setup
+## Setup Steps
 
-### 1. Import Styles
+### Step 1: Import Styles (Once)
 
-Import the DS styles **once** in your application entry point:
+Import DS styles in your application entry point:
 
 ```tsx
-// main.tsx or App.tsx
+// main.tsx - import ONCE at the app root
 import '@xala/ds/styles';
 ```
 
 This imports:
 - Digdir Designsystemet CSS
-- DS theme tokens
+- Design tokens (colors, spacing, typography)
 - Component styles
+- Theme CSS for selected theme
 
-### 2. Add Providers
+### Step 2: Add the Provider
 
-Wrap your application with the required providers:
+Wrap your application with `DesignsystemetProvider`:
 
 ```tsx
-import { ThemeProvider } from '@xala/ds';
+import { DesignsystemetProvider } from '@xala/ds';
 
 function App() {
   return (
-    <ThemeProvider>
+    <DesignsystemetProvider
+      theme="digdir"
+      colorScheme="auto"
+      size="md"
+      typography="primary"
+    >
       <RouterProvider router={router} />
-    </ThemeProvider>
+    </DesignsystemetProvider>
   );
 }
 ```
 
-### 3. Use Components
+**Provider Props:**
 
-Import and use DS components:
+| Prop | Values | Default | Description |
+|------|--------|---------|-------------|
+| `theme` | `digdir`, `altinn`, `uutilsynet`, `portal` | `digdir` | Visual theme |
+| `colorScheme` | `light`, `dark`, `auto` | `auto` | Color mode |
+| `size` | `sm`, `md`, `lg` | `md` | Component size scale |
+| `typography` | `primary`, `secondary` | `primary` | Font family |
+
+### Step 3: Use Components
+
+Import components from `@xala/ds`:
 
 ```tsx
-import { 
-  AppShell, 
-  PageHeader, 
-  DataTable, 
-  Button 
-} from '@xala/ds';
+import {
+  // Primitives
+  Button,
+  Card,
+  Grid,
+  Heading,
+  Input,
 
-function UsersPage() {
+  // Composed
+  PageHeader,
+  DataTable,
+  FilterBar,
+
+  // Blocks
+  RentalObjectCard,
+  BookingFormModal,
+
+  // Shells
+  AppShell,
+} from '@xala/ds';
+```
+
+## Complete Example
+
+```tsx
+// main.tsx
+import React from 'react';
+import ReactDOM from 'react-dom/client';
+import { QueryClientProvider } from '@tanstack/react-query';
+import { DesignsystemetProvider } from '@xala/ds';
+import { queryClient, initializeClient } from '@digilist/client-sdk';
+import '@xala/ds/styles';
+import { App } from './App';
+
+// Initialize SDK
+initializeClient({
+  baseUrl: import.meta.env.VITE_API_URL,
+  tenantId: import.meta.env.VITE_TENANT_ID,
+});
+
+ReactDOM.createRoot(document.getElementById('root')!).render(
+  <React.StrictMode>
+    <QueryClientProvider client={queryClient}>
+      <DesignsystemetProvider theme="digdir" colorScheme="auto">
+        <App />
+      </DesignsystemetProvider>
+    </QueryClientProvider>
+  </React.StrictMode>
+);
+```
+
+```tsx
+// App.tsx
+import { RouterProvider, createBrowserRouter } from 'react-router-dom';
+import { AppShell, PageHeader, DataTable, Button } from '@xala/ds';
+import { useListings } from '@digilist/client-sdk/hooks';
+
+function ListingsPage() {
+  const { data, isLoading } = useListings();
+
   return (
-    <AppShell title="Admin">
-      <PageHeader 
-        title="Users" 
-        actions={<Button>Add User</Button>}
+    <AppShell title="Backoffice">
+      <PageHeader
+        title="Utleieobjekter"
+        actions={<Button>Legg til</Button>}
       />
-      <DataTable columns={columns} data={users} />
+      <DataTable
+        columns={columns}
+        data={data ?? []}
+        loading={isLoading}
+      />
     </AppShell>
   );
 }
 ```
 
-## Theme Configuration
+## Theme Customization
 
-### Light/Dark Mode
+Designsystemet supports custom themes through the [Theme Builder](https://theme.designsystemet.no/).
 
-The DS supports light, dark, and auto (system) themes:
+### Using Built-in Themes
+
+```tsx
+<DesignsystemetProvider theme="altinn">
+  {/* App uses Altinn theme */}
+</DesignsystemetProvider>
+```
+
+### Theme Switching at Runtime
 
 ```tsx
 import { useTheme } from '@xala/ds';
 
-function ThemeToggle() {
-  const { isDark, toggleTheme } = useTheme();
-  
+function ThemeSelector() {
+  const { theme, setTheme, colorScheme, setColorScheme } = useTheme();
+
   return (
-    <Button onClick={toggleTheme}>
-      {isDark ? 'Light Mode' : 'Dark Mode'}
-    </Button>
+    <>
+      <Select value={theme} onChange={(e) => setTheme(e.target.value)}>
+        <option value="digdir">Digdir</option>
+        <option value="altinn">Altinn</option>
+        <option value="portal">Portal</option>
+      </Select>
+
+      <Button onClick={() => setColorScheme(colorScheme === 'light' ? 'dark' : 'light')}>
+        Toggle Dark Mode
+      </Button>
+    </>
   );
 }
 ```
 
-### Using Tokens
+## Using Design Tokens
 
-Always use design tokens for styling:
+Always use CSS variables for styling:
 
 ```tsx
 // Spacing
-style={{ padding: 'var(--ds-spacing-4)' }}
+style={{
+  padding: 'var(--ds-spacing-4)',      // 16px
+  gap: 'var(--ds-spacing-2)',          // 8px
+  margin: 'var(--ds-spacing-6)',       // 24px
+}}
 
-// Colors
-style={{ color: 'var(--ds-color-neutral-text-default)' }}
+// Colors (with data-color attribute)
+style={{
+  color: 'var(--ds-color-text-default)',
+  backgroundColor: 'var(--ds-color-surface-default)',
+  borderColor: 'var(--ds-color-border-default)',
+}}
 
 // Typography
-style={{ fontSize: 'var(--ds-font-size-md)' }}
+style={{
+  fontSize: 'var(--ds-font-size-4)',
+  fontWeight: 'var(--ds-font-weight-medium)',
+  lineHeight: 'var(--ds-line-height-md)',
+}}
 
 // Borders
-style={{ borderRadius: 'var(--ds-border-radius-md)' }}
+style={{
+  borderRadius: 'var(--ds-border-radius-md)',
+  borderWidth: 'var(--ds-border-width-default)',
+}}
+
+// Shadows
+style={{
+  boxShadow: 'var(--ds-shadow-md)',
+}}
 ```
 
-## Component Layers
+## Semantic Color Usage
 
-### When to Use Each Layer
-
-| Layer | Use When |
-|-------|----------|
-| **Primitives** | Building custom layouts or low-level UI |
-| **Composed** | Assembling standard page sections |
-| **Blocks** | Implementing business features |
-| **Shells** | Creating application scaffolding |
-
-### Example: Building a Dashboard
+Colors are semantic - they change based on context:
 
 ```tsx
-import {
-  // Shell
-  AppShell,
-  DashboardSidebar,
-  
-  // Composed
-  PageHeader,
-  DataTable,
-  
-  // Blocks
-  StatCard,
-  ActivityFeed,
-  
-  // Primitives
-  Grid,
-  Card,
-} from '@xala/ds';
+// Accent colors (brand)
+<div data-color="accent">
+  {/* Uses --ds-color-* tokens with accent values */}
+</div>
 
-function Dashboard() {
-  return (
-    <AppShell sidebar={<DashboardSidebar items={navItems} />}>
-      <PageHeader title="Dashboard" />
-      
-      <Grid columns={4} gap="var(--ds-spacing-4)">
-        <StatCard title="Revenue" value="$12,345" />
-        <StatCard title="Users" value="1,234" />
-        <StatCard title="Orders" value="567" />
-        <StatCard title="Growth" value="+12%" />
-      </Grid>
-      
-      <Grid columns={2} gap="var(--ds-spacing-4)">
-        <Card>
-          <DataTable columns={columns} data={recentOrders} />
-        </Card>
-        <Card>
-          <ActivityFeed items={activities} />
-        </Card>
-      </Grid>
-    </AppShell>
-  );
-}
+// Danger colors (errors)
+<div data-color="danger">
+  {/* Uses --ds-color-* tokens with danger values */}
+</div>
+
+// Success colors
+<div data-color="success">
+  {/* Uses --ds-color-* tokens with success values */}
+</div>
+```
+
+## Responsive Sizing
+
+Use the `data-size` attribute for responsive components:
+
+```tsx
+// Small components
+<div data-size="sm">
+  <Button>Small Button</Button>
+</div>
+
+// Medium (default)
+<div data-size="md">
+  <Button>Medium Button</Button>
+</div>
+
+// Large
+<div data-size="lg">
+  <Button>Large Button</Button>
+</div>
 ```
 
 ## Testing
 
 ### data-testid Convention
 
-Every interactive DS component exposes `data-testid` props:
+All interactive components support `data-testid`:
 
 ```tsx
 <Button data-testid="submit-button">Submit</Button>
-<DataTable data-testid="users-table" />
+<DataTable data-testid="users-table" columns={columns} data={data} />
+<Input data-testid="email-input" type="email" />
 ```
 
-### E2E Testing
+### Playwright Testing
 
 ```tsx
-// Playwright example
-await page.getByTestId('submit-button').click();
-await expect(page.getByTestId('users-table')).toBeVisible();
+// tests/e2e/example.spec.ts
+import { test, expect } from '@playwright/test';
+
+test('should submit form', async ({ page }) => {
+  await page.goto('/form');
+
+  await page.getByTestId('email-input').fill('test@example.com');
+  await page.getByTestId('submit-button').click();
+
+  await expect(page.getByTestId('success-message')).toBeVisible();
+});
 ```
 
 ## Troubleshooting
 
 ### Styles Not Loading
 
-Ensure you import styles in your entry point:
-
 ```tsx
+// Ensure you import styles in main.tsx
 import '@xala/ds/styles';
 ```
 
-### Theme Not Working
-
-Verify ThemeProvider wraps your app:
+### Theme Not Applied
 
 ```tsx
-<ThemeProvider>
+// Ensure DesignsystemetProvider wraps your app
+<DesignsystemetProvider theme="digdir">
   <App />
-</ThemeProvider>
+</DesignsystemetProvider>
 ```
 
 ### TypeScript Errors
 
-The DS exports all types. Import them explicitly:
-
 ```tsx
+// Import types explicitly
 import type { ButtonProps, DataTableProps } from '@xala/ds';
 ```
+
+### Component Not Found
+
+```tsx
+// Check the component is exported from index.ts
+// All components should be importable from '@xala/ds'
+import { ComponentName } from '@xala/ds';
+```
+
+## Next Steps
+
+- Browse [Components](/?path=/docs/components-button--docs)
+- Read about [Accessibility](/?path=/docs/fundamentals-accessibility--docs)
+- Learn [Best Practices](/?path=/docs/fundamentals-best-practices--docs)
+- Explore [Patterns](/?path=/docs/fundamentals-patterns--docs)
+
+## External Resources
+
+- [Designsystemet Getting Started](https://designsystemet.no/no/fundamentals/introduction/get-started)
+- [Theme Builder](https://theme.designsystemet.no/)
+- [Design Tokens Reference](https://designsystemet.no/no/fundamentals/design-elements/variables)
+- [GitHub Repository](https://github.com/digdir/designsystemet)

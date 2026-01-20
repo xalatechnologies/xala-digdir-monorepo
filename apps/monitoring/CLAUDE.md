@@ -1,53 +1,54 @@
-# apps/minside - User Portal Application
+# apps/monitoring - System Monitoring Dashboard
 
 > **Extends:** [Root CLAUDE.md](../../CLAUDE.md)
 
 ## Purpose
 
-The **minside** app is the user portal for the Xala/Digilist Platform. It provides end-users with a personalized dashboard to manage their bookings, profile, and preferences.
+The **monitoring** app is the system monitoring dashboard for the Xala/Digilist Platform. It provides operations staff with real-time visibility into system health, performance metrics, error tracking, and alerting.
 
-**Port:** 5174
-**URL (local):** http://localhost:5174
-**URL (test):** https://minside-test.digilist.no
+**Port:** 5178
+**URL (local):** http://localhost:5178
+**URL (test):** https://monitoring-test.digilist.no
 
 ---
 
 ## Key Characteristics
 
-- **User-focused** - Personal dashboard and booking management
-- **Authentication required** - All routes require login
-- **Mobile-optimized** - Designed for on-the-go access
-- **Notification-rich** - In-app notifications and alerts
-- **Self-service** - Users manage own bookings and profile
-- **GDPR-compliant** - Data export, deletion requests, consent management
+- **Internal application** - Requires staff/admin authentication
+- **Real-time monitoring** - Live metrics and health status
+- **Alerting system** - Configurable alerts and notifications
+- **Multi-tenant visibility** - Cross-kommune health overview
+- **Incident management** - Track and resolve system issues
+- **Observability** - Integrates with @xala/observability package
 
 ---
 
 ## Directory Structure
 
 ```
-apps/minside/
+apps/monitoring/
 ├── src/
-│   ├── features/           # Feature-based modules
-│   │   ├── dashboard/      # User dashboard (overview)
-│   │   ├── bookings/       # My bookings
-│   │   ├── profile/        # User profile management
-│   │   ├── notifications/  # Notification center
-│   │   ├── favorites/      # Saved listings
-│   │   ├── payments/       # Payment methods and history
-│   │   └── settings/       # User settings and preferences
-│   ├── routes/             # React Router routes
-│   ├── components/         # Shared UI components
-│   │   └── layout/         # Layout components (Sidebar, Header)
-│   ├── providers/          # Context providers (Auth, Theme)
-│   ├── hooks/              # Custom React hooks
-│   ├── utils/              # Helper utilities
-│   └── main.tsx            # App entry point
-├── public/                 # Static assets
-│   └── themes/             # Theme CSS files
-├── vite.config.ts          # Vite configuration
-├── tsconfig.json           # TypeScript config
-└── package.json            # Dependencies
+│   ├── routes/              # React Router routes
+│   │   ├── dashboard.tsx    # Main monitoring dashboard
+│   │   ├── health.tsx       # Health check overview
+│   │   ├── metrics.tsx      # System metrics
+│   │   ├── alerts.tsx       # Active alerts
+│   │   ├── incidents.tsx    # Incident management
+│   │   └── help.tsx         # Help documentation
+│   ├── components/          # Monitoring-specific components
+│   │   ├── HealthStatus/    # Health check displays
+│   │   ├── MetricsChart/    # Performance charts
+│   │   ├── AlertList/       # Alert management
+│   │   └── IncidentTimeline/# Incident tracking
+│   ├── providers/           # Context providers
+│   ├── hooks/               # Custom React hooks
+│   ├── utils/               # Helper utilities
+│   └── main.tsx             # App entry point
+├── public/                  # Static assets
+│   └── themes/              # Theme CSS files
+├── vite.config.ts           # Vite configuration
+├── tsconfig.json            # TypeScript config
+└── package.json             # Dependencies
 ```
 
 ---
@@ -56,14 +57,14 @@ apps/minside/
 
 ```bash
 # From repository root
-pnpm --filter @xala/minside dev        # Start dev server
-pnpm --filter @xala/minside build      # Production build
-pnpm --filter @xala/minside preview    # Preview production build
+pnpm --filter @xala/monitoring dev        # Start dev server
+pnpm --filter @xala/monitoring build      # Production build
+pnpm --filter @xala/monitoring preview    # Preview production build
 
 # From this directory
-pnpm dev                               # Start dev server
-pnpm build                             # Production build
-pnpm preview                           # Preview build
+pnpm dev                                  # Start dev server (port 5178)
+pnpm build                                # Production build
+pnpm preview                              # Preview build
 ```
 
 ---
@@ -71,95 +72,66 @@ pnpm preview                           # Preview build
 ## App-Specific Rules
 
 ### 1. Authentication Required
-- **ALL routes require authentication**
-- Redirect unauthenticated users to `/login`
+- **ALL routes require staff authentication**
+- Redirect unauthenticated users to login
 - Use `ProtectedRoute` wrapper for all pages
-- Support multiple auth methods (Vipps, Microsoft, Google)
+- Check admin/ops permissions before showing features
 
-### 2. User-Centric Design
-- Personalized dashboard on login
-- Quick access to active bookings
-- Unread notification badge
-- Recent activity timeline
-- Favorite listings
+### 2. Real-Time Metrics
+- Use WebSocket for live metric updates
+- Update dashboard every 5 seconds
+- Show connection status indicator
+- Handle reconnection gracefully
 
-### 3. Mobile-First
-- Touch-friendly navigation (bottom nav on mobile)
-- Responsive sidebar (drawer on mobile)
-- Thumb-zone optimization for CTAs
-- Offline capability for viewing bookings
+### 3. Alert Management
+- Display critical alerts prominently
+- Allow alert acknowledgment
+- Track alert history
+- Integrate with notification system
 
-### 4. Notification System
-- In-app notification center
-- Toast notifications for important updates
-- Email/SMS notification preferences
-- Push notification support (PWA)
-- Real-time WebSocket updates
+### 4. Incident Tracking
+- Create incidents from alerts
+- Track incident lifecycle (open -> investigating -> resolved)
+- Include timeline of events
+- Support post-mortem notes
 
-### 5. GDPR Compliance
-- Data export functionality (JSON/CSV)
-- Data deletion requests
-- Consent management
-- Privacy settings
-- Activity log (user can view own actions)
+### 5. Observability Integration
+- Use `@xala/observability` package for metrics
+- Follow Prometheus metric naming conventions
+- Support Grafana dashboard links
+- Track 36+ predefined metrics
 
 ---
 
 ## Key Features
 
-### Dashboard
-- **Location:** `src/features/dashboard/`
-- Overview of active bookings
-- Upcoming events
-- Recent notifications
-- Quick actions (new booking, view favorites)
-- Statistics (total bookings, total spent)
+### Health Dashboard
+- **Location:** `src/routes/dashboard.tsx`
+- Overall system health status
+- Service-by-service health checks
+- Database connection status
+- External service availability
 
-### My Bookings
-- **Location:** `src/features/bookings/`
-- List of all bookings (past, active, upcoming)
-- Filter by status and date
-- Booking details view
-- Cancel booking with refund tracking
-- Modify booking (if allowed)
-- Download booking confirmation (PDF)
+### Metrics Visualization
+- **Location:** `src/routes/metrics.tsx`
+- Real-time performance charts
+- Historical metric trends
+- Custom metric queries
+- Export to CSV
 
-### User Profile
-- **Location:** `src/features/profile/`
-- Personal information
-- Contact details
-- Profile picture upload
-- Verify email/phone
-- Connected accounts (social login)
+### Alert Management
+- **Location:** `src/routes/alerts.tsx`
+- Active alert list
+- Alert severity levels (critical, warning, info)
+- Alert acknowledgment workflow
+- Alert rule configuration
 
-### Notification Center
-- **Location:** `src/features/notifications/`
-- Unread badge count
-- Notification list (sortable, filterable)
-- Mark as read/unread
-- Notification preferences (email, SMS, push)
-- Notification history
-
-### Favorites
-- **Location:** `src/features/favorites/`
-- Saved listings for quick access
-- Remove from favorites
-- Book directly from favorites
-
-### Payment Methods
-- **Location:** `src/features/payments/`
-- Saved payment methods (cards, Vipps)
-- Add/remove payment methods
-- Set default payment method
-- Payment history and invoices
-
-### Settings
-- **Location:** `src/features/settings/`
-- Language preference
-- Theme (light/dark/auto)
-- Notification preferences
-- Privacy settings (GDPR)
-- Data export/deletion requests
+### Incident Management
+- **Location:** `src/routes/incidents.tsx`
+- Incident creation and tracking
+- Timeline of events
+- Resolution notes
+- Post-mortem documentation
 
 ---
 
@@ -169,25 +141,38 @@ pnpm preview                           # Preview build
 ```tsx
 import {
   useAuth,                # User authentication
-  useUser,                # User profile
-  useBookings,            # User's bookings
-  useNotifications,       # Notification center
-  useFavorites,           # Saved listings
-  usePaymentMethods,      # Payment methods
-  useGDPR,                # GDPR operations
+  useMonitoringMetrics,   # System metrics
+  useHealthChecks,        # Health status
+  useAlerts,              # Alert management
+  useIncidents,           # Incident tracking
 } from '@digilist/client-sdk/hooks';
+```
+
+### Observability Package
+```tsx
+import {
+  MetricsCollector,
+  AlertRules,
+  HealthChecker,
+} from '@xala/observability';
+
+// 36 predefined metrics
+// 11 alert rules
+// Real-time health checks
 ```
 
 ### Realtime Events
 ```tsx
 import { realtimeClient } from '@digilist/client-sdk';
 
-// Subscribe to user-specific notifications
-realtimeClient.onNotification((notification) => {
-  // Show toast
-  showNotification(notification);
-  // Update unread count
-  queryClient.invalidateQueries(['notifications']);
+// Subscribe to health events
+realtimeClient.onHealth((event) => {
+  updateHealthStatus(event);
+});
+
+// Subscribe to alert events
+realtimeClient.onAlert((alert) => {
+  showAlertNotification(alert);
 });
 ```
 
@@ -196,17 +181,18 @@ realtimeClient.onNotification((notification) => {
 ## Routing Structure
 
 ```
-/                           # Dashboard (protected)
+/                           # Dashboard overview
 /login                      # Login page
-/bookings                   # My bookings
-/bookings/:id               # Booking details
-/profile                    # User profile
-/notifications              # Notification center
-/favorites                  # Saved listings
-/payments                   # Payment methods
-/settings                   # User settings
-/settings/privacy           # Privacy settings
-/settings/notifications     # Notification preferences
+/health                     # Health check details
+/metrics                    # System metrics
+/metrics/:category          # Category-specific metrics
+/alerts                     # Active alerts
+/alerts/:id                 # Alert details
+/incidents                  # Incident list
+/incidents/new              # Create incident
+/incidents/:id              # Incident details
+/settings                   # Monitoring settings
+/help                       # Help documentation
 ```
 
 ---
@@ -216,64 +202,74 @@ realtimeClient.onNotification((notification) => {
 ```bash
 VITE_API_URL=https://api.digilist.no
 VITE_WS_URL=wss://api.digilist.no/ws
-VITE_TENANT_ID=default
-VITE_VIPPS_CLIENT_ID=...
+VITE_PROMETHEUS_URL=https://prometheus.digilist.no
+VITE_GRAFANA_URL=https://grafana.digilist.no
 ```
 
 ---
 
 ## Common Patterns
 
-### Protected Route
+### Health Status Display
 ```tsx
-import { Navigate } from 'react-router-dom';
-import { useAuth } from '@digilist/client-sdk/hooks';
+import { useHealthChecks } from '@digilist/client-sdk/hooks';
 
-export function ProtectedRoute({ children }: { children: React.ReactNode }) {
-  const { user, isLoading } = useAuth();
+export function HealthOverview() {
+  const { data: health, isLoading } = useHealthChecks();
 
-  if (isLoading) return <LoadingSpinner />;
-  if (!user) return <Navigate to="/login" replace />;
-
-  return <>{children}</>;
-}
-```
-
-### Notification Badge
-```tsx
-import { useNotifications } from '@digilist/client-sdk/hooks';
-import { Badge } from '@xala/ds';
-
-export function NotificationBadge() {
-  const { data: notifications } = useNotifications({ unreadOnly: true });
-  const unreadCount = notifications?.length ?? 0;
+  if (isLoading) return <Spinner />;
 
   return (
-    <Badge count={unreadCount} max={99}>
-      <NotificationIcon />
-    </Badge>
+    <HealthGrid>
+      {health?.services.map(service => (
+        <HealthCard
+          key={service.name}
+          name={service.name}
+          status={service.status}
+          latency={service.latency}
+        />
+      ))}
+    </HealthGrid>
   );
 }
 ```
 
-### Mobile Navigation
+### Real-Time Metrics
 ```tsx
-import { Drawer, Navigation } from '@xala/ds';
-import { useMediaQuery } from '@xala/ds/hooks';
+import { useMonitoringMetrics } from '@digilist/client-sdk/hooks';
+import { useEffect } from 'react';
 
-export function AppNavigation() {
-  const isMobile = useMediaQuery('(max-width: 768px)');
-  const [isOpen, setIsOpen] = useState(false);
+export function MetricsChart() {
+  const { data, refetch } = useMonitoringMetrics();
 
-  if (isMobile) {
-    return (
-      <Drawer open={isOpen} onClose={() => setIsOpen(false)}>
-        <Navigation items={navItems} />
-      </Drawer>
-    );
-  }
+  // Refresh every 5 seconds
+  useEffect(() => {
+    const interval = setInterval(refetch, 5000);
+    return () => clearInterval(interval);
+  }, [refetch]);
 
-  return <Sidebar><Navigation items={navItems} /></Sidebar>;
+  return <LineChart data={data?.timeSeries} />;
+}
+```
+
+### Alert Acknowledgment
+```tsx
+import { useAcknowledgeAlert } from '@digilist/client-sdk/hooks';
+
+export function AlertRow({ alert }: { alert: Alert }) {
+  const { mutate: acknowledge } = useAcknowledgeAlert();
+
+  return (
+    <TableRow severity={alert.severity}>
+      <TableCell>{alert.message}</TableCell>
+      <TableCell>{alert.timestamp}</TableCell>
+      <TableCell>
+        <Button onClick={() => acknowledge(alert.id)}>
+          Acknowledge
+        </Button>
+      </TableCell>
+    </TableRow>
+  );
 }
 ```
 
@@ -282,15 +278,13 @@ export function AppNavigation() {
 ## Testing
 
 Tests are located in `../../tests/`:
-- **E2E:** `tests/e2e/minside-*.spec.ts`
+- **E2E:** `tests/e2e/monitoring-*.spec.ts`
 - **Unit:** Co-located with components (`src/**/*.test.tsx`)
+- **Integration:** `tests/integration/monitoring/`
 
 ```bash
-# Run minside-specific E2E tests
-pnpm test:e2e tests/e2e/minside-*.spec.ts
-
-# Run unit tests
-pnpm test
+# Run monitoring-specific E2E tests
+pnpm test:e2e tests/e2e/monitoring-*.spec.ts
 ```
 
 ---
@@ -302,7 +296,7 @@ pnpm test
 pnpm build
 
 # Deploy to test environment
-pnpm deploy:minside
+pnpm deploy:monitoring
 
 # Preview locally
 pnpm preview
@@ -314,150 +308,47 @@ pnpm preview
 
 ## Common Issues
 
-### 1. Login Not Working
-- Check `useAuth()` hook is properly configured
-- Verify API URL is correct
-- Check authentication flow (Vipps/Microsoft/Google)
-- Inspect browser console for auth errors
+### 1. Metrics Not Loading
+- Check Prometheus URL configuration
+- Verify API connection
+- Check authentication token
 
-### 2. Notifications Not Appearing
-- Check WebSocket connection is active
-- Verify `onNotification` subscription
-- Check notification permissions (browser/device)
-- Ensure user has notifications enabled in settings
+### 2. WebSocket Disconnecting
+- Check `VITE_WS_URL` is correct
+- Verify network stability
+- Check reconnection logic
 
-### 3. Mobile Navigation Issues
-- Verify media query breakpoints
-- Check sidebar/drawer component state
-- Test on actual mobile devices (not just browser resize)
-- Validate touch event handlers
+### 3. Alerts Not Appearing
+- Verify alert subscription
+- Check alert rule configuration
+- Review threshold settings
 
 ---
 
-## Performance Considerations
+## Thin App Compliance
 
-- Lazy load heavy features (booking calendar, payment forms)
-- Cache user profile and bookings
-- Optimize images (profile pictures, listing images)
-- Use service worker for offline capability
+This app follows the **Thin App Strategy**:
+- All UI components imported from `@xala/ds`
+- No business logic in UI (SDK-first)
+- No hardcoded styles (design tokens only)
+- All text localized via `@xala/i18n`
 
----
-
-## GDPR Features
-
-### Data Export
-```tsx
-import { useGDPR } from '@digilist/client-sdk/hooks';
-
-function PrivacySettings() {
-  const { exportData } = useGDPR();
-
-  const handleExport = async () => {
-    const data = await exportData();
-    downloadFile(data, 'my-data.json');
-  };
-
-  return <Button onClick={handleExport}>Export My Data</Button>;
-}
-```
-
-### Data Deletion
-```tsx
-import { useGDPR } from '@digilist/client-sdk/hooks';
-
-function DeleteAccount() {
-  const { requestDeletion } = useGDPR();
-
-  const handleDelete = async () => {
-    if (confirm('Are you sure?')) {
-      await requestDeletion();
-      // User will be logged out
-    }
-  };
-
-  return <Button variant="danger" onClick={handleDelete}>Delete My Account</Button>;
-}
-```
+**Current Thin App Score:** Part of ongoing migration
 
 ---
 
 ## When in Doubt
 
-1. Is user authenticated? → Check `useAuth()` first
-2. Should this be mobile-optimized? → Yes, always
-3. Should this update in real-time? → Subscribe to WebSocket events
-4. Does user need to control this? → Add to settings
-5. Check root CLAUDE.md for architecture rules
-6. Use SDK hooks for ALL data operations
-7. Import components from `@xala/ds` only
-8. Use `t()` for ALL user-facing text
+1. Is user authenticated? -> Check `useAuth()` first
+2. Does user have monitoring permission? -> Check capabilities
+3. Are metrics real-time? -> Use WebSocket subscription
+4. Check root CLAUDE.md for architecture rules
+5. Use SDK hooks for ALL data operations
+6. Import components from `@xala/ds` only
+7. Use `t()` for ALL user-facing text
 
 ---
 
-## 🔒 CRITICAL LESSONS LEARNED (2026-01-17)
-
-> **⚠️ MANDATORY READING**
-> 
-> These lessons come from a 4-hour production debugging session that fixed critical authentication issues.
-> **ALL developers working on apps/minside MUST read these.**
-
-### Required Reading
-
-1. **`docs/architecture/AUTHENTICATION_SYSTEM.md`** (comprehensive)
-   - Complete authentication flow
-   - Cookie architecture
-   - Database schema requirements
-   - Troubleshooting guide
-
-2. **`docs/operations/LESSONS_LEARNED_AUTH_FIX_2026-01-17.md`** (detailed)
-   - Root cause analysis
-   - 10 critical lessons learned
-   - Anti-patterns to avoid
-   - Process improvements
-
-3. **Root `CLAUDE.md`** → Critical Lessons Learned section
-
-4. **Root `AI_RULES.md`** → Hard Lines section
-
-### Recommended AI Skill for apps/minside
-
-When working on apps/minside, use: **frontend-developer**
-
-Available in: `.claude/skills/frontend-developer/`
-
-### Critical Rules for apps/minside
-
-1. **Database Schema:** Tables MUST be in named schemas (platform, domain, compliance)
-2. **Authentication:** System is LOCKED - no changes without approval
-3. **Deployment:** Follow mandatory checklist in AI_RULES.md
-4. **Testing:** Test authentication after ANY deployment
-5. **Documentation:** Update docs when making significant changes
-
-### Quick Validation
-
-Before deploying changes to apps/minside:
-
-```bash
-# 1. Verify database schemas
-psql -d digilist_prod -c "\dn"
-
-# 2. Rebuild if SDK changed
-pnpm -F apps/minside build
-
-# 3. Test locally
-pnpm -F apps/minside dev
-
-# 4. Deploy
-# (Follow deployment checklist)
-
-# 5. Test authentication
-# - BankID login → Dashboard
-# - Demo login → Dashboard
-# - Check browser cookies
-```
-
----
-
-**Last Updated:** 2026-01-17
-**Status:** Production Stable
+**Last Updated:** 2026-01-20
+**Status:** Production Ready
 **Next Review:** After significant changes

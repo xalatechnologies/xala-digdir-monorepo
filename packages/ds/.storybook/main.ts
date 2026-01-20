@@ -1,22 +1,32 @@
-import { fileURLToPath } from "node:url";
-import { dirname } from "node:path";
-import type { StorybookConfig } from '@storybook/react-vite';
+import { dirname, join } from 'node:path';
+import { fileURLToPath } from 'node:url';
+import { defineMain } from '@storybook/react-vite/node';
 
-const config: StorybookConfig = {
+const getAbsolutePath = (packageName: string) =>
+  dirname(fileURLToPath(import.meta.resolve(join(packageName, 'package.json'))));
+
+export default defineMain({
+  framework: {
+    name: getAbsolutePath('@storybook/react-vite'),
+    options: {
+      strictMode: false,
+    },
+  },
   stories: [
     '../stories/**/*.mdx',
     '../stories/**/*.stories.@(js|jsx|mjs|ts|tsx)',
-    '../src/**/*.stories.@(js|jsx|mjs|ts|tsx)',
   ],
   staticDirs: ['./public'],
-  addons: [getAbsolutePath("@storybook/addon-a11y"), getAbsolutePath("@storybook/addon-links"), getAbsolutePath("@storybook/addon-docs")],
-  framework: {
-    name: getAbsolutePath("@storybook/react-vite"),
-    options: {
-      strictMode: false, // Disable strict mode to reduce act() warnings
-    },
-  },
+  addons: [
+    getAbsolutePath('@storybook/addon-a11y'),
+    getAbsolutePath('@storybook/addon-links'),
+    getAbsolutePath('@storybook/addon-docs'),
+  ],
   docs: {},
+  previewHead: (head) => `
+    ${head}
+    <link rel="stylesheet" href="/vendor/designsystemet.css" />
+  `,
   typescript: {
     reactDocgen: 'react-docgen-typescript',
     reactDocgenTypescriptOptions: {
@@ -42,10 +52,4 @@ const config: StorybookConfig = {
       },
     };
   },
-};
-
-export default config;
-
-function getAbsolutePath(value: string): any {
-  return dirname(fileURLToPath(import.meta.resolve(`${value}/package.json`)));
-}
+});

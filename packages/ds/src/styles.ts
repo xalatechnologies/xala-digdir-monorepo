@@ -10,8 +10,8 @@
  * import '@xala/ds/styles'; // Do this once in your application's entry point
  * ```
  */
-import '@digdir/designsystemet-css';
-import '@digdir/designsystemet-css/theme';
+import '@digdir/designsystemet-css/dist/src/index.css';
+import '@digdir/designsystemet-css/theme.css';
 
 /**
  * Theme Loading Strategy:

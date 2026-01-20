@@ -109,6 +109,9 @@
       "@types/react": "^18.3.27",
       "@types/react-dom": "^18.3.7",
       "@tanstack/react-query": "^5.62.16"
+    },
+    "patchedDependencies": {
+      "@digdir/designsystemet-css@1.9.0": "patches/@digdir__designsystemet-css@1.9.0.patch"
     }
   }
 }

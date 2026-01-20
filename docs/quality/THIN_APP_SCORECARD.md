@@ -5,12 +5,12 @@
 
 ---
 
-## Overall Score: 67/100
+## Overall Score: 75/100
 
 ```
 ┌─────────────────────────────────────────────────────────────┐
-│  THIN APP COMPLIANCE                          67/100       │
-│  ████████████████████████████░░░░░░░░░░░░░░  67%          │
+│  THIN APP COMPLIANCE                          75/100       │
+│  ██████████████████████████████████░░░░░░░░  75%          │
 └─────────────────────────────────────────────────────────────┘
 ```
 
@@ -35,9 +35,9 @@
 |:---------|:-----:|:------:|:-------:|
 | Components in apps | 163 | High | -20 |
 | Inline styles | 7,538 | Medium | -8 |
-| Role checks in UI | 32 | High | -3 |
+| Role checks in UI | 29 | High | -2.5 |
 | Direct fetch calls | 14 | High | -2 |
-| Emoji usages | 42 | Low | -0.5 |
+| Emoji usages | 0 | Low | 0 |
 | CSS files | 1 | Medium | -0.5 |
 
 ---

@@ -1,0 +1,12 @@
+diff --git a/package.json b/package.json
+index 90e74af685368f7dbbcb941c99fc1ef8cc06083f..18be68ff5db62952244860257a2db56394c06906 100644
+--- a/package.json
++++ b/package.json
+@@ -10,6 +10,7 @@
+   "homepage": "https://github.com/digdir/designsystemet/tree/main/packages/css",
+   "license": "MIT",
+   "exports": {
++    "./package.json": "./package.json",
+     "./theme": {
+       "types": "./types.d.ts",
+       "default": "./dist/theme/designsystemet.css"

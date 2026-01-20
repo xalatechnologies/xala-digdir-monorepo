@@ -6,7 +6,7 @@
 
 ```bash
 # Development
-pnpm dev                    # Start dev server (port 5175)
+pnpm dev                    # Start dev server (port 5178)
 pnpm build                  # Build for production
 pnpm preview                # Preview production build
 
@@ -29,58 +29,49 @@ pnpm --filter @xala/monitoring test
 
 ## Key Files
 
-- `src/main.tsx` - App entry point
-- `src/routes/` - Protected route definitions
-- `src/components/layout/Sidebar.tsx` - Main navigation
-- `src/routes/overview.tsx` - System overview dashboard
-- `src/routes/incidents.tsx` - Incident management
-- `src/routes/synthetics.tsx` - Synthetic monitors
-- `vite.config.ts` - Build configuration
+- `src/main.tsx` - App entry point with providers
+- `src/routes/` - Route definitions (dashboard, health, metrics, alerts, incidents)
+- `src/components/` - Monitoring-specific components
+- `vite.config.ts` - Build configuration (port 5178)
 
 ## SDK Services Used
 
-- `useAuth()` - Authentication
-- `monitoringService` - System monitoring data
-- `useHealth()` - System health status
-- `useMetrics()` - Performance metrics
-- `useIncidents()` - Incident management
-- `useLogs()` - System logs
-- Observability package - Grafana integration
+- `useAuth()` - Authentication and user context
+- `useMonitoringMetrics()` - System metrics data
+- `useHealthChecks()` - Service health status
+- `useAlerts()` - Alert management
+- `useIncidents()` - Incident tracking
+- `realtimeClient` - WebSocket for live updates
+
+## Observability Integration
+
+```tsx
+import { MetricsCollector, AlertRules } from '@xala/observability';
+
+// 36 predefined metrics available
+// 11 configurable alert rules
+// Real-time health monitoring
+```
 
 ## Common Tasks
 
-### Add New User Feature
-1. Create feature directory in `src/features/`
-2. Add route with `ProtectedRoute` wrapper
-3. Add navigation item to Sidebar
-4. Implement with user-centric design
-5. Test on mobile viewport
+### Add New Metric Display
+1. Create component in `src/components/`
+2. Use `useMonitoringMetrics()` hook for data
+3. Import chart components from `@xala/ds`
+4. Add route if standalone page needed
 
-### Add Notification Type
-1. Define notification type in SDK
-2. Subscribe to WebSocket event
-3. Update notification center UI
-4. Add notification preference setting
+### Add New Alert Type
+1. Define alert rule in observability package
+2. Create alert display component
+3. Subscribe to alert events via WebSocket
+4. Add notification handling
 
-### Add GDPR Feature
-```tsx
-import { useGDPR } from '@digilist/client-sdk/hooks';
-
-function GDPRFeature() {
-  const { exportData, requestDeletion } = useGDPR();
-
-  // Export user data
-  const handleExport = async () => {
-    const data = await exportData();
-    downloadFile(data, 'my-data.json');
-  };
-
-  // Request account deletion
-  const handleDelete = async () => {
-    await requestDeletion();
-  };
-}
-```
+### Add Health Check
+1. Configure health endpoint in API
+2. Use `useHealthChecks()` hook
+3. Display status in health dashboard
+4. Add alert threshold if needed
 
 ## Testing Commands
 
@@ -90,10 +81,9 @@ pnpm test                   # Watch mode
 pnpm test:run               # Run once
 
 # E2E tests
-pnpm test:e2e tests/e2e/minside-*.spec.ts          # Minside-specific
-pnpm test:e2e tests/e2e/minside-mobile.spec.ts     # Mobile tests
-pnpm test:e2e tests/e2e/minside-offline.spec.ts    # Offline tests
-pnpm test:e2e tests/e2e/minside-protected-route.spec.ts  # Auth tests
+pnpm test:e2e tests/e2e/monitoring-*.spec.ts       # Monitoring-specific
+pnpm test:e2e tests/e2e/monitoring-health.spec.ts  # Health check tests
+pnpm test:e2e tests/e2e/monitoring-alerts.spec.ts  # Alert tests
 ```
 
 ## Environment Setup
@@ -102,21 +92,24 @@ pnpm test:e2e tests/e2e/minside-protected-route.spec.ts  # Auth tests
 # Required environment variables
 VITE_API_URL=https://api.digilist.no
 VITE_WS_URL=wss://api.digilist.no/ws
-VITE_TENANT_ID=default
-VITE_VIPPS_CLIENT_ID=...
+VITE_PROMETHEUS_URL=https://prometheus.digilist.no
+VITE_GRAFANA_URL=https://grafana.digilist.no
 ```
 
-## Debugging
+## Real-Time Monitoring
 
-```bash
-# Check auth status
-# Browser console: localStorage.getItem('minside_user')
+```tsx
+import { realtimeClient } from '@digilist/client-sdk';
 
-# Test API connectivity
-curl https://api.digilist.no/health
+// Subscribe to health events
+realtimeClient.onHealth((event) => {
+  updateDashboard(event);
+});
 
-# Check WebSocket connection
-# Browser console → Network tab → WS filter
+// Subscribe to alerts
+realtimeClient.onAlert((alert) => {
+  showNotification(alert);
+});
 ```
 
 ## Build & Deploy
@@ -129,24 +122,37 @@ pnpm build                  # Output: dist/
 pnpm build --mode analyze
 
 # Deploy
-pnpm deploy:minside        # Deploy to minside-test.digilist.no
+pnpm deploy:monitoring      # Deploy to monitoring-test.digilist.no
 ```
 
-## Mobile Testing
+## Common Debugging
 
 ```bash
-# Test responsive design
-# Chrome DevTools → Device toolbar (Cmd+Shift+M)
+# Check if user is authenticated
+# Browser console: localStorage.getItem('monitoring_user')
 
-# Test on actual devices
-# Use ngrok or similar to expose local dev server
-npx ngrok http 5174
+# Test API connectivity
+curl https://api.digilist.no/health
+
+# Check Prometheus connectivity
+curl https://prometheus.digilist.no/-/healthy
+
+# Check WebSocket events
+# Enable console logging in realtimeClient.ts
 ```
 
 ## Important Notes
 
-- **All routes are protected** - Require authentication
-- **Mobile-first** - Test on mobile viewport first
-- **Real-time notifications** - WebSocket required
-- **GDPR compliant** - Data export/deletion available
-- **Multi-auth** - Supports Vipps, Microsoft, Google
+- **Staff authentication required** - Operations/admin access only
+- **Real-time updates** - WebSocket connection required
+- **Observability integration** - Uses @xala/observability package
+- **Prometheus metrics** - 36 predefined metrics available
+- **Alert rules** - 11 configurable alert thresholds
+- **Cross-tenant visibility** - Can view all kommune health status
+
+## Thin App Rules
+
+- Import ALL components from `@xala/ds`
+- Use SDK hooks for ALL data operations
+- No inline styles (use design tokens)
+- All text through `t()` function
