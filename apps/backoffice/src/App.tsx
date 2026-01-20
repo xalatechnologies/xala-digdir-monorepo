@@ -11,7 +11,7 @@ import { RealtimeProvider } from '@digilist/client-sdk';
 import { ThemeProvider, useTheme } from '@xala/ds';
 import { ProtectedRoute } from '@xala/ds';
 import { AppLayout } from './components/layout/AppLayout';
-import { LoadingFallback } from './components/LoadingFallback';
+import { LoadingFallback } from '@xala/ds';
 import { initSentry } from './lib/sentry';
 
 // Eager imports - frequently accessed pages
