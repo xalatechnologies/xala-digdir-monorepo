@@ -18,12 +18,7 @@
     "strict": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
-    "noFallthroughCasesInSwitch": true,
-    "baseUrl": ".",
-    "paths": {
-      "@digilist/client-sdk": ["../../packages/client-sdk/src"],
-      "@digilist/client-sdk/*": ["../../packages/client-sdk/src/*"]
-    }
+    "noFallthroughCasesInSwitch": true
   },
   "include": ["src"]
 }

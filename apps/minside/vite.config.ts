@@ -1,6 +1,7 @@
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 import { VitePWA } from 'vite-plugin-pwa';
+import tsconfigPaths from 'vite-tsconfig-paths';
 import path from 'path';
 
 export default defineConfig({
@@ -21,6 +22,7 @@ export default defineConfig({
   },
   plugins: [
     react(),
+    tsconfigPaths({ root: path.resolve(__dirname, '../..') }),
     // PWA DISABLED - Service worker causes aggressive caching issues during development
     // Re-enable for production when offline support is required
     // VitePWA({
@@ -31,12 +33,8 @@ export default defineConfig({
   ],
   resolve: {
     alias: {
-      '@xala/ds': path.resolve(__dirname, '../../packages/ds/src'),
+      // CSS imports cannot be resolved by tsconfig paths
       '@digdir/designsystemet-css': path.resolve(__dirname, '../../node_modules/@digdir/designsystemet-css'),
-      '@digilist/client-sdk': path.resolve(__dirname, '../../packages/client-sdk/src'),
-      '@digilist/client-sdk/hooks': path.resolve(__dirname, '../../packages/client-sdk/src/hooks'),
-      '@digilist/client-sdk/types': path.resolve(__dirname, '../../packages/client-sdk/src/types'),
-      '@digilist/client-sdk/realtime': path.resolve(__dirname, '../../packages/client-sdk/src/realtime'),
     },
   },
   optimizeDeps: {

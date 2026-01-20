@@ -19,7 +19,7 @@ import type { SearchResultItem, SearchResultGroup } from '@xala/ds';
 import { useNotificationUnreadCount } from '@digilist/client-sdk';
 import { useAuth } from '@xala/auth';
 import { useTheme } from '@xala/ds';
-import { useNotificationCenter } from '../../App';
+import { useNotificationCenter } from '@xala/runtime';
 import { AccountSwitcher } from '../AccountSwitcher';
 
 interface HeaderProps {

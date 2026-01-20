@@ -1,18 +1,10 @@
 import { defineConfig } from 'vitest/config';
 import react from '@vitejs/plugin-react';
-import path from 'path';
+import tsconfigPaths from 'vite-tsconfig-paths';
 
 export default defineConfig({
-  plugins: [react()],
+  plugins: [react(), tsconfigPaths()],
   resolve: {
-    alias: {
-      '@xala/ds': path.resolve(__dirname, './packages/ds/src'),
-      '@xala/i18n': path.resolve(__dirname, './packages/i18n/src'),
-      '@xala/auth': path.resolve(__dirname, './packages/auth/src'),
-      '@digilist/client-sdk': path.resolve(__dirname, './packages/client-sdk/src'),
-      '@digilist/client-sdk/hooks': path.resolve(__dirname, './packages/client-sdk/src/hooks'),
-      '@digilist/client-sdk/types': path.resolve(__dirname, './packages/client-sdk/src/types'),
-    },
     dedupe: ['react', 'react-dom', 'react-router-dom'],
   },
   test: {

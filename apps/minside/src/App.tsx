@@ -1,17 +1,21 @@
+/**
+ * minside App Component
+ *
+ * With RuntimeProvider, this file contains only:
+ * - BrowserRouter (app-specific routing)
+ * - AccountContextProvider (app-specific account switching)
+ * - Routes
+ */
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
-import { DesignsystemetProvider, DialogProvider, ErrorBoundary } from '@xala/ds';
-import { I18nProvider } from '@xala/i18n';
-import { useState, useCallback, createContext, useContext } from 'react';
-
-import { AuthProvider, useOAuthCallback } from '@xala/auth';
-import { RealtimeProvider } from '@digilist/client-sdk';
-import { ThemeProvider, useTheme } from '@xala/ds';
-import { AccountContextProvider, useAccountContext, type DashboardContext } from './providers/AccountContextProvider';
 import { ProtectedRoute, AccountSelectionModal } from '@xala/ds';
+import { useOAuthCallback } from '@xala/auth';
+import { AccountContextProvider, useAccountContext, type DashboardContext } from './providers/AccountContextProvider';
 
-// Dashboard context constants (technical identifiers, not user-facing strings)
+// Dashboard context constants
 const CONTEXT_PERSONAL: DashboardContext = 'personal';
 const CONTEXT_ORGANIZATION: DashboardContext = 'organization';
+
+// Layout and Routes
 import { AppLayout } from './components/layout/AppLayout';
 import { LoginPage } from './routes/login';
 import { DashboardPage } from './routes/dashboard';
@@ -20,7 +24,6 @@ import { BookingsPage } from './routes/bookings';
 import { BillingPage } from './routes/billing';
 import { MessagesPage } from './routes/messages';
 import { SettingsPage } from './routes/settings';
-// Organization pages
 import { OrganizationDashboardPage, OrganizationBookingsPage, OrganizationInvoicesPage, OrganizationMembersPage, SeasonRentalPage, OrganizationSettingsPage, OrganizationActivityPage } from './routes/org';
 import { UserPreferencesPage } from './routes/preferences';
 import { NotificationsPage } from './routes/notifications';
@@ -31,44 +34,8 @@ import { SeasonsPage } from './routes/seasons';
 import { SeasonApplicationsPage } from './routes/season-applications';
 import { SeasonDetailPage } from './routes/season-detail';
 
-// Notification Center Context
-interface NotificationCenterContextValue {
-  openNotificationCenter: () => void;
-  closeNotificationCenter: () => void;
-  isOpen: boolean;
-}
-
-const NotificationCenterContext = createContext<NotificationCenterContextValue | null>(null);
-
-export function useNotificationCenter(): NotificationCenterContextValue {
-  const context = useContext(NotificationCenterContext);
-  if (!context) {
-    throw new Error('useNotificationCenter must be used within NotificationCenterProvider');
-  }
-  return context;
-}
-
-function NotificationCenterProvider({ children }: { children: React.ReactNode }) {
-  const [isOpen, setIsOpen] = useState(false);
-
-  const openNotificationCenter = useCallback(() => {
-    setIsOpen(true);
-  }, []);
-
-  const closeNotificationCenter = useCallback(() => {
-    setIsOpen(false);
-  }, []);
-
-  return (
-    <NotificationCenterContext.Provider value={{ openNotificationCenter, closeNotificationCenter, isOpen }}>
-      {children}
-    </NotificationCenterContext.Provider>
-  );
-}
-
 /**
  * OAuth Callback Handler
- * Handles OAuth/BankID redirects automatically - must be inside BrowserRouter
  */
 function OAuthCallbackHandler() {
   useOAuthCallback();
@@ -77,10 +44,7 @@ function OAuthCallbackHandler() {
 
 /**
  * Account Selection Wrapper
- * Displays the AccountSelectionModal when user hasn't selected an account yet
- * and hasn't chosen to remember their choice.
- *
- * Uses the DS props-based AccountSelectionModal component, wiring context to props.
+ * App-specific: displays account selection modal on first login
  */
 function AccountSelectionWrapper({ children }: { children: React.ReactNode }) {
   const {
@@ -94,7 +58,6 @@ function AccountSelectionWrapper({ children }: { children: React.ReactNode }) {
     markAccountAsSelected,
   } = useAccountContext();
 
-  // Show modal only if user hasn't selected an account and hasn't chosen to remember
   const showModal = !hasSelectedAccount && !rememberChoice;
 
   const handlePersonalSelect = () => {
@@ -123,40 +86,23 @@ function AccountSelectionWrapper({ children }: { children: React.ReactNode }) {
   );
 }
 
+/**
+ * MinSide App - Citizen Dashboard
+ * Now thin: BrowserRouter + AccountContext + Routes only
+ */
 export function App() {
   return (
-    <ThemeProvider>
-      <AppWithTheme />
-    </ThemeProvider>
-  );
-}
-
-function AppWithTheme() {
-  const { colorScheme } = useTheme();
-  
-  return (
-    <I18nProvider initialLocale="nb">
-      <DesignsystemetProvider theme="digilist" colorScheme={colorScheme} size="md">
-      <DialogProvider>
-      <ErrorBoundary>
-      <BrowserRouter
-        future={{
-          v7_startTransition: true,
-          v7_relativeSplatPath: true,
-        }}
-      >
-        <OAuthCallbackHandler />
-        <NotificationCenterProvider>
-          <AuthProvider config={{ appType: 'minside', debug: import.meta.env.DEV }}>
-            <AccountContextProvider>
-            <AccountSelectionWrapper>
-            <RealtimeProvider
-              wsUrl={import.meta.env.VITE_WS_URL}
-              tenantId={import.meta.env.VITE_TENANT_ID}
-            >
-            <Routes>
+    <BrowserRouter
+      future={{
+        v7_startTransition: true,
+        v7_relativeSplatPath: true,
+      }}
+    >
+      <OAuthCallbackHandler />
+      <AccountContextProvider>
+        <AccountSelectionWrapper>
+          <Routes>
             <Route path="/login" element={<LoginPage />} />
-
             <Route
               path="/"
               element={
@@ -176,7 +122,7 @@ function AppWithTheme() {
               <Route path="seasons/:id" element={<ProtectedRoute requiredContext={CONTEXT_PERSONAL}><SeasonDetailPage /></ProtectedRoute>} />
               <Route path="season-applications" element={<ProtectedRoute requiredContext={CONTEXT_PERSONAL}><SeasonApplicationsPage /></ProtectedRoute>} />
 
-              {/* Shared routes (any context) */}
+              {/* Shared routes */}
               <Route path="settings" element={<SettingsPage />} />
               <Route path="preferences" element={<UserPreferencesPage />} />
               <Route path="notifications" element={<NotificationsPage />} />
@@ -192,18 +138,10 @@ function AppWithTheme() {
               <Route path="org/settings" element={<ProtectedRoute requiredContext={CONTEXT_ORGANIZATION}><OrganizationSettingsPage /></ProtectedRoute>} />
               <Route path="org/activity" element={<ProtectedRoute requiredContext={CONTEXT_ORGANIZATION}><OrganizationActivityPage /></ProtectedRoute>} />
             </Route>
-
             <Route path="*" element={<Navigate to="/" replace />} />
-            </Routes>
-            </RealtimeProvider>
-            </AccountSelectionWrapper>
-            </AccountContextProvider>
-          </AuthProvider>
-        </NotificationCenterProvider>
-      </BrowserRouter>
-      </ErrorBoundary>
-      </DialogProvider>
-      </DesignsystemetProvider>
-    </I18nProvider>
+          </Routes>
+        </AccountSelectionWrapper>
+      </AccountContextProvider>
+    </BrowserRouter>
   );
 }

@@ -1,5 +1,6 @@
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
+import tsconfigPaths from 'vite-tsconfig-paths';
 import path from 'path';
 import { sentryVitePlugin } from '@sentry/vite-plugin';
 
@@ -11,6 +12,7 @@ export default defineConfig({
   },
   plugins: [
     react(),
+    tsconfigPaths({ root: path.resolve(__dirname, '../..') }),
     // Upload source maps to Sentry on production builds
     sentryVitePlugin({
       org: process.env.SENTRY_ORG,
@@ -25,12 +27,8 @@ export default defineConfig({
   ],
   resolve: {
     alias: {
-      '@': path.resolve(__dirname, './src'),
-      '@xala/ds': path.resolve(__dirname, '../../packages/ds/src'),
+      // CSS imports cannot be resolved by tsconfig paths
       '@digdir/designsystemet-css': path.resolve(__dirname, '../../node_modules/@digdir/designsystemet-css'),
-      '@digilist/client-sdk': path.resolve(__dirname, '../../packages/client-sdk/src'),
-      '@digilist/client-sdk/hooks': path.resolve(__dirname, '../../packages/client-sdk/src/hooks'),
-      '@digilist/client-sdk/types': path.resolve(__dirname, '../../packages/client-sdk/src/types'),
     },
   },
   optimizeDeps: {

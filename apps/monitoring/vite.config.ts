@@ -1,6 +1,7 @@
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 import { VitePWA } from 'vite-plugin-pwa';
+import tsconfigPaths from 'vite-tsconfig-paths';
 import path from 'path';
 
 export default defineConfig({
@@ -8,6 +9,7 @@ export default defineConfig({
   envDir: path.resolve(__dirname, '../..'),
   plugins: [
     react(),
+    tsconfigPaths({ root: path.resolve(__dirname, '../..') }),
     VitePWA({
       registerType: 'autoUpdate',
       injectRegister: 'auto',
@@ -104,15 +106,8 @@ export default defineConfig({
   },
   resolve: {
     alias: {
-      '@xala/runtime': path.resolve(__dirname, '../../packages/runtime/src'),
-      '@xala/ds': path.resolve(__dirname, '../../packages/ds/src'),
-      '@xala/i18n': path.resolve(__dirname, '../../packages/i18n/src'),
-      '@xala/auth': path.resolve(__dirname, '../../packages/auth/src'),
+      // CSS imports cannot be resolved by tsconfig paths
       '@digdir/designsystemet-css': path.resolve(__dirname, '../../node_modules/@digdir/designsystemet-css'),
-      '@digilist/client-sdk': path.resolve(__dirname, '../../packages/client-sdk/src'),
-      '@digilist/client-sdk/hooks': path.resolve(__dirname, '../../packages/client-sdk/src/hooks'),
-      '@digilist/client-sdk/types': path.resolve(__dirname, '../../packages/client-sdk/src/types'),
-      '@digilist/client-sdk/realtime': path.resolve(__dirname, '../../packages/client-sdk/src/realtime'),
     },
   },
   optimizeDeps: {

@@ -424,8 +424,11 @@ export {
   GlobalErrorHandler,
   useGlobalError,
   // GDPR Components
+  ConsentManager,
   ConsentPopup,
   ConsentSettings,
+  DataExportCard,
+  DeleteAccountCard,
   DataSubjectRequestForm,
   // Account Management Components
   AccountSwitcher,
