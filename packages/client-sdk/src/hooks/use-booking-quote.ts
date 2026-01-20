@@ -157,7 +157,7 @@ export function useRecurringPreview(options: UseRecurringPreviewOptions) {
   return useQuery({
     queryKey: dalKeys.booking.recurringPreview(selectionHash),
     queryFn: async () => {
-      const response = await bookingService.getRecurringPreview(selection as any);
+      const response = await bookingService.getRecurringPreview(selection);
       return response.data;
     },
     enabled: enabled && !!rentalObjectId && !!startTime && !!endTime && !!frequency,

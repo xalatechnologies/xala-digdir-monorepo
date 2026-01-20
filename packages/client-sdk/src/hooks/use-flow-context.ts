@@ -34,11 +34,11 @@ export interface SaveFlowContextOptions {
   /** Booking mode */
   bookingMode?: string;
   /** Selected dates */
-  selectedDates?: any[];
+  selectedDates?: string[];
   /** Selected time slots */
-  selectedSlots?: any[];
+  selectedSlots?: Array<{ startTime: string; endTime: string; [key: string]: unknown }>;
   /** Recurring booking rules */
-  recurringRules?: any;
+  recurringRules?: Record<string, unknown>;
   /** Additional form data */
   formData?: Record<string, unknown>;
   /** Custom storage key (optional) */

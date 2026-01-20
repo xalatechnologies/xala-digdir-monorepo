@@ -23,12 +23,21 @@ class CalendarContractsService extends BaseService {
   }
 }
 
+interface CreateBlockRequest {
+  rentalObjectId: string;
+  startDate: string;
+  endDate: string;
+  title?: string;
+  reason?: string;
+  [key: string]: unknown;
+}
+
 class BlocksService extends BaseService {
   constructor() {
     super('/api/blocks');
   }
 
-  async createBlock(request: any) {
+  async createBlock(request: CreateBlockRequest) {
     return this.post('', request);
   }
 
@@ -102,7 +111,7 @@ export function useCreateBlock() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: (request: any) => blocksService.createBlock(request),
+    mutationFn: (request: CreateBlockRequest) => blocksService.createBlock(request),
     onSuccess: (_data, variables) => {
       queryClient.invalidateQueries({
         queryKey: calendarContractsKeys.blocks(

@@ -34,7 +34,7 @@ class GlobalSearchService extends BaseService {
     super('/api/search');
   }
 
-  async search(request: any) {
+  async search(request: unknown) {
     return this.post('/global', request);
   }
 }
@@ -44,7 +44,7 @@ class GDPRService extends BaseService {
     super('/api/gdpr');
   }
 
-  async createDSAR(request: any) {
+  async createDSAR(request: unknown) {
     return this.post('/dsar', request);
   }
 
@@ -70,7 +70,7 @@ class ReportsService extends BaseService {
     return this.get('/templates');
   }
 
-  async generateReport(request: any) {
+  async generateReport(request: unknown) {
     return this.post('/generate', request);
   }
 
@@ -92,7 +92,7 @@ class SeasonsService extends BaseService {
     return this.get(`/${seasonId}`);
   }
 
-  async apply(seasonId: string, request: any) {
+  async apply(seasonId: string, request: unknown) {
     return this.post(`/${seasonId}/apply`, request);
   }
 
@@ -114,7 +114,7 @@ class OrgContextService extends BaseService {
     return this.get('/org-context');
   }
 
-  async setOrgContext(request: any) {
+  async setOrgContext(request: unknown) {
     return this.post('/org-context', request);
   }
 }
@@ -139,7 +139,7 @@ export const advancedContractsKeys = {
   },
   search: {
     all: ['global-search'] as const,
-    results: (request: any) => [...advancedContractsKeys.search.all, 'results', request] as const,
+    results: (request: unknown) => [...advancedContractsKeys.search.all, 'results', request] as const,
   },
   gdpr: {
     all: ['gdpr'] as const,
@@ -195,7 +195,7 @@ export function useHelpSearch(query: string) {
 // Global Search Hooks
 // =============================================================================
 
-export function useGlobalSearch(request: any, options?: { enabled?: boolean }) {
+export function useGlobalSearch(request: Record<string, unknown> | undefined, options?: { enabled?: boolean }) {
   return useQuery({
     queryKey: advancedContractsKeys.search.results(request),
     queryFn: () => globalSearchService.search(request),
@@ -205,7 +205,7 @@ export function useGlobalSearch(request: any, options?: { enabled?: boolean }) {
 
 export function useGlobalSearchMutation() {
   return useMutation({
-    mutationFn: (request: any) => globalSearchService.search(request),
+    mutationFn: (request: unknown) => globalSearchService.search(request),
   });
 }
 
@@ -217,7 +217,7 @@ export function useCreateDSAR() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: (request: any) => gdprService.createDSAR(request),
+    mutationFn: (request: unknown) => gdprService.createDSAR(request),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: advancedContractsKeys.gdpr.all });
     },
@@ -266,7 +266,7 @@ export function useGenerateReport() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: (request: any) => reportsService.generateReport(request),
+    mutationFn: (request: unknown) => reportsService.generateReport(request),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: advancedContractsKeys.reports.list() });
     },
@@ -278,7 +278,8 @@ export function useReport(reportId: string) {
     queryKey: advancedContractsKeys.reports.report(reportId),
     queryFn: () => reportsService.getReport(reportId),
     enabled: !!reportId,
-    refetchInterval: (data: any) => {
+    refetchInterval: (query) => {
+      const data = query.state.data as { data?: { status?: string } } | undefined;
       if (data?.data?.status === 'QUEUED' || data?.data?.status === 'GENERATING') {
         return 5000; // Poll every 5 seconds while generating
       }
@@ -310,7 +311,7 @@ export function useApplyForSeason() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: ({ seasonId, request }: { seasonId: string; request: any }) =>
+    mutationFn: ({ seasonId, request }: { seasonId: string; request: unknown }) =>
       seasonsService.apply(seasonId, request),
     onSuccess: (_data, variables) => {
       queryClient.invalidateQueries({
@@ -354,7 +355,7 @@ export function useSetOrgContext() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: (request: any) => orgContextService.setOrgContext(request),
+    mutationFn: (request: unknown) => orgContextService.setOrgContext(request),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: advancedContractsKeys.orgContext.current() });
     },

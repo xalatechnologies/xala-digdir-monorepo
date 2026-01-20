@@ -64,6 +64,29 @@ export interface DeliveryReportQueryParams {
   limit?: number;
 }
 
+export interface DeliveryStatus {
+  notificationId: string;
+  channel: string;
+  status: 'pending' | 'sent' | 'delivered' | 'failed';
+  attempts: number;
+  lastAttemptAt?: string;
+  deliveredAt?: string;
+  error?: string;
+}
+
+export interface DeliveryReport {
+  id: string;
+  notificationId: string;
+  channel: string;
+  status: string;
+  recipient: string;
+  sentAt?: string;
+  deliveredAt?: string;
+  failedAt?: string;
+  errorMessage?: string;
+  metadata?: Record<string, unknown>;
+}
+
 export interface PaginatedResponse<T> {
   data: T[];
   meta: {
@@ -302,26 +325,26 @@ class NotificationService {
   /**
    * Get delivery status for a notification
    */
-  async getDeliveryStatus(id: string): Promise<{ data: any }> {
-    return getClient().get<{ data: any }>(`${this.basePath}/${id}/delivery-status`);
+  async getDeliveryStatus(id: string): Promise<{ data: DeliveryStatus }> {
+    return getClient().get<{ data: DeliveryStatus }>(`${this.basePath}/${id}/delivery-status`);
   }
 
   /**
    * Get delivery reports with filtering
    */
-  async getDeliveryReports(params?: DeliveryReportQueryParams): Promise<PaginatedResponse<any>> {
+  async getDeliveryReports(params?: DeliveryReportQueryParams): Promise<PaginatedResponse<DeliveryReport>> {
     const queryParams = new URLSearchParams();
     if (params) {
       Object.entries(params).forEach(([key, value]) => {
         if (value !== undefined) queryParams.set(key, String(value));
       });
     }
-    
-    const url = queryParams.toString() 
+
+    const url = queryParams.toString()
       ? `${this.basePath}/delivery-reports?${queryParams.toString()}`
       : `${this.basePath}/delivery-reports`;
-    
-    return getClient().get<PaginatedResponse<any>>(url);
+
+    return getClient().get<PaginatedResponse<DeliveryReport>>(url);
   }
 
   /**

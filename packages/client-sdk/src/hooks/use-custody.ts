@@ -43,8 +43,8 @@ export function useCanCustody(rentalObjectId: string, scope: CustodyScope): bool
 
   // This is a client-side check for convenience
   // Server-side enforcement is the source of truth
-  return (grants as any[]).some(grant => 
-    grant.status === 'ACTIVE' && 
+  return grants.some(grant =>
+    grant.status === 'ACTIVE' &&
     grant.scopes.includes(scope)
   );
 }
@@ -86,7 +86,7 @@ export function useCreateCustodySubgrant() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: ({ parentGrantId, _rentalObjectId, data }: { parentGrantId: string; _rentalObjectId: string; data: any }) =>
+    mutationFn: ({ parentGrantId, _rentalObjectId, data }: { parentGrantId: string; _rentalObjectId: string; data: CreateCustodyGrantDTO }) =>
       custodyService.createSubgrant(parentGrantId, data),
     onSuccess: (_, { _rentalObjectId: rentalObjectId }) => {
       queryClient.invalidateQueries({ queryKey: custodyKeys.rentalObject(rentalObjectId) });

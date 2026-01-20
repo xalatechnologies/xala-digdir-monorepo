@@ -182,7 +182,7 @@ export function useToggleFavorite() {
       // Optimistically toggle
       queryClient.setQueryData(
         queryKeys.favorites.isFavorited(rentalObjectId),
-        (old: any) => ({ isFavorited: !old?.isFavorited })
+        (old: { isFavorited?: boolean } | undefined) => ({ isFavorited: !old?.isFavorited })
       );
 
       return { previous };

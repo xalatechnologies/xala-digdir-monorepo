@@ -16,11 +16,11 @@ class BookingContractsService extends BaseService {
     super('/api/bookings');
   }
 
-  async previewPrice(request: any) {
+  async previewPrice(request: unknown) {
     return this.post('/preview-price', request);
   }
 
-  async previewRecurring(request: any) {
+  async previewRecurring(request: unknown) {
     return this.post('/recurring/preview', request);
   }
 }
@@ -33,18 +33,33 @@ const bookingContractsService = new BookingContractsService();
 
 export const bookingContractsKeys = {
   all: ['booking-contracts'] as const,
-  pricePreview: (request: any) => [...bookingContractsKeys.all, 'price-preview', request] as const,
-  recurringPreview: (request: any) => [...bookingContractsKeys.all, 'recurring-preview', request] as const,
+  pricePreview: (request: unknown) => [...bookingContractsKeys.all, 'price-preview', request] as const,
+  recurringPreview: (request: unknown) => [...bookingContractsKeys.all, 'recurring-preview', request] as const,
 };
 
 // =============================================================================
 // Hooks
 // =============================================================================
 
+interface PricePreviewRequest {
+  rentalObjectId: string;
+  startTime?: string;
+  endTime?: string;
+  [key: string]: unknown;
+}
+
+interface RecurringPreviewRequest {
+  rentalObjectId: string;
+  startTime?: string;
+  endTime?: string;
+  frequency?: string;
+  [key: string]: unknown;
+}
+
 /**
  * Preview booking price with breakdown
  */
-export function usePricePreview(request: any, options?: { enabled?: boolean }) {
+export function usePricePreview(request: PricePreviewRequest | undefined, options?: { enabled?: boolean }) {
   return useQuery({
     queryKey: bookingContractsKeys.pricePreview(request),
     queryFn: () => bookingContractsService.previewPrice(request),
@@ -55,7 +70,7 @@ export function usePricePreview(request: any, options?: { enabled?: boolean }) {
 /**
  * Preview recurring booking with conflicts
  */
-export function useRecurringPreview(request: any, options?: { enabled?: boolean }) {
+export function useRecurringPreview(request: RecurringPreviewRequest | undefined, options?: { enabled?: boolean }) {
   return useQuery({
     queryKey: bookingContractsKeys.recurringPreview(request),
     queryFn: () => bookingContractsService.previewRecurring(request),
@@ -68,7 +83,7 @@ export function useRecurringPreview(request: any, options?: { enabled?: boolean 
  */
 export function usePreviewPriceMutation() {
   return useMutation({
-    mutationFn: (request: any) => bookingContractsService.previewPrice(request),
+    mutationFn: (request: PricePreviewRequest) => bookingContractsService.previewPrice(request),
   });
 }
 
@@ -77,6 +92,6 @@ export function usePreviewPriceMutation() {
  */
 export function usePreviewRecurringMutation() {
   return useMutation({
-    mutationFn: (request: any) => bookingContractsService.previewRecurring(request),
+    mutationFn: (request: RecurringPreviewRequest) => bookingContractsService.previewRecurring(request),
   });
 }

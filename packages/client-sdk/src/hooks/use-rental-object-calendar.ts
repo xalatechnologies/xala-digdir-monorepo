@@ -155,14 +155,15 @@ export function useCalendarRealtime(
     // This hook just provides the handler function
     
     // For now, we expose the handler via a custom event
-    const listener = (e: CustomEvent<BookingWebSocketEvent>) => {
-      handleEvent(e.detail);
+    const listener = (e: Event) => {
+      const customEvent = e as CustomEvent<BookingWebSocketEvent>;
+      handleEvent(customEvent.detail);
     };
 
-    window.addEventListener('booking-event' as any, listener as EventListener);
-    
+    window.addEventListener('booking-event', listener);
+
     return () => {
-      window.removeEventListener('booking-event' as any, listener as EventListener);
+      window.removeEventListener('booking-event', listener);
     };
   }, [handleEvent]);
 

@@ -65,6 +65,15 @@ export function useOrganization(id: string) {
   });
 }
 
+interface OrganizationMember {
+  id: string;
+  userId: string;
+  name: string;
+  email: string;
+  role: string;
+  status: string;
+}
+
 /**
  * Fetch organization members (MinSide)
  *
@@ -72,7 +81,7 @@ export function useOrganization(id: string) {
  * Expected endpoint: GET /api/organizations/:id/members
  */
 export function useOrganizationMembers(organizationId: string) {
-  return useQuery<{ data: any[] }>({
+  return useQuery<{ data: OrganizationMember[] }>({
     queryKey: ['organizations', organizationId, 'members'],
     queryFn: async () => {
       // STUB: Return empty array until backend is ready
@@ -93,10 +102,10 @@ export function useOrganizationMembers(organizationId: string) {
  * TODO: Implement when backend endpoint is ready
  */
 export function useAddOrganizationMember() {
-  return useMutation<{ data: any }, Error, { organizationId: string; userId: string }>({
+  return useMutation<{ data: OrganizationMember }, Error, { organizationId: string; userId: string }>({
     mutationFn: async (_payload) => {
       // STUB: Return unchanged until backend ready
-      return { data: {} };
+      return { data: {} as OrganizationMember };
     },
   });
 }
@@ -121,10 +130,10 @@ export function useRemoveOrganizationMember() {
  * TODO: Implement when backend endpoint is ready
  */
 export function useUpdateOrganizationMember() {
-  return useMutation<{ data: any }, Error, { organizationId: string; userId: string; role?: string }>({
+  return useMutation<{ data: OrganizationMember }, Error, { organizationId: string; userId: string; role?: string }>({
     mutationFn: async (_payload) => {
       // STUB: Return unchanged until backend ready
-      return { data: {} };
+      return { data: {} as OrganizationMember };
     },
   });
 }

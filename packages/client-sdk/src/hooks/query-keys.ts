@@ -135,7 +135,7 @@ export const queryKeys = {
       [...queryKeys.calendar.all, 'events', params] as const,
     slots: (params: { rentalObjectId: string; date: string; duration?: number }) =>
       [...queryKeys.calendar.all, 'slots', params] as const,
-    config: (rentalObjectId: string, params?: any) =>
+    config: (rentalObjectId: string, params?: Record<string, unknown>) =>
       [...queryKeys.calendar.all, 'config', rentalObjectId, params] as const,
     availabilityMatrix: (rentalObjectId: string, params: { from: string; to: string; bookingType?: string }) =>
       [...queryKeys.calendar.all, 'availabilityMatrix', rentalObjectId, params] as const,
@@ -273,7 +273,7 @@ export const queryKeys = {
       [...queryKeys.notifications.all, 'my', params] as const,
     unreadCount: () => [...queryKeys.notifications.all, 'unreadCount'] as const,
     deliveryStatus: (id: string) => [...queryKeys.notifications.all, 'deliveryStatus', id] as const,
-    deliveryReports: (params?: any) => [...queryKeys.notifications.all, 'deliveryReports', params] as const,
+    deliveryReports: (params?: { startDate?: string; endDate?: string; status?: string; type?: string; page?: number; limit?: number }) => [...queryKeys.notifications.all, 'deliveryReports', params] as const,
   },
 
   // =========================================================================
