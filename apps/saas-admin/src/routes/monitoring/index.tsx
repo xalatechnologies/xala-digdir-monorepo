@@ -19,7 +19,13 @@ import {
   CheckCircleIcon,
   AlertTriangleIcon,
 } from '@xala/ds';
-import { useSaasTenants, useSaasBillingOverview } from '@digilist/client-sdk/hooks';
+import {
+  useSaasTenants,
+  useSaasBillingOverview,
+  useRunI18nScanner,
+  useRunDesignSystemScanner,
+  useRunWcagScanner,
+} from '@digilist/client-sdk/hooks';
 import { useT } from '@xala/i18n';
 
 // Mock metrics data - will be replaced with real API
@@ -38,8 +44,8 @@ const MOCK_ACTIVITY_LOG = [
   { id: '5', action: 'Seed data importert', actor: 'operator@example.com', timestamp: '2026-01-17T18:45:00Z' },
 ];
 
-// Scanner results - will be fetched from API
-const MOCK_SCANNER_RESULTS = {
+// Scanner results - initial state (will be updated from API)
+const INITIAL_SCANNER_RESULTS = {
   i18n: {
     lastRun: '2026-01-18T13:30:00Z',
     totalKeys: 9312,
@@ -67,8 +73,7 @@ const MOCK_SCANNER_RESULTS = {
 export function MonitoringPage() {
   const t = useT();
   const [refreshing] = useState(false);
-  const [, setScannerResults] = useState(MOCK_SCANNER_RESULTS);
-  const [runningScanner, setRunningScanner] = useState<string | null>(null);
+  const [scannerResults, setScannerResults] = useState(INITIAL_SCANNER_RESULTS);
 
   // Queries
   const { data: tenantsData, isLoading: loadingTenants } = useSaasTenants({ limit: 1000 });
@@ -77,45 +82,51 @@ export function MonitoringPage() {
   const tenants = tenantsData?.data ?? [];
   const billing = billingData?.data;
 
-  const handleRunScanner = async (scanner: 'i18n' | 'designSystem' | 'compliance') => {
-    const scannerMap = {
-      i18n: 'i18n',
-      designSystem: 'design-system',
-      compliance: 'wcag',
-    };
-    
-    setRunningScanner(scanner);
-    try {
-      const response = await fetch(`/api/scanners/${scannerMap[scanner]}`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-      });
-      
-      if (!response.ok) throw new Error('Scanner failed');
-      
-      const result = await response.json();
-      
+  // Scanner mutations using SDK hooks
+  const runI18nScanner = useRunI18nScanner();
+  const runDesignSystemScanner = useRunDesignSystemScanner();
+  const runWcagScanner = useRunWcagScanner();
+
+  // Determine which scanner is running
+  const runningScanner = runI18nScanner.isPending
+    ? 'i18n'
+    : runDesignSystemScanner.isPending
+      ? 'designSystem'
+      : runWcagScanner.isPending
+        ? 'compliance'
+        : null;
+
+  const handleRunScanner = (scanner: 'i18n' | 'designSystem' | 'compliance') => {
+    const updateScannerResults = (result: { data?: { timestamp?: string; summary?: { total?: number; errors?: number; warnings?: number }; success?: boolean } }) => {
       setScannerResults((prev) => ({
         ...prev,
         [scanner]: {
-          lastRun: result.timestamp,
-          totalKeys: result.summary.total || 0,
-          missingKeys: scanner === 'i18n' ? result.summary.errors : undefined,
-          hardcodedStrings: scanner === 'i18n' ? result.summary.warnings : undefined,
-          totalComponents: scanner === 'designSystem' ? prev.designSystem.totalComponents : undefined,
-          violations: scanner === 'designSystem' ? result.summary.errors : undefined,
-          tokenCompliance: scanner === 'designSystem' ? (result.success ? 100 : 95) : undefined,
-          wcagErrors: scanner === 'compliance' ? result.summary.errors : undefined,
-          wcagWarnings: scanner === 'compliance' ? result.summary.warnings : undefined,
-          gdprCompliance: scanner === 'compliance' ? 100 : undefined,
-          status: result.success ? 'success' as const : 'warning' as const,
+          lastRun: result.data?.timestamp ?? new Date().toISOString(),
+          totalKeys: result.data?.summary?.total || 0,
+          missingKeys: scanner === 'i18n' ? result.data?.summary?.errors : prev.i18n.missingKeys,
+          hardcodedStrings: scanner === 'i18n' ? result.data?.summary?.warnings : prev.i18n.hardcodedStrings,
+          totalComponents: scanner === 'designSystem' ? prev.designSystem.totalComponents : prev.designSystem.totalComponents,
+          violations: scanner === 'designSystem' ? result.data?.summary?.errors : prev.designSystem.violations,
+          tokenCompliance: scanner === 'designSystem' ? (result.data?.success ? 100 : 95) : prev.designSystem.tokenCompliance,
+          wcagErrors: scanner === 'compliance' ? result.data?.summary?.errors : prev.compliance.wcagErrors,
+          wcagWarnings: scanner === 'compliance' ? result.data?.summary?.warnings : prev.compliance.wcagWarnings,
+          gdprCompliance: scanner === 'compliance' ? 100 : prev.compliance.gdprCompliance,
+          status: result.data?.success ? ('success' as const) : ('warning' as const),
         },
       }));
-    } catch (error) {
+    };
+
+    const onError = (error: Error) => {
       console.error(`Scanner ${scanner} failed:`, error);
-      alert(`Scanner failed: ${error instanceof Error ? error.message : 'Unknown error'}`);
-    } finally {
-      setRunningScanner(null);
+      alert(`Scanner failed: ${error.message}`);
+    };
+
+    if (scanner === 'i18n') {
+      runI18nScanner.mutate(undefined, { onSuccess: updateScannerResults, onError });
+    } else if (scanner === 'designSystem') {
+      runDesignSystemScanner.mutate(undefined, { onSuccess: updateScannerResults, onError });
+    } else if (scanner === 'compliance') {
+      runWcagScanner.mutate(undefined, { onSuccess: updateScannerResults, onError });
     }
   };
 
@@ -333,23 +344,23 @@ export function MonitoringPage() {
           <div style={{ padding: 'var(--ds-spacing-4)', border: '1px solid var(--ds-color-neutral-border-subtle)', borderRadius: 'var(--ds-border-radius-md)' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 'var(--ds-spacing-3)' }}>
               <Paragraph size="sm" style={{ margin: 0, fontWeight: 'var(--ds-font-weight-medium)' }}>i18n Scanner</Paragraph>
-              <Badge color={MOCK_SCANNER_RESULTS.i18n.status === 'success' ? 'success' : 'warning'}>
-                {MOCK_SCANNER_RESULTS.i18n.status === 'success' ? <CheckCircleIcon /> : <AlertTriangleIcon />}
-                {MOCK_SCANNER_RESULTS.i18n.status}
+              <Badge color={scannerResults.i18n.status === 'success' ? 'success' : 'warning'}>
+                {scannerResults.i18n.status === 'success' ? <CheckCircleIcon /> : <AlertTriangleIcon />}
+                {scannerResults.i18n.status}
               </Badge>
             </div>
             <div style={{ fontSize: 'var(--ds-font-size-xs)', color: 'var(--ds-color-neutral-text-subtle)', marginBottom: 'var(--ds-spacing-3)' }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 'var(--ds-spacing-1)' }}>
                 <span>{t('monitoring.text.totalKeys')}</span>
-                <span style={{ color: 'var(--ds-color-neutral-text-default)' }}>{MOCK_SCANNER_RESULTS.i18n.totalKeys.toLocaleString()}</span>
+                <span style={{ color: 'var(--ds-color-neutral-text-default)' }}>{scannerResults.i18n.totalKeys.toLocaleString()}</span>
               </div>
               <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 'var(--ds-spacing-1)' }}>
                 <span>{t('monitoring.text.missingKeys')}</span>
-                <span style={{ color: 'var(--ds-color-success-text-default)' }}>{MOCK_SCANNER_RESULTS.i18n.missingKeys}</span>
+                <span style={{ color: 'var(--ds-color-success-text-default)' }}>{scannerResults.i18n.missingKeys}</span>
               </div>
               <div style={{ display: 'flex', justifyContent: 'space-between' }}>
                 <span>{t('monitoring.text.hardcodedStrings')}</span>
-                <span style={{ color: 'var(--ds-color-warning-text-default)' }}>{MOCK_SCANNER_RESULTS.i18n.hardcodedStrings}</span>
+                <span style={{ color: 'var(--ds-color-warning-text-default)' }}>{scannerResults.i18n.hardcodedStrings}</span>
               </div>
             </div>
             <button
@@ -374,23 +385,23 @@ export function MonitoringPage() {
           <div style={{ padding: 'var(--ds-spacing-4)', border: '1px solid var(--ds-color-neutral-border-subtle)', borderRadius: 'var(--ds-border-radius-md)' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 'var(--ds-spacing-3)' }}>
               <Paragraph size="sm" style={{ margin: 0, fontWeight: 'var(--ds-font-weight-medium)' }}>{t('monitoring.text.designSystem')}</Paragraph>
-              <Badge color={MOCK_SCANNER_RESULTS.designSystem.status === 'success' ? 'success' : 'warning'}>
-                {MOCK_SCANNER_RESULTS.designSystem.status === 'success' ? <CheckCircleIcon /> : <AlertTriangleIcon />}
-                {MOCK_SCANNER_RESULTS.designSystem.status}
+              <Badge color={scannerResults.designSystem.status === 'success' ? 'success' : 'warning'}>
+                {scannerResults.designSystem.status === 'success' ? <CheckCircleIcon /> : <AlertTriangleIcon />}
+                {scannerResults.designSystem.status}
               </Badge>
             </div>
             <div style={{ fontSize: 'var(--ds-font-size-xs)', color: 'var(--ds-color-neutral-text-subtle)', marginBottom: 'var(--ds-spacing-3)' }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 'var(--ds-spacing-1)' }}>
                 <span>{t('monitoring.text.components')}</span>
-                <span style={{ color: 'var(--ds-color-neutral-text-default)' }}>{MOCK_SCANNER_RESULTS.designSystem.totalComponents}</span>
+                <span style={{ color: 'var(--ds-color-neutral-text-default)' }}>{scannerResults.designSystem.totalComponents}</span>
               </div>
               <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 'var(--ds-spacing-1)' }}>
                 <span>{t('monitoring.text.violations')}</span>
-                <span style={{ color: MOCK_SCANNER_RESULTS.designSystem.violations > 0 ? 'var(--ds-color-danger-text-default)' : 'var(--ds-color-success-text-default)' }}>{MOCK_SCANNER_RESULTS.designSystem.violations}</span>
+                <span style={{ color: scannerResults.designSystem.violations > 0 ? 'var(--ds-color-danger-text-default)' : 'var(--ds-color-success-text-default)' }}>{scannerResults.designSystem.violations}</span>
               </div>
               <div style={{ display: 'flex', justifyContent: 'space-between' }}>
                 <span>{t('monitoring.text.tokenCompliance')}</span>
-                <span style={{ color: 'var(--ds-color-success-text-default)' }}>{MOCK_SCANNER_RESULTS.designSystem.tokenCompliance}%</span>
+                <span style={{ color: 'var(--ds-color-success-text-default)' }}>{scannerResults.designSystem.tokenCompliance}%</span>
               </div>
             </div>
             <button
@@ -415,23 +426,23 @@ export function MonitoringPage() {
           <div style={{ padding: 'var(--ds-spacing-4)', border: '1px solid var(--ds-color-neutral-border-subtle)', borderRadius: 'var(--ds-border-radius-md)' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 'var(--ds-spacing-3)' }}>
               <Paragraph size="sm" style={{ margin: 0, fontWeight: 'var(--ds-font-weight-medium)' }}>WCAG / Compliance</Paragraph>
-              <Badge color={MOCK_SCANNER_RESULTS.compliance.status === 'success' ? 'success' : 'warning'}>
-                {MOCK_SCANNER_RESULTS.compliance.status === 'success' ? <CheckCircleIcon /> : <AlertTriangleIcon />}
-                {MOCK_SCANNER_RESULTS.compliance.status}
+              <Badge color={scannerResults.compliance.status === 'success' ? 'success' : 'warning'}>
+                {scannerResults.compliance.status === 'success' ? <CheckCircleIcon /> : <AlertTriangleIcon />}
+                {scannerResults.compliance.status}
               </Badge>
             </div>
             <div style={{ fontSize: 'var(--ds-font-size-xs)', color: 'var(--ds-color-neutral-text-subtle)', marginBottom: 'var(--ds-spacing-3)' }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 'var(--ds-spacing-1)' }}>
                 <span>{t('monitoring.text.wcagErrors')}</span>
-                <span style={{ color: MOCK_SCANNER_RESULTS.compliance.wcagErrors > 0 ? 'var(--ds-color-danger-text-default)' : 'var(--ds-color-success-text-default)' }}>{MOCK_SCANNER_RESULTS.compliance.wcagErrors}</span>
+                <span style={{ color: scannerResults.compliance.wcagErrors > 0 ? 'var(--ds-color-danger-text-default)' : 'var(--ds-color-success-text-default)' }}>{scannerResults.compliance.wcagErrors}</span>
               </div>
               <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 'var(--ds-spacing-1)' }}>
                 <span>{t('monitoring.text.wcagWarnings')}</span>
-                <span style={{ color: 'var(--ds-color-warning-text-default)' }}>{MOCK_SCANNER_RESULTS.compliance.wcagWarnings}</span>
+                <span style={{ color: 'var(--ds-color-warning-text-default)' }}>{scannerResults.compliance.wcagWarnings}</span>
               </div>
               <div style={{ display: 'flex', justifyContent: 'space-between' }}>
                 <span>{t('monitoring.text.gdprCompliance')}</span>
-                <span style={{ color: 'var(--ds-color-success-text-default)' }}>{MOCK_SCANNER_RESULTS.compliance.gdprCompliance}%</span>
+                <span style={{ color: 'var(--ds-color-success-text-default)' }}>{scannerResults.compliance.gdprCompliance}%</span>
               </div>
             </div>
             <button

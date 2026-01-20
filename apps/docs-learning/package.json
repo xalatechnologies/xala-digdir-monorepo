@@ -10,6 +10,8 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@xala/config": "workspace:*",
+    "@xala/runtime": "workspace:*",
     "@xala/auth": "workspace:*",
     "@xala/docs-content": "workspace:*",
     "@digilist/client-sdk": "workspace:*",

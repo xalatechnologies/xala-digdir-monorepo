@@ -231,3 +231,39 @@ export { orgDashboardService } from './org-dashboard.service';
 // Blocks - Calendar blocks management
 export { blocksService } from './blocks.service';
 export type { BlockQueryParams, BlockListResponse } from './blocks.service';
+
+// Admin Permissions - Rental object specific permissions (different from RBAC)
+export {
+  adminPermissionService,
+} from './admin-permission.service';
+export type {
+  RentalObjectPermission,
+  GrantPermissionDTO,
+  AdminPermissionQueryParams,
+} from './admin-permission.service';
+
+// AI Seed Generator
+export { aiSeedService } from './ai-seed.service';
+export type {
+  EntityType as SeedEntityType,
+  GenerateSeedRequest,
+  GenerateSeedResponse,
+} from './ai-seed.service';
+
+// Scanners - Code quality and compliance
+export { scannerService } from './scanner.service';
+export type {
+  ScannerType,
+  ScannerResult,
+  ScannerStatus,
+} from './scanner.service';
+
+// Activities - Public activities (classes, events, etc.)
+export { activityService } from './activity.service';
+export type {
+  Activity,
+  ActivityCategory,
+  ActivityQueryParams,
+  ActivityRegistration,
+  RegisterForActivityDTO,
+} from './activity.service';

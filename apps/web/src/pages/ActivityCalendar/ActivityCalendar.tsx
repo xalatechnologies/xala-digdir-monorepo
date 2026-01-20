@@ -1,13 +1,14 @@
 import React, { useState } from 'react';
-import { useQuery } from '@tanstack/react-query';
 import { format } from 'date-fns';
 import { nb } from 'date-fns/locale';
 import { useT } from '@xala/i18n';
+import { useActivities, type ActivityCategory } from '@digilist/client-sdk/hooks';
+import type { Activity } from '@digilist/client-sdk/services';
 import './ActivityCalendar.css';
 
 /**
  * Public Activity Calendar
- * 
+ *
  * Display upcoming classes, events, and activities at venues
  * Features:
  * - Public activity listing
@@ -16,42 +17,19 @@ import './ActivityCalendar.css';
  * - Calendar integration
  */
 
-interface Activity {
-  id: string;
-  title: string;
-  description: string;
-  category: string;
-  startTime: Date;
-  endTime: Date;
-  rentalObjectName: string;
-  maxParticipants?: number;
-  currentParticipants: number;
-  instructorName?: string;
-  difficulty?: string;
-  registrationFee: number;
-  imageUrl?: string;
-}
-
 export const ActivityCalendar: React.FC = () => {
   const t = useT();
-  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+  const [selectedCategory, setSelectedCategory] = useState<ActivityCategory | null>(null);
   const [selectedDate, setSelectedDate] = useState(new Date());
 
-  // Fetch activities
-  const { data: activities = [], isLoading } = useQuery({
-    queryKey: ['activities', selectedCategory, selectedDate],
-    queryFn: async () => {
-      const params = new URLSearchParams({
-        date: selectedDate.toISOString(),
-        ...(selectedCategory && { category: selectedCategory }),
-      });
-      const response = await fetch(`/api/activities?${params}`);
-      if (!response.ok) throw new Error('Failed to fetch activities');
-      return response.json();
-    },
+  // Fetch activities using SDK hook
+  const { data: activitiesData, isLoading } = useActivities({
+    date: selectedDate.toISOString(),
+    category: selectedCategory ?? undefined,
   });
+  const activities = activitiesData?.data ?? [];
 
-  const categories = ['CLASS', 'EVENT', 'TRAINING', 'WORKSHOP', 'MATCH', 'PERFORMANCE'];
+  const categories: ActivityCategory[] = ['CLASS', 'EVENT', 'TRAINING', 'WORKSHOP', 'MATCH', 'PERFORMANCE'];
 
   /**
    * Get availability status

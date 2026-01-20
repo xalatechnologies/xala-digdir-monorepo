@@ -830,3 +830,59 @@ export { useDebounced } from './useDebounced';
 
 export { useUserContext } from './use-user-context';
 export type { UserContextResponse } from './use-user-context';
+
+// Admin Permissions hooks (Rental object-specific permissions)
+export {
+  useAdminPermissions,
+  useAdminPermission,
+  useAdminPermissionsByRentalObject,
+  useAdminPermissionsByUser,
+  useAdminPermissionsByOrganization,
+  useGrantAdminPermission,
+  useRevokeAdminPermission,
+  useUpdateAdminPermission,
+  type AdminPermissionQueryParams,
+  type GrantPermissionDTO,
+} from './use-admin-permissions';
+
+// AI Seed Generator hooks
+export {
+  useGenerateSeed,
+  useGenerateRentalObjects,
+  useGenerateUsers,
+  useGenerateOrganizations,
+  useGenerateBookings,
+  useGenerateReviews,
+  type EntityType as SeedEntityType,
+  type GenerateSeedRequest,
+} from './use-ai-seed';
+
+// Scanner hooks
+export {
+  useScannerStatus,
+  useScannerLastResult,
+  useAllScannerStatuses,
+  useRunScanner,
+  useRunI18nScanner,
+  useRunDesignSystemScanner,
+  useRunWcagScanner,
+  type ScannerType,
+} from './use-scanners';
+
+// Activities hooks (Public activities)
+export {
+  useActivities,
+  useActivity,
+  useActivitiesByCategory,
+  useActivitiesByDate,
+  useActivitiesByRentalObject,
+  useActivityRegistrations,
+  useUpcomingActivities,
+  useActivityCategories,
+  useSearchActivities,
+  useRegisterForActivity,
+  useCancelActivityRegistration,
+  type ActivityCategory,
+  type ActivityQueryParams,
+  type RegisterForActivityDTO,
+} from './use-activities';

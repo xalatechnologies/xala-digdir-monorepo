@@ -1,11 +1,17 @@
 import React, { useState } from 'react';
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import './PermissionManagement.css';
 import { useT } from '@xala/i18n';
+import {
+  useAdminPermissions,
+  useGrantAdminPermission,
+  useRevokeAdminPermission,
+  type GrantPermissionDTO,
+} from '@digilist/client-sdk/hooks';
+import type { RentalObjectPermission } from '@digilist/client-sdk/services';
 
 /**
  * Permission Management Dashboard
- * 
+ *
  * Admin interface for managing granular rental object permissions
  * Features:
  * - Grant/revoke permissions
@@ -14,105 +20,35 @@ import { useT } from '@xala/i18n';
  * - Audit log
  */
 
-interface Permission {
-  id: string;
-  rentalObjectId: string;
-  rentalObjectName: string;
-  userId?: string;
-  userName?: string;
-  organizationId?: string;
-  organizationName?: string;
-  
-  // Permission flags
-  canView: boolean;
-  canBook: boolean;
-  canManage: boolean;
-  canApproveBookings: boolean;
-  canCancelBookings: boolean;
-  canViewReports: boolean;
-  canSetPricing: boolean;
-  canManageAvailability: boolean;
-  
-  // Time-based
-  validFrom?: Date;
-  validUntil?: Date;
-  
-  // Audit
-  grantedBy: string;
-  grantedAt: Date;
-  revokedAt?: Date;
-}
-
-interface PermissionFormData {
-  rentalObjectId: string;
-  grantTo: 'USER' | 'ORGANIZATION';
-  userId?: string;
-  organizationId?: string;
-  permissions: {
-    canView: boolean;
-    canBook: boolean;
-    canManage: boolean;
-    canApproveBookings: boolean;
-    canCancelBookings: boolean;
-    canViewReports: boolean;
-    canSetPricing: boolean;
-    canManageAvailability: boolean;
-  };
-  validFrom?: string;
-  validUntil?: string;
-}
+// Use the SDK type for permissions
+type Permission = RentalObjectPermission;
 
 export const PermissionManagement: React.FC = () => {
   const t = useT();
-  const queryClient = useQueryClient();
   const [showForm, setShowForm] = useState(false);
-  const [selectedPermission, setSelectedPermission] = useState<Permission | null>(null);
   const [filterObjectId, setFilterObjectId] = useState('');
   const [filterGrantee, setFilterGrantee] = useState('');
 
-  // Fetch permissions
-  const { data: permissions = [], isLoading } = useQuery({
-    queryKey: ['permissions', filterObjectId, filterGrantee],
-    queryFn: async () => {
-      const params = new URLSearchParams();
-      if (filterObjectId) params.set('rentalObjectId', filterObjectId);
-      if (filterGrantee) params.set('search', filterGrantee);
-      
-      const response = await fetch(`/api/admin/permissions?${params}`);
-      if (!response.ok) throw new Error('Failed to fetch permissions');
-      return response.json();
-    },
+  // Fetch permissions using SDK hook
+  const { data: permissionsData, isLoading } = useAdminPermissions({
+    rentalObjectId: filterObjectId || undefined,
+    search: filterGrantee || undefined,
   });
+  const permissions = permissionsData?.data ?? [];
 
-  // Grant permission mutation
-  const grantPermission = useMutation({
-    mutationFn: async (data: PermissionFormData) => {
-      const response = await fetch('/api/admin/permissions', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(data),
-      });
-      if (!response.ok) throw new Error('Failed to grant permission');
-      return response.json();
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['permissions'] });
-      setShowForm(false);
-    },
-  });
+  // Grant permission mutation using SDK hook
+  const grantPermission = useGrantAdminPermission();
 
-  // Revoke permission mutation
-  const revokePermission = useMutation({
-    mutationFn: async (permissionId: string) => {
-      const response = await fetch(`/api/admin/permissions/${permissionId}`, {
-        method: 'DELETE',
-      });
-      if (!response.ok) throw new Error('Failed to revoke permission');
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['permissions'] });
-    },
-  });
+  // Revoke permission mutation using SDK hook
+  const revokePermission = useRevokeAdminPermission();
+
+  const handleGrantPermission = (data: GrantPermissionDTO) => {
+    grantPermission.mutate(data, {
+      onSuccess: () => {
+        setShowForm(false);
+      },
+    });
+  };
 
   /**
    * Render permission badge
@@ -274,9 +210,10 @@ export const PermissionManagement: React.FC = () => {
               onSubmit={(e) => {
                 e.preventDefault();
                 const formData = new FormData(e.currentTarget);
-                const data: any = {
-                  rentalObjectId: formData.get('rentalObjectId'),
-                  grantTo: formData.get('grantTo'),
+                const grantTo = formData.get('grantTo') as 'USER' | 'ORGANIZATION';
+                const data: GrantPermissionDTO = {
+                  rentalObjectId: formData.get('rentalObjectId') as string,
+                  grantTo,
                   permissions: {
                     canView: formData.get('canView') === 'on',
                     canBook: formData.get('canBook') === 'on',
@@ -287,17 +224,13 @@ export const PermissionManagement: React.FC = () => {
                     canSetPricing: formData.get('canSetPricing') === 'on',
                     canManageAvailability: formData.get('canManageAvailability') === 'on',
                   },
-                  validFrom: formData.get('validFrom') || undefined,
-                  validUntil: formData.get('validUntil') || undefined,
+                  validFrom: (formData.get('validFrom') as string) || undefined,
+                  validUntil: (formData.get('validUntil') as string) || undefined,
+                  userId: grantTo === 'USER' ? (formData.get('userId') as string) : undefined,
+                  organizationId: grantTo === 'ORGANIZATION' ? (formData.get('organizationId') as string) : undefined,
                 };
-                
-                if (data.grantTo === 'USER') {
-                  data.userId = formData.get('userId');
-                } else {
-                  data.organizationId = formData.get('organizationId');
-                }
-                
-                grantPermission.mutate(data);
+
+                handleGrantPermission(data);
               }}
             >
               {/* Form fields */}

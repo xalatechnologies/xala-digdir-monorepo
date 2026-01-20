@@ -1,7 +1,7 @@
 /**
  * AI Seed Generator Page
  * SaaS Admin page for generating demo data using AI
- * 
+ *
  * Provides form UI for selecting entity types, counts, and target tenants
  */
 
@@ -19,7 +19,7 @@ import {
   CheckCircleIcon,
   XCircleIcon,
 } from '@xala/ds';
-import { useSaasTenants } from '@digilist/client-sdk/hooks';
+import { useSaasTenants, useGenerateSeed, type SeedEntityType } from '@digilist/client-sdk/hooks';
 import { useT } from '@xala/i18n';
 
 // Entity types available for AI generation (keys for i18n, translated in component)
@@ -60,13 +60,17 @@ export function AISeedGeneratorPage() {
     count: 10,
     tenantId: '',
   });
-  const [isGenerating, setIsGenerating] = useState(false);
   const [result, setResult] = useState<GenerationResult | null>(null);
   const [generationLog, setGenerationLog] = useState<string[]>([]);
+  const [startTime, setStartTime] = useState<number | null>(null);
 
   // Queries
   const { data: tenantsData, isLoading: loadingTenants } = useSaasTenants({ status: 'active', limit: 100 });
   const tenants = tenantsData?.data ?? [];
+
+  // SDK mutation for generating seed data
+  const generateSeed = useGenerateSeed();
+  const isGenerating = generateSeed.isPending;
 
   const handlePresetSelect = (presetName: string) => {
     const preset = PRESETS.find((p) => p.nameKey === presetName);
@@ -82,56 +86,42 @@ export function AISeedGeneratorPage() {
     }
   };
 
-  const handleGenerate = async () => {
+  const handleGenerate = () => {
     if (!config.tenantId) {
       setResult({ success: false, message: 'Velg en tenant først' });
       return;
     }
 
-    setIsGenerating(true);
     setResult(null);
     setGenerationLog([]);
+    const now = Date.now();
+    setStartTime(now);
+    setGenerationLog((prev) => [...prev, `Starter generering av ${config.count} ${config.entityType}...`]);
 
-    try {
-      const startTime = Date.now();
-      setGenerationLog((prev) => [...prev, `Starter generering av ${config.count} ${config.entityType}...`]);
-
-      // Call the API endpoint
-      const response = await fetch('/api/admin/ai-seed-generator', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          entityType: config.entityType,
-          count: config.count,
-          tenantId: config.tenantId,
-        }),
-      });
-
-      const data = await response.json();
-      const duration = Date.now() - startTime;
-
-      if (response.ok) {
-        setGenerationLog((prev) => [...prev, `Generering fullført på ${(duration / 1000).toFixed(1)}s`]);
-        setResult({
-          success: true,
-          message: `Genererte ${data.count ?? config.count} ${t(ENTITY_TYPES.find((e) => e.value === config.entityType)?.labelKey ?? config.entityType)}`,
-          entitiesCreated: data.count ?? config.count,
-          duration,
-        });
-      } else {
-        setGenerationLog((prev) => [...prev, `Feil: ${data.message ?? 'Ukjent feil'}`]);
-        setResult({
-          success: false,
-          message: data.message ?? 'Generering feilet',
-        });
+    generateSeed.mutate(
+      {
+        entityType: config.entityType as SeedEntityType,
+        count: config.count,
+        tenantId: config.tenantId,
+      },
+      {
+        onSuccess: (data) => {
+          const duration = Date.now() - now;
+          setGenerationLog((prev) => [...prev, `Generering fullført på ${(duration / 1000).toFixed(1)}s`]);
+          setResult({
+            success: true,
+            message: `Genererte ${data.data?.entitiesCreated ?? config.count} ${t(ENTITY_TYPES.find((e) => e.value === config.entityType)?.labelKey ?? config.entityType)}`,
+            entitiesCreated: data.data?.entitiesCreated ?? config.count,
+            duration,
+          });
+        },
+        onError: (error) => {
+          const message = error instanceof Error ? error.message : 'Ukjent feil';
+          setGenerationLog((prev) => [...prev, `Feil: ${message}`]);
+          setResult({ success: false, message });
+        },
       }
-    } catch (error) {
-      const message = error instanceof Error ? error.message : 'Ukjent feil';
-      setGenerationLog((prev) => [...prev, `Feil: ${message}`]);
-      setResult({ success: false, message });
-    } finally {
-      setIsGenerating(false);
-    }
+    );
   };
 
   const selectedEntityInfo = ENTITY_TYPES.find((e) => e.value === config.entityType);

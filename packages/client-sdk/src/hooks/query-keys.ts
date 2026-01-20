@@ -567,4 +567,72 @@ export const queryKeys = {
     all: ['features'] as const,
     tenant: () => [...queryKeys.features.all, 'tenant'] as const,
   },
+
+  // =========================================================================
+  // Admin Permissions Keys (Rental Object Specific)
+  // =========================================================================
+  adminPermissions: {
+    all: ['adminPermissions'] as const,
+    lists: () => [...queryKeys.adminPermissions.all, 'list'] as const,
+    list: (params?: { rentalObjectId?: string; search?: string; userId?: string; organizationId?: string; status?: string }) =>
+      [...queryKeys.adminPermissions.lists(), params] as const,
+    details: () => [...queryKeys.adminPermissions.all, 'detail'] as const,
+    detail: (id: string) => [...queryKeys.adminPermissions.details(), id] as const,
+    byRentalObject: (rentalObjectId: string) => [...queryKeys.adminPermissions.all, 'byRentalObject', rentalObjectId] as const,
+    byUser: (userId: string) => [...queryKeys.adminPermissions.all, 'byUser', userId] as const,
+    byOrganization: (organizationId: string) => [...queryKeys.adminPermissions.all, 'byOrganization', organizationId] as const,
+  },
+
+  // =========================================================================
+  // AI Seed Generator Keys
+  // =========================================================================
+  aiSeed: {
+    all: ['aiSeed'] as const,
+  },
+
+  // =========================================================================
+  // Scanner Keys
+  // =========================================================================
+  scanners: {
+    all: ['scanners'] as const,
+    status: (scanner: string) => [...queryKeys.scanners.all, 'status', scanner] as const,
+    lastResult: (scanner: string) => [...queryKeys.scanners.all, 'lastResult', scanner] as const,
+    allStatuses: () => [...queryKeys.scanners.all, 'allStatuses'] as const,
+  },
+
+  // =========================================================================
+  // Activities Keys (Public)
+  // =========================================================================
+  activities: {
+    all: ['activities'] as const,
+    lists: () => [...queryKeys.activities.all, 'list'] as const,
+    list: (params?: { date?: string; category?: string; rentalObjectId?: string; search?: string }) =>
+      [...queryKeys.activities.lists(), params] as const,
+    details: () => [...queryKeys.activities.all, 'detail'] as const,
+    detail: (id: string) => [...queryKeys.activities.details(), id] as const,
+    byCategory: (category: string, params?: Record<string, unknown>) =>
+      [...queryKeys.activities.all, 'byCategory', category, params] as const,
+    byDate: (date: string, params?: Record<string, unknown>) =>
+      [...queryKeys.activities.all, 'byDate', date, params] as const,
+    byRentalObject: (rentalObjectId: string, params?: Record<string, unknown>) =>
+      [...queryKeys.activities.all, 'byRentalObject', rentalObjectId, params] as const,
+    registrations: (activityId: string) => [...queryKeys.activities.detail(activityId), 'registrations'] as const,
+    upcoming: (limit?: number) => [...queryKeys.activities.all, 'upcoming', limit] as const,
+    categories: () => [...queryKeys.activities.all, 'categories'] as const,
+  },
+
+  // =========================================================================
+  // Amenities Keys
+  // =========================================================================
+  amenities: {
+    all: ['amenities'] as const,
+    lists: () => [...queryKeys.amenities.all, 'list'] as const,
+    list: (params?: { search?: string; category?: string; page?: number; limit?: number }) =>
+      [...queryKeys.amenities.lists(), params] as const,
+    details: () => [...queryKeys.amenities.all, 'detail'] as const,
+    detail: (id: string) => [...queryKeys.amenities.details(), id] as const,
+    byCategory: (category: string) => [...queryKeys.amenities.all, 'byCategory', category] as const,
+    popular: (limit?: number) => [...queryKeys.amenities.all, 'popular', limit] as const,
+    search: (query: string) => [...queryKeys.amenities.all, 'search', query] as const,
+  },
 } as const;

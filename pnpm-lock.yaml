@@ -225,6 +225,9 @@ importers:
       '@xala/auth':
         specifier: workspace:*
         version: link:../../packages/auth
+      '@xala/config':
+        specifier: workspace:*
+        version: link:../../packages/config
       '@xala/ds':
         specifier: workspace:*
         version: link:../../packages/ds
@@ -234,6 +237,9 @@ importers:
       '@xala/i18n':
         specifier: workspace:*
         version: link:../../packages/i18n
+      '@xala/runtime':
+        specifier: workspace:*
+        version: link:../../packages/runtime
       date-fns:
         specifier: ^4.1.0
         version: 4.1.0
@@ -307,6 +313,9 @@ importers:
       '@xala/auth':
         specifier: workspace:*
         version: link:../../packages/auth
+      '@xala/config':
+        specifier: workspace:*
+        version: link:../../packages/config
       '@xala/docs-content':
         specifier: workspace:*
         version: link:../../packages/docs-content
@@ -319,6 +328,9 @@ importers:
       '@xala/i18n':
         specifier: workspace:*
         version: link:../../packages/i18n
+      '@xala/runtime':
+        specifier: workspace:*
+        version: link:../../packages/runtime
       date-fns:
         specifier: ^4.1.0
         version: 4.1.0
@@ -371,6 +383,9 @@ importers:
       '@xala/auth':
         specifier: workspace:*
         version: link:../../packages/auth
+      '@xala/config':
+        specifier: workspace:*
+        version: link:../../packages/config
       '@xala/contracts':
         specifier: workspace:*
         version: link:../../packages/contracts
@@ -383,6 +398,9 @@ importers:
       '@xala/i18n':
         specifier: workspace:*
         version: link:../../packages/i18n
+      '@xala/runtime':
+        specifier: workspace:*
+        version: link:../../packages/runtime
       date-fns:
         specifier: ^4.1.0
         version: 4.1.0
@@ -450,6 +468,9 @@ importers:
       '@xala/auth':
         specifier: workspace:*
         version: link:../../packages/auth
+      '@xala/config':
+        specifier: workspace:*
+        version: link:../../packages/config
       '@xala/contracts':
         specifier: workspace:*
         version: link:../../packages/contracts
@@ -465,6 +486,9 @@ importers:
       '@xala/observability':
         specifier: workspace:*
         version: link:../../packages/observability
+      '@xala/runtime':
+        specifier: workspace:*
+        version: link:../../packages/runtime
       date-fns:
         specifier: ^4.1.0
         version: 4.1.0
@@ -614,12 +638,18 @@ importers:
       '@xala/auth':
         specifier: workspace:^
         version: link:../../packages/auth
+      '@xala/config':
+        specifier: workspace:*
+        version: link:../../packages/config
       '@xala/ds':
         specifier: workspace:*
         version: link:../../packages/ds
       '@xala/i18n':
         specifier: workspace:*
         version: link:../../packages/i18n
+      '@xala/runtime':
+        specifier: workspace:*
+        version: link:../../packages/runtime
       framer-motion:
         specifier: ^12.26.2
         version: 12.26.2(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
