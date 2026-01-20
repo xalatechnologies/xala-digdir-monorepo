@@ -13,7 +13,7 @@ import {
   Checkbox,
   Badge,
 } from '@xala/ds';
-import type { UseRentalObjectWizardReturn } from '../../../hooks/useRentalObjectWizard';
+import type { UseRentalObjectWizardReturn } from '@/features/rental-objects';
 
 export interface RequirementsStepProps {
   wizard: UseRentalObjectWizardReturn;

@@ -167,6 +167,22 @@ export const digdirScanner = [
   ...componentSuggestions,
 ];
 
+// Thin App compliance rules (enforces SDK-first, no providers in routes)
+export const thinApp = [
+  {
+    files: ['apps/**/*.{tsx,ts}'],
+    ignores: ['**/node_modules/**', '**/dist/**', '**/build/**', '**/*.d.ts', '**/main.tsx'],
+    plugins: {
+      digdir: digdirPlugin,
+    },
+    rules: {
+      'digdir/no-raw-fetch': 'error',
+      'digdir/no-provider-in-routes': 'error',
+      'digdir/no-deep-relatives': 'warn',
+    },
+  },
+];
+
 // API-specific ACL enforcement rules
 export const apiAclRules = [
   {

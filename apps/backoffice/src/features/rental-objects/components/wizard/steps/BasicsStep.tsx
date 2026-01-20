@@ -5,7 +5,7 @@
 
 import { useT } from '@xala/i18n';
 import { Textfield, Textarea, NativeSelect, Heading, Paragraph, Alert, Card } from '@xala/ds';
-import type { UseRentalObjectWizardReturn } from '../../../hooks/useRentalObjectWizard';
+import type { UseRentalObjectWizardReturn } from '@/features/rental-objects';
 
 export interface BasicsStepProps {
   wizard: UseRentalObjectWizardReturn;

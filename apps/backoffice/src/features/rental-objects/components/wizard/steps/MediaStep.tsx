@@ -17,7 +17,7 @@ import {
   Stack,
   ImageIcon,
 } from '@xala/ds';
-import type { UseRentalObjectWizardReturn } from '../../../hooks/useRentalObjectWizard';
+import type { UseRentalObjectWizardReturn } from '@/features/rental-objects';
 
 export interface MediaStepProps {
   wizard: UseRentalObjectWizardReturn;

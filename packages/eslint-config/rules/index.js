@@ -14,6 +14,9 @@ import preferDsComponents from './prefer-ds-components.js';
 import requireProvider from './require-provider.js';
 import i18nNoHardcodedStrings from './i18n-no-hardcoded-strings.js';
 import noDirectSchemaImport from './no-direct-schema-import.js';
+import noRawFetch from './no-raw-fetch.js';
+import noProviderInRoutes from './no-provider-in-routes.js';
+import noDeepRelatives from './no-deep-relatives.js';
 
 export const rules = {
   'no-hardcoded-colors': noHardcodedColors,
@@ -27,6 +30,10 @@ export const rules = {
   'require-provider': requireProvider,
   'i18n-no-hardcoded-strings': i18nNoHardcodedStrings,
   'no-direct-schema-import': noDirectSchemaImport,
+  // Thin App Compliance Rules
+  'no-raw-fetch': noRawFetch,
+  'no-provider-in-routes': noProviderInRoutes,
+  'no-deep-relatives': noDeepRelatives,
 };
 
 export default rules;

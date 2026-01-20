@@ -182,7 +182,7 @@ const customViewports = {
 };
 
 /**
- * Theme decorator - uses dark mode addon hook
+ * Theme decorator - uses dark mode addon hook and createRuntime() from @xala/runtime
  */
 const withTheme: Decorator = (Story) => {
   const isDarkMode = useDarkMode();
@@ -193,6 +193,9 @@ const withTheme: Decorator = (Story) => {
     document.documentElement.setAttribute('data-color-scheme', theme);
   }, [theme]);
 
+  // Note: For Storybook, we use a simplified provider setup.
+  // In production apps, use RuntimeProvider from @xala/runtime.
+  // For component isolation testing, use createRuntime().TestWrapper.
   return (
     <I18nProvider initialLocale="nb">
       <ThemeProvider>

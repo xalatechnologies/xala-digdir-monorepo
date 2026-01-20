@@ -18,7 +18,7 @@ import {
   TrashIcon,
   CreditCardIcon,
 } from '@xala/ds';
-import type { UseRentalObjectWizardReturn } from '../../../hooks/useRentalObjectWizard';
+import type { UseRentalObjectWizardReturn } from '@/features/rental-objects';
 
 export interface PackagesStepProps {
   wizard: UseRentalObjectWizardReturn;

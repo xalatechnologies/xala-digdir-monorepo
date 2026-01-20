@@ -16,7 +16,7 @@ import {
   SettingsIcon,
   ClockIcon,
 } from '@xala/ds';
-import type { UseRentalObjectWizardReturn } from '../../../hooks/useRentalObjectWizard';
+import type { UseRentalObjectWizardReturn } from '@/features/rental-objects';
 
 export interface BookingStepProps {
   wizard: UseRentalObjectWizardReturn;

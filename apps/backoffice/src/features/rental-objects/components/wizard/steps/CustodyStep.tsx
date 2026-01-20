@@ -11,7 +11,7 @@ import {
   useCreateCustodyGrant,
   useRevokeCustodyGrant 
 } from '@digilist/client-sdk';
-import type { useRentalObjectWizard } from '../../../hooks/useRentalObjectWizard';
+import type { useRentalObjectWizard } from '@/features/rental-objects';
 
 export interface CustodyStepProps {
   wizard: ReturnType<typeof useRentalObjectWizard>;

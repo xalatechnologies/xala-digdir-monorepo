@@ -5,7 +5,7 @@
 
 import { useT } from '@xala/i18n';
 import { Heading, Paragraph, Card, Badge } from '@xala/ds';
-import type { UseRentalObjectWizardReturn } from '../../../hooks/useRentalObjectWizard';
+import type { UseRentalObjectWizardReturn } from '@/features/rental-objects';
 
 export interface CategorySelectorProps {
   wizard: UseRentalObjectWizardReturn;
