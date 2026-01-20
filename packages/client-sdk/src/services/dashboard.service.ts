@@ -2,8 +2,8 @@
  * Dashboard Service
  * Quick stats, recent activity, and dashboard widgets
  */
-import { getClient } from '../core/client-factory';
-import type { DashboardKPIs } from '../types';
+import { getClient } from '@/core/client-factory';
+import type { DashboardKPIs } from '@/types';
 
 // Status breakdown from API
 export interface StatusBreakdown {

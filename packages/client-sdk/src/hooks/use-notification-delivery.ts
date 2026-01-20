@@ -5,8 +5,8 @@
 
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { queryKeys } from './query-keys';
-import { notificationService } from '../services/notification.service';
-import type { DeliveryReportQueryParams } from '../services/notification.service';
+import { notificationService } from '@/services/notification.service';
+import type { DeliveryReportQueryParams } from '@/services/notification.service';
 
 // ============================================================================
 // Delivery Query Hooks

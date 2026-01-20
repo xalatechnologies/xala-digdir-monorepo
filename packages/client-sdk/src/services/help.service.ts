@@ -4,7 +4,7 @@
  * KRAV-SUP-01: Opplæringsplan + innebygde hjelpeverktøy
  * KRAV-SUP-03: Brukerstøtte for innbyggere
  */
-import { getClient } from '../core/client-factory';
+import { getClient } from '@/core/client-factory';
 
 // =============================================================================
 // FAQ Types

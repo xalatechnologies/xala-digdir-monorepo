@@ -4,9 +4,9 @@
  * Liskov Substitution: All services can be used interchangeably
  */
 
-import type { IHttpClient } from '../core/http-client.interface';
-import { getClient } from '../core/client-factory';
-import type { MediaUploadResponse, UploadOptions } from '../types/upload';
+import type { IHttpClient } from '@/core/http-client.interface';
+import { getClient } from '@/core/client-factory';
+import type { MediaUploadResponse, UploadOptions } from '@/types/upload';
 
 export abstract class BaseService {
   protected readonly basePath: string;

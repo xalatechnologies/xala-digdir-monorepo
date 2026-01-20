@@ -7,7 +7,7 @@
  */
 
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { modulesService, type UpdateModuleDTO } from '../services/modules.service';
+import { modulesService, type UpdateModuleDTO } from '@/services/modules.service';
 
 // =============================================================================
 // Query Keys

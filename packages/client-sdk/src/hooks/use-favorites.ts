@@ -1,12 +1,12 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { favoritesService } from '../services/favorites.service';
+import { favoritesService } from '@/services/favorites.service';
 import type {
   CreateFavoriteDTO,
   UpdateFavoriteDTO,
   ListFavoritesQuery,
   BulkAddFavoritesDTO,
   BulkRemoveFavoritesDTO,
-} from '../types/favorites.types';
+} from '@/types/favorites.types';
 import { queryKeys } from './query-keys';
 
 /**

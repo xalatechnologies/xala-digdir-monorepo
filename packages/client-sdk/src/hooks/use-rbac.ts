@@ -11,9 +11,9 @@
 
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { queryKeys } from './query-keys';
-import { authzService } from '../services/authz.service';
-import { accessGrantService } from '../services/access-grant.service';
-import { permissionAssignmentService } from '../services/permission-assignment.service';
+import { authzService } from '@/services/authz.service';
+import { accessGrantService } from '@/services/access-grant.service';
+import { permissionAssignmentService } from '@/services/permission-assignment.service';
 import type {
   UserCapabilities,
   AccessGrantQueryParams,
@@ -24,7 +24,7 @@ import type {
   AssignPermissionsDTO,
   RentalObjectPermission,
   CheckPermissionRequest,
-} from '../types/rbac';
+} from '@/types/rbac';
 
 // ============================================================================
 // Capabilities Hooks

@@ -6,7 +6,7 @@
 
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { queryKeys } from './query-keys';
-import { saasService } from '../services/saas.service';
+import { saasService } from '@/services/saas.service';
 import type {
   SaasTenantQueryParams,
   CreateSaasTenantRequest,
@@ -20,7 +20,7 @@ import type {
   FeatureFlagsQueryParams,
   UpdateCategoryEntitlementsRequest,
   UpdateSecretRequest,
-} from '../types/saas';
+} from '@/types/saas';
 
 // ============================================================================
 // SaaS Admin Identity

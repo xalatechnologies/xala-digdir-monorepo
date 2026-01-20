@@ -2,14 +2,14 @@
  * Blocks Service
  * Service for calendar block CRUD operations
  */
-import { getClient } from '../core/client-factory';
+import { getClient } from '@/core/client-factory';
 import type {
   Block,
   CreateBlockDTO,
   UpdateBlockDTO,
   ConflictCheckParams,
   ConflictsResponse,
-} from '../types/additional';
+} from '@/types/additional';
 
 export interface BlockQueryParams {
   rentalObjectId?: string;

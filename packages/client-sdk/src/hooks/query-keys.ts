@@ -8,13 +8,13 @@ import type {
   RentalObjectQueryParams,
   AvailabilityQueryParams,
   PublicRentalObjectParams,
-} from '../types/rental-object';
-import type { BookingQueryParams } from '../types/booking';
-import type { ReportQueryParams, AuditQueryParams } from '../types/additional';
-import type { ReviewQueryParams } from '../types/review';
-import type { EconomyQueryParams } from '../types/economy';
-import type { SearchParams, TypeaheadParams, SavedFilterQueryParams, RecentSearchQueryParams } from '../types/search';
-import type { DiscountCodeQueryParams, ValidateDiscountCodeDTO } from '../types/additional';
+} from '@/types/rental-object';
+import type { BookingQueryParams } from '@/types/booking';
+import type { ReportQueryParams, AuditQueryParams } from '@/types/additional';
+import type { ReviewQueryParams } from '@/types/review';
+import type { EconomyQueryParams } from '@/types/economy';
+import type { SearchParams, TypeaheadParams, SavedFilterQueryParams, RecentSearchQueryParams } from '@/types/search';
+import type { DiscountCodeQueryParams, ValidateDiscountCodeDTO } from '@/types/additional';
 
 /**
  * Strongly-typed query key factory

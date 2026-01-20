@@ -4,7 +4,7 @@
  */
 
 import { useQuery, useMutation, useQueryClient, type UseQueryOptions, type UseMutationOptions } from '@tanstack/react-query';
-import { tenantAdminUserService } from '../services/tenant-admin-user.service';
+import { tenantAdminUserService } from '@/services/tenant-admin-user.service';
 import type {
   TenantUser,
   UserQueryParams,
@@ -16,8 +16,10 @@ import type {
   UserInvitation,
   ResendInvitationDTO,
   CancelInvitationDTO,
-} from '../services/tenant-admin-user.service';
-import type { PaginatedResponse, SingleResponse, SuccessResponse } from '../types/enums';
+  UserRole,
+  UserActivityLogEntry,
+} from '@/services/tenant-admin-user.service';
+import type { PaginatedResponse, SingleResponse, SuccessResponse } from '@/types/enums';
 
 // =============================================================================
 // Query Keys
@@ -32,7 +34,7 @@ export const tenantAdminUserKeys = {
   permissions: (id: string) => [...tenantAdminUserKeys.detail(id), 'permissions'] as const,
   activity: (id: string) => [...tenantAdminUserKeys.detail(id), 'activity'] as const,
   invitations: () => [...tenantAdminUserKeys.all, 'invitations'] as const,
-  invitation: (params?: any) => [...tenantAdminUserKeys.invitations(), params] as const,
+  invitation: (params?: { status?: 'pending' | 'expired'; page?: number; limit?: number }) => [...tenantAdminUserKeys.invitations(), params] as const,
 };
 
 // =============================================================================
@@ -89,7 +91,7 @@ export function useUserEffectivePermissions(
 export function useUserActivity(
   userId: string,
   params?: { page?: number; limit?: number; startDate?: string; endDate?: string },
-  options?: Omit<UseQueryOptions<PaginatedResponse<any>>, 'queryKey' | 'queryFn'>
+  options?: Omit<UseQueryOptions<PaginatedResponse<UserActivityLogEntry>>, 'queryKey' | 'queryFn'>
 ) {
   return useQuery({
     queryKey: tenantAdminUserKeys.activity(userId),
@@ -365,7 +367,7 @@ export function useBulkDeactivateUsers(
  * Bulk assign role
  */
 export function useBulkAssignRole(
-  options?: UseMutationOptions<SuccessResponse, Error, { userIds: string[]; role: any }>
+  options?: UseMutationOptions<SuccessResponse, Error, { userIds: string[]; role: UserRole }>
 ) {
   const queryClient = useQueryClient();
 

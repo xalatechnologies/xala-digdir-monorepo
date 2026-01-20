@@ -4,8 +4,8 @@
  */
 
 import { useQuery, type UseQueryOptions } from '@tanstack/react-query';
-import { NavigationService } from '../services/navigation.service';
-import type { NavigationResponse } from '../types/navigation';
+import { NavigationService } from '@/services/navigation.service';
+import type { NavigationResponse } from '@/types/navigation';
 
 const navigationService = new NavigationService();
 

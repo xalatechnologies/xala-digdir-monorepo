@@ -5,13 +5,13 @@
 
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { queryKeys } from './query-keys';
-import { discountCodesService } from '../services/discount-codes.service';
+import { discountCodesService } from '@/services/discount-codes.service';
 import type { 
   DiscountCodeQueryParams,
   CreateDiscountCodeDTO,
   UpdateDiscountCodeDTO,
   ValidateDiscountCodeDTO,
-} from '../types';
+} from '@/types';
 
 // ============================================================================
 // Query Hooks

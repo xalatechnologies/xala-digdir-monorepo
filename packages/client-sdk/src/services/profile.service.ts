@@ -4,13 +4,13 @@
  */
 
 import { BaseService } from './base.service';
-import type { SingleResponse } from '../types/enums';
+import type { SingleResponse } from '@/types/enums';
 import type {
   UserProfile,
   UserPreferences,
   UpdateProfileDTO,
   UpdatePreferencesDTO,
-} from '../types/profile';
+} from '@/types/profile';
 
 export class ProfileService extends BaseService {
   constructor() {

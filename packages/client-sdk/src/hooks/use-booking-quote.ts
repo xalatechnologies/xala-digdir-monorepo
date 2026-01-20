@@ -10,9 +10,9 @@
  */
 
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { bookingService } from '../services/booking.service';
-import { dalKeys, createSelectionHash, invalidateBookings, invalidateAvailability } from '../dal';
-import type { BookingQuoteSelectionDTO, CreateBookingDTO } from '../types/booking';
+import { bookingService } from '@/services/booking.service';
+import { dalKeys, createSelectionHash, invalidateBookings, invalidateAvailability } from '@/dal';
+import type { BookingQuoteSelectionDTO, CreateBookingDTO } from '@/types/booking';
 
 // =============================================================================
 // Query Keys (exported for external use)

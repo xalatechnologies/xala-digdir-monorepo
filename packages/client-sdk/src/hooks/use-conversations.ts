@@ -10,7 +10,7 @@ import {
   type Message,
   type CreateConversationDTO,
   type SendMessageDTO,
-} from '../services/conversation.service';
+} from '@/services/conversation.service';
 
 // =============================================================================
 // Query Keys

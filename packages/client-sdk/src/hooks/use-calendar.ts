@@ -9,13 +9,13 @@ import { queryKeys } from './query-keys';
 import {
   realtimeClient,
   type RealtimeEventHandler,
-} from '../realtime';
+} from '@/realtime';
 import {
   rentalObjectCalendarService,
   availabilityMatrixService,
   type CalendarConfigQueryParams,
-} from '../services/calendar.service';
-import type { AvailabilityMatrixQueryParams } from '../types/calendar';
+} from '@/services/calendar.service';
+import type { AvailabilityMatrixQueryParams } from '@/types/calendar';
 
 // ============================================================================
 // Calendar Configuration Hooks

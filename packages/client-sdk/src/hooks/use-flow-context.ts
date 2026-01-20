@@ -5,9 +5,9 @@
  */
 
 import { useCallback, useMemo, useSyncExternalStore } from 'react';
-import { authService } from '../services/auth.service';
-import type { RequireAuthResult, ResumeFlowResult } from '../services/auth.service';
-import type { FlowContext } from '../types/auth';
+import { authService } from '@/services/auth.service';
+import type { RequireAuthResult, ResumeFlowResult } from '@/services/auth.service';
+import type { FlowContext } from '@/types/auth';
 import {
   FLOW_CONTEXT_KEY,
   hasStoredFlowContext as checkStoredFlowContext,
@@ -15,7 +15,7 @@ import {
   clearFlowContextFromStorage,
   getFlowContextTTL,
   validateReturnToUrl,
-} from '../utils/flow-context';
+} from '@/utils/flow-context';
 
 // =============================================================================
 // Types

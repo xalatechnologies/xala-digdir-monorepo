@@ -8,7 +8,7 @@ import {
   buildAddressString,
   type GeocodedLocation,
   type GeocodeConfig,
-} from '../utils/geocode';
+} from '@/utils/geocode';
 
 export interface GeocodedItem<T> {
   item: T;

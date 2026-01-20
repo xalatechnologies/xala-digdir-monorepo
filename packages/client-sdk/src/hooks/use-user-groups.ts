@@ -5,8 +5,8 @@
 
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { queryKeys } from './query-keys';
-import { userGroupsService } from '../services/user-groups.service';
-import type { UserGroupQueryParams, CreateUserGroupDTO, UpdateUserGroupDTO } from '../types';
+import { userGroupsService } from '@/services/user-groups.service';
+import type { UserGroupQueryParams, CreateUserGroupDTO, UpdateUserGroupDTO } from '@/types';
 
 export function useUserGroups(params?: UserGroupQueryParams) {
   return useQuery({

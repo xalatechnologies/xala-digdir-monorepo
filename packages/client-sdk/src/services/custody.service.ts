@@ -13,6 +13,12 @@ import type {
 
 export type { CustodyGrant, CustodySubgrant };
 
+interface BulkAssignResult {
+  successful: number;
+  failed: number;
+  results: Array<{ granteeId: string; status: 'success' | 'error'; error?: string }>;
+}
+
 export class CustodyService extends BaseService {
   constructor() {
     super('/api/custody');
@@ -53,8 +59,8 @@ export class CustodyService extends BaseService {
   /**
    * Bulk assign grants
    */
-  public async bulkAssign(data: BulkAssignCustodyGrantDTO): Promise<any> {
-    const response = await this.post<{ data: any }>('/grants/bulk', data);
+  public async bulkAssign(data: BulkAssignCustodyGrantDTO): Promise<BulkAssignResult> {
+    const response = await this.post<{ data: BulkAssignResult }>('/grants/bulk', data);
     return response.data;
   }
 

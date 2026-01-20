@@ -9,7 +9,7 @@
  */
 
 import type { QueryClient } from '@tanstack/react-query';
-import type { AvailabilityQueryParams } from '../types/rental-object';
+import type { AvailabilityQueryParams } from '@/types/rental-object';
 
 // =============================================================================
 // Query Key Factory

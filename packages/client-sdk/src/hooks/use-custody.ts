@@ -3,7 +3,7 @@
  * React Query hooks for managing resource-scoped delegation.
  */
 import { useQuery, useMutation, useQueryClient, type UseQueryResult } from '@tanstack/react-query';
-import { custodyService } from '../services/custody.service';
+import { custodyService } from '@/services/custody.service';
 import type { CustodyGrant, CustodyScope, CreateCustodyGrantDTO } from '@xala/contracts';
 
 const custodyKeys = {

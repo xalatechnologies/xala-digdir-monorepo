@@ -11,8 +11,8 @@ import type {
   GdprDataExport,
   ConsentSettings,
   UpdateConsentDTO,
-} from '../types/gdpr';
-import type { PaginatedResponse, SingleResponse, SuccessResponse } from '../types/enums';
+} from '@/types/gdpr';
+import type { PaginatedResponse, SingleResponse, SuccessResponse } from '@/types/enums';
 
 export class GdprService extends BaseService {
   constructor() {

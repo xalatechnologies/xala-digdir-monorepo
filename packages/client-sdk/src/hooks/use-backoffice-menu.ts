@@ -11,7 +11,7 @@ import type {
   MenuTreeDTO,
   SupportedLanguage,
 } from '@xala/contracts/projections';
-import { getClient } from '../core/client-factory';
+import { getClient } from '@/core/client-factory';
 
 interface UseBackofficeMenuOptions {
   language?: SupportedLanguage;

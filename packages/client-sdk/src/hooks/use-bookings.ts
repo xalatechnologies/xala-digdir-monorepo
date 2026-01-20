@@ -10,14 +10,14 @@ import {
   calendarService, 
   allocationService, 
   availabilityService 
-} from '../services/booking.service';
+} from '@/services/booking.service';
 import type { 
   BookingQueryParams, 
   CreateBookingDTO, 
   UpdateBookingDTO,
   CancelBookingDTO,
   CreateAllocationDTO
-} from '../types/booking';
+} from '@/types/booking';
 
 // ============================================================================
 // Booking Hooks

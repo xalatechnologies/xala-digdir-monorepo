@@ -2,7 +2,7 @@
  * Monitoring Service
  * System health, logs, and performance monitoring (Admin)
  */
-import { getClient } from '../core/client-factory';
+import { getClient } from '@/core/client-factory';
 
 export interface HealthStatus {
   status: 'ok' | 'degraded' | 'down';

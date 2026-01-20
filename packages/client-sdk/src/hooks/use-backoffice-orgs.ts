@@ -5,14 +5,14 @@
  * Reference: packages/client-sdk/src/types/organization-contracts.ts
  */
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { BaseService } from '../services/base.service';
+import { BaseService } from '@/services/base.service';
 import type {
   CreateOrganizationRequest,
   UpdateOrganizationRequest,
   AddMemberRequest,
   AssignRentalObjectRequest,
   OrganizationListParams,
-} from '../types/organization-contracts';
+} from '@/types/organization-contracts';
 
 // =============================================================================
 // Service

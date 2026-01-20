@@ -10,7 +10,7 @@ import {
   useRealtimeRentalObjects,
   useRealtimeMessages,
   useRealtimeNotifications,
-} from '../hooks';
+} from '@/hooks';
 
 export interface RealtimeContextValue {
   isConnected: boolean;

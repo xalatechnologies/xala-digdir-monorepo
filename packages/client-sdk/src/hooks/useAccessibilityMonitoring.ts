@@ -5,13 +5,13 @@
  */
 
 import { useEffect, useRef, useCallback, useState, useMemo } from 'react';
-import { getClient } from '../core/client-factory';
+import { getClient } from '@/core/client-factory';
 import {
   AccessibilityMonitoringService,
   detectScreenReader,
   type KeyboardNavigationMetric,
   type FocusManagementMetric,
-} from '../services/accessibilityMonitoringService';
+} from '@/services/accessibilityMonitoringService';
 
 export interface UseAccessibilityMonitoringOptions {
   enabled?: boolean;

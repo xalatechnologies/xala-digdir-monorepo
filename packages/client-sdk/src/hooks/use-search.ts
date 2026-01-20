@@ -5,7 +5,7 @@
 
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { queryKeys } from './query-keys';
-import { searchService } from '../services/search.service';
+import { searchService } from '@/services/search.service';
 import type {
   SearchParams,
   TypeaheadParams,
@@ -14,7 +14,7 @@ import type {
   UpdateSavedFilterDTO,
   RecentSearchQueryParams,
   ExportSearchParams
-} from '../types/search';
+} from '@/types/search';
 
 // ============================================================================
 // Global Search Hooks

@@ -4,8 +4,8 @@
  */
 
 import { useQuery, useMutation } from '@tanstack/react-query';
-import { billingService, orgBillingService } from '../services/billing.service';
-import type { InvoiceQueryParams } from '../services/billing.service';
+import { billingService, orgBillingService } from '@/services/billing.service';
+import type { InvoiceQueryParams } from '@/services/billing.service';
 
 // =============================================================================
 // Query Keys

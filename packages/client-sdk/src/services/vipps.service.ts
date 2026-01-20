@@ -9,7 +9,7 @@
  * vippsAuthService.authorize('https://web-test.digilist.no/');
  */
 
-import { getClient, getClientConfig } from '../core/client-factory';
+import { getClient, getClientConfig } from '@/core/client-factory';
 
 // =============================================================================
 // Types

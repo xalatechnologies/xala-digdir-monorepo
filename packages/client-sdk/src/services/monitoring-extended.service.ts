@@ -2,7 +2,7 @@
  * Extended Monitoring Service
  * Extends the existing monitoring service with new endpoints
  */
-import { getClient } from '../core/client-factory';
+import { getClient } from '@/core/client-factory';
 import type {
   MonitoringOverviewDTO,
   IncidentDTO,

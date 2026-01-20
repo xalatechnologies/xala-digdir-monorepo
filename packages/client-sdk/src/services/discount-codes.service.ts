@@ -12,7 +12,7 @@ import type {
   ValidateDiscountCodeDTO,
   PaginatedResponse,
   SingleResponse,
-} from '../types';
+} from '@/types';
 
 export class DiscountCodesService extends BaseService {
   constructor() {

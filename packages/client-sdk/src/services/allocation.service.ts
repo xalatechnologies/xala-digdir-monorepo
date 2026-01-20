@@ -2,7 +2,7 @@
  * Allocations Service
  * Calendar allocations and time blocking management
  */
-import { getClient } from '../core/client-factory';
+import { getClient } from '@/core/client-factory';
 
 export interface Allocation {
   id: string;

@@ -3,9 +3,9 @@
  * React Query hooks for audit log operations
  */
 import { useQuery } from '@tanstack/react-query';
-import { auditService } from '../services/audit.service';
-import type { AuditLogEntry, AuditQueryParams as ServiceAuditQueryParams } from '../services/audit.service';
-import type { AuditQueryParams } from '../types/additional';
+import { auditService } from '@/services/audit.service';
+import type { AuditLogEntry, AuditQueryParams as ServiceAuditQueryParams } from '@/services/audit.service';
+import type { AuditQueryParams } from '@/types/additional';
 import { queryKeys } from './query-keys';
 
 // Re-export the AuditLogEntry type as AuditEvent for backwards compatibility
@@ -15,10 +15,10 @@ export type { AuditLogEntry };
 export type AuditEvent = AuditLogEntry;
 
 // Re-export AuditQueryParams from types
-export type { AuditQueryParams } from '../types/additional';
+export type { AuditQueryParams } from '@/types/additional';
 
 // Re-export AuditStats from service
-export type { AuditStats } from '../services/audit.service';
+export type { AuditStats } from '@/services/audit.service';
 
 /**
  * Fetch paginated audit logs with filtering

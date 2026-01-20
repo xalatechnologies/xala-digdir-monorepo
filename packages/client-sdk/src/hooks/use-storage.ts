@@ -4,8 +4,8 @@
  */
 
 import { useMutation, useQuery, useQueryClient, type UseMutationResult, type UseQueryResult } from '@tanstack/react-query';
-import { StorageService } from '../services/storage.service';
-import { storageKeys } from '../query-keys/storage.keys';
+import { StorageService } from '@/services/storage.service';
+import { storageKeys } from '@/query-keys/storage.keys';
 import type {
   UploadFileResponse,
   UploadMultipleFilesResponse,
@@ -13,7 +13,7 @@ import type {
   ListFilesResponse,
   UpdateFileMetadataRequest,
   FileUploadInput,
-} from '../types/storage.types';
+} from '@/types/storage.types';
 
 // Create storage service instance
 const storageService = new StorageService();

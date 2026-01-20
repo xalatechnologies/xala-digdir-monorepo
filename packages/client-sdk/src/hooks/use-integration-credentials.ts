@@ -11,7 +11,7 @@ import {
   type CredentialInfo,
   type CreateCredentialInput,
   type UpdateCredentialInput,
-} from '../services/integration-credentials.service';
+} from '@/services/integration-credentials.service';
 
 const credentialsService = new IntegrationCredentialsService();
 

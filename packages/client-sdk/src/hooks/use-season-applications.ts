@@ -9,7 +9,7 @@ import {
   type CreateSeasonApplicationDTO,
   type AllocateApplicationDTO,
   type FinalizeSeasonAllocationsDTO,
-} from '../services/season-application.service';
+} from '@/services/season-application.service';
 
 // Query keys for season applications
 export const seasonApplicationKeys = {

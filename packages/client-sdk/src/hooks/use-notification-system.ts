@@ -3,7 +3,7 @@
  * React Query hooks for the notification system
  */
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { notificationSystemService } from '../services/notification-system.service';
+import { notificationSystemService } from '@/services/notification-system.service';
 import type {
   NotificationQueryParams,
   SendNotificationDTO,
@@ -11,7 +11,7 @@ import type {
   CreateTemplateDTO,
   UpdateTemplateDTO,
   TemplatePreviewRequest,
-} from '../types/notification-system';
+} from '@/types/notification-system';
 
 // Query keys
 export const notificationSystemKeys = {

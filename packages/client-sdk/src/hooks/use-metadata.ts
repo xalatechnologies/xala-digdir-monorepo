@@ -18,7 +18,7 @@
  */
 
 import { useQuery, type UseQueryResult } from '@tanstack/react-query';
-import { metadataService } from '../services/metadata.service';
+import { metadataService } from '@/services/metadata.service';
 import type {
   CategoryMetadata,
   TimeModeMetadata,
@@ -26,7 +26,7 @@ import type {
   StatusMetadata,
   MetadataResponse,
   MetadataFilter,
-} from '../services/metadata.service';
+} from '@/services/metadata.service';
 
 /**
  * Query keys for metadata

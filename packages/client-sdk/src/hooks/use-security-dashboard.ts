@@ -5,11 +5,11 @@
 
 import { useQuery } from '@tanstack/react-query';
 import { queryKeys } from './query-keys';
-import { securityService } from '../services/security.service';
+import { securityService } from '@/services/security.service';
 import type {
   FailedLoginQueryParams,
   DataExportQueryParams,
-} from '../services/security.service';
+} from '@/services/security.service';
 
 /**
  * Get security dashboard metrics

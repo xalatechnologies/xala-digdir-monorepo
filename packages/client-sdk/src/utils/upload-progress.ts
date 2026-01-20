@@ -3,7 +3,7 @@
  * Helper functions for calculating and formatting upload progress
  */
 
-import type { UploadProgressEvent } from '../types/upload';
+import type { UploadProgressEvent } from '@/types/upload';
 
 // =============================================================================
 // Progress Calculation

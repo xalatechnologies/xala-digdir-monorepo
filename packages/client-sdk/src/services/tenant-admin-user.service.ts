@@ -11,7 +11,7 @@
  */
 
 import { BaseService } from './base.service';
-import type { PaginatedResponse, SingleResponse, SuccessResponse } from '../types/enums';
+import type { PaginatedResponse, SingleResponse, SuccessResponse } from '@/types/enums';
 
 // =============================================================================
 // Types

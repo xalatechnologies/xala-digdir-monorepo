@@ -6,7 +6,7 @@
  * Tenant admins can assign scopes to delegate responsibilities.
  */
 import { BaseService } from './base.service';
-import type { PaginatedResponse, SingleResponse } from '../types/enums';
+import type { PaginatedResponse, SingleResponse } from '@/types/enums';
 
 // =============================================================================
 // Types

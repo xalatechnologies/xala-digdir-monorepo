@@ -2,7 +2,7 @@
  * Org Dashboard Service
  * Service for organization-scoped dashboard operations
  */
-import { getClient } from '../core/client-factory';
+import { getClient } from '@/core/client-factory';
 import type {
   OrgDashboardStatsDTO,
   OrgPendingItemDTO,
@@ -12,7 +12,7 @@ import type {
   AssignedRentalObjectDTO,
   PaginatedResponse,
   PaginationParams,
-} from '../types/org-dashboard';
+} from '@/types/org-dashboard';
 
 /**
  * Org Dashboard Service

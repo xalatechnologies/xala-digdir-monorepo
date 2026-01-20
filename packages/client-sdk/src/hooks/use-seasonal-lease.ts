@@ -5,8 +5,8 @@
 
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { queryKeys } from './query-keys';
-import { seasonalLeaseService } from '../services/seasonal-lease.service';
-import type { SeasonalLeaseQueryParams, CreateSeasonalLeaseDTO, UpdateSeasonalLeaseDTO } from '../types';
+import { seasonalLeaseService } from '@/services/seasonal-lease.service';
+import type { SeasonalLeaseQueryParams, CreateSeasonalLeaseDTO, UpdateSeasonalLeaseDTO } from '@/types';
 
 export function useSeasonalLeases(params?: SeasonalLeaseQueryParams) {
   return useQuery({

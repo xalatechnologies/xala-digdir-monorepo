@@ -2,7 +2,7 @@
  * Discount Code Service
  * Promo codes and discounts management (Admin only)
  */
-import { getClient } from '../core/client-factory';
+import { getClient } from '@/core/client-factory';
 
 export interface DiscountCode {
   id: string;

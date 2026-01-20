@@ -9,7 +9,7 @@ import type {
   UpdateSettingsDTO,
   SettingCategory,
   SingleResponse,
-} from '../types';
+} from '@/types';
 
 export class SettingsService extends BaseService {
   constructor() {

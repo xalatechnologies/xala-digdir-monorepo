@@ -4,7 +4,7 @@
  */
 
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { templatesService, CreateTemplateDTO, UpdateTemplateDTO, TemplatePreviewRequest } from '../services/templates.service';
+import { templatesService, CreateTemplateDTO, UpdateTemplateDTO, TemplatePreviewRequest } from '@/services/templates.service';
 
 // Query key factory
 export const templateKeys = {

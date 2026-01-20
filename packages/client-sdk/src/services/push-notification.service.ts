@@ -2,13 +2,13 @@
  * Push Notification Service
  * Browser push notification subscriptions and notification preferences
  */
-import { getClient } from '../core/client-factory';
+import { getClient } from '@/core/client-factory';
 import type {
   PushSubscription,
   NotificationPreferences,
   RegisterPushSubscriptionDTO,
   UpdateNotificationPreferencesDTO,
-} from '../types/push-notification';
+} from '@/types/push-notification';
 
 export interface PushSubscriptionResponse {
   data: PushSubscription;

@@ -5,11 +5,11 @@
 
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { queryKeys } from './query-keys';
-import { gdprService } from '../services/gdpr.service';
+import { gdprService } from '@/services/gdpr.service';
 import type {
   GdprRequestQueryParams,
   CreateGdprRequestDTO
-} from '../types/gdpr';
+} from '@/types/gdpr';
 
 // ============================================================================
 // GDPR Request Hooks

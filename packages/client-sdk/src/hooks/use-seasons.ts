@@ -9,7 +9,7 @@ import {
   type SeasonQueryParams,
   type CreateSeasonDTO,
   type UpdateSeasonDTO,
-} from '../services/season.service';
+} from '@/services/season.service';
 
 // Query keys for seasons
 export const seasonKeys = {

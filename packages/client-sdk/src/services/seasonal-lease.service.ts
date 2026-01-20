@@ -11,7 +11,7 @@ import type {
   SeasonalLeaseQueryParams,
   PaginatedResponse,
   SingleResponse,
-} from '../types';
+} from '@/types';
 
 export class SeasonalLeaseService extends BaseService {
   constructor() {

@@ -2,7 +2,7 @@
  * Conversation Service
  * Messaging and conversation management
  */
-import { getClient } from '../core/client-factory';
+import { getClient } from '@/core/client-factory';
 
 export interface Conversation {
   id: string;

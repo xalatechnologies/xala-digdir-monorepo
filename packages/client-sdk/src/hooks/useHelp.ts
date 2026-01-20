@@ -4,7 +4,7 @@
  * KRAV-SUP-01, KRAV-SUP-03
  */
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { helpService } from '../services/help.service';
+import { helpService } from '@/services/help.service';
 
 // Query keys for cache management
 export const helpKeys = {

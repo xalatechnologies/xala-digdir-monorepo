@@ -11,7 +11,7 @@ import type {
   UserGroupQueryParams,
   PaginatedResponse,
   SingleResponse,
-} from '../types';
+} from '@/types';
 
 export class UserGroupsService extends BaseService {
   constructor() {

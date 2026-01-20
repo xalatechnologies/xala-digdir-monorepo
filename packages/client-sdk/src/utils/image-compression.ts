@@ -4,7 +4,7 @@
  */
 
 import imageCompression from 'browser-image-compression';
-import type { ImageCompressionOptions, UploadError } from '../types/upload';
+import type { ImageCompressionOptions, UploadError } from '@/types/upload';
 
 /**
  * Default compression options for images

@@ -7,7 +7,7 @@ import type {
   ListUsersQuery,
   AssignRoleDTO,
   SuspendUserDTO,
-} from '../types/user.types';
+} from '@/types/user.types';
 
 /**
  * User Service

@@ -22,8 +22,8 @@ import type {
   EconomyQueryParams,
   EconomyExportParams,
   EconomyStatistics,
-} from '../types/economy';
-import type { PaginatedResponse, SingleResponse, SuccessResponse } from '../types/enums';
+} from '@/types/economy';
+import type { PaginatedResponse, SingleResponse, SuccessResponse } from '@/types/enums';
 
 /**
  * Economy Service

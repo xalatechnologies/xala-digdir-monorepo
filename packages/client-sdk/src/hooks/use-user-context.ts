@@ -5,7 +5,7 @@
  */
 
 import { useQuery, type UseQueryOptions } from '@tanstack/react-query';
-import { getClient } from '../core/client-factory';
+import { getClient } from '@/core/client-factory';
 import { menuQueryKeys } from './use-backoffice-menu';
 
 export interface UserContextResponse {

@@ -8,12 +8,12 @@
  */
 
 import { useQuery, useQueryClient } from '@tanstack/react-query';
-import { rentalObjectService } from '../services/rental-object.service';
-import { dalKeys, handleBookingEvent, type BookingWebSocketEvent } from '../dal';
+import { rentalObjectService } from '@/services/rental-object.service';
+import { dalKeys, handleBookingEvent, type BookingWebSocketEvent } from '@/dal';
 import type { 
   RentalObjectAvailability, 
   RentalObjectCalendarConfig,
-} from '../types/rental-object';
+} from '@/types/rental-object';
 import { useEffect, useCallback } from 'react';
 
 // =============================================================================

@@ -5,7 +5,7 @@
  */
 
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { pricingService } from '../services/pricing.service';
+import { pricingService } from '@/services/pricing.service';
 import type {
   CreatePricingGroupDTO,
   UpdatePricingGroupDTO,
@@ -13,7 +13,7 @@ import type {
   UpdateRentalObjectPricingDTO,
   BulkUpdatePricingDTO,
   BookingQuoteRequest,
-} from '../types/pricing.types';
+} from '@/types/pricing.types';
 import { queryKeys } from './query-keys';
 
 // ====================================================================

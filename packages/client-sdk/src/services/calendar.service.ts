@@ -12,8 +12,8 @@ import type {
   RentalObjectCalendarConfigProjectionDTO,
   RentalObjectAvailabilityMatrixProjectionDTO,
   AvailabilityMatrixQueryParams,
-} from '../types/calendar';
-import type { SingleResponse } from '../types/enums';
+} from '@/types/calendar';
+import type { SingleResponse } from '@/types/enums';
 
 /**
  * Query parameters for calendar config endpoint

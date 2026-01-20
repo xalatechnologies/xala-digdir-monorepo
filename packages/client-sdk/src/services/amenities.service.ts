@@ -11,7 +11,7 @@ import type {
   AmenityQueryParams,
   PaginatedResponse,
   SingleResponse,
-} from '../types';
+} from '@/types';
 
 export class AmenitiesService extends BaseService {
   constructor() {

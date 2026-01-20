@@ -12,7 +12,7 @@
  * window.location.href = idportenService.getAuthorizeUrl();
  */
 
-import { getClient, getClientConfig } from '../core/client-factory';
+import { getClient, getClientConfig } from '@/core/client-factory';
 
 // =============================================================================
 // Types

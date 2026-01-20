@@ -9,7 +9,7 @@ import type {
   BulkAddFavoritesDTO,
   BulkRemoveFavoritesDTO,
   BulkFavoritesResponse,
-} from '../types/favorites.types';
+} from '@/types/favorites.types';
 
 /**
  * Favorites Service

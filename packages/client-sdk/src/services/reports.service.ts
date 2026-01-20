@@ -2,7 +2,7 @@
  * Reports Service
  * Analytics, reports, and data export
  */
-import { getClient } from '../core/client-factory';
+import { getClient } from '@/core/client-factory';
 import type {
   ReportQueryParams,
   BookingReport,
@@ -12,7 +12,7 @@ import type {
   TimeSlotHeatmap,
   SeasonalPattern,
   PeriodComparison,
-} from '../types';
+} from '@/types';
 
 export interface DashboardStats {
   bookings: {

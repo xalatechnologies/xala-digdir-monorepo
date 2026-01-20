@@ -2,7 +2,7 @@
  * Audit Service
  * Provides access to audit logs, real-time audit events, and client-side logging
  */
-import { getClient, getClientConfig } from '../core/client-factory';
+import { getClient, getClientConfig } from '@/core/client-factory';
 
 export interface AuditLogEntry {
   id: string;

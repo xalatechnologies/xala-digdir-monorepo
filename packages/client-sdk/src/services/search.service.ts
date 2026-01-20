@@ -17,8 +17,8 @@ import type {
   RecentSearchQueryParams,
   ExportSearchParams,
   ExportSearchResponse
-} from '../types/search';
-import type { PaginatedResponse, SingleResponse, SuccessResponse } from '../types/enums';
+} from '@/types/search';
+import type { PaginatedResponse, SingleResponse, SuccessResponse } from '@/types/enums';
 
 export class SearchService extends BaseService {
   constructor() {

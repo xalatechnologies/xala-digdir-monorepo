@@ -5,8 +5,8 @@
  * The 4-category system represents the main types of municipal assets available for rental.
  */
 
-import type { BookingTimeMode } from '../types/enums';
-import type { RentalObjectCategory } from '../types/rental-object';
+import type { BookingTimeMode } from '@/types/enums';
+import type { RentalObjectCategory } from '@/types/rental-object';
 
 // =============================================================================
 // Default Time Modes

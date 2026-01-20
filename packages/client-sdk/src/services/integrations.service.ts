@@ -11,7 +11,7 @@ export interface Integration {
   provider: string;
   name: string;
   status: 'active' | 'inactive' | 'error';
-  config: Record<string, any>;
+  config: Record<string, unknown>;
   createdAt: string;
   updatedAt: string;
   createdBy: string | null;
@@ -21,13 +21,13 @@ export interface Integration {
 export interface IntegrationUpdate {
   name?: string;
   status?: 'active' | 'inactive' | 'error';
-  config?: Record<string, any>;
+  config?: Record<string, unknown>;
 }
 
 export interface IntegrationTestResult {
   success: boolean;
   message: string;
-  details?: any;
+  details?: unknown;
 }
 
 export class IntegrationsService extends BaseService {

@@ -4,7 +4,7 @@
  */
 
 import { BaseService } from './base.service';
-import type { SingleResponse } from '../types/enums';
+import type { SingleResponse } from '@/types/enums';
 
 // =============================================================================
 // Types

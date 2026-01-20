@@ -3,7 +3,7 @@
  * React Query keys for storage operations
  */
 
-import type { ListFilesQuery } from '../types/storage.types';
+import type { ListFilesQuery } from '@/types/storage.types';
 
 export const storageKeys = {
   all: ['storage'] as const,

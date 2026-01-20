@@ -11,7 +11,7 @@ import type {
   CaseHandlerScopeQueryParams,
   PaginatedResponse,
   SingleResponse,
-} from '../types';
+} from '@/types';
 
 export class CaseHandlerScopeService extends BaseService {
   constructor() {

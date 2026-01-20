@@ -105,7 +105,7 @@ export function useUpdateUserPreferences() {
 export function useUpdateCurrentUser() {
   const queryClient = useQueryClient();
 
-  return useMutation<{ data: any }, Error, UpdateUserPayload>({
+  return useMutation<{ data: UpdateUserPayload }, Error, UpdateUserPayload>({
     mutationFn: async (payload) => {
       // STUB: Return unchanged until backend ready
       return {
@@ -161,12 +161,18 @@ export function useUploadUserAvatar() {
   });
 }
 
+interface UserExportData {
+  profile?: Record<string, unknown>;
+  bookings?: Array<Record<string, unknown>>;
+  exportedAt?: string;
+}
+
 /**
  * Export user data (GDPR right to data portability)
  * TODO: Implement when backend is ready
  */
 export function useExportData() {
-  return useMutation<{ data: any }, Error>({
+  return useMutation<{ data: UserExportData }, Error>({
     mutationFn: async () => {
       // STUB: Return empty data
       return {

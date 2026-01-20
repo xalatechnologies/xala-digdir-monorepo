@@ -5,8 +5,8 @@
 
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { queryKeys } from './query-keys';
-import { widgetService } from '../services/widget.service';
-import type { CreateWidgetDTO } from '../services/widget.service';
+import { widgetService } from '@/services/widget.service';
+import type { CreateWidgetDTO } from '@/services/widget.service';
 
 // ============================================================================
 // Widget Query Hooks

@@ -13,8 +13,8 @@ import type {
   UserCapabilities,
   CheckPermissionRequest,
   CheckPermissionResponse,
-} from '../types/rbac';
-import type { SingleResponse } from '../types/enums';
+} from '@/types/rbac';
+import type { SingleResponse } from '@/types/enums';
 
 /**
  * User role type for authz (distinct from general UserRole in types/enums)

@@ -6,7 +6,7 @@ import type {
   UpdateUserDTO,
   ListUsersQuery,
   AssignRoleDTO,
-} from '../types/user.types';
+} from '@/types/user.types';
 import { queryKeys } from './query-keys';
 
 /**
@@ -28,7 +28,10 @@ export function useUsers(query?: Partial<ListUsersQuery>) {
     queryKey: queryKeys.users.list(query),
     queryFn: async () => {
       // TODO: Implement userService.list(query)
-      const response = await fetch(`/api/admin/users?${new URLSearchParams(query as any)}`);
+      const params = query
+        ? new URLSearchParams(Object.entries(query).filter(([, v]) => v !== undefined).map(([k, v]) => [k, String(v)]))
+        : undefined;
+      const response = await fetch(params ? `/api/admin/users?${params}` : '/api/admin/users');
       if (!response.ok) throw new Error('Failed to fetch users');
       return response.json() as Promise<UserListResponse>;
     },

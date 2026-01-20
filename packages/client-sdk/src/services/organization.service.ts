@@ -17,9 +17,9 @@ import type {
   GdprDataExport,
   ConsentSettings,
   NotificationPreferences
-} from '../types/organization';
-import type { PaginatedResponse, SingleResponse, SuccessResponse } from '../types/enums';
-import type { UploadOptions, MediaUploadResponse } from '../types/upload';
+} from '@/types/organization';
+import type { PaginatedResponse, SingleResponse, SuccessResponse } from '@/types/enums';
+import type { UploadOptions, MediaUploadResponse } from '@/types/upload';
 
 // =============================================================================
 // Branding Types

@@ -15,8 +15,8 @@ import type {
   BulkAccessGrantDTO,
   AccessGrantQueryParams,
   RevokeAccessRequest,
-} from '../types/rbac';
-import type { PaginatedResponse, SingleResponse, SuccessResponse } from '../types/enums';
+} from '@/types/rbac';
+import type { PaginatedResponse, SingleResponse, SuccessResponse } from '@/types/enums';
 
 export class AccessGrantService extends BaseService {
   constructor() {

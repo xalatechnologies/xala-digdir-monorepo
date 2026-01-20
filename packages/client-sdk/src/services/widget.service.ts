@@ -2,7 +2,7 @@
  * Widget Service
  * Embeddable widgets configuration (Admin)
  */
-import { getClient } from '../core/client-factory';
+import { getClient } from '@/core/client-factory';
 
 export interface Widget {
   id: string;

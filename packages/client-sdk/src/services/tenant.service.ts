@@ -2,7 +2,7 @@
  * Tenant Service
  * Tenant management, subscriptions, and licenses (TenantAdmin only)
  */
-import { getClient } from '../core/client-factory';
+import { getClient } from '@/core/client-factory';
 
 export interface Tenant {
   id: string;

@@ -12,8 +12,8 @@ import type {
   ModerateReviewDTO,
   ReviewStats,
   ReviewSummary,
-} from '../types/review';
-import type { PaginatedResponse, SingleResponse, SuccessResponse } from '../types/enums';
+} from '@/types/review';
+import type { PaginatedResponse, SingleResponse, SuccessResponse } from '@/types/enums';
 
 export class ReviewService extends BaseService {
   constructor() {

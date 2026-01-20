@@ -2,7 +2,7 @@
  * Season Service
  * Manages seasonal booking periods (parent entity for season applications)
  */
-import { getClient } from '../core/client-factory';
+import { getClient } from '@/core/client-factory';
 
 export type SeasonStatus = 'draft' | 'open' | 'closed' | 'active' | 'completed' | 'cancelled';
 

@@ -2,8 +2,8 @@
  * Notification System Service
  * SDK service for interacting with the notification system API
  */
-import { getClient } from '../core/client-factory';
-import type { IHttpClient } from '../core/http-client.interface';
+import { getClient } from '@/core/client-factory';
+import type { IHttpClient } from '@/core/http-client.interface';
 import type {
   NotificationDTO,
   NotificationListResponse,
@@ -21,7 +21,7 @@ import type {
   BroadcastNotificationResponse,
   AvailableChannelsResponse,
   RateLimitsResponse,
-} from '../types/notification-system';
+} from '@/types/notification-system';
 
 const NOTIFICATIONS_BASE = '/api/notifications';
 const TEMPLATES_BASE = '/api/notification-templates';

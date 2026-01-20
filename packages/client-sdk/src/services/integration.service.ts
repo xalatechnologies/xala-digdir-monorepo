@@ -18,8 +18,8 @@ import type {
   InitiatePaymentDTO,
   CapturePaymentDTO,
   RefundPaymentDTO
-} from '../types/settings';
-import type { SingleResponse, SuccessResponse, PaginatedResponse } from '../types/enums';
+} from '@/types/settings';
+import type { SingleResponse, SuccessResponse, PaginatedResponse } from '@/types/enums';
 
 /**
  * Settings Service

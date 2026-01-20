@@ -7,7 +7,7 @@
  */
 
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { rentalObjectService, publicRentalObjectService } from '../services/rental-object.service';
+import { rentalObjectService, publicRentalObjectService } from '@/services/rental-object.service';
 import type {
   RentalObjectQueryParams,
   CreateRentalObjectDTO,
@@ -15,9 +15,9 @@ import type {
   RentalObjectCategory,
   AvailabilityQueryParams,
   PublicRentalObjectParams,
-} from '../types/rental-object';
-import type { UploadOptions } from '../types/upload';
-import { compressImage, isImageFile } from '../utils/image-compression';
+} from '@/types/rental-object';
+import type { UploadOptions } from '@/types/upload';
+import { compressImage, isImageFile } from '@/utils/image-compression';
 
 // =============================================================================
 // Query Keys

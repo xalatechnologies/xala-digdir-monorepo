@@ -2,7 +2,7 @@
  * Season Application Service
  * Manages seasonal lease applications and allocation workflow
  */
-import { getClient } from '../core/client-factory';
+import { getClient } from '@/core/client-factory';
 
 export interface SeasonApplication {
   id: string;

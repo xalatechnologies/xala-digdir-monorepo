@@ -11,7 +11,7 @@ import {
   type KeyboardNavigationMetric,
   type FocusManagementMetric,
   type AriaAnnouncementMetric,
-} from '../services/accessibilityMonitoringService';
+} from '@/services/accessibilityMonitoringService';
 
 // ============================================================================
 // Types
@@ -296,4 +296,4 @@ export type {
   ScreenReaderDetectionMetric,
   FocusManagementMetric,
   AriaAnnouncementMetric,
-} from '../services/accessibilityMonitoringService';
+} from '@/services/accessibilityMonitoringService';

@@ -3,9 +3,9 @@
  * React Query hooks for analytics and reporting
  */
 import { useQuery, useMutation } from '@tanstack/react-query';
-import { reportsService } from '../services/reports.service';
-import { dashboardService } from '../services/dashboard.service';
-import type { ReportQueryParams, ExportFormat } from '../types';
+import { reportsService } from '@/services/reports.service';
+import { dashboardService } from '@/services/dashboard.service';
+import type { ReportQueryParams, ExportFormat } from '@/types';
 
 // Query keys for reports
 export const reportKeys = {

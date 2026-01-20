@@ -26,7 +26,7 @@
  */
 
 import { useQuery, type UseQueryResult } from '@tanstack/react-query';
-import { getClient } from '../core/client-factory';
+import { getClient } from '@/core/client-factory';
 import type { CapabilitiesProjection } from '@xala/contracts/projections';
 
 // =============================================================================

@@ -5,7 +5,7 @@
 
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { queryKeys } from './query-keys';
-import { economyService } from '../services/economy.service';
+import { economyService } from '@/services/economy.service';
 import type {
   EconomyQueryParams,
   CreateInvoiceBasisDTO,
@@ -17,7 +17,7 @@ import type {
   CreateCreditNoteDTO,
   SyncToVismaDTO,
   EconomyExportParams,
-} from '../types/economy';
+} from '@/types/economy';
 
 // =============================================================================
 // Invoice Basis Hooks

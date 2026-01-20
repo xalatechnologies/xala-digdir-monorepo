@@ -9,8 +9,8 @@ import type {
   LoginCredentials, 
   EmailLoginCredentials,
   OAuthProvider 
-} from '../types/auth';
-import type { SingleResponse } from '../types/enums';
+} from '@/types/auth';
+import type { SingleResponse } from '@/types/enums';
 
 export interface RequireAuthOptions {
   returnUrl?: string;

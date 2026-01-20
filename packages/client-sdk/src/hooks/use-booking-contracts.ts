@@ -5,7 +5,7 @@
  * Reference: packages/client-sdk/src/types/booking-contracts.ts
  */
 import { useQuery, useMutation } from '@tanstack/react-query';
-import { BaseService } from '../services/base.service';
+import { BaseService } from '@/services/base.service';
 
 // =============================================================================
 // Service

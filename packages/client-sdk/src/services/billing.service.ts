@@ -2,9 +2,9 @@
  * Billing Service
  * User billing summary and invoice operations (Minside portal)
  */
-import { getClient } from '../core/client-factory';
-import type { PaginatedResponse, SingleResponse } from '../types/enums';
-import type { InvoiceLineItem } from '../types/economy';
+import { getClient } from '@/core/client-factory';
+import type { PaginatedResponse, SingleResponse } from '@/types/enums';
+import type { InvoiceLineItem } from '@/types/economy';
 
 // =============================================================================
 // Billing Types

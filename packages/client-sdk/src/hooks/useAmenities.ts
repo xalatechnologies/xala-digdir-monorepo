@@ -6,12 +6,12 @@
  */
 
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { amenitiesService } from '../services';
+import { amenitiesService } from '@/services';
 import type {
   CreateAmenityRequest,
   UpdateAmenityRequest,
   AssignAmenitiesRequest,
-} from '../services/amenities.service';
+} from '@/services/amenities.service';
 
 // Query keys factory
 export const amenitiesKeys = {

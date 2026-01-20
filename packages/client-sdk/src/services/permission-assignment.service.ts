@@ -11,7 +11,7 @@ import type {
   PermissionAssignmentQueryParams,
   PaginatedResponse,
   SingleResponse,
-} from '../types';
+} from '@/types';
 
 export class PermissionAssignmentService extends BaseService {
   constructor() {

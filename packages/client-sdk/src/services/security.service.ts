@@ -3,7 +3,7 @@
  * Provides security metrics, GDPR compliance status, failed login tracking,
  * and data export monitoring for compliance dashboard
  */
-import { getClient } from '../core/client-factory';
+import { getClient } from '@/core/client-factory';
 
 export interface SecurityMetrics {
   auditTrailCompleteness: number;

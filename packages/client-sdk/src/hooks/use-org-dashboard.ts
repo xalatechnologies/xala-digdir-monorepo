@@ -3,11 +3,11 @@
  * React Query hooks for organization-scoped dashboard operations
  */
 import { useQuery } from '@tanstack/react-query';
-import { orgDashboardService } from '../services/org-dashboard.service';
+import { orgDashboardService } from '@/services/org-dashboard.service';
 import type {
   CalendarPreviewParams,
   PaginationParams,
-} from '../types/org-dashboard';
+} from '@/types/org-dashboard';
 
 // Query keys for org dashboard
 export const orgDashboardKeys = {

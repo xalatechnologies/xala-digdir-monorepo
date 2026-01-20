@@ -3,12 +3,12 @@
  * React Query hooks for calendar block operations
  */
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { blocksService, type BlockQueryParams } from '../services/blocks.service';
+import { blocksService, type BlockQueryParams } from '@/services/blocks.service';
 import type {
   CreateBlockDTO,
   UpdateBlockDTO,
   ConflictCheckParams
-} from '../types/additional';
+} from '@/types/additional';
 
 // Query keys for blocks
 export const blockKeys = {

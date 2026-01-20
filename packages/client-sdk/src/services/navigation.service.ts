@@ -3,9 +3,9 @@
  * API client for navigation endpoints
  */
 
-import type { NavigationResponse } from '../types/navigation';
-import { NavigationApiResponseSchema } from '../types/navigation';
-import { getClient } from '../core/client-factory';
+import type { NavigationResponse } from '@/types/navigation';
+import { NavigationApiResponseSchema } from '@/types/navigation';
+import { getClient } from '@/core/client-factory';
 
 export interface BackofficeMenuResponse {
   templateCode: string;

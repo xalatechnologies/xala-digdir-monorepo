@@ -11,7 +11,7 @@ import type {
   AllocationQueryParams,
   PaginatedResponse,
   SingleResponse,
-} from '../types';
+} from '@/types';
 
 export class AllocationsService extends BaseService {
   constructor() {

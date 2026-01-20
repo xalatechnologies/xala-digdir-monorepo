@@ -4,7 +4,7 @@
  */
 
 import { BaseService } from './base.service';
-import { getClientConfig } from '../core/client-factory';
+import { getClientConfig } from '@/core/client-factory';
 import type {
   UploadFileResponse,
   UploadMultipleFilesResponse,
@@ -12,7 +12,7 @@ import type {
   ListFilesResponse,
   UpdateFileMetadataRequest,
   FileUploadInput,
-} from '../types/storage.types';
+} from '@/types/storage.types';
 
 export class StorageService extends BaseService {
   constructor() {

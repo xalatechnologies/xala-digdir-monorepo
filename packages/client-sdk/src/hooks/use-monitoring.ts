@@ -3,14 +3,14 @@
  * React Query hooks for system monitoring and health operations
  */
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { monitoringService } from '../services/monitoring.service';
+import { monitoringService } from '@/services/monitoring.service';
 import type {
   HealthStatus,
   SystemMetrics,
   LogEntry,
   LogQueryParams,
   Incident,
-} from '../services/monitoring.service';
+} from '@/services/monitoring.service';
 import { queryKeys } from './query-keys';
 
 // Re-export types for convenience

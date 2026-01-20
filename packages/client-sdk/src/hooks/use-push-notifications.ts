@@ -6,13 +6,13 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useState, useEffect, useCallback } from 'react';
 import { queryKeys } from './query-keys';
-import { pushNotificationService } from '../services/push-notification.service';
+import { pushNotificationService } from '@/services/push-notification.service';
 import type {
   RegisterPushSubscriptionDTO,
   UpdateNotificationPreferencesDTO,
   // UpdateOrganizationNotificationPreferencesDTO, // TODO: Add organization preferences
   PushPermissionState,
-} from '../types/push-notification';
+} from '@/types/push-notification';
 
 // ============================================================================
 // Push Subscription Query Hooks

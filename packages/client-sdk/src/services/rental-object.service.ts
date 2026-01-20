@@ -23,9 +23,9 @@ import type {
   TimeSlot,
   City,
   Municipality,
-} from '../types/rental-object';
-import type { SuccessResponse, SingleResponse } from '../types/enums';
-import type { UploadOptions, MediaUploadResponse } from '../types/upload';
+} from '@/types/rental-object';
+import type { SuccessResponse, SingleResponse } from '@/types/enums';
+import type { UploadOptions, MediaUploadResponse } from '@/types/upload';
 
 // =============================================================================
 // Category Info Types

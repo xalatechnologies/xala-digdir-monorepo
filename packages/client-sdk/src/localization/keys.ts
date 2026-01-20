@@ -337,8 +337,8 @@ import type {
   ActorType,
   BookingTimeMode,
   PricingUnit,
-} from '../types/enums';
-import type { RentalObjectCategory, RentalObjectStatus } from '../types/rental-object';
+} from '@/types/enums';
+import type { RentalObjectCategory, RentalObjectStatus } from '@/types/rental-object';
 
 export function getBookingStatusKey(status: BookingStatus): string {
   return BOOKING_STATUS_KEYS[status] ?? status;

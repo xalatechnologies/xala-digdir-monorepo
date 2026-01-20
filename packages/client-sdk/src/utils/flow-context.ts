@@ -4,7 +4,7 @@
  * Used to preserve user navigation and booking state across authentication interruptions
  */
 
-import type { FlowContext, ReturnToConfig } from '../types/auth';
+import type { FlowContext, ReturnToConfig } from '@/types/auth';
 
 // =============================================================================
 // Constants

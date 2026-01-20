@@ -4,7 +4,7 @@
  */
 
 import { useQuery, useQueryClient } from '@tanstack/react-query';
-import { authzService, type AuthzResource, type AuthzAction } from '../services/authz.service';
+import { authzService, type AuthzResource, type AuthzAction } from '@/services/authz.service';
 
 export const authzKeys = {
   all: ['authz'] as const,

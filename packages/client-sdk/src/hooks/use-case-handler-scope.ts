@@ -5,8 +5,8 @@
 
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { queryKeys } from './query-keys';
-import { caseHandlerScopeService } from '../services/case-handler-scope.service';
-import type { CaseHandlerScopeQueryParams, CreateCaseHandlerScopeDTO, UpdateCaseHandlerScopeDTO } from '../types';
+import { caseHandlerScopeService } from '@/services/case-handler-scope.service';
+import type { CaseHandlerScopeQueryParams, CreateCaseHandlerScopeDTO, UpdateCaseHandlerScopeDTO } from '@/types';
 
 export function useCaseHandlerScopes(params?: CaseHandlerScopeQueryParams) {
   return useQuery({

@@ -3,7 +3,7 @@
  * Tenant-scoped administration for branding, integrations, and capability management
  * Required roles: TENANT_ADMIN, TENANT_BILLING_ADMIN, TENANT_TECH_ADMIN
  */
-import { getClient } from '../core/client-factory';
+import { getClient } from '@/core/client-factory';
 import type {
   TenantAdminFlags as TenantFlags,
   TenantAdminIntegrationsResponse as TenantIntegrationsResponse,
@@ -13,7 +13,7 @@ import type {
   TenantAdminSubscriptionResponse as SubscriptionResponse,
   TenantAdminBrandingResponse as BrandingResponse,
   TenantAdminIntegrationResponse as IntegrationResponse,
-} from '../types/tenant-admin';
+} from '@/types/tenant-admin';
 
 // ============================================================================
 // Service Implementation

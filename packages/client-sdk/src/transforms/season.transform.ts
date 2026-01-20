@@ -5,7 +5,7 @@
  * Used by web, backoffice, and minside apps.
  */
 
-import type { Season, SeasonStatus, SeasonApplication } from '../types';
+import type { Season, SeasonStatus, SeasonApplication } from '@/types';
 
 // =============================================================================
 // UI Types for Transformed Seasons

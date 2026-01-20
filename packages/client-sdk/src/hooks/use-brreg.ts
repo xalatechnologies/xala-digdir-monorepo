@@ -4,7 +4,7 @@
  */
 
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { brregService } from '../services/brreg.service';
+import { brregService } from '@/services/brreg.service';
 
 // Query key factory
 export const brregKeys = {

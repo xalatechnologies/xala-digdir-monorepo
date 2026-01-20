@@ -3,7 +3,7 @@
  * Platform-wide SaaS administration for tenant management, plans, feature flags, and billing
  * Required roles: SAAS_SUPER_ADMIN, SAAS_BILLING_ADMIN, SAAS_SUPPORT_AGENT
  */
-import { getClient } from '../core/client-factory';
+import { getClient } from '@/core/client-factory';
 import type {
   SaasTenant,
   SaasTenantWithStats,
@@ -29,7 +29,7 @@ import type {
   SaasAdminCapabilities,
   PaginatedResponse,
   SingleResponse,
-} from '../types/saas';
+} from '@/types/saas';
 
 // ============================================================================
 // Service Implementation

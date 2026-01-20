@@ -2,7 +2,7 @@
  * Notification Service
  * Push notifications, email triggers, and in-app notifications
  */
-import { getClient } from '../core/client-factory';
+import { getClient } from '@/core/client-factory';
 
 export interface Notification {
   id: string;

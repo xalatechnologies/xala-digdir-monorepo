@@ -9,7 +9,7 @@ import {
   realtimeClient,
   type RealtimeEventHandler,
   type RealtimeClientConfig,
-} from '../realtime';
+} from '@/realtime';
 
 /**
  * Hook to connect to realtime WebSocket on mount

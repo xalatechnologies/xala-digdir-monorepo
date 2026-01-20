@@ -177,49 +177,49 @@ class RealtimeClient {
   /**
    * Subscribe to availability events
    */
-  onAvailability(handler: (event: any) => void): () => void {
+  onAvailability(handler: RealtimeEventHandler): () => void {
     return this.on('*', handler);
   }
 
   /**
    * Subscribe to booking created events
    */
-  onBookingCreated(handler: (event: any) => void): () => void {
+  onBookingCreated(handler: RealtimeEventHandler): () => void {
     return this.on('booking', handler);
   }
 
   /**
    * Subscribe to booking updated events
    */
-  onBookingUpdated(handler: (event: any) => void): () => void {
+  onBookingUpdated(handler: RealtimeEventHandler): () => void {
     return this.on('booking', handler);
   }
 
   /**
    * Subscribe to booking cancelled events
    */
-  onBookingCancelled(handler: (event: any) => void): () => void {
+  onBookingCancelled(handler: RealtimeEventHandler): () => void {
     return this.on('booking', handler);
   }
 
   /**
    * Subscribe to block created events
    */
-  onBlockCreated(handler: (event: any) => void): () => void {
+  onBlockCreated(handler: RealtimeEventHandler): () => void {
     return this.on('*', handler);
   }
 
   /**
    * Subscribe to block updated events
    */
-  onBlockUpdated(handler: (event: any) => void): () => void {
+  onBlockUpdated(handler: RealtimeEventHandler): () => void {
     return this.on('*', handler);
   }
 
   /**
    * Subscribe to block deleted events
    */
-  onBlockDeleted(handler: (event: any) => void): () => void {
+  onBlockDeleted(handler: RealtimeEventHandler): () => void {
     return this.on('*', handler);
   }
 

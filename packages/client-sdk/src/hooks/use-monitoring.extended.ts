@@ -3,7 +3,7 @@
  * React Query hooks for monitoring data
  */
 import { useQuery, useMutation, useQueryClient, type UseQueryOptions, type UseMutationOptions } from '@tanstack/react-query';
-import { monitoringExtendedService } from '../services/monitoring-extended.service';
+import { monitoringExtendedService } from '@/services/monitoring-extended.service';
 import type {
   MonitoringOverviewDTO,
   IncidentDTO,

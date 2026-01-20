@@ -13,8 +13,8 @@ import {
   nifService,
   vippsService,
   calendarSyncService
-} from '../services/integration.service';
-import type { TenantSettings, CreateAccessCodeDTO, CreateInvoiceDTO, InitiatePaymentDTO, CapturePaymentDTO, RefundPaymentDTO } from '../types/settings';
+} from '@/services/integration.service';
+import type { TenantSettings, CreateAccessCodeDTO, CreateInvoiceDTO, InitiatePaymentDTO, CapturePaymentDTO, RefundPaymentDTO } from '@/types/settings';
 
 // ============================================================================
 // Settings Hooks
@@ -311,7 +311,7 @@ export function useSyncCalendar() {
 // Manage integration credentials and settings (ID-porten, Vipps, Visma, RCO, ACOS)
 // ============================================================================
 
-import { integrationsService, type IntegrationUpdate } from '../services';
+import { integrationsService, type IntegrationUpdate } from '@/services';
 
 const INTEGRATION_CONFIG_KEYS = {
   all: ['integration-configs'] as const,

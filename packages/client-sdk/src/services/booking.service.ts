@@ -17,9 +17,13 @@ import type {
   CalendarQueryParams,
   Allocation,
   CreateAllocationDTO,
-  PaymentTransaction
-} from '../types/booking';
-import type { PaginatedResponse, SingleResponse, SuccessResponse } from '../types/enums';
+  PaymentTransaction,
+  BookingQuoteSelectionDTO,
+  BookingQuoteProjectionDTO,
+  BookingSelectionDTO,
+  RecurringPreviewProjectionDTO,
+} from '@/types/booking';
+import type { PaginatedResponse, SingleResponse, SuccessResponse } from '@/types/enums';
 
 export class BookingService extends BaseService {
   constructor() {
@@ -326,7 +330,7 @@ export class BookingService extends BaseService {
    * Get booking quote for a selection
    * Returns pricing and availability information
    */
-  async quote(selection: any): Promise<SingleResponse<any>> {
+  async quote(selection: BookingQuoteSelectionDTO): Promise<SingleResponse<BookingQuoteProjectionDTO>> {
     return this.client.post(this.buildPath('/quote'), selection);
   }
 
@@ -334,7 +338,7 @@ export class BookingService extends BaseService {
    * Get recurring booking preview
    * Returns server-computed occurrence preview with conflict detection
    */
-  async getRecurringPreview(selection: any): Promise<SingleResponse<any>> {
+  async getRecurringPreview(selection: BookingSelectionDTO): Promise<SingleResponse<RecurringPreviewProjectionDTO>> {
     return this.client.post(this.buildPath('/recurring/preview'), selection);
   }
 }

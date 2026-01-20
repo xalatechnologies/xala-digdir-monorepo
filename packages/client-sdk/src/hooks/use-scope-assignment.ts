@@ -9,7 +9,7 @@ import {
   type UpdateScopeAssignmentDTO,
   type AssignScopesDTO,
   type ScopeQueryParams,
-} from '../services/scope-assignment.service';
+} from '@/services/scope-assignment.service';
 
 // =============================================================================
 // Query Keys

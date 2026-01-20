@@ -4,7 +4,7 @@
  */
 
 import { BaseService } from './base.service';
-import type { SingleResponse, PaginatedResponse } from '../types/enums';
+import type { SingleResponse, PaginatedResponse } from '@/types/enums';
 import type {
   PricingGroup,
   PricingGroupListResponse,
@@ -17,7 +17,7 @@ import type {
   BookingQuoteResponse,
   BulkUpdatePricingDTO,
   BulkUpdatePricingResponse,
-} from '../types/pricing.types';
+} from '@/types/pricing.types';
 
 // =============================================================================
 // Types

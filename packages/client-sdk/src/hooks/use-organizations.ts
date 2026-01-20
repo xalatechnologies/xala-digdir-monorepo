@@ -7,7 +7,7 @@
  */
 
 import { useQuery, useMutation } from '@tanstack/react-query';
-import type { Organization } from '../types';
+import type { Organization } from '@/types';
 
 interface UseOrganizationsOptions {
   status?: 'active' | 'inactive' | 'all';

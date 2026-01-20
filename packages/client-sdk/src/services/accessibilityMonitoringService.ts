@@ -11,8 +11,8 @@
  * - GDPR compliant
  */
 
-import type { IHttpClient } from '../core/http-client.interface';
-import { getClient, getClientConfig } from '../core/client-factory';
+import type { IHttpClient } from '@/core/http-client.interface';
+import { getClient, getClientConfig } from '@/core/client-factory';
 
 // ============================================================================
 // Types
