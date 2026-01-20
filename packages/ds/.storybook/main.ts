@@ -47,16 +47,23 @@ export default defineMain({
     },
   },
   viteFinal: async (config) => {
+    const srcPath = new URL('../src', import.meta.url).pathname;
     return {
       ...config,
       resolve: {
         ...config.resolve,
         alias: {
           ...config.resolve?.alias,
-          '@xala/ds': new URL('../src', import.meta.url).pathname,
+          // Handle @xala/ds paths - order matters, more specific first
+          '@xala/ds/blocks': `${srcPath}/blocks`,
+          '@xala/ds/composed': `${srcPath}/composed`,
+          '@xala/ds/primitives': `${srcPath}/primitives`,
+          '@xala/ds/shells': `${srcPath}/shells`,
+          '@xala/ds': srcPath,
           // Storybook 10 exports blocks from addon-docs, not standalone @storybook/blocks
           '@storybook/blocks': '@storybook/addon-docs/blocks',
         },
+        extensions: ['.tsx', '.ts', '.jsx', '.js', '.json'],
       },
     };
   },

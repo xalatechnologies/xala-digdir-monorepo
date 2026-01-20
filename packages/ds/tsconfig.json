@@ -12,6 +12,10 @@
     "baseUrl": ".",
     "paths": {
       "@xala/ds": ["./src/index.ts"],
+      "@xala/ds/blocks/*": ["./src/blocks/*"],
+      "@xala/ds/composed/*": ["./src/composed/*"],
+      "@xala/ds/primitives/*": ["./src/primitives/*"],
+      "@xala/ds/shells/*": ["./src/shells/*"],
       "@xala/ds/*": ["./src/*"]
     }
   },
