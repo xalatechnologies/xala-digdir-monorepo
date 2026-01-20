@@ -13,7 +13,7 @@ import { test, expect } from '@playwright/test';
 
 const BACKOFFICE_URL = process.env.BACKOFFICE_URL || 'http://localhost:5173';
 const WEB_URL = process.env.WEB_URL || 'http://localhost:3001';
-const API_URL = process.env.API_URL || 'http://localhost:3000/api';
+const API_URL = process.env.API_URL || 'http://localhost:4000/api';
 
 // =============================================================================
 // Helpers

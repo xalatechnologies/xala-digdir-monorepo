@@ -11,7 +11,7 @@ import { setupMockApi } from '@digilist/api/mocks/api-server.mock';
  * - Rate limiting awareness
  */
 
-const API_BASE = process.env.API_URL || 'http://localhost:3000';
+const API_BASE = process.env.API_URL || 'http://localhost:4000';
 const ORG_ADMIN_TOKEN = process.env.ORG_ADMIN_TOKEN || 'mock-token';
 const ORG_ID = process.env.TEST_ORG_ID || 'test-org-id';
 const TENANT_ID = process.env.TEST_TENANT_ID || 'test-tenant-id';

@@ -16,7 +16,7 @@ import type { RBACMatrixRule } from './types';
 import orgAdminMatrix from '@digilist/api/rbac/rbac-matrix.org-admin.json';
 
 // Test configuration
-const API_BASE = process.env.API_URL || 'http://localhost:3000';
+const API_BASE = process.env.API_URL || 'http://localhost:4000';
 
 // Mock tokens - in real tests, these would be generated during setup
 const ORG_ADMIN_TOKEN = process.env.ORG_ADMIN_TOKEN || 'mock-org-admin-token';

@@ -12,7 +12,7 @@ import { setupMockApi } from '@digilist/api/mocks/api-server.mock';
 
 import orgMemberMatrix from '@digilist/api/rbac/rbac-matrix.org-member.json';
 
-const API_BASE = process.env.API_URL || 'http://localhost:3000';
+const API_BASE = process.env.API_URL || 'http://localhost:4000';
 const ORG_MEMBER_TOKEN = process.env.ORG_MEMBER_TOKEN || 'mock-org-member-token';
 const ORG_ID = process.env.TEST_ORG_ID || 'test-org-id';
 const OTHER_ORG_ID = process.env.OTHER_ORG_ID || 'other-org-id';

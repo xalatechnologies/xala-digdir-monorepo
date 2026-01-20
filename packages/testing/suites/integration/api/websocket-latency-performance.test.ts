@@ -6,8 +6,8 @@
 import { describe, it, expect, beforeAll, afterAll } from 'vitest';
 import { setupMockApi } from '@digilist/api/mocks/api-server.mock';
 
-const API_URL = process.env.API_URL || 'http://localhost:3000';
-const WS_URL = process.env.WS_URL || 'ws://localhost:3000';
+const API_URL = process.env.API_URL || 'http://localhost:4000';
+const WS_URL = process.env.WS_URL || 'ws://localhost:4000';
 const TENANT_ID = 'f47ac10b-58cc-4372-a567-0e02b2c3d479';
 const NUM_CONCURRENT_CLIENTS = 10;
 const MAX_LATENCY_MS = 1000; // 1 second requirement

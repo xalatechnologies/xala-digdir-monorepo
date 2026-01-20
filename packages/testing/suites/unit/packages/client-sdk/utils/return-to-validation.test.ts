@@ -238,10 +238,10 @@ describe.skip('ReturnTo URL Validation', () => {
     });
 
     it('should handle URLs with ports correctly', () => {
-      const originsWithPorts = ['https://digilist.no:8443', 'http://localhost:3000'];
+      const originsWithPorts = ['https://digilist.no:8443', 'http://localhost:4000'];
 
       expect(validateReturnToUrl('https://digilist.no:8443/listings', originsWithPorts)).toBe(true);
-      expect(validateReturnToUrl('http://localhost:3000/dashboard', originsWithPorts)).toBe(true);
+      expect(validateReturnToUrl('http://localhost:4000/dashboard', originsWithPorts)).toBe(true);
 
       // Wrong port should fail
       expect(validateReturnToUrl('https://digilist.no:9999/listings', originsWithPorts)).toBe(false);

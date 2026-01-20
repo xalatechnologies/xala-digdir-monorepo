@@ -12,7 +12,7 @@ import { setupMockApi } from '@digilist/api/mocks/api-server.mock';
 import { test, expect } from '@playwright/test';
 
 const BACKOFFICE_URL = process.env.BACKOFFICE_URL || 'http://localhost:5173';
-const API_URL = process.env.API_URL || 'http://localhost:3000/api';
+const API_URL = process.env.API_URL || 'http://localhost:4000/api';
 
 // =============================================================================
 // Helpers

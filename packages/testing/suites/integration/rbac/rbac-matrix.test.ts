@@ -11,7 +11,7 @@ import { describe, it, expect, beforeAll } from 'vitest';
 import { setupMockApi } from '@digilist/api/mocks/api-server.mock';
 import * as fs from 'fs';
 
-const API_URL = process.env.API_URL || 'http://localhost:3000/api';
+const API_URL = process.env.API_URL || 'http://localhost:4000/api';
 
 // =============================================================================
 // RBAC Matrix Definition

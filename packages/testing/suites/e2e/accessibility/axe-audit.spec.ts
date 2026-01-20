@@ -123,7 +123,7 @@ test.describe('Backoffice Accessibility', () => {
 
   test('Dashboard should pass WCAG 2.1 AA when authenticated', async ({ page, request }) => {
     // Login first
-    const loginResponse = await request.post('http://localhost:3000/api/auth/test-login', {
+    const loginResponse = await request.post('http://localhost:4000/api/auth/test-login', {
       data: { role: 'admin' },
     });
 

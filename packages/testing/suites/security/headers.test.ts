@@ -10,7 +10,7 @@
 import { describe, it, expect, beforeAll } from 'vitest';
 import { setupMockApi } from '@digilist/api/mocks/api-server.mock';
 
-const API_URL = process.env.API_URL || 'http://localhost:3000';
+const API_URL = process.env.API_URL || 'http://localhost:4000';
 
 // =============================================================================
 // Security Header Requirements

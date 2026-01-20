@@ -57,8 +57,8 @@ Object.defineProperty(window, 'localStorage', {
 const mockLocation = {
   pathname: '/test',
   search: '',
-  origin: 'http://localhost:3000',
-  href: 'http://localhost:3000/test',
+  origin: 'http://localhost:4000',
+  href: 'http://localhost:4000/test',
 };
 
 Object.defineProperty(window, 'location', {
