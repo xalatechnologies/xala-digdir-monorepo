@@ -1,18 +1,14 @@
 /**
- * SaaS Admin Application Layout
+ * AppLayout Wrapper
  *
- * Mobile-first responsive layout for SaaS Admin app
- * - Shows sidebar on desktop (>= 768px)
- * - Shows bottom navigation on mobile (< 768px)
- * - Follows DIGILIST design patterns
+ * Thin wrapper that wires app-specific Sidebar, Header, and bottom navigation
+ * to DS AppLayout component.
  */
 
-import { Outlet, useLocation } from 'react-router-dom';
-import { useState, useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
 import {
-  BottomNavigation,
+  AppLayout as DSAppLayout,
   type BottomNavigationItem,
-  DashboardContent,
   HomeIcon,
   BuildingIcon,
   ChartIcon,
@@ -23,14 +19,9 @@ import { useT } from '@xala/i18n';
 import { Sidebar } from './Sidebar';
 import { Header } from './Header';
 
-const MOBILE_BREAKPOINT = 768;
-
 export function AppLayout() {
   const location = useLocation();
   const t = useT();
-  const [isMobile, setIsMobile] = useState(
-    typeof window !== 'undefined' ? window.innerWidth < MOBILE_BREAKPOINT : false
-  );
 
   // Page title lookup using i18n keys
   const pageTitleKeys: Record<string, string> = {
@@ -46,16 +37,6 @@ export function AppLayout() {
 
   const titleKey = pageTitleKeys[location.pathname];
   const title = titleKey ? t(titleKey) : '';
-
-  // Track viewport size for mobile/desktop detection
-  useEffect(() => {
-    const handleResize = () => {
-      setIsMobile(window.innerWidth < MOBILE_BREAKPOINT);
-    };
-
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
-  }, []);
 
   // Bottom navigation items for mobile - show most important items
   const bottomNavItems: BottomNavigationItem[] = [
@@ -97,44 +78,12 @@ export function AppLayout() {
   ];
 
   return (
-    <div
-      style={{
-        display: 'flex',
-        height: '100vh',
-        backgroundColor: 'var(--ds-color-neutral-background-default)',
-      }}
-    >
-      {/* Sidebar - Desktop only */}
-      {!isMobile && <Sidebar />}
-
-      <div
-        style={{
-          flex: 1,
-          display: 'flex',
-          flexDirection: 'column',
-          overflow: 'hidden',
-        }}
-      >
-        <Header title={title} />
-
-        <DashboardContent
-          hasBottomNav={isMobile}
-          data-testid="saas-admin-content"
-        >
-          <Outlet />
-        </DashboardContent>
-      </div>
-
-      {/* Bottom Navigation - Mobile only */}
-      {isMobile && (
-        <BottomNavigation
-          items={bottomNavItems}
-          fixed={true}
-          variant="surface"
-          showLabels={true}
-          safeArea={true}
-        />
-      )}
-    </div>
+    <DSAppLayout
+      sidebar={<Sidebar />}
+      header={<Header title={title} />}
+      bottomNavItems={bottomNavItems}
+      mobileBreakpoint={768}
+      data-testid="saas-admin-layout"
+    />
   );
 }

@@ -1,28 +1,25 @@
 /**
- * AppLayout Component
+ * AppLayout Wrapper
  *
- * Mobile-first responsive layout for Minside app
- * - Shows sidebar on desktop (>= 768px)
- * - Shows bottom navigation on mobile (< 768px)
- * - Follows DIGILIST design patterns
+ * Thin wrapper that wires app-specific Sidebar, Header, bottom navigation,
+ * search, and alerts to DS AppLayout component.
  */
 
-import { Outlet, useLocation, useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import {
-  Alert,
-  BottomNavigation,
+  AppLayout as DSAppLayout,
   type BottomNavigationItem,
-  DashboardContent,
+  Alert,
+  HeaderSearch,
+  SearchIcon,
+  type SearchResultItem,
+  type SearchResultGroup,
   HomeIcon,
   BookOpenIcon,
   CalendarIcon,
   MessageIcon,
   SettingsIcon,
-  HeaderSearch,
-  SearchIcon,
-  type SearchResultItem,
-  type SearchResultGroup,
 } from '@xala/ds';
 import { useT } from '@xala/i18n';
 import { Sidebar } from './Sidebar';
@@ -156,7 +153,7 @@ export function AppLayout() {
     }
   }, [lostOrganizationMessage, clearLostOrganizationMessage]);
 
-  // Track viewport size for mobile/desktop detection
+  // Track viewport size for mobile/desktop detection (DS AppLayout handles this, but we need it for topContent)
   useEffect(() => {
     const handleResize = () => {
       setIsMobile(window.innerWidth < MOBILE_BREAKPOINT);
@@ -219,99 +216,73 @@ export function AppLayout() {
     },
   ];
 
-  return (
-    <div
-      style={{
-        display: 'flex',
-        height: '100vh',
-        backgroundColor: 'var(--ds-color-neutral-background-default)',
-      }}
-    >
-      {/* Sidebar - Desktop only */}
-      {!isMobile && <Sidebar />}
-
-      <div
-        style={{
-          flex: 1,
-          display: 'flex',
-          flexDirection: 'column',
-          overflow: 'hidden',
-        }}
-      >
-        <Header title={title} />
-
-        {/* Mobile Search - Below header */}
-        {isMobile && (
-          <div style={{ padding: 'var(--ds-spacing-4) var(--ds-spacing-6)', borderBottom: '1px solid var(--ds-color-neutral-border-subtle)' }}>
-            <HeaderSearch
-              placeholder={t('common.sok_i_bookinger_brukere')}
-              value={searchQuery}
-              onSearchChange={handleSearchChange}
-              onResultSelect={handleResultSelect}
-              results={searchResults}
-              showShortcut={false}
-              enableGlobalShortcut={false}
-              noResultsText={t('common.ingen_resultater_funnet')}
-            />
-          </div>
-        )}
-
-        {/* Context redirect notification */}
-        {redirectMessage && (
-          <div
-            style={{
-              padding: isMobile ? 'var(--ds-spacing-3)' : 'var(--ds-spacing-4)',
-              paddingBottom: 0,
-            }}
-          >
-            <Alert
-              data-color="info"
-              data-size="sm"
-              role="status"
-              aria-live="polite"
-            >
-              {redirectMessage}
-            </Alert>
-          </div>
-        )}
-
-        {/* Lost organization notification - shown when user's org membership was lost */}
-        {lostOrganizationMessage && (
-          <div
-            style={{
-              padding: isMobile ? 'var(--ds-spacing-3)' : 'var(--ds-spacing-4)',
-              paddingBottom: 0,
-            }}
-          >
-            <Alert
-              data-color="warning"
-              data-size="sm"
-              role="alert"
-              aria-live="assertive"
-            >
-              {lostOrganizationMessage}
-            </Alert>
-          </div>
-        )}
-
-        <DashboardContent
-          hasBottomNav={isMobile}
-          data-testid="monitoring-content"
-        >
-          <Outlet />
-        </DashboardContent>
-      </div>
-
-      {/* Bottom Navigation - Mobile only */}
+  // Build top content (alerts and mobile search)
+  const topContent = (
+    <>
+      {/* Mobile Search - Below header */}
       {isMobile && (
-        <BottomNavigation
-          items={bottomNavItems}
-          fixed={true}
-          variant="surface"
-          showLabels={true}
-          safeArea={true}
-        />
+        <div style={{ padding: 'var(--ds-spacing-4) var(--ds-spacing-6)', borderBottom: '1px solid var(--ds-color-neutral-border-subtle)' }}>
+          <HeaderSearch
+            placeholder={t('common.sok_i_bookinger_brukere')}
+            value={searchQuery}
+            onSearchChange={handleSearchChange}
+            onResultSelect={handleResultSelect}
+            results={searchResults}
+            showShortcut={false}
+            enableGlobalShortcut={false}
+            noResultsText={t('common.ingen_resultater_funnet')}
+          />
+        </div>
       )}
-    </div>
+
+      {/* Context redirect notification */}
+      {redirectMessage && (
+        <div
+          style={{
+            padding: isMobile ? 'var(--ds-spacing-3)' : 'var(--ds-spacing-4)',
+            paddingBottom: 0,
+          }}
+        >
+          <Alert
+            data-color="info"
+            data-size="sm"
+            role="status"
+            aria-live="polite"
+          >
+            {redirectMessage}
+          </Alert>
+        </div>
+      )}
+
+      {/* Lost organization notification - shown when user's org membership was lost */}
+      {lostOrganizationMessage && (
+        <div
+          style={{
+            padding: isMobile ? 'var(--ds-spacing-3)' : 'var(--ds-spacing-4)',
+            paddingBottom: 0,
+          }}
+        >
+          <Alert
+            data-color="warning"
+            data-size="sm"
+            role="alert"
+            aria-live="assertive"
+          >
+            {lostOrganizationMessage}
+          </Alert>
+        </div>
+      )}
+    </>
+  );
+
+  return (
+    <DSAppLayout
+      sidebar={<Sidebar />}
+      header={<Header title={title} />}
+      bottomNavItems={bottomNavItems}
+      topContent={topContent}
+      mobileBreakpoint={MOBILE_BREAKPOINT}
+      data-testid="monitoring-layout"
+    />
   );
 }

@@ -8,13 +8,14 @@
  * allowing for app-specific navigation and branding while standardizing
  * the layout structure.
  * 
- * Note: This is a base layout component. Apps may choose to implement
- * their own AppLayout if they need more specific behavior (e.g., mobile
- * bottom navigation, complex responsive behavior, etc.).
+ * Supports mobile-first responsive design with optional bottom navigation
+ * for mobile devices.
  */
 
 import { Outlet } from 'react-router-dom';
-import { ReactNode } from 'react';
+import { ReactNode, useState, useEffect } from 'react';
+import { BottomNavigation, type BottomNavigationItem } from '../composed/bottom-navigation';
+import { DashboardContent } from './DashboardContent';
 
 export interface AppLayoutProps {
   /** Sidebar component (required) */
@@ -37,6 +38,15 @@ export interface AppLayoutProps {
   
   /** Additional content to render above main content (e.g., alerts, banners) */
   topContent?: ReactNode;
+  
+  /** Mobile breakpoint in pixels (default: 768) */
+  mobileBreakpoint?: number;
+  
+  /** Bottom navigation items for mobile (optional) */
+  bottomNavItems?: BottomNavigationItem[];
+  
+  /** Whether to show sidebar on mobile (default: false) */
+  showSidebarOnMobile?: boolean;
 }
 
 /**
@@ -47,6 +57,10 @@ export interface AppLayoutProps {
  * <AppLayout
  *   sidebar={<MySidebar />}
  *   header={<MyHeader title="Dashboard" />}
+ *   bottomNavItems={[
+ *     { id: 'home', label: 'Home', icon: <HomeIcon />, href: '/', active: true },
+ *     { id: 'bookings', label: 'Bookings', icon: <BookIcon />, href: '/bookings' },
+ *   ]}
  * />
  * ```
  */
@@ -58,7 +72,29 @@ export function AppLayout({
   className,
   style,
   topContent,
+  mobileBreakpoint = 768,
+  bottomNavItems,
+  showSidebarOnMobile = false,
 }: AppLayoutProps) {
+  const [isMobile, setIsMobile] = useState(
+    typeof window !== 'undefined' ? window.innerWidth < mobileBreakpoint : false
+  );
+
+  // Track viewport size for mobile/desktop detection
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+
+    const handleResize = () => {
+      setIsMobile(window.innerWidth < mobileBreakpoint);
+    };
+
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, [mobileBreakpoint]);
+
+  const shouldShowSidebar = !isMobile || showSidebarOnMobile;
+  const hasBottomNav = isMobile && bottomNavItems && bottomNavItems.length > 0;
+
   return (
     <div
       className={className}
@@ -69,8 +105,8 @@ export function AppLayout({
         ...style,
       }}
     >
-      {/* Sidebar */}
-      {sidebar}
+      {/* Sidebar - Desktop only (or if showSidebarOnMobile is true) */}
+      {shouldShowSidebar && sidebar}
 
       <div
         style={{
@@ -87,18 +123,28 @@ export function AppLayout({
         {topContent}
 
         {/* Main content area */}
-        <main
+        <DashboardContent
+          hasBottomNav={hasBottomNav}
           style={{
-            flex: 1,
-            overflow: 'auto',
             padding: contentPadding,
           }}
         >
-          <div style={{ maxWidth: maxContentWidth, margin: '0 auto' }}>
+          <div style={{ maxWidth: maxContentWidth, margin: '0 auto', width: '100%' }}>
             <Outlet />
           </div>
-        </main>
+        </DashboardContent>
       </div>
+
+      {/* Bottom Navigation - Mobile only */}
+      {hasBottomNav && (
+        <BottomNavigation
+          items={bottomNavItems}
+          fixed={true}
+          variant="surface"
+          showLabels={true}
+          safeArea={true}
+        />
+      )}
     </div>
   );
 }
