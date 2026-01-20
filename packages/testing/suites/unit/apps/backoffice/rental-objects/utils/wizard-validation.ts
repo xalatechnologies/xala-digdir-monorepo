@@ -11,7 +11,7 @@ import { useT } from '@xala/i18n';
   WizardStepId,
   ValidationError,
   StepValidationResult,
-} from '@xala/api/types';
+} from '@digilist/api/types';
 
 /**
  * Validates a single wizard step

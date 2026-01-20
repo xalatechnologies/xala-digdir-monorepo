@@ -7,7 +7,7 @@ import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import {
   validateReturnToUrl,
   sanitizeReturnToUrl,
-} from '@xala/api/utils/flow-context';
+} from '@digilist/api/utils/flow-context';
 
 describe('ReturnTo URL Validation', () => {
   beforeEach(() => {

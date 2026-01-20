@@ -9,9 +9,9 @@ import { describe, it, expect, vi, beforeEach } from 'vitest';
 screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { ToastProvider } from '@xala/backoffice/providers/ToastProvider';
-import { RentalObjectsListView } from '@xala/api/components/RentalObjectsListView';
-import { RentalObjectWizard } from '@xala/api/components/wizard/RentalObjectWizard';
-import { RentalObjectDetailView } from '@xala/api/components/detail/RentalObjectDetailView';
+import { RentalObjectsListView } from '@digilist/api/components/RentalObjectsListView';
+import { RentalObjectWizard } from '@digilist/api/components/wizard/RentalObjectWizard';
+import { RentalObjectDetailView } from '@digilist/api/components/detail/RentalObjectDetailView';
 import { useT } from '@xala/i18n';
 
 // Mock all dependencies

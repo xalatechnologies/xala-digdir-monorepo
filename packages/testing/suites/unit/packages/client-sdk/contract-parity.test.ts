@@ -6,7 +6,7 @@
  * Run with: pnpm --filter @digilist/client-sdk test:contracts
  */
 import { describe, it, expect } from 'vitest';
-import * as services from '@xala/api/services';
+import * as services from '@digilist/api/services';
 
 interface ApiEndpoint {
   path: string;

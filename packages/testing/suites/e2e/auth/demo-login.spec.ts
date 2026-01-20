@@ -1,11 +1,11 @@
 // Skip E2E tests if not explicitly enabled
-import { setupMockApi } from '@xala/api/mocks/api-server.mock';
+import { setupMockApi } from '@digilist/api/mocks/api-server.mock';
 /**
  * Demo Login E2E Test
  */
 import { test, expect } from '@playwright/test';
-import { LoginPage } from '@xala/api/helpers/pages/LoginPage';
-import { TEST_CREDENTIALS } from '@xala/api/fixtures/auth/auth.fixture';
+import { LoginPage } from '@digilist/api/helpers/pages/LoginPage';
+import { TEST_CREDENTIALS } from '@digilist/api/fixtures/auth/auth.fixture';
 
 test.describe('Demo Login', () => {
   setupMockApi();

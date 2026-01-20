@@ -5,9 +5,9 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import { ProtectedRoute } from '@xala/api/ProtectedRoute';
-import { AuthContext } from '@xala/api/providers/AuthProvider';
-import type { AuthContextType } from '@xala/api/types';
+import { ProtectedRoute } from '@digilist/api/ProtectedRoute';
+import { AuthContext } from '@digilist/api/providers/AuthProvider';
+import type { AuthContextType } from '@digilist/api/types';
 
 // Mock auth context
 function renderWithAuthContext(authValue: Partial<AuthContextType>, children: React.ReactNode) {

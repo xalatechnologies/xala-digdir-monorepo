@@ -13,7 +13,7 @@
  */
 
 import { describe, it, expect, beforeEach } from 'vitest';
-import { setupMockApi } from '@xala/api/mocks/api-server.mock';
+import { setupMockApi } from '@digilist/api/mocks/api-server.mock';
 import { toDomain, toCardProjection, toDetailsProjection, toPersistence, type DbRentalObject } from '@testing/stubs/api-imports';
 import type { RentalObject } from '@testing/stubs/api-imports';
 

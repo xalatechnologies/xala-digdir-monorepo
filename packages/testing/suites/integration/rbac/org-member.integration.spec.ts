@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { setupMockApi } from '@xala/api/mocks/api-server.mock';
+import { setupMockApi } from '@digilist/api/mocks/api-server.mock';
 
 /**
  * ORG_MEMBER Integration Tests
@@ -10,7 +10,7 @@ import { setupMockApi } from '@xala/api/mocks/api-server.mock';
  * - Cross-org requests return 403/404
  */
 
-import orgMemberMatrix from '@xala/api/rbac/rbac-matrix.org-member.json';
+import orgMemberMatrix from '@digilist/api/rbac/rbac-matrix.org-member.json';
 
 const API_BASE = process.env.API_URL || 'http://localhost:3000';
 const ORG_MEMBER_TOKEN = process.env.ORG_MEMBER_TOKEN || 'mock-org-member-token';

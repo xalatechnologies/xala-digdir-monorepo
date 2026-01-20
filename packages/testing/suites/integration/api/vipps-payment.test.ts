@@ -5,10 +5,10 @@
  */
 
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
-import { setupMockApi } from '@xala/api/mocks/api-server.mock';
-import { VippsCheckoutService, clearVippsCheckoutService } from '@xala/api/integrations/vipps/vipps-checkout.service';
-import { clearVippsConfigCache, VIPPS_PAYMENT_STATUS } from '@xala/api/config/vipps.config';
-import { clearVippsClient } from '@xala/api/integrations/vipps/vipps.client';
+import { setupMockApi } from '@digilist/api/mocks/api-server.mock';
+import { VippsCheckoutService, clearVippsCheckoutService } from '@digilist/api/integrations/vipps/vipps-checkout.service';
+import { clearVippsConfigCache, VIPPS_PAYMENT_STATUS } from '@digilist/api/config/vipps.config';
+import { clearVippsClient } from '@digilist/api/integrations/vipps/vipps.client';
 
 // Mock environment variables
 const mockEnv = {

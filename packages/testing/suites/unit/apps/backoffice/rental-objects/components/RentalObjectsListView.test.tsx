@@ -8,8 +8,8 @@ screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { RentalObjectsListView } from './RentalObjectsListView';
 import { useRentalObjects } from '@digilist/client-sdk';
-import { useListingPermissions } from '@xala/api/rental-objects/hooks/useListingPermissions';
-import { useListingFilters } from '@xala/api/rental-objects/hooks/useListingFilters';
+import { useListingPermissions } from '@digilist/api/rental-objects/hooks/useListingPermissions';
+import { useListingFilters } from '@digilist/api/rental-objects/hooks/useListingFilters';
 
 // Mock dependencies
 vi.mock('@digilist/client-sdk', async () => {

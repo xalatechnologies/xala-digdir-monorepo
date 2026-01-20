@@ -8,7 +8,7 @@ import {
   createScopedQueryKey,
   matchQueryKey,
   serializeQueryParams,
-} from '@xala/api/query/query-key-factory';
+} from '@digilist/api/query/query-key-factory';
 
 describe('QueryKeyFactory', () => {
   describe('createQueryKeyFactory', () => {

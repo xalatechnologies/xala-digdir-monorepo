@@ -14,7 +14,7 @@ import {
   Select,
   SaveIcon,
 } from '@xala/ds';
-import { useGeneralSettings } from '@xala/api/hooks/useGeneralSettings';
+import { useGeneralSettings } from '@digilist/api/hooks/useGeneralSettings';
 import { useT } from '@xala/i18n';
 
 export function GeneralTab() {

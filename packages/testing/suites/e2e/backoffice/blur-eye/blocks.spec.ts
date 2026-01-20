@@ -1,10 +1,10 @@
 // Skip E2E tests if not explicitly enabled
-import { setupMockApi } from '@xala/api/../mocks/api-server.mock';
-import { test, expect } from '@xala/api/fixtures/qa-expert.fixture';
-import { config } from '@xala/api/config/backoffice.config';
+import { setupMockApi } from '@digilist/api/../mocks/api-server.mock';
+import { test, expect } from '@digilist/api/fixtures/qa-expert.fixture';
+import { config } from '@digilist/api/config/backoffice.config';
 import {
   assertNoForbiddenTerminology,
-} from '@xala/api/fixtures/blur-eye.helpers';
+} from '@digilist/api/fixtures/blur-eye.helpers';
 
 /**
  * Blocks Module Blur-Eye E2E Tests

@@ -6,7 +6,7 @@
  */
 
 import { describe, it, expect } from 'vitest';
-import noDirectSchemaImport from '@xala/api/packages/eslint-config/rules/no-direct-schema-import.js';
+import noDirectSchemaImport from '@digilist/api/packages/eslint-config/rules/no-direct-schema-import.js';
 
 describe('ESLint Rule: no-direct-schema-import', () => {
   it('should export a valid ESLint rule', () => {

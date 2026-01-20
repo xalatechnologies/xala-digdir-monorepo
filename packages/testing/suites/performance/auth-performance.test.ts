@@ -18,9 +18,9 @@
  * - Concurrent requests: 100 req/s without errors
  */
 import { describe, it, expect, beforeAll } from 'vitest';
-import { setupMockApi } from '@xala/api/mocks/api-server.mock';
+import { setupMockApi } from '@digilist/api/mocks/api-server.mock';
 import type { TestContext } from 'vitest';
-import { setupMockApi } from '@xala/api/mocks/api-server.mock';
+import { setupMockApi } from '@digilist/api/mocks/api-server.mock';
 
 const API_URL = process.env.API_URL || 'http://localhost:4000';
 const TEST_TENANT_ID = 'test-tenant';

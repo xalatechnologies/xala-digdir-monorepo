@@ -15,10 +15,10 @@ vi.mock('../../core/client-factory', () => ({
   })),
 }));
 
-import { getClient } from '@xala/api/core/client-factory';
-import { helpService } from '@xala/api/services/help.service';
-import { seasonalLeaseService } from '@xala/api/services/seasonal-lease.service';
-// import { bookingService } from '@xala/api/services/booking.service';
+import { getClient } from '@digilist/api/core/client-factory';
+import { helpService } from '@digilist/api/services/help.service';
+import { seasonalLeaseService } from '@digilist/api/services/seasonal-lease.service';
+// import { bookingService } from '@digilist/api/services/booking.service';
 
 describe('HelpService', () => {
   const mockClient = {

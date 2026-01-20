@@ -11,7 +11,7 @@
  * 4. RFC7807 errors flow correctly
  */
 import { describe, it, expect } from 'vitest';
-import { setupMockApi } from '@xala/api/../../mocks/api-server.mock';
+import { setupMockApi } from '@digilist/api/../../mocks/api-server.mock';
 
 // Import from our SDK
 import {
@@ -20,7 +20,7 @@ import {
   getActionReasonKey,
   isListingAction,
   isBookingAction,
-} from '@xala/api/types/actions';
+} from '@digilist/api/types/actions';
 
 import {
   projectionRegistry,
@@ -28,7 +28,7 @@ import {
   getProjectionsForRole,
   getCacheConfigForProjection,
   isWithinPayloadBudget,
-} from '@xala/api/types/projection-registry';
+} from '@digilist/api/types/projection-registry';
 
 // ==============================================================================
 // MOCK DATA: Simulating what comes from each layer

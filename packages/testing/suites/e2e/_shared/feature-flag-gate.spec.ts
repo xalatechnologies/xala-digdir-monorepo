@@ -1,5 +1,5 @@
 // Skip E2E tests if not explicitly enabled
-import { setupMockApi } from '@xala/api/mocks/api-server.mock';
+import { setupMockApi } from '@digilist/api/mocks/api-server.mock';
 /**
  * Feature Flag Gate Test
  * Verifies that disabling a module removes it from navigation and access

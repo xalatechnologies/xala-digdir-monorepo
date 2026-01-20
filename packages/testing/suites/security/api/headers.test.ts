@@ -6,7 +6,7 @@
  * Run with: pnpm dev & pnpm test:security
  */
 import { describe, it, expect, beforeAll } from 'vitest';
-import { setupMockApi } from '@xala/api/mocks/api-server.mock';
+import { setupMockApi } from '@digilist/api/mocks/api-server.mock';
 
 const API_URL = 'http://localhost:4000';
 let serverAvailable = false;

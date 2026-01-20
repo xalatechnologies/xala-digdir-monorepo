@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest';
-import { setupMockApi } from '@xala/api/mocks/api-server.mock';
+import { setupMockApi } from '@digilist/api/mocks/api-server.mock';
 import { CustodyService } from '@testing/stubs/api-imports';
 import { CustodyEvaluator } from '@testing/stubs/api-imports';
 import { CustodyScope, UserContext } from '@testing/stubs/api-imports';

@@ -1,7 +1,7 @@
 // Skip E2E tests if not explicitly enabled
-import { setupMockApi } from '@xala/api/mocks/api-server.mock';
+import { setupMockApi } from '@digilist/api/mocks/api-server.mock';
 import { test } from '@playwright/test';
-import { TEST_CREDENTIALS } from '@xala/api/fixtures/auth/auth.fixture';
+import { TEST_CREDENTIALS } from '@digilist/api/fixtures/auth/auth.fixture';
 
 test('Inspect login page structure', async ({ page }) => {
   console.log(`\n🔍 Inspecting: ${TEST_CREDENTIALS.user.baseUrl}/login`);

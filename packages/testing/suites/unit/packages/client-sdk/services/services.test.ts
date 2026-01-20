@@ -21,12 +21,12 @@ import {
   calendarService, 
   allocationService,
   availabilityService 
-} from '@xala/api/services/booking.service';
+} from '@digilist/api/services/booking.service';
 import { 
   organizationService, 
   userService 
-} from '@xala/api/services/organization.service';
-import { authService } from '@xala/api/services/auth.service';
+} from '@digilist/api/services/organization.service';
+import { authService } from '@digilist/api/services/auth.service';
 import { 
   settingsService,
   rcoService,
@@ -35,7 +35,7 @@ import {
   nifService,
   vippsService,
   calendarSyncService
-} from '@xala/api/services/integration.service';
+} from '@digilist/api/services/integration.service';
 
 describe('Services', () => {
   // ListingService tests skipped - service not implemented

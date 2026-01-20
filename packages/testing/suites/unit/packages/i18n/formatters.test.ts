@@ -6,7 +6,7 @@ import {
   formatDateTime,
   formatNumber,
   formatPercent,
-} from '@xala/api/formatters';
+} from '@digilist/api/formatters';
 
 /**
  * Formatter Tests

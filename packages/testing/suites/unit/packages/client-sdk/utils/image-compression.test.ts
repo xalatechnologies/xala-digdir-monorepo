@@ -12,7 +12,7 @@ import {
   validateImageType,
   validateImageSize,
   validateImageFile,
-} from '@xala/api/utils/image-compression';
+} from '@digilist/api/utils/image-compression';
 
 // Mock browser-image-compression
 vi.mock('browser-image-compression', () => ({

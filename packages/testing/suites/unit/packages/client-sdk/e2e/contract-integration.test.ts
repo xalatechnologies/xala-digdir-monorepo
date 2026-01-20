@@ -11,7 +11,7 @@
  * 4. Query Key & Cache Invalidation - TanStack Query patterns
  */
 import { describe, it, expect } from 'vitest';
-import { setupMockApi } from '@xala/api/../../mocks/api-server.mock';
+import { setupMockApi } from '@digilist/api/../../mocks/api-server.mock';
 
 // ==============================================================================
 // Mock API Server

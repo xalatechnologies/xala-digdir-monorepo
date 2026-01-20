@@ -15,7 +15,7 @@
  */
 
 import { describe, it, expect, beforeEach } from 'vitest';
-import { setupMockApi } from '@xala/api/mocks/api-server.mock';
+import { setupMockApi } from '@digilist/api/mocks/api-server.mock';
 import { MetadataController } from '@testing/stubs/api-imports';
 import type { FastifyRequest, FastifyReply } from 'fastify';
 

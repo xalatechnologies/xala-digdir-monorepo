@@ -4,7 +4,7 @@
  */
 
 import { useT } from '@xala/i18n';
-import type { WizardStep } from '@xala/api/types';
+import type { WizardStep } from '@digilist/api/types';
 
 interface WizardStepperProps {
   steps: WizardStep[];

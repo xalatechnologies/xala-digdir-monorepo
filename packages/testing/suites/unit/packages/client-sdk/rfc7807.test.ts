@@ -6,7 +6,7 @@
  * Run with: pnpm --filter @digilist/client-sdk test:rfc7807
  */
 import { describe, it, expect } from 'vitest';
-import { ApiError } from '@xala/api/core/http-client.interface';
+import { ApiError } from '@digilist/api/core/http-client.interface';
 
 interface ProblemDetails {
   type: string;

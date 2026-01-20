@@ -10,7 +10,7 @@ import type {
   WizardStepId,
   ValidationError,
   StepValidationResult,
-} from '@xala/api/types';
+} from '@digilist/api/types';
 
 /**
  * Validates a single wizard step

@@ -10,7 +10,7 @@ import {
   getPersistedLocale,
   persistLocale,
   clearPersistedLocale,
-} from '@xala/api/storage';
+} from '@digilist/api/storage';
 
 // Mock js-cookie
 vi.mock('js-cookie', () => ({

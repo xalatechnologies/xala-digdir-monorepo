@@ -3,9 +3,9 @@
  * Comprehensive test coverage for HTTP client including RFC7807 error handling
  */
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
-import { FetchHttpClient } from '@xala/api/core/fetch-client';
-import { ApiError } from '@xala/api/core/http-client.interface';
-import type { ApiClientConfig } from '@xala/api/core/http-client.interface';
+import { FetchHttpClient } from '@digilist/api/core/fetch-client';
+import { ApiError } from '@digilist/api/core/http-client.interface';
+import type { ApiClientConfig } from '@digilist/api/core/http-client.interface';
 
 // Mock global fetch
 const mockFetch = vi.fn();

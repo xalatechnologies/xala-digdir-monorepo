@@ -1,5 +1,5 @@
 // Skip E2E tests if not explicitly enabled
-import { setupMockApi } from '@xala/api/mocks/api-server.mock';
+import { setupMockApi } from '@digilist/api/mocks/api-server.mock';
 /**
  * E2E Test: Canonical Booking Approval Flow
  *
@@ -22,11 +22,11 @@ import { setupMockApi } from '@xala/api/mocks/api-server.mock';
  * - Audit logging
  */
 
-import { test, expect } from '@xala/api/fixtures/auth/auth.fixture';
-import { BookingsPage } from '@xala/api/helpers/pages/BookingsPage';
-import { BookingDetailsPage } from '@xala/api/helpers/pages/BookingDetailsPage';
-import { NotificationCenterPage } from '@xala/api/helpers/pages/NotificationCenterPage';
-import { getTestBookingData, BOOKING_STATES, APPROVAL_REASON } from '@xala/api/fixtures/bookings.fixture';
+import { test, expect } from '@digilist/api/fixtures/auth/auth.fixture';
+import { BookingsPage } from '@digilist/api/helpers/pages/BookingsPage';
+import { BookingDetailsPage } from '@digilist/api/helpers/pages/BookingDetailsPage';
+import { NotificationCenterPage } from '@digilist/api/helpers/pages/NotificationCenterPage';
+import { getTestBookingData, BOOKING_STATES, APPROVAL_REASON } from '@digilist/api/fixtures/bookings.fixture';
 
 test.describe('Canonical Booking Approval Flow', () => {
   setupMockApi();

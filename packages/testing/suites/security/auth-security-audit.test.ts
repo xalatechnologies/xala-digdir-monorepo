@@ -4,7 +4,7 @@
  */
 
 import { describe, it, expect, beforeAll, afterAll, beforeEach } from 'vitest';
-import { setupMockApi } from '@xala/api/mocks/api-server.mock';
+import { setupMockApi } from '@digilist/api/mocks/api-server.mock';
 import { JwtService } from '@testing/stubs/api-imports';
 import { SessionService } from '@testing/stubs/api-imports';
 import { COOKIE_CONFIG, validateCookieConfig } from '@testing/stubs/api-imports';

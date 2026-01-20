@@ -1,8 +1,8 @@
 // Skip E2E tests if not explicitly enabled
-import { setupMockApi } from '@xala/api/../mocks/api-server.mock';
+import { setupMockApi } from '@digilist/api/../mocks/api-server.mock';
 import { test, expect } from '@playwright/test';
 import AxeBuilder from '@axe-core/playwright';
-import { config } from '@xala/api/config/backoffice.config';
+import { config } from '@digilist/api/config/backoffice.config';
 
 /**
  * WCAG 2.1 AA Compliance Tests

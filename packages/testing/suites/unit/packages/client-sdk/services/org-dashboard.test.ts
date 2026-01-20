@@ -15,8 +15,8 @@ vi.mock('../../core/client-factory', () => ({
   })),
 }));
 
-import { getClient } from '@xala/api/core/client-factory';
-import { orgDashboardService } from '@xala/api/services/org-dashboard.service';
+import { getClient } from '@digilist/api/core/client-factory';
+import { orgDashboardService } from '@digilist/api/services/org-dashboard.service';
 import type {
   OrgDashboardStatsDTO,
   OrgPendingItemDTO,
@@ -24,7 +24,7 @@ import type {
   OrgAlertDTO,
   AssignedRentalObjectDTO,
   PaginatedResponse,
-} from '@xala/api/types/org-dashboard';
+} from '@digilist/api/types/org-dashboard';
 
 describe('OrgDashboardService', () => {
   const mockClient = {

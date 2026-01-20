@@ -5,7 +5,7 @@
 
 import { describe, it, expect, beforeEach } from 'vitest';
 import { recordHttpRequest, recordHttpRequestSize, recordHttpResponseSize } from './api';
-import { prometheusExporter } from '@xala/api/exporters/prometheus';
+import { prometheusExporter } from '@digilist/api/exporters/prometheus';
 
 describe('API Metrics', () => {
   beforeEach(() => {

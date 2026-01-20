@@ -11,7 +11,7 @@ import {
   recordDatabaseTransaction,
   withDatabaseMetrics,
 } from './database';
-import { prometheusExporter } from '@xala/api/exporters/prometheus';
+import { prometheusExporter } from '@digilist/api/exporters/prometheus';
 
 describe('Database Metrics', () => {
   beforeEach(() => {

@@ -1,5 +1,5 @@
 // Skip E2E tests if not explicitly enabled
-import { setupMockApi } from '@xala/api/mocks/api-server.mock';
+import { setupMockApi } from '@digilist/api/mocks/api-server.mock';
 /**
  * Case Handler Scope Enforcement E2E Test
  * Full flow: Create case handler scope → Login as Case Handler → Approve scoped booking → Fail on non-scoped

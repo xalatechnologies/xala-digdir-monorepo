@@ -4,7 +4,7 @@
  */
 
 import { describe, it, expect, beforeEach, vi } from 'vitest';
-import { FeatureFlagsService } from '@xala/api/services/feature-flags.service';
+import { FeatureFlagsService } from '@digilist/api/services/feature-flags.service';
 import type { NodePgDatabase } from 'drizzle-orm/node-postgres';
 
 describe('FeatureFlagsService', () => {

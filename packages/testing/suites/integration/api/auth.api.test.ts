@@ -11,7 +11,7 @@
  */
 
 import { describe, it, expect } from 'vitest';
-import { setupMockApi } from '@xala/api/mocks/api-server.mock';
+import { setupMockApi } from '@digilist/api/mocks/api-server.mock';
 import { request, skipIfNoServer } from './setup';
 
 describe('Auth API Integration Tests', () => {

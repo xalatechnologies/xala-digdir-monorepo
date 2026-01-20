@@ -13,7 +13,7 @@
  * - RBAC for org_admin role
  */
 import { describe, it, expect, beforeAll, afterAll } from 'vitest';
-import { setupMockApi } from '@xala/api/mocks/api-server.mock';
+import { setupMockApi } from '@digilist/api/mocks/api-server.mock';
 
 // Test configuration
 const API_URL = process.env.API_URL || 'http://localhost:4000';

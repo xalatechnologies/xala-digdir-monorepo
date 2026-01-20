@@ -3,7 +3,7 @@
  * Tests serialization, deserialization, validation, and storage of authentication flow context
  */
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
-import type { FlowContext, ReturnToConfig } from '@xala/api/types/auth';
+import type { FlowContext, ReturnToConfig } from '@digilist/api/types/auth';
 import {
   serializeFlowContext,
   deserializeFlowContext,
@@ -24,7 +24,7 @@ import {
   FLOW_CONTEXT_KEY,
   MAX_FLOW_CONTEXT_SIZE,
   FLOW_CONTEXT_EXPIRY_MS,
-} from '@xala/api/utils/flow-context';
+} from '@digilist/api/utils/flow-context';
 
 // =============================================================================
 // Test Fixtures

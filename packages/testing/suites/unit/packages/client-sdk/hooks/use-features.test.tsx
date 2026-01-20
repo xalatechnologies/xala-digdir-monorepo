@@ -15,8 +15,8 @@ import {
   useFeatureFlags,
   useAnyFeature,
   useAllFeatures,
-} from '@xala/api/use-features';
-import * as clientFactory from '@xala/api/core/client-factory';
+} from '@digilist/api/use-features';
+import * as clientFactory from '@digilist/api/core/client-factory';
 
 // Mock the client factory
 vi.mock('../../core/client-factory');

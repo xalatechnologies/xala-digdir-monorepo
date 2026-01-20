@@ -4,7 +4,7 @@
  */
 import { describe, it, expect, beforeAll, afterAll, vi, beforeEach } from 'vitest';
 import Fastify, { FastifyInstance } from 'fastify';
-import { TEST_IDS } from '@xala/api/test-utils';
+import { TEST_IDS } from '@digilist/api/test-utils';
 
 describe('Configuration Controllers', () => {
   let app: FastifyInstance;

@@ -10,8 +10,8 @@ import {
   clearDLQ,
   getDLQEntries,
   getDLQStats,
-} from '@xala/api/retry/retry';
-import { ApiError } from '@xala/api/errors/api-error';
+} from '@digilist/api/retry/retry';
+import { ApiError } from '@digilist/api/errors/api-error';
 
 describe('Retry Infrastructure', () => {
   beforeEach(() => {

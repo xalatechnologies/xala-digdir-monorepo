@@ -14,12 +14,12 @@
  * Plus additional attack variations to ensure comprehensive coverage.
  */
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
-import { setupMockApi } from '@xala/api/../../mocks/api-server.mock';
+import { setupMockApi } from '@digilist/api/../../mocks/api-server.mock';
 import {
   validateReturnToUrl,
   sanitizeReturnToUrl,
   createFlowContext,
-} from '@xala/api/utils/flow-context';
+} from '@digilist/api/utils/flow-context';
 
 describe('Security Verification - Open Redirect Prevention', () => {
   setupMockApi();

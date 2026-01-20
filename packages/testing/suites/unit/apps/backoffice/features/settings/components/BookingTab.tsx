@@ -14,7 +14,7 @@ import {
   Switch,
   SaveIcon,
 } from '@xala/ds';
-import { useBookingSettings } from '@xala/api/hooks/useBookingSettings';
+import { useBookingSettings } from '@digilist/api/hooks/useBookingSettings';
 import { useT } from '@xala/i18n';
 
 export function BookingTab() {

@@ -8,9 +8,9 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { render, screen, waitFor } from '@testing-library/react';
 import { BrowserRouter } from 'react-router-dom';
-import { AuthProvider } from '@xala/api/AuthProvider';
-import { useAuth } from '@xala/api/hooks/useAuth';
-import type { AuthConfig } from '@xala/api/types';
+import { AuthProvider } from '@digilist/api/AuthProvider';
+import { useAuth } from '@digilist/api/hooks/useAuth';
+import type { AuthConfig } from '@digilist/api/types';
 
 // Mock authService
 vi.mock('@digilist/client-sdk/services', () => ({

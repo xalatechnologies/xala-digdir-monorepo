@@ -8,7 +8,7 @@ import {
   filterNavItemsByCapabilities,
   annotateNavItems,
   type NavItem,
-} from '@xala/api/use-navigation';
+} from '@digilist/api/use-navigation';
 
 describe('filterNavItemsByCapabilities', () => {
   const testItems: NavItem[] = [

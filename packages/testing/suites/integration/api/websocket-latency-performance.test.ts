@@ -4,7 +4,7 @@
  * Verifies <1 second update latency with concurrent clients
  */
 import { describe, it, expect, beforeAll, afterAll } from 'vitest';
-import { setupMockApi } from '@xala/api/mocks/api-server.mock';
+import { setupMockApi } from '@digilist/api/mocks/api-server.mock';
 
 const API_URL = process.env.API_URL || 'http://localhost:3000';
 const WS_URL = process.env.WS_URL || 'ws://localhost:3000';

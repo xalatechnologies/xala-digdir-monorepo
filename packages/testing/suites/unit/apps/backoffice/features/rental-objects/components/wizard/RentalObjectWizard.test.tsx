@@ -8,7 +8,7 @@ import { renderWithRuntime, screen, fireEvent, waitFor } from '@digilist/testing
 screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { RentalObjectWizard } from './RentalObjectWizard';
-import { useRentalObjectWizard } from '@xala/api/hooks/useRentalObjectWizard';
+import { useRentalObjectWizard } from '@digilist/api/hooks/useRentalObjectWizard';
 import { useRentalObjectBySlug, useCreateRentalObject, useUpdateRentalObject } from '@digilist/client-sdk';
 import { ToastProvider } from '@xala/backoffice/providers/ToastProvider';
 import { useT } from '@xala/i18n';

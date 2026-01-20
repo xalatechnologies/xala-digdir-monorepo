@@ -1,5 +1,5 @@
 import { test as setup, expect } from '@playwright/test';
-import { config } from '@xala/api/config/backoffice.config';
+import { config } from '@digilist/api/config/backoffice.config';
 import * as fs from 'fs';
 
 /**

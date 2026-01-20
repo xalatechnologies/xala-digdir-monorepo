@@ -1,5 +1,5 @@
 // Skip E2E tests if not explicitly enabled
-import { setupMockApi } from '@xala/api/mocks/api-server.mock';
+import { setupMockApi } from '@digilist/api/mocks/api-server.mock';
 /**
  * Org Admin Permission Assignment E2E Test
  * Full flow: Login as Org Admin → Navigate to Members → Navigate to Permissions → Assign RO_BOOK → Verify

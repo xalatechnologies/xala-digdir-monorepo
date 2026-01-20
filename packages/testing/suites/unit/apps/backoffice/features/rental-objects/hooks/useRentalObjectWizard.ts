@@ -17,13 +17,13 @@ import type {
   WizardStep,
   RentalObject,
   CreateRentalObjectDTO,
-} from '@xala/api/types';
+} from '@digilist/api/types';
 import {
   ALL_WIZARD_STEPS,
   WIZARD_STEPS_BY_CATEGORY,
   CATEGORY_CONFIGS,
-} from '@xala/api/types';
-import { validateStep, validateAllSteps } from '@xala/api/utils/wizard-validation';
+} from '@digilist/api/types';
+import { validateStep, validateAllSteps } from '@digilist/api/utils/wizard-validation';
 import { useT } from '@xala/i18n';
 
 export interface UseRentalObjectWizardOptions {

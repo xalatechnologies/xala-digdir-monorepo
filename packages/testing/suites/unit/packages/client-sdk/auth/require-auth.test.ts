@@ -3,12 +3,12 @@
  * Tests the AuthService methods for session-safe return-to-flow authentication
  */
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
-import type { FlowContext } from '@xala/api/types/auth';
+import type { FlowContext } from '@digilist/api/types/auth';
 import {
   AuthService,
   type RequireAuthOptions,
-} from '@xala/api/services/auth.service';
-import { FLOW_CONTEXT_KEY } from '@xala/api/utils/flow-context';
+} from '@digilist/api/services/auth.service';
+import { FLOW_CONTEXT_KEY } from '@digilist/api/utils/flow-context';
 
 // =============================================================================
 // Mock client factory

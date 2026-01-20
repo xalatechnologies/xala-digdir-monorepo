@@ -3,7 +3,7 @@ import { vi, beforeEach, afterEach } from 'vitest';
 import { renderWithRuntime, screen, fireEvent, waitFor } from '@digilist/testing';
 import { CalendarPage } from './calendar';
 import * as clientSDK from '@digilist/client-sdk';
-import { ToastProvider } from '@xala/api/providers/ToastProvider';
+import { ToastProvider } from '@digilist/api/providers/ToastProvider';
 import { useT } from '@xala/i18n';
 
 // Mock SDK hooks

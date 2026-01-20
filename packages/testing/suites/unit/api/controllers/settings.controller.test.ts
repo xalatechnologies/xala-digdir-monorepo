@@ -3,7 +3,7 @@
  * Target: 95%+ coverage
  */
 import { describe, it, expect, beforeAll, afterAll } from 'vitest';
-import { createTestApp, TestContext } from '@xala/api/test-utils';
+import { createTestApp, TestContext } from '@digilist/api/test-utils';
 
 describe('SettingsController', () => {
   let ctx: TestContext;
