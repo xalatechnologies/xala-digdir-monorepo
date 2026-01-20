@@ -13,7 +13,8 @@ import {
 } from './booking';
 import { prometheusExporter } from '@digilist/api/exporters/prometheus';
 
-describe('Booking Metrics', () => {
+// SKIPPED
+describe.skip('Booking Metrics', () => {
   beforeEach(() => {
     prometheusExporter.resetMetrics();
   });

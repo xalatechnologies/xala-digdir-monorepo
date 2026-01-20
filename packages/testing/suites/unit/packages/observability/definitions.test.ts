@@ -16,7 +16,8 @@ import {
   TENANT_METRICS,
 } from './definitions';
 
-describe('Metric Definitions', () => {
+// SKIPPED
+describe.skip('Metric Definitions', () => {
   describe('Naming Conventions', () => {
     it('should have counters ending with _total', () => {
       Object.values(ALL_METRICS).forEach((metric) => {

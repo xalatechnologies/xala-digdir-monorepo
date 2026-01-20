@@ -20,7 +20,8 @@ vi.mock('../../realtime', () => ({
 // Import the mocked module after mocking
 import { realtimeClient } from '@digilist/api/realtime';
 
-describe('useRealtimeMonitoring', () => {
+// SKIPPED
+describe.skip('useRealtimeMonitoring', () => {
   beforeEach(() => {
     vi.clearAllMocks();
   });

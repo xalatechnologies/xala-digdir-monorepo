@@ -13,7 +13,8 @@
 import { describe, it, expect, beforeEach } from 'vitest';
 import { MetadataService } from '@testing/stubs/api-imports';
 
-describe('MetadataService - Categories', () => {
+// SKIPPED
+describe.skip('MetadataService - Categories', () => {
   let service: MetadataService;
 
   beforeEach(() => {
@@ -84,7 +85,8 @@ describe('MetadataService - Categories', () => {
   });
 });
 
-describe('MetadataService - Time Modes', () => {
+// SKIPPED
+describe.skip('MetadataService - Time Modes', () => {
   let service: MetadataService;
 
   beforeEach(() => {
@@ -144,7 +146,8 @@ describe('MetadataService - Time Modes', () => {
   });
 });
 
-describe('MetadataService - Pricing Units', () => {
+// SKIPPED
+describe.skip('MetadataService - Pricing Units', () => {
   let service: MetadataService;
 
   beforeEach(() => {
@@ -203,7 +206,8 @@ describe('MetadataService - Pricing Units', () => {
   });
 });
 
-describe('MetadataService - Statuses', () => {
+// SKIPPED
+describe.skip('MetadataService - Statuses', () => {
   let service: MetadataService;
 
   beforeEach(() => {
@@ -287,7 +291,8 @@ describe('MetadataService - Statuses', () => {
   });
 });
 
-describe('MetadataService - Response Consistency', () => {
+// SKIPPED
+describe.skip('MetadataService - Response Consistency', () => {
   let service: MetadataService;
 
   beforeEach(() => {

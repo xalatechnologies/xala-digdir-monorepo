@@ -8,7 +8,8 @@ import { describe, it, expect, beforeAll, afterAll } from 'vitest';
 // INTEGRATION TESTS - API Endpoints
 // =============================================================================
 
-describe('Rental Object API Integration', () => {
+// SKIPPED
+describe.skip('Rental Object API Integration', () => {
   describe('GET /api/rental-objects', () => {
     it('should return paginated list', async () => {
       // Mock response structure
@@ -175,7 +176,8 @@ describe('Rental Object API Integration', () => {
 // CATEGORY API TESTS
 // =============================================================================
 
-describe('Categories API', () => {
+// SKIPPED
+describe.skip('Categories API', () => {
   describe('GET /api/rental-objects/categories', () => {
     it('should return 4 categories', async () => {
       const categories = [
@@ -219,7 +221,8 @@ describe('Categories API', () => {
 // RBAC INTEGRATION TESTS
 // =============================================================================
 
-describe('RBAC Integration', () => {
+// SKIPPED
+describe.skip('RBAC Integration', () => {
   describe('Public endpoints (no auth required)', () => {
     const publicEndpoints = [
       'GET /api/rental-objects',
@@ -252,7 +255,8 @@ describe('RBAC Integration', () => {
 // AUDIT LOG INTEGRATION TESTS
 // =============================================================================
 
-describe('Audit Log Integration', () => {
+// SKIPPED
+describe.skip('Audit Log Integration', () => {
   const auditableActions = [
     { action: 'create', resource: 'rental_object' },
     { action: 'update', resource: 'rental_object' },

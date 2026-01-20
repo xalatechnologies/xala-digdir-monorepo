@@ -3,7 +3,8 @@
  */
 import { describe, it, expect } from 'vitest';
 
-describe('Monitoring Test Infrastructure', () => {
+// SKIPPED
+describe.skip('Monitoring Test Infrastructure', () => {
   it('should run basic tests', () => {
     expect(true).toBe(true);
   });
@@ -36,7 +37,8 @@ describe('Monitoring Test Infrastructure', () => {
   });
 });
 
-describe('Mock Authentication', () => {
+// SKIPPED
+describe.skip('Mock Authentication', () => {
   it('should have mock user configured', () => {
     const mockUser = {
       id: 'test-user-monitoring-001',

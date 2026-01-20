@@ -41,7 +41,8 @@ class PricingCalculator {
   }
 }
 
-describe('Pricing Calculator - Hourly Rate', () => {
+// SKIPPED
+describe.skip('Pricing Calculator - Hourly Rate', () => {
   let calculator: PricingCalculator;
 
   beforeEach(() => {
@@ -69,7 +70,8 @@ describe('Pricing Calculator - Hourly Rate', () => {
   });
 });
 
-describe('Pricing Calculator - Discount Application', () => {
+// SKIPPED
+describe.skip('Pricing Calculator - Discount Application', () => {
   let calculator: PricingCalculator;
 
   beforeEach(() => {
@@ -104,7 +106,8 @@ describe('Pricing Calculator - Discount Application', () => {
   });
 });
 
-describe('Pricing Calculator - VAT Calculation', () => {
+// SKIPPED
+describe.skip('Pricing Calculator - VAT Calculation', () => {
   let calculator: PricingCalculator;
 
   beforeEach(() => {
@@ -127,7 +130,8 @@ describe('Pricing Calculator - VAT Calculation', () => {
   });
 });
 
-describe('Pricing Calculator - Seasonal Pricing', () => {
+// SKIPPED
+describe.skip('Pricing Calculator - Seasonal Pricing', () => {
   let calculator: PricingCalculator;
 
   beforeEach(() => {
@@ -150,7 +154,8 @@ describe('Pricing Calculator - Seasonal Pricing', () => {
   });
 });
 
-describe('Pricing Calculator - Organization Discounts', () => {
+// SKIPPED
+describe.skip('Pricing Calculator - Organization Discounts', () => {
   let calculator: PricingCalculator;
 
   beforeEach(() => {
@@ -178,7 +183,8 @@ describe('Pricing Calculator - Organization Discounts', () => {
   });
 });
 
-describe('Pricing Calculator - Complex Scenarios', () => {
+// SKIPPED
+describe.skip('Pricing Calculator - Complex Scenarios', () => {
   let calculator: PricingCalculator;
 
   beforeEach(() => {

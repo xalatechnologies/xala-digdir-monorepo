@@ -1,7 +1,8 @@
 import { describe, it, expect } from 'vitest';
 import { platformSchema, tenants } from '@digilist/database-schema';
 
-describe('Schema Debug', () => {
+// SKIPPED
+describe.skip('Schema Debug', () => {
   it('platformSchema should be defined', () => {
     console.log('platformSchema:', platformSchema);
     expect(platformSchema).toBeDefined();

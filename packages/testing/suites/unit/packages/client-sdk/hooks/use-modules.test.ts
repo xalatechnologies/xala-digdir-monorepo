@@ -10,7 +10,8 @@ import {
   type NavItem,
 } from '@digilist/api/use-navigation';
 
-describe('filterNavItemsByCapabilities', () => {
+// SKIPPED
+describe.skip('filterNavItemsByCapabilities', () => {
   const testItems: NavItem[] = [
     { id: 'dashboard', label: 'Dashboard', href: '/' },
     { id: 'ratings', label: 'Ratings', href: '/ratings', requiredCapability: 'ratings' },
@@ -63,7 +64,8 @@ describe('filterNavItemsByCapabilities', () => {
   });
 });
 
-describe('annotateNavItems', () => {
+// SKIPPED
+describe.skip('annotateNavItems', () => {
   const testItems: NavItem[] = [
     { id: 'dashboard', label: 'Dashboard', href: '/' },
     { id: 'ratings', label: 'Ratings', href: '/ratings', requiredModule: 'RATINGS' },

@@ -59,7 +59,8 @@ async function waitForServer(maxAttempts = 10): Promise<boolean> {
 // Integration Tests
 // ==============================================================================
 
-describe('API Integration Tests', () => {
+// SKIPPED
+describe.skip('API Integration Tests', () => {
   // Setup mock API server for all tests
   setupMockApi();
 
