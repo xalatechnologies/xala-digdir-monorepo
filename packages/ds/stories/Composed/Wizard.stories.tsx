@@ -143,7 +143,7 @@ export const FullExample: Story = {
           title="Create Listing"
           showStepCounter
         />
-        <div style={{ padding: 'var(--ds-spacing-6)', minHeight: '200px' }}>
+        <div style={{ padding: 'var(--ds-spacing-6)', minHeight: 'var(--ds-spacing-48)' }}>
           {stepContent[sampleSteps[currentStep]?.id ?? 'info']}
         </div>
         <div style={{ borderTop: '1px solid var(--ds-color-neutral-border-default)', padding: 'var(--ds-spacing-4)' }}>

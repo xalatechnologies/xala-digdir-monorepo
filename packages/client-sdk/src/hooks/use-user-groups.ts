@@ -3,8 +3,8 @@
  * React Query hooks for user group management
  */
 
-import { useQuery, useMutation, useQueryClient } from '@tantml:function_calls>
-<invoke name="queryKeys } from './query-keys';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { queryKeys } from './query-keys';
 import { userGroupsService } from '../services/user-groups.service';
 import type { UserGroupQueryParams, CreateUserGroupDTO, UpdateUserGroupDTO } from '../types';
 

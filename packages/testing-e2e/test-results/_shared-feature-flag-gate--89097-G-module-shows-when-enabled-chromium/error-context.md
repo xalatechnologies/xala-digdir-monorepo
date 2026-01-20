@@ -3,11 +3,13 @@
 ```yaml
 - generic [ref=e4]:
   - complementary [ref=e5]:
-    - generic [ref=e7]:
-      - img "Digilist" [ref=e8]
-      - generic [ref=e9]:
-        - generic [ref=e10]: DIGILIST
-        - generic [ref=e11]: Backoffice
+    - link "Digilist DIGILIST Backoffice" [ref=e6] [cursor=pointer]:
+      - /url: /
+      - generic [ref=e7]:
+        - img "Digilist" [ref=e8]
+        - generic [ref=e9]:
+          - generic [ref=e10]: DIGILIST
+          - generic [ref=e11]: Backoffice
     - navigation [ref=e12]:
       - generic [ref=e13]:
         - paragraph [ref=e14]: Administrasjon
@@ -171,72 +173,70 @@
           - generic [ref=e262]:
             - generic [ref=e263]: ⌘
             - generic [ref=e264]: K
-        - generic [ref=e266]:
-          - button "Bytt til mørkt tema" [ref=e267] [cursor=pointer]:
-            - img [ref=e269]
-          - button "Varsler" [ref=e271] [cursor=pointer]:
-            - img [ref=e273]
-          - button "Innstillinger" [ref=e276] [cursor=pointer]:
-            - img [ref=e278]
-          - button "Logg ut" [ref=e282] [cursor=pointer]:
-            - img [ref=e283]
-            - text: Logg ut
-    - main [ref=e286]:
-      - generic [ref=e288]:
-        - generic [ref=e290]:
-          - heading "Velkommen tilbake, Test" [level=1] [ref=e291]
-          - paragraph [ref=e292]: Du har full tilgang til alle funksjoner i systemet.
-        - generic [ref=e293]:
-          - generic [ref=e294]:
-            - generic [ref=e295]:
-              - paragraph [ref=e296]: Ventende bookinger
-              - img [ref=e298]
-            - heading "0" [level=3] [ref=e302]
-            - paragraph [ref=e303]: Krever din behandling
-          - generic [ref=e304]:
-            - generic [ref=e305]:
-              - paragraph [ref=e306]: Godkjente
-              - img [ref=e308]
-            - generic [ref=e311]:
-              - heading "0" [level=3] [ref=e312]
-              - generic [ref=e313]:
-                - img [ref=e314]
+        - generic [ref=e265]:
+          - button "Bytt til mørkt tema" [ref=e266] [cursor=pointer]:
+            - img [ref=e268]
+          - button "Varsler" [ref=e270] [cursor=pointer]:
+            - img [ref=e272]
+          - button "Test User menu" [ref=e276] [cursor=pointer]:
+            - generic [ref=e277]: T
+            - generic [ref=e278]: Test User
+    - main [ref=e279]:
+      - generic [ref=e280]:
+        - generic [ref=e282]:
+          - heading "Velkommen tilbake, Test" [level=1] [ref=e283]
+          - paragraph [ref=e284]: Du har full tilgang til alle funksjoner i systemet.
+        - generic [ref=e285]:
+          - generic [ref=e286]:
+            - generic [ref=e287]:
+              - paragraph [ref=e288]: Ventende bookinger
+              - img [ref=e290]
+            - heading "0" [level=3] [ref=e294]
+            - paragraph [ref=e295]: Krever din behandling
+          - generic [ref=e296]:
+            - generic [ref=e297]:
+              - paragraph [ref=e298]: Godkjente
+              - img [ref=e300]
+            - generic [ref=e303]:
+              - heading "0" [level=3] [ref=e304]
+              - generic [ref=e305]:
+                - img [ref=e306]
                 - text: 8%
-            - paragraph [ref=e317]: Denne måneden
-          - generic [ref=e318]:
-            - generic [ref=e319]:
-              - paragraph [ref=e320]: Avslått
-              - img [ref=e322]
-            - heading "0" [level=3] [ref=e327]
-            - paragraph [ref=e328]: Denne måneden
-          - generic [ref=e329]:
-            - generic [ref=e330]:
-              - paragraph [ref=e331]: Totalt
-              - img [ref=e333]
-            - generic [ref=e335]:
-              - heading "0" [level=3] [ref=e336]
-              - generic [ref=e337]:
-                - img [ref=e338]
+            - paragraph [ref=e309]: Denne måneden
+          - generic [ref=e310]:
+            - generic [ref=e311]:
+              - paragraph [ref=e312]: Avslått
+              - img [ref=e314]
+            - heading "0" [level=3] [ref=e319]
+            - paragraph [ref=e320]: Denne måneden
+          - generic [ref=e321]:
+            - generic [ref=e322]:
+              - paragraph [ref=e323]: Totalt
+              - img [ref=e325]
+            - generic [ref=e327]:
+              - heading "0" [level=3] [ref=e328]
+              - generic [ref=e329]:
+                - img [ref=e330]
                 - text: 15%
-            - paragraph [ref=e341]: Alle bookinger
-        - generic [ref=e342]:
-          - generic [ref=e344]:
-            - heading "Siste aktivitet" [level=2] [ref=e345]
-            - button "Se alle" [ref=e346] [cursor=pointer]
-          - generic [ref=e347]:
-            - generic [ref=e348]:
-              - heading "Hurtighandlinger" [level=2] [ref=e349]
-              - generic [ref=e350]:
-                - button "Behandle ventende" [ref=e351] [cursor=pointer]:
-                  - img [ref=e352]
+            - paragraph [ref=e333]: Alle bookinger
+        - generic [ref=e334]:
+          - generic [ref=e336]:
+            - heading "Siste aktivitet" [level=2] [ref=e337]
+            - button "Se alle" [ref=e338] [cursor=pointer]
+          - generic [ref=e339]:
+            - generic [ref=e340]:
+              - heading "Hurtighandlinger" [level=2] [ref=e341]
+              - generic [ref=e342]:
+                - button "Behandle ventende" [ref=e343] [cursor=pointer]:
+                  - img [ref=e344]
                   - text: Behandle ventende
-                - button "Se alle bookinger" [ref=e355] [cursor=pointer]:
-                  - img [ref=e356]
+                - button "Se alle bookinger" [ref=e347] [cursor=pointer]:
+                  - img [ref=e348]
                   - text: Se alle bookinger
-                - button "Brukere" [ref=e358] [cursor=pointer]:
-                  - img [ref=e359]
+                - button "Brukere" [ref=e350] [cursor=pointer]:
+                  - img [ref=e351]
                   - text: Administrer brukere
-            - generic [ref=e364]:
-              - paragraph [ref=e367]: Alle systemer operative
-              - paragraph [ref=e368]: "Sist oppdatert: 20:16"
+            - generic [ref=e356]:
+              - paragraph [ref=e359]: Alle systemer operative
+              - paragraph [ref=e360]: "Sist oppdatert: 20:00"
 ```

@@ -45,7 +45,7 @@ function EmptyState({ icon, title, description, action }: EmptyStateProps) {
         {title}
       </Heading>
       {description && (
-        <Paragraph style={{ color: 'var(--ds-color-neutral-text-subtle)', maxWidth: '400px' }}>
+        <Paragraph style={{ color: 'var(--ds-color-neutral-text-subtle)' }}>
           {description}
         </Paragraph>
       )}

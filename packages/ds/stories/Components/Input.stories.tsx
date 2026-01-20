@@ -117,7 +117,7 @@ export const Password: Story = {
  */
 export const FormExample: Story = {
   render: () => (
-    <form style={{ display: 'flex', flexDirection: 'column', gap: 'var(--ds-spacing-4)', maxWidth: '400px' }}>
+    <form style={{ display: 'flex', flexDirection: 'column', gap: 'var(--ds-spacing-4)' }}>
       <Textfield label="First Name" placeholder="Enter first name" />
       <Textfield label="Last Name" placeholder="Enter last name" />
       <Textfield label="Email" type="email" placeholder="name@example.com" />

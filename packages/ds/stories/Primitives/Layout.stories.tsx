@@ -50,8 +50,8 @@ const Box = ({ children, color = 'accent' }: { children: React.ReactNode; color?
 export const ContainerDefault: Story = {
   name: 'Container',
   render: () => (
-    <Container maxWidth="800px" style={{ backgroundColor: 'var(--ds-color-neutral-surface-hover)' }}>
-      <Box>Content inside a Container (max-width: 800px)</Box>
+    <Container style={{ backgroundColor: 'var(--ds-color-neutral-surface-hover)' }}>
+      <Box>Content inside a Container</Box>
     </Container>
   ),
 };
@@ -105,7 +105,7 @@ export const GridMixed: Story = {
 export const GridAutoFit: Story = {
   name: 'Grid Auto-fit',
   render: () => (
-    <Grid columns="repeat(auto-fit, minmax(200px, 1fr))" gap="var(--ds-spacing-4)">
+    <Grid columns="repeat(auto-fit, minmax(var(--ds-spacing-48), 1fr))" gap="var(--ds-spacing-4)">
       <Box>Card 1</Box>
       <Box>Card 2</Box>
       <Box>Card 3</Box>
@@ -148,7 +148,7 @@ export const StackHorizontal: Story = {
 export const StackAligned: Story = {
   name: 'Stack Aligned',
   render: () => (
-    <Stack direction="horizontal" spacing="var(--ds-spacing-4)" justify="between" align="center" style={{ height: '150px', backgroundColor: 'var(--ds-color-neutral-surface-hover)', padding: 'var(--ds-spacing-4)' }}>
+    <Stack direction="horizontal" spacing="var(--ds-spacing-4)" justify="between" align="center" style={{ minHeight: 'var(--ds-spacing-32)', backgroundColor: 'var(--ds-color-neutral-surface-hover)', padding: 'var(--ds-spacing-4)' }}>
       <Box>Left</Box>
       <Box>Center</Box>
       <Box>Right</Box>
@@ -162,10 +162,10 @@ export const StackAligned: Story = {
 export const CombinedLayout: Story = {
   name: 'Combined Example',
   render: () => (
-    <Container maxWidth="1000px">
+    <Container>
       <Stack spacing="var(--ds-spacing-6)">
         <Box color="info">Header</Box>
-        <Grid columns="250px 1fr" gap="var(--ds-spacing-4)">
+        <Grid columns="var(--ds-spacing-64) 1fr" gap="var(--ds-spacing-4)">
           <Stack spacing="var(--ds-spacing-2)">
             <Box color="warning">Nav Item 1</Box>
             <Box color="warning">Nav Item 2</Box>

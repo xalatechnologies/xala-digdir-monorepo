@@ -186,7 +186,7 @@ export const FullWidth: Story = {
   },
   decorators: [
     (Story) => (
-      <div style={{ width: '300px' }}>
+      <div style={{ width: 'var(--ds-spacing-64)' }}>
         <Story />
       </div>
     ),

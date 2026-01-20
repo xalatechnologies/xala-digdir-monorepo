@@ -42,7 +42,7 @@ type Story = StoryObj<typeof meta>;
  */
 export const Default: Story = {
   render: () => (
-    <Card style={{ maxWidth: '400px' }}>
+    <Card>
       <Heading level={3} data-size="sm">Card Title</Heading>
       <Paragraph>
         This is a basic card with some content. Cards are used to group related information.
@@ -56,7 +56,7 @@ export const Default: Story = {
  */
 export const WithActions: Story = {
   render: () => (
-    <Card style={{ maxWidth: '400px' }}>
+    <Card>
       <Heading level={3} data-size="sm">Booking Request</Heading>
       <Paragraph>
         John Doe has requested to book Meeting Room A for December 15, 2024.
@@ -74,7 +74,7 @@ export const WithActions: Story = {
  */
 export const AsLink: Story = {
   render: () => (
-    <Card asChild style={{ maxWidth: '400px', cursor: 'pointer' }}>
+    <Card asChild style={{ cursor: 'pointer' }}>
       <a href="#" style={{ textDecoration: 'none', color: 'inherit' }}>
         <Heading level={3} data-size="sm">Click to View Details</Heading>
         <Paragraph>
@@ -90,9 +90,9 @@ export const AsLink: Story = {
  */
 export const WithImage: Story = {
   render: () => (
-    <Card style={{ maxWidth: '400px', overflow: 'hidden' }}>
+    <Card style={{ overflow: 'hidden' }}>
       <div style={{ 
-        height: '200px', 
+        aspectRatio: '16/9', 
         backgroundColor: 'var(--ds-color-neutral-surface-default)',
         display: 'flex',
         alignItems: 'center',
@@ -117,7 +117,7 @@ export const CardGrid: Story = {
   render: () => (
     <div style={{ 
       display: 'grid', 
-      gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))',
+      gridTemplateColumns: 'repeat(auto-fill, minmax(var(--ds-spacing-64), 1fr)),',
       gap: 'var(--ds-spacing-4)',
     }}>
       {[1, 2, 3].map((i) => (

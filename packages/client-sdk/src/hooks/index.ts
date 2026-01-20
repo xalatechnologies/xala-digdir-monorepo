@@ -209,11 +209,10 @@ export {
 export {
   useDiscountCodes,
   useDiscountCode,
-  useValidateCode,
+  useValidateDiscountCode,
   useCreateDiscountCode,
   useUpdateDiscountCode,
   useDeleteDiscountCode,
-  useToggleActive,
 } from './use-discount-codes';
 
 // Organization hooks (MinSide) - TEMPORARY STUB
