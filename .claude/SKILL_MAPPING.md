@@ -18,6 +18,7 @@ When working on a specific app or package, use the corresponding skill:
 | **apps/web** | frontend-developer | `.claude/skills/frontend-developer/` |
 | **apps/tenant-admin** | frontend-developer | `.claude/skills/frontend-developer/` |
 | **apps/saas-admin** | frontend-developer | `.claude/skills/frontend-developer/` |
+| **packages/runtime** | runtime-composition-expert | `.agent/skills/runtime-composition-expert/` |
 | **packages/client-sdk** | client-sdk-expert | `.claude/skills/client-sdk-expert/` |
 | **packages/contracts** | contracts-expert | `.claude/skills/contracts-expert/` |
 | **packages/ds** | design-system-expert | `.claude/skills/design-system-expert/` |

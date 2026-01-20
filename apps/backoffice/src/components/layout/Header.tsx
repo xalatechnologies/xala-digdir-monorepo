@@ -5,7 +5,7 @@ import { useUnreadCount } from '@digilist/client-sdk';
 import { useAuth } from '@xala/auth';
 import { useTheme } from '@xala/ds';
 import { useT } from '@xala/i18n';
-import { useNotificationCenter } from '../../App';
+import { useNotificationCenter } from '@xala/runtime';
 
 interface HeaderProps {
   title?: string;

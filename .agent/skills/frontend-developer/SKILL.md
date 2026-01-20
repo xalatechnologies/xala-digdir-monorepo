@@ -236,34 +236,87 @@ function App() {
 }
 ```
 
-## Provider Setup
+## Provider Setup - RuntimeProvider (MANDATORY)
+
+All apps MUST use `@xala/runtime` RuntimeProvider. Direct provider composition is FORBIDDEN.
 
 ```tsx
-// main.tsx
+// main.tsx - CORRECT PATTERN
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { DesignsystemetProvider } from '@xala/ds';
-import { LazyI18nProvider } from '@xala/i18n';
-import { RealtimeProvider } from '@digilist/client-sdk/providers';
+import { RuntimeProvider } from '@xala/runtime';
+import { initializeClient } from '@digilist/client-sdk';
 import '@xala/ds/styles';
+import './root.css';
 import App from './App';
 
-const queryClient = new QueryClient();
+// Initialize SDK
+initializeClient({
+  baseUrl: import.meta.env.VITE_API_URL || 'https://api.digilist.no',
+  tenantId: import.meta.env.VITE_TENANT_ID || 'default',
+  licenseKey: import.meta.env.VITE_LICENSE_KEY || 'dev-key',
+});
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
-    <QueryClientProvider client={queryClient}>
-      <LazyI18nProvider defaultLocale="nb">
-        <DesignsystemetProvider theme="digdir" colorScheme="auto">
-          <RealtimeProvider>
-            <App />
-          </RealtimeProvider>
-        </DesignsystemetProvider>
-      </LazyI18nProvider>
-    </QueryClientProvider>
+    <RuntimeProvider
+      config={{
+        appType: 'web', // or 'backoffice', 'minside', etc.
+        apiUrl: import.meta.env.VITE_API_URL || 'https://api.digilist.no',
+        wsUrl: import.meta.env.VITE_WS_URL,
+        tenantId: import.meta.env.VITE_TENANT_ID || 'default',
+        licenseKey: import.meta.env.VITE_LICENSE_KEY || 'dev-key',
+        locale: 'nb',
+        theme: 'digilist',
+        colorScheme: 'auto',
+      }}
+    >
+      <App />
+    </RuntimeProvider>
   </StrictMode>
 );
+
+// ❌ FORBIDDEN - Manual provider composition
+// <QueryClientProvider>
+//   <ThemeProvider>
+//     <I18nProvider>
+//       ...
+// DO NOT DO THIS. Use RuntimeProvider.
+```
+
+### RuntimeProvider Guarantees
+
+- **t() always works** - I18nProvider is mounted before any component
+- **Auth always available** - AuthProvider in correct position  
+- **Theme consistent** - DesignsystemetProvider configured correctly
+- **SDK ready** - QueryClient and SDK initialized
+
+### App.tsx Pattern (Thin Routing Layer)
+
+```tsx
+// App.tsx - CORRECT PATTERN (routes only)
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { ProtectedRoute } from '@xala/ds';
+
+export function App() {
+  return (
+    <BrowserRouter>
+      <Routes>
+        <Route path="/login" element={<LoginPage />} />
+        <Route element={<ProtectedRoute />}>
+          <Route path="/" element={<DashboardPage />} />
+          <Route path="/bookings" element={<BookingsPage />} />
+        </Route>
+      </Routes>
+    </BrowserRouter>
+  );
+}
+
+// ❌ FORBIDDEN in App.tsx:
+// - Provider imports (except app-specific like AccountContextProvider)
+// - Theme state management
+// - SDK initialization
+// - QueryClient creation
 ```
 
 ## Error Handling

@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { useState } from 'react';
-import { UnifiedBookingEngine, Card, Paragraph } from '@xala/ds';
+import { Card, Paragraph } from '@xala/ds';
+import { UnifiedBookingEngine } from '../../src/blocks/booking-engine/UnifiedBookingEngine';
 import type {
   BookingConfig,
   BookingSelection,

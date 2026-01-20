@@ -1,43 +1,43 @@
+/**
+ * web Entry Point
+ *
+ * Uses @xala/runtime for unified provider management.
+ */
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-
-// ✅ Single import point for Designsystemet CSS (required).
-import '@xala/ds/styles';
-
-// Initialize SDK with API configuration
+import { RuntimeProvider } from '@xala/runtime';
 import { initializeClient } from '@digilist/client-sdk';
 
+import '@xala/ds/styles';
+import './root.css';
+import { App } from './App';
+
+// Initialize SDK with API configuration
 initializeClient({
   baseUrl: import.meta.env.VITE_API_URL || 'https://api.digilist.no',
   tenantId: import.meta.env.VITE_TENANT_ID || 'f47ac10b-58cc-4372-a567-0e02b2c3d479',
   licenseKey: import.meta.env.VITE_LICENSE_KEY || '',
 });
 
-// Note: Theme CSS is dynamically loaded by DesignsystemetProvider.
-// The provider loads CLI-generated base theme + extensions.
-
-// Minimal global font settings (recommended by Designsystemet).
-import './root.css';
-
-import { App } from './App';
-import { useT } from '@xala/i18n';
-
-// Create React Query client with default options
-const queryClient = new QueryClient({
-  defaultOptions: {
-    queries: {
-      staleTime: 1000 * 60 * 5, // 5 minutes
-      retry: 1,
-      refetchOnWindowFocus: false,
-    },
-  },
-});
-
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
-    <QueryClientProvider client={queryClient}>
+    <RuntimeProvider
+      config={{
+        appType: 'web',
+        apiUrl: import.meta.env.VITE_API_URL || 'https://api.digilist.no',
+        wsUrl: import.meta.env.VITE_WS_URL,
+        tenantId: import.meta.env.VITE_TENANT_ID || 'default',
+        licenseKey: import.meta.env.VITE_LICENSE_KEY || 'dev-key',
+        locale: 'nb',
+        theme: 'digilist',
+        colorScheme: 'auto',
+        authConfig: {
+          loginPath: '/login',
+          debug: import.meta.env.DEV,
+        },
+      }}
+    >
       <App />
-    </QueryClientProvider>
+    </RuntimeProvider>
   </React.StrictMode>,
 );

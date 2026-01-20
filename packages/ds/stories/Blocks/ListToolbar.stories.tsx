@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import { Button } from '@xala/ds';
-import { ListToolbar, type ListToolbarFilter, type ListToolbarSortOption } from '@xala/ds/composed';
-import { PlusIcon } from '@xala/ds/primitives';
+import { Button, PlusIcon } from '@xala/ds';
+import { ListToolbar } from '../../src/composed/ListToolbar';
+import type { ListToolbarFilter, ListToolbarSortOption } from '../../src/composed/ListToolbar';
 
 /**
  * ListToolbar provides search, filters, and view controls for list pages.

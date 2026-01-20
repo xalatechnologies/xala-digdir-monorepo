@@ -27,6 +27,8 @@ export default defineConfig({
   ],
   resolve: {
     alias: {
+      // App-internal alias
+      '@': path.resolve(__dirname, './src'),
       // CSS imports cannot be resolved by tsconfig paths
       '@digdir/designsystemet-css': path.resolve(__dirname, '../../node_modules/@digdir/designsystemet-css'),
     },

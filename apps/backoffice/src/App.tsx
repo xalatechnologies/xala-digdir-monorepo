@@ -1,17 +1,20 @@
-import React, { Suspense, useState, useCallback, createContext, useContext } from 'react';
+/**
+ * backoffice App Component
+ *
+ * With RuntimeProvider, this is a thin routing layer.
+ * App-specific providers (BackofficeRoleProvider, CapabilityProvider) remain here.
+ */
+import React, { Suspense } from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
-import { DesignsystemetProvider, DialogProvider, ErrorBoundary } from '@xala/ds';
-import { I18nProvider } from '@xala/i18n';
+import { LoadingFallback, ProtectedRoute } from '@xala/ds';
+import { useOAuthCallback } from '@xala/auth';
+import { RealtimeProvider } from '@digilist/client-sdk';
 
-import { AuthProvider, useOAuthCallback } from '@xala/auth';
+// App-specific providers (business logic)
 import { BackofficeRoleProvider } from './providers/BackofficeRoleProvider';
 import { CapabilityProvider } from './providers/CapabilityProvider';
 import { ToastProvider } from './providers/ToastProvider';
-import { RealtimeProvider } from '@digilist/client-sdk';
-import { ThemeProvider, useTheme } from '@xala/ds';
-import { ProtectedRoute } from '@xala/ds';
 import { AppLayout } from './components/layout/AppLayout';
-import { LoadingFallback } from '@xala/ds';
 import { initSentry } from './lib/sentry';
 
 // Eager imports - frequently accessed pages
@@ -34,10 +37,8 @@ const MessagesPage = React.lazy(() => import('./routes/messages').then(m => ({ d
 const OrganizationsListPage = React.lazy(() => import('./routes/organizations').then(m => ({ default: m.OrganizationsListPage })));
 const OrganizationDetailPage = React.lazy(() => import('./routes/organizations').then(m => ({ default: m.OrganizationDetailPage })));
 const OrganizationFormPage = React.lazy(() => import('./routes/organizations').then(m => ({ default: m.OrganizationFormPage })));
-// RBAC Organization pages
 const OrganizationMembersPage = React.lazy(() => import('./routes/organizations').then(m => ({ default: m.OrganizationMembersPage })));
 const PermissionAssignmentPage = React.lazy(() => import('./routes/organizations').then(m => ({ default: m.PermissionAssignmentPage })));
-// RBAC Access Grants pages
 const AccessGrantsPage = React.lazy(() => import('./routes/access-grants').then(m => ({ default: m.AccessGrantsPage })));
 const NewAccessGrantPage = React.lazy(() => import('./routes/access-grants').then(m => ({ default: m.NewAccessGrantPage })));
 const UsersPage = React.lazy(() => import('./routes/users').then(m => ({ default: m.UsersPage })));
@@ -85,406 +86,134 @@ const HelpFAQPage = React.lazy(() => import('./routes/help/faq'));
 // Initialize Sentry error tracking before React rendering
 initSentry();
 
-// Notification Center Context
-interface NotificationCenterContextValue {
-  openNotificationCenter: () => void;
-  closeNotificationCenter: () => void;
-  isOpen: boolean;
-}
-
-const NotificationCenterContext = createContext<NotificationCenterContextValue | null>(null);
-
-export function useNotificationCenter(): NotificationCenterContextValue {
-  const context = useContext(NotificationCenterContext);
-  if (!context) {
-    throw new Error('useNotificationCenter must be used within NotificationCenterProvider');
-  }
-  return context;
-}
-
-function NotificationCenterProvider({ children }: { children: React.ReactNode }) {
-  const [isOpen, setIsOpen] = useState(false);
-
-  const openNotificationCenter = useCallback(() => {
-    setIsOpen(true);
-  }, []);
-
-  const closeNotificationCenter = useCallback(() => {
-    setIsOpen(false);
-  }, []);
-
-  return (
-    <NotificationCenterContext.Provider value={{ openNotificationCenter, closeNotificationCenter, isOpen }}>
-      {children}
-    </NotificationCenterContext.Provider>
-  );
-}
-
 /**
  * OAuth Callback Handler
- * Handles OAuth/BankID redirects automatically - must be inside BrowserRouter
  */
 function OAuthCallbackHandler() {
   useOAuthCallback();
   return null;
 }
 
+/**
+ * Backoffice App - Tenant Admin Panel
+ * Now thin: BrowserRouter + Routes + app-specific providers only
+ */
 export function App() {
   return (
-    <ThemeProvider>
-      <AppWithTheme />
-    </ThemeProvider>
-  );
-}
-
-function AppWithTheme() {
-  const { colorScheme } = useTheme();
-  
-  return (
-    <I18nProvider initialLocale="nb">
-      <DesignsystemetProvider theme="digilist" colorScheme={colorScheme} size="md">
-      <DialogProvider>
-      <ErrorBoundary>
+    <BrowserRouter
+      future={{
+        v7_startTransition: true,
+        v7_relativeSplatPath: true,
+      }}
+    >
+      <OAuthCallbackHandler />
       <ToastProvider>
-      <BrowserRouter
-        future={{
-          v7_startTransition: true,
-          v7_relativeSplatPath: true,
-        }}
-      >
-        <OAuthCallbackHandler />
-        <NotificationCenterProvider>
-          <AuthProvider config={{ appType: 'backoffice', debug: import.meta.env.DEV }}>
-            <AppContent />
-          </AuthProvider>
-        </NotificationCenterProvider>
-      </BrowserRouter>
-      </ToastProvider>
-      </ErrorBoundary>
-      </DialogProvider>
-      </DesignsystemetProvider>
-    </I18nProvider>
-  );
-}
-
-function AppContent() {
-  return (
-    <BackofficeRoleProvider>
+        <BackofficeRoleProvider>
           <CapabilityProvider>
-          <RealtimeProvider
-            wsUrl={import.meta.env.VITE_WS_URL}
-            tenantId={import.meta.env.VITE_TENANT_ID}
-          >
-          <Suspense fallback={<LoadingFallback />}>
-          <Routes>
-            <Route path="/login" element={<LoginPage />} />
-            <Route path="/role-selection" element={<RoleSelectionPage />} />
-
-            <Route
-              path="/"
-              element={
-                <ProtectedRoute>
-                  <AppLayout />
-                </ProtectedRoute>
-              }
+            <RealtimeProvider
+              wsUrl={import.meta.env.VITE_WS_URL}
+              tenantId={import.meta.env.VITE_TENANT_ID}
             >
-              <Route index element={<DashboardPage />} />
-              {/* Rental Objects routes */}
-              <Route path="rental-objects" element={<RentalObjectsPage />} />
-              <Route path="rental-objects/new" element={<RentalObjectEditPage />} />
-              <Route path="rental-objects/:slug" element={<RentalObjectEditPage />} />
-              <Route path="rental-objects/:slug/view" element={<RentalObjectDetailPage />} />
-              {/* Legacy redirects for backwards compatibility */}
-              <Route path="listings" element={<Navigate to="/rental-objects" replace />} />
-              <Route path="listings/new" element={<Navigate to="/rental-objects/new" replace />} />
-              {/* Note: Dynamic redirects for /listings/:slug routes would require custom component - handled by 404 for now */}
-              <Route path="calendar" element={<CalendarPage />} />
-              <Route path="requests" element={<Navigate to="/bookings" replace />} />
-              <Route path="bookings" element={<BookingsPage />} />
-              <Route path="bookings/pending" element={<PendingBookingsPage />} />
-              <Route path="bookings/:id" element={<BookingDetailPage />} />
-              <Route path="seasons" element={<SeasonsListPage />} />
-              <Route path="seasons/new" element={<SeasonFormPage />} />
-              <Route path="seasons/:id" element={<SeasonDetailPage />} />
-              <Route path="seasons/:id/edit" element={<SeasonFormPage />} />
-              <Route path="messages" element={<MessagesPage />} />
-              <Route path="reports" element={<ReportsPage />} />
-              <Route
-                path="reviews/moderation"
-                element={
-                  <ProtectedRoute requiredRole="admin">
-                    <ReviewModerationPage />
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                path="audit"
-                element={
-                  <ProtectedRoute requiredRole="admin">
-                    <AuditPage />
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                path="organizations"
-                element={
-                  <ProtectedRoute requiredRole="admin">
-                    <OrganizationsListPage />
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                path="organizations/new"
-                element={
-                  <ProtectedRoute requiredRole="admin">
-                    <OrganizationFormPage />
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                path="organizations/:id"
-                element={
-                  <ProtectedRoute requiredRole="admin">
-                    <OrganizationDetailPage />
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                path="organizations/:id/edit"
-                element={
-                  <ProtectedRoute requiredRole="admin">
-                    <OrganizationFormPage />
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                path="organizations/:id/members"
-                element={
-                  <ProtectedRoute requiredRole="admin">
-                    <OrganizationMembersPage />
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                path="organizations/:id/permissions"
-                element={
-                  <ProtectedRoute requiredRole="admin">
-                    <PermissionAssignmentPage />
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                path="organizations/:id/rental-objects"
-                element={
-                  <ProtectedRoute requiredRole="admin">
-                    <OrganizationRentalObjectsPage />
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                path="access-grants"
-                element={
-                  <ProtectedRoute requiredRole="admin">
-                    <AccessGrantsPage />
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                path="access-grants/new"
-                element={
-                  <ProtectedRoute requiredRole="admin">
-                    <NewAccessGrantPage />
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                path="users"
-                element={
-                  <ProtectedRoute requiredRole="admin">
-                    <UsersPage />
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                path="settings"
-                element={
-                  <ProtectedRoute requiredRole="admin">
-                    <SettingsPage />
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                path="gdpr-requests"
-                element={
-                  <ProtectedRoute requiredRole="admin">
-                    <GdprRequestsPage />
-                  </ProtectedRoute>
-                }
-              />
-              
-              {/* Saksbehandler routes - case_handler role only */}
-              <Route
-                path="work-queue"
-                element={
-                  <ProtectedRoute requiredRole="case_handler">
-                    <WorkQueuePage />
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                path="season-applications"
-                element={
-                  <ProtectedRoute requiredRole="case_handler">
-                    <SeasonApplicationsReviewPage />
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                path="allocation-planner"
-                element={
-                  <ProtectedRoute requiredRole="case_handler">
-                    <AllocationPlannerPage />
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                path="decision-forms"
-                element={
-                  <ProtectedRoute requiredRole="case_handler">
-                    <DecisionFormsPage />
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                path="audit-timeline"
-                element={
-                  <ProtectedRoute requiredRole="case_handler">
-                    <AuditTimelinePage />
-                  </ProtectedRoute>
-                }
-              />
-              
-              {/* Admin routes */}
-              <Route
-                path="rental-objects/wizard"
-                element={
-                  <ProtectedRoute requiredRole="admin">
-                    <RentalObjectWizardPage />
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                path="rental-objects/wizard/:id"
-                element={
-                  <ProtectedRoute requiredRole="admin">
-                    <RentalObjectWizardPage />
-                  </ProtectedRoute>
-                }
-              />
-              {/* Legacy wizard redirects */}
-              <Route path="listings/wizard" element={<Navigate to="/rental-objects/wizard" replace />} />
-              <Route
-                path="pricing-rules"
-                element={
-                  <ProtectedRoute requiredRole="admin">
-                    <PricingRulesPage />
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                path="users-management"
-                element={
-                  <ProtectedRoute requiredRole="admin">
-                    <UsersManagementPage />
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                path="admin-reports"
-                element={
-                  <ProtectedRoute requiredRole="admin">
-                    <AdminReportsPage />
-                  </ProtectedRoute>
-                }
-              />
-              
-              {/* TenantAdmin routes */}
-              <Route
-                path="tenant/settings"
-                element={
-                  <ProtectedRoute requiredRole="admin">
-                    <TenantSettingsPage />
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                path="tenant/branding"
-                element={
-                  <ProtectedRoute requiredRole="admin">
-                    <TenantBrandingPage />
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                path="tenant/audit-log"
-                element={
-                  <ProtectedRoute requiredRole="admin">
-                    <TenantAuditLogPage />
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                path="tenant/users"
-                element={
-                  <ProtectedRoute requiredRole="admin">
-                    <TenantUsersListPage />
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                path="tenant/users/invite"
-                element={
-                  <ProtectedRoute requiredRole="admin">
-                    <TenantUserInvitePage />
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                path="tenant/features"
-                element={
-                  <ProtectedRoute requiredRole="admin">
-                    <TenantFeaturesPage />
-                  </ProtectedRoute>
-                }
-              />
+              <Suspense fallback={<LoadingFallback />}>
+                <Routes>
+                  <Route path="/login" element={<LoginPage />} />
+                  <Route path="/role-selection" element={<RoleSelectionPage />} />
 
-              {/* OrgAdmin routes */}
-              <Route
-                path="org-admin/dashboard"
-                element={
-                  <ProtectedRoute requiredRole="org_admin">
-                    <OrgAdminDashboardPage />
-                  </ProtectedRoute>
-                }
-              />
+                  <Route
+                    path="/"
+                    element={
+                      <ProtectedRoute>
+                        <AppLayout />
+                      </ProtectedRoute>
+                    }
+                  >
+                    <Route index element={<DashboardPage />} />
+                    
+                    {/* Rental Objects routes */}
+                    <Route path="rental-objects" element={<RentalObjectsPage />} />
+                    <Route path="rental-objects/new" element={<RentalObjectEditPage />} />
+                    <Route path="rental-objects/:slug" element={<RentalObjectEditPage />} />
+                    <Route path="rental-objects/:slug/view" element={<RentalObjectDetailPage />} />
+                    
+                    {/* Legacy redirects */}
+                    <Route path="listings" element={<Navigate to="/rental-objects" replace />} />
+                    <Route path="listings/new" element={<Navigate to="/rental-objects/new" replace />} />
+                    
+                    <Route path="calendar" element={<CalendarPage />} />
+                    <Route path="requests" element={<Navigate to="/bookings" replace />} />
+                    <Route path="bookings" element={<BookingsPage />} />
+                    <Route path="bookings/pending" element={<PendingBookingsPage />} />
+                    <Route path="bookings/:id" element={<BookingDetailPage />} />
+                    <Route path="seasons" element={<SeasonsListPage />} />
+                    <Route path="seasons/new" element={<SeasonFormPage />} />
+                    <Route path="seasons/:id" element={<SeasonDetailPage />} />
+                    <Route path="seasons/:id/edit" element={<SeasonFormPage />} />
+                    <Route path="messages" element={<MessagesPage />} />
+                    <Route path="reports" element={<ReportsPage />} />
+                    
+                    {/* Admin routes */}
+                    <Route path="reviews/moderation" element={<ProtectedRoute requiredRole="admin"><ReviewModerationPage /></ProtectedRoute>} />
+                    <Route path="audit" element={<ProtectedRoute requiredRole="admin"><AuditPage /></ProtectedRoute>} />
+                    <Route path="organizations" element={<ProtectedRoute requiredRole="admin"><OrganizationsListPage /></ProtectedRoute>} />
+                    <Route path="organizations/new" element={<ProtectedRoute requiredRole="admin"><OrganizationFormPage /></ProtectedRoute>} />
+                    <Route path="organizations/:id" element={<ProtectedRoute requiredRole="admin"><OrganizationDetailPage /></ProtectedRoute>} />
+                    <Route path="organizations/:id/edit" element={<ProtectedRoute requiredRole="admin"><OrganizationFormPage /></ProtectedRoute>} />
+                    <Route path="organizations/:id/members" element={<ProtectedRoute requiredRole="admin"><OrganizationMembersPage /></ProtectedRoute>} />
+                    <Route path="organizations/:id/permissions" element={<ProtectedRoute requiredRole="admin"><PermissionAssignmentPage /></ProtectedRoute>} />
+                    <Route path="organizations/:id/rental-objects" element={<ProtectedRoute requiredRole="admin"><OrganizationRentalObjectsPage /></ProtectedRoute>} />
+                    <Route path="access-grants" element={<ProtectedRoute requiredRole="admin"><AccessGrantsPage /></ProtectedRoute>} />
+                    <Route path="access-grants/new" element={<ProtectedRoute requiredRole="admin"><NewAccessGrantPage /></ProtectedRoute>} />
+                    <Route path="users" element={<ProtectedRoute requiredRole="admin"><UsersPage /></ProtectedRoute>} />
+                    <Route path="settings" element={<ProtectedRoute requiredRole="admin"><SettingsPage /></ProtectedRoute>} />
+                    <Route path="gdpr-requests" element={<ProtectedRoute requiredRole="admin"><GdprRequestsPage /></ProtectedRoute>} />
+                    
+                    {/* Saksbehandler routes */}
+                    <Route path="work-queue" element={<ProtectedRoute requiredRole="case_handler"><WorkQueuePage /></ProtectedRoute>} />
+                    <Route path="season-applications" element={<ProtectedRoute requiredRole="case_handler"><SeasonApplicationsReviewPage /></ProtectedRoute>} />
+                    <Route path="allocation-planner" element={<ProtectedRoute requiredRole="case_handler"><AllocationPlannerPage /></ProtectedRoute>} />
+                    <Route path="decision-forms" element={<ProtectedRoute requiredRole="case_handler"><DecisionFormsPage /></ProtectedRoute>} />
+                    <Route path="audit-timeline" element={<ProtectedRoute requiredRole="case_handler"><AuditTimelinePage /></ProtectedRoute>} />
+                    
+                    {/* Admin routes */}
+                    <Route path="rental-objects/wizard" element={<ProtectedRoute requiredRole="admin"><RentalObjectWizardPage /></ProtectedRoute>} />
+                    <Route path="rental-objects/wizard/:id" element={<ProtectedRoute requiredRole="admin"><RentalObjectWizardPage /></ProtectedRoute>} />
+                    <Route path="listings/wizard" element={<Navigate to="/rental-objects/wizard" replace />} />
+                    <Route path="pricing-rules" element={<ProtectedRoute requiredRole="admin"><PricingRulesPage /></ProtectedRoute>} />
+                    <Route path="users-management" element={<ProtectedRoute requiredRole="admin"><UsersManagementPage /></ProtectedRoute>} />
+                    <Route path="admin-reports" element={<ProtectedRoute requiredRole="admin"><AdminReportsPage /></ProtectedRoute>} />
+                    
+                    {/* TenantAdmin routes */}
+                    <Route path="tenant/settings" element={<ProtectedRoute requiredRole="admin"><TenantSettingsPage /></ProtectedRoute>} />
+                    <Route path="tenant/branding" element={<ProtectedRoute requiredRole="admin"><TenantBrandingPage /></ProtectedRoute>} />
+                    <Route path="tenant/audit-log" element={<ProtectedRoute requiredRole="admin"><TenantAuditLogPage /></ProtectedRoute>} />
+                    <Route path="tenant/users" element={<ProtectedRoute requiredRole="admin"><TenantUsersListPage /></ProtectedRoute>} />
+                    <Route path="tenant/users/invite" element={<ProtectedRoute requiredRole="admin"><TenantUserInvitePage /></ProtectedRoute>} />
+                    <Route path="tenant/features" element={<ProtectedRoute requiredRole="admin"><TenantFeaturesPage /></ProtectedRoute>} />
 
-              {/* Blocks routes - accessible to org_admin, org_member, case_handler, and admin */}
-              <Route path="blocks" element={<BlocksListPage />} />
-              <Route path="blocks/new" element={<BlockFormPage />} />
-              <Route path="blocks/:id" element={<BlockDetailPage />} />
-              <Route path="blocks/:id/edit" element={<BlockFormPage />} />
+                    {/* OrgAdmin routes */}
+                    <Route path="org-admin/dashboard" element={<ProtectedRoute requiredRole="org_admin"><OrgAdminDashboardPage /></ProtectedRoute>} />
 
-              {/* Help routes - accessible to all authenticated users */}
-              <Route path="help" element={<HelpPage />} />
-              <Route path="help/guides" element={<HelpGuidesPage />} />
-              <Route path="help/faq" element={<HelpFAQPage />} />
-            </Route>
+                    {/* Blocks routes */}
+                    <Route path="blocks" element={<BlocksListPage />} />
+                    <Route path="blocks/new" element={<BlockFormPage />} />
+                    <Route path="blocks/:id" element={<BlockDetailPage />} />
+                    <Route path="blocks/:id/edit" element={<BlockFormPage />} />
 
-            <Route path="*" element={<Navigate to="/" replace />} />
-          </Routes>
-          </Suspense>
-          </RealtimeProvider>
+                    {/* Help routes */}
+                    <Route path="help" element={<HelpPage />} />
+                    <Route path="help/guides" element={<HelpGuidesPage />} />
+                    <Route path="help/faq" element={<HelpFAQPage />} />
+                  </Route>
+
+                  <Route path="*" element={<Navigate to="/" replace />} />
+                </Routes>
+              </Suspense>
+            </RealtimeProvider>
           </CapabilityProvider>
-          </BackofficeRoleProvider>
+        </BackofficeRoleProvider>
+      </ToastProvider>
+    </BrowserRouter>
   );
 }
+
+export default App;
