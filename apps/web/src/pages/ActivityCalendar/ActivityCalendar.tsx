@@ -115,10 +115,10 @@ export const ActivityCalendar: React.FC = () => {
                   <p className="activity-description">{activity.description}</p>
                   
                   <div className="activity-meta">
-                    <div>📍 {activity.rentalObjectName}</div>
-                    <div>🕐 {format(activity.startTime, 'HH:mm', { locale: nb })}</div>
-                    {activity.instructorName && <div>👤 {activity.instructorName}</div>}
-                    {activity.difficulty && <div>📊 {activity.difficulty}</div>}
+                    <div>Location: {activity.rentalObjectName}</div>
+                    <div>Time: {format(activity.startTime, 'HH:mm', { locale: nb })}</div>
+                    {activity.instructorName && <div>Instructor: {activity.instructorName}</div>}
+                    {activity.difficulty && <div>Level: {activity.difficulty}</div>}
                   </div>
 
                   <div className="activity-footer">

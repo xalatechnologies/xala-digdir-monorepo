@@ -1,4 +1,4 @@
-import type { Preview, Decorator } from '@storybook/react';
+import type { Preview, Decorator } from '@storybook/react-vite';
 import React from 'react';
 
 // Inter font from Google Fonts
@@ -13,6 +13,53 @@ import './public/themes/digilist-extensions.css';
 
 import { ThemeProvider, useTheme } from '../src/ThemeProvider';
 import { I18nProvider } from '@xala/i18n';
+
+// Suppress React 18 act() warnings and WebSocket HMR noise in Storybook
+// These are expected in Storybook's non-testing environment and don't indicate real issues
+//
+// 🔍 Need to see these warnings for debugging?
+// Temporarily comment out the console overrides below (lines 36-49)
+// Or access: window.__originalConsole.error('test') in browser console
+const originalError = console.error;
+const originalWarn = console.warn;
+const originalLog = console.log;
+
+const shouldSuppressMessage = (message: unknown): boolean => {
+  if (typeof message !== 'string') return false;
+  
+  const suppressPatterns = [
+    'Warning: The current testing environment is not configured to support act',
+    'WebSocket is already in CLOSING or CLOSED state',
+    'WebSocket connection',
+    'WebSocket error',
+  ];
+  
+  return suppressPatterns.some(pattern => message.includes(pattern));
+};
+
+console.error = (...args) => {
+  if (shouldSuppressMessage(args[0])) return;
+  originalError.call(console, ...args);
+};
+
+console.warn = (...args) => {
+  if (shouldSuppressMessage(args[0])) return;
+  originalWarn.call(console, ...args);
+};
+
+console.log = (...args) => {
+  if (shouldSuppressMessage(args[0])) return;
+  originalLog.call(console, ...args);
+};
+
+// Store originals for debugging (accessible via window.__originalConsole)
+if (typeof window !== 'undefined') {
+  (window as any).__originalConsole = {
+    error: originalError,
+    warn: originalWarn,
+    log: originalLog,
+  };
+}
 
 /**
  * Theme decorator that wraps all stories with DS theme provider
@@ -51,13 +98,13 @@ const preview: Preview = {
       toc: true,
     },
     a11y: {
-      element: '#storybook-root',
+      context: '#storybook-root',
       config: {},
       options: {},
       manual: false,
     },
     backgrounds: {
-      disable: true,
+      disabled: true,
     },
     options: {
       storySort: {

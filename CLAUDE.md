@@ -287,18 +287,29 @@ This is a **Turborepo** using **pnpm workspaces**.
 
 ```
 xala-digdir-monorepo/
-├── apps/                           # Applications
+├── apps/                           # Applications (7 total)
 │   ├── web/                        # Public web app (port 5173)
-│   ├── backoffice/                 # Admin portal (port 5175)
 │   ├── minside/                    # User portal (port 5174)
+│   ├── backoffice/                 # Admin portal (port 5175)
+│   ├── saas-admin/                 # SaaS administration (port 5177)
+│   ├── monitoring/                 # System monitoring (port 5178)
+│   ├── docs-learning/              # Documentation portal (port 5179)
 │   └── api/                        # Fastify API server (port 4000)
 │
-├── packages/                       # Shared packages
+├── packages/                       # Shared packages (14 total)
 │   ├── client-sdk/                 # Enterprise SDK ⭐
+│   ├── contracts/                  # API contracts (Zod schemas) ⭐
+│   ├── sdk-core/                   # SDK primitives (HTTP, RFC7807)
+│   ├── database-schema/            # Drizzle ORM definitions
+│   ├── auth/                       # Authentication layer
 │   ├── ds/                         # Design System facade ⭐
 │   ├── ds-themes/                  # Theme CSS files
 │   ├── ds-registry/                # Component documentation
 │   ├── i18n/                       # Internationalization ⭐
+│   ├── observability/              # Metrics, logging
+│   ├── testing/                    # Unit test utilities
+│   ├── testing-e2e/                # Playwright E2E
+│   ├── docs-content/               # Documentation content
 │   └── eslint-config/              # Shared ESLint rules
 │
 ├── tests/                          # Consolidated test structure ⭐
@@ -354,6 +365,23 @@ xala-digdir-monorepo/
   - WebSocket server for real-time events
   - [CLAUDE.md](./apps/api/CLAUDE.md) | [AGENTS.md](./apps/api/AGENTS.md)
 
+- **apps/saas-admin** - SaaS administration portal Vite + React app (port 5177)
+  - Billing, subscriptions, feature management
+  - Plan and entitlement configuration
+  - Route and navigation policy management
+  - [CLAUDE.md](./apps/saas-admin/CLAUDE.md) | [AGENTS.md](./apps/saas-admin/AGENTS.md)
+
+- **apps/monitoring** - System monitoring dashboard Vite + React app (port 5178)
+  - Health checks and performance monitoring
+  - System metrics visualization
+  - Error tracking and alerting
+  - [CLAUDE.md](./apps/monitoring/CLAUDE.md) | [AGENTS.md](./apps/monitoring/AGENTS.md)
+
+- **apps/docs-learning** - Documentation and learning portal Vite + React app (port 5179)
+  - Training materials and guides
+  - Interactive documentation
+  - [CLAUDE.md](./apps/docs-learning/CLAUDE.md) | [AGENTS.md](./apps/docs-learning/AGENTS.md)
+
 ### Packages (packages/)
 
 - **@xala/sdk-core** - Generic SDK primitives (HTTP client, RFC7807 errors, retry, query keys)
@@ -390,78 +418,88 @@ xala-digdir-monorepo/
   - Compliance scanner
   - [CLAUDE.md](./packages/eslint-config/CLAUDE.md) | [AGENTS.md](./packages/eslint-config/AGENTS.md)
 
+- **@xala/auth** - Authentication layer
+  - Session management, token handling
+  - BankID/ID-porten integration support
+  - [CLAUDE.md](./packages/auth/CLAUDE.md) | [AGENTS.md](./packages/auth/AGENTS.md)
+
+- **@digilist/database-schema** - Drizzle ORM table definitions
+  - PostgreSQL schema definitions (platform, domain, saas, compliance, monitoring)
+  - Migration management
+  - [CLAUDE.md](./packages/database-schema/CLAUDE.md) | [AGENTS.md](./packages/database-schema/AGENTS.md)
+
+- **@xala/observability** - Observability and monitoring utilities
+  - Prometheus metrics, Grafana dashboards
+  - Structured logging, distributed tracing
+
+- **@digilist/testing** - Shared testing utilities
+  - Test fixtures, mock data
+  - Custom matchers, setup functions
+  - [CLAUDE.md](./packages/testing/CLAUDE.md) | [AGENTS.md](./packages/testing/AGENTS.md)
+
+- **@digilist/testing-e2e** - Playwright E2E test configuration
+  - E2E test helpers and utilities
+  - Browser automation patterns
+
+- **@xala/docs-content** - Documentation content
+  - Markdown-based documentation
+  - Guides and training materials
+
 ### Dependency Graph
 
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│                        APPLICATIONS                             │
-├─────────────────────────────────────────────────────────────────┤
-│                                                                 │
-│  ┌─────────────┐  ┌──────────────┐  ┌───────────────┐         │
-│  │  apps/web   │  │ apps/minside │  │ apps/backoffice│         │
-│  │ (port 5173) │  │ (port 5174)  │  │  (port 5175)   │         │
-│  └──────┬──────┘  └──────┬───────┘  └───────┬────────┘         │
-│         │                │                   │                  │
-│         └────────────────┼───────────────────┘                  │
-│                          │                                      │
-│                          ▼                                      │
-│         ┌────────────────────────────────────────┐              │
-│         │      @digilist/client-sdk ⭐          │              │
-│         │  (30+ services, React Query hooks)    │              │
-│         └────────────────┬───────────────────────┘              │
-│                          │                                      │
-│                          ▼                                      │
-│         ┌────────────────────────────────────────┐              │
-│         │          apps/api ⭐                   │              │
-│         │  (Fastify, PostgreSQL, WebSocket)     │              │
-│         │     https://api.digilist.no           │              │
-│         └────────────────────────────────────────┘              │
-│                                                                 │
-├─────────────────────────────────────────────────────────────────┤
-│                      UI COMPONENTS                              │
-├─────────────────────────────────────────────────────────────────┤
-│                                                                 │
-│  ┌─────────────┐  ┌──────────────┐  ┌───────────────┐         │
-│  │  apps/web   │  │ apps/minside │  │ apps/backoffice│         │
-│  └──────┬──────┘  └──────┬───────┘  └───────┬────────┘         │
-│         │                │                   │                  │
-│         └────────────────┼───────────────────┘                  │
-│                          │                                      │
-│                          ▼                                      │
-│         ┌────────────────────────────────────────┐              │
-│         │            @xala/ds ⭐                 │              │
-│         │    (Design System Facade)             │              │
-│         │   - Primitives (re-exported)          │              │
-│         │   - Composed (custom)                 │              │
-│         │   - Blocks (business)                 │              │
-│         │   - Shells (layouts)                  │              │
-│         └────────────────┬───────────────────────┘              │
-│                          │                                      │
-│                          ▼                                      │
-│         ┌────────────────────────────────────────┐              │
-│         │  @digdir/designsystemet-react          │              │
-│         │  @digdir/designsystemet-css            │              │
-│         │  (Norwegian Design System)             │              │
-│         └────────────────────────────────────────┘              │
-│                                                                 │
-├─────────────────────────────────────────────────────────────────┤
-│                    INTERNATIONALIZATION                         │
-├─────────────────────────────────────────────────────────────────┤
-│                                                                 │
-│  ┌─────────────┐  ┌──────────────┐  ┌───────────────┐         │
-│  │  apps/web   │  │ apps/minside │  │ apps/backoffice│         │
-│  └──────┬──────┘  └──────┬───────┘  └───────┬────────┘         │
-│         │                │                   │                  │
-│         └────────────────┼───────────────────┘                  │
-│                          │                                      │
-│                          ▼                                      │
-│         ┌────────────────────────────────────────┐              │
-│         │          @xala/i18n ⭐                 │              │
-│         │  (Norwegian & English translations)    │              │
-│         │         useT() hook                    │              │
-│         └────────────────────────────────────────┘              │
-│                                                                 │
-└─────────────────────────────────────────────────────────────────┘
+┌──────────────────────────────────────────────────────────────────────────────┐
+│                            FRONTEND APPLICATIONS (6)                          │
+├──────────────────────────────────────────────────────────────────────────────┤
+│                                                                              │
+│  ┌──────────┐ ┌──────────┐ ┌───────────┐ ┌───────────┐ ┌──────────┐ ┌─────┐│
+│  │   web    │ │ minside  │ │ backoffice│ │ saas-admin│ │monitoring│ │docs ││
+│  │  :5173   │ │  :5174   │ │   :5175   │ │   :5177   │ │  :5178   │ │:5179││
+│  └────┬─────┘ └────┬─────┘ └─────┬─────┘ └─────┬─────┘ └────┬─────┘ └──┬──┘│
+│       │            │             │             │            │          │    │
+│       └────────────┴─────────────┴─────────────┴────────────┴──────────┘    │
+│                                    │                                         │
+│                                    ▼                                         │
+│              ┌────────────────────────────────────────┐                      │
+│              │      @digilist/client-sdk ⭐          │                      │
+│              │  (30+ services, React Query hooks)    │                      │
+│              └────────────────────┬───────────────────┘                      │
+│                                   │                                          │
+│                                   ▼                                          │
+│              ┌────────────────────────────────────────┐                      │
+│              │          apps/api ⭐ (port 4000)       │                      │
+│              │  (Fastify, PostgreSQL, WebSocket)     │                      │
+│              │     https://api.digilist.no           │                      │
+│              └────────────────────────────────────────┘                      │
+│                                                                              │
+├──────────────────────────────────────────────────────────────────────────────┤
+│                           SHARED PACKAGES                                    │
+├──────────────────────────────────────────────────────────────────────────────┤
+│                                                                              │
+│  All 6 frontend apps depend on:                                              │
+│                                                                              │
+│  ┌─────────────────────┐  ┌─────────────────────┐  ┌─────────────────────┐  │
+│  │      @xala/ds       │  │     @xala/i18n      │  │   @xala/auth        │  │
+│  │ (Design System)     │  │ (Internationalization)│  │ (Authentication)   │  │
+│  └─────────────────────┘  └─────────────────────┘  └─────────────────────┘  │
+│                                                                              │
+│  ┌─────────────────────┐  ┌─────────────────────┐  ┌─────────────────────┐  │
+│  │  @xala/sdk-core     │  │  @xala/contracts    │  │ @xala/observability │  │
+│  │ (HTTP, RFC7807)     │  │ (Zod schemas)       │  │ (Metrics, Logging)  │  │
+│  └─────────────────────┘  └─────────────────────┘  └─────────────────────┘  │
+│                                                                              │
+│  Backend-only:                                                               │
+│  ┌─────────────────────────────────────────────────────────────────────┐    │
+│  │  @digilist/database-schema (Drizzle ORM, PostgreSQL)                │    │
+│  └─────────────────────────────────────────────────────────────────────┘    │
+│                                                                              │
+│  Testing:                                                                    │
+│  ┌─────────────────────────┐  ┌─────────────────────────┐                   │
+│  │  @digilist/testing      │  │  @digilist/testing-e2e  │                   │
+│  │  (Unit test utilities)  │  │  (Playwright E2E)       │                   │
+│  └─────────────────────────┘  └─────────────────────────┘                   │
+│                                                                              │
+└──────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ### Import Rules (Critical)
@@ -1332,8 +1370,13 @@ resolve: {
 ## Development URLs
 
 - Web app: http://localhost:5173
-- Backoffice: http://localhost:5174
-- API health: http://localhost:3002/health
+- Minside: http://localhost:5174
+- Backoffice: http://localhost:5175
+- SaaS Admin: http://localhost:5177
+- Monitoring: http://localhost:5178
+- Docs Learning: http://localhost:5179
+- API: http://localhost:4000
+- API health: http://localhost:4000/health
 
 ---
 

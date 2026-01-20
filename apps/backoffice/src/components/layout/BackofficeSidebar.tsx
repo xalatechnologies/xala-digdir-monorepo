@@ -37,6 +37,7 @@ import {
 import { useAuth } from '@xala/auth';
 import { useBackofficeMenu, usePendingGdprRequests } from '@digilist/client-sdk/hooks';
 import { useT } from '@xala/i18n';
+import { useBackofficeRole } from '../../hooks/useBackofficeRole';
 import { Sidebar as LegacySidebar } from './Sidebar';
 
 interface BackofficeSidebarProps {
@@ -113,6 +114,7 @@ function mapCategoryToSection(category: MenuCategory, badgeCounts?: Record<strin
 export function BackofficeSidebar({ isMobileOpen = false, onMobileClose }: BackofficeSidebarProps) {
   const t = useT();
   const { user } = useAuth();
+  const { isAdmin } = useBackofficeRole();
   
   const { data: menuData, isLoading, error } = useBackofficeMenu({ language: 'nb' });
   
@@ -179,7 +181,7 @@ export function BackofficeSidebar({ isMobileOpen = false, onMobileClose }: Backo
             marginTop: '2px',
           }}
         >
-          {user.role === 'admin' ? t('role.admin') : t('role.caseHandler')}
+          {isAdmin ? t('role.admin') : t('role.caseHandler')}
         </div>
       </div>
     </div>

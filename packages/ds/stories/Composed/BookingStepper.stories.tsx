@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/react-vite';
 import { BookingStepper } from '../../src/composed/BookingStepper';
 import { useState } from 'react';
 

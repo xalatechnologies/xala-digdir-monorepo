@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/react-vite';
 import { Skeleton, SkeletonText, SkeletonCard, SkeletonTable } from '../../src/composed/Skeleton';
 
 const meta: Meta<typeof Skeleton> = {

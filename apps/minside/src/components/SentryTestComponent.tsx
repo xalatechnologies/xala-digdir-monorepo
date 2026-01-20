@@ -83,9 +83,9 @@ export function SentryTestComponent() {
 
   return (
     <Card style={{ padding: 'var(--ds-spacing-8)', margin: 'var(--ds-spacing-8)', maxWidth: '800px' }}>
-      <h2 style={{ marginBottom: 'var(--ds-spacing-4)' }}>🧪 Sentry Error Tracking Test Panel - Minside App</h2>
-      <p style={{ marginBottom: 'var(--ds-spacing-6)', color: 'var(--ds-color-neutral-text-subtle)' }}>
-        ⚠️ <strong>For testing only!</strong> Remove this component before production.
+      <h2 style={{ marginBottom: 'var(--ds-spacing-4)' }}>Sentry Error Tracking Test Panel - Minside App</h2>
+      <p style={{ color: 'var(--ds-color-warning-text-default)', marginBottom: 'var(--ds-spacing-3)' }}>
+        WARNING: <strong>For testing only!</strong> Remove this component before production.
       </p>
 
       <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--ds-spacing-4)' }}>

@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/react-vite';
 import { Button, Heading, Paragraph } from '@digdir/designsystemet-react';
 import { SearchIcon, PlusIcon } from '../../src/primitives';
 

@@ -31,7 +31,7 @@ import { useT } from '@xala/i18n';
 // Status tabs for main navigation
 const STATUS_TABS = [
   { id: 'pending', label: 'Ventende', icon: '⏳', color: 'warning' },
-  { id: 'processing', label: 'Behandles', icon: '⚙️', color: 'info' },
+  { id: 'processing', label: 'Behandles', icon: 'SettingsIcon', color: 'info' },
   { id: 'completed', label: t("status.completed"), icon: '✓', color: 'success' },
   { id: 'rejected', label: t('common.avslaatt'), icon: '✕', color: 'danger' },
   { id: 'all', label: 'Alle', icon: 'FileIcon', color: 'neutral' },

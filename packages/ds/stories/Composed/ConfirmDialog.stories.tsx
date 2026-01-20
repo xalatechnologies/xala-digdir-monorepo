@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/react-vite';
 import { useState } from 'react';
 import { ConfirmDialog, ActionDialog } from '../../src/composed/ConfirmDialog';
 import { Button } from '@digdir/designsystemet-react';

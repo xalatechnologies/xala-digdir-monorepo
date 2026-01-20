@@ -34,7 +34,7 @@ const allGuideConfigs: GuideConfig[] = [
     id: 'booking-approval',
     translationKey: 'bookingApproval',
     stepCount: 7,
-    icon: '✅',
+    icon: 'CheckIcon',
     difficulty: 'beginner',
   },
   {
@@ -81,7 +81,7 @@ const allGuideConfigs: GuideConfig[] = [
     id: 'org-settings',
     translationKey: 'orgSettings',
     stepCount: 7,
-    icon: '⚙️',
+    icon: 'SettingsIcon',
     difficulty: 'advanced',
     roles: ['admin', 'tenant_admin'],
   },

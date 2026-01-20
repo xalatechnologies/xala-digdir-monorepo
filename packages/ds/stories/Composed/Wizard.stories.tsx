@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/react-vite';
 import { useState } from 'react';
 import { WizardStepper, WizardNavigation } from '../../src/composed/data-page/Wizard';
 import { Button, Paragraph } from '@digdir/designsystemet-react';

@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/react-vite';
 import { PageHeader } from '../../src/composed';
 import { Button, Breadcrumbs } from '@digdir/designsystemet-react';
 import { PlusIcon, DownloadIcon } from '../../src/primitives';

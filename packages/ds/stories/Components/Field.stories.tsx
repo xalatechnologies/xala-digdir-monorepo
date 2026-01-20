@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/react-vite';
 import { Field, Label, Input, Textarea, Select, Checkbox, ValidationMessage } from '@digdir/designsystemet-react';
 
 const meta: Meta = {

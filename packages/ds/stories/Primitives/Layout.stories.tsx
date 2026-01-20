@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/react-vite';
 import { Container } from '../../src/primitives/container';
 import { Grid } from '../../src/primitives/grid';
 import { Stack } from '../../src/primitives/stack';

@@ -4,21 +4,21 @@
  * Overview page with section cards and quick links.
  */
 
-import { Heading, Paragraph, Card } from '@xala/ds';
+import { Heading, Paragraph, Card, CalendarIcon, LockIcon, CreditCardIcon, SettingsIcon, TableIcon, ExternalLinkIcon, InfoIcon, UserIcon, BuildingIcon, SearchIcon } from '@xala/ds';
 import { Link } from 'react-router-dom';
 import { useT } from '@xala/i18n';
 import { useFeatureFlags } from '@digilist/client-sdk';
 import { isSectionEnabled, DOCS_FEATURE_FLAGS } from '../lib/feature-flags';
 import { DOCS_SECTIONS, type DocsSection } from '../types';
 
-const SECTION_CONFIG: Record<DocsSection, { icon: string; color: string }> = {
-  booking: { icon: '📅', color: 'accent' },
-  rbac: { icon: '🔐', color: 'info' },
-  payments: { icon: '💳', color: 'success' },
-  admin: { icon: '⚙️', color: 'warning' },
-  api: { icon: '🖥️', color: 'neutral' },
-  integrations: { icon: '🔌', color: 'info' },
-  faq: { icon: '❓', color: 'accent' },
+const SECTION_CONFIG: Record<DocsSection, { icon: React.ReactNode; color: string }> = {
+  booking: { icon: <CalendarIcon size={24} />, color: 'accent' },
+  rbac: { icon: <LockIcon size={24} />, color: 'info' },
+  payments: { icon: <CreditCardIcon size={24} />, color: 'success' },
+  admin: { icon: <SettingsIcon size={24} />, color: 'warning' },
+  api: { icon: <TableIcon size={24} />, color: 'neutral' },
+  integrations: { icon: <ExternalLinkIcon size={24} />, color: 'info' },
+  faq: { icon: <InfoIcon size={24} />, color: 'accent' },
 };
 
 export function DocsHomePage() {
@@ -52,7 +52,7 @@ export function DocsHomePage() {
               to={`/${section}`}
               style={{ /* sectionCard - converted from CSS module */ }}
             >
-              <Card style={{ /* card - converted from CSS module */ }} style={{ padding: 'var(--ds-spacing-4)' }}>
+              <Card style={{ padding: 'var(--ds-spacing-4)' }}>
                 <div style={{ /* sectionIcon - converted from CSS module */ }}>{config.icon}</div>
                 <Heading level={3} style={{ /* sectionTitle - converted from CSS module */ }}>
                   {t(`docs.sections.${section}.title`)}
@@ -73,7 +73,7 @@ export function DocsHomePage() {
         </Heading>
         <div style={{ /* quickLinksGrid - converted from CSS module */ }}>
           <Link to="/roles/web/end-user" style={{ /* quickLink - converted from CSS module */ }}>
-            <span style={{ /* quickLinkIcon - converted from CSS module */ }}>👤</span>
+            <UserIcon size={24} />
             <div>
               <Paragraph data-size="sm" style={{ /* quickLinkTitle - converted from CSS module */ }}>
                 {t('docs.home.forEndUsers')}
@@ -84,7 +84,7 @@ export function DocsHomePage() {
             </div>
           </Link>
           <Link to="/roles/backoffice/org-admin" style={{ /* quickLink - converted from CSS module */ }}>
-            <span style={{ /* quickLinkIcon - converted from CSS module */ }}>🏢</span>
+            <BuildingIcon size={24} />
             <div>
               <Paragraph data-size="sm" style={{ /* quickLinkTitle - converted from CSS module */ }}>
                 {t('docs.home.forOrgAdmins')}
@@ -95,7 +95,7 @@ export function DocsHomePage() {
             </div>
           </Link>
           <Link to="/search" style={{ /* quickLink - converted from CSS module */ }}>
-            <span style={{ /* quickLinkIcon - converted from CSS module */ }}>🔍</span>
+            <SearchIcon size={24} />
             <div>
               <Paragraph data-size="sm" style={{ /* quickLinkTitle - converted from CSS module */ }}>
                 {t('docs.home.searchDocs')}

@@ -83,7 +83,7 @@ export function SentryTestComponent() {
     <Card style={{ padding: '2rem', margin: '2rem', maxWidth: '800px' }}>
       <h2 style={{ marginBottom: '1rem' }}>{t('.sentry.error.tracking.test.panel.web.app')}</h2>
       <p style={{ marginBottom: '1.5rem', color: 'var(--ds-color-neutral-text-subtle)' }}>
-        ⚠️ <strong>{t('for.testing.only')}</strong> Remove this component before production.
+        WARNING: <strong>{t('for.testing.only')}</strong> Remove this component before production.
       </p>
 
       <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>

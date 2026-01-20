@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/react-vite';
 import { Details, Paragraph } from '@digdir/designsystemet-react';
 import React from 'react';
 

@@ -169,7 +169,7 @@ export function SeedDataManagementPage() {
               cursor: 'pointer'
             }}
           >
-            <div style={{ fontSize: 'var(--ds-font-size-10)', marginBottom: 'var(--ds-spacing-4)' }}>📁</div>
+            <div style={{ fontSize: 'var(--ds-font-size-10)', marginBottom: 'var(--ds-spacing-4)' }}>JSON</div>
             <Heading level={3} size="sm" style={{ marginBottom: 'var(--ds-spacing-2)' }}>
               Drag & Drop JSON File
             </Heading>
@@ -373,7 +373,7 @@ export function SeedDataManagementPage() {
       {step === 'complete' && result && (
         <Card style={{ padding: 'var(--ds-spacing-6)' }}>
           <Heading level={2} size="md" style={{ marginBottom: 'var(--ds-spacing-4)' }}>
-            {result.success ? '✅ Import Complete!' : '⚠️ Import Completed with Errors'}
+            {result.success ? 'Import Complete!' : 'Import Completed with Errors'}
           </Heading>
 
           {/* Success Summary */}

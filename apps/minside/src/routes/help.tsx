@@ -16,8 +16,11 @@ import {
   Button,
   Input,
   Textarea,
-  InfoIcon,
   DashboardPageHeader,
+  CalendarIcon,
+  CreditCardIcon,
+  PeopleIcon,
+  BuildingIcon,
 } from '@xala/ds';
 import { useT } from '@xala/i18n';
 
@@ -133,19 +136,19 @@ export function HelpPage() {
         gap: 'var(--ds-spacing-4)',
       }}>
         <Card style={{ padding: 'var(--ds-spacing-4)', textAlign: 'center', cursor: 'pointer' }}>
-          <Paragraph data-size="lg" style={{ margin: 0, marginBottom: 'var(--ds-spacing-2)' }}>📅</Paragraph>
+          <CalendarIcon size={24} style={{ marginBottom: 'var(--ds-spacing-2)' }} />
           <Paragraph data-size="sm" style={{ margin: 0, fontWeight: 600 }}>{t('help.quickLinks.booking')}</Paragraph>
         </Card>
         <Card style={{ padding: 'var(--ds-spacing-4)', textAlign: 'center', cursor: 'pointer' }}>
-          <Paragraph data-size="lg" style={{ margin: 0, marginBottom: 'var(--ds-spacing-2)' }}>💳</Paragraph>
+          <CreditCardIcon size={24} style={{ marginBottom: 'var(--ds-spacing-2)' }} />
           <Paragraph data-size="sm" style={{ margin: 0, fontWeight: 600 }}>{t('help.quickLinks.payment')}</Paragraph>
         </Card>
         <Card style={{ padding: 'var(--ds-spacing-4)', textAlign: 'center', cursor: 'pointer' }}>
-          <Paragraph data-size="lg" style={{ margin: 0, marginBottom: 'var(--ds-spacing-2)' }}>👥</Paragraph>
+          <PeopleIcon size={24} style={{ marginBottom: 'var(--ds-spacing-2)' }} />
           <Paragraph data-size="sm" style={{ margin: 0, fontWeight: 600 }}>{t('help.quickLinks.account')}</Paragraph>
         </Card>
         <Card style={{ padding: 'var(--ds-spacing-4)', textAlign: 'center', cursor: 'pointer' }}>
-          <Paragraph data-size="lg" style={{ margin: 0, marginBottom: 'var(--ds-spacing-2)' }}>🏢</Paragraph>
+          <BuildingIcon size={24} style={{ marginBottom: 'var(--ds-spacing-2)' }} />
           <Paragraph data-size="sm" style={{ margin: 0, fontWeight: 600 }}>{t('help.quickLinks.organization')}</Paragraph>
         </Card>
       </div>

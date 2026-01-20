@@ -53,10 +53,10 @@ interface SearchResultsProps {
 
 // Entity type tabs for filtering results
 const ENTITY_TYPE_TABS = [
-  { id: 'all', label: 'Alle', icon: '🔍' },
-  { id: 'booking', label: 'Bookinger', icon: '📅' },
-  { id: 'listing', label: 'Lokaler', icon: '🏢' },
-  { id: 'organization', label: 'Organisasjoner', icon: '👥' },
+  { id: 'all', label: 'Alle', icon: <ExternalLinkIcon size={16} /> },
+  { id: 'booking', label: 'Bookinger', icon: <CalendarIcon size={16} /> },
+  { id: 'listing', label: 'Lokaler', icon: <BuildingIcon size={16} /> },
+  { id: 'organization', label: 'Organisasjoner', icon: <PeopleIcon size={16} /> },
 ] as const;
 
 /**

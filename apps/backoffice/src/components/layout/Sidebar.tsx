@@ -603,7 +603,7 @@ export function Sidebar() {
                   marginTop: '2px',
                 }}
               >
-                {user.role === 'admin' ? t('role.admin') : t('role.caseHandler')}
+                {effectiveRole === 'admin' || effectiveRole === 'super_admin' ? t('role.admin') : t('role.caseHandler')}
               </Paragraph>
             </div>
           </div>

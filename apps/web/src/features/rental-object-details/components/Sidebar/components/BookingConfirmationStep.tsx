@@ -5,7 +5,7 @@
  */
 
 import * as React from 'react';
-import { Heading, Paragraph, Button } from '@xala/ds';
+import { Heading, Paragraph, Button, UserIcon, BuildingIcon } from '@xala/ds';
 import type { FlowSelectedSlot, FlowBookingMode } from '@digilist/client-sdk';
 import { useT } from '@xala/i18n';
 import { BookingVisibilitySelector, type BookingVisibility } from './BookingVisibilitySelector';
@@ -403,7 +403,7 @@ export function BookingConfirmationStep({
               border: '1px dashed var(--ds-color-warning-border-default)',
             }}
           >
-            🧪 {t('auth.demoLoginButton')}
+            [TEST] {t('auth.demoLoginButton')}
           </Button>
         </div>
 
@@ -509,7 +509,7 @@ export function BookingConfirmationStep({
                     flexShrink: 0,
                   }}
                 >
-                  👤
+                  <UserIcon size={18} />
                 </div>
                 <div style={{ flex: 1 }}>
                   <Paragraph data-size="md" style={{ margin: 0, fontWeight: 'var(--ds-font-weight-semibold)', color: 'var(--ds-color-neutral-text-default)' }}>
@@ -561,7 +561,7 @@ export function BookingConfirmationStep({
                     flexShrink: 0,
                   }}
                 >
-                  🏢
+                  <BuildingIcon size={18} />
                 </div>
                 <div style={{ flex: 1 }}>
                   <Paragraph data-size="md" style={{ margin: 0, fontWeight: 'var(--ds-font-weight-semibold)', color: 'var(--ds-color-neutral-text-default)' }}>
@@ -671,7 +671,7 @@ export function BookingConfirmationStep({
                   transition: 'all 150ms ease',
                 }}
               >
-                <span>👤</span>
+                <UserIcon size={16} />
                 <span style={{ fontSize: 'var(--ds-font-size-sm)', fontWeight: bookingAccountType === 'private' ? 'var(--ds-font-weight-semibold)' : 'normal' }}>
                   {t('som.privatperson')}
                 </span>
@@ -693,7 +693,7 @@ export function BookingConfirmationStep({
                   transition: 'all 150ms ease',
                 }}
               >
-                <span>🏢</span>
+                <BuildingIcon size={16} />
                 <span style={{ fontSize: 'var(--ds-font-size-sm)', fontWeight: bookingAccountType === 'organization' ? 'var(--ds-font-weight-semibold)' : 'normal' }}>
                   {t('paa.vegne.av.organisasjon')}
                 </span>

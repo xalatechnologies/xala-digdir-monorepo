@@ -16,6 +16,10 @@ import {
   Button,
   Input,
   Textarea,
+  CalendarIcon,
+  CreditCardIcon,
+  PeopleIcon,
+  BuildingIcon,
 } from '@xala/ds';
 import { useT } from '@xala/i18n';
 
@@ -135,19 +139,19 @@ export function HelpPage() {
         gap: 'var(--ds-spacing-4)',
       }}>
         <Card style={{ padding: 'var(--ds-spacing-4)', textAlign: 'center', cursor: 'pointer' }}>
-          <Paragraph data-size="lg" style={{ margin: 0, marginBottom: 'var(--ds-spacing-2)' }}>📅</Paragraph>
+          <div style={{ margin: 0, marginBottom: 'var(--ds-spacing-2)', display: 'flex', justifyContent: 'center' }}><CalendarIcon size={24} /></div>
           <Paragraph data-size="sm" style={{ margin: 0, fontWeight: 600 }}>{t('help.quickLinks.booking')}</Paragraph>
         </Card>
         <Card style={{ padding: 'var(--ds-spacing-4)', textAlign: 'center', cursor: 'pointer' }}>
-          <Paragraph data-size="lg" style={{ margin: 0, marginBottom: 'var(--ds-spacing-2)' }}>💳</Paragraph>
+          <div style={{ margin: 0, marginBottom: 'var(--ds-spacing-2)', display: 'flex', justifyContent: 'center' }}><CreditCardIcon size={24} /></div>
           <Paragraph data-size="sm" style={{ margin: 0, fontWeight: 600 }}>{t('help.quickLinks.payment')}</Paragraph>
         </Card>
         <Card style={{ padding: 'var(--ds-spacing-4)', textAlign: 'center', cursor: 'pointer' }}>
-          <Paragraph data-size="lg" style={{ margin: 0, marginBottom: 'var(--ds-spacing-2)' }}>👥</Paragraph>
+          <div style={{ margin: 0, marginBottom: 'var(--ds-spacing-2)', display: 'flex', justifyContent: 'center' }}><PeopleIcon size={24} /></div>
           <Paragraph data-size="sm" style={{ margin: 0, fontWeight: 600 }}>{t('help.quickLinks.account')}</Paragraph>
         </Card>
         <Card style={{ padding: 'var(--ds-spacing-4)', textAlign: 'center', cursor: 'pointer' }}>
-          <Paragraph data-size="lg" style={{ margin: 0, marginBottom: 'var(--ds-spacing-2)' }}>🏢</Paragraph>
+          <div style={{ margin: 0, marginBottom: 'var(--ds-spacing-2)', display: 'flex', justifyContent: 'center' }}><BuildingIcon size={24} /></div>
           <Paragraph data-size="sm" style={{ margin: 0, fontWeight: 600 }}>{t('help.quickLinks.organization')}</Paragraph>
         </Card>
       </div>

@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/react-vite';
 import { Dialog, Button, Paragraph, Heading } from '@digdir/designsystemet-react';
 import { useRef } from 'react';
 

@@ -38,7 +38,7 @@ const helpSectionKeys: HelpSectionKey[] = [
     titleKey: 'help.sections.faq.title',
     descriptionKey: 'help.sections.faq.description',
     href: '/help/faq',
-    icon: '❓',
+    icon: 'InfoIcon',
   },
   {
     titleKey: 'help.sections.support.title',
