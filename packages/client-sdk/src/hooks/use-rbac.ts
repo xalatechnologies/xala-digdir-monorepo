@@ -325,7 +325,7 @@ export function usePermissionAssignmentsByOrganization(
  */
 export function usePermissionAssignmentsByUser(
   userId: string,
-  params?: PermissionAssignmentQueryParams
+  _params?: PermissionAssignmentQueryParams
 ) {
   return useQuery({
     queryKey: queryKeys.permissionAssignments.byUser(userId),
@@ -340,7 +340,7 @@ export function usePermissionAssignmentsByUser(
 export function usePermissionAssignmentsByRentalObject(
   organizationId: string,
   rentalObjectId: string,
-  params?: PermissionAssignmentQueryParams
+  _params?: PermissionAssignmentQueryParams
 ) {
   return useQuery({
     queryKey: queryKeys.permissionAssignments.byRentalObject(organizationId, rentalObjectId),
@@ -510,8 +510,8 @@ export function useBulkAssignPermissions() {
 
   return useMutation({
     mutationFn: async ({
-      organizationId,
-      rentalObjectId,
+      organizationId: _organizationId,
+      rentalObjectId: _rentalObjectId,
       assignments,
     }: {
       organizationId: string;
@@ -520,7 +520,7 @@ export function useBulkAssignPermissions() {
     }) => {
       // Process assignments sequentially for each user
       const results = await Promise.all(
-        assignments.map(a => 
+        assignments.map(a =>
           permissionAssignmentService.bulkAssign(a.userId, a.permissions.map(p => p.toString()))
         )
       );
@@ -551,7 +551,7 @@ export function useCopyPermissions() {
   return useMutation({
     mutationFn: ({
       organizationId,
-      rentalObjectId,
+      rentalObjectId: _rentalObjectId,
       fromUserId,
       toUserId,
     }: {

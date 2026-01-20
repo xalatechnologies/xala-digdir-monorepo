@@ -5,7 +5,6 @@
 
 import type { ReactNode } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { sdk } from '../services';
 import { queryKeys } from '../query-keys';
 
 export interface EffectiveEntitlements {
@@ -157,7 +156,7 @@ export function RouteGuard({
     return fallback || null;
   }
 
-  return <>{children}</>;
+  return children;
 }
 
 /**
@@ -183,5 +182,5 @@ export function FeatureGuard({
     return fallback || null;
   }
 
-  return <>{children}</>;
+  return children;
 }

@@ -146,7 +146,7 @@ export function useUploadUserAvatar() {
   const queryClient = useQueryClient();
 
   return useMutation<{ data: { avatarUrl: string } }, Error, UploadAvatarPayload>({
-    mutationFn: async (payload) => {
+    mutationFn: async (_payload) => {
       // STUB: Return placeholder URL
       return {
         data: {

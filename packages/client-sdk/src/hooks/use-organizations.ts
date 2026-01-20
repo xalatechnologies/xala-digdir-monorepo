@@ -94,7 +94,7 @@ export function useOrganizationMembers(organizationId: string) {
  */
 export function useAddOrganizationMember() {
   return useMutation<{ data: any }, Error, { organizationId: string; userId: string }>({
-    mutationFn: async (payload) => {
+    mutationFn: async (_payload) => {
       // STUB: Return unchanged until backend ready
       return { data: {} };
     },
@@ -108,7 +108,7 @@ export function useAddOrganizationMember() {
  */
 export function useRemoveOrganizationMember() {
   return useMutation<{ success: boolean }, Error, { organizationId: string; userId: string }>({
-    mutationFn: async (payload) => {
+    mutationFn: async (_payload) => {
       // STUB: Return success until backend ready
       return { success: true };
     },
@@ -122,7 +122,7 @@ export function useRemoveOrganizationMember() {
  */
 export function useUpdateOrganizationMember() {
   return useMutation<{ data: any }, Error, { organizationId: string; userId: string; role?: string }>({
-    mutationFn: async (payload) => {
+    mutationFn: async (_payload) => {
       // STUB: Return unchanged until backend ready
       return { data: {} };
     },

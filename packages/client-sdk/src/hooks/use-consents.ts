@@ -59,7 +59,7 @@ export function useUpdateConsents() {
   const queryClient = useQueryClient();
 
   return useMutation<ConsentsResponse, Error, UpdateConsentPayload>({
-    mutationFn: async (payload) => {
+    mutationFn: async (_payload) => {
       // STUB: Return unchanged data until backend is ready
       return {
         data: [],
