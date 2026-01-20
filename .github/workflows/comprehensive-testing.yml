@@ -345,6 +345,135 @@ jobs:
         run: pnpm i18n:unused || true
 
   # ============================================================================
+  # GDPR COMPLIANCE TESTS
+  # ============================================================================
+  gdpr-compliance:
+    name: GDPR Compliance
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: ${{ env.PNPM_VERSION }}
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Install Playwright Browsers
+        run: npx playwright install --with-deps chromium
+
+      - name: Build Apps
+        run: pnpm build
+
+      - name: Run GDPR Compliance Tests
+        run: npx playwright test packages/testing/suites/compliance/gdpr/
+        continue-on-error: true
+        env:
+          CI: true
+
+      - name: Upload GDPR Report
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: gdpr-compliance-report
+          path: playwright-report/
+          retention-days: 7
+
+  # ============================================================================
+  # VISUAL REGRESSION TESTS
+  # ============================================================================
+  visual-regression:
+    name: Visual Regression
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: ${{ env.PNPM_VERSION }}
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Install Playwright Browsers
+        run: npx playwright install --with-deps chromium
+
+      - name: Build Apps
+        run: pnpm build
+
+      - name: Run Visual Regression Tests
+        run: npx playwright test packages/testing/suites/visual-regression/
+        continue-on-error: true
+        env:
+          CI: true
+
+      - name: Upload Visual Regression Report
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: visual-regression-report
+          path: playwright-report/
+          retention-days: 7
+
+  # ============================================================================
+  # USER STORY TESTS
+  # ============================================================================
+  user-story-tests:
+    name: User Story Tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: ${{ env.PNPM_VERSION }}
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Install Playwright Browsers
+        run: npx playwright install --with-deps chromium
+
+      - name: Build Apps
+        run: pnpm build
+
+      - name: Run User Story Tests
+        run: npx playwright test packages/testing/suites/user-stories/
+        continue-on-error: true
+        env:
+          CI: true
+
+      - name: Upload User Story Report
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: user-story-report
+          path: playwright-report/
+          retention-days: 7
+
+  # ============================================================================
   # LINT AND TYPE CHECK
   # ============================================================================
   lint-and-typecheck:
@@ -429,6 +558,9 @@ jobs:
       - security-tests
       - performance-tests
       - i18n-compliance
+      - gdpr-compliance
+      - visual-regression
+      - user-story-tests
       - lint-and-typecheck
       - build-verification
     if: always()
@@ -447,6 +579,9 @@ jobs:
           echo "| Security | ${{ needs.security-tests.result }} |" >> $GITHUB_STEP_SUMMARY
           echo "| Performance | ${{ needs.performance-tests.result }} |" >> $GITHUB_STEP_SUMMARY
           echo "| i18n Compliance | ${{ needs.i18n-compliance.result }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| GDPR Compliance | ${{ needs.gdpr-compliance.result }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Visual Regression | ${{ needs.visual-regression.result }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| User Stories | ${{ needs.user-story-tests.result }} |" >> $GITHUB_STEP_SUMMARY
           echo "| Lint & Types | ${{ needs.lint-and-typecheck.result }} |" >> $GITHUB_STEP_SUMMARY
           echo "| Build | ${{ needs.build-verification.result }} |" >> $GITHUB_STEP_SUMMARY
 
