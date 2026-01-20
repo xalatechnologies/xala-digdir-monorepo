@@ -11,6 +11,7 @@ import { useOrganizations } from '@digilist/client-sdk/hooks';
  * - Fetch user's organizations from SDK
  * - Provide methods to switch between personal/organization mode
  * - Validate organization selection
+ * - Configurable storage key prefix for app isolation
  */
 
 // =============================================================================
@@ -60,31 +61,39 @@ export interface ActiveAccount {
 const AccountContext = createContext<AccountContextValue | undefined>(undefined);
 
 // =============================================================================
-// Local Storage Keys
+// Storage Key Factory
 // =============================================================================
 
-const STORAGE_KEYS = {
-  ACCOUNT_TYPE: 'minside_account_type',
-  SELECTED_ORG_ID: 'minside_selected_organization',
-  HAS_SELECTED: 'minside_has_selected_account',
-  REMEMBER_CHOICE: 'minside_remember_choice',
-} as const;
+const createStorageKeys = (prefix: string) => ({
+  ACCOUNT_TYPE: `${prefix}_account_type`,
+  SELECTED_ORG_ID: `${prefix}_selected_organization`,
+  HAS_SELECTED: `${prefix}_has_selected_account`,
+  REMEMBER_CHOICE: `${prefix}_remember_choice`,
+} as const);
 
 // =============================================================================
 // Provider Component
 // =============================================================================
 
-interface AccountContextProviderProps {
+export interface AccountContextProviderProps {
   children: React.ReactNode;
-  userId?: string; // Optional user ID for personal account
-  userName?: string; // Optional user name for personal account
+  /** Storage key prefix for localStorage (default: 'app') */
+  storageKeyPrefix?: string;
+  /** Optional user ID for personal account */
+  userId?: string;
+  /** Optional user name for personal account */
+  userName?: string;
 }
 
 export const AccountContextProvider: React.FC<AccountContextProviderProps> = ({
   children,
+  storageKeyPrefix = 'app',
   userId = 'current-user',
   userName = 'Bruker',
 }) => {
+  // Create storage keys with the configured prefix
+  const STORAGE_KEYS = useMemo(() => createStorageKeys(storageKeyPrefix), [storageKeyPrefix]);
+
   // Fetch user's organizations from SDK
   const { data: organizationsResponse, isLoading: isLoadingOrganizations } = useOrganizations({
     status: 'active', // Only fetch active organizations
@@ -226,7 +235,7 @@ export const AccountContextProvider: React.FC<AccountContextProviderProps> = ({
       setAccountType('personal');
       setSelectedOrganization(null);
     }
-  }, [isLoadingOrganizations, organizations]);
+  }, [isLoadingOrganizations, organizations, STORAGE_KEYS]);
 
   // Method: Switch to personal account
   const switchToPersonal = () => {
@@ -312,6 +321,7 @@ export const AccountContextProvider: React.FC<AccountContextProviderProps> = ({
       hasSelectedAccount,
       rememberChoice,
       lostOrganizationMessage,
+      STORAGE_KEYS,
     ]
   );
 

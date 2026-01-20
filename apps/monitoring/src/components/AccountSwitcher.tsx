@@ -7,7 +7,7 @@
 
 import { useNavigate } from 'react-router-dom';
 import { AccountSwitcher as DSAccountSwitcher } from '@xala/ds';
-import { useAccountContext } from '../providers/AccountContextProvider';
+import { useAccountContext } from '@xala/runtime';
 
 export function AccountSwitcher() {
   const {

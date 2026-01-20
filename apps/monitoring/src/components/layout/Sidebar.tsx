@@ -15,7 +15,7 @@ import {
 } from '@xala/ds';
 import { useT } from '@xala/i18n';
 import { useAuth } from '@xala/auth';
-import { useAccountContext } from '../../providers/AccountContextProvider';
+import { useAccountContext } from '@xala/runtime';
 import { useNavigationItems, type NavItemFromApi } from '../../hooks/useNavigation';
 
 const ICON_MAP: Record<string, React.ReactNode> = {

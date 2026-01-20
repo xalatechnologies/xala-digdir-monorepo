@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Card, Heading, Paragraph, Button, Spinner, Label, Select, Textfield, Textarea } from '@xala/ds';
 import type { Season } from '@digilist/client-sdk/types';
-import { useAccountContext } from '../../../providers/AccountContextProvider';
+import { useAccountContext } from '@xala/runtime';
 import { useT } from '@xala/i18n';
 
 /**

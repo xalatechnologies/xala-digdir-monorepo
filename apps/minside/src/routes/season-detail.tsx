@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { useParams, useNavigate, Link, useSearchParams } from 'react-router-dom';
 import { Container, Heading, Paragraph, Card, Button, Spinner } from '@xala/ds';
 import { useSeasons } from '@digilist/client-sdk/hooks';
-import { useAccountContext } from '../providers/AccountContextProvider';
+import { useAccountContext } from '@xala/runtime';
 import { SeasonStatusBadge } from '../features/seasons/components/SeasonStatusBadge';
 import { SeasonApplicationDrawer, type SeasonApplicationFormData } from '../features/seasons/components/SeasonApplicationDrawer';
 import { useT } from '@xala/i18n';

@@ -9,7 +9,7 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { ProtectedRoute, AccountSelectionModal } from '@xala/ds';
 import { useOAuthCallback } from '@xala/auth';
-import { AccountContextProvider, useAccountContext, type DashboardContext } from './providers/AccountContextProvider';
+import { AccountContextProvider, useAccountContext, type DashboardContext } from '@xala/runtime';
 
 // Dashboard context constants
 const CONTEXT_PERSONAL: DashboardContext = 'personal';
@@ -99,7 +99,7 @@ export function App() {
       }}
     >
       <OAuthCallbackHandler />
-      <AccountContextProvider>
+      <AccountContextProvider storageKeyPrefix="minside">
         <AccountSelectionWrapper>
           <Routes>
             <Route path="/login" element={<LoginPage />} />

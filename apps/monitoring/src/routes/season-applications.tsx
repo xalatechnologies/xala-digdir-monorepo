@@ -2,7 +2,7 @@ import { useState, useMemo } from 'react';
 import { Container, Heading, Paragraph, Card, Button, Spinner } from '@xala/ds';
 import { useNavigate } from 'react-router-dom';
 import { useSeasonApplications } from '@digilist/client-sdk/hooks';
-import { useAccountContext } from '../providers/AccountContextProvider';
+import { useAccountContext } from '@xala/runtime';
 import { ApplicationCard } from '../features/seasons/components/ApplicationCard';
 import { useT } from '@xala/i18n';
 

@@ -51,6 +51,20 @@ export { useLocalization } from './hooks/useLocalization';
 export { useSDK } from './hooks/useSDK';
 export { useRBAC } from './hooks/useRBAC';
 
+// App-specific providers
+export {
+  AccountContextProvider,
+  useAccountContext,
+} from './providers';
+export type {
+  AccountType,
+  DashboardContext,
+  AccountContextState,
+  AccountContextValue,
+  AccountContextProviderProps,
+  ActiveAccount,
+} from './providers';
+
 // Types
 export type {
   // Config types
