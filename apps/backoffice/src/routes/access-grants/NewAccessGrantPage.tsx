@@ -26,7 +26,7 @@ import {
   type CreateAccessGrantDTO,
 } from '@digilist/client-sdk';
 import { useT } from '@xala/i18n';
-import { FormSection, FormActions } from '../../components/shared';
+import { FormSection, FormActions } from '@xala/ds';
 
 export function NewAccessGrantPage() {
   const t = useT();

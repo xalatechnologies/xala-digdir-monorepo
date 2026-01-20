@@ -103,7 +103,7 @@ export function FilterChips({
         type="button"
         variant="tertiary"
         onClick={onResetAll}
-        size="sm"
+        data-size="sm"
         style={{
           fontSize: 'var(--ds-font-size-sm)',
           textDecoration: 'underline',

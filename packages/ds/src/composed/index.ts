@@ -373,6 +373,10 @@ export type {
   ErrorStateProps,
 } from './PageStates';
 
+// Loading Fallback (Suspense fallback component)
+export { LoadingFallback } from './LoadingFallback';
+export type { LoadingFallbackProps } from './LoadingFallback';
+
 // Table Row Actions (dropdown menu for table actions)
 export {
   TableRowActions,

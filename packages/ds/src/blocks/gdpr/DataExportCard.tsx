@@ -7,12 +7,119 @@
  * - Download link when export is ready
  */
 
-import { useState, type ReactNode } from 'react';
+import React, { useState } from 'react';
 import { Card } from '../../primitives';
 import { Heading, Paragraph, Button } from '@digdir/designsystemet-react';
 import { useMyGdprRequests, useCreateGdprRequest } from '@digilist/client-sdk/hooks';
 import type { GdprRequest } from '@digilist/client-sdk/types';
 import { useT } from '@xala/i18n';
+
+// Local type to ensure proper inference (workaround for TS type resolution)
+interface LocalGdprRequest {
+  id: string;
+  userId: string;
+  requestType: 'export' | 'deletion';
+  status: 'pending' | 'processing' | 'completed' | 'rejected';
+  requestedAt: string;
+  processedAt?: string | null;
+  processedBy?: string | null;
+  expiresAt: string;
+  metadata?: Record<string, unknown>;
+  tenantId: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+interface ExportRequestStatusProps {
+  exportRequest: LocalGdprRequest;
+  getStatusMessage: (status: string) => string;
+  getExpiryMessage: (expiresAt: string) => string;
+  handleDownload: () => void;
+  downloadLabel: string;
+}
+
+function ExportRequestStatus({
+  exportRequest,
+  getStatusMessage,
+  getExpiryMessage,
+  handleDownload,
+  downloadLabel,
+}: ExportRequestStatusProps): React.ReactElement {
+  // Extract all values to typed local variables to ensure proper inference
+  const status: string = exportRequest.status;
+  const expiresAt: string = exportRequest.expiresAt;
+  const rejectionReason: string | undefined = exportRequest.metadata?.rejectionReason
+    ? String(exportRequest.metadata.rejectionReason)
+    : undefined;
+
+  const requestedDate: string = new Date(exportRequest.requestedAt).toLocaleDateString('nb-NO', {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit'
+  });
+  const statusText: string = getStatusMessage(status);
+
+  const bgColor: string = status === 'completed'
+    ? 'var(--ds-color-success-surface)'
+    : status === 'rejected'
+    ? 'var(--ds-color-danger-surface)'
+    : 'var(--ds-color-info-surface)';
+
+  const borderColor: string = status === 'completed'
+    ? 'var(--ds-color-success-border)'
+    : status === 'rejected'
+    ? 'var(--ds-color-danger-border)'
+    : 'var(--ds-color-info-border)';
+
+  return (
+    <div style={{
+      padding: 'var(--ds-spacing-4)',
+      borderRadius: 'var(--ds-border-radius-md)',
+      backgroundColor: bgColor,
+      border: '1px solid',
+      borderColor: borderColor,
+    }}>
+      {/* Status message */}
+      <p data-size="sm" style={{ margin: 0, marginBottom: 'var(--ds-spacing-3)', fontWeight: 500, fontSize: 'var(--ds-font-size-sm)' }}>
+        {statusText}
+      </p>
+
+      {/* Request date */}
+      <p data-size="xs" style={{ margin: 0, color: 'var(--ds-color-neutral-text-subtle)', fontSize: 'var(--ds-font-size-xs)' }}>
+        {`Forespurt: ${requestedDate}`}
+      </p>
+
+      {/* Download button for completed requests */}
+      {status === 'completed' && (
+        <div style={{ marginTop: 'var(--ds-spacing-3)', display: 'flex', flexDirection: 'column', gap: 'var(--ds-spacing-2)' }}>
+          {expiresAt && getExpiryMessage(expiresAt) && (
+            <p data-size="xs" style={{ margin: 0, color: 'var(--ds-color-warning-text)', fontSize: 'var(--ds-font-size-xs)' }}>
+              {getExpiryMessage(expiresAt)}
+            </p>
+          )}
+          <Button
+            type="button"
+            variant="primary"
+            data-size="sm"
+            onClick={handleDownload}
+            style={{ minHeight: '40px', alignSelf: 'flex-start' }}
+          >
+            {downloadLabel}
+          </Button>
+        </div>
+      )}
+
+      {/* Rejection reason */}
+      {status === 'rejected' && rejectionReason && (
+        <p data-size="xs" style={{ margin: 0, marginTop: 'var(--ds-spacing-2)', color: 'var(--ds-color-danger-text)', fontSize: 'var(--ds-font-size-xs)' }}>
+          {`Årsak: ${rejectionReason}`}
+        </p>
+      )}
+    </div>
+  );
+}
 
 export function DataExportCard() {
   const t = useT();
@@ -110,70 +217,15 @@ export function DataExportCard() {
         )}
 
         {/* Active request exists */}
-        {!isLoading && exportRequest && (() => {
-          const requestedDate: string = new Date(exportRequest.requestedAt).toLocaleDateString('nb-NO', {
-            year: 'numeric',
-            month: 'long',
-            day: 'numeric',
-            hour: '2-digit',
-            minute: '2-digit'
-          });
-
-          return (
-            <div style={{
-              padding: 'var(--ds-spacing-4)',
-              borderRadius: 'var(--ds-border-radius-md)',
-              backgroundColor: exportRequest.status === 'completed'
-                ? 'var(--ds-color-success-surface)'
-                : exportRequest.status === 'rejected'
-                ? 'var(--ds-color-danger-surface)'
-                : 'var(--ds-color-info-surface)',
-              border: '1px solid',
-              borderColor: exportRequest.status === 'completed'
-                ? 'var(--ds-color-success-border)'
-                : exportRequest.status === 'rejected'
-                ? 'var(--ds-color-danger-border)'
-                : 'var(--ds-color-info-border)',
-            }}>
-              {/* Status message */}
-              <Paragraph data-size="sm" style={{ margin: 0, marginBottom: 'var(--ds-spacing-3)', fontWeight: 500 }}>
-                {getStatusMessage(exportRequest.status)}
-              </Paragraph>
-
-              {/* Request date */}
-              <Paragraph data-size="xs" style={{ margin: 0, color: 'var(--ds-color-neutral-text-subtle)' }}>
-                Forespurt: {requestedDate}
-              </Paragraph>
-
-            {/* Download button for completed requests */}
-            {exportRequest.status === 'completed' && (
-              <div style={{ marginTop: 'var(--ds-spacing-3)', display: 'flex', flexDirection: 'column', gap: 'var(--ds-spacing-2)' }}>
-                {exportRequest.expiresAt && getExpiryMessage(exportRequest.expiresAt) && (
-                  <Paragraph data-size="xs" style={{ margin: 0, color: 'var(--ds-color-warning-text)' }}>
-                    {getExpiryMessage(exportRequest.expiresAt)}
-                  </Paragraph>
-                )}
-                <Button
-                  type="button"
-                  variant="primary"
-                  data-size="sm"
-                  onClick={handleDownload}
-                  style={{ minHeight: '40px', alignSelf: 'flex-start' }}
-                >
-                  {t('actions.last_ned_mine_data')}
-                </Button>
-              </div>
-            )}
-
-            {/* Rejection reason */}
-            {exportRequest.status === 'rejected' && exportRequest.metadata?.rejectionReason && (
-              <Paragraph data-size="xs" style={{ margin: 0, marginTop: 'var(--ds-spacing-2)', color: 'var(--ds-color-danger-text)' }}>
-                Årsak: {String(exportRequest.metadata.rejectionReason)}
-              </Paragraph>
-            )}
-            </div>
-          );
-        })()}
+        {!isLoading && exportRequest && (
+          <ExportRequestStatus
+            exportRequest={exportRequest}
+            getStatusMessage={getStatusMessage}
+            getExpiryMessage={getExpiryMessage}
+            handleDownload={handleDownload}
+            downloadLabel={t('actions.last_ned_mine_data')}
+          />
+        )}
 
         {/* Error state */}
         {createRequest.isError && (

@@ -23,7 +23,7 @@ import {
   useUpdateSeason,
   type CreateSeasonDTO,
 } from '@digilist/client-sdk';
-import { FormSection, FormActions } from '../../components/shared';
+import { FormSection, FormActions } from '@xala/ds';
 import { useT } from '@xala/i18n';
 
 export function SeasonFormPage() {

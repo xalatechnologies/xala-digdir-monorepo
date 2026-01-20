@@ -8,12 +8,100 @@
  * - Ability to cancel pending request
  */
 
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { Card } from '../../primitives';
 import { Heading, Paragraph, Button } from '@digdir/designsystemet-react';
 import { useMyGdprRequests, useCreateGdprRequest, useCancelGdprRequest } from '@digilist/client-sdk/hooks';
 import type { GdprRequest } from '@digilist/client-sdk/types';
 import { useT } from '@xala/i18n';
+
+interface DeletionRequestStatusProps {
+  deletionRequest: GdprRequest;
+  getStatusMessage: (status: string) => string;
+  canCancelRequest: boolean;
+  onCancelRequest: () => void;
+  isCancelling: boolean;
+  cancelButtonLabel: string;
+}
+
+function DeletionRequestStatus({
+  deletionRequest,
+  getStatusMessage,
+  canCancelRequest,
+  onCancelRequest,
+  isCancelling,
+  cancelButtonLabel,
+}: DeletionRequestStatusProps): React.ReactElement {
+  // Extract all values to typed local variables to ensure proper inference
+  const status: string = deletionRequest.status;
+  const rejectionReason: string | undefined = deletionRequest.metadata?.rejectionReason
+    ? String(deletionRequest.metadata.rejectionReason)
+    : undefined;
+
+  const requestedDate: string = new Date(deletionRequest.requestedAt).toLocaleDateString('nb-NO', {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit'
+  });
+  const statusText: string = getStatusMessage(status);
+
+  const bgColor: string = status === 'completed'
+    ? 'var(--ds-color-danger-surface)'
+    : status === 'rejected'
+    ? 'var(--ds-color-warning-surface)'
+    : 'var(--ds-color-info-surface)';
+
+  const borderColor: string = status === 'completed'
+    ? 'var(--ds-color-danger-border)'
+    : status === 'rejected'
+    ? 'var(--ds-color-warning-border)'
+    : 'var(--ds-color-info-border)';
+
+  return (
+    <div style={{
+      padding: 'var(--ds-spacing-4)',
+      borderRadius: 'var(--ds-border-radius-md)',
+      backgroundColor: bgColor,
+      border: '1px solid',
+      borderColor: borderColor,
+    }}>
+      {/* Status message */}
+      <p data-size="sm" style={{ margin: 0, marginBottom: 'var(--ds-spacing-3)', fontWeight: 500, fontSize: 'var(--ds-font-size-sm)' }}>
+        {statusText}
+      </p>
+
+      {/* Request date */}
+      <p data-size="xs" style={{ margin: 0, color: 'var(--ds-color-neutral-text-subtle)', fontSize: 'var(--ds-font-size-xs)' }}>
+        {`Forespurt: ${requestedDate}`}
+      </p>
+
+      {/* Rejection reason */}
+      {status === 'rejected' && rejectionReason && (
+        <p data-size="xs" style={{ margin: 0, marginTop: 'var(--ds-spacing-2)', color: 'var(--ds-color-danger-text)', fontSize: 'var(--ds-font-size-xs)' }}>
+          {`Årsak: ${rejectionReason}`}
+        </p>
+      )}
+
+      {/* Cancel button for pending/processing requests */}
+      {canCancelRequest && (
+        <div style={{ marginTop: 'var(--ds-spacing-3)' }}>
+          <Button
+            type="button"
+            variant="secondary"
+            data-size="sm"
+            onClick={onCancelRequest}
+            disabled={isCancelling}
+            style={{ minHeight: '40px' }}
+          >
+            {cancelButtonLabel}
+          </Button>
+        </div>
+      )}
+    </div>
+  );
+}
 
 export function DeleteAccountCard() {
   const t = useT();
@@ -78,7 +166,7 @@ export function DeleteAccountCard() {
     }
   };
 
-  const canCancelRequest = deletionRequest && (deletionRequest.status === 'pending' || deletionRequest.status === 'processing');
+  const canCancelRequest = !!(deletionRequest && (deletionRequest.status === 'pending' || deletionRequest.status === 'processing'));
 
   return (
     <Card style={{ padding: 'var(--ds-spacing-5)' }}>
@@ -186,66 +274,16 @@ export function DeleteAccountCard() {
         )}
 
         {/* Active deletion request exists */}
-        {!isLoading && deletionRequest && (() => {
-          const requestedDate: string = new Date(deletionRequest.requestedAt).toLocaleDateString('nb-NO', {
-            year: 'numeric',
-            month: 'long',
-            day: 'numeric',
-            hour: '2-digit',
-            minute: '2-digit'
-          });
-
-          return (
-            <div style={{
-              padding: 'var(--ds-spacing-4)',
-              borderRadius: 'var(--ds-border-radius-md)',
-              backgroundColor: deletionRequest.status === 'completed'
-                ? 'var(--ds-color-danger-surface)'
-                : deletionRequest.status === 'rejected'
-                ? 'var(--ds-color-warning-surface)'
-                : 'var(--ds-color-info-surface)',
-              border: '1px solid',
-              borderColor: deletionRequest.status === 'completed'
-                ? 'var(--ds-color-danger-border)'
-                : deletionRequest.status === 'rejected'
-                ? 'var(--ds-color-warning-border)'
-                : 'var(--ds-color-info-border)',
-            }}>
-              {/* Status message */}
-              <Paragraph data-size="sm" style={{ margin: 0, marginBottom: 'var(--ds-spacing-3)', fontWeight: 500 }}>
-                {getStatusMessage(deletionRequest.status)}
-              </Paragraph>
-
-              {/* Request date */}
-              <Paragraph data-size="xs" style={{ margin: 0, color: 'var(--ds-color-neutral-text-subtle)' }}>
-                Forespurt: {requestedDate}
-              </Paragraph>
-
-              {/* Rejection reason */}
-              {deletionRequest.status === 'rejected' && deletionRequest.metadata?.rejectionReason && (
-                <Paragraph data-size="xs" style={{ margin: 0, marginTop: 'var(--ds-spacing-2)', color: 'var(--ds-color-danger-text)' }}>
-                  Årsak: {String(deletionRequest.metadata.rejectionReason)}
-                </Paragraph>
-              )}
-
-              {/* Cancel button for pending/processing requests */}
-              {canCancelRequest && (
-                <div style={{ marginTop: 'var(--ds-spacing-3)' }}>
-                  <Button
-                    type="button"
-                    variant="secondary"
-                    data-size="sm"
-                    onClick={handleCancelRequest}
-                    disabled={cancelRequest.isPending}
-                    style={{ minHeight: '40px' }}
-                  >
-                    {cancelRequest.isPending ? t('common.kansellerer') : 'Angre forespørsel'}
-                  </Button>
-                </div>
-              )}
-            </div>
-          );
-        })()}
+        {!isLoading && deletionRequest && (
+          <DeletionRequestStatus
+            deletionRequest={deletionRequest}
+            getStatusMessage={getStatusMessage}
+            canCancelRequest={canCancelRequest}
+            onCancelRequest={handleCancelRequest}
+            isCancelling={cancelRequest.isPending}
+            cancelButtonLabel={cancelRequest.isPending ? t('common.kansellerer') : 'Angre forespørsel'}
+          />
+        )}
 
         {/* Error state */}
         {(createRequest.isError || cancelRequest.isError) && (

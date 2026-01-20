@@ -48,7 +48,7 @@ import {
 } from '@digilist/client-sdk';
 import type { SeasonalLease } from '@digilist/client-sdk/services/seasonal-lease.service';
 import { MemberManagement } from '../../components/organizations/MemberManagement';
-import { FormSection } from '../../components/shared';
+import { FormSection } from '@xala/ds';
 import { useMemo } from 'react';
 import { useT } from '@xala/i18n';
 

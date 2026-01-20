@@ -121,6 +121,13 @@ export {
   DashboardHeader,
   // DashboardPageHeader
   DashboardPageHeader,
+  // LoadingFallback (Suspense fallback)
+  LoadingFallback,
+  // Form Layout Components
+  FormSection,
+  FormActions,
+  FormRow,
+  FormDivider,
 } from './composed';
 export type {
   ProtectedRouteProps,

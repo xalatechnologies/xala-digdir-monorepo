@@ -35,7 +35,7 @@ import {
   useDeleteSeason,
   type SeasonStatus,
 } from '@digilist/client-sdk';
-import { FormSection } from '../../components/shared';
+import { FormSection } from '@xala/ds';
 import { SeasonVenueManagement } from '../../components/seasons/SeasonVenueManagement';
 import { SeasonApplicationManagement } from '../../components/seasons/SeasonApplicationManagement';
 import { SeasonAllocationManagement } from '../../components/seasons/SeasonAllocationManagement';

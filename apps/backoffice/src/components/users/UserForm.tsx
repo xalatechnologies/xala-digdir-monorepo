@@ -12,7 +12,7 @@ import {
   Alert,
 } from '@xala/ds';
 import type { User, CreateUserDTO, UserRole } from '@digilist/client-sdk';
-import { FormSection, FormActions, InfoBox } from '../shared';
+import { FormSection, FormActions, InfoBox } from '@xala/ds';
 import { useT } from '@xala/i18n';
 
 interface UserFormProps {

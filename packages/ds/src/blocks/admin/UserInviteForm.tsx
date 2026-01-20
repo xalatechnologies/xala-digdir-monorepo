@@ -214,12 +214,13 @@ export function UserInviteForm({
 
         {/* Email Field */}
         <div>
-          <Label htmlFor="email">
+          <Label id="email-label" htmlFor="email">
             Email Address *
           </Label>
           <Textfield
             id="email"
             type="email"
+            aria-labelledby="email-label"
             placeholder="user@example.com"
             value={formData.email}
             onChange={(e) => handleChange('email', e.target.value)}

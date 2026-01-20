@@ -6,7 +6,7 @@
  */
 
 import React from 'react';
-import { Paragraph, Button } from '@xala/ds';
+import { Paragraph, Button } from '@digdir/designsystemet-react';
 import { cn } from '../../utils';
 
 export type EmptyStateVariant = 'default' | 'success' | 'warning' | 'info';
@@ -164,18 +164,20 @@ export function EmptyState({
         >
           {action && (
             <Button
+              type="button"
               variant={action.variant || 'primary'}
               onClick={action.onClick}
-              size={size === 'sm' ? 'sm' : size === 'lg' ? 'lg' : 'md'}
+              data-size={size === 'sm' ? 'sm' : size === 'lg' ? 'lg' : 'md'}
             >
               {action.label}
             </Button>
           )}
           {secondaryAction && (
             <Button
+              type="button"
               variant={secondaryAction.variant || 'secondary'}
               onClick={secondaryAction.onClick}
-              size={size === 'sm' ? 'sm' : size === 'lg' ? 'lg' : 'md'}
+              data-size={size === 'sm' ? 'sm' : size === 'lg' ? 'lg' : 'md'}
             >
               {secondaryAction.label}
             </Button>

@@ -15,7 +15,7 @@ import type {
   CreateOrganizationDTO,
   ActorType,
 } from '@digilist/client-sdk';
-import { FormSection, FormActions } from '../shared';
+import { FormSection, FormActions } from '@xala/ds';
 import { useT } from '@xala/i18n';
 
 interface OrganizationFormProps {

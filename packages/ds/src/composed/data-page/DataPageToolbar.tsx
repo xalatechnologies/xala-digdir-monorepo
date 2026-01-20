@@ -6,8 +6,9 @@
  */
 
 import React from 'react';
-import { HeaderSearch, Button } from '@xala/ds';
-import { GridIcon, ListIcon, MapIcon, TableIcon } from '@xala/ds';
+import { GridIcon, ListIcon, MapIcon, TableIcon } from '../../primitives';
+import { Button } from '@digdir/designsystemet-react';
+import { HeaderSearch } from '../header-parts';
 import { cn } from '../../utils';
 
 export type ViewMode = 'grid' | 'list' | 'map' | 'table';
@@ -133,7 +134,7 @@ export function DataPageToolbar({
                 key={mode}
                 type="button"
                 variant={isActive ? 'primary' : 'tertiary'}
-                size="sm"
+                data-size="sm"
                 onClick={() => onViewModeChange(mode)}
                 aria-label={`Switch to ${mode} view`}
                 style={{
