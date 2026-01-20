@@ -40,7 +40,7 @@ export interface CaseHandlerScope {
   categoryKeys?: string[];
   assignedBy?: string | null;
   status: ScopeStatus;
-  metadata?: Record<string, any>;
+  metadata?: Record<string, unknown>;
   createdAt: string;
   updatedAt: string;
 }
@@ -54,7 +54,7 @@ export interface CreateScopeAssignmentDTO {
   rentalObjectId?: string;
   organizationId?: string;
   categoryKeys?: string[];
-  metadata?: Record<string, any>;
+  metadata?: Record<string, unknown>;
 }
 
 /**
@@ -66,7 +66,7 @@ export interface UpdateScopeAssignmentDTO {
   organizationId?: string | null;
   categoryKeys?: string[];
   status?: ScopeStatus;
-  metadata?: Record<string, any>;
+  metadata?: Record<string, unknown>;
 }
 
 /**

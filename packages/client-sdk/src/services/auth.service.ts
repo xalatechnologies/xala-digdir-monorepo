@@ -19,9 +19,9 @@ export interface RequireAuthOptions {
   tenantId?: string;
   listingId?: string;
   bookingMode?: string;
-  selectedDates?: any[];
-  selectedSlots?: any[];
-  recurringRules?: any;
+  selectedDates?: string[];
+  selectedSlots?: { startTime: string; endTime: string; date: string }[];
+  recurringRules?: Record<string, unknown>;
   formData?: Record<string, unknown>;
 }
 
@@ -36,7 +36,7 @@ export interface ResumeFlowResult {
   returnUrl?: string;
   session?: AuthSession;
   hasContext?: boolean;
-  flowContext?: any;
+  flowContext?: Record<string, unknown>;
 }
 
 export class AuthService extends BaseService {

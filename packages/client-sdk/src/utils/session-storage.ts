@@ -20,7 +20,7 @@ export interface SessionState {
   }[];
 
   // Form data
-  formData?: Record<string, any>;
+  formData?: Record<string, unknown>;
 
   // Metadata
   timestamp: number;

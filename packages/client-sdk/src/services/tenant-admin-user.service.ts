@@ -72,6 +72,18 @@ export interface DelegateScope {
   permissions: string[];
 }
 
+export interface UserActivityLogEntry {
+  id: string;
+  userId: string;
+  action: string;
+  resourceType: string;
+  resourceId?: string;
+  metadata?: Record<string, unknown>;
+  ipAddress?: string;
+  userAgent?: string;
+  createdAt: string;
+}
+
 export interface AssignScopeDTO {
   userId: string;
   scopes: DelegateScope[];
@@ -283,7 +295,7 @@ export class TenantAdminUserService extends BaseService {
     limit?: number;
     startDate?: string;
     endDate?: string;
-  }): Promise<PaginatedResponse<any>> {
+  }): Promise<PaginatedResponse<UserActivityLogEntry>> {
     return this.client.get(
       this.buildPath(`/${userId}/activity`),
       { params: params as Record<string, string | number | boolean> }

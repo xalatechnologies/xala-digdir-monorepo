@@ -26,7 +26,7 @@ export abstract class BaseService {
   /**
    * HTTP GET request
    */
-  public async get<T>(path: string, config?: { params?: any }): Promise<T> {
+  public async get<T>(path: string, config?: { params?: Record<string, unknown> }): Promise<T> {
     const url = this.buildPath(path);
     return this.client.get<T>(url, config);
   }
@@ -34,7 +34,7 @@ export abstract class BaseService {
   /**
    * HTTP POST request
    */
-  public async post<T>(path: string, data?: any, config?: any): Promise<T> {
+  public async post<T>(path: string, data?: unknown, config?: Record<string, unknown>): Promise<T> {
     const url = this.buildPath(path);
     return this.client.post<T>(url, data, config);
   }
@@ -42,7 +42,7 @@ export abstract class BaseService {
   /**
    * HTTP PUT request
    */
-  public async put<T>(path: string, data?: any, config?: any): Promise<T> {
+  public async put<T>(path: string, data?: unknown, config?: Record<string, unknown>): Promise<T> {
     const url = this.buildPath(path);
     return this.client.put<T>(url, data, config);
   }
@@ -50,7 +50,7 @@ export abstract class BaseService {
   /**
    * HTTP PATCH request
    */
-  public async patch<T>(path: string, data?: any, config?: any): Promise<T> {
+  public async patch<T>(path: string, data?: unknown, config?: Record<string, unknown>): Promise<T> {
     const url = this.buildPath(path);
     return this.client.patch<T>(url, data, config);
   }
@@ -58,7 +58,7 @@ export abstract class BaseService {
   /**
    * HTTP DELETE request
    */
-  public async delete<T = void>(path: string, config?: any): Promise<T> {
+  public async delete<T = void>(path: string, config?: Record<string, unknown>): Promise<T> {
     const url = this.buildPath(path);
     return this.client.delete<T>(url, config);
   }
