@@ -1,15 +1,13 @@
 /**
  * Account Switcher Block
- * 
+ *
  * Dropdown button for switching between personal and organization accounts.
- * 
- * This component is props-based to follow Thin App architecture.
- * Apps should wire AccountContextProvider data to props.
- * 
+ * Domain-agnostic - receives organization data via generic props.
+ *
  * @example
  * ```tsx
  * const { accountType, organizations, switchToPersonal, switchToOrganization } = useAccountContext();
- * 
+ *
  * <AccountSwitcher
  *   accountType={accountType}
  *   selectedOrganization={selectedOrganization}
@@ -25,12 +23,19 @@
 import { useState, useRef, useEffect } from 'react';
 import { Button, Paragraph } from '@xala/ds';
 import { UserIcon, BuildingIcon, CheckIcon, SettingsIcon } from '@xala/ds';
-import { useT } from '@xala/i18n';
-import type { Organization } from '@digilist/client-sdk/types';
 
 // =============================================================================
 // Types
 // =============================================================================
+
+/**
+ * Generic organization interface that can be used with any organization data
+ */
+export interface BaseOrganization {
+  id: string;
+  name: string;
+  organizationNumber?: string;
+}
 
 export type AccountType = 'personal' | 'organization';
 
@@ -41,13 +46,19 @@ export interface ActiveAccount {
   displayName: string;
 }
 
-export interface AccountSwitcherProps {
+export interface AccountSwitcherLabels {
+  personal: string;
+  organizations: string;
+  manageOrganizations: string;
+}
+
+export interface AccountSwitcherProps<TOrganization extends BaseOrganization = BaseOrganization> {
   /** Current account type */
   accountType: AccountType;
   /** Currently selected organization (if organization mode) */
-  selectedOrganization: Organization | null;
+  selectedOrganization: TOrganization | null;
   /** List of available organizations */
-  organizations: Organization[];
+  organizations: TOrganization[];
   /** Active account information */
   activeAccount: ActiveAccount;
   /** Callback when switching to personal account */
@@ -60,7 +71,19 @@ export interface AccountSwitcherProps {
   minWidth?: string;
   /** Width of the dropdown menu */
   dropdownWidth?: string;
+  /** Labels for i18n */
+  labels?: Partial<AccountSwitcherLabels>;
 }
+
+// =============================================================================
+// Default Labels
+// =============================================================================
+
+const DEFAULT_LABELS: AccountSwitcherLabels = {
+  personal: 'Personlig konto',
+  organizations: 'Organisasjoner',
+  manageOrganizations: 'Administrer organisasjoner',
+};
 
 // =============================================================================
 // Icons (TODO: Replace with DS icons when ChevronDownIcon is available)
@@ -78,7 +101,7 @@ function ChevronDownIcon() {
 // Component
 // =============================================================================
 
-export function AccountSwitcher({
+export function AccountSwitcher<TOrganization extends BaseOrganization = BaseOrganization>({
   accountType,
   selectedOrganization,
   organizations,
@@ -88,8 +111,9 @@ export function AccountSwitcher({
   onManageOrganizations,
   minWidth = '220px',
   dropdownWidth = '340px',
-}: AccountSwitcherProps) {
-  const t = useT();
+  labels: customLabels,
+}: AccountSwitcherProps<TOrganization>) {
+  const labels = { ...DEFAULT_LABELS, ...customLabels };
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
@@ -241,7 +265,7 @@ export function AccountSwitcher({
               </div>
               <div style={{ flex: 1, textAlign: 'left' }}>
                 <Paragraph data-size="sm" style={{ margin: 0, fontWeight: 'var(--ds-font-weight-medium)' }}>
-                  {t('components.accountSwitcher.personal')}
+                  {labels.personal}
                 </Paragraph>
               </div>
               {accountType === 'personal' && (
@@ -281,7 +305,7 @@ export function AccountSwitcher({
                     fontWeight: 'var(--ds-font-weight-semibold)',
                   }}
                 >
-                  {t('components.accountSwitcher.organizations')}
+                  {labels.organizations}
                 </Paragraph>
               </div>
               {organizations.map((org) => (
@@ -410,7 +434,7 @@ export function AccountSwitcher({
                 data-size="sm"
                 style={{ margin: 0, color: 'var(--ds-color-neutral-text-subtle)' }}
               >
-                {t('components.accountSwitcher.manageOrganizations')}
+                {labels.manageOrganizations}
               </Paragraph>
             </Button>
           </div>

@@ -84,7 +84,7 @@ export type { BreadcrumbProps } from './Breadcrumb';
 export { BookingStepper } from './BookingStepper';
 export type { BookingStepperProps } from './BookingStepper';
 export { WizardStepper } from './WizardStepper';
-export type { WizardStepperProps, WizardStep } from './WizardStepper';
+export type { WizardStepperProps, WizardStep, WizardStepState, WizardStepperLabels } from './WizardStepper';
 
 // Dialogs
 export {

@@ -1,23 +1,24 @@
 /**
  * @xala/config - Types
  *
- * Centralized type definitions for application configuration
+ * Generic type definitions for application configuration.
+ * Platform-agnostic - domain-specific types should be defined in domain packages.
+ *
+ * This package uses a generic App Registry pattern to allow domain-specific
+ * apps to be defined at runtime rather than hardcoded in the platform.
  */
 
 // ============================================================================
-// App Types
+// App Types (Generic/Platform)
 // ============================================================================
 
 /**
- * Supported application types in the Xala/Digilist Platform
+ * Generic app type - string-based for extensibility
+ *
+ * Domain-specific apps register their types at runtime.
+ * For Digilist-specific types, see @digilist/runtime
  */
-export type AppType =
-  | 'web'
-  | 'minside'
-  | 'backoffice'
-  | 'saas-admin'
-  | 'monitoring'
-  | 'docs-learning';
+export type AppType = string;
 
 /**
  * Supported locales
@@ -30,9 +31,10 @@ export type SupportedLocale = 'nb' | 'en';
 export type ColorScheme = 'light' | 'dark' | 'auto';
 
 /**
- * Theme identifier
+ * Theme identifier (extensible)
+ * Domain-specific themes should be defined in domain packages.
  */
-export type ThemeId = 'digilist' | 'altinn';
+export type ThemeId = string;
 
 // ============================================================================
 // Environment Configuration
@@ -87,6 +89,7 @@ export interface AuthConfig {
 
 /**
  * App profile - static configuration for each app
+ * Domain-specific apps should register profiles using registerAppProfile()
  */
 export interface AppProfile {
   /** App identifier */
@@ -169,7 +172,8 @@ export interface RuntimeConfig {
 // ============================================================================
 
 /**
- * Configuration for SDK initialization
+ * Generic SDK initialization configuration
+ * Domain SDKs may extend this with additional fields
  */
 export interface SDKConfig {
   /** API base URL */

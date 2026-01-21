@@ -13,6 +13,90 @@
       "dependsOn": ["^lint"],
       "outputs": [],
       "inputs": ["src/**/*.{ts,tsx,js,jsx}", "*.{js,mjs,cjs}", "package.json"]
+    },
+    "test": {
+      "dependsOn": ["^build"],
+      "outputs": [],
+      "inputs": ["src/**/*.{ts,tsx}", "**/*.test.{ts,tsx}", "**/*.spec.{ts,tsx}"]
+    },
+    "typecheck": {
+      "dependsOn": ["^build"],
+      "outputs": []
+    },
+    "@xalatechnologies/platform#build": {
+      "dependsOn": [],
+      "outputs": ["dist/**"],
+      "inputs": ["src/**/*.{ts,tsx}", "package.json", "tsconfig.json", "tsup.config.ts"]
+    },
+    "@xalatechnologies/enterprise#build": {
+      "dependsOn": [],
+      "outputs": ["dist/**"],
+      "inputs": ["src/**/*.{ts,tsx}", "package.json", "tsconfig.json", "tsup.config.ts"]
+    },
+    "@xalatechnologies/governance#build": {
+      "dependsOn": [],
+      "outputs": ["dist/**"],
+      "inputs": ["src/**/*.ts", "package.json", "tsconfig.json"]
+    },
+    "@digilist/domain#build": {
+      "dependsOn": [],
+      "outputs": ["dist/**"],
+      "inputs": ["src/**/*.ts", "package.json", "tsconfig.json", "tsup.config.ts"]
+    },
+    "@xala/ds#build": {
+      "dependsOn": [],
+      "outputs": [],
+      "inputs": ["src/**/*.{ts,tsx}", "package.json", "tsconfig.json"]
+    },
+    "@digilist/ui#build": {
+      "dependsOn": [
+        "@xalatechnologies/platform#build",
+        "@digilist/domain#build",
+        "@xala/i18n#build",
+        "@digilist/contracts#build"
+      ],
+      "outputs": ["dist/**"],
+      "inputs": ["src/**/*.{ts,tsx}", "package.json", "tsconfig.json", "tsup.config.ts"]
+    },
+    "@xalatechnologies/platform#test": {
+      "dependsOn": ["@xalatechnologies/platform#build"],
+      "outputs": []
+    },
+    "@xalatechnologies/enterprise#test": {
+      "dependsOn": ["@xalatechnologies/enterprise#build"],
+      "outputs": []
+    },
+    "@xalatechnologies/governance#test": {
+      "dependsOn": ["@xalatechnologies/governance#build"],
+      "outputs": []
+    },
+    "@digilist/domain#test": {
+      "dependsOn": ["@digilist/domain#build"],
+      "outputs": []
+    },
+    "@digilist/ui#test": {
+      "dependsOn": ["@digilist/ui#build"],
+      "outputs": []
+    },
+    "@xalatechnologies/platform#lint": {
+      "dependsOn": [],
+      "outputs": []
+    },
+    "@xalatechnologies/enterprise#lint": {
+      "dependsOn": [],
+      "outputs": []
+    },
+    "@xalatechnologies/governance#lint": {
+      "dependsOn": [],
+      "outputs": []
+    },
+    "@digilist/domain#lint": {
+      "dependsOn": [],
+      "outputs": []
+    },
+    "@digilist/ui#lint": {
+      "dependsOn": [],
+      "outputs": []
     }
   }
 }

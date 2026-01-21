@@ -1,7 +1,39 @@
 /**
  * ProfileTab Block - Reusable DS Component
- * 
- * Manages user profile information including avatar, personal details
+ *
+ * Manages user profile information including avatar, personal details.
+ * Domain-agnostic - receives all data and handlers via props.
+ *
+ * @example
+ * ```tsx
+ * // In app with SDK
+ * import { useT } from '@xala/i18n';
+ * import { useProfile, useAvatarUpload } from '@digilist/client-sdk';
+ *
+ * function MyProfileTab() {
+ *   const t = useT();
+ *   const { profile, updateProfile, isSaving } = useProfile();
+ *   const { uploadAvatar, isUploading, preview } = useAvatarUpload();
+ *
+ *   return (
+ *     <ProfileTab
+ *       currentUser={currentUser}
+ *       profileData={profile}
+ *       avatarPreview={preview}
+ *       isSaving={isSaving}
+ *       isUploadingAvatar={isUploading}
+ *       onProfileDataChange={updateProfile}
+ *       onSaveProfile={handleSave}
+ *       onAvatarChange={uploadAvatar}
+ *       labels={{
+ *         profilePicture: t('settings.profilePicture'),
+ *         uploadDescription: t('settings.uploadDescription'),
+ *         // ... other labels
+ *       }}
+ *     />
+ *   );
+ * }
+ * ```
  */
 import { useRef } from 'react';
 import {
@@ -12,8 +44,20 @@ import {
   Textfield,
 } from '@digdir/designsystemet-react';
 import { Stack, FormField, SaveIcon, UserIcon, CameraIcon } from '../../primitives';
-import { useT } from '@xala/i18n';
-import type { Address } from '@digilist/client-sdk/types';
+
+// =============================================================================
+// Types
+// =============================================================================
+
+/**
+ * Generic address interface - domain-agnostic
+ */
+export interface ProfileAddress {
+  street?: string;
+  postalCode?: string;
+  city?: string;
+  country?: string;
+}
 
 export interface ProfileData {
   name: string;
@@ -21,8 +65,31 @@ export interface ProfileData {
   phone: string;
   dateOfBirth: string;
   nationalId: string;
-  invoiceAddress: Address;
-  residenceAddress: Address;
+  invoiceAddress: ProfileAddress;
+  residenceAddress: ProfileAddress;
+}
+
+export interface ProfileTabLabels {
+  profilePicture: string;
+  uploadDescription: string;
+  changeImage: string;
+  uploading: string;
+  fileTypeHint: string;
+  personalInfo: string;
+  personalInfoDescription: string;
+  fullName: string;
+  fullNamePlaceholder: string;
+  email: string;
+  emailPlaceholder: string;
+  phone: string;
+  phonePlaceholder: string;
+  dateOfBirth: string;
+  nationalId: string;
+  nationalIdPlaceholder: string;
+  saveChanges: string;
+  saving: string;
+  changeProfilePicture: string;
+  saveProfileSettings: string;
 }
 
 export interface ProfileTabProps {
@@ -37,8 +104,41 @@ export interface ProfileTabProps {
   onProfileDataChange: (data: Partial<ProfileData>) => void;
   onSaveProfile: () => void;
   onAvatarChange: (file: File) => void;
+  /** Labels for i18n */
+  labels?: Partial<ProfileTabLabels>;
   'data-testid'?: string;
 }
+
+// =============================================================================
+// Default Labels
+// =============================================================================
+
+const DEFAULT_LABELS: ProfileTabLabels = {
+  profilePicture: 'Profilbilde',
+  uploadDescription: 'Last opp et profilbilde som vises i systemet',
+  changeImage: 'Endre bilde',
+  uploading: 'Laster...',
+  fileTypeHint: 'JPG, PNG eller GIF (maks 5MB)',
+  personalInfo: 'Personlig informasjon',
+  personalInfoDescription: 'Din grunnleggende kontaktinformasjon',
+  fullName: 'Fullt navn',
+  fullNamePlaceholder: 'Ola Nordmann',
+  email: 'E-postadresse',
+  emailPlaceholder: 'ola.nordmann@example.com',
+  phone: 'Telefonnummer',
+  phonePlaceholder: '+47 123 45 678',
+  dateOfBirth: 'Fodselsdato',
+  nationalId: 'Fodselsnummer',
+  nationalIdPlaceholder: '11 siffer',
+  saveChanges: 'Lagre endringer',
+  saving: 'Lagrer...',
+  changeProfilePicture: 'Endre profilbilde',
+  saveProfileSettings: 'Lagre profilinnstillinger',
+};
+
+// =============================================================================
+// Component
+// =============================================================================
 
 export function ProfileTab({
   currentUser,
@@ -49,9 +149,10 @@ export function ProfileTab({
   onProfileDataChange,
   onSaveProfile,
   onAvatarChange,
+  labels: customLabels,
   'data-testid': testId = 'profile-tab',
 }: ProfileTabProps) {
-  const t = useT();
+  const labels = { ...DEFAULT_LABELS, ...customLabels };
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -68,10 +169,10 @@ export function ProfileTab({
         <Stack spacing="var(--ds-spacing-5)">
           <div>
             <Heading level={3} data-size="sm" style={{ marginBottom: 'var(--ds-spacing-3)' }}>
-              {t('common.profilbilde') || 'Profilbilde'}
+              {labels.profilePicture}
             </Heading>
             <Paragraph data-size="sm" style={{ color: 'var(--ds-color-neutral-text-subtle)' }}>
-              {t('common.last.opp.profilbilde') || 'Last opp et profilbilde som vises i systemet'}
+              {labels.uploadDescription}
             </Paragraph>
           </div>
 
@@ -116,13 +217,13 @@ export function ProfileTab({
                 onClick={() => fileInputRef.current?.click()}
                 disabled={isUploadingAvatar}
                 type="button"
-                aria-label={t('common.endre_profilbilde') || 'Endre profilbilde'}
+                aria-label={labels.changeProfilePicture}
               >
                 <CameraIcon />
-                {isUploadingAvatar ? t('state.loading') || 'Laster...' : t('common.endre.bilde') || 'Endre bilde'}
+                {isUploadingAvatar ? labels.uploading : labels.changeImage}
               </Button>
               <Paragraph data-size="xs" style={{ color: 'var(--ds-color-neutral-text-subtle)' }}>
-                {t('common.jpg.png.eller.gif.maks.5mb') || 'JPG, PNG eller GIF (maks 5MB)'}
+                {labels.fileTypeHint}
               </Paragraph>
             </Stack>
           </div>
@@ -134,69 +235,69 @@ export function ProfileTab({
         <Stack spacing="var(--ds-spacing-5)">
           <div>
             <Heading level={3} data-size="sm" style={{ marginBottom: 'var(--ds-spacing-3)' }}>
-              {t('common.personlig.informasjon') || 'Personlig informasjon'}
+              {labels.personalInfo}
             </Heading>
             <Paragraph data-size="sm" style={{ color: 'var(--ds-color-neutral-text-subtle)' }}>
-              {t('common.din.grunnleggende.kontaktinformasjon') || 'Din grunnleggende kontaktinformasjon'}
+              {labels.personalInfoDescription}
             </Paragraph>
           </div>
 
           <Stack spacing="var(--ds-spacing-4)">
-            <FormField label={t('common.fullt_navn') || 'Fullt navn'} required>
+            <FormField label={labels.fullName} required>
               <Textfield
                 value={profileData.name}
                 onChange={(e) => onProfileDataChange({ name: e.target.value })}
-                placeholder={t('common.ola_nordmann') || 'Ola Nordmann'}
-                aria-label={t('common.fullt_navn') || 'Fullt navn'}
+                placeholder={labels.fullNamePlaceholder}
+                aria-label={labels.fullName}
               />
             </FormField>
 
-            <FormField label={t('common.epostadresse') || 'E-postadresse'} required>
+            <FormField label={labels.email} required>
               <Textfield
                 type="email"
                 value={profileData.email}
                 onChange={(e) => onProfileDataChange({ email: e.target.value })}
-                placeholder={t('settings.placeholder.olanordmannexamplecom') || 'ola.nordmann@example.com'}
-                aria-label={t('common.epostadresse') || 'E-postadresse'}
+                placeholder={labels.emailPlaceholder}
+                aria-label={labels.email}
               />
             </FormField>
 
-            <FormField label={t('common.telefonnummer') || 'Telefonnummer'}>
+            <FormField label={labels.phone}>
               <Textfield
                 type="tel"
                 value={profileData.phone}
                 onChange={(e) => onProfileDataChange({ phone: e.target.value })}
-                placeholder={t('settings.placeholder.4712345678') || '+47 123 45 678'}
-                aria-label={t('common.telefonnummer') || 'Telefonnummer'}
+                placeholder={labels.phonePlaceholder}
+                aria-label={labels.phone}
               />
             </FormField>
 
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 'var(--ds-spacing-3)' }}>
-              <FormField label={t('common.fodselsdato') || 'Fødselsdato'}>
+              <FormField label={labels.dateOfBirth}>
                 <Textfield
                   type="date"
                   value={profileData.dateOfBirth}
                   onChange={(e) => onProfileDataChange({ dateOfBirth: e.target.value })}
-                  aria-label={t('common.fodselsdato') || 'Fødselsdato'}
+                  aria-label={labels.dateOfBirth}
                 />
               </FormField>
 
-              <FormField label={t('common.fodselsnummer') || 'Fødselsnummer'}>
+              <FormField label={labels.nationalId}>
                 <Textfield
                   value={profileData.nationalId}
                   onChange={(e) => onProfileDataChange({ nationalId: e.target.value })}
-                  placeholder={t('common.11_siffer') || '11 siffer'}
+                  placeholder={labels.nationalIdPlaceholder}
                   maxLength={11}
-                  aria-label={t('common.fodselsnummer') || 'Fødselsnummer'}
+                  aria-label={labels.nationalId}
                 />
               </FormField>
             </div>
           </Stack>
 
           <div style={{ paddingTop: 'var(--ds-spacing-4)', borderTop: '1px solid var(--ds-color-neutral-border-subtle)' }}>
-            <Button onClick={onSaveProfile} disabled={isSaving} type="button" aria-label={t('common.lagre_profilinnstillinger') || 'Lagre profilinnstillinger'}>
+            <Button onClick={onSaveProfile} disabled={isSaving} type="button" aria-label={labels.saveProfileSettings}>
               <SaveIcon />
-              {isSaving ? t('state.saving') || 'Lagrer...' : t('common.lagre_endringer') || 'Lagre endringer'}
+              {isSaving ? labels.saving : labels.saveChanges}
             </Button>
           </div>
         </Stack>

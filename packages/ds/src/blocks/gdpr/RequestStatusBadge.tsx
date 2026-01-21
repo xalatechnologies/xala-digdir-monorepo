@@ -1,14 +1,25 @@
 /**
  * RequestStatusBadge
  *
- * Status badge for GDPR request statuses
- * - Supports: pending, processing, completed, rejected
- * - Norwegian labels
- * - Consistent color coding
+ * Generic status badge component for request statuses.
+ * Domain-agnostic - receives status configuration via props.
+ *
+ * @example
+ * ```tsx
+ * // For GDPR requests
+ * <RequestStatusBadge
+ *   status="pending"
+ *   statusConfig={{
+ *     pending: { color: 'warning', label: 'Venter' },
+ *     processing: { color: 'info', label: 'Behandles' },
+ *     completed: { color: 'success', label: 'Fullfort' },
+ *     rejected: { color: 'danger', label: 'Avslaatt' },
+ *   }}
+ * />
+ * ```
  */
 
 import * as React from 'react';
-import type { GdprRequestStatus } from '@digilist/client-sdk/types';
 
 // =============================================================================
 // Types
@@ -77,7 +88,7 @@ export interface StatusTagProps {
 /**
  * Base StatusTag component for displaying status labels.
  */
-function StatusTag({
+export function StatusTag({
   children,
   color,
   size = 'sm',
@@ -108,28 +119,45 @@ function StatusTag({
 }
 
 // =============================================================================
-// GDPR Request Status Badge
+// Request Status Badge (Generic)
 // =============================================================================
 
-const gdprRequestStatusConfig: Record<GdprRequestStatus, StatusBadgeConfig> = {
-  pending: { color: 'warning', label: 'Venter' },
-  processing: { color: 'info', label: 'Behandles' },
-  completed: { color: 'success', label: 'Fullført' },
-  rejected: { color: 'danger', label: 'Avslått' },
-};
-
-export interface RequestStatusBadgeProps {
-  /** GDPR request status */
-  status: GdprRequestStatus;
+export interface RequestStatusBadgeProps<TStatus extends string = string> {
+  /** The status value */
+  status: TStatus;
+  /** Status configuration mapping status to color and label */
+  statusConfig: Record<TStatus, StatusBadgeConfig>;
   /** Size variant */
   size?: 'sm' | 'md' | 'lg';
+  /** Fallback config when status is not in statusConfig */
+  fallbackConfig?: StatusBadgeConfig;
 }
 
 /**
- * RequestStatusBadge component for displaying GDPR request status.
- * Uses color-coded badges with Norwegian labels.
+ * Generic RequestStatusBadge component for displaying request status.
+ * Receives status configuration via props for domain-agnostic usage.
  */
-export function RequestStatusBadge({ status, size = 'sm' }: RequestStatusBadgeProps): React.ReactElement {
-  const config = gdprRequestStatusConfig[status] || { color: 'neutral' as BadgeColor, label: status };
+export function RequestStatusBadge<TStatus extends string = string>({
+  status,
+  statusConfig,
+  size = 'sm',
+  fallbackConfig = { color: 'neutral', label: status },
+}: RequestStatusBadgeProps<TStatus>): React.ReactElement {
+  const config = statusConfig[status] || fallbackConfig;
   return <StatusTag color={config.color} size={size}>{config.label}</StatusTag>;
 }
+
+// =============================================================================
+// Default GDPR Status Config (convenience export for common use case)
+// =============================================================================
+
+/**
+ * Default status configuration for GDPR requests.
+ * Apps can use this or provide their own config.
+ */
+export const DEFAULT_GDPR_STATUS_CONFIG: Record<string, StatusBadgeConfig> = {
+  pending: { color: 'warning', label: 'Venter' },
+  processing: { color: 'info', label: 'Behandles' },
+  completed: { color: 'success', label: 'Fullfort' },
+  rejected: { color: 'danger', label: 'Avslaatt' },
+};

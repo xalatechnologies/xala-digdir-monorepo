@@ -6,13 +6,21 @@ This file provides guidance to Claude Code when working with the Contracts packa
 
 ## Package Purpose
 
-`@xala/contracts` is the **single source of truth** for all API contracts in the Xala platform. It provides:
+`@xala/contracts` is the **platform-level** contracts package containing ONLY generic, domain-agnostic schemas and types.
 
-1. **Zod Schemas** - Validation schemas for API requests/responses
-2. **Projections** - UI-ready DTO schemas with pre-computed fields
-3. **TypeScript Types** - Inferred from Zod schemas for type safety
+**What this package contains:**
+1. **RFC7807 Problem Details** - Error response schemas
+2. **Pagination** - Generic pagination schemas and types
+3. **Common Types** - Timestamps, metadata, currency, identifiers
+4. **Module System** - Feature flag module registry and DTOs
+5. **Monitoring** - Platform monitoring DTOs
 
-**Key Principle**: Database schema is private. This package defines the PUBLIC API contract that SDK and UI consume.
+**What this package does NOT contain:**
+- Domain-specific schemas (rental-object, booking, organization, user)
+- Domain-specific projections
+- Domain-specific types
+
+**Domain contracts belong in `@digilist/contracts`** (separate package).
 
 ---
 
@@ -21,20 +29,24 @@ This file provides guidance to Claude Code when working with the Contracts packa
 ```
 ┌──────────────────────────────────────────────────────┐
 │                    Frontend Apps                      │
-│  Import types for component props                    │
+│  Import domain types from @digilist/contracts        │
+│  Import platform types from @xala/contracts          │
 ├──────────────────────────────────────────────────────┤
 │              @digilist/client-sdk                    │
-│  Import projections for return types                 │
+│  Uses both platform and domain contracts             │
 ├──────────────────────────────────────────────────────┤
-│           @xala/contracts (This Package)             │
-│  ┌────────────┐ ┌─────────────┐ ┌───────────────┐   │
-│  │  Schemas   │ │ Projections │ │ TypeScript    │   │
-│  │  (Zod)     │ │ (UI DTOs)   │ │ Types         │   │
-│  └────────────┘ └─────────────┘ └───────────────┘   │
+│  @digilist/contracts (DOMAIN)    @xala/contracts    │
+│  ┌────────────────────────┐     ┌─────────────────┐ │
+│  │ RentalObjectSchema     │     │ RFC7807         │ │
+│  │ BookingSchema          │     │ Pagination      │ │
+│  │ OrganizationSchema     │     │ Timestamps      │ │
+│  │ UserSchema             │     │ Module Registry │ │
+│  │ Domain Projections     │     │ Monitoring DTOs │ │
+│  └────────────────────────┘     └─────────────────┘ │
 ├──────────────────────────────────────────────────────┤
 │                   @digilist/api                       │
-│  Import schemas for request validation               │
-│  Build projections from database entities            │
+│  Uses domain contracts for validation                │
+│  Uses platform contracts for error responses         │
 └──────────────────────────────────────────────────────┘
 ```
 
@@ -42,225 +54,197 @@ This file provides guidance to Claude Code when working with the Contracts packa
 
 ## Module Reference
 
-### /schemas - Validation Schemas
-
-#### Common Schemas
-```typescript
-import {
-  UUIDSchema,           // z.string().uuid()
-  SlugSchema,           // z.string().regex(/^[a-z0-9-]+$/)
-  PaginationSchema,     // { page: z.number(), limit: z.number() }
-  SortOrderSchema,      // z.enum(['asc', 'desc'])
-  MetadataSchema,       // z.record(z.unknown())
-  ProblemDetailsSchema, // RFC 7807 error format
-} from '@xala/contracts/schemas';
-```
-
-#### Domain Schemas
-```typescript
-import {
-  // Rental Objects
-  CreateRentalObjectSchema,
-  UpdateRentalObjectSchema,
-  RentalObjectQuerySchema,
-  RentalObjectCategorySchema,
-  BookingTimeModeSchema,
-  
-  // Bookings
-  CreateBookingSchema,
-  BookingStatusSchema,
-  
-  // Organizations
-  CreateOrganizationSchema,
-  OrganizationBaseSchema,
-  
-  // Users
-  CreateUserSchema,
-  UserBaseSchema,
-  
-  // Capabilities
-  CapabilitySchema,
-  ActionCodeSchema,
-  CAPABILITIES,  // Constant object with all capability codes
-} from '@xala/contracts/schemas';
-```
-
-### /projections - UI-Ready DTOs
-
-Projections are display-optimized schemas with pre-computed fields:
+### /schemas - Platform Schemas
 
 ```typescript
 import {
-  // Rental Objects
-  RentalObjectCardProjectionSchema,    // For list views
-  RentalObjectDetailsProjectionSchema, // For detail pages
-  
-  // Bookings
-  BookingProjectionSchema,
-  BookingQuoteProjectionSchema,
-  
-  // Organizations
-  OrganizationProjectionSchema,
-  
-  // Users
-  UserProjectionSchema,
-  
-  // Capabilities
-  CapabilitiesProjectionSchema,
-} from '@xala/contracts/projections';
-```
+  // Pagination
+  PaginationSchema,          // { page, limit }
+  PaginatedResponseMetaSchema,
+  createPaginatedResponseSchema,
 
-#### Projection Example
-```typescript
-const RentalObjectCardProjectionSchema = z.object({
+  // Sorting
+  SortOrderSchema,           // z.enum(['asc', 'desc'])
+  createSortableQuerySchema,
+
   // Identifiers
-  id: z.string(),
-  slug: z.string(),
-  
-  // Display content
-  name: z.string(),
-  typeLabel: z.string(),           // Pre-computed display label
-  categoryI18nKey: z.string(),     // i18n key for translation
-  locationFormatted: z.string().optional(),
-  priceDisplay: z.string(),        // "100 NOK/time"
-  
-  // Media
-  primaryImageUrl: z.string().optional(),
-  
-  // Computed states
-  isAvailable: z.boolean(),
-  isFeatured: z.boolean().optional(),
-});
+  UUIDSchema,                // z.string().uuid()
+  SlugSchema,                // z.string().regex(/^[a-z0-9-]+$/)
 
-type RentalObjectCardProjection = z.infer<typeof RentalObjectCardProjectionSchema>;
+  // Timestamps
+  TimestampsSchema,          // { createdAt, updatedAt }
+
+  // Metadata
+  MetadataSchema,            // z.record(z.unknown())
+
+  // Currency
+  CurrencyCodeSchema,        // z.string().length(3)
+  MoneySchema,               // { amount, currency }
+
+  // RFC 7807 Error
+  ProblemDetailsSchema,      // { type, title, status, detail, ... }
+  FieldErrorSchema,          // { field, message, code }
+
+  // Response Wrappers
+  createDataResponseSchema,
+  createPaginatedResponseSchema,
+} from '@xala/contracts/schemas';
 ```
 
-### /types - TypeScript Types
-
-All types are inferred from schemas:
+### /types - Platform Types
 
 ```typescript
 import type {
-  // From schemas
-  CreateRentalObject,
-  UpdateRentalObject,
-  CreateBooking,
-  CreateOrganization,
-  
-  // From projections
-  RentalObjectCardProjection,
-  RentalObjectDetailsProjection,
-  BookingProjection,
-  CapabilitiesProjection,
+  Pagination,
+  PaginatedResponseMeta,
+  SortOrder,
+  Timestamps,
+  Metadata,
+  CurrencyCode,
+  Money,
+  FieldError,
+  ProblemDetails,
 } from '@xala/contracts/types';
+```
+
+### /modules - Module System
+
+Feature flag module registry:
+
+```typescript
+import {
+  // Module keys
+  ModuleKey,
+  ModuleKeyType,
+
+  // Domain groups
+  DomainGroup,
+  DomainGroupType,
+  DOMAIN_GROUP_MODULES,
+
+  // Module definitions
+  MODULE_REGISTRY,
+  ModuleDefinition,
+  ModuleCategory,
+
+  // Helper functions
+  getModulesByCategory,
+  getModuleDependencies,
+  getModuleDependents,
+  canDisableModule,
+  computeCapabilities,
+  getAllCapabilities,
+
+  // DTOs
+  ModuleDTO,
+  ModuleInfoDTO,
+  EffectiveModulesDTO,
+  UpdateModuleDTO,
+} from '@xala/contracts/modules';
+```
+
+### /monitoring - Monitoring DTOs
+
+```typescript
+import {
+  // Overview
+  SystemHealthDTO,
+  ServiceStatusDTO,
+
+  // Incidents
+  IncidentDTO,
+  IncidentSeverity,
+
+  // Logs
+  LogEntryDTO,
+  LogLevel,
+
+  // Audit
+  AuditLogDTO,
+} from '@xala/contracts/monitoring';
+```
+
+### /validation - Environment Validation
+
+```typescript
+import {
+  webEnvSchema,
+  minsideEnvSchema,
+  backofficeEnvSchema,
+  apiEnvSchema,
+  validateEnv,
+  createEnvValidator,
+} from '@xala/contracts/validation';
 ```
 
 ---
 
 ## Usage Patterns
 
-### In API (Validation)
+### Error Response (RFC 7807)
 ```typescript
-import { CreateRentalObjectSchema } from '@xala/contracts/schemas';
+import { ProblemDetailsSchema } from '@xala/contracts/schemas';
+import type { ProblemDetails } from '@xala/contracts/types';
 
-// Validate request body
-const validated = CreateRentalObjectSchema.safeParse(request.body);
-if (!validated.success) {
-  return reply.status(422).send({
-    type: '/errors/validation',
-    title: 'Validation Error',
-    status: 422,
-    errors: validated.error.flatten().fieldErrors,
-  });
+function createError(status: number, title: string, detail?: string): ProblemDetails {
+  return {
+    type: `/errors/${status}`,
+    title,
+    status,
+    detail,
+  };
 }
 ```
 
-### In SDK (Types)
+### Paginated Response
 ```typescript
-import type { RentalObjectCardProjection } from '@xala/contracts/projections';
+import {
+  PaginationSchema,
+  createPaginatedResponseSchema
+} from '@xala/contracts/schemas';
+import { z } from 'zod';
 
-export function useRentalObjects() {
-  return useQuery<{ data: RentalObjectCardProjection[] }>({
-    queryKey: ['rental-objects'],
-    queryFn: () => client.get('/api/rental-objects'),
-  });
-}
+// Validate query params
+const query = PaginationSchema.parse(request.query);
+
+// Create response schema for domain type
+const ItemResponseSchema = createPaginatedResponseSchema(
+  z.object({ id: z.string(), name: z.string() })
+);
 ```
 
-### In Frontend (Props)
+### For Domain Types
 ```typescript
-import type { RentalObjectCardProjection } from '@xala/contracts/projections';
-
-interface ListingCardProps {
-  listing: RentalObjectCardProjection;
-}
-
-function ListingCard({ listing }: ListingCardProps) {
-  return (
-    <Card>
-      <img src={listing.primaryImageUrl} alt={listing.name} />
-      <h2>{listing.name}</h2>
-      <p>{listing.priceDisplay}</p>
-    </Card>
-  );
-}
+// Domain-specific contracts are in @digilist/contracts
+import { RentalObjectSchema, BookingSchema } from '@digilist/contracts/schemas';
+import type { RentalObject, Booking } from '@digilist/contracts/types';
+import type { RentalObjectCardProjection } from '@digilist/contracts/projections';
 ```
-
----
-
-## Testing
-
-```bash
-# Run all tests
-pnpm test
-
-# Watch mode
-pnpm test:watch
-```
-
-Tests are in `src/__tests__/`:
-- `schemas.test.ts` - Schema validation tests
-- `projections.test.ts` - Projection schema tests
 
 ---
 
 ## Non-Negotiable Rules
 
-1. **SINGLE SOURCE OF TRUTH** - Types defined here, not duplicated elsewhere
-2. **ZOD SCHEMAS FIRST** - TypeScript types are inferred from Zod
-3. **NO BUSINESS LOGIC** - Schemas validate shape, not compute values
-4. **ADDITIVE CHANGES ONLY** - Never remove fields without deprecation
-5. **ALL SCHEMAS TESTED** - Validation must be verified with tests
+1. **PLATFORM ONLY** - Only generic, domain-agnostic schemas
+2. **NO DOMAIN SCHEMAS** - Domain schemas go in @digilist/contracts
+3. **ZOD SCHEMAS FIRST** - TypeScript types are inferred from Zod
+4. **NO BUSINESS LOGIC** - Schemas validate shape, not compute values
+5. **ADDITIVE CHANGES ONLY** - Never remove fields without deprecation
 
 ---
 
-## Contract Evolution
+## What Was Removed
 
-### Adding a New Field
-```typescript
-// Step 1: Add as optional
-const BookingSchema = z.object({
-  // existing fields...
-  newField: z.string().optional(),  // ✅ Optional first
-});
-
-// Step 2: After all consumers updated, make required (if needed)
-```
-
-### Deprecating a Field
-```typescript
-const BookingSchema = z.object({
-  /** @deprecated Use newField instead. Will be removed in v3.0 */
-  oldField: z.string().optional(),
-  newField: z.string(),
-});
-```
-
-### Breaking Changes
-1. Create versioned schema: `BookingSchemaV2`
-2. Support both in API for migration period
-3. Deprecate old schema in SDK
-4. Remove old schema after migration complete
+The following were moved to `@digilist/contracts`:
+- `schemas/rental-object.schema.ts`
+- `schemas/booking.schema.ts`
+- `schemas/organization.schema.ts`
+- `schemas/user.schema.ts`
+- `schemas/capabilities.schema.ts`
+- `schemas/custody.schema.ts`
+- `projections/*` (all domain projections)
+- `storage.ts` (domain entity references)
+- `openapi/` (domain-specific OpenAPI generation)
 
 ---
 
@@ -271,6 +255,7 @@ const BookingSchema = z.object({
 - **vitest** - Testing
 
 ## Peer Packages
+- Used by `@digilist/contracts` (extends platform schemas)
 - Used by `@digilist/client-sdk`
 - Used by `@digilist/api`
-- Types consumed by all frontend apps
+- Platform types consumed by all apps

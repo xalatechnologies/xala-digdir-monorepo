@@ -12,17 +12,20 @@
     "declarationMap": true,
     "sourceMap": true,
     "outDir": "./dist",
-    "rootDir": "./src",
-    "resolveJsonModule": true,
+        "resolveJsonModule": true,
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
     "noEmit": true,
+    "composite": false,
     "paths": {
       "@/*": ["./src/*"],
       "@/core/*": ["./src/core/*"],
       "@/modules/*": ["./src/modules/*"],
       "@/schemas/*": ["./src/schemas/*"],
-      "@/database/*": ["./src/database/*"]
+      "@/database/*": ["./src/database/*"],
+      "@xalatechnologies/platform": ["../../packages/platform/src/index.ts"],
+      "@xalatechnologies/platform/config": ["../../packages/platform/src/config/index.ts"],
+      "@xalatechnologies/platform/*": ["../../packages/platform/src/*/index.ts"]
     },
     "baseUrl": "."
   },

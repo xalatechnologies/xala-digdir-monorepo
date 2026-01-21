@@ -1,186 +1,94 @@
 /**
  * @xala/config - App Profiles
  *
- * Static configuration profiles for each application.
- * These define the default behavior and settings for each app type.
+ * Generic app profile registry with runtime registration support.
+ * Domain-specific apps should register their profiles at runtime.
+ *
+ * This package provides a generic App Registry pattern - domain-specific
+ * apps (like Digilist) should import from their respective domain packages
+ * which register profiles on module load.
+ *
+ * @example
+ * ```typescript
+ * // Domain package (e.g., @digilist/runtime) registers profiles:
+ * import { registerAppProfiles } from '@xala/config';
+ * import { digilistProfiles } from './digilist-profiles';
+ *
+ * registerAppProfiles(digilistProfiles);
+ *
+ * // Then apps can use them:
+ * import '@digilist/runtime'; // Side-effect: registers profiles
+ * import { getAppProfile, createAppConfig } from '@xala/config';
+ *
+ * const profile = getAppProfile('backoffice');
+ * ```
  */
 
 import type { AppType, AppProfile, RuntimeConfig, EnvConfig, SDKConfig } from './types';
 
 // ============================================================================
-// App Profile Definitions
+// Generic App Registry (Platform Layer)
 // ============================================================================
 
 /**
- * Web - Public-facing booking site
- * Port: 5173
+ * App profile registry - mutable for runtime registration
+ * @internal
  */
-const webProfile: AppProfile = {
-  appType: 'web',
-  displayName: 'Digilist Web',
-  description: 'Public-facing booking and discovery portal',
-  defaultPort: 5173,
-  locale: 'nb',
-  theme: 'digilist',
-  colorScheme: 'auto',
-  authConfig: {
-    loginPath: '/login',
-    debug: false,
-    sessionCheckInterval: 60000, // 1 minute
-    requireAuth: false, // Public site, auth optional
-  },
-  featureFlags: {
-    'map-view': true,
-    'search-suggestions': true,
-    'guest-booking': true,
-  },
-};
+const appProfileRegistry = new Map<AppType, AppProfile>();
 
 /**
- * Minside - Citizen self-service portal
- * Port: 5174
+ * Register an app profile at runtime
+ *
+ * @param profile - The app profile to register
+ *
+ * @example
+ * ```typescript
+ * // In domain-specific runtime setup
+ * registerAppProfile({
+ *   appType: 'my-domain-app',
+ *   displayName: 'My Domain App',
+ *   // ... other config
+ * });
+ * ```
  */
-const minsideProfile: AppProfile = {
-  appType: 'minside',
-  displayName: 'Min Side',
-  description: 'Citizen self-service portal for booking management',
-  defaultPort: 5174,
-  locale: 'nb',
-  theme: 'digilist',
-  colorScheme: 'auto',
-  authConfig: {
-    loginPath: '/login',
-    debug: false,
-    sessionCheckInterval: 60000,
-    requireAuth: true, // All routes require auth
-  },
-  featureFlags: {
-    'notifications': true,
-    'payment-history': true,
-    'gdpr-export': true,
-  },
-};
+export function registerAppProfile(profile: AppProfile): void {
+  appProfileRegistry.set(profile.appType, profile);
+}
 
 /**
- * Backoffice - Tenant admin panel
- * Port: 5175
+ * Register multiple app profiles at once
+ *
+ * @param profiles - Array of app profiles to register
+ *
+ * @example
+ * ```typescript
+ * // In domain package initialization
+ * registerAppProfiles([webProfile, backofficeProfile, minsideProfile]);
+ * ```
  */
-const backofficeProfile: AppProfile = {
-  appType: 'backoffice',
-  displayName: 'Backoffice',
-  description: 'Tenant administration and management portal',
-  defaultPort: 5175,
-  locale: 'nb',
-  theme: 'digilist',
-  colorScheme: 'auto',
-  authConfig: {
-    loginPath: '/login',
-    debug: false,
-    sessionCheckInterval: 30000, // 30 seconds (more frequent for admin)
-    requireAuth: true,
-  },
-  featureFlags: {
-    'bulk-operations': true,
-    'reports': true,
-    'integrations': true,
-    'audit-log': true,
-  },
-};
+export function registerAppProfiles(profiles: AppProfile[]): void {
+  profiles.forEach((profile) => registerAppProfile(profile));
+}
 
 /**
- * SaaS Admin - Platform administration
- * Port: 5177
+ * Clear all registered profiles (useful for testing)
  */
-const saasAdminProfile: AppProfile = {
-  appType: 'saas-admin',
-  displayName: 'SaaS Admin',
-  description: 'Platform-level administration and billing',
-  defaultPort: 5177,
-  locale: 'nb',
-  theme: 'digilist',
-  colorScheme: 'auto',
-  authConfig: {
-    loginPath: '/login',
-    debug: false,
-    sessionCheckInterval: 30000,
-    requireAuth: true,
-  },
-  featureFlags: {
-    'billing': true,
-    'tenant-management': true,
-    'feature-flags': true,
-    'system-settings': true,
-  },
-};
+export function clearAppProfiles(): void {
+  appProfileRegistry.clear();
+}
 
 /**
- * Monitoring - Observability dashboard
- * Port: 5178
+ * Check if an app profile is registered
+ *
+ * @param appType - The app type identifier
+ * @returns True if profile is registered
  */
-const monitoringProfile: AppProfile = {
-  appType: 'monitoring',
-  displayName: 'Monitoring',
-  description: 'System health and observability dashboard',
-  defaultPort: 5178,
-  locale: 'nb',
-  theme: 'digilist',
-  colorScheme: 'dark', // Dark theme for monitoring dashboards
-  authConfig: {
-    loginPath: '/login',
-    debug: false,
-    sessionCheckInterval: 30000,
-    requireAuth: true,
-  },
-  featureFlags: {
-    'realtime-metrics': true,
-    'alerts': true,
-    'incident-management': true,
-  },
-};
-
-/**
- * Docs Learning - Documentation portal
- * Port: 5179
- */
-const docsLearningProfile: AppProfile = {
-  appType: 'docs-learning',
-  displayName: 'Documentation',
-  description: 'Documentation and learning portal',
-  defaultPort: 5179,
-  locale: 'nb',
-  theme: 'digilist',
-  colorScheme: 'auto',
-  authConfig: {
-    loginPath: '/login',
-    debug: false,
-    sessionCheckInterval: 300000, // 5 minutes (less critical)
-    requireAuth: false, // Public docs, some training requires auth
-  },
-  featureFlags: {
-    'search': true,
-    'tutorials': true,
-    'api-docs': true,
-  },
-};
+export function hasAppProfile(appType: AppType): boolean {
+  return appProfileRegistry.has(appType);
+}
 
 // ============================================================================
-// Profile Registry
-// ============================================================================
-
-/**
- * Registry of all app profiles
- */
-const appProfiles: Record<AppType, AppProfile> = {
-  'web': webProfile,
-  'minside': minsideProfile,
-  'backoffice': backofficeProfile,
-  'saas-admin': saasAdminProfile,
-  'monitoring': monitoringProfile,
-  'docs-learning': docsLearningProfile,
-};
-
-// ============================================================================
-// Public API
+// Public Query API
 // ============================================================================
 
 /**
@@ -192,31 +100,57 @@ const appProfiles: Record<AppType, AppProfile> = {
  *
  * @example
  * ```typescript
+ * // After domain package has registered profiles
+ * import '@digilist/runtime'; // Side-effect: registers Digilist profiles
+ * import { getAppProfile } from '@xala/config';
+ *
  * const profile = getAppProfile('backoffice');
  * console.log(profile.defaultPort); // 5175
  * ```
  */
 export function getAppProfile(appType: AppType): AppProfile {
-  const profile = appProfiles[appType];
+  const profile = appProfileRegistry.get(appType);
   if (!profile) {
-    throw new Error(`Unknown app type: ${appType}`);
+    const registered = Array.from(appProfileRegistry.keys());
+    const availableTypes = registered.length > 0
+      ? registered.join(', ')
+      : 'none - did you import your domain runtime package?';
+
+    throw new Error(
+      `Unknown app type: "${appType}". ` +
+      `Available types: ${availableTypes}. ` +
+      `Make sure to import your domain runtime package (e.g., import '@digilist/runtime') ` +
+      `before using getAppProfile().`
+    );
   }
   return profile;
 }
 
 /**
- * Get all app profiles
+ * Get all registered app profiles
+ *
+ * @returns Record of all registered profiles keyed by appType
  */
 export function getAllAppProfiles(): Record<AppType, AppProfile> {
-  return { ...appProfiles };
+  const result: Record<AppType, AppProfile> = {};
+  appProfileRegistry.forEach((profile, key) => {
+    result[key] = profile;
+  });
+  return result;
 }
 
 /**
- * Get list of all app types
+ * Get list of all registered app types
+ *
+ * @returns Array of registered app type identifiers
  */
 export function getAppTypes(): AppType[] {
-  return Object.keys(appProfiles) as AppType[];
+  return Array.from(appProfileRegistry.keys());
 }
+
+// ============================================================================
+// Config Factory Functions
+// ============================================================================
 
 /**
  * Create runtime config by combining app profile with environment config
@@ -227,6 +161,9 @@ export function getAppTypes(): AppType[] {
  *
  * @example
  * ```typescript
+ * import '@digilist/runtime'; // Registers profiles
+ * import { validateEnv, createRuntimeConfig } from '@xala/config';
+ *
  * const env = validateEnv(import.meta.env);
  * const config = createRuntimeConfig('backoffice', env);
  *
@@ -263,12 +200,16 @@ export function createRuntimeConfig(
  *
  * @param env - Environment configuration
  * @param headers - Optional custom headers
- * @returns SDKConfig for initializeClient()
+ * @returns SDKConfig for SDK initialization
  *
  * @example
  * ```typescript
+ * import { validateEnv, createSDKConfig } from '@xala/config';
+ *
  * const env = validateEnv(import.meta.env);
  * const sdkConfig = createSDKConfig(env);
+ *
+ * // Pass to your domain SDK's initialize function
  * initializeClient(sdkConfig);
  * ```
  */
@@ -289,10 +230,15 @@ export function createSDKConfig(
  *
  * @param appType - The app type identifier
  * @param env - Environment configuration
- * @returns Object with sdkConfig and runtimeConfig
+ * @param options - Optional configuration
+ * @returns Object with sdkConfig, runtimeConfig, and profile
  *
  * @example
  * ```typescript
+ * import '@digilist/runtime'; // Registers profiles
+ * import { validateEnv, createAppConfig } from '@xala/config';
+ * import { initializeClient } from '@digilist/client-sdk';
+ *
  * const env = validateEnv(import.meta.env);
  * const { sdkConfig, runtimeConfig } = createAppConfig('backoffice', env);
  *
@@ -324,16 +270,3 @@ export function createAppConfig(
     profile,
   };
 }
-
-// ============================================================================
-// Export Profiles (for direct access if needed)
-// ============================================================================
-
-export {
-  webProfile,
-  minsideProfile,
-  backofficeProfile,
-  saasAdminProfile,
-  monitoringProfile,
-  docsLearningProfile,
-};

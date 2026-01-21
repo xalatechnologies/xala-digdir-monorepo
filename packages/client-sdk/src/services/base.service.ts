@@ -26,9 +26,13 @@ export abstract class BaseService {
   /**
    * HTTP GET request
    */
-  public async get<T>(path: string, config?: { params?: Record<string, unknown> }): Promise<T> {
+  public async get<T, P = unknown>(
+    path: string,
+    config?: { params?: P }
+  ): Promise<T> {
     const url = this.buildPath(path);
-    return this.client.get<T>(url, config);
+    // Cast params to expected type - service consumers pass typed query objects
+    return this.client.get<T>(url, config as { params?: Record<string, string | number | boolean | undefined> });
   }
 
   /**

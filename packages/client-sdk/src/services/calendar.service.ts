@@ -21,6 +21,8 @@ import type { SingleResponse } from '@/types/enums';
 export interface CalendarConfigQueryParams {
   /** Booking type to get config for (optional) */
   bookingType?: string;
+  /** Index signature for query key compatibility */
+  [key: string]: string | undefined;
 }
 
 /**

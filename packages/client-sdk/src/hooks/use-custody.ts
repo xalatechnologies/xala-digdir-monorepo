@@ -4,7 +4,7 @@
  */
 import { useQuery, useMutation, useQueryClient, type UseQueryResult } from '@tanstack/react-query';
 import { custodyService } from '@/services/custody.service';
-import type { CustodyGrant, CustodyScope, CreateCustodyGrantDTO } from '@xala/contracts';
+import type { CustodyGrant, CustodyScope, CreateCustodyGrantDTO, CreateCustodySubgrantDTO } from '@xala/contracts';
 
 const custodyKeys = {
   all: ['custody'] as const,
@@ -86,7 +86,7 @@ export function useCreateCustodySubgrant() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: ({ parentGrantId, _rentalObjectId, data }: { parentGrantId: string; _rentalObjectId: string; data: CreateCustodyGrantDTO }) =>
+    mutationFn: ({ parentGrantId, _rentalObjectId, data }: { parentGrantId: string; _rentalObjectId: string; data: CreateCustodySubgrantDTO }) =>
       custodyService.createSubgrant(parentGrantId, data),
     onSuccess: (_, { _rentalObjectId: rentalObjectId }) => {
       queryClient.invalidateQueries({ queryKey: custodyKeys.rentalObject(rentalObjectId) });

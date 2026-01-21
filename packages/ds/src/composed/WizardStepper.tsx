@@ -8,16 +8,44 @@
  * - Horizontal pill layout (compact, mobile-friendly)
  * - Optional step progress indicator
  * - Error state per step
- * - i18n support
+ * - i18n support via labels prop
  * - Clickable completed steps for navigation
  * - Optional icons per step
  * - Accessible with keyboard navigation
+ *
+ * Domain-agnostic - receives all labels via props.
+ *
+ * @example
+ * ```tsx
+ * // In app with i18n
+ * import { useT } from '@xala/i18n';
+ *
+ * function MyWizard() {
+ *   const t = useT();
+ *
+ *   return (
+ *     <WizardStepper
+ *       steps={[
+ *         { id: 'select', label: t('wizard.select') },
+ *         { id: 'details', label: t('wizard.details') },
+ *         { id: 'confirm', label: t('wizard.confirm') },
+ *       ]}
+ *       currentStep={1}
+ *       onStepClick={(index) => setStep(index)}
+ *       labels={{
+ *         stepProgress: t('wizard.stepProgress'),
+ *         navigation: t('wizard.navigation'),
+ *         optional: t('common.optional'),
+ *       }}
+ *     />
+ *   );
+ * }
+ * ```
  *
  * @module @xala/ds/composed/WizardStepper
  */
 
 import React from 'react';
-import { useT } from '@xala/i18n';
 import { CheckIcon } from '../primitives/icons';
 
 // =============================================================================
@@ -39,6 +67,15 @@ export interface WizardStep {
 
 export type WizardStepState = 'completed' | 'active' | 'future' | 'error';
 
+export interface WizardStepperLabels {
+  /** Progress text pattern (use {current} and {total} placeholders) */
+  stepProgress: string;
+  /** Navigation aria-label */
+  navigation: string;
+  /** Optional step indicator */
+  optional: string;
+}
+
 export interface WizardStepperProps {
   /** Array of wizard steps */
   steps: WizardStep[];
@@ -56,11 +93,23 @@ export interface WizardStepperProps {
   size?: 'sm' | 'md' | 'lg';
   /** Visual variant */
   variant?: 'pill' | 'connected';
+  /** Labels for i18n */
+  labels?: Partial<WizardStepperLabels>;
   /** Custom class name */
   className?: string;
   /** Custom styles */
   style?: React.CSSProperties;
 }
+
+// =============================================================================
+// Default Labels
+// =============================================================================
+
+const DEFAULT_LABELS: WizardStepperLabels = {
+  stepProgress: 'Steg {current} av {total}',
+  navigation: 'Wizard navigation',
+  optional: 'valgfri',
+};
 
 // =============================================================================
 // Size configurations
@@ -106,6 +155,15 @@ function getStepState(
   return 'future';
 }
 
+/**
+ * Replace placeholders in progress text
+ */
+function formatProgressText(template: string, current: number, total: number): string {
+  return template
+    .replace('{current}', String(current))
+    .replace('{total}', String(total));
+}
+
 // =============================================================================
 // Main Component
 // =============================================================================
@@ -131,7 +189,7 @@ function getStepState(
  * <WizardStepper
  *   steps={steps}
  *   currentStep={currentStep}
- *   errors={{ details: ['Felt er påkrevd'] }}
+ *   errors={{ details: ['Felt er pakrevd'] }}
  *   showProgress
  *   title="Bookingprosess"
  * />
@@ -146,19 +204,15 @@ export function WizardStepper({
   title,
   size = 'md',
   variant = 'pill',
+  labels: customLabels,
   className,
   style,
 }: WizardStepperProps): React.ReactElement {
-  const t = useT();
+  const labels = { ...DEFAULT_LABELS, ...customLabels };
   const config = sizeConfig[size];
 
-  // Get progress text, fallback if t() doesn't have the key
-  const progressText = t('wizard.stepProgress', {
-    current: String(currentStep + 1),
-    total: String(steps.length)
-  });
-  const fallbackProgress = `Steg ${currentStep + 1} av ${steps.length}`;
-  const displayProgress = progressText.includes('wizard.stepProgress') ? fallbackProgress : progressText;
+  // Format progress text
+  const displayProgress = formatProgressText(labels.stepProgress, currentStep + 1, steps.length);
 
   return (
     <div
@@ -207,7 +261,7 @@ export function WizardStepper({
       {/* Step pills - horizontal layout */}
       <div
         role="navigation"
-        aria-label={title || t('wizard.navigation') || 'Wizard navigation'}
+        aria-label={title || labels.navigation}
         style={{
           display: 'flex',
           alignItems: 'center',
@@ -252,7 +306,7 @@ export function WizardStepper({
                 disabled={!isClickable}
                 type="button"
                 aria-current={state === 'active' ? 'step' : undefined}
-                aria-label={`${step.label}${step.optional ? ` (${t('common.optional') || 'valgfri'})` : ''}`}
+                aria-label={`${step.label}${step.optional ? ` (${labels.optional})` : ''}`}
                 style={{
                   flex: 1,
                   display: 'flex',

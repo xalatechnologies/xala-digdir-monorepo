@@ -1,0 +1,30 @@
+{
+  "name": "@xala/runtime",
+  "version": "2.0.0-compat",
+  "description": "DEPRECATED: Compatibility layer for @xala/runtime. Migrate to @xalatechnologies/platform/runtime",
+  "type": "module",
+  "main": "./src/index.ts",
+  "types": "./src/index.ts",
+  "exports": {
+    ".": {
+      "types": "./src/index.ts",
+      "default": "./src/index.ts"
+    },
+    "./providers": {
+      "types": "./src/providers.ts",
+      "default": "./src/providers.ts"
+    }
+  },
+  "scripts": {
+    "build": "echo 'Compatibility package - source-only'",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@xalatechnologies/platform": "workspace:*"
+  },
+  "peerDependencies": {
+    "react": "^18.0.0",
+    "react-dom": "^18.0.0"
+  },
+  "deprecated": "This package is deprecated. Please migrate to @xalatechnologies/platform/runtime. See migration guide: https://docs.xalatechnologies.com/migration"
+}

@@ -363,8 +363,10 @@ export interface RecurringOccurrenceDTO {
  * Supports SINGLE_SLOT, IN_GAME, and RECURRING booking patterns.
  */
 export interface BookingSelectionDTO {
+  /** Selection hash for preview lookup (returned from preview endpoint) */
+  hash?: string;
   /** ID of the listing being booked */
-  rentalObjectId: string;
+  rentalObjectId?: string;
   /** Booking mode for this selection */
   mode: BookingMode;
   /** Start time for SINGLE_SLOT/IN_GAME, or pattern start for RECURRING */
@@ -391,6 +393,15 @@ export interface BookingSelectionDTO {
   // In-game specific fields
   /** Duration in minutes for IN_GAME mode */
   durationMinutes?: number;
+}
+
+/**
+ * Lookup a previously generated recurring booking preview by hash.
+ * Used to retrieve cached preview results.
+ */
+export interface RecurringPreviewLookupDTO {
+  /** Preview hash returned from initial preview generation */
+  hash: string;
 }
 
 /**

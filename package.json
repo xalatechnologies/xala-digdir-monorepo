@@ -50,6 +50,8 @@
     "deploy:saas-admin": "./scripts/deploy.sh saas-admin",
     "deploy:all": "./scripts/deploy.sh all",
     "deploy:ssl": "./scripts/setup-ssl.sh",
+    "verify:boundaries": "./scripts/verify-boundaries.sh",
+    "verify:terms": "./scripts/verify-terms.sh",
     "prepare": "node -e \"if (process.env.CI !== 'true' && process.env.DOCKER !== 'true') { require('child_process').exec('husky') }\""
   },
   "lint-staged": {

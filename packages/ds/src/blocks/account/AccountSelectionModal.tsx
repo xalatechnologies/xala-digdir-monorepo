@@ -2,10 +2,7 @@
  * Account Selection Modal Block
  *
  * Post-login modal for selecting account type (personal or organization).
- * Shows immediately after login if user hasn't made a selection yet.
- *
- * This component is props-based to follow Thin App architecture.
- * Apps should wire their AccountContext data to these props.
+ * Domain-agnostic - receives organization data via generic props.
  *
  * @example
  * ```tsx
@@ -35,17 +32,41 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Button, Checkbox, Spinner, Heading, Paragraph, Card } from '@xala/ds';
 import { UserIcon, BuildingIcon, CheckIcon } from '@xala/ds';
-import type { Organization } from '@digilist/client-sdk/types';
 
 // =============================================================================
 // Types
 // =============================================================================
 
-export interface AccountSelectionModalProps {
+/**
+ * Generic organization interface that can be used with any organization data
+ */
+export interface BaseOrganization {
+  id: string;
+  name: string;
+  organizationNumber?: string;
+}
+
+export interface AccountSelectionModalLabels {
+  title: string;
+  subtitle: string;
+  selectOrganizationTitle: string;
+  selectOrganizationSubtitle: string;
+  personalAccount: string;
+  personalAccountDesc: string;
+  organizationAccount: string;
+  organizationAccountDesc: string;
+  noOrganizations: string;
+  orgNumber: string;
+  rememberChoice: string;
+  back: string;
+  continue: string;
+}
+
+export interface AccountSelectionModalProps<TOrganization extends BaseOrganization = BaseOrganization> {
   /** Whether the modal is open */
   open: boolean;
   /** Available organizations for selection */
-  organizations: Organization[];
+  organizations: TOrganization[];
   /** Whether organizations are being loaded */
   isLoadingOrganizations: boolean;
   /** Current remember choice value */
@@ -57,28 +78,14 @@ export interface AccountSelectionModalProps {
   /** Callback when organization is selected */
   onOrganizationSelect: (organizationId: string) => void;
   /** Labels for i18n */
-  labels?: {
-    title?: string;
-    subtitle?: string;
-    selectOrganizationTitle?: string;
-    selectOrganizationSubtitle?: string;
-    personalAccount?: string;
-    personalAccountDesc?: string;
-    organizationAccount?: string;
-    organizationAccountDesc?: string;
-    noOrganizations?: string;
-    orgNumber?: string;
-    rememberChoice?: string;
-    back?: string;
-    continue?: string;
-  };
+  labels?: Partial<AccountSelectionModalLabels>;
 }
 
 // =============================================================================
 // Default Labels
 // =============================================================================
 
-const defaultLabels = {
+const DEFAULT_LABELS: AccountSelectionModalLabels = {
   title: 'Velg kontotype',
   subtitle: 'Hvordan vil du bruke tjenesten?',
   selectOrganizationTitle: 'Velg organisasjon',
@@ -86,7 +93,7 @@ const defaultLabels = {
   personalAccount: 'Personlig konto',
   personalAccountDesc: 'Bruk tjenesten som privatperson',
   organizationAccount: 'Organisasjonskonto',
-  organizationAccountDesc: 'Bruk tjenesten på vegne av din organisasjon',
+  organizationAccountDesc: 'Bruk tjenesten pa vegne av din organisasjon',
   noOrganizations: 'Du har ingen organisasjoner registrert',
   orgNumber: 'Org.nr',
   rememberChoice: 'Husk mitt valg',
@@ -100,7 +107,7 @@ const defaultLabels = {
 
 type SelectionStep = 'account-type' | 'organization';
 
-export function AccountSelectionModal({
+export function AccountSelectionModal<TOrganization extends BaseOrganization = BaseOrganization>({
   open,
   organizations,
   isLoadingOrganizations,
@@ -109,8 +116,8 @@ export function AccountSelectionModal({
   onPersonalSelect,
   onOrganizationSelect,
   labels: customLabels,
-}: AccountSelectionModalProps): React.ReactElement | null {
-  const labels = { ...defaultLabels, ...customLabels };
+}: AccountSelectionModalProps<TOrganization>): React.ReactElement | null {
+  const labels = { ...DEFAULT_LABELS, ...customLabels };
   const dialogRef = useRef<HTMLDialogElement>(null);
   const [step, setStep] = useState<SelectionStep>('account-type');
   const [selectedOrgId, setSelectedOrgId] = useState<string | null>(null);

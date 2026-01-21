@@ -1,7 +1,31 @@
 /**
  * PreferencesTab Block - Reusable DS Component
- * 
- * Manages user preferences: language, display settings, and session management
+ *
+ * Manages user preferences: language, display settings, and session management.
+ * Domain-agnostic - receives all data and handlers via props.
+ *
+ * @example
+ * ```tsx
+ * // In app with i18n
+ * import { useT } from '@xala/i18n';
+ *
+ * function MyPreferencesTab() {
+ *   const t = useT();
+ *
+ *   return (
+ *     <PreferencesTab
+ *       locale={locale}
+ *       onLocaleChange={setLocale}
+ *       onLogout={handleLogout}
+ *       labels={{
+ *         language: t('settings.language'),
+ *         selectLanguage: t('settings.selectLanguage'),
+ *         // ... other labels
+ *       }}
+ *     />
+ *   );
+ * }
+ * ```
  */
 import {
   Card,
@@ -11,22 +35,68 @@ import {
   Select,
 } from '@digdir/designsystemet-react';
 import { Stack, FormField } from '../../primitives';
-import { useT } from '@xala/i18n';
+
+// =============================================================================
+// Types
+// =============================================================================
+
+export interface PreferencesTabLabels {
+  language: string;
+  selectLanguage: string;
+  preferredLanguage: string;
+  norwegianBokmal: string;
+  norwegianNynorsk: string;
+  english: string;
+  appearance: string;
+  customizeAppearance: string;
+  themeComingSoon: string;
+  sessionAndSecurity: string;
+  manageSession: string;
+  logout: string;
+  logoutDescription: string;
+}
 
 export interface PreferencesTabProps {
   locale: 'nb' | 'nn' | 'en';
   onLocaleChange: (locale: 'nb' | 'nn' | 'en') => void;
   onLogout: () => void;
+  /** Labels for i18n */
+  labels?: Partial<PreferencesTabLabels>;
   'data-testid'?: string;
 }
+
+// =============================================================================
+// Default Labels
+// =============================================================================
+
+const DEFAULT_LABELS: PreferencesTabLabels = {
+  language: 'Sprak',
+  selectLanguage: 'Velg sprak for brukergrensesnittet',
+  preferredLanguage: 'Foretrukket sprak',
+  norwegianBokmal: 'Norsk bokmal',
+  norwegianNynorsk: 'Norsk nynorsk',
+  english: 'English',
+  appearance: 'Utseende',
+  customizeAppearance: 'Tilpass hvordan systemet ser ut',
+  themeComingSoon: 'Tema og utseendeinnstillinger kommer snart',
+  sessionAndSecurity: 'Okt og sikkerhet',
+  manageSession: 'Administrer din palogging og sikkerhet',
+  logout: 'Logg ut',
+  logoutDescription: 'Logg ut av din konto pa denne enheten',
+};
+
+// =============================================================================
+// Component
+// =============================================================================
 
 export function PreferencesTab({
   locale,
   onLocaleChange,
   onLogout,
+  labels: customLabels,
   'data-testid': testId = 'preferences-tab',
 }: PreferencesTabProps) {
-  const t = useT();
+  const labels = { ...DEFAULT_LABELS, ...customLabels };
 
   return (
     <Stack spacing="var(--ds-spacing-6)" data-testid={testId}>
@@ -35,18 +105,18 @@ export function PreferencesTab({
         <Stack spacing="var(--ds-spacing-4)">
           <div>
             <Heading level={3} data-size="sm" style={{ marginBottom: 'var(--ds-spacing-2)' }}>
-              {t('common.spraak') || 'Språk'}
+              {labels.language}
             </Heading>
             <Paragraph data-size="sm" style={{ color: 'var(--ds-color-neutral-text-subtle)' }}>
-              {t('common.velg.spraak.for.brukergrensesnittet') || 'Velg språk for brukergrensesnittet'}
+              {labels.selectLanguage}
             </Paragraph>
           </div>
 
-          <FormField label={t('common.foretrukket_spraak') || 'Foretrukket språk'}>
+          <FormField label={labels.preferredLanguage}>
             <Select value={locale} onChange={(e) => onLocaleChange(e.target.value as 'nb' | 'nn' | 'en')}>
-              <option value="nb">{t('common.norsk_bokmaal') || 'Norsk bokmål'}</option>
-              <option value="nn">{t('common.norsk_nynorsk') || 'Norsk nynorsk'}</option>
-              <option value="en">{t('settings.text.english') || 'English'}</option>
+              <option value="nb">{labels.norwegianBokmal}</option>
+              <option value="nn">{labels.norwegianNynorsk}</option>
+              <option value="en">{labels.english}</option>
             </Select>
           </FormField>
         </Stack>
@@ -57,10 +127,10 @@ export function PreferencesTab({
         <Stack spacing="var(--ds-spacing-4)">
           <div>
             <Heading level={3} data-size="sm" style={{ marginBottom: 'var(--ds-spacing-2)' }}>
-              {t('common.utseende') || 'Utseende'}
+              {labels.appearance}
             </Heading>
             <Paragraph data-size="sm" style={{ color: 'var(--ds-color-neutral-text-subtle)' }}>
-              {t('common.tilpass.hvordan.systemet.ser.ut') || 'Tilpass hvordan systemet ser ut'}
+              {labels.customizeAppearance}
             </Paragraph>
           </div>
 
@@ -70,7 +140,7 @@ export function PreferencesTab({
             borderRadius: 'var(--ds-border-radius-md)'
           }}>
             <Paragraph data-size="sm" style={{ margin: 0, color: 'var(--ds-color-neutral-text-subtle)' }}>
-              {t('common.tema.og.utseende.kommer.snart') || 'Tema og utseendeinnstillinger kommer snart'}
+              {labels.themeComingSoon}
             </Paragraph>
           </div>
         </Stack>
@@ -81,10 +151,10 @@ export function PreferencesTab({
         <Stack spacing="var(--ds-spacing-4)">
           <div>
             <Heading level={3} data-size="sm" style={{ marginBottom: 'var(--ds-spacing-2)' }}>
-              {t('common.okt.og.sikkerhet') || 'Økt og sikkerhet'}
+              {labels.sessionAndSecurity}
             </Heading>
             <Paragraph data-size="sm" style={{ color: 'var(--ds-color-neutral-text-subtle)' }}>
-              {t('common.administrer.din.paalogging.og.sikkerhet') || 'Administrer din pålogging og sikkerhet'}
+              {labels.manageSession}
             </Paragraph>
           </div>
 
@@ -98,14 +168,14 @@ export function PreferencesTab({
           }}>
             <div>
               <Paragraph data-size="sm" style={{ margin: 0, fontWeight: 'var(--ds-font-weight-medium)' }}>
-                {t('common.logg_ut') || 'Logg ut'}
+                {labels.logout}
               </Paragraph>
               <Paragraph data-size="xs" style={{ margin: 0, marginTop: 'var(--ds-spacing-1)', color: 'var(--ds-color-neutral-text-subtle)' }}>
-                {t('common.logg.ut.av.konto.paa.enhet') || 'Logg ut av din konto på denne enheten'}
+                {labels.logoutDescription}
               </Paragraph>
             </div>
             <Button variant="secondary" data-size="sm" onClick={onLogout} type="button">
-              {t('common.logg_ut') || 'Logg ut'}
+              {labels.logout}
             </Button>
           </div>
         </Stack>

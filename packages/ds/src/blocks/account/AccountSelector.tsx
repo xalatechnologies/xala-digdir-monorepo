@@ -1,15 +1,13 @@
 /**
  * Account Selector Block
- * 
+ *
  * Two-step account selection component for choosing between personal and organization accounts.
- * 
- * This component is props-based to follow Thin App architecture.
- * Apps should wire AccountContextProvider data to props.
- * 
+ * Domain-agnostic - receives organization data via generic props.
+ *
  * @example
  * ```tsx
  * const { organizations, isLoadingOrganizations, switchToPersonal, switchToOrganization } = useAccountContext();
- * 
+ *
  * <AccountSelector
  *   organizations={organizations}
  *   isLoadingOrganizations={isLoadingOrganizations}
@@ -25,18 +23,38 @@
 import { useState } from 'react';
 import { Button, Checkbox, Spinner } from '@xala/ds';
 import { UserIcon, BuildingIcon, CheckIcon, ArrowLeftIcon } from '@xala/ds';
-import { useT } from '@xala/i18n';
-import type { Organization } from '@digilist/client-sdk/types';
 
 // =============================================================================
 // Types
 // =============================================================================
 
+/**
+ * Generic organization interface that can be used with any organization data
+ */
+export interface BaseOrganization {
+  id: string;
+  name: string;
+  organizationNumber?: string;
+}
+
 export type AccountSelectionType = 'personal' | 'organization';
 
-export interface AccountSelectorProps {
+export interface AccountSelectorLabels {
+  personalTitle: string;
+  personalDescription: string;
+  organizationTitle: string;
+  organizationDescription: string;
+  noOrgs: string;
+  loading: string;
+  rememberChoice: string;
+  back: string;
+  continue: string;
+  orgNumber: string;
+}
+
+export interface AccountSelectorProps<TOrganization extends BaseOrganization = BaseOrganization> {
   /** List of available organizations */
-  organizations: Organization[];
+  organizations: TOrganization[];
   /** Whether organizations are currently loading */
   isLoadingOrganizations: boolean;
   /** Callback when personal account is selected */
@@ -51,7 +69,26 @@ export interface AccountSelectorProps {
   onRememberChoiceChange?: (value: boolean) => void;
   /** Custom class name */
   className?: string;
+  /** Labels for i18n */
+  labels?: Partial<AccountSelectorLabels>;
 }
+
+// =============================================================================
+// Default Labels
+// =============================================================================
+
+const DEFAULT_LABELS: AccountSelectorLabels = {
+  personalTitle: 'Personlig konto',
+  personalDescription: 'Bruk tjenesten som privatperson',
+  organizationTitle: 'Organisasjonskonto',
+  organizationDescription: 'Bruk tjenesten pa vegne av din organisasjon',
+  noOrgs: 'Ingen organisasjoner tilgjengelig',
+  loading: 'Laster...',
+  rememberChoice: 'Husk mitt valg',
+  back: 'Tilbake',
+  continue: 'Fortsett',
+  orgNumber: 'Org.nr',
+};
 
 // =============================================================================
 // Account Option Component
@@ -133,17 +170,19 @@ function AccountOption({
 // Organization Option Component
 // =============================================================================
 
-interface OrganizationOptionProps {
-  organization: Organization;
+interface OrganizationOptionProps<TOrganization extends BaseOrganization> {
+  organization: TOrganization;
   isSelected: boolean;
   onClick: () => void;
+  labels: AccountSelectorLabels;
 }
 
-function OrganizationOption({
+function OrganizationOption<TOrganization extends BaseOrganization>({
   organization,
   isSelected,
   onClick,
-}: OrganizationOptionProps): React.ReactElement {
+  labels,
+}: OrganizationOptionProps<TOrganization>): React.ReactElement {
   return (
     <Button
       type="button"
@@ -198,7 +237,7 @@ function OrganizationOption({
               color: 'var(--ds-color-neutral-text-subtle)',
             }}
           >
-            Org.nr: {organization.organizationNumber}
+            {labels.orgNumber}: {organization.organizationNumber}
           </div>
         )}
       </div>
@@ -217,7 +256,7 @@ function OrganizationOption({
 
 type SelectionStep = 'account-type' | 'organization';
 
-export function AccountSelector({
+export function AccountSelector<TOrganization extends BaseOrganization = BaseOrganization>({
   organizations,
   isLoadingOrganizations,
   onPersonalSelect,
@@ -226,8 +265,9 @@ export function AccountSelector({
   rememberChoice = false,
   onRememberChoiceChange,
   className,
-}: AccountSelectorProps): React.ReactElement {
-  const t = useT();
+  labels: customLabels,
+}: AccountSelectorProps<TOrganization>): React.ReactElement {
+  const labels = { ...DEFAULT_LABELS, ...customLabels };
   const [step, setStep] = useState<SelectionStep>('account-type');
   const [selectedOrgId, setSelectedOrgId] = useState<string | null>(null);
 
@@ -271,19 +311,19 @@ export function AccountSelector({
         >
           <AccountOption
             icon={<UserIcon size={24} />}
-            title={t('minside.accountSelection.personalTitle')}
-            description={t('minside.accountSelection.personalDescription')}
+            title={labels.personalTitle}
+            description={labels.personalDescription}
             onClick={handlePersonalSelect}
           />
           <AccountOption
             icon={<BuildingIcon size={24} />}
-            title={t('minside.accountSelection.organizationTitle')}
+            title={labels.organizationTitle}
             description={
               isLoadingOrganizations
-                ? t('state.loading')
+                ? labels.loading
                 : organizations.length === 0
-                  ? t('minside.accountSelection.noOrgs')
-                  : t('minside.accountSelection.organizationDescription')
+                  ? labels.noOrgs
+                  : labels.organizationDescription
             }
             onClick={handleOrganizationClick}
             disabled={isLoadingOrganizations || organizations.length === 0}
@@ -303,7 +343,7 @@ export function AccountSelector({
               checked={rememberChoice}
               onChange={(e: React.ChangeEvent<HTMLInputElement>) => onRememberChoiceChange(e.target.checked)}
               value="remember"
-              label={t('minside.accountSelection.rememberChoice')}
+              label={labels.rememberChoice}
             />
           </div>
         )}
@@ -325,7 +365,7 @@ export function AccountSelector({
         type="button"
         variant="tertiary"
         onClick={handleBack}
-        aria-label={t('action.back')}
+        aria-label={labels.back}
         style={{
           marginBottom: 'var(--ds-spacing-4)',
           display: 'flex',
@@ -334,13 +374,13 @@ export function AccountSelector({
         }}
       >
         <ArrowLeftIcon size={20} />
-        {t('action.back')}
+        {labels.back}
       </Button>
 
       {/* Organization List */}
       {isLoadingOrganizations ? (
         <div style={{ display: 'flex', justifyContent: 'center', padding: 'var(--ds-spacing-8)' }}>
-          <Spinner aria-label={t('state.loading')} />
+          <Spinner aria-label={labels.loading} />
         </div>
       ) : (
         <div
@@ -357,6 +397,7 @@ export function AccountSelector({
               organization={org}
               isSelected={selectedOrgId === org.id}
               onClick={() => setSelectedOrgId(org.id)}
+              labels={labels}
             />
           ))}
         </div>
@@ -370,7 +411,7 @@ export function AccountSelector({
         disabled={!selectedOrgId}
         style={{ width: '100%' }}
       >
-        {t('minside.accountSelection.continue')}
+        {labels.continue}
       </Button>
 
       {/* Remember Choice Checkbox */}
@@ -387,7 +428,7 @@ export function AccountSelector({
             checked={rememberChoice}
             onChange={(e: React.ChangeEvent<HTMLInputElement>) => onRememberChoiceChange(e.target.checked)}
             value="remember"
-            label={t('minside.accountSelection.rememberChoice')}
+            label={labels.rememberChoice}
           />
         </div>
       )}

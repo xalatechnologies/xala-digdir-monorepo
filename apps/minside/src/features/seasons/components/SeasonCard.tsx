@@ -6,7 +6,7 @@
  */
 
 import { useNavigate } from 'react-router-dom';
-import { SeasonCard as DSSeasonCard, type SeasonCardData } from '@xala/ds';
+import { SeasonCard as DSSeasonCard, type SeasonCardData } from '@digilist/ui';
 import type { Season } from '@digilist/client-sdk/types';
 
 interface SeasonCardWrapperProps {

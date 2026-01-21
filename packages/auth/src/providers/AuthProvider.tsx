@@ -1,10 +1,10 @@
 /**
  * Centralized Authentication Provider
  * ==================================
- * 
+ *
  * Single source of truth for authentication across ALL Xala/Digilist applications.
  * Replaces 4 separate AuthProvider implementations (~1,400 lines) with one (~400 lines).
- * 
+ *
  * SECURITY ARCHITECTURE: HTTP-Only Cookie-Based Authentication
  * -----------------------------------------------------------
  * - NO tokens in URLs or localStorage
@@ -12,14 +12,14 @@
  * - HTTP-only cookies set by api.digilist.no
  * - Domain: .digilist.no (works across all subdomains = SSO!)
  * - OAuth 2.0 Authorization Code flow (RFC 8252 compliant)
- * 
+ *
  * DEVELOPMENT MODE (VITE_ENABLE_DEV_MODE=true)
  * -------------------------------------------
  * - Auto-login with mock developer user (bypasses all auth)
  * - Skips API calls for session validation
  * - NEVER enabled in production builds
  * - Speeds up development by removing login friction
- * 
+ *
  * ROLE-BASED ACCESS CONTROL
  * -------------------------
  * - minside: citizen, admin
@@ -27,17 +27,43 @@
  * - saas-admin: super_admin, admin
  * - tenant-admin: tenant_admin, admin
  * - web: all authenticated users
+ *
+ * DEPENDENCY INJECTION
+ * --------------------
+ * This provider uses AuthServiceContext for dependency injection.
+ * Auth services can be provided in two ways:
+ *
+ * 1. Via AuthServiceProvider (recommended):
+ * ```tsx
+ * <AuthServiceProvider authService={myAuthService}>
+ *   <AuthProvider config={{ appType: 'my-app' }}>
+ *     <App />
+ *   </AuthProvider>
+ * </AuthServiceProvider>
+ * ```
+ *
+ * 2. Via config.injectedService (legacy, still supported):
+ * ```tsx
+ * <AuthProvider config={{
+ *   appType: 'my-app',
+ *   injectedService: { authService: myAuthService }
+ * }}>
+ *   <App />
+ * </AuthProvider>
+ * ```
  */
 
-import { useState, useEffect, useCallback, useMemo, useSyncExternalStore, createContext, useRef } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { authService } from '@digilist/client-sdk/services';
 import {
-  FLOW_CONTEXT_KEY,
-  hasStoredFlowContext as checkStoredFlowContext,
-  clearFlowContextFromStorage,
-  getFlowContextTTL,
-} from '@digilist/client-sdk';
+  useState,
+  useEffect,
+  useCallback,
+  useMemo,
+  useSyncExternalStore,
+  createContext,
+  useRef,
+  useContext,
+} from 'react';
+import { useNavigate } from 'react-router-dom';
 
 import type {
   User,
@@ -46,7 +72,15 @@ import type {
   AuthConfig,
   AuthContextType,
   RestoreFlowContextResult,
+  AuthServiceContract,
+  FlowContextUtilities,
+  FlowResumeResult,
 } from '../types';
+
+import {
+  AuthServiceContext,
+  defaultFlowContextUtils,
+} from './AuthServiceContext';
 
 // =============================================================================
 // Role-Based Access Control Configuration
@@ -59,7 +93,7 @@ const DEFAULT_ALLOWED_ROLES: Record<AppType, UserRole[]> = {
   'minside': [], // All authenticated users allowed
   'backoffice': ['admin', 'saksbehandler', 'super_admin', 'case_handler'],
   'saas-admin': ['super_admin', 'admin'],
-  'tenant-admin': ['tenant_admin', 'admin', 'super_admin'],  
+  'tenant-admin': ['tenant_admin', 'admin', 'super_admin'],
   'web': [], // All authenticated users allowed
 };
 
@@ -70,8 +104,8 @@ const DEFAULT_ACCESS_DENIED_MESSAGES: Record<AppType, string> = {
   'minside': 'Du har ikke tilgang til Min Side. Kun innbyggere og administratorer har tilgang.',
   'backoffice': 'Du har ikke tilgang til administrasjonspanelet. Kun administratorer og saksbehandlere har tilgang.',
   'saas-admin': 'Du har ikke tilgang til dette panelet. Kun superadministratorer har tilgang.',
-  'tenant-admin': 'Du har ikke tilgang til dette panelet. Kun leietakeradministratorer har tilgang.',  
-  'web': 'Du må være innlogget for å få tilgang til denne siden.',
+  'tenant-admin': 'Du har ikke tilgang til dette panelet. Kun leietakeradministratorer har tilgang.',
+  'web': 'Du m\u00e5 v\u00e6re innlogget for \u00e5 f\u00e5 tilgang til denne siden.',
 };
 
 // =============================================================================
@@ -80,11 +114,15 @@ const DEFAULT_ACCESS_DENIED_MESSAGES: Record<AppType, string> = {
 
 const subscribers = new Set<() => void>();
 
+// Current flow context key (can be customized via FlowContextUtilities)
+let currentFlowContextKey = 'auth_flow_context';
+let currentHasStoredFlowContext = defaultFlowContextUtils.hasStoredFlowContext;
+
 function subscribe(callback: () => void): () => void {
   subscribers.add(callback);
 
   const handleStorageChange = (event: StorageEvent) => {
-    if (event.key === FLOW_CONTEXT_KEY || event.key === null) {
+    if (event.key === currentFlowContextKey || event.key === null) {
       callback();
     }
   };
@@ -102,7 +140,7 @@ function subscribe(callback: () => void): () => void {
 }
 
 function getSnapshot(): boolean {
-  return checkStoredFlowContext();
+  return currentHasStoredFlowContext();
 }
 
 function getServerSnapshot(): boolean {
@@ -129,24 +167,72 @@ interface AuthProviderProps {
 }
 
 export function AuthProvider({ children, config }: AuthProviderProps) {
-  // 🛡️ STRICT DEVELOPMENT MODE CHECK
-  // Triple safeguard to ensure dev mode is NEVER active in production:
-  // 1. Must be in Vite dev mode (env.DEV === true)
-  // 2. Must NOT be in production mode (env.PROD !== true) 
-  // 3. Must have explicit opt-in (VITE_ENABLE_DEV_MODE === 'true')
+  // Check for dev mode (strict safeguards)
   const env = (import.meta as any).env;
-  const isDevMode = 
+  const isDevMode =
     env?.DEV === true &&           // Vite dev server running
     env?.PROD !== true &&          // NOT a production build
     env?.MODE === 'development' && // Explicit development mode
     env?.VITE_ENABLE_DEV_MODE === 'true'; // Explicit opt-in required
-  
+
   const [user, setUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [accessDeniedError, setAccessDeniedError] = useState<string | null>(null);
   const [tokenExpiresAt, setTokenExpiresAt] = useState<Date | null>(null);
-  const refreshTimerRef = useRef<NodeJS.Timeout | null>(null);
+  const refreshTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const navigate = useNavigate();
+
+  // =============================================================================
+  // Get Auth Service (from context or config.injectedService)
+  // =============================================================================
+
+  const serviceContext = useContext(AuthServiceContext);
+
+  // Determine auth service source:
+  // 1. config.injectedService (legacy, direct injection)
+  // 2. AuthServiceContext (recommended, via AuthServiceProvider)
+  const authServiceRef = useRef<AuthServiceContract | null>(
+    config.injectedService?.authService ?? null
+  );
+  const flowUtilsRef = useRef<FlowContextUtilities>(
+    config.injectedService?.flowContextUtils ?? defaultFlowContextUtils
+  );
+
+  // If no injected service, try to get from context
+  const [serviceReady, setServiceReady] = useState(!!config.injectedService);
+
+  // Initialize service from context if not injected directly
+  useEffect(() => {
+    if (!config.injectedService && serviceContext.isInitialized) {
+      authServiceRef.current = serviceContext.authService;
+      flowUtilsRef.current = serviceContext.flowContextUtils;
+
+      // Update subscription helpers
+      currentFlowContextKey = serviceContext.flowContextUtils.FLOW_CONTEXT_KEY;
+      currentHasStoredFlowContext = serviceContext.flowContextUtils.hasStoredFlowContext;
+
+      setServiceReady(true);
+    }
+  }, [config.injectedService, serviceContext]);
+
+  // Helper to get auth service (throws if not ready)
+  const getAuthService = useCallback((): AuthServiceContract => {
+    if (!authServiceRef.current) {
+      throw new Error(
+        '@xala/auth: Auth service not initialized. ' +
+        'Either wrap your app with AuthServiceProvider or provide config.injectedService.'
+      );
+    }
+    return authServiceRef.current;
+  }, []);
+
+  // Helper functions for flow context (use the loaded utilities)
+  const hasStoredFlowContextFn = useCallback(() => flowUtilsRef.current.hasStoredFlowContext(), []);
+  const clearFlowContextFromStorageFn = useCallback(() => flowUtilsRef.current.clearFlowContextFromStorage(), []);
+  const getFlowContextTTLFn = useCallback(
+    (ctx: FlowResumeResult['flowContext']) => flowUtilsRef.current.getFlowContextTTL(ctx),
+    []
+  );
 
   const hasStoredContext = useSyncExternalStore(
     subscribe,
@@ -155,8 +241,12 @@ export function AuthProvider({ children, config }: AuthProviderProps) {
   );
 
   // Determine allowed roles for this app
-  const allowedRoles = config.allowedRoles ?? DEFAULT_ALLOWED_ROLES[config.appType];
-  const accessDeniedMessage = config.accessDeniedMessage ?? DEFAULT_ACCESS_DENIED_MESSAGES[config.appType];
+  const allowedRoles = config.allowedRoles
+    ?? DEFAULT_ALLOWED_ROLES[config.appType as keyof typeof DEFAULT_ALLOWED_ROLES]
+    ?? [];
+  const accessDeniedMessage = config.accessDeniedMessage
+    ?? DEFAULT_ACCESS_DENIED_MESSAGES[config.appType as keyof typeof DEFAULT_ACCESS_DENIED_MESSAGES]
+    ?? 'You do not have access to this application.';
 
   // Debug logging helper
   const debug = useCallback((...args: unknown[]) => {
@@ -176,10 +266,10 @@ export function AuthProvider({ children, config }: AuthProviderProps) {
 
     // Check if user's role is in allowed list
     const userHasRole = allowedRoles.includes(user.role);
-    
+
     // For backoffice, also check grantedRoles
     if (config.appType === 'backoffice' && user.grantedRoles) {
-      const grantedRoleMatch = user.grantedRoles.some(grantedRole => 
+      const grantedRoleMatch = user.grantedRoles.some(grantedRole =>
         allowedRoles.includes(grantedRole as UserRole)
       );
       return userHasRole || grantedRoleMatch;
@@ -210,6 +300,7 @@ export function AuthProvider({ children, config }: AuthProviderProps) {
     refreshTimerRef.current = setTimeout(async () => {
       debug('Auto-refreshing token...');
       try {
+        const authService = getAuthService();
         const response = await authService.refreshToken();
         if (response.data?.expiresAt) {
           setTokenExpiresAt(new Date(response.data.expiresAt));
@@ -221,7 +312,7 @@ export function AuthProvider({ children, config }: AuthProviderProps) {
         // Let 401 interceptor handle logout
       }
     }, refreshDelay);
-  }, [debug]);
+  }, [debug, getAuthService]);
 
   /**
    * Clear refresh timer
@@ -238,6 +329,12 @@ export function AuthProvider({ children, config }: AuthProviderProps) {
    * Initialize authentication - check for existing session
    */
   useEffect(() => {
+    // Wait for service to be ready
+    if (!serviceReady) {
+      debug('Waiting for auth service to be ready...');
+      return;
+    }
+
     const checkAuth = async () => {
       // Add auth:expired event listener
       const handleAuthExpired = () => {
@@ -252,15 +349,23 @@ export function AuthProvider({ children, config }: AuthProviderProps) {
         window.addEventListener('auth:expired', handleAuthExpired);
       }
 
-      // 🚀 DEVELOPMENT MODE: Auto-login with mock user
-      // This ONLY runs when:
-      // - Running on Vite dev server (npm run dev)
-      // - NOT in a production build
-      // - MODE is explicitly 'development'
-      // - VITE_ENABLE_DEV_MODE is set to 'true'
+      const authService = authServiceRef.current;
+
+      if (!authService) {
+        debug('No auth service available');
+        setIsLoading(false);
+        if (config.onAuthError) {
+          config.onAuthError(new Error(
+            '@xala/auth: No auth service available. ' +
+            'Wrap your app with AuthServiceProvider or provide config.injectedService.'
+          ));
+        }
+        return;
+      }
+
+      // Dev mode notification (mock auth removed)
       if (isDevMode) {
-        debug('⚠️  Dev mode enabled but mock auth removed - use demo token login');
-        // REMOVED early return - proceed to normal session validation 
+        debug('Dev mode enabled but mock auth removed - use demo token login');
       }
 
       debug('Checking authentication status...');
@@ -277,21 +382,15 @@ export function AuthProvider({ children, config }: AuthProviderProps) {
 
         try {
           // Exchange authorization code for session
-          // This calls the API's OAuth callback endpoint which:
-          // 1. Validates the authorization code and state parameter
-          // 2. Exchanges code for OAuth tokens
-          // 3. Validates tenant ID and subscription status
-          // 4. Creates JWT with user, tenant, and subscription data
-          // 5. Sets HTTP-only cookies for session management
           const response = await authService.handleOAuthCallback(code, state || undefined);
           const session = response.data;
 
           const userData: User = {
             id: session.user.id,
-            name: session.user.name,
+            name: session.user.name || session.user.email,
             email: session.user.email,
             role: session.user.role as UserRole,
-            grantedRoles: session.user.grantedRoles,
+            grantedRoles: session.user.grantedRoles as User['grantedRoles'],
             tenantId: session.user.tenantId,
           };
 
@@ -363,7 +462,7 @@ export function AuthProvider({ children, config }: AuthProviderProps) {
           name: session.user.name || session.user.email,
           email: session.user.email,
           role: session.user.role as UserRole,
-          grantedRoles: session.user.grantedRoles,
+          grantedRoles: session.user.grantedRoles as User['grantedRoles'],
           tenantId: session.user.tenantId,
         };
 
@@ -402,8 +501,7 @@ export function AuthProvider({ children, config }: AuthProviderProps) {
         setAccessDeniedError(null);
         setUser(userData);
       } catch (error) {
-        // ✅ SECURITY FIX: Session validation failed - clear ALL user data
-        // HTTP-only session cookie is the ONLY source of authentication truth
+        // Session validation failed - clear ALL user data
         debug('Session validation failed - clearing user state');
 
         setUser(null);
@@ -426,7 +524,19 @@ export function AuthProvider({ children, config }: AuthProviderProps) {
     return () => {
       clearRefreshTimer();
     };
-  }, [config.appType, hasRequiredRole, accessDeniedMessage, debug, clearRefreshTimer, navigate, scheduleTokenRefresh]);
+  }, [
+    serviceReady,
+    config.appType,
+    config.loginPath,
+    config.onAuthError,
+    hasRequiredRole,
+    accessDeniedMessage,
+    debug,
+    clearRefreshTimer,
+    navigate,
+    scheduleTokenRefresh,
+    isDevMode,
+  ]);
 
   /**
    * Re-check session on visibility change
@@ -434,10 +544,10 @@ export function AuthProvider({ children, config }: AuthProviderProps) {
    */
   useEffect(() => {
     const handleVisibilityChange = async () => {
-      if (document.visibilityState === 'visible' && user && !isDevMode) {
+      if (document.visibilityState === 'visible' && user && !isDevMode && authServiceRef.current) {
         debug('Tab became visible - checking session...');
         try {
-          const response = await authService.getSession();
+          const response = await authServiceRef.current.getSession();
           // Session still valid, update expiry if needed
           if (response.data?.expiresAt) {
             setTokenExpiresAt(new Date(response.data.expiresAt));
@@ -466,9 +576,10 @@ export function AuthProvider({ children, config }: AuthProviderProps) {
     debug('Initiating OAuth login with provider:', provider);
 
     try {
+      const authService = getAuthService();
       const callbackUrl = window.location.origin + '/';
       const response = await authService.initiateOAuth(provider, callbackUrl);
-      
+
       debug('Redirecting to OAuth provider:', response.data.redirectUrl);
       window.location.href = response.data.redirectUrl;
     } catch (error) {
@@ -477,7 +588,7 @@ export function AuthProvider({ children, config }: AuthProviderProps) {
         config.onAuthError(error as Error);
       }
     }
-  }, [debug, config]);
+  }, [debug, config, getAuthService]);
 
   /**
    * Logout current user
@@ -485,23 +596,24 @@ export function AuthProvider({ children, config }: AuthProviderProps) {
   const logout = useCallback(async () => {
     debug('Logging out...');
 
-    // ✅ CRITICAL: Clear local state FIRST
+    // Clear local state FIRST
     setUser(null);
     localStorage.removeItem(`${config.appType}_user`);
     localStorage.removeItem('backoffice_mock_user'); // Clean up legacy
     localStorage.removeItem('minside_user'); // Clean up legacy
-    
+
     // Clear role storage (backoffice)
     localStorage.removeItem('backoffice_effective_role');
     localStorage.removeItem('backoffice_remember_role_choice');
-    
-    clearFlowContextFromStorage();
+
+    clearFlowContextFromStorageFn();
     notifySubscribers();
 
     debug('Local state cleared');
 
     // Server-side session invalidation
     try {
+      const authService = getAuthService();
       await authService.logout();
       debug('Server session cleared');
     } catch (error) {
@@ -510,25 +622,25 @@ export function AuthProvider({ children, config }: AuthProviderProps) {
 
     debug('Redirecting to login...');
     navigate('/login', { replace: true });
-  }, [config.appType, navigate, debug]);
+  }, [config.appType, navigate, debug, clearFlowContextFromStorageFn, getAuthService]);
 
   /**
    * Handle auth callback - set user state directly (for demo login without page reload)
    */
   const handleAuthCallback = useCallback((userData: Pick<User, 'id' | 'name' | 'email'>) => {
     debug('handleAuthCallback called:', userData.email);
-    
+
     const fullUser: User = {
       id: userData.id,
       name: userData.name,
       email: userData.email,
       role: 'citizen' as UserRole, // Default role for demo users
     };
-    
+
     // Store in localStorage for persistence
     localStorage.setItem(`${config.appType}_user`, JSON.stringify(fullUser));
     setUser(fullUser);
-    
+
     debug('User state updated via handleAuthCallback');
   }, [config.appType, debug]);
 
@@ -537,10 +649,10 @@ export function AuthProvider({ children, config }: AuthProviderProps) {
    */
   const checkRole = useCallback((role: UserRole): boolean => {
     if (!user) return false;
-    
+
     if (role === 'admin') return user.role === 'admin' || user.role === 'super_admin';
     if (role === 'saksbehandler') return user.role === 'admin' || user.role === 'saksbehandler';
-    
+
     return user.role === role;
   }, [user]);
 
@@ -549,7 +661,8 @@ export function AuthProvider({ children, config }: AuthProviderProps) {
    */
   const restoreFlowContext = useCallback((clearAfterLoad: boolean = true): RestoreFlowContextResult => {
     debug('Restoring flow context...');
-    
+
+    const authService = getAuthService();
     const result = authService.resumeFlow(clearAfterLoad);
 
     if (clearAfterLoad && result.hasContext) {
@@ -557,7 +670,7 @@ export function AuthProvider({ children, config }: AuthProviderProps) {
     }
 
     const ttl = result.flowContext
-      ? getFlowContextTTL(result.flowContext)
+      ? getFlowContextTTLFn(result.flowContext)
       : undefined;
 
     debug('Flow context restored:', result.hasContext ? 'yes' : 'no');
@@ -569,16 +682,16 @@ export function AuthProvider({ children, config }: AuthProviderProps) {
       wasExpired: result.wasExpired,
       wasInvalid: result.wasInvalid,
     };
-  }, [debug]);
+  }, [debug, getAuthService, getFlowContextTTLFn]);
 
   /**
    * Clear any stored flow context
    */
   const clearFlowContext = useCallback((): void => {
     debug('Clearing flow context');
-    clearFlowContextFromStorage();
+    clearFlowContextFromStorageFn();
     notifySubscribers();
-  }, [debug]);
+  }, [debug, clearFlowContextFromStorageFn]);
 
   const value = useMemo<AuthContextType>(
     () => ({

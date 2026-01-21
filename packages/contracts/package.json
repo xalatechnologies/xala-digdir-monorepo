@@ -1,7 +1,7 @@
 {
   "name": "@xala/contracts",
   "version": "1.0.0",
-  "description": "Shared API contracts: Zod schemas, TypeScript types, and OpenAPI generation",
+  "description": "Platform-level API contracts: Zod schemas for RFC7807, pagination, and common types",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
   "types": "dist/index.d.ts",
@@ -16,11 +16,6 @@
       "import": "./dist/schemas/index.mjs",
       "require": "./dist/schemas/index.js"
     },
-    "./projections": {
-      "types": "./dist/projections/index.d.ts",
-      "import": "./dist/projections/index.mjs",
-      "require": "./dist/projections/index.js"
-    },
     "./types": {
       "types": "./dist/types/index.d.ts",
       "import": "./dist/types/index.mjs",
@@ -30,6 +25,16 @@
       "types": "./dist/modules/index.d.ts",
       "import": "./dist/modules/index.mjs",
       "require": "./dist/modules/index.js"
+    },
+    "./monitoring": {
+      "types": "./dist/monitoring/index.d.ts",
+      "import": "./dist/monitoring/index.mjs",
+      "require": "./dist/monitoring/index.js"
+    },
+    "./validation": {
+      "types": "./dist/validation/env-schemas.d.ts",
+      "import": "./dist/validation/env-schemas.mjs",
+      "require": "./dist/validation/env-schemas.js"
     }
   },
   "files": [
@@ -43,16 +48,15 @@
     "typecheck": "tsc --noEmit",
     "lint": "eslint src --ext .ts",
     "test": "vitest run",
-    "test:watch": "vitest",
-    "openapi:generate": "tsx src/openapi/generate.ts",
-    "openapi:validate": "redocly lint openapi.yaml"
+    "test:watch": "vitest"
   },
   "keywords": [
     "api",
     "contracts",
     "zod",
-    "openapi",
-    "typescript"
+    "typescript",
+    "rfc7807",
+    "pagination"
   ],
   "author": "Xala Technologies",
   "license": "MIT",
@@ -61,8 +65,6 @@
     "zod": "^3.22.4"
   },
   "devDependencies": {
-    "@anatine/zod-openapi": "^2.2.0",
-    "openapi3-ts": "^4.2.1",
     "tsup": "^8.0.1",
     "tsx": "^4.7.0",
     "typescript": "^5.3.3",

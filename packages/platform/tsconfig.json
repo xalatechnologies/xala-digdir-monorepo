@@ -1,0 +1,43 @@
+{
+  "extends": "../../tsconfig.json",
+  "compilerOptions": {
+    "target": "ES2020",
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "lib": ["ES2020", "DOM", "DOM.Iterable"],
+    "jsx": "react-jsx",
+    "strict": true,
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "declaration": true,
+    "declarationMap": true,
+    "sourceMap": true,
+    "outDir": "./dist",
+    "rootDir": "./src",
+    "noEmit": true,
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noImplicitReturns": true,
+    "noFallthroughCasesInSwitch": true,
+    "composite": true,
+    "baseUrl": ".",
+    "paths": {
+      "@xalatechnologies/platform": ["./src/index.ts"],
+      "@xalatechnologies/platform/ui": ["./src/ui/index.ts"],
+      "@xalatechnologies/platform/ui/*": ["./src/ui/*"],
+      "@xalatechnologies/platform/runtime": ["./src/runtime/index.ts"],
+      "@xalatechnologies/platform/auth": ["./src/auth/index.ts"],
+      "@xalatechnologies/platform/config": ["./src/config/index.ts"],
+      "@xalatechnologies/platform/contracts": ["./src/contracts/index.ts"],
+      "@xalatechnologies/platform/sdk": ["./src/sdk/index.ts"],
+      "@xalatechnologies/platform/i18n": ["./src/i18n/index.ts"],
+      "@xalatechnologies/platform/observability": ["./src/observability/index.ts"]
+    }
+  },
+  "include": ["src/**/*"],
+  "exclude": ["node_modules", "dist", "src/**/*.test.tsx", "src/**/*.test.ts", "src/__tests__"]
+}

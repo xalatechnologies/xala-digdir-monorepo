@@ -1,9 +1,36 @@
 /**
  * VenueCard Block - Reusable DS Component
+ *
+ * Displays venue information with image, details, and apply action.
+ * Domain-agnostic - receives all data and handlers via props.
+ *
+ * @example
+ * ```tsx
+ * // In app with i18n
+ * import { useT } from '@xala/i18n';
+ *
+ * function MyVenueCard({ venue }) {
+ *   const t = useT();
+ *
+ *   return (
+ *     <VenueCard
+ *       venue={venue}
+ *       onApply={(id) => navigate(`/venues/${id}/apply`)}
+ *       labels={{
+ *         capacity: t('common.capacity'),
+ *         apply: t('common.apply'),
+ *       }}
+ *     />
+ *   );
+ * }
+ * ```
  */
 import { Card, Badge } from '../../primitives';
 import { Heading, Paragraph, Button } from '@digdir/designsystemet-react';
-import { useT } from '@xala/i18n';
+
+// =============================================================================
+// Types
+// =============================================================================
 
 export interface VenueCardData {
   id: string;
@@ -16,15 +43,41 @@ export interface VenueCardData {
   categories?: string[];
 }
 
+export interface VenueCardLabels {
+  capacity: string;
+  apply: string;
+}
+
 export interface VenueCardProps {
   venue: VenueCardData;
   onApply?: (id: string) => void;
   showApplyButton?: boolean;
+  /** Labels for i18n */
+  labels?: Partial<VenueCardLabels>;
   'data-testid'?: string;
 }
 
-export function VenueCard({ venue, onApply, showApplyButton = true, 'data-testid': testId = 'venue-card' }: VenueCardProps) {
-  const t = useT();
+// =============================================================================
+// Default Labels
+// =============================================================================
+
+const DEFAULT_LABELS: VenueCardLabels = {
+  capacity: 'Kapasitet',
+  apply: 'Sok',
+};
+
+// =============================================================================
+// Component
+// =============================================================================
+
+export function VenueCard({
+  venue,
+  onApply,
+  showApplyButton = true,
+  labels: customLabels,
+  'data-testid': testId = 'venue-card',
+}: VenueCardProps) {
+  const labels = { ...DEFAULT_LABELS, ...customLabels };
   const categories = venue.categories || [];
 
   return (
@@ -35,13 +88,13 @@ export function VenueCard({ venue, onApply, showApplyButton = true, 'data-testid
         {venue.address && <Paragraph data-size="sm" style={{ margin: 0, color: 'var(--ds-color-neutral-text-subtle)' }}>{venue.address.street}, {venue.address.city}</Paragraph>}
         {venue.description && <Paragraph data-size="sm" style={{ margin: 0, color: 'var(--ds-color-neutral-text-subtle)' }}>{venue.description}</Paragraph>}
         <div style={{ display: 'flex', gap: 'var(--ds-spacing-2)', marginTop: 'auto' }}>
-          {venue.capacity && <Badge size="sm">{t('common.capacity')}: {venue.capacity}</Badge>}
+          {venue.capacity && <Badge size="sm">{labels.capacity}: {venue.capacity}</Badge>}
           {categories.slice(0, 2).map((c, i) => <Badge key={i} size="sm">{c}</Badge>)}
         </div>
       </div>
       {showApplyButton && onApply && (
         <div style={{ padding: 'var(--ds-spacing-4)', borderTop: '1px solid var(--ds-color-neutral-border-subtle)' }}>
-          <Button type="button" variant="primary" data-size="sm" onClick={() => onApply(venue.id)} style={{ width: '100%' }}>{t('common.apply')}</Button>
+          <Button type="button" variant="primary" data-size="sm" onClick={() => onApply(venue.id)} style={{ width: '100%' }}>{labels.apply}</Button>
         </div>
       )}
     </Card>

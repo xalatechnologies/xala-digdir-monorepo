@@ -14,17 +14,20 @@ import {
   DrawerSection,
   DrawerItem,
   ContentLayout,
-  RentalObjectCard,
-  RentalObjectListItem,
-  RentalObjectGrid,
-  RentalObjectToolbar,
-  RentalObjectTableView,
   Stack,
   Text,
   HeaderSearch,
   Card,
 } from '@xala/ds';
-import type { SearchResultItem, SearchResultGroup, ViewMode } from '@xala/ds';
+import type { SearchResultItem, SearchResultGroup } from '@xala/ds';
+import {
+  RentalObjectCard,
+  RentalObjectListItem,
+  RentalObjectGrid,
+  RentalObjectToolbar,
+  RentalObjectTableView,
+  type ViewMode,
+} from '@digilist/ui';
 import {
   usePublicRentalObjectsList,
   usePublicCities,

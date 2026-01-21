@@ -1,41 +1,155 @@
 /**
  * ConsentManager
  *
- * Component for managing GDPR consent preferences
- * - Marketing consent
- * - Analytics consent
- * - Third-party sharing consent
- * - Shows last updated timestamp
+ * Component for managing GDPR consent preferences.
+ * Domain-agnostic - receives all data and callbacks via props.
+ *
+ * @example
+ * ```tsx
+ * // In app with SDK hooks
+ * function ConsentPage() {
+ *   const { data: consentsData, isLoading } = useConsents();
+ *   const updateConsents = useUpdateConsents();
+ *
+ *   const [consents, setConsents] = useState({
+ *     marketing: false,
+ *     analytics: false,
+ *     thirdPartySharing: false,
+ *   });
+ *
+ *   return (
+ *     <ConsentManager
+ *       consents={consents}
+ *       onConsentChange={(key, value) => setConsents({ ...consents, [key]: value })}
+ *       isLoading={isLoading}
+ *       isSaving={updateConsents.isPending}
+ *       isError={updateConsents.isError}
+ *       isSuccess={updateConsents.isSuccess}
+ *       hasChanges={hasChanges}
+ *       onSave={handleSave}
+ *       lastUpdated={consentsData?.data?.[0]?.updatedAt}
+ *       consentSettings={consentSettings}
+ *       labels={labels}
+ *     />
+ *   );
+ * }
+ * ```
  */
 
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Card, Heading, Paragraph, Button, Switch } from '@xala/ds';
-import { useConsents, useUpdateConsents } from '@digilist/client-sdk/hooks';
-import { useT } from '@xala/i18n';
+
+// =============================================================================
+// Types
+// =============================================================================
+
+export interface ConsentSetting {
+  key: string;
+  label: string;
+  description: string;
+}
+
+export interface ConsentManagerLabels {
+  title: string;
+  description: string;
+  loading: string;
+  saveButton: string;
+  savingButton: string;
+  successMessage: string;
+  errorMessage: string;
+  infoTitle: string;
+  infoDescription: string;
+  requiredConsentLabel: string;
+  requiredConsentDescription: string;
+}
+
+export interface ConsentManagerProps {
+  /** Current consent values */
+  consents: Record<string, boolean>;
+  /** Callback when a consent value changes */
+  onConsentChange: (key: string, value: boolean) => void;
+  /** Whether data is loading */
+  isLoading: boolean;
+  /** Whether consents are being saved */
+  isSaving: boolean;
+  /** Whether there was an error saving */
+  isError: boolean;
+  /** Whether save was successful */
+  isSuccess: boolean;
+  /** Whether there are unsaved changes */
+  hasChanges: boolean;
+  /** Callback to save consents */
+  onSave: () => void | Promise<void>;
+  /** Last updated timestamp (ISO string) */
+  lastUpdated?: string | null;
+  /** Consent settings to display */
+  consentSettings: ConsentSetting[];
+  /** Labels for i18n */
+  labels: ConsentManagerLabels;
+}
+
+// =============================================================================
+// Default Labels
+// =============================================================================
+
+export const DEFAULT_CONSENT_MANAGER_LABELS: ConsentManagerLabels = {
+  title: 'Samtykker',
+  description: 'Administrer dine personvernpreferanser. Du kan nar som helst endre eller trekke tilbake dine samtykker.',
+  loading: 'Laster samtykker...',
+  saveButton: 'Lagre endringer',
+  savingButton: 'Lagrer...',
+  successMessage: 'Samtykker oppdatert',
+  errorMessage: 'Det oppstod en feil ved lagring av samtykker. Vennligst prov igjen senere.',
+  infoTitle: 'Om samtykker',
+  infoDescription: 'Du kan nar som helst endre eller trekke tilbake dine samtykker. Nodvendige samtykker kreves for at tjenesten skal fungere og kan ikke deaktiveres. Alle endringer i samtykker logges i henhold til GDPR-krav.',
+  requiredConsentLabel: 'Nodvendige samtykker',
+  requiredConsentDescription: 'Nodvendig for at tjenesten skal fungere. Kan ikke deaktiveres.',
+};
+
+// =============================================================================
+// Default Consent Settings
+// =============================================================================
+
+export const DEFAULT_CONSENT_SETTINGS: ConsentSetting[] = [
+  {
+    key: 'marketing',
+    label: 'Markedsforing',
+    description: 'Motta nyheter, tilbud og oppdateringer fra oss.',
+  },
+  {
+    key: 'analytics',
+    label: 'Analyse og statistikk',
+    description: 'Tillat anonymisert analyse av bruksmonstre for a forbedre tjenesten.',
+  },
+  {
+    key: 'thirdPartySharing',
+    label: 'Deling med tredjeparter',
+    description: 'Tillat at dine data deles med partnere for utvidet funksjonalitet.',
+  },
+];
+
+// =============================================================================
+// Component
+// =============================================================================
 
 const MOBILE_BREAKPOINT = 768;
 
-export function ConsentManager() {
+export function ConsentManager({
+  consents,
+  onConsentChange,
+  isLoading,
+  isSaving,
+  isError,
+  isSuccess,
+  hasChanges,
+  onSave,
+  lastUpdated,
+  consentSettings = DEFAULT_CONSENT_SETTINGS,
+  labels = DEFAULT_CONSENT_MANAGER_LABELS,
+}: ConsentManagerProps): React.ReactElement {
   const [isMobile, setIsMobile] = useState(
     typeof window !== 'undefined' ? window.innerWidth < MOBILE_BREAKPOINT : false
   );
-
-  // Fetch current consents
-  const { data: consentsData, isLoading } = useConsents();
-  const t = useT();
-
-  // Update consents mutation
-  const updateConsents = useUpdateConsents();
-
-  // Local state for consent toggles
-  const [consents, setConsents] = useState({
-    marketing: false,
-    analytics: false,
-    thirdPartySharing: false,
-  });
-
-  // Track if there are unsaved changes
-  const [hasChanges, setHasChanges] = useState(false);
 
   useEffect(() => {
     const handleResize = () => setIsMobile(window.innerWidth < MOBILE_BREAKPOINT);
@@ -43,62 +157,10 @@ export function ConsentManager() {
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
-  // Update local state when consents data is loaded
-  useEffect(() => {
-    if (consentsData?.data) {
-      // Handle both array format (from SDK) and object format
-      const data = consentsData.data as any;
-      if (Array.isArray(data)) {
-        // SDK returns Consent[] array - find each consent type
-        const findConsent = (type: string) => 
-          data.find((c: any) => c.type === type)?.granted ?? false;
-        setConsents({
-          marketing: findConsent('marketing'),
-          analytics: findConsent('analytics'),
-          thirdPartySharing: findConsent('thirdPartySharing'),
-        });
-      } else {
-        // Legacy object format
-        setConsents({
-          marketing: data.marketing ?? false,
-          analytics: data.analytics ?? false,
-          thirdPartySharing: data.thirdPartySharing ?? false,
-        });
-      }
-    }
-  }, [consentsData]);
-
-  const updateConsent = (key: keyof typeof consents, value: boolean) => {
-    setConsents(prev => ({ ...prev, [key]: value }));
-    setHasChanges(true);
-  };
-
-  const handleSave = async () => {
-    try {
-      // Transform local state to array format expected by SDK
-      const payload = [
-        { type: 'marketing', granted: consents.marketing },
-        { type: 'analytics', granted: consents.analytics },
-        { type: 'thirdPartySharing', granted: consents.thirdPartySharing },
-      ];
-      await updateConsents.mutateAsync(payload as any);
-      setHasChanges(false);
-    } catch (error) {
-      console.error(t('validation.failed_to_update_consents'), error);
-    }
-  };
-
   const getLastUpdatedText = () => {
-    const data = consentsData?.data as any;
-    // Handle both array and object formats
-    const updatedAt = Array.isArray(data) 
-      ? data[0]?.updatedAt 
-      : data?.updatedAt;
-    if (!updatedAt) {
-      return null;
-    }
+    if (!lastUpdated) return null;
 
-    const date = new Date(updatedAt);
+    const date = new Date(lastUpdated);
     return date.toLocaleDateString('nb-NO', {
       year: 'numeric',
       month: 'long',
@@ -107,24 +169,6 @@ export function ConsentManager() {
       minute: '2-digit',
     });
   };
-
-  const consentSettings = [
-    {
-      key: 'marketing' as const,
-      label: t('common.markedsforing'),
-      description: t('common.motta_nyheter_tilbud_og'),
-    },
-    {
-      key: 'analytics' as const,
-      label: t('common.analyse_og_statistikk'),
-      description: t('common.tillat_anonymisert_analyse_av'),
-    },
-    {
-      key: 'thirdPartySharing' as const,
-      label: t('common.deling_med_tredjeparter'),
-      description: t('common.tillat_at_dine_data'),
-    },
-  ];
 
   return (
     <Card style={{ padding: 'var(--ds-spacing-5)' }}>
@@ -139,10 +183,10 @@ export function ConsentManager() {
         }}>
           <div>
             <Heading level={2} data-size="sm" style={{ margin: 0, marginBottom: 'var(--ds-spacing-2)' }}>
-              Samtykker
+              {labels.title}
             </Heading>
             <Paragraph data-size="sm" style={{ margin: 0, color: 'var(--ds-color-neutral-text-subtle)' }}>
-              Administrer dine personvernpreferanser. Du kan når som helst endre eller trekke tilbake dine samtykker.
+              {labels.description}
             </Paragraph>
           </div>
           {hasChanges && (
@@ -150,11 +194,11 @@ export function ConsentManager() {
               type="button"
               variant="primary"
               data-size="md"
-              onClick={handleSave}
-              disabled={updateConsents.isPending}
+              onClick={onSave}
+              disabled={isSaving}
               style={{ minHeight: '44px', alignSelf: isMobile ? 'stretch' : 'flex-start' }}
             >
-              {updateConsents.isPending ? t('state.saving') : 'Lagre endringer'}
+              {isSaving ? labels.savingButton : labels.saveButton}
             </Button>
           )}
         </div>
@@ -162,7 +206,7 @@ export function ConsentManager() {
         {/* Loading state */}
         {isLoading && (
           <Paragraph data-size="sm" style={{ margin: 0 }}>
-            Laster samtykker...
+            {labels.loading}
           </Paragraph>
         )}
 
@@ -180,14 +224,14 @@ export function ConsentManager() {
             }}>
               <div style={{ flex: 1 }}>
                 <Paragraph data-size="sm" style={{ margin: 0, fontWeight: 500 }}>
-                  t('common.nodvendige_samtykker')
+                  {labels.requiredConsentLabel}
                 </Paragraph>
                 <Paragraph data-size="xs" style={{ margin: 0, marginTop: 'var(--ds-spacing-1)', color: 'var(--ds-color-neutral-text-subtle)' }}>
-                  Nødvendig for at tjenesten skal fungere. Kan ikke deaktiveres.
+                  {labels.requiredConsentDescription}
                 </Paragraph>
               </div>
               <Switch
-                aria-label={t('common.nodvendige_samtykker')}
+                aria-label={labels.requiredConsentLabel}
                 checked={true}
                 disabled={true}
                 style={{ pointerEvents: 'none' }}
@@ -214,8 +258,8 @@ export function ConsentManager() {
                 </div>
                 <Switch
                   aria-label={item.label}
-                  checked={consents[item.key]}
-                  onChange={(e) => updateConsent(item.key, e.target.checked)}
+                  checked={consents[item.key] ?? false}
+                  onChange={(e) => onConsentChange(item.key, e.target.checked)}
                 />
               </div>
             ))}
@@ -230,7 +274,7 @@ export function ConsentManager() {
         )}
 
         {/* Success message */}
-        {updateConsents.isSuccess && !hasChanges && (
+        {isSuccess && !hasChanges && (
           <div style={{
             padding: 'var(--ds-spacing-3)',
             borderRadius: 'var(--ds-border-radius-md)',
@@ -238,13 +282,13 @@ export function ConsentManager() {
             border: '1px solid var(--ds-color-success-border)',
           }}>
             <Paragraph data-size="sm" style={{ margin: 0, color: 'var(--ds-color-success-text)' }}>
-              Samtykker oppdatert
+              {labels.successMessage}
             </Paragraph>
           </div>
         )}
 
         {/* Error message */}
-        {updateConsents.isError && (
+        {isError && (
           <div style={{
             padding: 'var(--ds-spacing-3)',
             borderRadius: 'var(--ds-border-radius-md)',
@@ -252,7 +296,7 @@ export function ConsentManager() {
             border: '1px solid var(--ds-color-danger-border)',
           }}>
             <Paragraph data-size="sm" style={{ margin: 0, color: 'var(--ds-color-danger-text)' }}>
-              Det oppstod en feil ved lagring av samtykker. Vennligst prøv igjen senere.
+              {labels.errorMessage}
             </Paragraph>
           </div>
         )}
@@ -264,7 +308,7 @@ export function ConsentManager() {
           backgroundColor: 'var(--ds-color-neutral-surface-hover)',
         }}>
           <Paragraph data-size="xs" style={{ margin: 0, color: 'var(--ds-color-neutral-text-subtle)' }}>
-            <strong>{t('common.om_samtykker')}</strong> Du kan når som helst endre eller trekke tilbake dine samtykker. Nødvendige samtykker kreves for at tjenesten skal fungere og kan ikke deaktiveres. Alle endringer i samtykker logges i henhold til GDPR-krav.
+            <strong>{labels.infoTitle}</strong> {labels.infoDescription}
           </Paragraph>
         </div>
       </div>

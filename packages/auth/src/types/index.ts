@@ -3,10 +3,18 @@
  * Unified types used across all applications
  */
 
+// Import service contract types for use in this file
+import type { InjectedAuthService } from './service-contract';
+
+// Re-export service contract types
+export * from './service-contract';
+
 /**
  * Application types that use this auth package
+ * NOTE: For platform-agnostic usage, use generic string type.
+ * This enum is preserved for backward compatibility with Digilist apps.
  */
-export type AppType = 'minside' | 'backoffice' | 'saas-admin' | 'tenant-admin' | 'web';
+export type AppType = 'minside' | 'backoffice' | 'saas-admin' | 'tenant-admin' | 'web' | string;
 
 /**
  * All possible user roles across the platform
@@ -66,46 +74,62 @@ export interface AuthConfig {
    * Application type - determines role-based access rules
    */
   appType: AppType;
-  
+
   /**
    * Roles allowed to access this app
    * If undefined, all authenticated users allowed
    */
   allowedRoles?: UserRole[];
-  
+
   /**
    * Path to the login page
    * @default '/login'
    */
   loginPath?: string;
-  
+
   /**
    * Path to redirect after successful login
    * @default '/'
    */
   loginRedirect?: string;
-  
+
   /**
    * Path to redirect when user lacks required role
    * @default '/access-denied'
    */
   unauthorizedRedirect?: string;
-  
+
   /**
    * Message to show when access is denied
    */
   accessDeniedMessage?: string;
-  
+
   /**
    * Callback fired on authentication errors
    */
   onAuthError?: (error: Error) => void;
-  
+
   /**
    * Enable debug logging
    * @default false
    */
   debug?: boolean;
+
+  /**
+   * Injected auth service (for platform-agnostic usage).
+   * If not provided, falls back to @digilist/client-sdk authService.
+   *
+   * @example
+   * ```tsx
+   * import { authService } from '@my-domain/sdk';
+   *
+   * <AuthProvider config={{
+   *   appType: 'my-app',
+   *   injectedService: { authService },
+   * }}>
+   * ```
+   */
+  injectedService?: InjectedAuthService;
 }
 
 /**

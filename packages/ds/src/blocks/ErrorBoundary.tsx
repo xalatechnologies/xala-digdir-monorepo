@@ -6,37 +6,83 @@
  *
  * This is a class component as required by React's error boundary API.
  *
- * Supports optional Sentry integration and audit logging for compliance tracking.
+ * Domain-agnostic - all integrations (Sentry, audit logging) should be
+ * injected via callbacks.
+ *
+ * @example
+ * ```tsx
+ * // In app with SDK
+ * import { auditService } from '@digilist/client-sdk';
+ * import * as Sentry from '@sentry/react';
+ *
+ * <ErrorBoundary
+ *   onError={(error, errorInfo) => {
+ *     // Sentry integration
+ *     Sentry.captureException(error, {
+ *       contexts: { react: { componentStack: errorInfo.componentStack } },
+ *     });
+ *     // Audit logging
+ *     auditService.logError('react_error_boundary', 'application', error, {
+ *       componentStack: errorInfo.componentStack,
+ *     });
+ *   }}
+ *   labels={{
+ *     title: t('errors.somethingWentWrong'),
+ *     defaultDescription: t('errors.unexpectedError'),
+ *     retryButton: t('common.retry'),
+ *   }}
+ * >
+ *   <App />
+ * </ErrorBoundary>
+ * ```
  */
 import { Component, type ErrorInfo, type ReactNode } from 'react';
 import { ErrorScreen } from './AuthComponents';
 
 // =============================================================================
-// ErrorBoundary - React Error Boundary Class Component
+// Types
 // =============================================================================
+
+export interface ErrorBoundaryLabels {
+  title: string;
+  defaultDescription: string;
+  retryButton: string;
+}
 
 export interface ErrorBoundaryProps {
   /** Child components to wrap and catch errors for */
   children: ReactNode;
   /** Custom fallback UI to render when an error occurs */
   fallback?: ReactNode;
-  /** Callback when an error is caught (for error tracking services) */
+  /** Callback when an error is caught (for error tracking, audit logging, etc.) */
   onError?: (error: Error, errorInfo: ErrorInfo) => void;
-  /** Custom title for the error screen */
+  /** Custom title for the error screen (overrides labels.title) */
   errorTitle?: string;
   /** Custom description for the error screen */
   errorDescription?: string;
   /** Show the retry button (default: true) */
   showRetryButton?: boolean;
-  /** Custom retry button text */
+  /** Custom retry button text (overrides labels.retryButton) */
   retryButtonText?: string;
   /** Custom retry handler (defaults to page reload) */
   onRetry?: () => void;
-  /** Enable Sentry error reporting (requires @sentry/react) */
-  enableSentry?: boolean;
-  /** Enable audit logging (requires @digilist/client-sdk auditService) */
-  enableAuditLogging?: boolean;
+  /** Labels for i18n */
+  labels?: Partial<ErrorBoundaryLabels>;
 }
+
+// =============================================================================
+// Default Labels
+// =============================================================================
+
+const DEFAULT_LABELS: ErrorBoundaryLabels = {
+  title: 'Noe gikk galt',
+  defaultDescription: 'En uventet feil har oppstatt. Vennligst prov igjen.',
+  retryButton: 'Last siden pa nytt',
+};
+
+// =============================================================================
+// ErrorBoundary - React Error Boundary Class Component
+// =============================================================================
 
 interface ErrorBoundaryState {
   hasError: boolean;
@@ -58,39 +104,8 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
     // Log error to console for development debugging
     console.error('ErrorBoundary caught an error:', error, errorInfo);
 
-    // Optional Sentry integration using dynamic import
-    if (this.props.enableSentry) {
-      import('@sentry/react')
-        .then((Sentry) => {
-          Sentry.captureException(error, {
-            contexts: {
-              react: {
-                componentStack: errorInfo.componentStack,
-              },
-            },
-          });
-        })
-        .catch(() => {
-          // Sentry not available, skip silently
-          console.warn('Sentry integration requested but @sentry/react not available');
-        });
-    }
-
-    // Optional audit logging using dynamic import
-    if (this.props.enableAuditLogging) {
-      import('@digilist/client-sdk')
-        .then(({ auditService }) => {
-          auditService.logError('react_error_boundary', 'application', error, {
-            componentStack: errorInfo.componentStack,
-          });
-        })
-        .catch(() => {
-          // Audit service not available, skip silently
-          console.warn('Audit logging requested but @digilist/client-sdk auditService not available');
-        });
-    }
-
-    // Call the onError callback if provided (for error tracking services)
+    // Call the onError callback if provided
+    // This is the integration point for Sentry, audit logging, etc.
     if (this.props.onError) {
       this.props.onError(error, errorInfo);
     }
@@ -112,11 +127,14 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
     const {
       children,
       fallback,
-      errorTitle = 'Noe gikk galt',
+      errorTitle,
       errorDescription,
       showRetryButton = true,
-      retryButtonText = 'Last siden på nytt',
+      retryButtonText,
+      labels: customLabels,
     } = this.props;
+
+    const labels = { ...DEFAULT_LABELS, ...customLabels };
 
     if (this.state.hasError) {
       // Use custom fallback if provided
@@ -124,17 +142,17 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
         return fallback;
       }
 
-      // Use ErrorScreen with Norwegian text
+      // Use ErrorScreen with configured or default text
       return (
         <ErrorScreen
-          title={errorTitle}
+          title={errorTitle || labels.title}
           description={
             errorDescription ||
             this.state.error?.message ||
-            'En uventet feil har oppstått. Vennligst prøv igjen.'
+            labels.defaultDescription
           }
           showRetryButton={showRetryButton}
-          retryButtonText={retryButtonText}
+          retryButtonText={retryButtonText || labels.retryButton}
           onRetry={this.handleRetry}
         />
       );
@@ -157,6 +175,8 @@ export interface WithErrorBoundaryOptions {
   errorTitle?: string;
   /** Custom description for the error screen */
   errorDescription?: string;
+  /** Labels for i18n */
+  labels?: Partial<ErrorBoundaryLabels>;
 }
 
 /**
@@ -191,6 +211,9 @@ export function withErrorBoundary<P extends object>(
     }
     if (options.errorDescription !== undefined) {
       boundaryProps.errorDescription = options.errorDescription;
+    }
+    if (options.labels !== undefined) {
+      boundaryProps.labels = options.labels;
     }
 
     return <ErrorBoundary {...(boundaryProps as ErrorBoundaryProps)} />;

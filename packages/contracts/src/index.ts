@@ -1,57 +1,52 @@
 /**
  * @xala/contracts
  *
- * Shared API contracts: Zod schemas, TypeScript types, and projections.
+ * Platform-level API contracts: Zod schemas, TypeScript types, and utilities.
  *
- * This package is the single source of truth for API contracts between
- * the API server, SDK, and frontend applications.
+ * This package contains ONLY platform-level contracts that are shared across all domains:
+ * - RFC7807 Problem Details schemas
+ * - Pagination schemas
+ * - Common response schemas
+ * - Generic entity schemas (id, timestamps, etc.)
+ * - Module registry and DTOs
+ * - Monitoring DTOs
+ *
+ * NOTE: Domain-specific contracts (rental-object, booking, organization, user, etc.)
+ * have been REMOVED from this package. They should be imported from @digilist/contracts.
  *
  * ## Usage
  *
  * ### Import Schemas (for validation)
  * ```typescript
- * import { RentalObjectSchema, BookingSchema } from '@xala/contracts/schemas';
+ * import { PaginationSchema, ProblemDetailsSchema } from '@xala/contracts/schemas';
  *
- * const parsed = RentalObjectSchema.parse(data);
+ * const parsed = PaginationSchema.parse({ page: 1, limit: 20 });
  * ```
  *
  * ### Import Types (for type annotations)
  * ```typescript
- * import type { RentalObject, Booking, User } from '@xala/contracts/types';
+ * import type { Pagination, ProblemDetails } from '@xala/contracts/types';
  *
- * function processBooking(booking: Booking) { ... }
+ * function handleError(error: ProblemDetails) { ... }
  * ```
  *
- * ### Import Projections (for UI)
+ * ### For Domain Types
  * ```typescript
- * import type { RentalObjectCardProjection } from '@xala/contracts/projections';
- *
- * function RentalCard({ data }: { data: RentalObjectCardProjection }) { ... }
+ * // Domain-specific contracts are in @digilist/contracts
+ * import { RentalObjectSchema, BookingSchema } from '@digilist/contracts/schemas';
+ * import type { RentalObject, Booking } from '@digilist/contracts/types';
  * ```
  */
 
 // =============================================================================
-// Re-export all modules
+// Platform-level exports
 // =============================================================================
 
-// Schemas
+// Schemas (platform-level only: pagination, RFC7807, timestamps, etc.)
 export * from './schemas';
 
-// Projections
-export * from './projections';
-
-// Storage
-export * from './storage';
-
-// Monitoring DTOs
-export * from './monitoring';
-
-// Modules
-export * from './modules';
-
-// Types (re-export for convenience)
+// Types (platform-level only, re-exported for convenience)
 export type {
-  // Common
   Pagination,
   PaginatedResponseMeta,
   SortOrder,
@@ -61,81 +56,17 @@ export type {
   Money,
   FieldError,
   ProblemDetails,
-
-  // Rental Objects
-  RentalObjectCategory,
-  BookingTimeMode,
-  RentalObjectStatus,
-  PricingUnit,
-  Pricing,
-  Location,
-  BookingFeatures,
-  Rules,
-  RentalObject,
-  CreateRentalObjectDTO,
-  UpdateRentalObjectDTO,
-  RentalObjectQueryParams,
-
-  // Bookings
-  BookingStatus,
-  PaymentStatus,
-  Booking,
-  CreateBookingDTO,
-  UpdateBookingDTO,
-  CancelBookingDTO,
-  BookingQueryParams,
-  BookingQuoteRequest,
-  BookingQuoteResponse,
-
-  // Organizations
-  OrganizationType,
-  OrganizationStatus,
-  Branding,
-  OrganizationSettings,
-  Organization,
-  CreateOrganizationDTO,
-  UpdateOrganizationDTO,
-  OrganizationQueryParams,
-
-  // Users
-  UserRole,
-  UserStatus,
-  User,
-  CreateUserDTO,
-  InviteUserDTO,
-  UpdateUserDTO,
-  AssignRoleDTO,
-  UserQueryParams,
-  ConsentPreferences,
-
-  // Capabilities
-  Capability,
-  UIHints,
-  FeatureFlags,
-  CapabilitiesResponse,
-  CapabilityKey,
-
-  // Custody
-  CustodyScope,
-  GranteeType,
-  CustodyGrant,
-  CustodySubgrant,
-  CreateCustodyGrantDTO,
-  BulkAssignCustodyGrantDTO,
-  CreateCustodySubgrantDTO,
-
-  // Projections
-  RentalObjectCardProjection,
-  RentalObjectDetailsProjection,
-  RentalObjectSearchResultProjection,
-  BookingCardProjection,
-  BookingDetailsProjection,
-  BookingReceiptProjection,
-  CalendarEventProjection,
-  OrganizationCardProjection,
-  OrganizationDetailsProjection,
-  MemberProjection,
-  UserCardProjection,
-  UserDetailsProjection,
-  CurrentUserProjection,
 } from './types';
+
+// Monitoring DTOs (platform infrastructure)
+export * from './monitoring';
+
+// Modules (platform infrastructure for feature flags)
+export * from './modules';
+
+// =============================================================================
+// NOTE: The following have been REMOVED (domain-specific, now in @digilist/contracts):
+// - ./storage (file upload types with domain entity references)
+// - ./projections (rental-object, booking, organization, user projections)
+// - Domain schemas (rental-object, booking, organization, user, capabilities, custody)
+// =============================================================================

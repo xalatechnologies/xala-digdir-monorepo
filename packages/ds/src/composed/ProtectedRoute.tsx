@@ -1,6 +1,6 @@
 /**
  * ProtectedRoute Component
- * 
+ *
  * Unified route protection component that supports:
  * - Basic authentication checks
  * - Role-based access control
@@ -8,22 +8,84 @@
  * - Account context checks (via callbacks)
  * - Flow context preservation for OAuth redirects
  * - Configurable redirect paths
- * 
- * This component is designed to work across all apps while allowing
- * app-specific customization through props and callbacks.
+ *
+ * Domain-agnostic - all SDK functionality should be injected via props.
+ * Flow context utilities can be passed in from the consuming application.
+ *
+ * @example
+ * ```tsx
+ * import { createFlowContext, saveFlowContextToStorage, sanitizeReturnToUrl } from '@digilist/client-sdk';
+ * import { useAuth } from '@xala/auth';
+ *
+ * function App() {
+ *   const authState = useAuth();
+ *
+ *   return (
+ *     <ProtectedRoute
+ *       authState={authState}
+ *       flowContextHandlers={{
+ *         createFlowContext,
+ *         saveFlowContextToStorage,
+ *         sanitizeReturnToUrl,
+ *       }}
+ *     >
+ *       <ProtectedContent />
+ *     </ProtectedRoute>
+ *   );
+ * }
+ * ```
  */
 
 import { useEffect, useRef, useMemo } from 'react';
 import { Navigate, useLocation } from 'react-router-dom';
 import { Spinner, Heading, Paragraph } from '@xala/ds';
-import { useT } from '@xala/i18n';
-import { useAuth } from '@xala/auth';
-import {
-  createFlowContext,
-  saveFlowContextToStorage,
-  sanitizeReturnToUrl,
-} from '@digilist/client-sdk';
-import type { FlowContext } from '@digilist/client-sdk';
+
+// =============================================================================
+// Types
+// =============================================================================
+
+/**
+ * Flow context interface for preserving state during OAuth redirects
+ */
+export interface FlowContext {
+  returnTo: string;
+  tenantId: string;
+  metadata?: Record<string, unknown>;
+}
+
+/**
+ * Flow context handlers that can be injected from the consuming app
+ */
+export interface FlowContextHandlers {
+  /** Creates a new flow context */
+  createFlowContext: (
+    returnTo: string,
+    tenantId: string,
+    metadata?: Record<string, unknown>
+  ) => FlowContext;
+  /** Saves flow context to storage */
+  saveFlowContextToStorage: (context: FlowContext) => boolean;
+  /** Sanitizes return URL for security */
+  sanitizeReturnToUrl: (url: string) => string;
+}
+
+/**
+ * Auth state interface - can be provided via useAuth hook or directly
+ */
+export interface AuthState {
+  isLoading: boolean;
+  isAuthenticated: boolean;
+  checkRole?: (role: string) => boolean;
+}
+
+/**
+ * Labels for i18n
+ */
+export interface ProtectedRouteLabels {
+  loading: string;
+  noAccess: string;
+  noAccessDescription: string;
+}
 
 /**
  * Props for ProtectedRoute component
@@ -31,63 +93,72 @@ import type { FlowContext } from '@digilist/client-sdk';
 export interface ProtectedRouteProps {
   /** Child components to wrap */
   children: React.ReactNode;
-  
+
+  /** Auth state (from useAuth or custom) */
+  authState: AuthState;
+
   /** Redirect path when not authenticated (default: /login) */
   redirectTo?: string;
-  
-  /** Tenant ID for flow context (optional, defaults to env or 'app') */
+
+  /** Tenant ID for flow context (optional, defaults to 'app') */
   tenantId?: string;
-  
+
   /** Enable flow context preservation (default: true) */
   enableFlowContext?: boolean;
-  
+
+  /** Flow context handlers (optional - only needed if enableFlowContext is true) */
+  flowContextHandlers?: FlowContextHandlers;
+
   /** Required role(s) to access this route */
   requiredRole?: string | string[];
-  
-  /** Custom role check function (overrides default checkRole from useAuth) */
+
+  /** Custom role check function (overrides default from authState) */
   checkRole?: (role: string) => boolean;
-  
+
   /** Required capability(ies) - checked via callback */
   requiredCapability?: string | string[];
-  
+
   /** Custom capability check function */
   checkCapability?: (capability: string) => boolean;
-  
+
   /** Check if ALL capabilities are required (default: true for requiredCapability array) */
   requireAllCapabilities?: boolean;
-  
+
   /** Required account context (e.g., 'personal' | 'organization') */
   requiredContext?: string;
-  
+
   /** Current account context */
   currentContext?: string;
-  
+
   /** Loading state for account context */
   isLoadingContext?: boolean;
-  
+
   /** Custom home route for authenticated users (default: /) */
   homeRoute?: string | (() => string);
-  
+
   /** Role selection page path (for dual-role users) */
   roleSelectionPath?: string;
-  
+
   /** Check if user needs role selection */
   needsRoleSelection?: boolean;
-  
+
   /** Custom access denied component */
   accessDeniedComponent?: React.ReactNode;
-  
+
   /** Show toast on access denied (requires toast provider) */
   showAccessDeniedToast?: boolean;
-  
+
   /** Custom toast function */
   showToast?: (title: string, message: string) => void;
-  
+
   /** Custom loading component */
   loadingComponent?: React.ReactNode;
-  
+
   /** Additional pages to exclude from redirect (besides login) */
   excludedPaths?: string[];
+
+  /** Labels for i18n */
+  labels?: Partial<ProtectedRouteLabels>;
 }
 
 /**
@@ -100,10 +171,26 @@ export interface ProtectedRouteLoginState {
   hasFlowContext: boolean;
 }
 
+// =============================================================================
+// Default Labels
+// =============================================================================
+
+const DEFAULT_LABELS: ProtectedRouteLabels = {
+  loading: 'Laster...',
+  noAccess: 'Ingen tilgang',
+  noAccessDescription: 'Du har ikke tilgang til denne siden.',
+};
+
+// =============================================================================
+// Helpers
+// =============================================================================
+
 /**
  * Extracts form data from location state if present
  */
-function extractFormDataFromState(state: unknown): Record<string, unknown> | undefined {
+function extractFormDataFromState(
+  state: unknown
+): Record<string, unknown> | undefined {
   if (!state || typeof state !== 'object') {
     return undefined;
   }
@@ -118,14 +205,20 @@ function extractFormDataFromState(state: unknown): Record<string, unknown> | und
   return undefined;
 }
 
+// =============================================================================
+// Component
+// =============================================================================
+
 /**
  * ProtectedRoute component with unified auth/role/capability checking
  */
 export function ProtectedRoute({
   children,
+  authState,
   redirectTo = '/login',
-  tenantId,
+  tenantId = 'app',
   enableFlowContext = true,
+  flowContextHandlers,
   requiredRole,
   checkRole: customCheckRole,
   requiredCapability,
@@ -142,50 +235,35 @@ export function ProtectedRoute({
   showToast,
   loadingComponent,
   excludedPaths = [],
+  labels: customLabels,
 }: ProtectedRouteProps) {
-  const t = useT();
-  const { isLoading, isAuthenticated, checkRole: authCheckRole } = useAuth();
+  const labels = { ...DEFAULT_LABELS, ...customLabels };
+  const { isLoading, isAuthenticated, checkRole: authCheckRole } = authState;
   const location = useLocation();
   const hasShownToast = useRef(false);
 
   // Track if we've already saved context to prevent double-saves
   const hasStoredContext = useRef(false);
 
-  // Get tenant ID from props, environment, or fallback
-  // Note: import.meta.env requires Vite types which may not be available in DS package
-  const getEnvTenantId = (): string | undefined => {
-    try {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const env = (import.meta as any)?.env;
-      return env?.VITE_TENANT_ID as string | undefined;
-    } catch {
-      return undefined;
-    }
-  };
-  const resolvedTenantId = tenantId ?? getEnvTenantId() ?? 'app';
-
   // Use custom checkRole or default from auth hook
   const checkRoleFn = customCheckRole || authCheckRole || (() => false);
 
   // Check role access
-  // Note: checkRoleFn may expect specific UserRole type, cast string as needed
   const hasRequiredRole = useMemo(() => {
     if (!requiredRole) return true;
 
     if (Array.isArray(requiredRole)) {
       // User needs ANY of the roles
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      return requiredRole.some((role) => checkRoleFn(role as any));
+      return requiredRole.some((role) => checkRoleFn(role));
     }
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    return checkRoleFn(requiredRole as any);
+    return checkRoleFn(requiredRole);
   }, [requiredRole, checkRoleFn]);
 
   // Check capability access
   const hasRequiredCapability = useMemo(() => {
     if (!requiredCapability || !checkCapability) return true;
-    
+
     if (Array.isArray(requiredCapability)) {
       if (requireAllCapabilities) {
         // User needs ALL capabilities
@@ -195,7 +273,7 @@ export function ProtectedRoute({
         return requiredCapability.some((cap) => checkCapability(cap));
       }
     }
-    
+
     return checkCapability(requiredCapability);
   }, [requiredCapability, checkCapability, requireAllCapabilities]);
 
@@ -219,12 +297,9 @@ export function ProtectedRoute({
       !hasShownToast.current
     ) {
       hasShownToast.current = true;
-      showToast(
-        t('components.protected.noAccess') || 'Ingen tilgang',
-        t('components.protected.noAccessDescription') || 'Du har ikke tilgang til denne siden.'
-      );
+      showToast(labels.noAccess, labels.noAccessDescription);
     }
-  }, [isLoading, isAuthenticated, hasAccess, showAccessDeniedToast, showToast, t]);
+  }, [isLoading, isAuthenticated, hasAccess, showAccessDeniedToast, showToast, labels]);
 
   // Reset toast flag when location changes
   useEffect(() => {
@@ -237,26 +312,22 @@ export function ProtectedRoute({
   useEffect(() => {
     if (
       enableFlowContext &&
+      flowContextHandlers &&
       !isLoading &&
       !isAuthenticated &&
       !hasStoredContext.current
     ) {
+      const { createFlowContext, saveFlowContextToStorage, sanitizeReturnToUrl } =
+        flowContextHandlers;
+
       // Build the returnTo URL from current location
-      const returnTo = sanitizeReturnToUrl(
-        location.pathname + location.search
-      );
+      const returnTo = sanitizeReturnToUrl(location.pathname + location.search);
 
       // Extract any form data that might be in state
       const formData = extractFormDataFromState(location.state);
 
       // Create and save flow context
-      const flowContext: FlowContext = createFlowContext(
-        returnTo,
-        resolvedTenantId,
-        {
-          formData,
-        }
-      );
+      const flowContext = createFlowContext(returnTo, tenantId, { formData });
 
       // Save to sessionStorage
       const saved = saveFlowContextToStorage(flowContext);
@@ -265,14 +336,21 @@ export function ProtectedRoute({
         hasStoredContext.current = true;
       }
     }
-  }, [isLoading, isAuthenticated, location, resolvedTenantId, enableFlowContext]);
+  }, [
+    isLoading,
+    isAuthenticated,
+    location,
+    tenantId,
+    enableFlowContext,
+    flowContextHandlers,
+  ]);
 
   // Show loading state
   if (isLoading || isLoadingContext) {
     if (loadingComponent) {
       return <>{loadingComponent}</>;
     }
-    
+
     return (
       <div
         style={{
@@ -283,14 +361,15 @@ export function ProtectedRoute({
           backgroundColor: 'var(--ds-color-neutral-background-default)',
         }}
       >
-        <Spinner aria-label={t('common.loading') || 'Laster...'} data-size="lg" />
+        <Spinner aria-label={labels.loading} data-size="lg" />
       </div>
     );
   }
 
   // Check if we're on an excluded path
   const isExcludedPath = excludedPaths.some((path) => location.pathname === path);
-  const isLoginPage = location.pathname === redirectTo || location.pathname === '/login';
+  const isLoginPage =
+    location.pathname === redirectTo || location.pathname === '/login';
   const isRoleSelectionPage = location.pathname === roleSelectionPath;
 
   // Redirect unauthenticated users
@@ -312,14 +391,16 @@ export function ProtectedRoute({
     if (needsRoleSelection && !isRoleSelectionPage) {
       return <Navigate to={roleSelectionPath} replace />;
     }
-    
+
     const home = typeof homeRoute === 'function' ? homeRoute() : homeRoute;
     return <Navigate to={home} replace />;
   }
 
   // Dual-role users without selection must select a role first
   if (needsRoleSelection && !isRoleSelectionPage) {
-    return <Navigate to={roleSelectionPath} state={{ from: location }} replace />;
+    return (
+      <Navigate to={roleSelectionPath} state={{ from: location }} replace />
+    );
   }
 
   // Check access
@@ -348,17 +429,21 @@ export function ProtectedRoute({
           data-size="lg"
           style={{ color: 'var(--ds-color-danger-text-default)' }}
         >
-          {t('components.protected.noAccess') || 'Ingen tilgang'}
+          {labels.noAccess}
         </Heading>
         <Paragraph style={{ color: 'var(--ds-color-neutral-text-subtle)' }}>
-          {t('components.protected.noAccessDescription') || 'Du har ikke tilgang til denne siden.'}
+          {labels.noAccessDescription}
         </Paragraph>
       </div>
     );
   }
 
   // Context validation: redirect if wrong context
-  if (requiredContext && currentContext && currentContext !== requiredContext) {
+  if (
+    requiredContext &&
+    currentContext &&
+    currentContext !== requiredContext
+  ) {
     const home = typeof homeRoute === 'function' ? homeRoute() : homeRoute;
     return <Navigate to={home} replace />;
   }

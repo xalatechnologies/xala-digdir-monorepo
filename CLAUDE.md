@@ -519,6 +519,161 @@ import axios from 'axios';                              // ❌
 
 ---
 
+## Package Namespace Migration (2026-01-21)
+
+### New Package Structure
+
+The platform has been migrated to the @xalatechnologies namespace:
+
+**Platform Packages (@xalatechnologies/*):**
+- `@xalatechnologies/platform` - Core platform package
+  - `@xalatechnologies/platform/ui` - Design system (from @xala/ds)
+  - `@xalatechnologies/platform/runtime` - Runtime providers
+  - `@xalatechnologies/platform/auth` - Authentication
+  - `@xalatechnologies/platform/config` - Configuration
+  - `@xalatechnologies/platform/contracts` - API contracts
+  - `@xalatechnologies/platform/sdk` - SDK core (HTTP, errors)
+  - `@xalatechnologies/platform/i18n` - Internationalization
+  - `@xalatechnologies/platform/observability` - Metrics, logging
+- `@xalatechnologies/enterprise` - Enterprise features
+- `@xalatechnologies/governance` - Testing, ESLint, verification
+
+**Domain Packages (@digilist/*):**
+- `@digilist/domain` - Domain contracts and types
+- `@digilist/sdk` - Domain SDK (services, hooks)
+- `@digilist/ui` - Domain UI components
+- `@digilist/runtime` - Domain runtime providers
+- `@digilist/database-schema` - Database schema
+
+### Import Rules
+
+```typescript
+// ✅ Platform packages - domain agnostic
+import { Button } from '@xalatechnologies/platform/ui';
+import { useAuth } from '@xalatechnologies/platform/auth';
+
+// ✅ Domain packages - Digilist specific
+import { useBookings } from '@digilist/sdk';
+import { RentalObjectCard } from '@digilist/ui';
+```
+
+### Compatibility Layer
+
+Old @xala/* imports still work but are deprecated:
+```typescript
+// ⚠️ Deprecated - will show console warning
+import { Button } from '@xala/ds';
+
+// ✅ New way
+import { Button } from '@xalatechnologies/platform/ui';
+```
+
+### Banned Terms
+
+The following terms are BANNED in platform packages:
+- "listing" → use "rentalObject"
+- "facility" → use "amenity"
+
+Run `pnpm verify:terms` to check for violations.
+
+---
+
+## Platform UI + Feature Kits Architecture (2026-01-21)
+
+### Architecture Overview
+
+The UI has been restructured into two layers:
+
+1. **Platform Patterns** (`@xalatechnologies/platform/ui/patterns`)
+   - Domain-neutral, reusable UI patterns
+   - Single Storybook, single maintenance point
+   - NO domain-specific terms (no "listing", "facility", "booking")
+   - Props-driven with pre-localized strings
+
+2. **Domain Feature Kits** (`@digilist/ui/features/*`)
+   - Thin wrappers (~50 lines) that compose Platform patterns
+   - Mappers to convert domain DTOs to pattern props
+   - Domain-specific terminology and business logic
+
+### Platform Patterns Available
+
+| Pattern | Purpose |
+|---------|---------|
+| `ResourceCard` | Generic card for any resource type |
+| `ResourceGrid` | Responsive grid layout for cards |
+| `ResourceDetailHeader` | Header for detail pages |
+| `SlotCalendar` | Calendar with time slots |
+| `PricingSummary` | Price breakdown display |
+| `FeatureChips` | Feature/amenity chips |
+| `MetadataRow` | Key-value metadata display |
+| `ScheduleCard` | Schedule/hours display |
+| `FormWizardModal` | Multi-step form modal |
+| `ConfirmationView` | Confirmation screen |
+| `SuccessView` | Success screen |
+
+### Feature Kits Available
+
+| Feature Kit | Components |
+|-------------|------------|
+| `@digilist/ui/features/rental-objects` | RentalObjectCard, RentalObjectGrid, etc. |
+| `@digilist/ui/features/booking` | BookingFormModal, PriceSummaryCard, etc. |
+| `@digilist/ui/features/seasons` | SeasonCard, VenueCard |
+
+### Import Rules
+
+```typescript
+// ✅ RECOMMENDED: Use Platform patterns with Feature Kit mappers
+import { ResourceCard } from '@xalatechnologies/platform/ui/patterns';
+import { mapRentalObjectToResourceCard } from '@digilist/ui/features/rental-objects';
+
+const props = mapRentalObjectToResourceCard(dto, t);
+return <ResourceCard {...props} />;
+
+// ✅ ALSO OK: Use Feature Kit thin wrappers
+import { RentalObjectCardWrapper } from '@digilist/ui/features/rental-objects';
+
+return <RentalObjectCardWrapper rentalObject={dto} t={t} />;
+
+// ⚠️ DEPRECATED: Import domain components from @xala/ds
+// These still work but will show deprecation warnings
+import { RentalObjectCard } from '@xala/ds'; // ⚠️ Deprecated
+
+// ❌ NEVER: Import domain components in platform packages
+// Platform must NEVER import from @digilist/*
+```
+
+### Thin Wrapper Pattern
+
+Feature Kit components should be thin wrappers (<50 lines):
+
+```typescript
+// packages/digilist-ui/src/features/rental-objects/RentalObjectCardWrapper.tsx
+import { ResourceCard } from '@xalatechnologies/platform/ui/patterns';
+import { mapRentalObjectToResourceCard } from './mappers';
+
+export function RentalObjectCardWrapper({
+  rentalObject,
+  onClick,
+  onFavorite,
+  t,
+}: RentalObjectCardWrapperProps) {
+  const props = mapRentalObjectToResourceCard(rentalObject, t);
+  return <ResourceCard {...props} onClick={onClick} onFavorite={onFavorite} />;
+}
+```
+
+### Verification Commands
+
+```bash
+# Verify platform does not import from domain
+pnpm verify:boundaries
+
+# Verify no banned terms in platform
+pnpm verify:terms
+```
+
+---
+
 ## Development Commands
 
 ### Essential Commands

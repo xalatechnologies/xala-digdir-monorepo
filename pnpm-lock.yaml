@@ -146,6 +146,9 @@ importers:
       '@xala/contracts':
         specifier: workspace:*
         version: link:../../packages/contracts
+      '@xalatechnologies/platform':
+        specifier: workspace:*
+        version: link:../../packages/platform
       dotenv:
         specifier: ^17.2.3
         version: 17.2.3
@@ -224,22 +227,22 @@ importers:
         version: 5.90.16(react@18.3.1)
       '@xala/auth':
         specifier: workspace:*
-        version: link:../../packages/auth
+        version: link:../../packages/xala-compat-auth
       '@xala/config':
         specifier: workspace:*
-        version: link:../../packages/config
+        version: link:../../packages/xala-compat-config
       '@xala/ds':
         specifier: workspace:*
-        version: link:../../packages/ds
+        version: link:../../packages/xala-compat-ds
       '@xala/ds-themes':
         specifier: workspace:*
         version: link:../../packages/ds-themes
       '@xala/i18n':
         specifier: workspace:*
-        version: link:../../packages/i18n
+        version: link:../../packages/xala-compat-i18n
       '@xala/runtime':
         specifier: workspace:*
-        version: link:../../packages/runtime
+        version: link:../../packages/xala-compat-runtime
       date-fns:
         specifier: ^4.1.0
         version: 4.1.0
@@ -312,25 +315,25 @@ importers:
         version: 5.90.16(react@18.3.1)
       '@xala/auth':
         specifier: workspace:*
-        version: link:../../packages/auth
+        version: link:../../packages/xala-compat-auth
       '@xala/config':
         specifier: workspace:*
-        version: link:../../packages/config
+        version: link:../../packages/xala-compat-config
       '@xala/docs-content':
         specifier: workspace:*
         version: link:../../packages/docs-content
       '@xala/ds':
         specifier: workspace:*
-        version: link:../../packages/ds
+        version: link:../../packages/xala-compat-ds
       '@xala/ds-themes':
         specifier: workspace:*
         version: link:../../packages/ds-themes
       '@xala/i18n':
         specifier: workspace:*
-        version: link:../../packages/i18n
+        version: link:../../packages/xala-compat-i18n
       '@xala/runtime':
         specifier: workspace:*
-        version: link:../../packages/runtime
+        version: link:../../packages/xala-compat-runtime
       date-fns:
         specifier: ^4.1.0
         version: 4.1.0
@@ -382,25 +385,25 @@ importers:
         version: 5.90.16(react@18.3.1)
       '@xala/auth':
         specifier: workspace:*
-        version: link:../../packages/auth
+        version: link:../../packages/xala-compat-auth
       '@xala/config':
         specifier: workspace:*
-        version: link:../../packages/config
+        version: link:../../packages/xala-compat-config
       '@xala/contracts':
         specifier: workspace:*
         version: link:../../packages/contracts
       '@xala/ds':
         specifier: workspace:*
-        version: link:../../packages/ds
+        version: link:../../packages/xala-compat-ds
       '@xala/ds-themes':
         specifier: workspace:*
         version: link:../../packages/ds-themes
       '@xala/i18n':
         specifier: workspace:*
-        version: link:../../packages/i18n
+        version: link:../../packages/xala-compat-i18n
       '@xala/runtime':
         specifier: workspace:*
-        version: link:../../packages/runtime
+        version: link:../../packages/xala-compat-runtime
       date-fns:
         specifier: ^4.1.0
         version: 4.1.0
@@ -467,28 +470,28 @@ importers:
         version: 5.90.16(react@18.3.1)
       '@xala/auth':
         specifier: workspace:*
-        version: link:../../packages/auth
+        version: link:../../packages/xala-compat-auth
       '@xala/config':
         specifier: workspace:*
-        version: link:../../packages/config
+        version: link:../../packages/xala-compat-config
       '@xala/contracts':
         specifier: workspace:*
         version: link:../../packages/contracts
       '@xala/ds':
         specifier: workspace:*
-        version: link:../../packages/ds
+        version: link:../../packages/xala-compat-ds
       '@xala/ds-themes':
         specifier: workspace:*
         version: link:../../packages/ds-themes
       '@xala/i18n':
         specifier: workspace:*
-        version: link:../../packages/i18n
+        version: link:../../packages/xala-compat-i18n
       '@xala/observability':
         specifier: workspace:*
         version: link:../../packages/observability
       '@xala/runtime':
         specifier: workspace:*
-        version: link:../../packages/runtime
+        version: link:../../packages/xala-compat-runtime
       date-fns:
         specifier: ^4.1.0
         version: 4.1.0
@@ -558,22 +561,22 @@ importers:
         version: 5.90.16(react@18.3.1)
       '@xala/auth':
         specifier: workspace:*
-        version: link:../../packages/auth
+        version: link:../../packages/xala-compat-auth
       '@xala/config':
         specifier: workspace:*
-        version: link:../../packages/config
+        version: link:../../packages/xala-compat-config
       '@xala/ds':
         specifier: workspace:*
-        version: link:../../packages/ds
+        version: link:../../packages/xala-compat-ds
       '@xala/ds-themes':
         specifier: workspace:*
         version: link:../../packages/ds-themes
       '@xala/i18n':
         specifier: workspace:*
-        version: link:../../packages/i18n
+        version: link:../../packages/xala-compat-i18n
       '@xala/runtime':
         specifier: workspace:*
-        version: link:../../packages/runtime
+        version: link:../../packages/xala-compat-runtime
       date-fns:
         specifier: ^4.1.0
         version: 4.1.0
@@ -637,19 +640,19 @@ importers:
         version: 5.90.16(react@18.3.1)
       '@xala/auth':
         specifier: workspace:^
-        version: link:../../packages/auth
+        version: link:../../packages/xala-compat-auth
       '@xala/config':
         specifier: workspace:*
-        version: link:../../packages/config
+        version: link:../../packages/xala-compat-config
       '@xala/ds':
         specifier: workspace:*
-        version: link:../../packages/ds
+        version: link:../../packages/xala-compat-ds
       '@xala/i18n':
         specifier: workspace:*
-        version: link:../../packages/i18n
+        version: link:../../packages/xala-compat-i18n
       '@xala/runtime':
         specifier: workspace:*
-        version: link:../../packages/runtime
+        version: link:../../packages/xala-compat-runtime
       framer-motion:
         specifier: ^12.26.2
         version: 12.26.2(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
@@ -713,10 +716,6 @@ importers:
         version: 1.6.1(@types/node@25.0.6)(@vitest/ui@1.6.1)(happy-dom@13.10.1)(jsdom@23.2.0)(terser@5.44.1)
 
   packages/auth:
-    dependencies:
-      '@digilist/client-sdk':
-        specifier: workspace:*
-        version: link:../client-sdk
     devDependencies:
       '@testing-library/jest-dom':
         specifier: ^6.9.1
@@ -808,12 +807,6 @@ importers:
         specifier: ^3.22.4
         version: 3.25.76
     devDependencies:
-      '@anatine/zod-openapi':
-        specifier: ^2.2.0
-        version: 2.2.8(openapi3-ts@4.5.0)(zod@3.25.76)
-      openapi3-ts:
-        specifier: ^4.2.1
-        version: 4.5.0
       tsup:
         specifier: ^8.0.1
         version: 8.5.1(@swc/core@1.15.8)(postcss@8.5.6)(tsx@4.21.0)(typescript@5.9.3)(yaml@2.8.2)
@@ -855,6 +848,103 @@ importers:
         specifier: ^5.7.2
         version: 5.9.3
 
+  packages/digilist-contracts:
+    dependencies:
+      '@xala/contracts':
+        specifier: workspace:*
+        version: link:../contracts
+      zod:
+        specifier: ^3.22.4
+        version: 3.25.76
+    devDependencies:
+      tsup:
+        specifier: ^8.0.0
+        version: 8.5.1(@swc/core@1.15.8)(postcss@8.5.6)(tsx@4.21.0)(typescript@5.9.3)(yaml@2.8.2)
+      typescript:
+        specifier: ^5.3.0
+        version: 5.9.3
+      vitest:
+        specifier: ^4.0.17
+        version: 4.0.17(@opentelemetry/api@1.9.0)(@types/node@25.0.6)(@vitest/browser-playwright@4.0.17)(@vitest/ui@4.0.17)(happy-dom@13.10.1)(jsdom@27.4.0)(msw@2.12.7(@types/node@25.0.6)(typescript@5.9.3))(terser@5.44.1)(tsx@4.21.0)(yaml@2.8.2)
+
+  packages/digilist-domain:
+    dependencies:
+      zod:
+        specifier: ^3.22.4
+        version: 3.25.76
+    devDependencies:
+      '@types/node':
+        specifier: ^20.10.0
+        version: 20.19.30
+      tsup:
+        specifier: ^8.0.1
+        version: 8.5.1(@swc/core@1.15.8)(postcss@8.5.6)(tsx@4.21.0)(typescript@5.9.3)(yaml@2.8.2)
+      typescript:
+        specifier: ^5.3.2
+        version: 5.9.3
+
+  packages/digilist-runtime:
+    dependencies:
+      '@digilist/client-sdk':
+        specifier: workspace:*
+        version: link:../client-sdk
+      '@xala/config':
+        specifier: workspace:*
+        version: link:../xala-compat-config
+      '@xala/runtime':
+        specifier: workspace:*
+        version: link:../xala-compat-runtime
+      react:
+        specifier: ^18.3.1
+        version: 18.3.1
+      react-dom:
+        specifier: ^18.3.1
+        version: 18.3.1(react@18.3.1)
+    devDependencies:
+      '@tanstack/react-query':
+        specifier: ^5.62.16
+        version: 5.90.16(react@18.3.1)
+      '@types/react':
+        specifier: ^18.3.27
+        version: 18.3.27
+      tsup:
+        specifier: ^8.5.1
+        version: 8.5.1(@swc/core@1.15.8)(postcss@8.5.6)(tsx@4.21.0)(typescript@5.9.3)(yaml@2.8.2)
+      typescript:
+        specifier: ^5.3.0
+        version: 5.9.3
+
+  packages/digilist-ui:
+    dependencies:
+      '@digilist/contracts':
+        specifier: workspace:*
+        version: link:../digilist-contracts
+      '@xala/ds':
+        specifier: workspace:*
+        version: link:../xala-compat-ds
+      '@xala/i18n':
+        specifier: workspace:*
+        version: link:../xala-compat-i18n
+      '@xalatechnologies/platform':
+        specifier: workspace:*
+        version: link:../platform
+      react:
+        specifier: ^18.3.1
+        version: 18.3.1
+      react-dom:
+        specifier: ^18.3.1
+        version: 18.3.1(react@18.3.1)
+    devDependencies:
+      '@types/react':
+        specifier: ^18.3.27
+        version: 18.3.27
+      tsup:
+        specifier: ^8.0.0
+        version: 8.5.1(@swc/core@1.15.8)(postcss@8.5.6)(tsx@4.21.0)(typescript@5.9.3)(yaml@2.8.2)
+      typescript:
+        specifier: ^5.3.0
+        version: 5.9.3
+
   packages/docs-content:
     dependencies:
       gray-matter:
@@ -887,13 +977,13 @@ importers:
         version: 8.55.0(react@18.3.1)
       '@xala/auth':
         specifier: workspace:*
-        version: link:../auth
+        version: link:../xala-compat-auth
       '@xala/ds-themes':
         specifier: workspace:*
         version: link:../ds-themes
       '@xala/i18n':
         specifier: workspace:*
-        version: link:../i18n
+        version: link:../xala-compat-i18n
       date-fns:
         specifier: ^4.1.0
         version: 4.1.0
@@ -972,7 +1062,7 @@ importers:
         version: 18.3.7(@types/react@18.3.27)
       '@xala/ds':
         specifier: workspace:*
-        version: link:../ds
+        version: link:../xala-compat-ds
       '@xala/ds-themes':
         specifier: workspace:*
         version: link:../ds-themes
@@ -999,6 +1089,25 @@ importers:
         specifier: ^5.4.8
         version: 5.4.21(@types/node@25.0.6)(terser@5.44.1)
 
+  packages/enterprise:
+    dependencies:
+      react:
+        specifier: ^18.3.1
+        version: 18.3.1
+    devDependencies:
+      '@types/react':
+        specifier: ^18.3.27
+        version: 18.3.27
+      tsup:
+        specifier: ^8.0.1
+        version: 8.5.1(@swc/core@1.15.8)(postcss@8.5.6)(tsx@4.21.0)(typescript@5.9.3)(yaml@2.8.2)
+      typescript:
+        specifier: ^5.3.3
+        version: 5.9.3
+      vitest:
+        specifier: ^1.2.0
+        version: 1.6.1(@types/node@25.0.6)(@vitest/ui@1.6.1)(happy-dom@13.10.1)(jsdom@27.4.0)(terser@5.44.1)
+
   packages/eslint-config:
     dependencies:
       '@eslint/js':
@@ -1010,6 +1119,22 @@ importers:
       typescript-eslint:
         specifier: ^8.0.0
         version: 8.52.0(eslint@9.39.2)(typescript@5.9.3)
+
+  packages/governance:
+    dependencies:
+      '@typescript-eslint/utils':
+        specifier: ^8.0.0
+        version: 8.52.0(eslint@9.39.2)(typescript@5.9.3)
+    devDependencies:
+      eslint:
+        specifier: ^9.0.0
+        version: 9.39.2
+      tsx:
+        specifier: ^4.7.0
+        version: 4.21.0
+      typescript:
+        specifier: ^5.4.0
+        version: 5.9.3
 
   packages/i18n:
     dependencies:
@@ -1064,26 +1189,63 @@ importers:
         specifier: ^2.3.4
         version: 2.8.2
 
+  packages/platform:
+    dependencies:
+      '@digdir/designsystemet-react':
+        specifier: ^1.9.0
+        version: 1.9.0(@types/react@18.3.27)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      '@tanstack/react-query':
+        specifier: ^5.62.16
+        version: 5.90.16(react@18.3.1)
+      react:
+        specifier: ^18.3.1
+        version: 18.3.1
+      react-dom:
+        specifier: ^18.3.1
+        version: 18.3.1(react@18.3.1)
+      react-router-dom:
+        specifier: ^6.22.0
+        version: 6.30.3(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      zod:
+        specifier: ^3.22.4
+        version: 3.25.76
+    devDependencies:
+      '@digdir/designsystemet-css':
+        specifier: ^1.0.0
+        version: 1.9.0(patch_hash=k25c72zgxe3xdvgjnjvmmamjhu)
+      '@types/react':
+        specifier: ^18.3.27
+        version: 18.3.27
+      '@types/react-dom':
+        specifier: ^18.3.7
+        version: 18.3.7(@types/react@18.3.27)
+      tsup:
+        specifier: ^8.0.1
+        version: 8.5.1(@swc/core@1.15.8)(postcss@8.5.6)(tsx@4.21.0)(typescript@5.9.3)(yaml@2.8.2)
+      typescript:
+        specifier: ^5.3.3
+        version: 5.9.3
+      vitest:
+        specifier: ^1.2.0
+        version: 1.6.1(@types/node@25.0.6)(@vitest/ui@1.6.1)(happy-dom@13.10.1)(jsdom@27.4.0)(terser@5.44.1)
+
   packages/runtime:
     dependencies:
       '@digdir/designsystemet-react':
         specifier: 1.2.0
         version: 1.2.0(@types/react@18.3.27)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
-      '@digilist/client-sdk':
-        specifier: workspace:*
-        version: link:../client-sdk
       '@tanstack/react-query':
         specifier: ^5.62.16
         version: 5.90.16(react@18.3.1)
       '@xala/auth':
         specifier: workspace:*
-        version: link:../auth
+        version: link:../xala-compat-auth
       '@xala/ds':
         specifier: workspace:*
-        version: link:../ds
+        version: link:../xala-compat-ds
       '@xala/i18n':
         specifier: workspace:*
-        version: link:../i18n
+        version: link:../xala-compat-i18n
       react:
         specifier: ^18.3.1
         version: 18.3.1
@@ -1144,6 +1306,9 @@ importers:
       '@vitest/ui':
         specifier: ^4.0.17
         version: 4.0.17(vitest@4.0.17)
+      '@xalatechnologies/platform':
+        specifier: workspace:*
+        version: link:../platform
       axe-core:
         specifier: ^4.8.0
         version: 4.11.1
@@ -1197,6 +1362,57 @@ importers:
         specifier: ^5.7.2
         version: 5.9.3
 
+  packages/xala-compat-auth:
+    dependencies:
+      '@xalatechnologies/platform':
+        specifier: workspace:*
+        version: link:../platform
+      react:
+        specifier: ^18.3.1
+        version: 18.3.1
+      react-router-dom:
+        specifier: ^6.0.0
+        version: 6.30.3(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+
+  packages/xala-compat-config:
+    dependencies:
+      '@xalatechnologies/platform':
+        specifier: workspace:*
+        version: link:../platform
+
+  packages/xala-compat-ds:
+    dependencies:
+      '@xalatechnologies/platform':
+        specifier: workspace:*
+        version: link:../platform
+      react:
+        specifier: ^18.3.1
+        version: 18.3.1
+      react-dom:
+        specifier: ^18.3.1
+        version: 18.3.1(react@18.3.1)
+
+  packages/xala-compat-i18n:
+    dependencies:
+      '@xalatechnologies/platform':
+        specifier: workspace:*
+        version: link:../platform
+      react:
+        specifier: ^18.3.1
+        version: 18.3.1
+
+  packages/xala-compat-runtime:
+    dependencies:
+      '@xalatechnologies/platform':
+        specifier: workspace:*
+        version: link:../platform
+      react:
+        specifier: ^18.3.1
+        version: 18.3.1
+      react-dom:
+        specifier: ^18.3.1
+        version: 18.3.1(react@18.3.1)
+
 packages:
 
   '@acemir/cssom@0.9.31':
@@ -1220,12 +1436,6 @@ packages:
   '@ampproject/remapping@2.3.0':
     resolution: {integrity: sha512-30iZtAPgz+LTIYoeivqYo853f02jBYSd5uGnGpkFV0M3xOt9aN73erkgYAmZU43x4VfqcnLxW9Kpg3R5LC4YYw==}
     engines: {node: '>=6.0.0'}
-
-  '@anatine/zod-openapi@2.2.8':
-    resolution: {integrity: sha512-iyM8mB556KdiZ6a1GTZ67ACLnJakU1hrzzXoh7PLaReldAdMq88MlZn/Ir/U56/TBuQctBhh/4seo0b0B343uw==}
-    peerDependencies:
-      openapi3-ts: ^4.1.2
-      zod: ^3.20.0
 
   '@apideck/better-ajv-errors@0.3.6':
     resolution: {integrity: sha512-P+ZygBLZtkp0qqOAJJVX4oX/sFo5JR3eBWwwuqHHhK0GIgQOKWrAfiAaWX0aArHkRWHMuggFEgAZNxVPwPZYaA==}
@@ -6762,9 +6972,6 @@ packages:
   openapi-types@12.1.3:
     resolution: {integrity: sha512-N4YtSYJqghVu4iek2ZUvcN/0aqH1kRDuNqzcycDxhOUpg7GdvLa2F3DgS6yBNhInhv2r/6I0Flkn7CqL8+nIcw==}
 
-  openapi3-ts@4.5.0:
-    resolution: {integrity: sha512-jaL+HgTq2Gj5jRcfdutgRGLosCy/hT8sQf6VOy+P+g36cZOjI1iukdPnijC+4CmeRzg/jEllJUboEic2FhxhtQ==}
-
   optionator@0.9.4:
     resolution: {integrity: sha512-6IpQ7mKUxRcZNLIObR0hz7lxsapSSIYNZJwXPGeF0mTVqGKFIXj1DQcMoT22S3ROcLyY/rz0PWaWZ9ayWmad9g==}
     engines: {node: '>= 0.8.0'}
@@ -8046,10 +8253,6 @@ packages:
     resolution: {integrity: sha512-q5W7tVM71e2xjHZTlgfTDoPF/SmqKG5hddq9SzR49CH2hayqRKJtQ4mtRlSxKaJlR/+9rEM+mnBHf7I2/BQcpQ==}
     engines: {node: '>=6.10'}
 
-  ts-deepmerge@6.2.1:
-    resolution: {integrity: sha512-8CYSLazCyj0DJDpPIxOFzJG46r93uh6EynYjuey+bxcLltBeqZL7DMfaE5ZPzZNFlav7wx+2TDa/mBl8gkTYzw==}
-    engines: {node: '>=14.13.1'}
-
   ts-interface-checker@0.1.13:
     resolution: {integrity: sha512-Y/arvbn+rrz3JCKl9C4kVNfTfSm2/mEp5FSz5EsZSANGPSlQrpRI5M4PKF+mJnE52jOO90PnPSc3Ur3bTQw0gA==}
 
@@ -8855,12 +9058,6 @@ snapshots:
     dependencies:
       '@jridgewell/gen-mapping': 0.3.13
       '@jridgewell/trace-mapping': 0.3.31
-
-  '@anatine/zod-openapi@2.2.8(openapi3-ts@4.5.0)(zod@3.25.76)':
-    dependencies:
-      openapi3-ts: 4.5.0
-      ts-deepmerge: 6.2.1
-      zod: 3.25.76
 
   '@apideck/better-ajv-errors@0.3.6(ajv@8.17.1)':
     dependencies:
@@ -15336,10 +15533,6 @@ snapshots:
 
   openapi-types@12.1.3: {}
 
-  openapi3-ts@4.5.0:
-    dependencies:
-      yaml: 2.8.2
-
   optionator@0.9.4:
     dependencies:
       deep-is: 0.1.4
@@ -16710,8 +16903,6 @@ snapshots:
       typescript: 5.9.3
 
   ts-dedent@2.2.0: {}
-
-  ts-deepmerge@6.2.1: {}
 
   ts-interface-checker@0.1.13: {}
 

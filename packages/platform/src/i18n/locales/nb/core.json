@@ -1,0 +1,305 @@
+{
+  "app": {
+    "name": "Digilist",
+    "tagline": "Booking for kommuner"
+  },
+  
+  "action": {
+    "save": "Lagre",
+    "saving": "Lagrer...",
+    "cancel": "Avbryt",
+    "delete": "Slett",
+    "deleting": "Sletter...",
+    "edit": "Rediger",
+    "create": "Opprett",
+    "creating": "Oppretter...",
+    "submit": "Send inn",
+    "submitting": "Sender...",
+    "close": "Lukk",
+    "back": "Tilbake",
+    "next": "Neste",
+    "previous": "Forrige",
+    "confirm": "Bekreft",
+    "approve": "Godkjenn",
+    "approving": "Godkjenner...",
+    "reject": "Avslå",
+    "rejecting": "Avslår...",
+    "search": "Søk",
+    "filter": "Filtrer",
+    "clear": "Tøm",
+    "reset": "Tilbakestill",
+    "refresh": "Oppdater",
+    "retry": "Prøv igjen",
+    "download": "Last ned",
+    "upload": "Last opp",
+    "uploading": "Laster opp...",
+    "copy": "Kopier",
+    "copied": "Kopiert!",
+    "view": "Vis",
+    "hide": "Skjul",
+    "expand": "Utvid",
+    "collapse": "Skjul",
+    "select": "Velg",
+    "selectAll": "Velg alle",
+    "deselect": "Fjern valg",
+    "add": "Legg til",
+    "remove": "Fjern",
+    "move": "Flytt",
+    "send": "Send",
+    "apply": "Bruk",
+    "login": "Logg inn",
+    "logout": "Logg ut",
+    "signup": "Registrer deg",
+    "clone": "Klon",
+    "archive": "Arkiver",
+    "publish": "Publiser",
+    "unpublish": "Avpubliser"
+  },
+  
+  "state": {
+    "loading": "Laster...",
+    "saving": "Lagrer...",
+    "processing": "Behandler...",
+    "empty": "Ingen data",
+    "error": "Noe gikk galt",
+    "success": "Fullført",
+    "pending": "Venter",
+    "active": "Aktiv",
+    "inactive": "Inaktiv",
+    "draft": "Utkast",
+    "published": "Publisert",
+    "archived": "Arkivert",
+    "deleted": "Slettet",
+    "cancelled": "Kansellert",
+    "completed": "Fullført",
+    "approved": "Godkjent",
+    "rejected": "Avslått",
+    "suspended": "Suspendert",
+    "expired": "Utløpt",
+    "scheduled": "Planlagt",
+    "confirmed": "Bekreftet",
+    "available": "Ledig",
+    "unavailable": "Utilgjengelig",
+    "busy": "Opptatt",
+    "blocked": "Blokkert",
+    "open": "Åpen",
+    "closed": "Stengt"
+  },
+  
+  "label": {
+    "name": "Navn",
+    "title": "Tittel",
+    "description": "Beskrivelse",
+    "email": "E-post",
+    "phone": "Telefon",
+    "address": "Adresse",
+    "city": "By",
+    "country": "Land",
+    "postalCode": "Postnummer",
+    "date": "Dato",
+    "time": "Tid",
+    "startDate": "Startdato",
+    "endDate": "Sluttdato",
+    "startTime": "Starttid",
+    "endTime": "Sluttid",
+    "duration": "Varighet",
+    "price": "Pris",
+    "total": "Totalt",
+    "subtotal": "Delsum",
+    "tax": "MVA",
+    "discount": "Rabatt",
+    "quantity": "Antall",
+    "status": "Status",
+    "type": "Type",
+    "category": "Kategori",
+    "tags": "Etiketter",
+    "notes": "Notater",
+    "comment": "Kommentar",
+    "message": "Melding",
+    "file": "Fil",
+    "image": "Bilde",
+    "images": "Bilder",
+    "url": "URL",
+    "id": "ID",
+    "createdAt": "Opprettet",
+    "updatedAt": "Oppdatert",
+    "createdBy": "Opprettet av",
+    "lastModified": "Sist endret",
+    "all": "Alle",
+    "none": "Ingen",
+    "other": "Annet",
+    "yes": "Ja",
+    "no": "Nei",
+    "or": "eller",
+    "and": "og"
+  },
+  
+  "time": {
+    "today": "I dag",
+    "yesterday": "I går",
+    "tomorrow": "I morgen",
+    "thisWeek": "Denne uken",
+    "lastWeek": "Forrige uke",
+    "nextWeek": "Neste uke",
+    "thisMonth": "Denne måneden",
+    "lastMonth": "Forrige måned",
+    "nextMonth": "Neste måned",
+    "thisYear": "I år",
+    "hour": "time",
+    "hours": "timer",
+    "minute": "minutt",
+    "minutes": "minutter",
+    "day": "dag",
+    "days": "dager",
+    "week": "uke",
+    "weeks": "uker",
+    "month": "måned",
+    "months": "måneder",
+    "year": "år",
+    "years": "år"
+  },
+  
+  "day": {
+    "monday": "Mandag",
+    "tuesday": "Tirsdag",
+    "wednesday": "Onsdag",
+    "thursday": "Torsdag",
+    "friday": "Fredag",
+    "saturday": "Lørdag",
+    "sunday": "Søndag",
+    "mon": "Man",
+    "tue": "Tir",
+    "wed": "Ons",
+    "thu": "Tor",
+    "fri": "Fre",
+    "sat": "Lør",
+    "sun": "Søn"
+  },
+  
+  "form": {
+    "form": {
+      "subcategory": {
+        "placeholder": "Velg underkategori"
+      }
+    },
+    "subcategory": {
+      "placeholder": "Velg underkategori"
+    },
+    "inventory": {
+      "tip": {
+        "page": {
+          "title": "Tips for beholdning"
+        }
+      }
+    },
+    "schedule": {
+      "on-demandDescription": "Opplevelsen er tilgjengelig på forespørsel og krever manuell godkjenning"
+    },
+    "basics": {
+      "name": "Navn",
+      "category": "Kategori",
+      "description": "Beskrivelse"
+    },
+    "category": {
+      "UTSTYR_OG_INVENTAR": "Utstyr og inventar"
+    },
+    "openingHours": {
+      "applyToWeekdays": "Bruk for alle ukedager",
+      "applyToWeekend": "Bruk for helg"
+    }
+  },
+  
+  "validation": {
+    "required": "Dette feltet er påkrevd",
+    "email": "Ugyldig e-postadresse",
+    "phone": "Ugyldig telefonnummer",
+    "url": "Ugyldig URL",
+    "minLength": "Minimum {{min}} tegn",
+    "maxLength": "Maksimum {{max}} tegn",
+    "min": "Minimum {{min}}",
+    "max": "Maksimum {{max}}",
+    "pattern": "Ugyldig format",
+    "unique": "Må være unik",
+    "match": "Feltene må være like",
+    "date": "Ugyldig dato",
+    "future": "Må være i fremtiden",
+    "past": "Må være i fortiden",
+    "positive": "Må være et positivt tall",
+    "integer": "Må være et heltall"
+  },
+  
+  "error": {
+    "generic": "Noe gikk galt. Prøv igjen.",
+    "network": "Kunne ikke koble til serveren",
+    "notFound": "Fant ikke ressursen",
+    "unauthorized": "Du har ikke tilgang",
+    "forbidden": "Handling ikke tillatt",
+    "timeout": "Forespørselen tok for lang tid",
+    "server": "Serverfeil. Prøv igjen senere.",
+    "validation": "Sjekk at alle felt er fylt ut riktig",
+    "conflict": "Konflikt med eksisterende data"
+  },
+  
+  "confirm": {
+    "delete": "Er du sikker på at du vil slette?",
+    "cancel": "Er du sikker på at du vil avbryte?",
+    "unsaved": "Du har ulagrede endringer. Vil du fortsette?",
+    "logout": "Er du sikker på at du vil logge ut?"
+  },
+  
+  "empty": {
+    "default": "Ingen data å vise",
+    "search": "Ingen resultater for søket",
+    "filter": "Ingen treff med valgte filter"
+  },
+  
+  "pagination": {
+    "page": "Side",
+    "of": "av",
+    "first": "Første",
+    "last": "Siste",
+    "next": "Neste",
+    "previous": "Forrige",
+    "showing": "Viser {{from}}-{{to}} av {{total}}"
+  },
+  
+  "media": {
+    "dropzone": {
+      "page": {
+        "title": "Last opp bilder"
+      }
+    },
+    "requirements": {
+      "page": {
+        "title": "Bildekrav"
+      }
+    }
+  },
+  
+  "aria": {
+    "close": "Lukk",
+    "open": "Åpne",
+    "menu": "Meny",
+    "search": "Søk",
+    "loading": "Laster innhold",
+    "required": "Påkrevd felt"
+  },
+  
+  "wizard": {
+    "step": {
+      "category": "Kategori",
+      "basics": "Grunnleggende",
+      "details": "Detaljer",
+      "resources": "Ressurser",
+      "availability": "Tilgjengelighet",
+      "images": "Bilder",
+      "content": "Innhold",
+      "review": "Gjennomgang"
+    },
+    "stepProgress": "Steg {{current}} av {{total}}",
+    "goToPreviousStep": "Gå til forrige steg",
+    "goToNextStep": "Gå til neste steg",
+    "saveDraft": "Lagre utkast",
+    "saveAndPublish": "Lagre og publiser"
+  }
+}

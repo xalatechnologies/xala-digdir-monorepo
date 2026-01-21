@@ -1,77 +1,171 @@
 /**
  * DataExportCard
  *
- * Component for exporting user data in compliance with GDPR
- * - Request data export
- * - Show pending request status
- * - Download link when export is ready
+ * Component for exporting user data in compliance with GDPR.
+ * Domain-agnostic - receives all data and callbacks via props.
+ *
+ * @example
+ * ```tsx
+ * // In app with SDK hooks
+ * function DataExportPage() {
+ *   const { data: requestsData, isLoading } = useMyGdprRequests({ requestType: 'export', limit: 1 });
+ *   const createRequest = useCreateGdprRequest();
+ *
+ *   return (
+ *     <DataExportCard
+ *       exportRequest={requestsData?.data?.[0]}
+ *       isLoading={isLoading}
+ *       isRequesting={createRequest.isPending}
+ *       isError={createRequest.isError}
+ *       onRequestExport={() => createRequest.mutateAsync({ requestType: 'export' })}
+ *       onDownload={() => window.open(requestsData?.data?.[0]?.metadata?.downloadUrl, '_blank')}
+ *       labels={labels}
+ *     />
+ *   );
+ * }
+ * ```
  */
 
-import React, { useState } from 'react';
+import React from 'react';
 import { Card } from '../../primitives';
 import { Heading, Paragraph, Button } from '@digdir/designsystemet-react';
-import { useMyGdprRequests, useCreateGdprRequest } from '@digilist/client-sdk/hooks';
-import type { GdprRequest } from '@digilist/client-sdk/types';
-import { useT } from '@xala/i18n';
 
-// Local type to ensure proper inference (workaround for TS type resolution)
-interface LocalGdprRequest {
+// =============================================================================
+// Types
+// =============================================================================
+
+export interface GdprExportRequest {
   id: string;
-  userId: string;
-  requestType: 'export' | 'deletion';
   status: 'pending' | 'processing' | 'completed' | 'rejected';
   requestedAt: string;
-  processedAt?: string | null;
-  processedBy?: string | null;
   expiresAt: string;
-  metadata?: Record<string, unknown>;
-  tenantId: string;
-  createdAt: string;
-  updatedAt: string;
+  metadata?: {
+    downloadUrl?: string;
+    rejectionReason?: string;
+    [key: string]: unknown;
+  };
 }
 
+export interface DataExportCardLabels {
+  title: string;
+  description: string;
+  loading: string;
+  requestButton: string;
+  requestingButton: string;
+  downloadButton: string;
+  errorMessage: string;
+  infoTitle: string;
+  infoDescription: string;
+  statusMessages: {
+    pending: string;
+    processing: string;
+    completed: string;
+    rejected: string;
+  };
+  requestedLabel: string;
+  expiryWarning: (days: number) => string;
+  expiredMessage: string;
+  rejectionLabel: string;
+}
+
+export interface DataExportCardProps {
+  /** Current export request (if any) */
+  exportRequest?: GdprExportRequest | null;
+  /** Whether data is loading */
+  isLoading: boolean;
+  /** Whether a request is being created */
+  isRequesting: boolean;
+  /** Whether there was an error creating request */
+  isError: boolean;
+  /** Callback to request data export */
+  onRequestExport: () => void | Promise<void>;
+  /** Callback to download exported data */
+  onDownload: () => void;
+  /** Labels for i18n */
+  labels: DataExportCardLabels;
+}
+
+// =============================================================================
+// Default Labels
+// =============================================================================
+
+export const DEFAULT_DATA_EXPORT_LABELS: DataExportCardLabels = {
+  title: 'Eksporter mine data',
+  description: 'Last ned en kopi av alle dataene vi har lagret om deg i JSON-format. Dette inkluderer profil, bookinger, meldinger og aktivitet.',
+  loading: 'Laster...',
+  requestButton: 'Eksporter mine data',
+  requestingButton: 'Oppretter foresporsel...',
+  downloadButton: 'Last ned mine data',
+  errorMessage: 'Det oppstod en feil ved opprettelse av foresporselen. Vennligst prov igjen senere.',
+  infoTitle: 'Viktig:',
+  infoDescription: 'Dataeksporten vil vaere tilgjengelig for nedlasting i 30 dager fra den er klar. Av sikkerhetshensyn ma du vaere innlogget for a laste ned dataene.',
+  statusMessages: {
+    pending: 'Din foresporsel er mottatt og venter pa behandling.',
+    processing: 'Vi forbereder dataene dine. Dette kan ta noen minutter.',
+    completed: 'Dataeksporten er klar for nedlasting.',
+    rejected: 'Foresporselen din ble avvist. Kontakt support for mer informasjon.',
+  },
+  requestedLabel: 'Forespurt:',
+  expiryWarning: (days: number) => `Denne nedlastingen utloper om ${days} dag${days !== 1 ? 'er' : ''}.`,
+  expiredMessage: 'Denne nedlastingen har utlopt.',
+  rejectionLabel: 'Arsak:',
+};
+
+// =============================================================================
+// Sub-components
+// =============================================================================
+
 interface ExportRequestStatusProps {
-  exportRequest: LocalGdprRequest;
-  getStatusMessage: (status: string) => string;
-  getExpiryMessage: (expiresAt: string) => string;
-  handleDownload: () => void;
-  downloadLabel: string;
+  exportRequest: GdprExportRequest;
+  labels: DataExportCardLabels;
+  onDownload: () => void;
 }
 
 function ExportRequestStatus({
   exportRequest,
-  getStatusMessage,
-  getExpiryMessage,
-  handleDownload,
-  downloadLabel,
+  labels,
+  onDownload,
 }: ExportRequestStatusProps): React.ReactElement {
-  // Extract all values to typed local variables to ensure proper inference
-  const status: string = exportRequest.status;
-  const expiresAt: string = exportRequest.expiresAt;
-  const rejectionReason: string | undefined = exportRequest.metadata?.rejectionReason
+  const status = exportRequest.status;
+  const expiresAt = exportRequest.expiresAt;
+  const rejectionReason = exportRequest.metadata?.rejectionReason
     ? String(exportRequest.metadata.rejectionReason)
     : undefined;
 
-  const requestedDate: string = new Date(exportRequest.requestedAt).toLocaleDateString('nb-NO', {
+  const requestedDate = new Date(exportRequest.requestedAt).toLocaleDateString('nb-NO', {
     year: 'numeric',
     month: 'long',
     day: 'numeric',
     hour: '2-digit',
-    minute: '2-digit'
+    minute: '2-digit',
   });
-  const statusText: string = getStatusMessage(status);
+  const statusText = labels.statusMessages[status] || '';
 
-  const bgColor: string = status === 'completed'
+  const bgColor = status === 'completed'
     ? 'var(--ds-color-success-surface)'
     : status === 'rejected'
-    ? 'var(--ds-color-danger-surface)'
-    : 'var(--ds-color-info-surface)';
+      ? 'var(--ds-color-danger-surface)'
+      : 'var(--ds-color-info-surface)';
 
-  const borderColor: string = status === 'completed'
+  const borderColor = status === 'completed'
     ? 'var(--ds-color-success-border)'
     : status === 'rejected'
-    ? 'var(--ds-color-danger-border)'
-    : 'var(--ds-color-info-border)';
+      ? 'var(--ds-color-danger-border)'
+      : 'var(--ds-color-info-border)';
+
+  const getExpiryMessage = () => {
+    if (!expiresAt) return null;
+    const expiryDate = new Date(expiresAt);
+    const now = new Date();
+    const daysRemaining = Math.ceil((expiryDate.getTime() - now.getTime()) / (1000 * 60 * 60 * 24));
+
+    if (daysRemaining < 0) {
+      return labels.expiredMessage;
+    } else if (daysRemaining <= 3) {
+      return labels.expiryWarning(daysRemaining);
+    }
+    return null;
+  };
 
   return (
     <div style={{
@@ -88,25 +182,25 @@ function ExportRequestStatus({
 
       {/* Request date */}
       <p data-size="xs" style={{ margin: 0, color: 'var(--ds-color-neutral-text-subtle)', fontSize: 'var(--ds-font-size-xs)' }}>
-        {`Forespurt: ${requestedDate}`}
+        {`${labels.requestedLabel} ${requestedDate}`}
       </p>
 
       {/* Download button for completed requests */}
       {status === 'completed' && (
         <div style={{ marginTop: 'var(--ds-spacing-3)', display: 'flex', flexDirection: 'column', gap: 'var(--ds-spacing-2)' }}>
-          {expiresAt && getExpiryMessage(expiresAt) && (
+          {getExpiryMessage() && (
             <p data-size="xs" style={{ margin: 0, color: 'var(--ds-color-warning-text)', fontSize: 'var(--ds-font-size-xs)' }}>
-              {getExpiryMessage(expiresAt)}
+              {getExpiryMessage()}
             </p>
           )}
           <Button
             type="button"
             variant="primary"
             data-size="sm"
-            onClick={handleDownload}
+            onClick={onDownload}
             style={{ minHeight: '40px', alignSelf: 'flex-start' }}
           >
-            {downloadLabel}
+            {labels.downloadButton}
           </Button>
         </div>
       )}
@@ -114,91 +208,43 @@ function ExportRequestStatus({
       {/* Rejection reason */}
       {status === 'rejected' && rejectionReason && (
         <p data-size="xs" style={{ margin: 0, marginTop: 'var(--ds-spacing-2)', color: 'var(--ds-color-danger-text)', fontSize: 'var(--ds-font-size-xs)' }}>
-          {`Årsak: ${rejectionReason}`}
+          {`${labels.rejectionLabel} ${rejectionReason}`}
         </p>
       )}
     </div>
   );
 }
 
-export function DataExportCard() {
-  const t = useT();
-  const [isRequesting, setIsRequesting] = useState(false);
+// =============================================================================
+// Main Component
+// =============================================================================
 
-  // Fetch user's GDPR requests
-  const { data: requestsData, isLoading } = useMyGdprRequests({
-    requestType: 'export',
-    limit: 1
-  });
-
-  // Create request mutation
-  const createRequest = useCreateGdprRequest();
-
-  // Find the most recent export request
-  const exportRequest: GdprRequest | undefined = requestsData?.data?.[0];
-
-  const handleRequestExport = async () => {
-    setIsRequesting(true);
-    try {
-      await createRequest.mutateAsync({ requestType: 'export' });
-    } catch (error) {
-      console.error(t('validation.failed_to_create_export'), error);
-    } finally {
-      setIsRequesting(false);
-    }
-  };
-
-  const handleDownload = () => {
-    if (exportRequest?.metadata?.downloadUrl) {
-      window.open(exportRequest.metadata.downloadUrl as string, '_blank');
-    }
-  };
-
-  const getStatusMessage = (status: string) => {
-    switch (status) {
-      case 'pending':
-        return 'Din forespørsel er mottatt og venter på behandling.';
-      case 'processing':
-        return 'Vi forbereder dataene dine. Dette kan ta noen minutter.';
-      case 'completed':
-        return 'Dataeksporten er klar for nedlasting.';
-      case 'rejected':
-        return 'Forespørselen din ble avvist. Kontakt support for mer informasjon.';
-      default:
-        return '';
-    }
-  };
-
-  const getExpiryMessage = (expiresAt: string) => {
-    const expiryDate = new Date(expiresAt);
-    const now = new Date();
-    const daysRemaining = Math.ceil((expiryDate.getTime() - now.getTime()) / (1000 * 60 * 60 * 24));
-
-    if (daysRemaining < 0) {
-      return 'Denne nedlastingen har utløpt.';
-    } else if (daysRemaining <= 3) {
-      return `Denne nedlastingen utløper om ${daysRemaining} dag${daysRemaining !== 1 ? 'er' : ''}.`;
-    }
-    return '';
-  };
-
+export function DataExportCard({
+  exportRequest,
+  isLoading,
+  isRequesting,
+  isError,
+  onRequestExport,
+  onDownload,
+  labels = DEFAULT_DATA_EXPORT_LABELS,
+}: DataExportCardProps): React.ReactElement {
   return (
     <Card style={{ padding: 'var(--ds-spacing-5)' }}>
       <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--ds-spacing-4)' }}>
         {/* Header */}
         <div>
           <Heading level={2} data-size="sm" style={{ margin: 0, marginBottom: 'var(--ds-spacing-2)' }}>
-            Eksporter mine data
+            {labels.title}
           </Heading>
           <Paragraph data-size="sm" style={{ margin: 0, color: 'var(--ds-color-neutral-text-subtle)' }}>
-            Last ned en kopi av alle dataene vi har lagret om deg i JSON-format. Dette inkluderer profil, bookinger, meldinger og aktivitet.
+            {labels.description}
           </Paragraph>
         </div>
 
         {/* Loading state */}
         {isLoading && (
           <Paragraph data-size="sm" style={{ margin: 0 }}>
-            Laster...
+            {labels.loading}
           </Paragraph>
         )}
 
@@ -208,11 +254,11 @@ export function DataExportCard() {
             type="button"
             variant="secondary"
             data-size="md"
-            onClick={handleRequestExport}
-            disabled={isRequesting || createRequest.isPending}
+            onClick={onRequestExport}
+            disabled={isRequesting}
             style={{ minHeight: '44px', alignSelf: 'flex-start' }}
           >
-            {isRequesting || createRequest.isPending ? t('common.oppretter_foresporsel') : 'Eksporter mine data'}
+            {isRequesting ? labels.requestingButton : labels.requestButton}
           </Button>
         )}
 
@@ -220,17 +266,15 @@ export function DataExportCard() {
         {!isLoading && exportRequest && (
           <ExportRequestStatus
             exportRequest={exportRequest}
-            getStatusMessage={getStatusMessage}
-            getExpiryMessage={getExpiryMessage}
-            handleDownload={handleDownload}
-            downloadLabel={t('actions.last_ned_mine_data')}
+            labels={labels}
+            onDownload={onDownload}
           />
         )}
 
         {/* Error state */}
-        {createRequest.isError && (
+        {isError && (
           <Paragraph data-size="sm" style={{ margin: 0, color: 'var(--ds-color-danger-text)' }}>
-            Det oppstod en feil ved opprettelse av forespørselen. Vennligst prøv igjen senere.
+            {labels.errorMessage}
           </Paragraph>
         )}
 
@@ -241,7 +285,7 @@ export function DataExportCard() {
           backgroundColor: 'var(--ds-color-neutral-surface-hover)',
         }}>
           <Paragraph data-size="xs" style={{ margin: 0, color: 'var(--ds-color-neutral-text-subtle)' }}>
-            <strong>Viktig:</strong> Dataeksporten vil være tilgjengelig for nedlasting i 30 dager fra den er klar. Av sikkerhetshensyn må du være innlogget for å laste ned dataene.
+            <strong>{labels.infoTitle}</strong> {labels.infoDescription}
           </Paragraph>
         </div>
       </div>

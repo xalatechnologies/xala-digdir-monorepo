@@ -74,7 +74,7 @@ export function ProtectedRoute({
   const hasCalledAccessDenied = useRef(false);
 
   // Determine if user has required access
-  const hasRequiredRole = !requiredRole || checkRole(requiredRole);
+  const hasRequiredRole = !requiredRole || checkRole(requiredRole as UserRole);
   const passesAccessCheck = !accessCheck || accessCheck();
   const hasAccess = hasRequiredRole && passesAccessCheck;
 

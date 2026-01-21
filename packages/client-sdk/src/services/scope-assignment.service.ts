@@ -130,7 +130,7 @@ export class ScopeAssignmentService extends BaseService {
    * Get all scope assignments (tenant-scoped, paginated)
    */
   async getAll(params?: ScopeQueryParams): Promise<PaginatedResponse<CaseHandlerScope>> {
-    return this.get<PaginatedResponse<CaseHandlerScope>>('', { params });
+    return this.get<PaginatedResponse<CaseHandlerScope>, ScopeQueryParams>('', { params });
   }
 
   /**

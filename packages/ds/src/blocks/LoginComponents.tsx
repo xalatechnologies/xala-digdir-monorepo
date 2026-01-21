@@ -6,7 +6,6 @@
  */
 import * as React from 'react';
 import { Button, Heading, Paragraph } from '@digdir/designsystemet-react';
-import { useT } from '@xala/i18n';
 import { cn } from '../utils';
 
 // =============================================================================

@@ -357,7 +357,8 @@ export {
   ImageSlider,
   RentalObjectDetailHeader,
   CapacityCard,
-  FacilityChips,
+  AmenityChips,
+  FacilityChips, // @deprecated - use AmenityChips
   AdditionalServicesList,
   ContactInfoCard,
   LocationCard,
@@ -449,7 +450,10 @@ export type {
   ImageSliderProps,
   RentalObjectDetailHeaderProps,
   CapacityCardProps,
-  FacilityChipsProps,
+  AmenityChipsProps,
+  Amenity,
+  FacilityChipsProps, // @deprecated - use AmenityChipsProps
+  Facility, // @deprecated - use Amenity
   AdditionalServicesListProps,
   ContactInfoCardProps,
   LocationCardProps,
@@ -582,25 +586,6 @@ export {
   formatPrice,
   formatPriceUnit
 } from './types/booking';
-
-// Rental Object Management Types
-export type {
-  RentalObjectQueryFilters,
-  // ViewMode already exported from composed
-  RentalObjectFilterState,
-  ListingStatus,
-  // ListingType already exported from composed
-  RentalObjectStatus,
-  RentalObjectType
-} from './types/rental-objects';
-
-// Rental Object Management Constants
-export {
-  TYPE_TABS,
-  STATUS_OPTIONS,
-  SORT_OPTIONS,
-  CAPACITY_OPTIONS
-} from './constants/rental-objects';
 
 // =============================================================================
 // Design System Utilities & Tokens

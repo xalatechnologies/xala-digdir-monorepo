@@ -1,0 +1,25 @@
+{
+  "name": "@xala/i18n",
+  "version": "2.0.0-compat",
+  "description": "DEPRECATED: Compatibility layer for @xala/i18n. Migrate to @xalatechnologies/platform/i18n",
+  "type": "module",
+  "main": "./src/index.ts",
+  "types": "./src/index.ts",
+  "exports": {
+    ".": {
+      "types": "./src/index.ts",
+      "default": "./src/index.ts"
+    }
+  },
+  "scripts": {
+    "build": "echo 'Compatibility package - source-only'",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@xalatechnologies/platform": "workspace:*"
+  },
+  "peerDependencies": {
+    "react": "^18.0.0"
+  },
+  "deprecated": "This package is deprecated. Please migrate to @xalatechnologies/platform/i18n. See migration guide: https://docs.xalatechnologies.com/migration"
+}

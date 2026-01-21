@@ -2,35 +2,64 @@
 
 ## Purpose
 
-Centralized configuration package for Xala/Digilist applications. Eliminates configuration duplication across apps by providing:
+Platform-agnostic configuration package for Xala applications. Provides:
 
-1. **AppProfile definitions** - Static configuration for each app type
-2. **Environment validation** - Zod schemas for env var validation
-3. **Config factories** - Functions to create SDK and RuntimeProvider configs
+1. **Generic AppProfile Registry** - Runtime registration pattern for app profiles
+2. **Environment Validation** - Zod schemas for env var validation
+3. **Config Factories** - Functions to create SDK and RuntimeProvider configs
+
+**This package is domain-agnostic.** Domain-specific profiles (like Digilist apps) should be defined in domain packages and registered at runtime.
 
 ## Usage
 
 ```tsx
 // apps/backoffice/src/main.tsx
+
+// Step 1: Import domain runtime to register profiles (side-effect import)
+import '@digilist/runtime';
+
+// Step 2: Use generic config API
 import { validateEnv, createAppConfig } from '@xala/config';
 import { RuntimeProvider } from '@xala/runtime';
 import { initializeClient } from '@digilist/client-sdk';
 
-// 1. Validate environment at startup
+// Validate environment at startup
 const env = validateEnv(import.meta.env);
 
-// 2. Get all configuration for this app
+// Get all configuration for this app
 const { sdkConfig, runtimeConfig } = createAppConfig('backoffice', env);
 
-// 3. Initialize SDK
+// Initialize SDK
 initializeClient(sdkConfig);
 
-// 4. Mount app with RuntimeProvider
+// Mount app with RuntimeProvider
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <RuntimeProvider config={runtimeConfig}>
     <App />
   </RuntimeProvider>
 );
+```
+
+## Architecture: Domain vs Platform
+
+This package follows a clean separation:
+
+| Layer | Package | Responsibility |
+|-------|---------|----------------|
+| Platform | `@xala/config` | Generic registry, factories, validation |
+| Domain | `@digilist/runtime` | Digilist-specific profiles and types |
+
+```
+@xala/config (Platform Layer)
+├── Generic Types (AppType, AppProfile, etc.)
+├── Registry API (registerAppProfile, getAppProfile)
+├── Config Factories (createRuntimeConfig, createSDKConfig)
+└── Environment Validation (validateEnv, envSchema)
+
+@digilist/runtime (Domain Layer)
+├── DigilistAppType, DigilistThemeId types
+├── App Profiles (web, minside, backoffice, etc.)
+└── Auto-registration on module load
 ```
 
 ## Key Exports
@@ -53,21 +82,26 @@ if (!result.success) {
 const env = assertEnv(import.meta.env);
 ```
 
-### App Profiles
+### App Profile Registry
 
 ```typescript
-import { getAppProfile, getAppTypes, getAllAppProfiles } from '@xala/config';
+import {
+  registerAppProfile,
+  registerAppProfiles,
+  getAppProfile,
+  getAppTypes,
+  getAllAppProfiles,
+  hasAppProfile,
+  clearAppProfiles,
+} from '@xala/config';
 
-// Get single profile
+// Domain packages register profiles
+registerAppProfiles(myDomainProfiles);
+
+// Apps query profiles
 const profile = getAppProfile('backoffice');
-console.log(profile.defaultPort); // 5175
-
-// Get all app types
 const types = getAppTypes();
-// ['web', 'minside', 'backoffice', 'saas-admin', 'monitoring', 'docs-learning']
-
-// Get all profiles
-const profiles = getAllAppProfiles();
+const all = getAllAppProfiles();
 ```
 
 ### Config Factories
@@ -91,24 +125,13 @@ const { sdkConfig, runtimeConfig, profile } = createAppConfig('backoffice', env)
 packages/config/
 ├── src/
 │   ├── index.ts           # Public exports
-│   ├── types.ts           # Type definitions
+│   ├── types.ts           # Generic type definitions
 │   ├── env-schema.ts      # Zod validation
-│   └── app-profiles.ts    # App profile definitions
+│   └── app-profiles.ts    # Registry API and factories
 ├── package.json
 ├── tsconfig.json
 └── CLAUDE.md
 ```
-
-## App Profiles
-
-| App | Port | Requires Auth | Color Scheme |
-|-----|------|---------------|--------------|
-| web | 5173 | No | auto |
-| minside | 5174 | Yes | auto |
-| backoffice | 5175 | Yes | auto |
-| saas-admin | 5177 | Yes | auto |
-| monitoring | 5178 | Yes | dark |
-| docs-learning | 5179 | No | auto |
 
 ## Environment Variables
 
@@ -135,51 +158,66 @@ const config = {
   // ... repeated in every app
 };
 
-// ✅ ALWAYS use @xala/config
+// ❌ NEVER import @digilist/* from @xala/config
+import { initializeClient } from '@digilist/client-sdk'; // ❌ Domain coupling!
+
+// ✅ ALWAYS use @xala/config for validation and factories
 import { validateEnv, createAppConfig } from '@xala/config';
 const env = validateEnv(import.meta.env);
 const { sdkConfig, runtimeConfig } = createAppConfig('backoffice', env);
 ```
 
-## Migration Guide
+## Creating a New Domain Runtime
 
-Before (6 apps with duplicate config):
+If you're creating a new domain (not Digilist), follow this pattern:
+
 ```typescript
-// Each app had ~20 lines of duplicate config
-initializeClient({
-  baseUrl: import.meta.env.VITE_API_URL || 'https://api.digilist.no',
-  tenantId: import.meta.env.VITE_TENANT_ID || 'default',
-  licenseKey: import.meta.env.VITE_LICENSE_KEY || 'dev-key',
-});
+// packages/my-domain-runtime/src/config/profiles.ts
+import type { AppProfile } from '@xala/config';
 
-<RuntimeProvider config={{
-  appType: 'backoffice',
-  apiUrl: import.meta.env.VITE_API_URL || 'https://api.digilist.no',
-  // ... duplicate config
-}}>
-```
+export const myAppProfile: AppProfile = {
+  appType: 'my-app',
+  displayName: 'My App',
+  description: 'My domain application',
+  defaultPort: 3000,
+  locale: 'nb',
+  theme: 'default',
+  colorScheme: 'auto',
+  authConfig: {
+    loginPath: '/login',
+    debug: false,
+    sessionCheckInterval: 60000,
+    requireAuth: true,
+  },
+  featureFlags: {},
+};
 
-After (centralized):
-```typescript
-import { validateEnv, createAppConfig } from '@xala/config';
+export const myDomainProfiles = [myAppProfile];
 
-const env = validateEnv(import.meta.env);
-const { sdkConfig, runtimeConfig } = createAppConfig('backoffice', env);
+// packages/my-domain-runtime/src/config/index.ts
+import { registerAppProfiles } from '@xala/config';
+import { myDomainProfiles } from './profiles';
 
-initializeClient(sdkConfig);
+// Auto-register on import
+registerAppProfiles(myDomainProfiles);
 
-<RuntimeProvider config={runtimeConfig}>
+export { myDomainProfiles };
+
+// packages/my-domain-runtime/src/index.ts
+import './config'; // Side-effect: registers profiles
+export * from './config';
 ```
 
 ## When in Doubt
 
-1. Need app-specific settings? → Check AppProfile
-2. Need env validation? → Use validateEnv()
-3. Need SDK config? → Use createSDKConfig()
-4. Need RuntimeProvider config? → Use createRuntimeConfig()
-5. Need both? → Use createAppConfig()
+1. Need app-specific settings? -> Domain package defines profiles, use getAppProfile()
+2. Need env validation? -> Use validateEnv()
+3. Need SDK config? -> Use createSDKConfig()
+4. Need RuntimeProvider config? -> Use createRuntimeConfig()
+5. Need both? -> Use createAppConfig()
+6. Profile not found? -> Import domain runtime package first (e.g., `import '@digilist/runtime'`)
 
 ---
 
-**Last Updated:** 2026-01-20
-**Status:** New Package
+**Last Updated:** 2026-01-21
+**Status:** Refactored - Domain-agnostic

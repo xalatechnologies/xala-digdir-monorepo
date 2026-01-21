@@ -1,0 +1,139 @@
+{
+  "name": "@xalatechnologies/platform",
+  "version": "1.0.0",
+  "description": "Unified platform package for Xala - UI components, runtime, auth, config, contracts, SDK, i18n, and observability",
+  "type": "module",
+  "main": "dist/index.js",
+  "module": "dist/index.mjs",
+  "types": "dist/index.d.ts",
+  "sideEffects": false,
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.js"
+    },
+    "./ui": {
+      "types": "./dist/ui/index.d.ts",
+      "import": "./dist/ui/index.mjs",
+      "require": "./dist/ui/index.js"
+    },
+    "./ui/primitives": {
+      "types": "./dist/ui/primitives/index.d.ts",
+      "import": "./dist/ui/primitives/index.mjs",
+      "require": "./dist/ui/primitives/index.js"
+    },
+    "./ui/composed": {
+      "types": "./dist/ui/composed/index.d.ts",
+      "import": "./dist/ui/composed/index.mjs",
+      "require": "./dist/ui/composed/index.js"
+    },
+    "./ui/shells": {
+      "types": "./dist/ui/shells/index.d.ts",
+      "import": "./dist/ui/shells/index.mjs",
+      "require": "./dist/ui/shells/index.js"
+    },
+    "./ui/blocks": {
+      "types": "./dist/ui/blocks/index.d.ts",
+      "import": "./dist/ui/blocks/index.mjs",
+      "require": "./dist/ui/blocks/index.js"
+    },
+    "./ui/themes": {
+      "types": "./dist/ui/themes/index.d.ts",
+      "import": "./dist/ui/themes/index.mjs",
+      "require": "./dist/ui/themes/index.js"
+    },
+    "./ui/patterns": {
+      "types": "./dist/ui/patterns/index.d.ts",
+      "import": "./dist/ui/patterns/index.mjs",
+      "require": "./dist/ui/patterns/index.js"
+    },
+    "./runtime": {
+      "types": "./dist/runtime/index.d.ts",
+      "import": "./dist/runtime/index.mjs",
+      "require": "./dist/runtime/index.js"
+    },
+    "./auth": {
+      "types": "./dist/auth/index.d.ts",
+      "import": "./dist/auth/index.mjs",
+      "require": "./dist/auth/index.js"
+    },
+    "./config": {
+      "types": "./dist/config/index.d.ts",
+      "import": "./dist/config/index.mjs",
+      "require": "./dist/config/index.js"
+    },
+    "./contracts": {
+      "types": "./dist/contracts/index.d.ts",
+      "import": "./dist/contracts/index.mjs",
+      "require": "./dist/contracts/index.js"
+    },
+    "./sdk": {
+      "types": "./dist/sdk/index.d.ts",
+      "import": "./dist/sdk/index.mjs",
+      "require": "./dist/sdk/index.js"
+    },
+    "./i18n": {
+      "types": "./dist/i18n/index.d.ts",
+      "import": "./dist/i18n/index.mjs",
+      "require": "./dist/i18n/index.js"
+    },
+    "./observability": {
+      "types": "./dist/observability/index.d.ts",
+      "import": "./dist/observability/index.mjs",
+      "require": "./dist/observability/index.js"
+    }
+  },
+  "files": [
+    "dist",
+    "src"
+  ],
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsup --watch",
+    "clean": "rm -rf dist",
+    "typecheck": "tsc --noEmit",
+    "lint": "eslint src --ext .ts,.tsx",
+    "test": "vitest run",
+    "test:watch": "vitest"
+  },
+  "keywords": [
+    "xala",
+    "platform",
+    "ui",
+    "sdk",
+    "react",
+    "typescript",
+    "designsystemet"
+  ],
+  "author": "Xala Technologies",
+  "license": "MIT",
+  "dependencies": {
+    "@digdir/designsystemet-react": "^1.9.0",
+    "@tanstack/react-query": "^5.62.16",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "react-router-dom": "^6.22.0",
+    "zod": "^3.22.4"
+  },
+  "devDependencies": {
+    "@digdir/designsystemet-css": "^1.0.0",
+    "@types/react": "^18.3.5",
+    "@types/react-dom": "^18.3.0",
+    "tsup": "^8.0.1",
+    "typescript": "^5.3.3",
+    "vitest": "^1.2.0"
+  },
+  "peerDependencies": {
+    "react": ">=18.0.0",
+    "react-dom": ">=18.0.0"
+  },
+  "peerDependenciesMeta": {
+    "react": {
+      "optional": false
+    },
+    "react-dom": {
+      "optional": false
+    }
+  }
+}

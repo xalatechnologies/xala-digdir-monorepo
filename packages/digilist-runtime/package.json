@@ -1,0 +1,74 @@
+{
+  "name": "@digilist/runtime",
+  "version": "1.0.0",
+  "description": "Domain-specific runtime providers for the Digilist rental booking platform",
+  "type": "module",
+  "main": "./dist/index.js",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.js"
+    },
+    "./providers": {
+      "types": "./dist/providers/index.d.ts",
+      "import": "./dist/providers/index.mjs",
+      "require": "./dist/providers/index.js"
+    },
+    "./hooks": {
+      "types": "./dist/hooks/index.d.ts",
+      "import": "./dist/hooks/index.mjs",
+      "require": "./dist/hooks/index.js"
+    },
+    "./config": {
+      "types": "./dist/config/index.d.ts",
+      "import": "./dist/config/index.mjs",
+      "require": "./dist/config/index.js"
+    }
+  },
+  "files": [
+    "dist",
+    "README.md"
+  ],
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsup --watch",
+    "lint": "eslint src --ext ts,tsx",
+    "typecheck": "tsc --noEmit"
+  },
+  "sideEffects": false,
+  "dependencies": {
+    "@digilist/client-sdk": "workspace:*",
+    "@xala/config": "workspace:*",
+    "@xala/runtime": "workspace:*"
+  },
+  "peerDependencies": {
+    "@tanstack/react-query": "^5.0.0",
+    "react": "^18.2.0 || ^19.0.0",
+    "react-dom": "^18.2.0 || ^19.0.0"
+  },
+  "peerDependenciesMeta": {
+    "@tanstack/react-query": {
+      "optional": true
+    }
+  },
+  "devDependencies": {
+    "@tanstack/react-query": "^5.62.16",
+    "@types/react": "^18.2.0",
+    "tsup": "^8.5.1",
+    "typescript": "^5.3.0"
+  },
+  "keywords": [
+    "digilist",
+    "runtime",
+    "providers",
+    "react",
+    "context",
+    "booking",
+    "rental"
+  ],
+  "author": "Xala Technologies <engineering@xalatechnologies.com>",
+  "license": "MIT"
+}

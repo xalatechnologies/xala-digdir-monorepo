@@ -21,6 +21,7 @@ import type {
   BookingQuoteSelectionDTO,
   BookingQuoteProjectionDTO,
   BookingSelectionDTO,
+  RecurringPreviewLookupDTO,
   RecurringPreviewProjectionDTO,
 } from '@/types/booking';
 import type { PaginatedResponse, SingleResponse, SuccessResponse } from '@/types/enums';
@@ -336,9 +337,12 @@ export class BookingService extends BaseService {
 
   /**
    * Get recurring booking preview
-   * Returns server-computed occurrence preview with conflict detection
+   * Returns server-computed occurrence preview with conflict detection.
+   * Can pass either a full selection (to generate preview) or a hash (to lookup cached preview).
    */
-  async getRecurringPreview(selection: BookingSelectionDTO): Promise<SingleResponse<RecurringPreviewProjectionDTO>> {
+  async getRecurringPreview(
+    selection: BookingSelectionDTO | RecurringPreviewLookupDTO
+  ): Promise<SingleResponse<RecurringPreviewProjectionDTO>> {
     return this.client.post(this.buildPath('/recurring/preview'), selection);
   }
 }

@@ -1,16 +1,24 @@
 /**
  * @xala/config
  *
- * Centralized configuration package for Xala/Digilist applications.
+ * Platform-agnostic configuration package for Xala applications.
  *
  * This package provides:
- * - AppProfile definitions for each app type
+ * - Generic AppProfile registry with runtime registration
  * - Environment variable validation with Zod
- * - SDK and RuntimeProvider configuration factories
+ * - Config factories for SDK and RuntimeProvider
+ *
+ * ## Domain-Specific Setup
+ *
+ * Domain packages (like @digilist/runtime) should:
+ * 1. Define their app profiles
+ * 2. Register them using registerAppProfiles()
+ * 3. Apps import the domain package to trigger registration
  *
  * @example
  * ```tsx
  * // apps/backoffice/src/main.tsx
+ * import '@digilist/runtime'; // Side-effect: registers Digilist profiles
  * import { validateEnv, createAppConfig } from '@xala/config';
  * import { RuntimeProvider } from '@xala/runtime';
  * import { initializeClient } from '@digilist/client-sdk';
@@ -36,7 +44,7 @@
  */
 
 // ============================================================================
-// Types
+// Types (Generic/Platform)
 // ============================================================================
 
 export type {
@@ -71,11 +79,16 @@ export {
 } from './env-schema';
 
 // ============================================================================
-// App Profiles
+// App Profile Registry
 // ============================================================================
 
 export {
-  // Main API
+  // Registration API (for domain packages)
+  registerAppProfile,
+  registerAppProfiles,
+  clearAppProfiles,
+  hasAppProfile,
+  // Query API
   getAppProfile,
   getAllAppProfiles,
   getAppTypes,
@@ -83,11 +96,4 @@ export {
   createRuntimeConfig,
   createSDKConfig,
   createAppConfig,
-  // Individual profiles (for advanced use)
-  webProfile,
-  minsideProfile,
-  backofficeProfile,
-  saasAdminProfile,
-  monitoringProfile,
-  docsLearningProfile,
 } from './app-profiles';

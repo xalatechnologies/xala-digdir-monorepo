@@ -2,7 +2,7 @@
  * VenueCard Wrapper
  * Thin wrapper that maps SDK RentalObject to DS VenueCard props
  */
-import { VenueCard as DSVenueCard, type VenueCardData } from '@xala/ds';
+import { VenueCard as DSVenueCard, type VenueCardData } from '@digilist/ui';
 import type { RentalObject } from '@digilist/client-sdk/types';
 
 interface VenueCardWrapperProps {

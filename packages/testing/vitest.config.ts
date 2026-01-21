@@ -59,6 +59,8 @@ export default defineConfig({
       '@digilist/client-sdk': resolve(__dirname, '../client-sdk/src'),
       '@digilist/contracts': resolve(__dirname, '../contracts/src'),
       '@digilist/testing': resolve(__dirname, './src'),
+      '@xalatechnologies/platform/config': resolve(__dirname, '../platform/src/config'),
+      '@xalatechnologies/platform': resolve(__dirname, '../platform/src'),
       '@xala/config': resolve(__dirname, '../config/src'),
       '@xala/i18n': resolve(__dirname, '../i18n/src'),
       '@xala/ds': resolve(__dirname, '../ds/src'),

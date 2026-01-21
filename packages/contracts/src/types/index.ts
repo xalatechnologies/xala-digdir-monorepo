@@ -1,15 +1,27 @@
 /**
  * Types Module
  *
- * Re-exports all TypeScript types derived from Zod schemas.
- * Use these types in your application code.
+ * Platform-level TypeScript types derived from Zod schemas.
+ *
+ * NOTE: Domain-specific types (rental-object, booking, organization, user, etc.)
+ * have been REMOVED from this package. They should be imported from @digilist/contracts/types.
+ *
+ * This package (@xala/contracts) contains ONLY platform-level types:
+ * - RFC7807 Problem Details types
+ * - Pagination types
+ * - Common response types
+ * - Generic entity types (timestamps, metadata, etc.)
  *
  * @example
- * import type { RentalObject, Booking, User } from '@xala/contracts/types';
+ * // For domain types, use @digilist/contracts:
+ * import type { RentalObject, Booking, User } from '@digilist/contracts/types';
+ *
+ * // For platform types, use @xala/contracts:
+ * import type { ProblemDetails, Pagination } from '@xala/contracts/types';
  */
 
 // =============================================================================
-// Common Types
+// Platform-level Types (from common.schema.ts)
 // =============================================================================
 
 export type {
@@ -23,120 +35,3 @@ export type {
   FieldError,
   ProblemDetails,
 } from '../schemas/common.schema';
-
-// =============================================================================
-// Rental Object Types
-// =============================================================================
-
-export type {
-  RentalObjectCategory,
-  BookingTimeMode,
-  RentalObjectStatus,
-  PricingUnit,
-  Pricing,
-  Location,
-  BookingFeatures,
-  Rules,
-  RentalObject,
-  CreateRentalObjectDTO,
-  UpdateRentalObjectDTO,
-  RentalObjectQueryParams,
-} from '../schemas/rental-object.schema';
-
-// =============================================================================
-// Booking Types
-// =============================================================================
-
-export type {
-  BookingStatus,
-  PaymentStatus,
-  Booking,
-  CreateBookingDTO,
-  UpdateBookingDTO,
-  CancelBookingDTO,
-  BookingQueryParams,
-  BookingQuoteRequest,
-  BookingQuoteResponse,
-} from '../schemas/booking.schema';
-
-// =============================================================================
-// Organization Types
-// =============================================================================
-
-export type {
-  OrganizationType,
-  OrganizationStatus,
-  Branding,
-  OrganizationSettings,
-  Organization,
-  CreateOrganizationDTO,
-  UpdateOrganizationDTO,
-  OrganizationQueryParams,
-} from '../schemas/organization.schema';
-
-// =============================================================================
-// User Types
-// =============================================================================
-
-export type {
-  UserRole,
-  UserStatus,
-  User,
-  CreateUserDTO,
-  InviteUserDTO,
-  UpdateUserDTO,
-  AssignRoleDTO,
-  UserQueryParams,
-  ConsentPreferences,
-} from '../schemas/user.schema';
-
-// =============================================================================
-// Capabilities Types
-// =============================================================================
-
-export type {
-  Capability,
-  UIHints,
-  FeatureFlags,
-  CapabilitiesResponse,
-  CapabilityKey,
-} from '../schemas/capabilities.schema';
-
-export type {
-  CustodyScope,
-  GranteeType,
-  CustodyGrant,
-  CustodySubgrant,
-  CreateCustodyGrantDTO,
-  BulkAssignCustodyGrantDTO,
-  CreateCustodySubgrantDTO,
-} from '../schemas/custody.schema';
-
-// =============================================================================
-// Projection Types
-// =============================================================================
-
-export type {
-  RentalObjectCardProjection,
-  RentalObjectDetailsProjection,
-  RentalObjectSearchResultProjection,
-} from '../projections/rental-object.projection';
-
-export type {
-  BookingCardProjection,
-  BookingDetailsProjection,
-  BookingReceiptProjection,
-  CalendarEventProjection,
-} from '../projections/booking.projection';
-
-export type {
-  OrganizationCardProjection,
-  OrganizationDetailsProjection,
-  MemberProjection,
-} from '../projections/organization.projection';
-
-export type {
-  UserCardProjection,
-  UserDetailsProjection,
-  CurrentUserProjection,
-} from '../projections/user.projection';

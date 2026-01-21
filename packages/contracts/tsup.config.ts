@@ -4,9 +4,10 @@ export default defineConfig({
   entry: {
     index: 'src/index.ts',
     'schemas/index': 'src/schemas/index.ts',
-    'projections/index': 'src/projections/index.ts',
     'types/index': 'src/types/index.ts',
     'modules/index': 'src/modules/index.ts',
+    'monitoring/index': 'src/monitoring/index.ts',
+    'validation/env-schemas': 'src/validation/env-schemas.ts',
   },
   format: ['cjs', 'esm'],
   dts: true,

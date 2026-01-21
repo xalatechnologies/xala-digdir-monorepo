@@ -237,7 +237,7 @@ export {
   adminPermissionService,
 } from './admin-permission.service';
 export type {
-  RentalObjectPermission,
+  RentalObjectPermissionGrant,
   GrantPermissionDTO,
   AdminPermissionQueryParams,
 } from './admin-permission.service';

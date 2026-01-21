@@ -29,6 +29,11 @@ export default defineConfig({
     alias: {
       // App-internal alias
       '@': path.resolve(__dirname, './src'),
+      // Force SDK to use dist (avoids @/ path alias conflicts with SDK source)
+      '@digilist/client-sdk/hooks': path.resolve(__dirname, '../../packages/client-sdk/dist/hooks/index.mjs'),
+      '@digilist/client-sdk/types': path.resolve(__dirname, '../../packages/client-sdk/dist/types/index.mjs'),
+      '@digilist/client-sdk/services': path.resolve(__dirname, '../../packages/client-sdk/dist/services/index.mjs'),
+      '@digilist/client-sdk': path.resolve(__dirname, '../../packages/client-sdk/dist/index.mjs'),
       // CSS imports cannot be resolved by tsconfig paths
       '@digdir/designsystemet-css': path.resolve(__dirname, '../../node_modules/@digdir/designsystemet-css'),
     },

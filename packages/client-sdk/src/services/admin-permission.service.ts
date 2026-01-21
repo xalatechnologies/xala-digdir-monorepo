@@ -11,7 +11,11 @@ import type { PaginatedResponse, SingleResponse } from '@/types';
 // Types
 // ============================================================================
 
-export interface RentalObjectPermission {
+/**
+ * Represents a permission grant/assignment for a rental object.
+ * Named differently from RentalObjectPermission enum (in types/rbac.ts) to avoid confusion.
+ */
+export interface RentalObjectPermissionGrant {
   id: string;
   rentalObjectId: string;
   rentalObjectName: string;
@@ -81,7 +85,7 @@ class AdminPermissionService extends BaseService {
   /**
    * Get all rental object permissions
    */
-  async getAll(params?: AdminPermissionQueryParams): Promise<PaginatedResponse<RentalObjectPermission>> {
+  async getAll(params?: AdminPermissionQueryParams): Promise<PaginatedResponse<RentalObjectPermissionGrant>> {
     const queryParams = params
       ? `?${new URLSearchParams(
           Object.entries(params)
@@ -89,21 +93,21 @@ class AdminPermissionService extends BaseService {
             .map(([k, v]) => [k, String(v)])
         ).toString()}`
       : '';
-    return this.client.get<PaginatedResponse<RentalObjectPermission>>(this.buildPath(queryParams));
+    return this.client.get<PaginatedResponse<RentalObjectPermissionGrant>>(this.buildPath(queryParams));
   }
 
   /**
    * Get single permission by ID
    */
-  async getById(id: string): Promise<SingleResponse<RentalObjectPermission>> {
-    return this.client.get<SingleResponse<RentalObjectPermission>>(this.buildPath(`/${id}`));
+  async getById(id: string): Promise<SingleResponse<RentalObjectPermissionGrant>> {
+    return this.client.get<SingleResponse<RentalObjectPermissionGrant>>(this.buildPath(`/${id}`));
   }
 
   /**
    * Grant permission to user or organization
    */
-  async grant(data: GrantPermissionDTO): Promise<SingleResponse<RentalObjectPermission>> {
-    return this.client.post<SingleResponse<RentalObjectPermission>>(this.buildPath(), data);
+  async grant(data: GrantPermissionDTO): Promise<SingleResponse<RentalObjectPermissionGrant>> {
+    return this.client.post<SingleResponse<RentalObjectPermissionGrant>>(this.buildPath(), data);
   }
 
   /**
@@ -116,28 +120,28 @@ class AdminPermissionService extends BaseService {
   /**
    * Update an existing permission
    */
-  async update(id: string, data: Partial<GrantPermissionDTO>): Promise<SingleResponse<RentalObjectPermission>> {
-    return this.client.patch<SingleResponse<RentalObjectPermission>>(this.buildPath(`/${id}`), data);
+  async update(id: string, data: Partial<GrantPermissionDTO>): Promise<SingleResponse<RentalObjectPermissionGrant>> {
+    return this.client.patch<SingleResponse<RentalObjectPermissionGrant>>(this.buildPath(`/${id}`), data);
   }
 
   /**
    * Get permissions for a specific rental object
    */
-  async getByRentalObject(rentalObjectId: string): Promise<PaginatedResponse<RentalObjectPermission>> {
+  async getByRentalObject(rentalObjectId: string): Promise<PaginatedResponse<RentalObjectPermissionGrant>> {
     return this.getAll({ rentalObjectId });
   }
 
   /**
    * Get permissions for a specific user
    */
-  async getByUser(userId: string): Promise<PaginatedResponse<RentalObjectPermission>> {
+  async getByUser(userId: string): Promise<PaginatedResponse<RentalObjectPermissionGrant>> {
     return this.getAll({ userId });
   }
 
   /**
    * Get permissions for a specific organization
    */
-  async getByOrganization(organizationId: string): Promise<PaginatedResponse<RentalObjectPermission>> {
+  async getByOrganization(organizationId: string): Promise<PaginatedResponse<RentalObjectPermissionGrant>> {
     return this.getAll({ organizationId });
   }
 }
