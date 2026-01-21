@@ -33,11 +33,15 @@ export {
 } from './PriceSummaryCard';
 
 // =============================================================================
-// NOTE: BookingSection and AdditionalServicesList remain in @xalatechnologies/platform/ui
+// Re-exports from @xalatechnologies/platform/ui (Backward Compatibility)
 // =============================================================================
-// These components are NOT re-exported here to avoid circular dependencies.
-// Import them directly from @xalatechnologies/platform/ui:
+// These components are re-exported from platform for backward compatibility.
+// They are domain-agnostic and should be imported directly from platform.
 //
-//   import { BookingSection, AdditionalServicesList } from '@xalatechnologies/platform/ui';
-//
-// Migration to @digilist/ui will happen in a future phase.
+// @deprecated Import from @xalatechnologies/platform/ui instead.
+
+export { BookingSection } from './BookingSection';
+export type { BookingSectionProps } from './BookingSection';
+
+export { AdditionalServicesList } from './AdditionalServicesList';
+export type { AdditionalServicesListProps } from './AdditionalServicesList';

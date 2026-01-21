@@ -38,7 +38,7 @@ const getNavigationResults = (query: string, t: (key: string) => string): Search
       id: 'nav-dashboard',
       label: t('saasAdmin.nav.dashboard'),
       description: t('common.gaa_til_oversikt') || 'Gå til oversikt',
-      icon: <SearchIcon size={18} />,
+      icon: <SearchIcon />,
       href: '/',
     });
   }
@@ -49,7 +49,7 @@ const getNavigationResults = (query: string, t: (key: string) => string): Search
       id: 'nav-tenants',
       label: t('saasAdmin.nav.tenants'),
       description: t('saasAdmin.nav.tenantsDesc') || 'Administrer leietakere',
-      icon: <BuildingIcon size={18} />,
+      icon: <BuildingIcon />,
       href: '/tenants',
     });
   }
@@ -60,7 +60,7 @@ const getNavigationResults = (query: string, t: (key: string) => string): Search
       id: 'nav-billing',
       label: t('saasAdmin.nav.billing'),
       description: t('saasAdmin.nav.billingDesc') || 'Fakturering og betalinger',
-      icon: <ChartIcon size={18} />,
+      icon: <ChartIcon />,
       href: '/billing',
     });
   }
@@ -71,7 +71,7 @@ const getNavigationResults = (query: string, t: (key: string) => string): Search
       id: 'nav-settings',
       label: t('saasAdmin.nav.settings'),
       description: 'Systemkonfigurasjon',
-      icon: <SettingsIcon size={18} />,
+      icon: <SettingsIcon />,
       href: '/settings',
     });
   }

@@ -17,8 +17,6 @@
     "@tanstack/react-query": "^5.0.0",
     "@xala/auth": "workspace:*",
     "@xala/config": "workspace:*",
-    "@xalatechnologies/platform": "workspace:*",
-    
     "@xala/i18n": "workspace:*",
     "@xala/runtime": "workspace:*",
     "@xalatechnologies/platform": "workspace:*",

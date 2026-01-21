@@ -87,6 +87,61 @@
       "types": "./dist/observability/index.d.ts",
       "import": "./dist/observability/index.mjs",
       "require": "./dist/observability/index.js"
+    },
+    "./observability/metrics": {
+      "types": "./dist/observability/metrics/index.d.ts",
+      "import": "./dist/observability/metrics/index.mjs",
+      "require": "./dist/observability/metrics/index.js"
+    },
+    "./observability/exporters": {
+      "types": "./dist/observability/exporters/index.d.ts",
+      "import": "./dist/observability/exporters/index.mjs",
+      "require": "./dist/observability/exporters/index.js"
+    },
+    "./observability/types": {
+      "types": "./dist/observability/types/index.d.ts",
+      "import": "./dist/observability/types/index.mjs",
+      "require": "./dist/observability/types/index.js"
+    },
+    "./sdk/http": {
+      "types": "./dist/sdk/http/index.d.ts",
+      "import": "./dist/sdk/http/index.mjs",
+      "require": "./dist/sdk/http/index.js"
+    },
+    "./sdk/errors": {
+      "types": "./dist/sdk/errors/index.d.ts",
+      "import": "./dist/sdk/errors/index.mjs",
+      "require": "./dist/sdk/errors/index.js"
+    },
+    "./sdk/query": {
+      "types": "./dist/sdk/query/index.d.ts",
+      "import": "./dist/sdk/query/index.mjs",
+      "require": "./dist/sdk/query/index.js"
+    },
+    "./sdk/retry": {
+      "types": "./dist/sdk/retry/index.d.ts",
+      "import": "./dist/sdk/retry/index.mjs",
+      "require": "./dist/sdk/retry/index.js"
+    },
+    "./ui/styles": {
+      "types": "./dist/ui/styles.d.ts",
+      "import": "./dist/ui/styles.mjs",
+      "require": "./dist/ui/styles.js"
+    },
+    "./ui/pages": {
+      "types": "./dist/ui/pages/index.d.ts",
+      "import": "./dist/ui/pages/index.mjs",
+      "require": "./dist/ui/pages/index.js"
+    },
+    "./ui/tokens": {
+      "types": "./dist/ui/tokens/index.d.ts",
+      "import": "./dist/ui/tokens/index.mjs",
+      "require": "./dist/ui/tokens/index.js"
+    },
+    "./i18n/locales": {
+      "types": "./dist/i18n/locales/index.d.ts",
+      "import": "./dist/i18n/locales/index.mjs",
+      "require": "./dist/i18n/locales/index.js"
     }
   },
   "typesVersions": {
@@ -135,6 +190,39 @@
       ],
       "observability": [
         "./dist/observability/index.d.ts"
+      ],
+      "observability/metrics": [
+        "./dist/observability/metrics/index.d.ts"
+      ],
+      "observability/exporters": [
+        "./dist/observability/exporters/index.d.ts"
+      ],
+      "observability/types": [
+        "./dist/observability/types/index.d.ts"
+      ],
+      "sdk/http": [
+        "./dist/sdk/http/index.d.ts"
+      ],
+      "sdk/errors": [
+        "./dist/sdk/errors/index.d.ts"
+      ],
+      "sdk/query": [
+        "./dist/sdk/query/index.d.ts"
+      ],
+      "sdk/retry": [
+        "./dist/sdk/retry/index.d.ts"
+      ],
+      "ui/styles": [
+        "./dist/ui/styles.d.ts"
+      ],
+      "ui/pages": [
+        "./dist/ui/pages/index.d.ts"
+      ],
+      "ui/tokens": [
+        "./dist/ui/tokens/index.d.ts"
+      ],
+      "i18n/locales": [
+        "./dist/i18n/locales/index.d.ts"
       ]
     }
   },
