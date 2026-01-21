@@ -12,7 +12,7 @@ import {
   FormField,
   Textfield,
   SaveIcon,
-} from '@xala/ds';
+} from '@xalatechnologies/platform/ui';
 import { useBrandingSettings } from '@digilist/api/hooks/useBrandingSettings';
 import { useT } from '@xala/i18n';
 

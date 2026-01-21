@@ -6,13 +6,13 @@
  */
 
 import * as React from 'react';
-import { Tag } from '@xala/ds';
+import { Tag } from '@xalatechnologies/platform/ui';
 import {
   UsersIcon,
   CalendarIcon,
   MapPinIcon,
   CheckCircleIcon,
-} from '@xala/ds';
+} from '@xalatechnologies/platform/ui';
 import type { KeyFacts, RentalObjectType, BookingMode } from '../types';
 import { createPresenter } from '../presenters/rentalObjectTypePresenter';
 import { useT } from '@xala/i18n';

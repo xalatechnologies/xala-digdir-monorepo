@@ -16,7 +16,7 @@ import {
   Heading,
   Dropdown,
   MoreVerticalIcon,
-} from '@xala/ds';
+} from '@xalatechnologies/platform/ui';
 import type { Review, ReviewStatus } from '@digilist/client-sdk';
 import {
   useApproveReview,

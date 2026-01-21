@@ -16,7 +16,7 @@ import {
   ChevronLeftIcon,
   ChevronRightIcon,
   CloseIcon,
-} from '@xala/ds';
+} from '@xalatechnologies/platform/ui';
 import type {
   BookingConfig,
   BookingSelection,

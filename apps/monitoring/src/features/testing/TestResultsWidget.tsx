@@ -6,7 +6,7 @@
  */
 
 import { useState, useEffect } from 'react';
-import { Card, Heading, Paragraph, Table, Badge, Spinner } from '@xala/ds';
+import { Card, Heading, Paragraph, Table, Badge, Spinner } from '@xalatechnologies/platform/ui';
 
 import { useT } from '@xala/i18n';
 interface TestSummary {

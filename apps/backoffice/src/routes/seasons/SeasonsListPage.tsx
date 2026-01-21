@@ -21,7 +21,7 @@ import {
   TrashIcon,
   EyeIcon,
   HeaderSearch,
-} from '@xala/ds';
+} from '@xalatechnologies/platform/ui';
 import { useSeasons, useDeleteSeason } from '@digilist/client-sdk/hooks';
 import type { SeasonStatus } from '@digilist/client-sdk/types';
 // import { StatusBadge } from '../../components/shared';

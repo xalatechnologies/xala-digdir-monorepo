@@ -18,7 +18,7 @@ import {
   BuildingIcon,
   MoreVerticalIcon,
   CheckIcon,
-} from '@xala/ds';
+} from '@xalatechnologies/platform/ui';
 import {
   useRentalObjects,
   useSeasonVenues,

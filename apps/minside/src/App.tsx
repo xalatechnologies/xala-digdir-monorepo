@@ -7,7 +7,7 @@
  * - Routes
  */
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
-import { ProtectedRoute, AccountSelectionModal } from '@xala/ds';
+import { ProtectedRoute, AccountSelectionModal } from '@xalatechnologies/platform/ui';
 import { useOAuthCallback } from '@xala/auth';
 import { AccountContextProvider, useAccountContext, type DashboardContext } from '@xala/runtime';
 

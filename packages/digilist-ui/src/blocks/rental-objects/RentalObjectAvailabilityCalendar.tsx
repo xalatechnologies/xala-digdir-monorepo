@@ -11,7 +11,7 @@
  * - MULTI_DAY mode: Date range picker for multi-day bookings
  */
 import * as React from 'react';
-import { Button, Heading, Paragraph, Alert } from '@xala/ds';
+import { Button, Heading, Paragraph, Alert } from '@xalatechnologies/platform/ui';
 import { cn } from '../../utils';
 import { ChevronLeftIcon, ChevronRightIcon, InfoIcon, ClockIcon, CalendarIcon } from '../../primitives/icons';
 import type {

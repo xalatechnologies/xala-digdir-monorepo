@@ -13,7 +13,7 @@ import {
   Pagination,
   Spinner,
   Paragraph,
-} from '@xala/ds';
+} from '@xalatechnologies/platform/ui';
 import { useT } from '@xala/i18n';
 import {
   usePendingDataRequests,

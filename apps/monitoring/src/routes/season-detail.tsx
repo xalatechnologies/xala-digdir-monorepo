@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate, Link, useSearchParams } from 'react-router-dom';
-import { Container, Heading, Paragraph, Card, Button, Spinner } from '@xala/ds';
+import { Container, Heading, Paragraph, Card, Button, Spinner } from '@xalatechnologies/platform/ui';
 import { useSeasons } from '@digilist/client-sdk/hooks';
 import { useAccountContext } from '@xala/runtime';
 import { SeasonStatusBadge } from '../features/seasons/components/SeasonStatusBadge';

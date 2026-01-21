@@ -13,7 +13,7 @@ import {
   LockIcon,
   type ActivityItemProps,
   type ActivityStatus,
-} from '@xala/ds';
+} from '@xalatechnologies/platform/ui';
 import {
   useSecurityMetrics,
   useGdprStatus,

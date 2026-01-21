@@ -17,8 +17,8 @@
     "@digilist/client-sdk": "workspace:*",
     "@sentry/react": "^8.42.0",
     "@tanstack/react-query": "^5.0.0",
-    "@xala/ds": "workspace:*",
-    "@xala/ds-themes": "workspace:*",
+    "@xalatechnologies/platform": "workspace:*",
+    
     "@xala/i18n": "workspace:*",
     "date-fns": "^4.1.0",
     "fuse.js": "^7.0.0",

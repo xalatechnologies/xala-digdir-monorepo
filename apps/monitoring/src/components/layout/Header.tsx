@@ -14,13 +14,13 @@ import {
   CalendarIcon,
   PeopleIcon,
   UserIcon,
-} from '@xala/ds';
-import type { SearchResultItem, SearchResultGroup } from '@xala/ds';
+} from '@xalatechnologies/platform/ui';
+import type { SearchResultItem, SearchResultGroup } from '@xalatechnologies/platform/ui';
 import { useNotificationUnreadCount } from '@digilist/client-sdk';
 import { useAuth } from '@xala/auth';
-import { useTheme } from '@xala/ds';
+import { useTheme } from '@xalatechnologies/platform/ui';
 import { useNotificationCenter } from '@xala/runtime';
-import { AccountSwitcher } from '@xala/ds';
+import { AccountSwitcher } from '@xalatechnologies/platform/ui';
 
 interface HeaderProps {
   title?: string;

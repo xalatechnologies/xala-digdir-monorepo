@@ -5,7 +5,7 @@
  * Used in list view mode. Supports images, location map, facilities, and capacity.
  */
 import * as React from 'react';
-import { Tag } from '@xala/ds';
+import { Tag } from '@xalatechnologies/platform/ui';
 import { cn } from '../../utils';
 
 export interface RentalObjectListItemProps {

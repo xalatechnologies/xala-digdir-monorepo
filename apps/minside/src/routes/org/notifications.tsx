@@ -30,7 +30,7 @@ import {
   Label,
   Alert,
   DashboardPageHeader,
-} from '@xala/ds';
+} from '@xalatechnologies/platform/ui';
 import { useT } from '@xala/i18n';
 import {
   // TODO: Re-enable when backend organization notification service is implemented

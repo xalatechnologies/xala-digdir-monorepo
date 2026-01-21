@@ -20,7 +20,7 @@ import {
   Label,
   useDialog,
   DashboardPageHeader,
-} from '@xala/ds';
+} from '@xalatechnologies/platform/ui';
 import {
   useOrganizationMembers,
 } from '@digilist/client-sdk';

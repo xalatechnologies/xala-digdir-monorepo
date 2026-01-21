@@ -26,7 +26,7 @@ import {
   BuildingIcon,
   CheckCircleIcon,
   HeaderSearch,
-} from '@xala/ds';
+} from '@xalatechnologies/platform/ui';
 import {
   useOrganization,
   useOrganizationMembers,

@@ -1,5 +1,5 @@
 import { useT } from '@xala/i18n';
-import { Heading } from '@xala/ds';
+import { Heading } from '@xalatechnologies/platform/ui';
 import { useRentalObjectWizard } from '@/features/rental-objects/hooks/useRentalObjectWizard';
 import { LocationStep } from './LocationStep';
 import { CapacityStep } from './CapacityStep';

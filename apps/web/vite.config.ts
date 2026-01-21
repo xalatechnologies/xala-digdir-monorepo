@@ -111,7 +111,7 @@ export default defineConfig({
           }
 
           // Design system in separate chunk
-          if (id.includes('packages/ds/src') || id.includes('@xala/ds')) {
+          if (id.includes('packages/ds/src') || id.includes('@xalatechnologies/platform/ui')) {
             return 'vendor-ds';
           }
 

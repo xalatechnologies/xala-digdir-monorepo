@@ -11,7 +11,7 @@ import {
   Button,
   Spinner,
   ArrowLeftIcon,
-} from '@xala/ds';
+} from '@xalatechnologies/platform/ui';
 import {
   useOrganization,
   useCreateOrganization,

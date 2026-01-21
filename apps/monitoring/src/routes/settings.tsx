@@ -29,7 +29,7 @@ import {
   SettingsIcon,
   MapPinIcon,
   HomeIcon,
-} from '@xala/ds';
+} from '@xalatechnologies/platform/ui';
 import {
   useCurrentUser,
   useUpdateCurrentUser,

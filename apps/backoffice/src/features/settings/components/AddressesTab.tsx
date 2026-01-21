@@ -16,7 +16,7 @@ import {
   SaveIcon,
   CopyIcon,
   InfoIcon,
-} from '@xala/ds';
+} from '@xalatechnologies/platform/ui';
 import {
   useCurrentUser,
   useUpdateCurrentUser,

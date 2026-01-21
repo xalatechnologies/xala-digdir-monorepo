@@ -16,7 +16,7 @@ import {
   AlertTriangleIcon,
   CheckCircleIcon,
   ArrowRightIcon,
-} from '@xala/ds';
+} from '@xalatechnologies/platform/ui';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@xala/auth';
 import { usePendingItems } from '@digilist/client-sdk';

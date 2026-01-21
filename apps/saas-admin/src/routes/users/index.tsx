@@ -14,8 +14,8 @@ import {
   HeaderSearch,
   Text,
   Stack,
-} from '@xala/ds';
-import { useUsers } from '@digilist/client-sdk/hooks';
+} from '@xalatechnologies/platform/ui';
+import { useUsers } from '@digilist/client-sdk/hooks'; // platform-exempt: user management is domain-specific
 import { useT } from '@xala/i18n';
 
 export function UsersPage() {
@@ -33,7 +33,7 @@ export function UsersPage() {
     if (!searchQuery) return users;
     const query = searchQuery.toLowerCase();
     return users.filter(
-      (user) =>
+      (user: { id: string; name?: string; email?: string }) =>
         user.name?.toLowerCase().includes(query) ||
         user.email?.toLowerCase().includes(query) ||
         user.id.toLowerCase().includes(query)
@@ -43,19 +43,19 @@ export function UsersPage() {
   if (isLoading) {
     return (
       <Stack direction="horizontal" justify="center" align="center" style={{ padding: 'var(--ds-spacing-8)' }}>
-        <Spinner size="lg" aria-label={t('state.loading')} />
+        <Spinner data-size="lg" aria-label={t('state.loading')} />
       </Stack>
     );
   }
 
   return (
-    <Stack direction="column" gap={20}>
+    <Stack direction="vertical" style={{ gap: '20px' }}>
       {/* Header */}
-      <Stack direction="column" gap={1}>
-        <Heading level={2} size="md">
+      <Stack direction="vertical" style={{ gap: '4px' }}>
+        <Heading level={2} data-size="md">
           {t('saasAdmin.nav.users')}
         </Heading>
-        <Paragraph size="sm" color="subtle">
+        <Paragraph data-size="sm" color="subtle">
           {t('saasAdmin.nav.usersDesc')}
         </Paragraph>
       </Stack>
@@ -73,7 +73,7 @@ export function UsersPage() {
       <Card>
         {filteredUsers.length === 0 ? (
           <Stack direction="horizontal" justify="center" align="center" style={{ padding: 'var(--ds-spacing-8)' }}>
-            <Paragraph size="sm" color="subtle">
+            <Paragraph data-size="sm" color="subtle">
               {t('empty.search')}
             </Paragraph>
           </Stack>
@@ -88,18 +88,18 @@ export function UsersPage() {
               </Table.Row>
             </Table.Head>
             <Table.Body>
-              {filteredUsers.map((user) => (
+              {filteredUsers.map((user: { id: string; name?: string; email?: string; tenantId?: string; active?: boolean }) => (
                 <Table.Row key={user.id}>
                   <Table.Cell>
-                    <Text size="sm" weight="medium">
+                    <Text data-size="sm" weight="medium">
                       {user.name || t('common.unknown')}
                     </Text>
                   </Table.Cell>
                   <Table.Cell>
-                    <Text size="sm">{user.email || '—'}</Text>
+                    <Text data-size="sm">{user.email || '—'}</Text>
                   </Table.Cell>
                   <Table.Cell>
-                    <Text size="sm">{user.tenantId || '—'}</Text>
+                    <Text data-size="sm">{user.tenantId || '—'}</Text>
                   </Table.Cell>
                   <Table.Cell>
                     <Badge color={user.active ? 'success' : 'neutral'}>
@@ -115,7 +115,7 @@ export function UsersPage() {
 
       {/* Results info */}
       <Stack direction="horizontal" justify="end" align="center">
-        <Text size="sm" color="var(--ds-color-neutral-text-subtle)">
+        <Text data-size="sm" color="var(--ds-color-neutral-text-subtle)">
           {t('pagination.showing', { defaultValue: 'Showing' })} {filteredUsers.length} {t('common.of', { defaultValue: 'of' })} {users.length} {t('saasAdmin.nav.users', { defaultValue: 'users' })}
         </Text>
       </Stack>

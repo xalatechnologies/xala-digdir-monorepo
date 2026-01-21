@@ -18,8 +18,8 @@ import {
   Text,
   HeaderSearch,
   Card,
-} from '@xala/ds';
-import type { SearchResultItem, SearchResultGroup, ViewMode } from '@xala/ds';
+} from '@xalatechnologies/platform/ui';
+import type { SearchResultItem, SearchResultGroup, ViewMode } from '@xalatechnologies/platform/ui';
 import {
   RentalObjectCard,
   RentalObjectListItem,
@@ -107,7 +107,7 @@ const PRICE_UNIT_LABELS: Record<string, string> = {
   'year': 'år',
 };
 
-// Custom Filter Chip Component since Chip is not exported from @xala/ds
+// Custom Filter Chip Component since Chip is not exported from @xalatechnologies/platform/ui
 const FilterChip = ({ label, onRemove }: { label: string; onRemove: () => void }) => (
   <motion.button
     type="button"

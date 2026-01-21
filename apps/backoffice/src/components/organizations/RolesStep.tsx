@@ -4,7 +4,7 @@
  */
 
 import { useCallback } from 'react';
-import { Stack, Paragraph, Heading, Card, Checkbox } from '@xala/ds';
+import { Stack, Paragraph, Heading, Card, Checkbox } from '@xalatechnologies/platform/ui';
 import { useT } from '@xala/i18n';
 
 // =============================================================================

@@ -52,6 +52,9 @@
     "deploy:ssl": "./scripts/setup-ssl.sh",
     "verify:boundaries": "./scripts/verify-boundaries.sh",
     "verify:terms": "./scripts/verify-terms.sh",
+    "verify:modules": "node ./scripts/verify-modules.mjs",
+    "verify:platform-only-apps": "./scripts/verify-platform-only-apps.sh",
+    "verify:all": "pnpm verify:boundaries && pnpm verify:terms && pnpm verify:modules && pnpm verify:platform-only-apps",
     "prepare": "node -e \"if (process.env.CI !== 'true' && process.env.DOCKER !== 'true') { require('child_process').exec('husky') }\""
   },
   "lint-staged": {

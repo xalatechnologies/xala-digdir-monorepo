@@ -5,7 +5,7 @@
  */
 import * as React from 'react';
 import { Heading, Paragraph, Button, Alert } from '@digdir/designsystemet-react';
-import { CalendarIcon, ChevronRightIcon, InfoIcon, UsersIcon } from '@xala/ds';
+import { CalendarIcon, ChevronRightIcon, InfoIcon, UsersIcon } from '@xalatechnologies/platform/ui';
 import { PriceSummary } from '../components/PriceSummary';
 import type {
   BookingConfig,

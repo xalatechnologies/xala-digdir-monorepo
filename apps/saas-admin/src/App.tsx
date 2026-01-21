@@ -5,7 +5,7 @@
  * All provider composition is handled by RuntimeProvider in main.tsx.
  */
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import { ProtectedRoute, Heading, Paragraph } from '@xala/ds';
+import { ProtectedRoute, Heading, Paragraph } from '@xalatechnologies/platform/ui';
 import { useT } from '@xala/i18n';
 import { useOAuthCallback } from '@xala/auth';
 

@@ -100,7 +100,7 @@ export {
 
 // =============================================================================
 // NOTE: BookingSection and AdditionalServicesList should be imported
-// directly from @xala/ds to avoid circular dependencies
+// directly from @xalatechnologies/platform/ui to avoid circular dependencies
 // =============================================================================
 
 // =============================================================================

@@ -1,7 +1,7 @@
 /**
  * CalendarSection Component
  *
- * Integrates the ListingAvailabilityCalendar from @xala/ds with SDK hooks.
+ * Integrates the ListingAvailabilityCalendar from @xalatechnologies/platform/ui with SDK hooks.
  * Displays dynamic availability calendar based on rental object configuration.
  * Supports TIME_SLOTS, ALL_DAY, and MULTI_DAY modes.
  *
@@ -10,13 +10,13 @@
  */
 
 import * as React from 'react';
-import { Paragraph, Heading, RentalObjectAvailabilityCalendar } from '@xala/ds';
+import { Paragraph, Heading, RentalObjectAvailabilityCalendar } from '@xalatechnologies/platform/ui';
 import {
   useRentalObjectCalendarConfig,
   useAvailabilityMatrix,
   useCalendarRealtime,
 } from '@digilist/client-sdk/hooks';
-import type { CalendarSelection, CalendarCell, CalendarMode } from '@xala/ds';
+import type { CalendarSelection, CalendarCell, CalendarMode } from '@xalatechnologies/platform/ui';
 import { useT } from '@xala/i18n';
 
 // =============================================================================

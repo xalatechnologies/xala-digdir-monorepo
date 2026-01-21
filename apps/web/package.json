@@ -19,7 +19,7 @@
     "@digilist/client-sdk": "workspace:*",
     "@tanstack/react-query": "^5.0.0",
     "@xala/auth": "workspace:^",
-    "@xala/ds": "workspace:*",
+    "@xalatechnologies/platform": "workspace:*",
     "@xala/i18n": "workspace:*",
     "framer-motion": "^12.26.2",
     "mapbox-gl": "^3.17.0",

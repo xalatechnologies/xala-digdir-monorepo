@@ -25,7 +25,7 @@ import {
   CopyIcon,
   ShieldCheckIcon,
   ClockIcon,
-} from '@xala/ds';
+} from '@xalatechnologies/platform/ui';
 import {
   useUser,
   useDeactivateUser,

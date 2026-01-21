@@ -11,7 +11,7 @@ import {
   Table,
   Badge,
   HeaderSearch,
-} from '@xala/ds';
+} from '@xalatechnologies/platform/ui';
 
 import {
   useDeliveryReports,

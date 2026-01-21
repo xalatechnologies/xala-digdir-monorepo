@@ -5,7 +5,7 @@
  * Available to all org_member users (CAP_NAV_HELP capability).
  */
 import * as React from 'react';
-import { Heading, Paragraph, Card, Badge } from '@xala/ds';
+import { Heading, Paragraph, Card, Badge } from '@xalatechnologies/platform/ui';
 import { Link } from 'react-router-dom';
 import { useAuth } from '@xala/auth';
 import { useT } from '@xala/i18n';

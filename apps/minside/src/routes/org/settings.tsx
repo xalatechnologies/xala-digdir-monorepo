@@ -17,7 +17,7 @@ import {
   Input,
   Switch,
   DashboardPageHeader,
-} from '@xala/ds';
+} from '@xalatechnologies/platform/ui';
 import { useT } from '@xala/i18n';
 
 const MOBILE_BREAKPOINT = 768;

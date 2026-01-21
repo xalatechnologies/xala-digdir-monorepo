@@ -17,7 +17,7 @@ import {
   Spinner,
   Table,
   Badge,
-} from '@xala/ds';
+} from '@xalatechnologies/platform/ui';
 import {
   useBillingSummary,
   useInvoices,

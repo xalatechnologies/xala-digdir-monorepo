@@ -1,7 +1,7 @@
 /**
  * Header
  *
- * MinSide header using DashboardHeader from @xala/ds.
+ * MinSide header using DashboardHeader from @xalatechnologies/platform/ui.
  * Contains app-specific search logic and hooks.
  */
 
@@ -14,11 +14,11 @@ import {
   CalendarIcon,
   PeopleIcon,
   SettingsIcon,
-} from '@xala/ds';
-import type { SearchResultItem, SearchResultGroup } from '@xala/ds';
+} from '@xalatechnologies/platform/ui';
+import type { SearchResultItem, SearchResultGroup } from '@xalatechnologies/platform/ui';
 import { useNotificationUnreadCount } from '@digilist/client-sdk';
 import { useAuth } from '@xala/auth';
-import { useTheme } from '@xala/ds';
+import { useTheme } from '@xalatechnologies/platform/ui';
 import { useNotificationCenter } from '@xala/runtime';
 import { AccountSwitcher } from '../AccountSwitcher';
 

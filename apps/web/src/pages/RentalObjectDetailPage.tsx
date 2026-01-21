@@ -13,8 +13,8 @@ import {
   ImageSlider,
   Spinner,
   Paragraph,
-} from '@xala/ds';
-import type { BreadcrumbItem, GalleryImage } from '@xala/ds';
+} from '@xalatechnologies/platform/ui';
+import type { BreadcrumbItem, GalleryImage } from '@xalatechnologies/platform/ui';
 import {
   useRentalObject,
   useRentalObjectBySlug,

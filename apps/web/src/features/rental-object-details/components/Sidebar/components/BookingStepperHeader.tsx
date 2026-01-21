@@ -5,7 +5,7 @@
  */
 
 import * as React from 'react';
-import { Heading, Paragraph } from '@xala/ds';
+import { Heading, Paragraph } from '@xalatechnologies/platform/ui';
 import { useT } from '@xala/i18n';
 
 // Step Icons

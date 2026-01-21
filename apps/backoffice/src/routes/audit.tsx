@@ -22,7 +22,7 @@ import {
   CloseIcon,
   ChevronLeftIcon,
   ChevronRightIcon,
-} from '@xala/ds';
+} from '@xalatechnologies/platform/ui';
 
 import {
   useAuditLog,

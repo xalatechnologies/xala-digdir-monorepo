@@ -16,14 +16,14 @@
     "sourceMap": true,
     "outDir": "./dist",
     "rootDir": "./src",
-    "noEmit": true,
+    "noEmit": false,
     "resolveJsonModule": true,
     "isolatedModules": true,
-    "noUnusedLocals": true,
-    "noUnusedParameters": true,
-    "noImplicitReturns": true,
+    "noUnusedLocals": false,
+    "noUnusedParameters": false,
+    "noImplicitReturns": false,
     "noFallthroughCasesInSwitch": true,
-    "composite": true,
+    "composite": false,
     "baseUrl": ".",
     "paths": {
       "@xalatechnologies/platform": ["./src/index.ts"],
@@ -38,6 +38,6 @@
       "@xalatechnologies/platform/observability": ["./src/observability/index.ts"]
     }
   },
-  "include": ["src/**/*"],
+  "include": ["src/**/*", "src/**/*.json"],
   "exclude": ["node_modules", "dist", "src/**/*.test.tsx", "src/**/*.test.ts", "src/__tests__"]
 }

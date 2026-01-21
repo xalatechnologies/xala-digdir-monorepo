@@ -16,11 +16,11 @@ import {
   GlobalSearch,
   ProtectedRoute,
   ConsentPopup,
-} from '@xala/ds';
+} from '@xalatechnologies/platform/ui';
 import { useT } from '@xala/i18n';
 import { useNotificationUnreadCount } from '@digilist/client-sdk';
 import { useAuth, useOAuthCallback } from '@xala/auth';
-import { useTheme } from '@xala/ds';
+import { useTheme } from '@xalatechnologies/platform/ui';
 
 // Pages
 import { RentalObjectsPage } from './pages/RentalObjectsPage';

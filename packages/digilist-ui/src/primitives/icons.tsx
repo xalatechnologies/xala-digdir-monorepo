@@ -1,7 +1,7 @@
 /**
  * @digilist/ui - Icons
  *
- * Re-export icons from @xala/ds for use in domain components.
+ * Re-export icons from @xalatechnologies/platform/ui for use in domain components.
  */
 
 export {
@@ -107,4 +107,4 @@ export {
   CreditCardIcon,
   OrganizationIcon,
   ClipboardListIcon,
-} from '@xala/ds';
+} from '@xalatechnologies/platform/ui';

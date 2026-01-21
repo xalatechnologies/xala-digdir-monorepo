@@ -2,12 +2,12 @@
  * DS Component Tests - Smoke Tests
  * 
  * Tests DS component availability
- * Note: @xala/ds is partially mocked globally in vitest.setup.ts
+ * Note: @xalatechnologies/platform/ui is partially mocked globally in vitest.setup.ts
  * So we verify the mocked icons work correctly
  */
 
 import { describe, it, expect } from 'vitest';
-import * as ds from '@xala/ds';
+import * as ds from '@xalatechnologies/platform/ui';
 
 describe('DS Component Module', () => {
   it('should export the DS module', () => {

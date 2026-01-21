@@ -4,7 +4,7 @@
  */
 
 import { useMemo } from 'react';
-import { Paragraph, Spinner } from '@xala/ds';
+import { Paragraph, Spinner } from '@xalatechnologies/platform/ui';
 import type { CalendarEvent } from '@digilist/client-sdk';
 import { useDragAndDrop } from '../hooks/useDragAndDrop';
 import { useConflictDetection } from '../hooks/useConflictDetection';

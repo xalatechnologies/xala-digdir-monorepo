@@ -91,3 +91,6 @@ export {
   getDLQStats,
   clearDLQ,
 } from './retry';
+
+// SaaS Admin (Tenant Management, Plans, Feature Flags, Billing)
+export * from './saas';

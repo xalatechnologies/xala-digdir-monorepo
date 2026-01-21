@@ -5,8 +5,8 @@
  * Displays star rating, review text, author name, date, and helpful count.
  */
 import * as React from 'react';
-import { Card, Stack, Heading, Paragraph, Badge, StarIcon } from '@xala/ds';
-import { cn } from '@xala/ds';
+import { Card, Stack, Heading, Paragraph, Badge, StarIcon } from '@xalatechnologies/platform/ui';
+import { cn } from '@xalatechnologies/platform/ui';
 import type { Review } from '@digilist/client-sdk/types';
 import { useT } from '@xala/i18n';
 

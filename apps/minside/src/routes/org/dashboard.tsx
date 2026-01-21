@@ -17,7 +17,7 @@ import {
   Spinner,
   Badge,
   DashboardPageHeader,
-} from '@xala/ds';
+} from '@xalatechnologies/platform/ui';
 import {
   useOrganization,
   useOrganizationMembers,

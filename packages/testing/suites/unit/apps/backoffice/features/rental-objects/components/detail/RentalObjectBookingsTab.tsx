@@ -1,4 +1,4 @@
-import { Paragraph } from '@xala/ds';
+import { Paragraph } from '@xalatechnologies/platform/ui';
 
 export function RentalObjectBookingsTab() {
   // TODO: Implement with translations

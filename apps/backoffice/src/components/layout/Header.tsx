@@ -1,9 +1,9 @@
 import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
-import { DashboardHeader, type SearchResultGroup } from '@xala/ds';
+import { DashboardHeader, type SearchResultGroup } from '@xalatechnologies/platform/ui';
 import { useUnreadCount } from '@digilist/client-sdk';
 import { useAuth } from '@xala/auth';
-import { useTheme } from '@xala/ds';
+import { useTheme } from '@xalatechnologies/platform/ui';
 import { useT } from '@xala/i18n';
 import { useNotificationCenter } from '@xala/runtime';
 

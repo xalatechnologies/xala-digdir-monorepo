@@ -1,7 +1,7 @@
 /* eslint-disable digdir/prefer-ds-components -- Calendar view with custom elements */
 
 import { useState, useMemo, useEffect } from 'react';
-import { Card, Heading, Paragraph, Button, Spinner, ChevronLeftIcon, ChevronRightIcon, PlusIcon } from '@xala/ds';
+import { Card, Heading, Paragraph, Button, Spinner, ChevronLeftIcon, ChevronRightIcon, PlusIcon } from '@xalatechnologies/platform/ui';
 import { useCalendarEvents, useRentalObjects, type CalendarEvent, type RentalObject, formatWeekRange } from '@digilist/client-sdk';
 import {
   CreateBlockModal,

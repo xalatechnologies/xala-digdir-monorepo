@@ -21,7 +21,7 @@ import {
   ClockIcon,
   UsersIcon,
   SparklesIcon,
-} from '@xala/ds';
+} from '@xalatechnologies/platform/ui';
 import { useT } from '@xala/i18n';
 import { useAuth, type SaasAdminRole } from '@xala/auth';
 import { useNavigationItems, type NavItemFromApi } from '../../hooks/useNavigation';

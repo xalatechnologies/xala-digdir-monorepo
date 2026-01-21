@@ -35,9 +35,9 @@ vi.mock('@xala/i18n', () => ({
   LocaleProvider: ({ children }: { children: React.ReactNode }) => children,
 }));
 
-// Mock @xala/ds icon components that cause undefined errors in GlobalSearch.tsx
+// Mock @xalatechnologies/platform/ui icon components that cause undefined errors in GlobalSearch.tsx
 // These icons are used in composed components and need stubs for test rendering
-vi.mock('@xala/ds', async (importOriginal) => {
+vi.mock('@xalatechnologies/platform/ui', async (importOriginal) => {
   const actual = await importOriginal();
   // Simple function component mocks - return null to avoid rendering issues
   const MockIcon = () => null;

@@ -5,7 +5,7 @@
  * Different roles see different guides based on their permissions.
  */
 import * as React from 'react';
-import { Card, Paragraph, Badge } from '@xala/ds';
+import { Card, Paragraph, Badge } from '@xalatechnologies/platform/ui';
 import { useAuth } from '@xala/auth';
 import { useT } from '@xala/i18n';
 import { HelpLayout, HelpStepList, type TocItem } from './components';

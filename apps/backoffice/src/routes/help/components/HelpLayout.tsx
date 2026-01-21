@@ -9,7 +9,7 @@
  * - Role-aware content filtering
  */
 import * as React from 'react';
-import { Heading, Paragraph, Button } from '@xala/ds';
+import { Heading, Paragraph, Button } from '@xalatechnologies/platform/ui';
 import { Link, useLocation } from 'react-router-dom';
 import { useAuth } from '@xala/auth';
 import { useT } from '@xala/i18n';

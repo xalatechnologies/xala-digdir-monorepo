@@ -34,7 +34,7 @@ import {
   Container,
   Stack,
   Textfield,
-} from '@xala/ds';
+} from '@xalatechnologies/platform/ui';
 import {
   useTenantAdminUsers,
   useDeactivateTenantUser,

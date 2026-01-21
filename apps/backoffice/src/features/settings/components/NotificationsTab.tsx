@@ -13,7 +13,7 @@ import {
   Textfield,
   Switch,
   SaveIcon,
-} from '@xala/ds';
+} from '@xalatechnologies/platform/ui';
 import { useNotificationSettings } from '../hooks/useNotificationSettings';
 import { useT } from '@xala/i18n';
 

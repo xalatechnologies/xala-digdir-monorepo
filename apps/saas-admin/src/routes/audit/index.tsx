@@ -15,8 +15,8 @@ import {
   Text,
   Stack,
   Grid,
-} from '@xala/ds';
-import { useAuditLog, useAuditStats } from '@digilist/client-sdk/hooks';
+} from '@xalatechnologies/platform/ui';
+import { useAuditLog, useAuditStats } from '@xalatechnologies/platform/sdk';
 import { useT } from '@xala/i18n';
 
 export function AuditLogPage() {

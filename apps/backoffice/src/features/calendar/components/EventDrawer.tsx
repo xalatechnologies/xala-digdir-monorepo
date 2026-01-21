@@ -10,7 +10,7 @@ import {
   Paragraph,
   Badge,
   Spinner,
-} from '@xala/ds';
+} from '@xalatechnologies/platform/ui';
 import {
   useConfirmBooking,
   useCancelBooking,

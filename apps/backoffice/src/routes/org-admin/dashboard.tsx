@@ -23,7 +23,7 @@ import {
   ArrowRightIcon,
   AlertTriangleIcon,
   MessageIcon,
-} from '@xala/ds';
+} from '@xalatechnologies/platform/ui';
 import {
   useOrgDashboardStats,
   useOrgPendingItems,

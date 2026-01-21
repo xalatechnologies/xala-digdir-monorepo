@@ -23,7 +23,7 @@ import {
   CheckCircleIcon,
   XCircleIcon,
   HeaderSearch,
-} from '@xala/ds';
+} from '@xalatechnologies/platform/ui';
 import {
   useUsers,
   useDeactivateUser,

@@ -15,7 +15,7 @@ import {
   Spinner,
   Table,
   BookingStatusBadge,
-} from '@xala/ds';
+} from '@xalatechnologies/platform/ui';
 import { useT, useLocale } from '@xala/i18n';
 import { NavLink } from 'react-router-dom';
 

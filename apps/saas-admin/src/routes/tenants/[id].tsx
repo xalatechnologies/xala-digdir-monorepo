@@ -34,7 +34,7 @@ import {
   LockIcon,
   ClockIcon,
   ListIcon,
-} from '@xala/ds';
+} from '@xalatechnologies/platform/ui';
 import { CategoryEntitlementsTab } from '../../components/CategoryEntitlementsTab';
 import {
   useSaasTenant,
@@ -46,11 +46,9 @@ import {
   useSuspendSaasTenant,
   useReactivateSaasTenant,
   useRotateSaasLicenseKey,
-} from '@digilist/client-sdk/hooks';
-import type {
-  SaasTenantStatus,
-  FeatureFlagCategory,
-} from '@digilist/client-sdk/types';
+  type SaasTenantStatus,
+  type FeatureFlagCategory,
+} from '@xalatechnologies/platform/sdk';
 
 const categoryLabels: Record<FeatureFlagCategory, string> = {
   module: 'Moduler',

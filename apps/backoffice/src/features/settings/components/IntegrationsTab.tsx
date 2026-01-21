@@ -3,7 +3,7 @@
  * Manages third-party integrations and system connections
  */
 
-import { Card, Heading, Paragraph, Switch, Badge, Stack } from '@xala/ds';
+import { Card, Heading, Paragraph, Switch, Badge, Stack } from '@xalatechnologies/platform/ui';
 import { useT } from '@xala/i18n';
 
 interface Integration {

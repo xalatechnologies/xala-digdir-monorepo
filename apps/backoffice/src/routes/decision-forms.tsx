@@ -20,7 +20,7 @@ import {
   Table,
   Spinner,
   useDialog,
-} from '@xala/ds';
+} from '@xalatechnologies/platform/ui';
 import { useLocale, useT } from '@xala/i18n';
 
 const MOBILE_BREAKPOINT = 768;

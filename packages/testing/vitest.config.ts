@@ -63,7 +63,7 @@ export default defineConfig({
       '@xalatechnologies/platform': resolve(__dirname, '../platform/src'),
       '@xala/config': resolve(__dirname, '../config/src'),
       '@xala/i18n': resolve(__dirname, '../i18n/src'),
-      '@xala/ds': resolve(__dirname, '../ds/src'),
+      '@xalatechnologies/platform/ui': resolve(__dirname, '../ds/src'),
       '@xala/auth': resolve(__dirname, '../auth/src'),
       '@xala/sdk-core': resolve(__dirname, '../sdk-core/src'),
       '@xala/contracts': resolve(__dirname, '../contracts/src'),

@@ -5,7 +5,7 @@
  */
 
 import { useT } from '@xala/i18n';
-import { Heading, Paragraph, Spinner, Breadcrumb, WizardStepper } from '@xala/ds';
+import { Heading, Paragraph, Spinner, Breadcrumb, WizardStepper } from '@xalatechnologies/platform/ui';
 import { useRentalObjectWizard } from '../../hooks/useRentalObjectWizard';
 import { WizardFooter } from './WizardFooter';
 import { CategorySelector } from './steps/CategorySelector';
@@ -79,7 +79,7 @@ export function RentalObjectWizard({ slug, cloneFromSlug }: RentalObjectWizardPr
             {wizard.isEditMode ? t('rentalObjects.editTitle') : t('rentalObjects.createTitle')}
           </Heading>
           
-          {/* WizardStepper - Reusable component from @xala/ds */}
+          {/* WizardStepper - Reusable component from @xalatechnologies/platform/ui */}
           <WizardStepper
             steps={wizard.steps.map(step => ({
               id: step.id,

@@ -5,7 +5,7 @@
  * Used to display available amenities for a rental object.
  */
 import * as React from 'react';
-import { cn } from '@xala/ds';
+import { cn } from '@xalatechnologies/platform/ui';
 
 /**
  * Amenity with optional icon

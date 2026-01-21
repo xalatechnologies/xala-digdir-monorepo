@@ -14,9 +14,9 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { validateEnv, createAppConfig } from '@xala/config';
 import { RuntimeProvider } from '@xala/runtime';
-import { initializeClient } from '@digilist/client-sdk';
+import { initializeClient } from '@xalatechnologies/platform/sdk';
 
-import '@xala/ds/styles';
+import '@xalatechnologies/platform/ui/styles';
 import './root.css';
 import { App } from './App';
 

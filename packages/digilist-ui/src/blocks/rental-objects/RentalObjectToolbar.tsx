@@ -6,7 +6,7 @@
  */
 import * as React from 'react';
 import { cn } from '../../utils';
-import { Button, ToggleGroup, Tooltip, Badge } from '@xala/ds';
+import { Button, ToggleGroup, Tooltip, Badge } from '@xalatechnologies/platform/ui';
 import { FilterIcon, GridIcon, ListIcon, MapIcon, TableIcon } from '../../primitives/icons';
 
 export type ViewMode = 'grid' | 'list' | 'map' | 'table';

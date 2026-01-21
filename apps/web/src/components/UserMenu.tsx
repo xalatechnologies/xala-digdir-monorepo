@@ -7,8 +7,8 @@
  */
 
 import { useState, useRef, useEffect } from 'react';
-import { Button } from '@xala/ds';
-import { UserIcon, LogOutIcon } from '@xala/ds';
+import { Button } from '@xalatechnologies/platform/ui';
+import { UserIcon, LogOutIcon } from '@xalatechnologies/platform/ui';
 import { useT } from '@xala/i18n';
 
 interface UserMenuProps {

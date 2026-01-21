@@ -12,7 +12,7 @@
  */
 
 import * as React from 'react';
-import { Paragraph, Spinner } from '@xala/ds';
+import { Paragraph, Spinner } from '@xalatechnologies/platform/ui';
 import { useT } from '@xala/i18n';
 
 // =============================================================================

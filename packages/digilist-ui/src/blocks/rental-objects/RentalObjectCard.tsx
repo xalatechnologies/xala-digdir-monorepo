@@ -5,7 +5,7 @@
  * Supports images, ratings, pricing, facilities, and action buttons.
  */
 import * as React from 'react';
-import { Tag, Heading, Paragraph } from '@xala/ds';
+import { Tag, Heading, Paragraph } from '@xalatechnologies/platform/ui';
 import { cn } from '../../utils';
 
 /** Card variant for different display contexts */

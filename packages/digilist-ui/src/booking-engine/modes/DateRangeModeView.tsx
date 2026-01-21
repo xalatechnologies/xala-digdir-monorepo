@@ -5,7 +5,7 @@
  */
 import * as React from 'react';
 import { Heading, Paragraph, Button } from '@digdir/designsystemet-react';
-import { CalendarIcon, ChevronLeftIcon, ChevronRightIcon, InfoIcon } from '@xala/ds';
+import { CalendarIcon, ChevronLeftIcon, ChevronRightIcon, InfoIcon } from '@xalatechnologies/platform/ui';
 import { cn, formatPrice as utilFormatPrice, formatPriceUnit } from '../utils';
 import { PriceSummary } from '../components/PriceSummary';
 import type {

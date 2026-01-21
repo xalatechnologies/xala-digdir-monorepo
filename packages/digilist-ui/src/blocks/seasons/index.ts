@@ -4,7 +4,7 @@
  * Domain-specific components for seasonal booking management.
  * These components are specific to the Digilist rental booking platform.
  *
- * Migrated from @xala/ds for platform decoupling.
+ * Migrated from @xalatechnologies/platform/ui for platform decoupling.
  * Uses @xalatechnologies/platform/ui for UI primitives.
  */
 

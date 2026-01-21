@@ -2,7 +2,7 @@
  * Docs Releases Page - Changelog/release notes
  */
 
-import { Heading, Paragraph, Card, Badge } from '@xala/ds';
+import { Heading, Paragraph, Card, Badge } from '@xalatechnologies/platform/ui';
 import { useT } from '@xala/i18n';
 
 // Release data with i18n key references

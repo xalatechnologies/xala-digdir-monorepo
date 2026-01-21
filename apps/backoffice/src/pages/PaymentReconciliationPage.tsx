@@ -21,7 +21,7 @@ import {
   ChevronRightIcon,
   Select,
   Textfield,
-} from '@xala/ds';
+} from '@xalatechnologies/platform/ui';
 import { usePaymentReconciliation, formatDate, formatCurrency } from '@digilist/client-sdk';
 import { useT, useLocale } from '@xala/i18n';
 

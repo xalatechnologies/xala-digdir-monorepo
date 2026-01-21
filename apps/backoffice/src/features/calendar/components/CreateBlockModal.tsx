@@ -14,7 +14,7 @@ import {
   Spinner,
   Checkbox,
   Alert,
-} from '@xala/ds';
+} from '@xalatechnologies/platform/ui';
 import {
   useRentalObjects,
   useCreateBlock,

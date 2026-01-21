@@ -25,7 +25,7 @@
   },
   "dependencies": {
     "@digilist/contracts": "workspace:*",
-    "@xala/ds": "workspace:*",
+    "@xalatechnologies/platform": "workspace:*",
     "@xala/i18n": "workspace:*",
     "@xalatechnologies/platform": "workspace:*"
   },

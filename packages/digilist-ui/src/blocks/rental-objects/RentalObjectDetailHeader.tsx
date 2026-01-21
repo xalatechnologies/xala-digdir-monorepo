@@ -8,7 +8,7 @@
  * with keyFacts array for type-specific information display.
  */
 import * as React from 'react';
-import { Tag, Heading, Paragraph } from '@xala/ds';
+import { Tag, Heading, Paragraph } from '@xalatechnologies/platform/ui';
 import { cn } from '../../utils';
 import { MapPinIcon, ShareIcon } from '../../primitives/icons';
 import { KeyFactsRow, type KeyFact } from './KeyFactsRow';

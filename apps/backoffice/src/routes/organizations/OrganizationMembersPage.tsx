@@ -14,7 +14,7 @@ import {
   ArrowLeftIcon,
   UsersIcon,
   BuildingIcon,
-} from '@xala/ds';
+} from '@xalatechnologies/platform/ui';
 import {
   useOrganization,
   useOrganizationMembers,

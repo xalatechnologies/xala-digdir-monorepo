@@ -19,8 +19,8 @@ import React, { useState } from 'react';
 import {
   Button,
   Checkbox,
-} from '@xala/ds';
-import { ShieldCheckIcon, ClipboardListIcon } from '@xala/ds';
+} from '@xalatechnologies/platform/ui';
+import { ShieldCheckIcon, ClipboardListIcon } from '@xalatechnologies/platform/ui';
 import { useT } from '@xala/i18n';
 import type { EffectiveBackofficeRole } from '../lib/capabilities';
 import { useBackofficeRole } from '../hooks/useBackofficeRole';

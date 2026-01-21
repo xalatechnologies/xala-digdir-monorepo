@@ -21,7 +21,7 @@ import {
   EyeIcon,
   TrashIcon,
   HeaderSearch,
-} from '@xala/ds';
+} from '@xalatechnologies/platform/ui';
 import {
   useAccessGrants,
   useRevokeAccess,

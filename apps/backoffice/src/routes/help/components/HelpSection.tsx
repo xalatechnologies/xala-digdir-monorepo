@@ -5,7 +5,7 @@
  * Automatically creates anchor targets for smooth scrolling.
  */
 import * as React from 'react';
-import { Heading, Paragraph, Card } from '@xala/ds';
+import { Heading, Paragraph, Card } from '@xalatechnologies/platform/ui';
 import { useAuth } from '@xala/auth';
 import { useT } from '@xala/i18n';
 

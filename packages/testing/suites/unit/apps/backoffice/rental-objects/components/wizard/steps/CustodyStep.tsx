@@ -3,7 +3,7 @@
  * Allows assigning custody/delegation during rental object creation/editing
  */
 import { useT } from '@xala/i18n';
-import { Heading, Paragraph, Button, Card, Badge, TrashIcon, PlusIcon } from '@xala/ds';
+import { Heading, Paragraph, Button, Card, Badge, TrashIcon, PlusIcon } from '@xalatechnologies/platform/ui';
 import { useState } from 'react';
 import { 
   useBackofficeOrganizations, 

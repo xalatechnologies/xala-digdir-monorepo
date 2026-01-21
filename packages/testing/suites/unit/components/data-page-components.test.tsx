@@ -10,9 +10,9 @@
 import { describe, it, expect, beforeAll, afterAll, beforeEach } from 'vitest';
 import { render, screen, fireEvent } from '@testing-library/react';
 import { I18nProvider } from '@xala/i18n';
-import { DesignsystemetProvider } from '@xala/ds';
+import { DesignsystemetProvider } from '@xalatechnologies/platform/ui';
 
-// Import components from @xala/ds (will be resolved via vitest aliases)
+// Import components from @xalatechnologies/platform/ui (will be resolved via vitest aliases)
 import {
   EmptyState,
   StatusTabs,
@@ -21,7 +21,7 @@ import {
   DataPageHeader,
   DataPageToolbar,
   BuildingIcon,
-} from '@xala/ds';
+} from '@xalatechnologies/platform/ui';
 
 function TestWrapper({ children }: { children: React.ReactNode }) {
   return (

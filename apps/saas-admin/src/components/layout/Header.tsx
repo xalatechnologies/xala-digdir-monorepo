@@ -1,7 +1,7 @@
 /**
  * SaaS Admin Header
  *
- * Header using DashboardHeader from @xala/ds.
+ * Header using DashboardHeader from @xalatechnologies/platform/ui.
  * Contains app-specific search logic and hooks.
  */
 
@@ -15,8 +15,8 @@ import {
   ChartIcon,
   SettingsIcon,
   useTheme,
-} from '@xala/ds';
-import type { SearchResultItem, SearchResultGroup } from '@xala/ds';
+} from '@xalatechnologies/platform/ui';
+import type { SearchResultItem, SearchResultGroup } from '@xalatechnologies/platform/ui';
 import { useAuth } from '@xala/auth';
 
 interface HeaderProps {

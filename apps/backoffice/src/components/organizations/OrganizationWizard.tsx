@@ -4,7 +4,7 @@
  */
 
 import { useState } from 'react';
-import { Button, Heading, Paragraph, Spinner } from '@xala/ds';
+import { Button, Heading, Paragraph, Spinner } from '@xalatechnologies/platform/ui';
 import type { ActorType } from '@digilist/client-sdk';
 import { BasicStep } from './BasicStep';
 import { BrandingStep } from './BrandingStep';

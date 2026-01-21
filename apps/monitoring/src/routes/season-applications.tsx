@@ -1,5 +1,5 @@
 import { useState, useMemo } from 'react';
-import { Container, Heading, Paragraph, Card, Button, Spinner } from '@xala/ds';
+import { Container, Heading, Paragraph, Card, Button, Spinner } from '@xalatechnologies/platform/ui';
 import { useNavigate } from 'react-router-dom';
 import { useSeasonApplications } from '@digilist/client-sdk/hooks';
 import { useAccountContext } from '@xala/runtime';

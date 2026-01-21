@@ -18,7 +18,7 @@ import {
   AlertTriangleIcon,
   DashboardPageHeader,
   Breadcrumb,
-} from '@xala/ds';
+} from '@xalatechnologies/platform/ui';
 import { useRentalObjectBySlug, useRentalObject } from '@digilist/client-sdk';
 import { RentalObjectOverviewTab } from './RentalObjectOverviewTab';
 import { RentalObjectBookingsTab } from './RentalObjectBookingsTab';

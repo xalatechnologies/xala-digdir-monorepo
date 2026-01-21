@@ -83,7 +83,7 @@ export interface ScheduleEntry {
 }
 
 // Feature/amenity chip
-export interface FeatureItem {
+export interface PatternFeatureItem {
   id: string;
   label: string;
   icon?: ReactNode;

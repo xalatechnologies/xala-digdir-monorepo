@@ -2,7 +2,7 @@
  * NotificationsTab Wrapper
  * Thin wrapper that wires notification settings hook to DS NotificationsTab props
  */
-import { NotificationsTab as DSNotificationsTab } from '@xala/ds';
+import { NotificationsTab as DSNotificationsTab } from '@xalatechnologies/platform/ui';
 import { useNotificationSettings } from '../hooks/useNotificationSettings';
 
 export function NotificationsTab() {

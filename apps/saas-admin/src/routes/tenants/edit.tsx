@@ -19,9 +19,14 @@ import {
   Stack,
   ArrowLeftIcon,
   SaveIcon,
-} from '@xala/ds';
-import { useSaasTenant, useUpdateSaasTenant, useSaasPlans } from '@digilist/client-sdk/hooks';
-import type { UpdateSaasTenantRequest, SaasTenantStatus } from '@digilist/client-sdk/types';
+} from '@xalatechnologies/platform/ui';
+import {
+  useSaasTenant,
+  useUpdateSaasTenant,
+  useSaasPlans,
+  type UpdateSaasTenantRequest,
+  type SaasTenantStatus,
+} from '@xalatechnologies/platform/sdk';
 import { useT } from '@xala/i18n';
 
 interface FormData {

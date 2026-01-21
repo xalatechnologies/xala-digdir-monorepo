@@ -11,7 +11,7 @@ import {
   Paragraph,
   HeaderSearch,
   Spinner,
-} from '@xala/ds';
+} from '@xalatechnologies/platform/ui';
 import { useReviews, type ReviewStatus, type Review } from '@digilist/client-sdk';
 import { ReviewModerationTable } from './components/ReviewModerationTable';
 import { useT } from '@xala/i18n';

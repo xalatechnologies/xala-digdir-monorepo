@@ -1,4 +1,4 @@
-import { Card, Heading, Paragraph, Switch, Spinner } from '@xala/ds';
+import { Card, Heading, Paragraph, Switch, Spinner } from '@xalatechnologies/platform/ui';
 import { useT } from '@xala/i18n';
 import {
   useNotificationPreferences,

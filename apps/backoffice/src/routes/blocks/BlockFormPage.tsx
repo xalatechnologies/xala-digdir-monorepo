@@ -17,7 +17,7 @@ import {
   Alert,
   SaveIcon,
   ArrowLeftIcon,
-} from '@xala/ds';
+} from '@xalatechnologies/platform/ui';
 import { useBlock, useCreateBlock, useUpdateBlock, useAssignedRentalObjects, useCheckConflicts } from '@digilist/client-sdk/hooks';
 import { useT } from '@xala/i18n';
 import { useNavigate, useParams } from 'react-router-dom';

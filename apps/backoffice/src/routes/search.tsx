@@ -19,7 +19,7 @@ import {
   DownloadIcon,
   Badge,
   Text,
-} from '@xala/ds';
+} from '@xalatechnologies/platform/ui';
 
 import {
   useExportResults,

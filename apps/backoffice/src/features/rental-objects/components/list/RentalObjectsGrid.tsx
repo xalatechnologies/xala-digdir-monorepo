@@ -18,7 +18,7 @@ import {
   CheckIcon,
   EyeIcon,
   Dialog,
-} from '@xala/ds';
+} from '@xalatechnologies/platform/ui';
 import { useState } from 'react';
 import type { RentalObject } from '@digilist/client-sdk/types';
 import { usePublishRentalObject, useUnpublishRentalObject, useArchiveRentalObject } from '@digilist/client-sdk/hooks';

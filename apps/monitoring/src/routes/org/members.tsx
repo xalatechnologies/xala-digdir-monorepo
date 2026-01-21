@@ -19,7 +19,7 @@ import {
   Select,
   Label,
   useDialog,
-} from '@xala/ds';
+} from '@xalatechnologies/platform/ui';
 import {
   useOrganizationMembers,
 } from '@digilist/client-sdk';

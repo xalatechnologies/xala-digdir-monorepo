@@ -8,7 +8,7 @@
  */
 
 import { useQuery, type UseQueryOptions } from '@tanstack/react-query';
-import { getClient } from '@digilist/client-sdk';
+import { getClient } from '@xalatechnologies/platform/sdk';
 import { useAuth } from '@xala/auth';
 
 export interface NavItemFromApi {

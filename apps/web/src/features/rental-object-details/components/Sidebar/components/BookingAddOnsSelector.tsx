@@ -14,7 +14,7 @@
  */
 
 import * as React from 'react';
-import { Paragraph, Checkbox, Badge } from '@xala/ds';
+import { Paragraph, Checkbox, Badge } from '@xalatechnologies/platform/ui';
 import { useT } from '@xala/i18n';
 
 // =============================================================================

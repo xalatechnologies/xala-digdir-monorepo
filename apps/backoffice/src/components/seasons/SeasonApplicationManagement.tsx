@@ -20,7 +20,7 @@ import {
   ClockIcon,
   EyeIcon,
   MessageSquareIcon,
-} from '@xala/ds';
+} from '@xalatechnologies/platform/ui';
 import {
   useSeasonApplications,
   useApproveSeasonApplication,

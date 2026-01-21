@@ -26,7 +26,7 @@ import {
   FilterIcon,
   HeaderSearch,
   useDialog,
-} from '@xala/ds';
+} from '@xalatechnologies/platform/ui';
 import {
   useBookings,
   useConfirmBooking,

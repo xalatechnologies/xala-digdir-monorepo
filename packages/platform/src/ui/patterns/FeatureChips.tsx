@@ -43,7 +43,7 @@
 
 import * as React from 'react';
 import { useState, useMemo } from 'react';
-import type { FeatureItem } from './types';
+import type { PatternFeatureItem } from './types';
 
 // =============================================================================
 // Types
@@ -58,7 +58,7 @@ export interface FeatureChipsLabels {
 
 export interface FeatureChipsProps {
   /** Array of features to display */
-  features: FeatureItem[];
+  features: PatternFeatureItem[];
   /** Layout direction */
   layout?: 'horizontal' | 'vertical' | 'wrap';
   /** Whether to show unavailable features (dimmed) */

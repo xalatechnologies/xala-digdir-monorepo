@@ -5,7 +5,7 @@
  */
 
 import { describe, it, expect } from 'vitest';
-import * as ds from '@xala/ds';
+import * as ds from '@xalatechnologies/platform/ui';
 
 describe('Designsystemet Compliance', () => {
   describe('Core Exports', () => {

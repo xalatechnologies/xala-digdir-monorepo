@@ -12,14 +12,14 @@ import {
   Checkbox,
   Alert,
   Button,
-} from '@xala/ds';
+} from '@xalatechnologies/platform/ui';
 import {
   useOrganizations,
   useListings,
   type SeasonalLease,
   type CreateSeasonalLeaseDTO,
 } from '@digilist/client-sdk';
-import { FormSection, FormActions } from '@xala/ds';
+import { FormSection, FormActions } from '@xalatechnologies/platform/ui';
 import { useT } from '@xala/i18n';
 
 interface SeasonalLeaseFormProps {

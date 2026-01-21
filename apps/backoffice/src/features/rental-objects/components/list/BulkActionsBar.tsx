@@ -4,7 +4,7 @@
  */
 
 import { useT } from '@xala/i18n';
-import { Button, Badge, Stack } from '@xala/ds';
+import { Button, Badge, Stack } from '@xalatechnologies/platform/ui';
 
 export interface BulkActionsBarProps {
   selectedCount: number;

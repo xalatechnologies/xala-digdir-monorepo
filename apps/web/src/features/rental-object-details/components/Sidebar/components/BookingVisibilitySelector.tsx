@@ -11,7 +11,7 @@
  */
 
 import * as React from 'react';
-import { Paragraph, Radio, Card } from '@xala/ds';
+import { Paragraph, Radio, Card } from '@xalatechnologies/platform/ui';
 import { useT } from '@xala/i18n';
 
 // =============================================================================

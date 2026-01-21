@@ -3,7 +3,7 @@
  * Collects basic organization information (name, contact, address)
  */
 
-import { Stack, FormField, Textfield, Select, Paragraph, Heading } from '@xala/ds';
+import { Stack, FormField, Textfield, Select, Paragraph, Heading } from '@xalatechnologies/platform/ui';
 import type { ActorType } from '@digilist/client-sdk';
 import { useT } from '@xala/i18n';
 

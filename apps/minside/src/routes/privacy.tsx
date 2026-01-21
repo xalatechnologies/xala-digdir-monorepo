@@ -21,7 +21,7 @@ import {
   TrashIcon,
   ShieldIcon,
   DashboardPageHeader,
-} from '@xala/ds';
+} from '@xalatechnologies/platform/ui';
 import {
   useCreateGdprRequest,
   useConsents,

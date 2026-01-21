@@ -4,7 +4,7 @@
  * Overview page with section cards and quick links.
  */
 
-import { Heading, Paragraph, Card, CalendarIcon, LockIcon, CreditCardIcon, SettingsIcon, TableIcon, ExternalLinkIcon, InfoIcon, UserIcon, BuildingIcon, SearchIcon } from '@xala/ds';
+import { Heading, Paragraph, Card, CalendarIcon, LockIcon, CreditCardIcon, SettingsIcon, TableIcon, ExternalLinkIcon, InfoIcon, UserIcon, BuildingIcon, SearchIcon } from '@xalatechnologies/platform/ui';
 import { Link } from 'react-router-dom';
 import { useT } from '@xala/i18n';
 import { useFeatureFlags } from '@digilist/client-sdk';

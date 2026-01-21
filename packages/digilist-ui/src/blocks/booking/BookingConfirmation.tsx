@@ -13,7 +13,7 @@ import {
   PhoneIcon,
   CheckCircleIcon,
   ChevronLeftIcon,
-} from '@xala/ds';
+} from '@xalatechnologies/platform/ui';
 import type { BookingDetails, AdditionalService } from '@digilist/contracts';
 
 // Utility function for class name concatenation

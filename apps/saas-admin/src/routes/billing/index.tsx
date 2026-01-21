@@ -10,8 +10,8 @@ import {
   Spinner,
   Grid,
   Stack,
-} from '@xala/ds';
-import { useSaasBillingOverview } from '@digilist/client-sdk/hooks';
+} from '@xalatechnologies/platform/ui';
+import { useSaasBillingOverview } from '@xalatechnologies/platform/sdk';
 import { useT } from '@xala/i18n';
 
 export function BillingPage() {

@@ -20,9 +20,12 @@ import {
   EmptyState,
   FilterChips,
   DataPageToolbar,
-} from '@xala/ds';
-import { useSaasFeatureFlagsCatalog } from '@digilist/client-sdk/hooks';
-import type { FeatureFlagCatalogItem, FeatureFlagCategory } from '@digilist/client-sdk/types';
+} from '@xalatechnologies/platform/ui';
+import {
+  useSaasFeatureFlagsCatalog,
+  type FeatureFlagCatalogItem,
+  type FeatureFlagCategory,
+} from '@xalatechnologies/platform/sdk';
 import { useT } from '@xala/i18n';
 
 // Category labels will be retrieved via i18n

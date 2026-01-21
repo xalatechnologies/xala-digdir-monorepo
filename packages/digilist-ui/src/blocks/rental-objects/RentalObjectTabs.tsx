@@ -5,7 +5,7 @@
  * Supports dynamic tabs based on rental object type and available content.
  */
 import * as React from 'react';
-import { Tabs } from '@xala/ds';
+import { Tabs } from '@xalatechnologies/platform/ui';
 import { cn } from '../../utils';
 
 // =============================================================================

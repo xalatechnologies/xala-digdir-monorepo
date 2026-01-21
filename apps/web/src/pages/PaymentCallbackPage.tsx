@@ -15,7 +15,7 @@ import {
   Button,
   Spinner,
   Stack,
-} from '@xala/ds';
+} from '@xalatechnologies/platform/ui';
 import { useVippsPayment } from '@digilist/client-sdk';
 import { useT } from '@xala/i18n';
 

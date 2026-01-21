@@ -4,13 +4,13 @@
  */
 import { useEffect, useCallback, useRef } from 'react';
 import { useNavigate, useLocation, useSearchParams } from 'react-router-dom';
-import { LoginPage as LoginPageComponent, DemoRoleSwitcher } from '@xala/ds';
+import { LoginPage as LoginPageComponent, DemoRoleSwitcher } from '@xalatechnologies/platform/ui';
 import { backofficeAuthConfig } from '@xala/auth';
 import {
   PlatformIcon,
   AutomationIcon,
   ShieldCheckIcon,
-} from '@xala/ds';
+} from '@xalatechnologies/platform/ui';
 import { useAuth } from '@xala/auth';
 import { useBackofficeRole, useNeedsRoleSelection } from '../hooks/useBackofficeRole';
 import { useDemoLogin } from '../hooks/useDemoLogin';

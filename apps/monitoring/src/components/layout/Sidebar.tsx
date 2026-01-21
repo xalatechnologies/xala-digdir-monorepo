@@ -12,7 +12,7 @@ import {
   UsersIcon,
   Drawer,
   Button,
-} from '@xala/ds';
+} from '@xalatechnologies/platform/ui';
 import { useT } from '@xala/i18n';
 import { useAuth } from '@xala/auth';
 import { useAccountContext } from '@xala/runtime';

@@ -1,7 +1,7 @@
 /**
  * Season Status Badge Component
  *
- * Displays a colored badge for season status using GenericStatusBadge from @xala/ds.
+ * Displays a colored badge for season status using GenericStatusBadge from @xalatechnologies/platform/ui.
  *
  * Usage:
  * ```tsx
@@ -21,7 +21,7 @@
  * - 'cancelled': Season has been cancelled (red)
  */
 
-import { GenericStatusBadge } from '@xala/ds';
+import { GenericStatusBadge } from '@xalatechnologies/platform/ui';
 import type { SeasonStatus } from '@digilist/client-sdk/types';
 import { SEASON_STATUS_CONFIG } from '../constants';
 

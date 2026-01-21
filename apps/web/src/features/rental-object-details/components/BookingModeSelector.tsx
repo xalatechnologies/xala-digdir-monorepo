@@ -7,7 +7,7 @@
  */
 
 import * as React from 'react';
-import { Tabs, Paragraph } from '@xala/ds';
+import { Tabs, Paragraph } from '@xalatechnologies/platform/ui';
 import { useT } from '@xala/i18n';
 import type { BookingMode } from '../../types';
 

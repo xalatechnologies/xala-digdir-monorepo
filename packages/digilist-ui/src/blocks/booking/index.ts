@@ -6,7 +6,7 @@
  */
 
 // =============================================================================
-// Local Components (migrated from @xala/ds)
+// Local Components (migrated from @xalatechnologies/platform/ui)
 // =============================================================================
 
 export {
@@ -33,11 +33,11 @@ export {
 } from './PriceSummaryCard';
 
 // =============================================================================
-// NOTE: BookingSection and AdditionalServicesList remain in @xala/ds
+// NOTE: BookingSection and AdditionalServicesList remain in @xalatechnologies/platform/ui
 // =============================================================================
 // These components are NOT re-exported here to avoid circular dependencies.
-// Import them directly from @xala/ds:
+// Import them directly from @xalatechnologies/platform/ui:
 //
-//   import { BookingSection, AdditionalServicesList } from '@xala/ds';
+//   import { BookingSection, AdditionalServicesList } from '@xalatechnologies/platform/ui';
 //
 // Migration to @digilist/ui will happen in a future phase.

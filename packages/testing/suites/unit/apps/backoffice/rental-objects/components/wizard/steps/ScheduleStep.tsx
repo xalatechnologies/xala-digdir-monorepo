@@ -14,7 +14,7 @@ import {
   NativeSelect,
   CalendarIcon,
   ClockIcon,
-} from '@xala/ds';
+} from '@xalatechnologies/platform/ui';
 import type { UseRentalObjectWizardReturn } from '@xala/backoffice/hooks/useRentalObjectWizard';
 
 export interface ScheduleStepProps {

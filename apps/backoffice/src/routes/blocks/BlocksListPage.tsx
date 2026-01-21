@@ -22,7 +22,7 @@ import {
   useDialog,
   PageHeader,
   NativeSelect,
-} from '@xala/ds';
+} from '@xalatechnologies/platform/ui';
 import { useBlocks, useAssignedBlocks, useDeleteBlock, useAssignedRentalObjects } from '@digilist/client-sdk/hooks';
 import { useT } from '@xala/i18n';
 import { useNavigate } from 'react-router-dom';

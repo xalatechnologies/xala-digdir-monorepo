@@ -20,7 +20,7 @@ import {
   DownloadIcon,
   TrashIcon,
   ShieldIcon,
-} from '@xala/ds';
+} from '@xalatechnologies/platform/ui';
 import {
   useCreateGdprRequest,
   useConsents,

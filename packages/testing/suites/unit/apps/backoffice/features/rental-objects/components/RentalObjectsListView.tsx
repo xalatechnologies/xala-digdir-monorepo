@@ -21,7 +21,7 @@ import {
   HeaderSearch,
   Stack,
   Text,
-} from '@xala/ds';
+} from '@xalatechnologies/platform/ui';
 import { useNavigate } from 'react-router-dom';
 import { useRentalObjects } from '@digilist/client-sdk';
 import type { RentalObjectStatus } from '@digilist/client-sdk';

@@ -73,6 +73,11 @@
       "import": "./dist/sdk/index.mjs",
       "require": "./dist/sdk/index.js"
     },
+    "./sdk/saas": {
+      "types": "./dist/sdk/saas/index.d.ts",
+      "import": "./dist/sdk/saas/index.mjs",
+      "require": "./dist/sdk/saas/index.js"
+    },
     "./i18n": {
       "types": "./dist/i18n/index.d.ts",
       "import": "./dist/i18n/index.mjs",
@@ -82,6 +87,55 @@
       "types": "./dist/observability/index.d.ts",
       "import": "./dist/observability/index.mjs",
       "require": "./dist/observability/index.js"
+    }
+  },
+  "typesVersions": {
+    "*": {
+      "ui": [
+        "./dist/ui/index.d.ts"
+      ],
+      "ui/primitives": [
+        "./dist/ui/primitives/index.d.ts"
+      ],
+      "ui/composed": [
+        "./dist/ui/composed/index.d.ts"
+      ],
+      "ui/shells": [
+        "./dist/ui/shells/index.d.ts"
+      ],
+      "ui/blocks": [
+        "./dist/ui/blocks/index.d.ts"
+      ],
+      "ui/themes": [
+        "./dist/ui/themes/index.d.ts"
+      ],
+      "ui/patterns": [
+        "./dist/ui/patterns/index.d.ts"
+      ],
+      "runtime": [
+        "./dist/runtime/index.d.ts"
+      ],
+      "auth": [
+        "./dist/auth/index.d.ts"
+      ],
+      "config": [
+        "./dist/config/index.d.ts"
+      ],
+      "contracts": [
+        "./dist/contracts/index.d.ts"
+      ],
+      "sdk": [
+        "./dist/sdk/index.d.ts"
+      ],
+      "sdk/saas": [
+        "./dist/sdk/saas/index.d.ts"
+      ],
+      "i18n": [
+        "./dist/i18n/index.d.ts"
+      ],
+      "observability": [
+        "./dist/observability/index.d.ts"
+      ]
     }
   },
   "files": [
@@ -95,22 +149,28 @@
     "typecheck": "tsc --noEmit",
     "lint": "eslint src --ext .ts,.tsx",
     "test": "vitest run",
-    "test:watch": "vitest"
+    "test:watch": "vitest",
+    "verify:boundaries": "node scripts/verify-boundaries.js",
+    "verify:terms": "node scripts/verify-terms.js"
   },
   "keywords": [
     "xala",
+    "xalatechnologies",
     "platform",
     "ui",
     "sdk",
     "react",
     "typescript",
-    "designsystemet"
+    "designsystemet",
+    "domain-agnostic"
   ],
   "author": "Xala Technologies",
   "license": "MIT",
   "dependencies": {
     "@digdir/designsystemet-react": "^1.9.0",
     "@tanstack/react-query": "^5.62.16",
+    "js-cookie": "^3.0.5",
+    "prom-client": "^15.1.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-router-dom": "^6.22.0",
@@ -118,6 +178,7 @@
   },
   "devDependencies": {
     "@digdir/designsystemet-css": "^1.0.0",
+    "@types/js-cookie": "^3.0.6",
     "@types/react": "^18.3.5",
     "@types/react-dom": "^18.3.0",
     "tsup": "^8.0.1",

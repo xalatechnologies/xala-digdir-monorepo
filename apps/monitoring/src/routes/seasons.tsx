@@ -1,5 +1,5 @@
 import { useState, useMemo } from 'react';
-import { Container, Heading, Paragraph, Card, Button, Spinner } from '@xala/ds';
+import { Container, Heading, Paragraph, Card, Button, Spinner } from '@xalatechnologies/platform/ui';
 import { useSeasons } from '@digilist/client-sdk/hooks';
 import type { SeasonStatus } from '@digilist/client-sdk/types';
 import { useAccountContext } from '@xala/runtime';

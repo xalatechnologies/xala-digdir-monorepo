@@ -130,7 +130,11 @@ function normalizeReasonKey(reasonKey: string): string {
   }
 
   // Check if it's a known prefix that needs mapping
-  const firstSegment = reasonKey.split('.')[0];
+  const segments = reasonKey.split('.');
+  const firstSegment = segments[0];
+  if (!firstSegment) {
+    return reasonKey;
+  }
   const prefix = REASON_KEY_PREFIX_MAP[firstSegment];
 
   if (prefix) {

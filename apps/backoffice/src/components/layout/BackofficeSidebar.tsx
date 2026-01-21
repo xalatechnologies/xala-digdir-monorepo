@@ -2,7 +2,7 @@
  * BackofficeSidebar
  * 
  * Database-driven sidebar using the DK API menu resolution endpoint.
- * Uses @xala/ds DashboardSidebar component for rendering.
+ * Uses @xalatechnologies/platform/ui DashboardSidebar component for rendering.
  * 
  * Features:
  * - DTO-driven rendering from useBackofficeMenu() hook
@@ -33,7 +33,7 @@ import {
   BellIcon,
   InfoIcon,
   Spinner,
-} from '@xala/ds';
+} from '@xalatechnologies/platform/ui';
 import { useAuth } from '@xala/auth';
 import { useBackofficeMenu, usePendingGdprRequests } from '@digilist/client-sdk/hooks';
 import { useT } from '@xala/i18n';

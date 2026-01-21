@@ -13,7 +13,7 @@ import {
   Textfield,
   Select,
   SaveIcon,
-} from '@xala/ds';
+} from '@xalatechnologies/platform/ui';
 import { useGeneralSettings } from '../hooks/useGeneralSettings';
 import { useT } from '@xala/i18n';
 

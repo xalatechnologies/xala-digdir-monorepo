@@ -9,13 +9,13 @@ import {
   FormField,
   Textfield,
   Select,
-} from '@xala/ds';
+} from '@xalatechnologies/platform/ui';
 import type {
   Organization,
   CreateOrganizationDTO,
   ActorType,
 } from '@digilist/client-sdk';
-import { FormSection, FormActions } from '@xala/ds';
+import { FormSection, FormActions } from '@xalatechnologies/platform/ui';
 import { useT } from '@xala/i18n';
 
 interface OrganizationFormProps {

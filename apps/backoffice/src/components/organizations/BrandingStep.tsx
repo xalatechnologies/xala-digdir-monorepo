@@ -6,7 +6,7 @@
 /* eslint-disable digdir/prefer-ds-components -- File upload component */
 
 import { useCallback, useState } from 'react';
-import { Stack, FormField, Paragraph, Heading, Card, Button } from '@xala/ds';
+import { Stack, FormField, Paragraph, Heading, Card, Button } from '@xalatechnologies/platform/ui';
 import { useT } from '@xala/i18n';
 
 // =============================================================================

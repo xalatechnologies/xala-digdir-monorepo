@@ -5,7 +5,7 @@
  * Supports selecting available slots and displays slot status.
  */
 import * as React from 'react';
-import { Button, Heading, Paragraph } from '@xala/ds';
+import { Button, Heading, Paragraph } from '@xalatechnologies/platform/ui';
 import { cn } from '../../utils';
 import { ChevronLeftIcon, ChevronRightIcon, InfoIcon } from '../../primitives/icons';
 import type { TimeSlot, TimeSlotStatus } from '../../types/rental-object-detail';

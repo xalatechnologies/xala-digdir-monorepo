@@ -15,7 +15,7 @@ import {
   CheckCircleIcon,
   BookingStatusBadge,
   Link as DSLink,
-} from '@xala/ds';
+} from '@xalatechnologies/platform/ui';
 import { useT } from '@xala/i18n';
 import { useMyBookings, formatDate, formatTime, type Booking } from '@digilist/client-sdk';
 import { useAuth } from '@xala/auth';

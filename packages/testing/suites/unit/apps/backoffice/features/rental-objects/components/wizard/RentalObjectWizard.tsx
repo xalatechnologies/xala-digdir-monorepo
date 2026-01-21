@@ -5,7 +5,7 @@
  */
 
 import { useT } from '@xala/i18n';
-import { Heading, Paragraph, Badge, Spinner } from '@xala/ds';
+import { Heading, Paragraph, Badge, Spinner } from '@xalatechnologies/platform/ui';
 import { useRentalObjectWizard } from '@digilist/api/hooks/useRentalObjectWizard';
 import { WizardFooter } from './WizardFooter';
 import { CategorySelector } from './steps/CategorySelector';

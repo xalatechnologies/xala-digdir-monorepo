@@ -13,9 +13,9 @@ import {
   Spinner,
   Card,
   FilterIcon,
-} from '@xala/ds';
+} from '@xalatechnologies/platform/ui';
 
-// Local icons since they're not exported from @xala/ds
+// Local icons since they're not exported from @xalatechnologies/platform/ui
 function XIcon() {
   return (
     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">

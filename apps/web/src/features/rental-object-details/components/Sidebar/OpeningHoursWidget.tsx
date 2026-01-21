@@ -6,7 +6,7 @@
  */
 
 import * as React from 'react';
-import { Paragraph } from '@xala/ds';
+import { Paragraph } from '@xalatechnologies/platform/ui';
 import type { OpeningHours, DayHours } from '../../types';
 import { useT } from '@xala/i18n';
 

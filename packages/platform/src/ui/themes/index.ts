@@ -1,76 +1,55 @@
 /**
- * @xalatechnologies/platform/ui/themes
+ * Theme registry for runtime tenant branding switching.
  *
- * Theme configuration and utilities
- *
- * Available themes:
- * - digdir - Default Digdir theme
- * - altinn - Altinn theme
- * - uutilsynet - Utsynet theme
- * - portal - Portal theme
+ * This module provides theme URLs that allow applications to swap themes
+ * by loading CSS files. Themes can be a single file or an array of files
+ * (base + extensions). This approach respects Designsystemet's requirement
+ * that theme CSS should only be loaded once per application.
  *
  * @example
- * ```tsx
- * import { ThemeProvider, useTheme, themes } from '@xalatechnologies/platform/ui/themes';
+ * ```typescript
+ * import { THEMES, DEFAULT_THEME, getThemeUrls } from '@xalatechnologies/platform/ui/themes';
  *
- * function App() {
- *   return (
- *     <ThemeProvider theme="digdir" colorScheme="auto">
- *       <MyApp />
- *     </ThemeProvider>
- *   );
- * }
+ * // Get theme URLs (always returns array)
+ * const urls = getThemeUrls(DEFAULT_THEME);
  * ```
  */
 
-// Theme types
-export type ThemeName = 'digdir' | 'altinn' | 'uutilsynet' | 'portal';
-export type ColorScheme = 'light' | 'dark' | 'auto';
-export type Size = 'sm' | 'md' | 'lg';
-export type Typography = 'primary' | 'secondary';
-
-export interface ThemeConfig {
-  theme: ThemeName;
-  colorScheme: ColorScheme;
-  size: Size;
-  typography: Typography;
-}
-
-export interface ThemeContextValue extends ThemeConfig {
-  setTheme: (theme: ThemeName) => void;
-  setColorScheme: (colorScheme: ColorScheme) => void;
-  setSize: (size: Size) => void;
-  setTypography: (typography: Typography) => void;
-}
-
-// Theme definitions
-export const themes: Record<ThemeName, { name: string; cssUrl: string }> = {
-  digdir: {
-    name: 'Digdir',
-    cssUrl: 'https://cdn.jsdelivr.net/npm/@digdir/designsystemet-theme@1/digdir.css',
-  },
-  altinn: {
-    name: 'Altinn',
-    cssUrl: 'https://cdn.jsdelivr.net/npm/@digdir/designsystemet-theme@1/altinn.css',
-  },
-  uutilsynet: {
-    name: 'UU-tilsynet',
-    cssUrl: 'https://cdn.jsdelivr.net/npm/@digdir/designsystemet-theme@1/uutilsynet.css',
-  },
-  portal: {
-    name: 'Portal',
-    cssUrl: 'https://cdn.jsdelivr.net/npm/@digdir/designsystemet-theme@1/portal.css',
-  },
+// Official Digdir themes - using public folder path
+const OFFICIAL_THEMES = {
+  digdir: '/themes/digdir.css',
+  altinn: '/themes/altinn.css',
+  uutilsynet: '/themes/uutilsynet.css',
+  portal: '/themes/portal.css',
 };
 
-// Default theme configuration
-export const defaultThemeConfig: ThemeConfig = {
-  theme: 'digdir',
-  colorScheme: 'auto',
-  size: 'md',
-  typography: 'primary',
+// Custom DIGILIST theme: CLI-generated base + app extensions
+const DIGILIST_THEME = [
+  '/themes/digilist.css',            // CLI-generated base
+  '/themes/digilist-extensions.css', // App-specific tokens
+];
+
+export type ThemeId = 'digdir' | 'altinn' | 'uutilsynet' | 'portal' | 'digilist';
+
+/**
+ * Theme CSS files. Can be single file (string) or multiple files (array).
+ * Multiple files are loaded in order: base theme first, then extensions.
+ */
+export const THEMES: Record<ThemeId, string | string[]> = {
+  digdir: OFFICIAL_THEMES.digdir,
+  altinn: OFFICIAL_THEMES.altinn,
+  uutilsynet: OFFICIAL_THEMES.uutilsynet,
+  portal: OFFICIAL_THEMES.portal,
+  digilist: DIGILIST_THEME,
 };
 
-// TODO: Migrate ThemeProvider and useTheme hook from @xala/ds
-// export { ThemeProvider } from './ThemeProvider';
-// export { useTheme } from './useTheme';
+/**
+ * Get theme URLs as an array (for consistent handling).
+ */
+export function getThemeUrls(themeId: ThemeId): string[] {
+  const theme = THEMES[themeId];
+  return Array.isArray(theme) ? theme : [theme];
+}
+
+// DIGILIST is the default theme
+export const DEFAULT_THEME: ThemeId = 'digilist';

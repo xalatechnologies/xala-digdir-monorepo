@@ -20,9 +20,13 @@ import {
   Stack,
   ArrowLeftIcon,
   SaveIcon,
-} from '@xala/ds';
-import { useCreateSaasTenant, useSaasPlans } from '@digilist/client-sdk/hooks';
-import type { CreateSaasTenantRequest, SeatLimits } from '@digilist/client-sdk/types';
+} from '@xalatechnologies/platform/ui';
+import {
+  useCreateSaasTenant,
+  useSaasPlans,
+  type CreateSaasTenantRequest,
+  type SeatLimits,
+} from '@xalatechnologies/platform/sdk';
 import { useT } from '@xala/i18n';
 
 const DEFAULT_SEAT_LIMITS: SeatLimits = {

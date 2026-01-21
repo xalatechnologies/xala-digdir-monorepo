@@ -18,7 +18,7 @@ import {
   Select,
   SelectOption,
   InfoIcon,
-} from '@xala/ds';
+} from '@xalatechnologies/platform/ui';
 import { useT } from '@xala/i18n';
 import { PaymentSection } from './PaymentSection';
 

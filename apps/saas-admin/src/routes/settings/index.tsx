@@ -8,7 +8,7 @@ import {
   Heading,
   Paragraph,
   Stack,
-} from '@xala/ds';
+} from '@xalatechnologies/platform/ui';
 import { useT } from '@xala/i18n';
 
 export function SettingsPage() {

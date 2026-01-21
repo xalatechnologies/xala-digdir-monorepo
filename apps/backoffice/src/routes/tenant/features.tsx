@@ -16,7 +16,7 @@ import {
   Badge,
   Spinner,
   Alert,
-} from '@xala/ds';
+} from '@xalatechnologies/platform/ui';
 import { useModulesManager, useModuleCatalog, useEffectiveModules } from '@digilist/client-sdk/hooks';
 
 const MOBILE_BREAKPOINT = 768;

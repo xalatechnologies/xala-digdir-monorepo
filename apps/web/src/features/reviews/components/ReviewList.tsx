@@ -5,7 +5,7 @@
  * Uses the useListingReviews hook from SDK and renders ReviewCard components.
  */
 import * as React from 'react';
-import { Button, Stack, Text, Spinner } from '@xala/ds';
+import { Button, Stack, Text, Spinner } from '@xalatechnologies/platform/ui';
 import { useListingReviews } from '@digilist/client-sdk';
 import { ReviewCard } from './ReviewCard';
 import type { ReviewQueryParams } from '@digilist/client-sdk/types';

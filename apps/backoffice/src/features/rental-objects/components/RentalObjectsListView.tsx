@@ -19,7 +19,7 @@ import {
   Paragraph,
   ChevronLeftIcon,
   ChevronRightIcon,
-} from '@xala/ds';
+} from '@xalatechnologies/platform/ui';
 import {
   useRentalObjects,
   type RentalObjectStatus,

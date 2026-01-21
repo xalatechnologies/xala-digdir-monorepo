@@ -5,7 +5,7 @@
  */
 
 import { useParams, Link, Navigate } from 'react-router-dom';
-import { Heading, Paragraph, Breadcrumb, Card } from '@xala/ds';
+import { Heading, Paragraph, Breadcrumb, Card } from '@xalatechnologies/platform/ui';
 import { useT } from '@xala/i18n';
 import { useFeatureFlags } from '@digilist/client-sdk';
 import { isSectionEnabled, DOCS_FEATURE_FLAGS } from '../lib/feature-flags';

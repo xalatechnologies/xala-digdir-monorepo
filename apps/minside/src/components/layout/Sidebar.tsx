@@ -1,7 +1,7 @@
 /**
  * Sidebar
  *
- * MinSide sidebar using DashboardSidebar from @xala/ds.
+ * MinSide sidebar using DashboardSidebar from @xalatechnologies/platform/ui.
  * Fetches navigation items from API with feature flag and role-based filtering.
  * Falls back to static navigation if API fails.
  */
@@ -20,7 +20,7 @@ import {
   RepeatIcon,
   UsersIcon,
   Button,
-} from '@xala/ds';
+} from '@xalatechnologies/platform/ui';
 import { useT } from '@xala/i18n';
 import { useAuth } from '@xala/auth';
 import { useAccountContext } from '@xala/runtime';
@@ -233,7 +233,7 @@ export function Sidebar() {
         </Button>
       )}
 
-      {/* DashboardSidebar from @xala/ds - uses default 400px width */}
+      {/* DashboardSidebar from @xalatechnologies/platform/ui - uses default 400px width */}
       <DashboardSidebar
         logo={
           <img

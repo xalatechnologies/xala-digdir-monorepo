@@ -19,7 +19,7 @@ import {
   Badge,
   CreditCardIcon,
   DashboardPageHeader,
-} from '@xala/ds';
+} from '@xalatechnologies/platform/ui';
 import {
   useBillingSummary,
   useInvoices,

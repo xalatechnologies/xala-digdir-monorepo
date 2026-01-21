@@ -13,7 +13,7 @@ import {
   Spinner,
   AlertTriangleIcon,
   CheckCircleIcon,
-} from '@xala/ds';
+} from '@xalatechnologies/platform/ui';
 import {
   // TODO: Implement season application conflict hooks
   // useSeasonConflicts,

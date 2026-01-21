@@ -26,7 +26,7 @@ import {
   Stack,
   ArrowLeftIcon,
   SendIcon,
-} from '@xala/ds';
+} from '@xalatechnologies/platform/ui';
 import {
   useInviteTenantUser,
   useOrganizations,

@@ -21,7 +21,7 @@ import {
   BookOpenIcon,
   ArrowRightIcon,
   UsersIcon,
-} from '@xala/ds';
+} from '@xalatechnologies/platform/ui';
 import { useT } from '@xala/i18n';
 import { useFeatureFlags } from '@digilist/client-sdk';
 import { isSectionEnabled, DOCS_FEATURE_FLAGS } from '../../lib/feature-flags';

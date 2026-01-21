@@ -3,7 +3,7 @@
  * Shows bookings with status 'pending' that require approval
  * Available to org_member users with CAP_BOOKINGS_APPROVE_ASSIGNED capability
  */
-import { Heading, Paragraph, Card, Skeleton, Button } from '@xala/ds';
+import { Heading, Paragraph, Card, Skeleton, Button } from '@xalatechnologies/platform/ui';
 import { useNavigate, Link } from 'react-router-dom';
 import { useBookings } from '@digilist/client-sdk';
 import { useT } from '@xala/i18n';

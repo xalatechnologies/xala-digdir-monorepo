@@ -2,10 +2,9 @@
  * VenueCard Block - Digilist Domain Component
  *
  * Domain-specific component for displaying venue information in seasonal context.
- * Migrated from @xala/ds to @digilist/ui for platform decoupling.
+ * Migrated from @xalatechnologies/platform/ui to @digilist/ui for platform decoupling.
  */
-import { Card, Heading, Paragraph, Button } from '@xalatechnologies/platform/ui/primitives';
-import { Badge } from '@xala/ds';
+import { Card, Heading, Paragraph, Button, Badge } from '@xalatechnologies/platform/ui/primitives';
 import { useT } from '@xala/i18n';
 
 export interface VenueCardData {

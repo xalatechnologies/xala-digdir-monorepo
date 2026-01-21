@@ -20,6 +20,7 @@ export default defineConfig({
     'config/index': 'src/config/index.ts',
     'contracts/index': 'src/contracts/index.ts',
     'sdk/index': 'src/sdk/index.ts',
+    'sdk/saas/index': 'src/sdk/saas/index.ts',
     'i18n/index': 'src/i18n/index.ts',
     'observability/index': 'src/observability/index.ts',
   },
@@ -38,6 +39,9 @@ export default defineConfig({
     '@digdir/designsystemet-css',
     '@tanstack/react-query',
     'zod',
+    // Additional externals for observability and i18n
+    'prom-client',
+    'js-cookie',
   ],
   esbuildOptions(options) {
     options.jsx = 'automatic';

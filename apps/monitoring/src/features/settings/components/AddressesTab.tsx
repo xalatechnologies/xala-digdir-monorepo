@@ -3,7 +3,7 @@
  * Thin wrapper that wires SDK hooks to DS AddressesTab props
  */
 import { useState, useEffect } from 'react';
-import { AddressesTab as DSAddressesTab, type AddressData } from '@xala/ds';
+import { AddressesTab as DSAddressesTab, type AddressData } from '@xalatechnologies/platform/ui';
 import {
   useCurrentUser,
   useUpdateCurrentUser,

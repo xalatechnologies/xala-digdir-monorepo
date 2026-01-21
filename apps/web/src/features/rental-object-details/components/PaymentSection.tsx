@@ -13,7 +13,7 @@ import {
   Paragraph,
   Button,
   Label,
-} from '@xala/ds';
+} from '@xalatechnologies/platform/ui';
 import { useInitiatePayment } from '@digilist/client-sdk/hooks';
 import { auditService } from '@digilist/client-sdk';
 import type { InitiatePaymentDTO } from '@digilist/client-sdk/types';

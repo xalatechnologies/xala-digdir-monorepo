@@ -3,7 +3,7 @@
  * Thin wrapper that wires SDK hooks to DS ProfileTab props
  */
 import { useState, useEffect } from 'react';
-import { ProfileTab as DSProfileTab, type ProfileData } from '@xala/ds';
+import { ProfileTab as DSProfileTab, type ProfileData } from '@xalatechnologies/platform/ui';
 import {
   useCurrentUser,
   useUpdateCurrentUser,

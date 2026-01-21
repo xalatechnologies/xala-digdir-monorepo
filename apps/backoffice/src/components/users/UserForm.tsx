@@ -10,9 +10,9 @@ import {
   Textfield,
   Select,
   Alert,
-} from '@xala/ds';
+} from '@xalatechnologies/platform/ui';
 import type { User, CreateUserDTO, UserRole } from '@digilist/client-sdk';
-import { FormSection, FormActions, InfoBox } from '@xala/ds';
+import { FormSection, FormActions, InfoBox } from '@xalatechnologies/platform/ui';
 import { useT } from '@xala/i18n';
 
 interface UserFormProps {

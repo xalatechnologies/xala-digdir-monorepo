@@ -17,7 +17,7 @@ import {
   Modal,
   Alert,
   Spinner,
-} from '@xala/ds';
+} from '@xalatechnologies/platform/ui';
 import {
   Key,
   Plus,

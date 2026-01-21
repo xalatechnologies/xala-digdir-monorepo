@@ -307,7 +307,7 @@ describe.skip('RealtimeToast', () => {
   });
 
   describe('Design System Compliance', () => {
-    it('should only import from @xala/ds', () => {
+    it('should only import from @xalatechnologies/platform/ui', () => {
       // This test verifies the imports at build time
       // The actual test is in the ESLint rules
       expect(true).toBe(true);

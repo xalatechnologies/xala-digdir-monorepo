@@ -14,9 +14,12 @@ import {
   Spinner,
   Checkbox,
   SaveIcon,
-} from '@xala/ds';
-import { useSaasTenantCategories, useUpdateSaasTenantCategories } from '@digilist/client-sdk/hooks';
-import type { CategoryEntitlement } from '@digilist/client-sdk/types';
+} from '@xalatechnologies/platform/ui';
+import {
+  useSaasTenantCategories,
+  useUpdateSaasTenantCategories,
+  type CategoryEntitlement,
+} from '@xalatechnologies/platform/sdk';
 
 // Well-known rental object categories from the platform
 const RENTAL_OBJECT_CATEGORIES = [

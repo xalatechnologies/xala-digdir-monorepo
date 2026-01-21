@@ -11,14 +11,14 @@
  */
 
 import * as React from 'react';
-import { RentalObjectCalendar } from '@xala/ds';
+import { RentalObjectCalendar } from '@xalatechnologies/platform/ui';
 import {
   useRentalObjectCalendar,
   useBookingQuote,
   useCreateBookingFromQuote,
   useRentalObjectCalendarRealtime,
 } from '@digilist/client-sdk';
-import type { CalendarSlot, CalendarConfig, CalendarSelection } from '@xala/ds';
+import type { CalendarSlot, CalendarConfig, CalendarSelection } from '@xalatechnologies/platform/ui';
 import { useTranslation } from 'react-i18next';
 import { useT } from '@xala/i18n';
 

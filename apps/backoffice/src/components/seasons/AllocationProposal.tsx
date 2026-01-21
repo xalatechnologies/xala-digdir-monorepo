@@ -21,9 +21,9 @@ import {
   PlayIcon,
   InfoIcon,
   Checkbox,
-} from '@xala/ds';
+} from '@xalatechnologies/platform/ui';
 
-// Local WarningIcon since it's not exported from @xala/ds
+// Local WarningIcon since it's not exported from @xalatechnologies/platform/ui
 function WarningIcon() {
   return (
     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">

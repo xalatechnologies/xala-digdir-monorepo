@@ -26,7 +26,7 @@ import {
   CameraIcon,
   CopyIcon,
   InfoIcon,
-} from '@xala/ds';
+} from '@xalatechnologies/platform/ui';
 import {
   useTenantSettings,
   useUpdateTenantSettings,

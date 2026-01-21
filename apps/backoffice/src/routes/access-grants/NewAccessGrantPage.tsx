@@ -18,7 +18,7 @@ import {
   ShieldCheckIcon,
   Alert,
   Textfield,
-} from '@xala/ds';
+} from '@xalatechnologies/platform/ui';
 import {
   useOrganizations,
   useRentalObjects,
@@ -26,7 +26,7 @@ import {
   type CreateAccessGrantDTO,
 } from '@digilist/client-sdk';
 import { useT } from '@xala/i18n';
-import { FormSection, FormActions } from '@xala/ds';
+import { FormSection, FormActions } from '@xalatechnologies/platform/ui';
 
 export function NewAccessGrantPage() {
   const t = useT();

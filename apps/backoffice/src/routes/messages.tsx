@@ -20,7 +20,7 @@ import {
   CalendarIcon,
   PaperclipIcon,
   XIcon,
-} from '@xala/ds';
+} from '@xalatechnologies/platform/ui';
 import {
   useConversations,
   useMessages,

@@ -5,7 +5,7 @@
  * clipboard copy, and social media sharing options.
  */
 import * as React from 'react';
-import { Button, Heading, Paragraph, Dialog } from '@xala/ds';
+import { Button, Heading, Paragraph, Dialog } from '@xalatechnologies/platform/ui';
 import { cn } from '../../utils';
 import { ShareIcon, CheckIcon, CloseIcon } from '../../primitives/icons';
 

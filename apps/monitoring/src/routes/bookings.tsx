@@ -24,7 +24,7 @@ import {
   CalendarIcon,
   ClockIcon,
   Link,
-} from '@xala/ds';
+} from '@xalatechnologies/platform/ui';
 import {
   useCancelBooking,
   type BookingStatus,

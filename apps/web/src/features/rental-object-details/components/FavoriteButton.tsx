@@ -6,7 +6,7 @@
  */
 
 import * as React from 'react';
-import { Button, Spinner } from '@xala/ds';
+import { Button, Spinner } from '@xalatechnologies/platform/ui';
 import { useT } from '@xala/i18n';
 
 // =============================================================================

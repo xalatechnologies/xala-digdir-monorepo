@@ -8,7 +8,7 @@ import {
   GlobeIcon,
   StarIcon,
   GridIcon,
-} from '@xala/ds';
+} from '@xalatechnologies/platform/ui';
 import { WizardStepId } from '../../types';
 
 export const WIZARD_ICONS: Record<WizardStepId, React.ReactNode> = {

@@ -4,7 +4,7 @@
  */
 
 import { useT } from '@xala/i18n';
-import { Button, Stack, Spinner } from '@xala/ds';
+import { Button, Stack, Spinner } from '@xalatechnologies/platform/ui';
 import type { UseRentalObjectWizardReturn } from '@digilist/api/hooks/useRentalObjectWizard';
 
 export interface WizardFooterProps {

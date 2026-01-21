@@ -16,14 +16,14 @@ import {
   FormField,
   Textfield,
   Alert,
-} from '@xala/ds';
+} from '@xalatechnologies/platform/ui';
 import {
   useSeason,
   useCreateSeason,
   useUpdateSeason,
   type CreateSeasonDTO,
 } from '@digilist/client-sdk';
-import { FormSection, FormActions } from '@xala/ds';
+import { FormSection, FormActions } from '@xalatechnologies/platform/ui';
 import { useT } from '@xala/i18n';
 
 export function SeasonFormPage() {

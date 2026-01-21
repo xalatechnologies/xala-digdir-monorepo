@@ -11,7 +11,7 @@ import {
   Button,
   Badge,
   Skeleton,
-} from '@xala/ds';
+} from '@xalatechnologies/platform/ui';
 import { 
   useCreateCustodySubgrant,
   useOrganizationMembers,

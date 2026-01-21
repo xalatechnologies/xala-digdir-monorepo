@@ -6,7 +6,7 @@
  */
 
 import * as React from 'react';
-import { Paragraph, Button } from '@xala/ds';
+import { Paragraph, Button } from '@xalatechnologies/platform/ui';
 import type { Address } from '../../types';
 import { useT } from '@xala/i18n';
 

@@ -16,7 +16,7 @@ import {
   Skeleton,
   ChevronLeftIcon,
   AlertTriangleIcon,
-} from '@xala/ds';
+} from '@xalatechnologies/platform/ui';
 import { useRentalObjectBySlug, useRentalObject } from '@digilist/client-sdk';
 import { RentalObjectHeader } from './RentalObjectHeader';
 import { RentalObjectOverviewTab } from './RentalObjectOverviewTab';

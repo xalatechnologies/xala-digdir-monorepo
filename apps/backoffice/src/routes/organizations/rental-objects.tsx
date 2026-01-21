@@ -33,7 +33,7 @@ import {
   CheckCircleIcon,
   XCircleIcon,
   EmptyState,
-} from '@xala/ds';
+} from '@xalatechnologies/platform/ui';
 import {
   useOrganization,
   useRentalObjects,

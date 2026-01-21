@@ -30,7 +30,7 @@ import React, { createContext, useContext, useMemo, useState, type ReactNode } f
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { I18nProvider } from '@xala/i18n';
 import { AuthProvider } from '@xala/auth';
-import { ErrorBoundary, ThemeProvider, DialogProvider } from '@xala/ds';
+import { ErrorBoundary, ThemeProvider, DialogProvider } from '@xalatechnologies/platform/ui';
 import type { RuntimeConfig, FeatureFlagsContext, TenantContext, NotificationCenterContext } from './types';
 
 // ============================================================================

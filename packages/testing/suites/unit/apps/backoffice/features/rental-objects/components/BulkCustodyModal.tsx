@@ -8,7 +8,7 @@ import {
   Heading,
   Paragraph,
   Card,
-} from '@xala/ds';
+} from '@xalatechnologies/platform/ui';
 import { 
   useBackofficeOrganizations,
   useUsers,

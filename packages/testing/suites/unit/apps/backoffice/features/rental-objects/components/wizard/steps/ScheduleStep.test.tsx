@@ -13,9 +13,9 @@ vi.mock('@xala/i18n', () => ({
   useT: () => (key: string) => key,
 }));
 
-// Mock @xala/ds icons
-vi.mock('@xala/ds', async () => {
-  const actual = await vi.importActual('@xala/ds');
+// Mock @xalatechnologies/platform/ui icons
+vi.mock('@xalatechnologies/platform/ui', async () => {
+  const actual = await vi.importActual('@xalatechnologies/platform/ui');
   return {
     ...actual,
     CalendarIcon: () => <div data-testid="calendar-icon" />,

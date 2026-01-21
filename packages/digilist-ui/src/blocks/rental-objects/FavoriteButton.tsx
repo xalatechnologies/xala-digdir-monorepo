@@ -5,7 +5,7 @@
  * Supports auth gating with callback for unauthenticated users.
  */
 import * as React from 'react';
-import { Button } from '@xala/ds';
+import { Button } from '@xalatechnologies/platform/ui';
 import { cn } from '../../utils';
 import { HeartIcon } from '../../primitives/icons';
 

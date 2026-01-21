@@ -14,7 +14,7 @@ import {
   Table,
   Badge,
   DashboardPageHeader,
-} from '@xala/ds';
+} from '@xalatechnologies/platform/ui';
 import { useOrgInvoices, useDownloadOrgInvoice } from '@digilist/client-sdk';
 import { useT, useLocale } from '@xala/i18n';
 import { NavLink } from 'react-router-dom';

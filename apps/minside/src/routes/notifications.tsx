@@ -20,7 +20,7 @@ import {
   Spinner,
   BellIcon,
   DashboardPageHeader,
-} from '@xala/ds';
+} from '@xalatechnologies/platform/ui';
 import { useT, useLocale } from '@xala/i18n';
 import {
   useMyNotifications,

@@ -6,8 +6,8 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useT } from '@xala/i18n';
-import { authService } from '@digilist/client-sdk';
-import type { DemoLoginFormData } from '@xala/ds';
+import { authService } from '@digilist/client-sdk'; // platform-exempt: auth is domain-specific
+import type { DemoLoginFormData } from '@xalatechnologies/platform/ui';
 
 export function useDemoLogin() {
   const [showDialog, setShowDialog] = useState(false);

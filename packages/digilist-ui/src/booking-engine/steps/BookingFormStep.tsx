@@ -5,7 +5,7 @@
  */
 import * as React from 'react';
 import { Heading, Button } from '@digdir/designsystemet-react';
-import { ChevronLeftIcon, ChevronRightIcon } from '@xala/ds';
+import { ChevronLeftIcon, ChevronRightIcon } from '@xalatechnologies/platform/ui';
 import { formatPrice } from '@digilist/contracts';
 import type {
   BookingFormData,

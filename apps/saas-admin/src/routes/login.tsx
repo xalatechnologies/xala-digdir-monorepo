@@ -4,16 +4,16 @@
  */
 import { useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { LoginPage as LoginPageComponent } from '@xala/ds';
+import { LoginPage as LoginPageComponent } from '@xalatechnologies/platform/ui';
 import { saasAdminAuthConfig } from '@xala/auth';
 import {
   ShieldCheckIcon,
   BuildingIcon,
   SettingsIcon,
-} from '@xala/ds';
+} from '@xalatechnologies/platform/ui';
 import { useAuth } from '@xala/auth';
 import { useDemoLogin } from '../hooks/useDemoLogin';
-import { idportenService } from '@digilist/client-sdk';
+import { idportenService } from '@digilist/client-sdk'; // platform-exempt: ID-porten is domain-specific
 import { useT } from '@xala/i18n';
 
 export function LoginPage(): React.ReactElement {

@@ -11,7 +11,7 @@ import { useT } from '@xala/i18n';
   Badge,
   Stack,
   Text,
-} from '@xala/ds';
+} from '@xalatechnologies/platform/ui';
 import { useAuditLog } from '@digilist/client-sdk';
 
 export function RentalObjectAuditTab({ rentalObjectId }: { rentalObjectId: string }) {

@@ -1,4 +1,4 @@
-import { Card, Heading, Paragraph, Button, Badge } from '@xala/ds';
+import { Card, Heading, Paragraph, Button, Badge } from '@xalatechnologies/platform/ui';
 import { useNavigate } from 'react-router-dom';
 import type { SeasonApplication } from '@digilist/client-sdk/types';
 import { WEEKDAY_LABELS } from '../constants';

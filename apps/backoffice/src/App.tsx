@@ -6,7 +6,7 @@
  */
 import React, { Suspense } from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
-import { LoadingFallback, ProtectedRoute } from '@xala/ds';
+import { LoadingFallback, ProtectedRoute } from '@xalatechnologies/platform/ui';
 import { useOAuthCallback } from '@xala/auth';
 import { RealtimeProvider } from '@digilist/client-sdk';
 

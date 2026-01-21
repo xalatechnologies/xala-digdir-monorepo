@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useT } from '@xala/i18n';
-import { Heading, Paragraph, Button, Card, Grid, PlusIcon, CopyIcon } from '@xala/ds';
+import { Heading, Paragraph, Button, Card, Grid, PlusIcon, CopyIcon } from '@xalatechnologies/platform/ui';
 import { RentalObjectsTable } from '@/features/rental-objects/components/list/RentalObjectsTable';
 import type { RentalObject } from '@digilist/client-sdk/types';
 import { useRentalObjects } from '@digilist/client-sdk';

@@ -15,7 +15,7 @@ import {
   BookOpenIcon,
   MessageIcon,
   SettingsIcon,
-} from '@xala/ds';
+} from '@xalatechnologies/platform/ui';
 import { useT } from '@xala/i18n';
 import { Sidebar } from './Sidebar';
 import { Header } from './Header';

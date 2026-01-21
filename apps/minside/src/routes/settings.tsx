@@ -30,7 +30,7 @@ import {
   MapPinIcon,
   HomeIcon,
   DashboardPageHeader,
-} from '@xala/ds';
+} from '@xalatechnologies/platform/ui';
 import {
   useCurrentUser,
   useUpdateCurrentUser,

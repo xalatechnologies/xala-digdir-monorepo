@@ -26,7 +26,7 @@ import {
   EyeIcon,
   HeaderSearch,
   PageHeader,
-} from '@xala/ds';
+} from '@xalatechnologies/platform/ui';
 import {
   useOrganizations,
   useDeleteOrganization,

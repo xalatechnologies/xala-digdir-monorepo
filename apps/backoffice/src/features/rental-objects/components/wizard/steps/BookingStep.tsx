@@ -15,7 +15,7 @@ import {
   CreditCardIcon,
   SettingsIcon,
   ClockIcon,
-} from '@xala/ds';
+} from '@xalatechnologies/platform/ui';
 import type { UseRentalObjectWizardReturn } from '@/features/rental-objects';
 
 export interface BookingStepProps {

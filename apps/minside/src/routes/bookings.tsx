@@ -1,7 +1,7 @@
 /**
  * BookingsPage
  *
- * Mobile-first responsive bookings page using @xala/ds shared components.
+ * Mobile-first responsive bookings page using @xalatechnologies/platform/ui shared components.
  * - Uses PageHeader for consistent page title
  * - Uses StatCard for stat display
  * - Uses ListToolbar for search/filters
@@ -27,7 +27,7 @@ import {
   EmptyState,
   Spinner,
   type ListToolbarFilter,
-} from '@xala/ds';
+} from '@xalatechnologies/platform/ui';
 import {
   useCancelBooking,
   type BookingStatus,

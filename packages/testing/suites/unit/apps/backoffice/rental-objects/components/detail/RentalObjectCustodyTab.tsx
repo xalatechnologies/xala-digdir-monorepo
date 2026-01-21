@@ -15,7 +15,7 @@ import { useT } from '@xala/i18n';
   PlusIcon,
   Card,
   Skeleton,
-} from '@xala/ds';
+} from '@xalatechnologies/platform/ui';
 import { 
   useRentalObjectCustody, 
   useCreateCustodyGrant, 

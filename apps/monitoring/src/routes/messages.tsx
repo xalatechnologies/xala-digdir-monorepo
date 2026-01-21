@@ -16,7 +16,7 @@ import {
   CalendarIcon,
   CheckCircleIcon,
   HomeIcon,
-} from '@xala/ds';
+} from '@xalatechnologies/platform/ui';
 import { useConversations, useMessages, useSendMessage, type Conversation, type Message, formatTime } from '@digilist/client-sdk';
 import { useAuth } from '@xala/auth';
 import { useT } from '@xala/i18n';

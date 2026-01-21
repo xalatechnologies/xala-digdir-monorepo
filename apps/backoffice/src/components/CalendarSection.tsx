@@ -13,7 +13,7 @@
  */
 
 import * as React from 'react';
-import { Paragraph } from '@xala/ds';
+import { Paragraph } from '@xalatechnologies/platform/ui';
 import { RentalObjectAvailabilityCalendar } from '@digilist/ui';
 import {
   useListingCalendarConfig,

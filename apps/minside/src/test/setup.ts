@@ -94,9 +94,9 @@ global.IntersectionObserver = class IntersectionObserver {
   unobserve() {}
 } as any;
 
-// Mock @xala/ds components that might be undefined
-vi.mock('@xala/ds', async () => {
-  const actual = await vi.importActual('@xala/ds');
+// Mock @xalatechnologies/platform/ui components that might be undefined
+vi.mock('@xalatechnologies/platform/ui', async () => {
+  const actual = await vi.importActual('@xalatechnologies/platform/ui');
   const React = await import('react');
   return {
     ...actual,

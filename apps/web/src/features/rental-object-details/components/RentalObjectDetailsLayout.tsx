@@ -10,7 +10,7 @@
  */
 
 import * as React from 'react';
-import { RequireAuthModal, ShareSheet } from '@xala/ds';
+import { RequireAuthModal, ShareSheet } from '@xalatechnologies/platform/ui';
 import type { RentalObject } from '../types';
 import { createPresenter } from '../presenters/rentalObjectTypePresenter';
 import {

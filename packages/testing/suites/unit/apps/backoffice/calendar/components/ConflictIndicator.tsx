@@ -4,7 +4,7 @@
  * Supports buffer time visualization to show time zones that should remain clear
  */
 
-import { Tooltip, XCircleIcon } from '@xala/ds';
+import { Tooltip, XCircleIcon } from '@xalatechnologies/platform/ui';
 import { useT } from '@xala/i18n';
 
 export interface ConflictIndicatorProps {

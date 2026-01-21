@@ -15,7 +15,7 @@ import {
   UsersIcon,
   type ActivityItemProps,
   type ActivityStatus,
-} from '@xala/ds';
+} from '@xalatechnologies/platform/ui';
 import { useDashboardStats, useDashboardActivity, usePendingItems, type RecentActivity } from '@digilist/client-sdk';
 import { useT, useLocale } from '@xala/i18n';
 import { useAuth } from '@xala/auth';

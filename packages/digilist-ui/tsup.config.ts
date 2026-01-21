@@ -14,9 +14,9 @@ export default defineConfig({
     'features/seasons/index': 'src/features/seasons/index.ts',
   },
   format: ['cjs', 'esm'],
-  // DTS disabled due to circular dependency with @xala/ds
+  // DTS disabled due to circular dependency with @xalatechnologies/platform/ui
   // Types are available via TypeScript's direct source access when using bundlers
-  // TODO: Re-enable once @xala/ds no longer depends on @digilist/ui
+  // TODO: Re-enable once @xalatechnologies/platform/ui no longer depends on @digilist/ui
   dts: false,
   splitting: false,
   sourcemap: true,
@@ -26,7 +26,7 @@ export default defineConfig({
   external: [
     'react',
     'react-dom',
-    '@xala/ds',
+    '@xalatechnologies/platform/ui',
     '@xala/i18n',
     '@digilist/contracts',
     // Mapbox dependencies - marked as external since they require an API key

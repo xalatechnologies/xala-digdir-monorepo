@@ -17,8 +17,8 @@ import {
   ArrowLeftIcon,
   SaveIcon,
   RefreshCwIcon,
-} from '@xala/ds';
-import { useSaasTenant } from '@digilist/client-sdk/hooks';
+} from '@xalatechnologies/platform/ui';
+import { useSaasTenant } from '@xalatechnologies/platform/sdk';
 import { useT } from '@xala/i18n';
 
 // Design system token mapping

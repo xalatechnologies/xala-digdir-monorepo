@@ -25,7 +25,7 @@ import {
   PlayIcon,
   LockIcon,
   UnlockIcon,
-} from '@xala/ds';
+} from '@xalatechnologies/platform/ui';
 import {
   useSeason,
   useSeasonApplications,
@@ -35,7 +35,7 @@ import {
   useDeleteSeason,
   type SeasonStatus,
 } from '@digilist/client-sdk';
-import { FormSection } from '@xala/ds';
+import { FormSection } from '@xalatechnologies/platform/ui';
 import { SeasonVenueManagement } from '../../components/seasons/SeasonVenueManagement';
 import { SeasonApplicationManagement } from '../../components/seasons/SeasonApplicationManagement';
 import { SeasonAllocationManagement } from '../../components/seasons/SeasonAllocationManagement';

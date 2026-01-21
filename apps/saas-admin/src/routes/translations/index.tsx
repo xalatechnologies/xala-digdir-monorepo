@@ -15,7 +15,7 @@ import {
   Table,
   Tag,
   Dialog,
-} from '@xala/ds';
+} from '@xalatechnologies/platform/ui';
 import { useT } from '@xala/i18n';
 
 // Namespace definitions

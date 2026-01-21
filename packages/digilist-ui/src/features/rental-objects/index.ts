@@ -140,5 +140,5 @@ export {
 
 // =============================================================================
 // NOTE: Platform blocks (GuidelinesTab, FAQTab, ContactInfoCard, etc.)
-// should be imported directly from @xala/ds to avoid circular dependencies
+// should be imported directly from @xalatechnologies/platform/ui to avoid circular dependencies
 // =============================================================================

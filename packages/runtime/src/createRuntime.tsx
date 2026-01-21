@@ -26,7 +26,7 @@
 import React, { type ReactNode } from 'react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { I18nProvider } from '@xala/i18n';
-import { ThemeProvider, DialogProvider } from '@xala/ds';
+import { ThemeProvider, DialogProvider } from '@xalatechnologies/platform/ui';
 import type {
   CreateRuntimeOptions,
   RuntimeInstance,

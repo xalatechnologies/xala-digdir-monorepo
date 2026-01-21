@@ -16,7 +16,7 @@ import {
   Alert,
   Badge,
   Text,
-} from '@xala/ds';
+} from '@xalatechnologies/platform/ui';
 import {
   useGdprRequest,
   useUpdateGdprRequestStatus,

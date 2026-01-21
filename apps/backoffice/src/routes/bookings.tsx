@@ -30,7 +30,7 @@ import {
   DownloadIcon,
   useDialog,
   PageHeader,
-} from '@xala/ds';
+} from '@xalatechnologies/platform/ui';
 
 import {
   useBookings,

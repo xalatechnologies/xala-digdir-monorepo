@@ -31,7 +31,7 @@ import {
   InboxIcon,
   CalendarIcon,
   SettingsIcon,
-} from '@xala/ds';
+} from '@xalatechnologies/platform/ui';
 import {
   useRcoStatus,
   useVismaStatus,

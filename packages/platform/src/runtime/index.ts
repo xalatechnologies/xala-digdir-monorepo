@@ -44,7 +44,9 @@ export interface RuntimeConfig {
 
 // Environment utilities
 export function getEnvironment(): 'development' | 'staging' | 'production' {
-  const env = typeof process !== 'undefined' ? process.env.NODE_ENV : 'development';
+  // Use globalThis for browser-safe access
+  const g = globalThis as { process?: { env?: { NODE_ENV?: string } } };
+  const env = g?.process?.env?.NODE_ENV ?? 'development';
   if (env === 'production') return 'production';
   if (env === 'test' || env === 'staging') return 'staging';
   return 'development';

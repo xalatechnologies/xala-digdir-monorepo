@@ -7,7 +7,7 @@
  */
 
 import * as React from 'react';
-import { Heading, Paragraph, Checkbox } from '@xala/ds';
+import { Heading, Paragraph, Checkbox } from '@xalatechnologies/platform/ui';
 import type {
   RecurringOccurrenceDTO,
   RecurringSummary,

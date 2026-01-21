@@ -12,7 +12,7 @@ import {
   Checkbox,
   Spinner,
   Paragraph,
-} from '@xala/ds';
+} from '@xalatechnologies/platform/ui';
 import type { RentalObject } from '@digilist/client-sdk/types';
 
 export interface RentalObjectsTableProps {

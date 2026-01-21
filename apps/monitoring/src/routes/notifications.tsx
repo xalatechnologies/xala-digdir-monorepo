@@ -17,7 +17,7 @@ import {
   Select,
   Badge,
   Spinner,
-} from '@xala/ds';
+} from '@xalatechnologies/platform/ui';
 import { useT, useLocale } from '@xala/i18n';
 
 const MOBILE_BREAKPOINT = 768;

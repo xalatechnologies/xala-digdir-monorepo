@@ -2,7 +2,7 @@
  * PaymentStatusBadge Component
  *
  * Displays payment status for bookings with color-coded badges.
- * Re-exported from @xala/ds design system.
+ * Re-exported from @xalatechnologies/platform/ui design system.
  *
  * Usage:
  * ```tsx
@@ -25,5 +25,5 @@ import { useT } from '@xala/i18n';
  */
 
 // Re-export from design system - DO NOT create custom UI components in apps
-export { PaymentStatusBadge } from '@xala/ds';
-export type { PaymentStatusBadgeProps, PaymentStatusType } from '@xala/ds';
+export { PaymentStatusBadge } from '@xalatechnologies/platform/ui';
+export type { PaymentStatusBadgeProps, PaymentStatusType } from '@xalatechnologies/platform/ui';

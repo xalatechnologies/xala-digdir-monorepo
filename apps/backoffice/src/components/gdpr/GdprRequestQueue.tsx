@@ -17,7 +17,7 @@ import {
   MoreVerticalIcon,
   FilterIcon,
   Dropdown,
-} from '@xala/ds';
+} from '@xalatechnologies/platform/ui';
 
 import {
   usePendingGdprRequests,

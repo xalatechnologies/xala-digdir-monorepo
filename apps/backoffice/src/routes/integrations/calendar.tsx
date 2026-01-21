@@ -28,7 +28,7 @@ import {
   ChevronLeftIcon,
   CalendarIcon,
   SendIcon,
-} from '@xala/ds';
+} from '@xalatechnologies/platform/ui';
 import { useCalendarSyncStatus, useSyncCalendar } from '@digilist/client-sdk';
 import { useT } from '@xala/i18n';
 

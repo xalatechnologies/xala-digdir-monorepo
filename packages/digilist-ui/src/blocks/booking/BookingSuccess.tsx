@@ -6,7 +6,7 @@
  */
 import * as React from 'react';
 import { Heading, Paragraph, Button } from '@digdir/designsystemet-react';
-import { CheckCircleIcon, CalendarIcon, MailIcon, PhoneIcon } from '@xala/ds';
+import { CheckCircleIcon, CalendarIcon, MailIcon, PhoneIcon } from '@xalatechnologies/platform/ui';
 import type { BookingDetails } from '@digilist/contracts';
 
 // Utility function for class name concatenation

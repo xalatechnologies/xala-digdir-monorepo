@@ -5,7 +5,7 @@
  */
 
 import * as React from 'react';
-import { Heading, Paragraph, Button, UserIcon, BuildingIcon } from '@xala/ds';
+import { Heading, Paragraph, Button, UserIcon, BuildingIcon } from '@xalatechnologies/platform/ui';
 import type { FlowSelectedSlot, FlowBookingMode } from '@digilist/client-sdk';
 import { useT } from '@xala/i18n';
 import { BookingVisibilitySelector, type BookingVisibility } from './BookingVisibilitySelector';

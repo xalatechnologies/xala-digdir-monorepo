@@ -27,7 +27,7 @@ import {
   ChevronLeftIcon,
   Textfield,
   Select,
-} from '@xala/ds';
+} from '@xalatechnologies/platform/ui';
 import { useT } from '@xala/i18n';
 
 interface ArchiveEvent {

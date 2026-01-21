@@ -9,7 +9,7 @@ import { useT } from '@xala/i18n';
   Heading,
   Paragraph,
   Card,
-} from '@xala/ds';
+} from '@xalatechnologies/platform/ui';
 import { 
   useBackofficeOrganizations,
   useUsers,

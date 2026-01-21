@@ -9,7 +9,7 @@
  * All core providers (Auth, I18n, Theme, SDK, etc.) are in RuntimeProvider.
  */
 import { BrowserRouter, Routes, Route, Navigate, useNavigate } from 'react-router-dom';
-import { ProtectedRoute, AccountSelectionModal } from '@xala/ds';
+import { ProtectedRoute, AccountSelectionModal } from '@xalatechnologies/platform/ui';
 import { useOAuthCallback } from '@xala/auth';
 import { useT } from '@xala/i18n';
 import { AccountContextProvider, useAccountContext, type DashboardContext } from '@xala/runtime';

@@ -4,13 +4,13 @@
  */
 import { useEffect, useCallback, useRef } from 'react';
 import { useNavigate, useLocation, useSearchParams } from 'react-router-dom';
-import { LoginPage } from '@xala/ds';
+import { LoginPage } from '@xalatechnologies/platform/ui';
 import { webAuthConfig } from '@xala/auth';
 import {
   PlatformIcon,
   AutomationIcon,
   ShieldCheckIcon,
-} from '@xala/ds';
+} from '@xalatechnologies/platform/ui';
 import { useAuth } from '../hooks/useAuth';
 import { useDemoLogin } from '../hooks/useDemoLogin';
 import { idportenService } from '@digilist/client-sdk';

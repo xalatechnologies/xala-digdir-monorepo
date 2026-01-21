@@ -30,7 +30,7 @@ import {
   PaymentStatusBadge,
   formatTimeAgo,
   Link as DsLink,
-} from '@xala/ds';
+} from '@xalatechnologies/platform/ui';
 import {
   useOrganization,
   useOrganizationMembers,
@@ -48,7 +48,7 @@ import {
 } from '@digilist/client-sdk';
 import type { SeasonalLease } from '@digilist/client-sdk/services/seasonal-lease.service';
 import { MemberManagement } from '../../components/organizations/MemberManagement';
-import { FormSection } from '@xala/ds';
+import { FormSection } from '@xalatechnologies/platform/ui';
 import { useMemo } from 'react';
 import { useT } from '@xala/i18n';
 

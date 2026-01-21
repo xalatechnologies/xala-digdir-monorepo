@@ -6,7 +6,7 @@
  */
 
 import * as React from 'react';
-import { Heading, Paragraph, Button, CheckCircleIcon, XCircleIcon, AlertTriangleIcon, ExternalLinkIcon } from '@xala/ds';
+import { Heading, Paragraph, Button, CheckCircleIcon, XCircleIcon, AlertTriangleIcon, ExternalLinkIcon } from '@xalatechnologies/platform/ui';
 import type {
   RecurringBookingResultProjectionDTO,
   RecurringOccurrenceResultDTO,
@@ -14,7 +14,7 @@ import type {
 import { formatDate, formatTime } from '@digilist/client-sdk';
 import { useT } from '@xala/i18n';
 
-// Icons are imported from @xala/ds above
+// Icons are imported from @xalatechnologies/platform/ui above
 
 // =============================================================================
 // Types

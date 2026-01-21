@@ -4,7 +4,7 @@
  */
 
 import { useT } from '@xala/i18n';
-import { CheckIcon } from '@xala/ds';
+import { CheckIcon } from '@xalatechnologies/platform/ui';
 import type { WizardStep } from '../../types';
 import { WIZARD_ICONS } from './WizardIcons';
 

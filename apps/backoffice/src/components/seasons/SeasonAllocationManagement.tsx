@@ -20,7 +20,7 @@ import {
   BuildingIcon,
   PlayIcon,
   CheckCircleIcon,
-} from '@xala/ds';
+} from '@xalatechnologies/platform/ui';
 import {
   useSeasonApplications,
   useAllocateApplication,

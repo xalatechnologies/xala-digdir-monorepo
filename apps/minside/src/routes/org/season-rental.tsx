@@ -21,7 +21,7 @@ import {
   Badge,
   Spinner,
   DashboardPageHeader,
-} from '@xala/ds';
+} from '@xalatechnologies/platform/ui';
 import { useLocale, useT } from '@xala/i18n';
 import {
   useSeasons,

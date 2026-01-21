@@ -27,7 +27,7 @@ export interface AuthProvider {
   /** Whether provider is enabled */
   enabled: boolean;
   
-  /** Icon component (from @xala/ds or custom) */
+  /** Icon component (from @xalatechnologies/platform/ui or custom) */
   icon?: () => ReactElement;
   
   /** Required roles to use this provider (optional) */

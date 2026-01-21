@@ -1,38 +1,80 @@
 /**
  * @xalatechnologies/platform/ui
- *
- * UI component layer providing a facade over @digdir/designsystemet-react
- * with additional composed components, business blocks, and application shells.
- *
- * Component Hierarchy:
- * 1. Primitives - Re-exported Designsystemet components
- * 2. Composed - Custom mid-level components built from primitives
- * 3. Shells - Application-level layouts
- * 4. Blocks - Business domain components
- * 5. Themes - Theme configuration and utilities
- *
- * @example
+ * 
+ * Unified Design System for the Xala Platform.
+ * Built on @digdir/designsystemet-react with custom extensions.
+ * 
+ * ## Import Examples
+ * 
  * ```tsx
- * import { Button, Card, Grid, AppShell } from '@xalatechnologies/platform/ui';
- *
- * function MyApp() {
- *   return (
- *     <AppShell>
- *       <Grid columns={3}>
- *         <Card>
- *           <Button>Click me</Button>
- *         </Card>
- *       </Grid>
- *     </AppShell>
- *   );
- * }
+ * // All components from single import
+ * import { Button, Card, AppShell } from '@xalatechnologies/platform/ui';
+ * 
+ * // Or use subpath imports for smaller bundles
+ * import { Button, Card } from '@xalatechnologies/platform/ui/primitives';
+ * import { PageHeader } from '@xalatechnologies/platform/ui/composed';
+ * import { AppShell } from '@xalatechnologies/platform/ui/shells';
  * ```
  */
 
-// Re-export all UI sub-modules
+// =============================================================================
+// Primitives - Base components (icons, container, grid, etc.)
+// Also re-exports all @digdir/designsystemet-react components
+// =============================================================================
 export * from './primitives';
-export * from './composed';
-export * from './shells';
+
+// =============================================================================
+// Provider & Theme
+// =============================================================================
+export { DesignsystemetProvider } from './provider';
+export type { DesignsystemetProviderProps, ColorScheme, DsSize, Typography } from './provider';
+export { ThemeProvider, useTheme } from './ThemeProvider';
+export type { ThemeProviderProps, ThemeContextValue } from './ThemeProvider';
+
+// =============================================================================
+// Composed Components (selective exports to avoid conflicts)
+// =============================================================================
+export {
+  ContentLayout,
+  FormSection,
+  FormActions,
+  GlobalSearch,
+  LanguageSwitcher,
+  HeaderSearch,
+  UserMenu,
+  ConfirmDialog,
+  DataTable,
+  FilterPanel,
+  DialogProvider,
+  useDialog,
+} from './composed';
+
+// =============================================================================
+// Blocks - Business logic components
+// =============================================================================
 export * from './blocks';
+
+// =============================================================================
+// Shells - Application shells
+// =============================================================================
+export * from './shells';
+
+// =============================================================================
+// Pages - Full page layouts
+// =============================================================================  
+export * from './pages';
+
+// =============================================================================
+// Patterns - High-level platform-specific components
+// =============================================================================
 export * from './patterns';
+
+// =============================================================================
+// Themes - Theme utilities
+// =============================================================================
 export * from './themes';
+
+// =============================================================================
+// Utilities
+// =============================================================================
+export { cn } from './utils';

@@ -13,7 +13,7 @@
     "@digdir/designsystemet-react": "1.2.0",
     "@tanstack/react-query": "^5.28.0",
     "@xala/auth": "workspace:*",
-    "@xala/ds": "workspace:*",
+    "@xalatechnologies/platform": "workspace:*",
     "@xala/i18n": "workspace:*",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"

@@ -10,7 +10,7 @@ import {
   Alert,
   Card,
   Textfield,
-} from '@xala/ds';
+} from '@xalatechnologies/platform/ui';
 import type { UseRentalObjectWizardReturn } from '@xala/backoffice/hooks/useRentalObjectWizard';
 
 export interface InventoryStepProps {

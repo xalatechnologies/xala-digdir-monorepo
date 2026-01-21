@@ -18,9 +18,13 @@ import {
   CheckCircleIcon,
   XCircleIcon,
   BuildingIcon,
-} from '@xala/ds';
-import { useSaasPlan, useSaasTenants } from '@digilist/client-sdk/hooks';
-import type { PlanStatus, BillingPeriod } from '@digilist/client-sdk/types';
+} from '@xalatechnologies/platform/ui';
+import {
+  useSaasPlan,
+  useSaasTenants,
+  type PlanStatus,
+  type BillingPeriod,
+} from '@xalatechnologies/platform/sdk';
 import { useT } from '@xala/i18n';
 
 const statusColors: Record<PlanStatus, 'success' | 'warning' | 'danger'> = {

@@ -14,7 +14,7 @@ import {
   Checkbox,
   Button,
 } from '@digdir/designsystemet-react';
-import { CalendarIcon, ClockIcon, CloseIcon } from '@xala/ds';
+import { CalendarIcon, ClockIcon, CloseIcon } from '@xalatechnologies/platform/ui';
 import type { BookingDetails, AdditionalService } from '@digilist/contracts';
 
 // Utility function for class name concatenation

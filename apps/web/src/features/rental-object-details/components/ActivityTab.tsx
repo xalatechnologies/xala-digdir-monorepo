@@ -8,7 +8,7 @@
  */
 
 import * as React from 'react';
-import { Heading, Paragraph, Card, Tag } from '@xala/ds';
+import { Heading, Paragraph, Card, Tag } from '@xalatechnologies/platform/ui';
 import type { ActivityData, RentalObjectEvent, RentalHistoryItem, RentalObjectType } from '../types';
 import { createPresenter } from '../presenters/rentalObjectTypePresenter';
 import { useT } from '@xala/i18n';

@@ -20,7 +20,7 @@ import {
   Alert,
   Chip,
   ProgressBar
-} from '@xala/ds';
+} from '@xalatechnologies/platform/ui';
 import { useT } from '@xala/i18n';
 import {
   type SeedData,

@@ -5,7 +5,7 @@
  * Different roles see different FAQs based on their permissions.
  */
 import * as React from 'react';
-import { Paragraph, Button, Heading, Link } from '@xala/ds';
+import { Paragraph, Button, Heading, Link } from '@xalatechnologies/platform/ui';
 import { useAuth } from '@xala/auth';
 import { HelpLayout, HelpFAQItem, type TocItem } from './components';
 import { useT } from '@xala/i18n';

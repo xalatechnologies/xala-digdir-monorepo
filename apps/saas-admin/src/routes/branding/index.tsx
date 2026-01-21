@@ -17,8 +17,8 @@ import {
   SparklesIcon,
   EditIcon,
   SearchIcon,
-} from '@xala/ds';
-import { useSaasTenants } from '@digilist/client-sdk/hooks';
+} from '@xalatechnologies/platform/ui';
+import { useSaasTenants } from '@xalatechnologies/platform/sdk';
 import { useT } from '@xala/i18n';
 
 // Mock branding data - will be replaced with real API

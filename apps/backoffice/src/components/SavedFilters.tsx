@@ -23,7 +23,7 @@ import {
   ClockIcon,
   PlusIcon,
   useDialog,
-} from '@xala/ds';
+} from '@xalatechnologies/platform/ui';
 import {
   useSavedFilters,
   useCreateSavedFilter,

@@ -20,14 +20,14 @@ import {
   Link,
   TrashIcon,
   ExternalLinkIcon,
-} from '@xala/ds';
+} from '@xalatechnologies/platform/ui';
 import {
   useFavorites,
   useRemoveFavorite,
   useFavoriteCount,
 } from '@digilist/client-sdk';
 import { useT } from '@xala/i18n';
-import { useDialog } from '@xala/ds';
+import { useDialog } from '@xalatechnologies/platform/ui';
 
 // Web app URL for viewing rental objects
 const WEB_APP_URL = import.meta.env.VITE_WEB_APP_URL || 'https://digilist.no';

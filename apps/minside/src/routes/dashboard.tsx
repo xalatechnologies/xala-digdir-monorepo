@@ -1,7 +1,7 @@
 /**
  * DashboardPage
  *
- * Mobile-first responsive dashboard using @xala/ds shared components.
+ * Mobile-first responsive dashboard using @xalatechnologies/platform/ui shared components.
  * - Uses PageHeader for consistent welcome section
  * - Uses StatCard for KPI display
  * - Uses QuickActionCard for quick actions
@@ -27,7 +27,7 @@ import {
   StatCard,
   QuickActionCard,
   EmptyState,
-} from '@xala/ds';
+} from '@xalatechnologies/platform/ui';
 import { useT } from '@xala/i18n';
 import { useMyBookings, formatDate, formatTime, type Booking } from '@digilist/client-sdk';
 import { useAuth } from '@xala/auth';

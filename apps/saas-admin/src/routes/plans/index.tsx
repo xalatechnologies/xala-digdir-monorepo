@@ -25,12 +25,14 @@ import {
   StatusTabs,
   FilterChips,
   DataPageHeader,
-} from '@xala/ds';
+} from '@xalatechnologies/platform/ui';
 import {
   useSaasPlans,
   useUpdateSaasPlan,
-} from '@digilist/client-sdk/hooks';
-import type { Plan, PlanStatus, BillingPeriod } from '@digilist/client-sdk/types';
+  type Plan,
+  type PlanStatus,
+  type BillingPeriod,
+} from '@xalatechnologies/platform/sdk';
 import { useT } from '@xala/i18n';
 
 const statusColors: Record<PlanStatus, 'success' | 'warning' | 'danger'> = {

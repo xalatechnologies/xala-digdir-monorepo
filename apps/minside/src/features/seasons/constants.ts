@@ -5,7 +5,7 @@
  */
 
 import type { SeasonStatus } from '@digilist/client-sdk/types';
-import type { BadgeColor } from '@xala/ds';
+import type { BadgeColor } from '@xalatechnologies/platform/ui';
 
 // =============================================================================
 // Season Status Configuration

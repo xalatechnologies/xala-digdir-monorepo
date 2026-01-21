@@ -27,13 +27,14 @@ import {
   StatusTabs,
   FilterChips,
   DataPageHeader,
-} from '@xala/ds';
+} from '@xalatechnologies/platform/ui';
 import {
   useSaasTenants,
   useSuspendSaasTenant,
   useReactivateSaasTenant,
-} from '@digilist/client-sdk/hooks';
-import type { SaasTenant, SaasTenantStatus } from '@digilist/client-sdk/types';
+  type SaasTenant,
+  type SaasTenantStatus,
+} from '@xalatechnologies/platform/sdk';
 import { useT } from '@xala/i18n';
 
 const statusColors: Record<SaasTenantStatus, 'success' | 'warning' | 'danger' | 'info'> = {

@@ -6,14 +6,14 @@
  */
 
 import * as React from 'react';
-import { Heading, Paragraph, Button } from '@xala/ds';
+import { Heading, Paragraph, Button } from '@xalatechnologies/platform/ui';
 import { bookingService, auditService, authService, type CreateBookingDTO, useOrganizations } from '@digilist/client-sdk';
 import type { BookingConfig } from '../../types';
 import { BookingDialog, type BookingFormData, type BookingSlot } from '../BookingDialog';
 import { CalendarSection } from '../CalendarSection';
 import { useAuth } from '@xala/auth';
 import { useT } from '@xala/i18n';
-import type { CalendarSelection, CalendarCell } from '@xala/ds';
+import type { CalendarSelection, CalendarCell } from '@xalatechnologies/platform/ui';
 
 import { BookingStepperHeader, type BookingStep } from './components/BookingStepperHeader';
 import { BookingCartSidebar, type SlotDetail } from './components/BookingCartSidebar';

@@ -5,7 +5,7 @@
  */
 import * as React from 'react';
 import { Heading, Paragraph, Button } from '@digdir/designsystemet-react';
-import { SparklesIcon, ChevronRightIcon } from '@xala/ds';
+import { SparklesIcon, ChevronRightIcon } from '@xalatechnologies/platform/ui';
 import { formatPriceUnit } from '../utils';
 import type {
   BookingConfig,

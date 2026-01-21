@@ -4,7 +4,7 @@
  */
 
 import React, { createContext, useContext, useState, useCallback, type ReactNode } from 'react';
-import { Alert } from '@xala/ds';
+import { Alert } from '@xalatechnologies/platform/ui';
 import { useT } from '@xala/i18n';
 
 type ToastType = 'success' | 'info' | 'warning' | 'danger';

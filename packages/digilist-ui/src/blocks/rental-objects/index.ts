@@ -81,10 +81,10 @@ export type { AmenityChipsProps as FacilityChipsProps } from '../AmenityChips';
 export type { Amenity as Facility } from '../AmenityChips';
 
 // =============================================================================
-// NOTE: Platform blocks remain in @xala/ds
+// NOTE: Platform blocks remain in @xalatechnologies/platform/ui
 // =============================================================================
 // The following components are NOT re-exported here to avoid circular dependencies.
-// Import them directly from @xala/ds:
+// Import them directly from @xalatechnologies/platform/ui:
 //
 //   import {
 //     GuidelinesTab,
@@ -93,6 +93,6 @@ export type { Amenity as Facility } from '../AmenityChips';
 //     OpeningHoursCard,
 //     LocationCard,
 //     CapacityCard,
-//   } from '@xala/ds';
+//   } from '@xalatechnologies/platform/ui';
 //
-// These are platform-neutral blocks that will remain in @xala/ds.
+// These are platform-neutral blocks that will remain in @xalatechnologies/platform/ui.

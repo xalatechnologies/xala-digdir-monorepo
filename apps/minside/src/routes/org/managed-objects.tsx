@@ -12,7 +12,7 @@ import {
   Badge,
   Skeleton,
   DashboardPageHeader,
-} from '@xala/ds';
+} from '@xalatechnologies/platform/ui';
 import { 
   useCreateCustodySubgrant,
   useOrganizationMembers,

@@ -19,7 +19,7 @@ import {
   BuildingIcon,
   PeopleIcon,
   ExternalLinkIcon,
-} from '@xala/ds';
+} from '@xalatechnologies/platform/ui';
 
 import {
   useGlobalSearch,

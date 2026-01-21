@@ -1,4 +1,4 @@
-import { Paragraph } from '@xala/ds';
+import { Paragraph } from '@xalatechnologies/platform/ui';
 import { useT } from '@xala/i18n';
 import type { RentalObject } from '@digilist/client-sdk';
 

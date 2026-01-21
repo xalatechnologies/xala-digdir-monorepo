@@ -18,10 +18,10 @@ import {
   EditIcon,
   TrashIcon,
   SettingsIcon,
-} from '@xala/ds';
+} from '@xalatechnologies/platform/ui';
 import { useT } from '@xala/i18n';
 
-// Local icons (not exported from @xala/ds)
+// Local icons (not exported from @xalatechnologies/platform/ui)
 function ChevronUpIcon() {
   return (
     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">

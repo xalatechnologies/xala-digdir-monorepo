@@ -4,7 +4,7 @@
 
 import { useState, useMemo } from 'react';
 import { useSearchParams, Link } from 'react-router-dom';
-import { Heading, Paragraph, Textfield, Card } from '@xala/ds';
+import { Heading, Paragraph, Textfield, Card } from '@xalatechnologies/platform/ui';
 import { useT } from '@xala/i18n';
 
 // Mock search results for MVP - article titles/snippets would come from MDX content
