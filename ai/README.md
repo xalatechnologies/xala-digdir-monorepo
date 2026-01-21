@@ -1,35 +1,45 @@
-# DigiList AI Governance System
+# Xala Platform AI Governance System
 
+> **Machine-Operable Doctrine for LLM Assistants**
 > **Repository Intelligence for Cursor / Claude / Windsurf / Copilot**
 > **Prevents architectural drift permanently**
-> **Last Updated:** 2026-01-20
+> **Last Updated:** 2026-01-21
 
 ---
 
 ## Quick Start
 
+### For LLMs
+
+**Load in this order:**
+
+1. `bootstrap/BOOTSTRAP_INDEX.md` - Load order and context check
+2. `bootstrap/SYSTEM_INTENT.md` - What this system IS
+3. `bootstrap/NON_NEGOTIABLES.md` - Rules that CANNOT be violated
+4. `bootstrap/OUTPUT_CONTRACT.md` - Expected response format
+5. `bootstrap/SAFETY_RAILS.md` - When to STOP and ask
+
+**Then load as needed:**
+- `doctrine/boundaries/` - Package and layer boundaries
+- `doctrine/patterns/` - How to do things right
+- `doctrine/anti-patterns/` - What NOT to do
+- `doctrine/runbooks/` - Step-by-step guides
+
 ### For Humans
 
 ```bash
 # Run full audit
-/audit
+pnpm verify:boundaries
 
-# Check thin-app compliance
-/audit thin-app
+# Check terminology
+pnpm verify:terms
 
-# Plan a migration
-/plan migrate-runtime apps/web
+# Build everything
+pnpm build
 
-# Verify changes
-/verify
+# Run tests
+pnpm test:run
 ```
-
-### For LLMs
-
-Read these documents in order:
-1. `PRINCIPLES.md` - Non-negotiable rules
-2. `ARCHITECTURE.md` - System overview
-3. `ANTI_PATTERNS.md` - What NOT to do
 
 ---
 
@@ -37,17 +47,111 @@ Read these documents in order:
 
 ```
 ai/
-├── README.md              # This file
-├── AGENTS.md              # Agent definitions (8 agents)
-├── SKILLS.md              # Skill catalog
-├── COMMANDS.md            # Command reference
-├── ARCHITECTURE.md        # System overview
-├── PRINCIPLES.md          # Non-negotiables
-├── ANTI_PATTERNS.md       # Forbidden patterns
-├── DS_RULES.md            # Design System rules
-├── SDK_RULES.md           # SDK usage rules
-├── TESTING_RULES.md       # Testing requirements
-└── CHANGE_MANAGEMENT.md   # Change process
+├── README.md                           # This file
+│
+├── bootstrap/                          # 🚀 LLM BOOTSTRAP BUNDLE
+│   ├── BOOTSTRAP_INDEX.md             # Load order (start here)
+│   ├── SYSTEM_INTENT.md               # What this system IS
+│   ├── NON_NEGOTIABLES.md             # Hard rules
+│   ├── OUTPUT_CONTRACT.md             # Response format
+│   └── SAFETY_RAILS.md                # Stop conditions
+│
+├── doctrine/                           # 📚 5-LAYER DOCTRINE
+│   ├── laws/                          # Layer 1: Immutable principles
+│   │   ├── IMMUTABLE_LAWS.md          # Core laws
+│   │   └── THREE_LAYER_MODEL.md       # Universal/Server/Tooling
+│   │
+│   ├── boundaries/                    # Layer 2: Package boundaries
+│   │   ├── LAYER_MAP.md               # Platform vs Domain vs App
+│   │   ├── PACKAGE_OWNERSHIP.md       # Who owns what
+│   │   └── IMPORT_RULES.md            # What can import what
+│   │
+│   ├── patterns/                      # Layer 3: Correct patterns
+│   │   ├── SDK_FIRST.md               # How to access data
+│   │   ├── UI_PLATFORM_ONLY.md        # How to build UI
+│   │   └── THIN_APP.md                # App structure
+│   │
+│   ├── anti-patterns/                 # Layer 4: What NOT to do
+│   │   ├── BANNED_IMPORTS.md          # Forbidden imports
+│   │   ├── DOMAIN_LEAK.md             # Domain in platform
+│   │   └── UI_LOGIC.md                # Logic in UI
+│   │
+│   └── runbooks/                      # Layer 5: Step-by-step guides
+│       ├── NEW_SDK_SERVICE.md         # Add SDK service
+│       ├── NEW_UI_COMPONENT.md        # Add UI component
+│       └── FIX_BOUNDARY.md            # Fix violations
+│
+├── AGENTS.md                          # Agent definitions
+├── SKILLS.md                          # Skill catalog
+├── COMMANDS.md                        # Command reference
+├── ARCHITECTURE.md                    # System overview
+├── PRINCIPLES.md                      # Non-negotiables (legacy)
+├── ANTI_PATTERNS.md                   # Forbidden patterns (legacy)
+├── DS_RULES.md                        # Design System rules
+├── SDK_RULES.md                       # SDK usage rules
+├── TESTING_RULES.md                   # Testing requirements
+├── CHANGE_MANAGEMENT.md               # Change process
+├── UNIVERSAL_SAAS_GOVERNANCE.md       # Universal SaaS model
+│
+└── templates/                         # Starter templates
+    ├── PLATFORM_OVERVIEW.template.md
+    ├── ARCHITECTURE.template.md
+    ├── PRINCIPLES.template.md
+    ├── ANTI_PATTERNS.template.md
+    ├── UI_RULES.template.md
+    ├── API_RULES.template.md
+    ├── TESTING_RULES.template.md
+    └── CHANGE_PROCESS.template.md
+```
+
+---
+
+## The 5-Layer Doctrine Model
+
+```
+┌─────────────────────────────────────────────────────────────────────┐
+│                        LAYER 1: LAWS                                 │
+│  Immutable principles that NEVER change                             │
+│  • Dependency direction (Platform → Domain → App)                   │
+│  • Single source of truth                                           │
+│  • Audit trail requirement                                          │
+└─────────────────────────────────────────────────────────────────────┘
+                                │
+                                ▼
+┌─────────────────────────────────────────────────────────────────────┐
+│                     LAYER 2: BOUNDARIES                              │
+│  Package and layer separation rules                                  │
+│  • Platform vs Domain vs App                                        │
+│  • Import rules                                                      │
+│  • Package ownership                                                 │
+└─────────────────────────────────────────────────────────────────────┘
+                                │
+                                ▼
+┌─────────────────────────────────────────────────────────────────────┐
+│                      LAYER 3: PATTERNS                               │
+│  How to do things correctly                                          │
+│  • SDK-First data access                                            │
+│  • UI Platform patterns                                              │
+│  • Thin app architecture                                            │
+└─────────────────────────────────────────────────────────────────────┘
+                                │
+                                ▼
+┌─────────────────────────────────────────────────────────────────────┐
+│                    LAYER 4: ANTI-PATTERNS                            │
+│  What NOT to do (with examples)                                      │
+│  • Banned imports                                                    │
+│  • Domain leaks                                                      │
+│  • UI logic                                                          │
+└─────────────────────────────────────────────────────────────────────┘
+                                │
+                                ▼
+┌─────────────────────────────────────────────────────────────────────┐
+│                      LAYER 5: RUNBOOKS                               │
+│  Step-by-step guides for common tasks                                │
+│  • Add new SDK service                                              │
+│  • Add new UI component                                              │
+│  • Fix boundary violation                                            │
+└─────────────────────────────────────────────────────────────────────┘
 ```
 
 ---
@@ -65,122 +169,67 @@ ai/
 
 | Rule | Enforcement |
 |------|-------------|
+| Platform never imports domain | ESLint + CI |
+| Frontend never imports server-only | ESLint + CI |
 | SDK-First | No fetch/axios in apps |
 | DS-First | No @digdir/* imports |
-| Runtime-First | No manual providers |
-| Contract-First | No local type definitions |
 | i18n-First | No hardcoded strings |
-
----
-
-## Agents
-
-| Agent | Scope | Role |
-|-------|-------|------|
-| Governor | All | Final authority |
-| Architecture Auditor | All | Detect violations |
-| Domain | Business logic | Rule enforcement |
-| SDK & Contract | API/SDK | Contract parity |
-| Design System | UI | DS compliance |
-| Thin App Enforcer | Apps | Presentation-only |
-| Test Governor | Tests | Quality enforcement |
-| Documentation | Docs | Accuracy |
+| Thin Apps | No business logic in apps |
 
 ---
 
 ## Commands
 
-### Audit
-```
-/audit                    Full repo audit
-/audit thin-app           Thin app only
-/audit runtime            Provider analysis
-/audit ds                 Design system
-/audit sdk                SDK/API drift
+### Verification
+
+```bash
+# Full boundary check
+pnpm verify:boundaries
+
+# Check for banned terms
+pnpm verify:terms
+
+# Run all governance checks
+pnpm -F @xalatechnologies/governance verify
 ```
 
-### Plan
-```
-/plan migrate-runtime     Runtime centralization
-/plan thin-app            App refactor
-/plan alias-migration     Import aliases
-```
+### Build & Test
 
-### Execute
-```
-/implement step <n>       Execute one step
-/verify                   Validation checklist
-/block                    Hard stop
-```
-
----
-
-## Change Process
-
-```
-AUDIT → PLAN → IMPLEMENT → VERIFY
-        ↓         ↓          ↓
-     Approve   One step   Checklist
-                at a time   pass
+```bash
+pnpm build           # Build all packages
+pnpm typecheck       # Type check
+pnpm test:run        # Run tests
+pnpm lint            # ESLint check
 ```
 
 ---
 
 ## Integration
 
-### Cursor Rules
-
-Add to `.cursorrules`:
-```
-Read /ai/PRINCIPLES.md before any code change.
-Run /audit before implementing.
-Follow /ai/ANTI_PATTERNS.md strictly.
-```
-
 ### Claude Projects
 
 Add to project knowledge:
-- `/ai/ARCHITECTURE.md`
-- `/ai/PRINCIPLES.md`
-- `/ai/ANTI_PATTERNS.md`
+- `ai/bootstrap/` (all files)
+- `ai/doctrine/` (as needed)
+
+### Cursor Rules
+
+```
+# .cursorrules
+Read /ai/bootstrap/BOOTSTRAP_INDEX.md first.
+Follow /ai/doctrine/patterns/ strictly.
+Check /ai/doctrine/anti-patterns/ before writing code.
+```
 
 ### CI/CD
 
-See `.github/workflows/ai-compliance.yml` for automated checks.
+```yaml
+# .github/workflows/ci.yml
+- name: Boundary Check
+  run: pnpm verify:boundaries
 
----
-
-## File References
-
-| Document | Purpose |
-|----------|---------|
-| `/ai/AGENTS.md` | Agent definitions |
-| `/ai/SKILLS.md` | Skill catalog |
-| `/ai/COMMANDS.md` | Command reference |
-| `/ai/ARCHITECTURE.md` | System overview |
-| `/ai/PRINCIPLES.md` | Non-negotiables |
-| `/ai/ANTI_PATTERNS.md` | Forbidden patterns |
-| `/ai/DS_RULES.md` | Design System |
-| `/ai/SDK_RULES.md` | SDK usage |
-| `/ai/TESTING_RULES.md` | Testing |
-| `/ai/CHANGE_MANAGEMENT.md` | Change process |
-
----
-
-## Quick Violations Check
-
-```bash
-# Thin app violations
-grep -r "import.*Provider" apps/*/src/routes --include="*.tsx"
-
-# Direct fetch
-grep -rE "fetch\(" apps/*/src --include="*.tsx"
-
-# Direct @digdir
-grep -r "@digdir/designsystemet" apps/*/src --include="*.tsx"
-
-# Deep relatives
-grep -rE "from ['\"]\.\.\/\.\.\/\.\.\/" apps packages --include="*.tsx"
+- name: Term Check
+  run: pnpm verify:terms
 ```
 
 ---
@@ -188,9 +237,41 @@ grep -rE "from ['\"]\.\.\/\.\.\/\.\.\/" apps packages --include="*.tsx"
 ## Success Criteria
 
 This system succeeds when:
-- ✅ New devs can't accidentally break architecture
+- ✅ Platform packages have ZERO @digilist/* imports
+- ✅ Frontend apps have ZERO server-only imports
+- ✅ All data access goes through SDK
+- ✅ All UI goes through platform design system
+- ✅ Apps contain only orchestration, no logic
+- ✅ New developers can't accidentally break architecture
 - ✅ AI outputs are predictable and consistent
-- ✅ Runtime/build errors decrease
-- ✅ Apps remain presentation-only
-- ✅ DS is the only UI surface
-- ✅ SDK is the only data surface
+
+---
+
+## Quick Violations Check
+
+```bash
+# Platform imports domain (FORBIDDEN)
+grep -r "@digilist" packages/platform/src && echo "VIOLATION"
+
+# Frontend imports server (FORBIDDEN)
+grep -r "@xalatechnologies/platform-schema" apps/web/src && echo "VIOLATION"
+
+# Direct @digdir in apps (FORBIDDEN)
+grep -r "@digdir/designsystemet" apps/*/src && echo "VIOLATION"
+
+# Direct fetch in apps (FORBIDDEN)
+grep -rE "fetch\(" apps/*/src --include="*.tsx" && echo "VIOLATION"
+```
+
+---
+
+## File References
+
+| Document | Purpose | Priority |
+|----------|---------|----------|
+| `bootstrap/BOOTSTRAP_INDEX.md` | Load order | 1 |
+| `bootstrap/SYSTEM_INTENT.md` | System identity | 2 |
+| `bootstrap/NON_NEGOTIABLES.md` | Hard rules | 3 |
+| `doctrine/boundaries/LAYER_MAP.md` | Architecture | 4 |
+| `doctrine/patterns/SDK_FIRST.md` | Data access | 5 |
+| `doctrine/anti-patterns/BANNED_IMPORTS.md` | What to avoid | 6 |

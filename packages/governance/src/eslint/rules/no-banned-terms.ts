@@ -16,7 +16,6 @@ const noBannedTerms: Rule.RuleModule = {
       description: 'Disallow banned terms (listing, facility)',
       recommended: true,
     },
-    fixable: null,
     schema: [],
     messages: {
       bannedTerm:
@@ -58,6 +57,3 @@ const noBannedTerms: Rule.RuleModule = {
 };
 
 export default noBannedTerms;
-
-// CommonJS export for ESLint compatibility
-module.exports = noBannedTerms;
