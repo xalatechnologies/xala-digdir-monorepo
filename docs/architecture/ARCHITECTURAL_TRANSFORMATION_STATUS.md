@@ -121,30 +121,43 @@ This document tracks the progress of the Master Architectural Transformation to 
 
 ## Phase D: UI Platform-Only
 
-### PR D.1: Remove Domain Components from @xala/ds ⏳ PENDING
+### PR D.1: Remove Domain Components from @xala/ds 🔄 IN PROGRESS
 
-**To Do:**
-- Move domain components to @digilist/ui
-- Keep only platform patterns in @xala/ds
-- Update re-exports for backward compatibility
+**Analysis In Progress:**
+- Identifying domain-specific components in packages/platform/src/ui/blocks/
+- Creating migration plan: DS_DOMAIN_COMPONENT_MIGRATION.md
+- Creating re-export stubs in @digilist/ui
 
-### PR D.2: Convert saas-admin to Platform-Only ⏳ PENDING
+**Domain Components Identified:**
+- booking-engine/, BookingConfirmation.tsx, BookingFormModal.tsx, BookingSection.tsx, BookingSuccess.tsx
+- RentalObject*.tsx (9 components)
+- seasons/
+- FacilityChips.tsx (also uses banned term "Facility")
 
-**To Do:**
-- Remove @digilist/* imports from apps/saas-admin
-- Use @xalatechnologies/platform/sdk only
+### PR D.2: Convert saas-admin to Platform-Only 🔄 IN PROGRESS
 
-### PR D.3: Verify All Platform Apps ⏳ PENDING
+**Audit In Progress:**
+- Searching for @digilist/* imports in apps/saas-admin
+- Creating audit report: SAAS_ADMIN_PLATFORM_AUDIT.md
 
-**To Do:**
-- Run verification on monitoring-global, docs-global, saas-admin
-- Ensure no domain imports
+### PR D.3: Verify All Platform Apps 🔄 IN PROGRESS
+
+**Verification In Progress:**
+- Running verify-boundaries.sh
+- Running verify-terms.sh
+- Running verify-platform-only-apps.sh
+- Running verify-modules.mjs
+- Creating report: VERIFICATION_REPORT.md
 
 ---
 
 ## Phase E: Package Consolidation
 
-### PR E.1: Consolidate @xala/* → @xalatechnologies/platform ⏳ PENDING
+### PR E.1: Consolidate @xala/* → @xalatechnologies/platform 🔄 IN PROGRESS
+
+**Documentation In Progress:**
+- Creating PACKAGE_CONSOLIDATION_PLAN.md
+- Verifying exports in packages/platform/package.json
 
 **Target Mapping:**
 - @xala/ds → @xalatechnologies/platform/ui

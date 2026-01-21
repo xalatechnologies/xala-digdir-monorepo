@@ -2,7 +2,7 @@
  * ActivityFeed Block
  * Display timeline of user activity
  */
-import { Card, Badge } from '../../primitives';
+import { Card, Badge } from '@digdir/designsystemet-react';
 import { Paragraph } from '@digdir/designsystemet-react';
 
 export interface ActivityItemData {

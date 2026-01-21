@@ -4,7 +4,7 @@
  * Will be enhanced in Phase 3 when actively used
  */
 import React from 'react';
-import { Card } from '../../primitives';
+import { Card } from '@digdir/designsystemet-react';
 import { Heading, Paragraph, Alert } from '@digdir/designsystemet-react';
 
 export interface Permission {

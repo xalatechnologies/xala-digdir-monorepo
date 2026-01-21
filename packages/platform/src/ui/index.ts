@@ -18,8 +18,12 @@
  */
 
 // =============================================================================
-// Primitives - Base components (icons, container, grid, etc.)
-// Also re-exports all @digdir/designsystemet-react components
+// @digdir/designsystemet-react - Re-export all base components
+// =============================================================================
+export * from '@digdir/designsystemet-react';
+
+// =============================================================================
+// Primitives - Custom components (icons, container, grid, etc.)
 // =============================================================================
 export * from './primitives';
 

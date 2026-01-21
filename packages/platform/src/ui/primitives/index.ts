@@ -16,14 +16,11 @@ export type { StackProps } from './stack';
 export { Icon } from './icon';
 export type { IconProps } from './icon';
 
-export { Card } from './card';
-export type { CardProps } from './card';
+// Note: Card and Badge are provided by @digdir/designsystemet-react
+// Custom versions removed to avoid export conflicts
 
 export { Text } from './text';
 export type { TextProps } from './text';
-
-export { Badge } from './badge';
-export type { BadgeProps } from './badge';
 
 export {
   SunIcon,

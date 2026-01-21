@@ -25,7 +25,7 @@
  * }
  * ```
  */
-import { Card, Badge } from '../../primitives';
+import { Card, Badge } from '@digdir/designsystemet-react';
 import { Heading, Paragraph, Button } from '@digdir/designsystemet-react';
 
 // =============================================================================
@@ -88,8 +88,8 @@ export function VenueCard({
         {venue.address && <Paragraph data-size="sm" style={{ margin: 0, color: 'var(--ds-color-neutral-text-subtle)' }}>{venue.address.street}, {venue.address.city}</Paragraph>}
         {venue.description && <Paragraph data-size="sm" style={{ margin: 0, color: 'var(--ds-color-neutral-text-subtle)' }}>{venue.description}</Paragraph>}
         <div style={{ display: 'flex', gap: 'var(--ds-spacing-2)', marginTop: 'auto' }}>
-          {venue.capacity && <Badge size="sm">{labels.capacity}: {venue.capacity}</Badge>}
-          {categories.slice(0, 2).map((c, i) => <Badge key={i} size="sm">{c}</Badge>)}
+          {venue.capacity && <Badge data-size="sm">{labels.capacity}: {venue.capacity}</Badge>}
+          {categories.slice(0, 2).map((c, i) => <Badge key={i} data-size="sm">{c}</Badge>)}
         </div>
       </div>
       {showApplyButton && onApply && (

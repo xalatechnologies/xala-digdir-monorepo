@@ -7,14 +7,56 @@
   "types": "./src/index.ts",
   "sideEffects": false,
   "exports": {
-    ".": "./src/index.ts",
-    "./blocks": "./src/blocks/index.ts",
-    "./features": "./src/features/index.ts",
-    "./features/rental-objects": "./src/features/rental-objects/index.ts",
-    "./rental-objects": "./src/blocks/rental-objects/index.ts",
-    "./booking": "./src/blocks/booking/index.ts",
-    "./seasons": "./src/blocks/seasons/index.ts",
-    "./booking-engine": "./src/booking-engine/index.ts"
+    ".": {
+      "types": "./src/index.ts",
+      "import": "./src/index.ts",
+      "require": "./dist/index.cjs"
+    },
+    "./blocks": {
+      "types": "./src/blocks/index.ts",
+      "import": "./src/blocks/index.ts",
+      "require": "./dist/blocks/index.cjs"
+    },
+    "./features": {
+      "types": "./src/features/index.ts",
+      "import": "./src/features/index.ts",
+      "require": "./dist/features/index.cjs"
+    },
+    "./features/rental-objects": {
+      "types": "./src/features/rental-objects/index.ts",
+      "import": "./src/features/rental-objects/index.ts",
+      "require": "./dist/features/rental-objects/index.cjs"
+    },
+    "./features/booking": {
+      "types": "./src/features/booking/index.ts",
+      "import": "./src/features/booking/index.ts",
+      "require": "./dist/features/booking/index.cjs"
+    },
+    "./features/seasons": {
+      "types": "./src/features/seasons/index.ts",
+      "import": "./src/features/seasons/index.ts",
+      "require": "./dist/features/seasons/index.cjs"
+    },
+    "./rental-objects": {
+      "types": "./src/blocks/rental-objects/index.ts",
+      "import": "./src/blocks/rental-objects/index.ts",
+      "require": "./dist/blocks/rental-objects/index.cjs"
+    },
+    "./booking": {
+      "types": "./src/blocks/booking/index.ts",
+      "import": "./src/blocks/booking/index.ts",
+      "require": "./dist/blocks/booking/index.cjs"
+    },
+    "./seasons": {
+      "types": "./src/blocks/seasons/index.ts",
+      "import": "./src/blocks/seasons/index.ts",
+      "require": "./dist/blocks/seasons/index.cjs"
+    },
+    "./booking-engine": {
+      "types": "./src/booking-engine/index.ts",
+      "import": "./src/booking-engine/index.ts",
+      "require": "./dist/booking-engine/index.cjs"
+    }
   },
   "scripts": {
     "build": "tsup",
@@ -26,8 +68,7 @@
   "dependencies": {
     "@digilist/contracts": "workspace:*",
     "@xalatechnologies/platform": "workspace:*",
-    "@xala/i18n": "workspace:*",
-    "@xalatechnologies/platform": "workspace:*"
+    "@xala/i18n": "workspace:*"
   },
   "peerDependencies": {
     "react": "^18.2.0",

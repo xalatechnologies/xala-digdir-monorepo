@@ -29,7 +29,7 @@
  */
 
 import React, { useState } from 'react';
-import { Card } from '../../primitives';
+import { Card } from '@digdir/designsystemet-react';
 import { Heading, Paragraph, Button } from '@digdir/designsystemet-react';
 
 // =============================================================================

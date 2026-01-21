@@ -28,7 +28,7 @@
  * }
  * ```
  */
-import { Card, Badge } from '../../primitives';
+import { Card, Badge } from '@digdir/designsystemet-react';
 import { Heading, Paragraph, Button } from '@digdir/designsystemet-react';
 
 // =============================================================================
@@ -119,7 +119,7 @@ export function SeasonCard({
           <Heading level={3} data-size="sm" style={{ margin: 0 }}>{season.name}</Heading>
           {season.description && <Paragraph data-size="sm" style={{ margin: 0, color: 'var(--ds-color-neutral-text-subtle)' }}>{season.description}</Paragraph>}
         </div>
-        <Badge variant={statusConfig.color} size="sm">{statusLabel}</Badge>
+        <Badge data-color={statusConfig.color} data-data-size="sm">{statusLabel}</Badge>
       </div>
       <div style={{ padding: 'var(--ds-spacing-6)', flex: 1 }}>
         <Paragraph data-size="sm" style={{ margin: 0 }}>{labels.period}: {formatDate(season.startDate)} - {formatDate(season.endDate)}</Paragraph>

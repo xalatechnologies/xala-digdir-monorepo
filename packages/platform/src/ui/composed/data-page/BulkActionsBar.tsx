@@ -6,7 +6,7 @@
  */
 
 import React from 'react';
-import { Badge } from '../../primitives';
+import { Badge } from '@digdir/designsystemet-react';
 import { Button } from '@digdir/designsystemet-react';
 import { cn } from '../../utils';
 
@@ -88,9 +88,9 @@ export function BulkActionsBar({
     <>
       <div className={cn('bulk-actions-bar', className)} style={{ ...containerStyle, ...style }}>
         {/* Selected Count Badge */}
-        <Badge variant="info" size="lg">
+        <span style={{ backgroundColor: 'var(--ds-color-info-surface-default)', color: 'var(--ds-color-info-text-default)', padding: '0.25rem 0.75rem', borderRadius: 'var(--ds-border-radius-full)', fontSize: 'var(--ds-font-size-md)', fontWeight: 'var(--ds-font-weight-medium)' }}>
           {selectedLabel.replace('{{count}}', selectedCount.toString())}
-        </Badge>
+        </span>
 
         {/* Divider */}
         <div
