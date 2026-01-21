@@ -1,30 +1,56 @@
-# apps/api - Fastify API Server
+# apps/api - Domain API Server
 
 > **Extends:** [Root CLAUDE.md](../../CLAUDE.md)
 
 ## Purpose
 
-The **api** app is the Fastify-based API server for the Xala/Digilist Platform. It provides all backend services, business logic, data persistence, authentication, and audit logging.
+The **api** app is the Fastify-based **Domain API** server for Digilist rental booking. It provides domain-specific business logic, data persistence, and real-time events for rental objects, bookings, calendar, seasons, and related features.
+
+**IMPORTANT:** This API is **DOMAIN-ONLY**. Platform modules (auth, tenant, user, organizations, etc.) are in `apps/platform-api` (port 4001).
 
 **Port:** 4000
 **URL (local):** http://localhost:4000
 **URL (production):** https://api.digilist.no
-**Health check:** `/api/health`
+**Health check:** `/health`
 
 ---
 
-## Key Characteristics
+## Domain vs Platform Split
 
-- **Fastify framework** - High-performance Node.js web framework
-- **TypeScript** - Type-safe backend development
-- **Drizzle ORM** - Type-safe database queries (PostgreSQL)
-- **Multi-tenant** - Kommune-level data isolation
-- **Audit-first** - All mutations automatically logged
-- **RFC 7807** - Standard error responses (Problem Details)
-- **WebSocket** - Real-time event broadcasting
-- **JWT authentication** - Secure token-based auth
-- **Rate limiting** - API abuse prevention
-- **CORS configured** - Cross-origin requests handled
+### What Belongs Here (Domain)
+
+Domain-specific modules for Digilist rental booking:
+
+- **Rental Objects** - Rental object CRUD, categories, amenities
+- **Bookings** - Booking management, cart, confirmation
+- **Calendar** - Availability, time slots, blocks
+- **Seasons** - Season management, seasonal leases
+- **Custody** - Custody state machine
+- **Search** - Domain-specific search
+- **Pricing** - Pricing rules, discount codes
+- **Reviews** - Review management
+- **Allocations** - Resource allocations
+- **Conversations** - Messaging (domain context)
+- **Favorites** - User favorites
+- **Dashboard** - Domain dashboard data
+- **Reports** - Domain reports
+
+### What Does NOT Belong Here (Platform)
+
+Platform modules are in `apps/platform-api`:
+
+- Authentication (auth, authz, idporten)
+- User management
+- Tenant management
+- Organizations
+- GDPR compliance
+- Audit logging
+- Notifications
+- Feature flags
+- SaaS admin (billing, plans, entitlements)
+- Storage
+- Translations (system)
+- WebSocket infrastructure
 
 ---
 
@@ -33,32 +59,52 @@ The **api** app is the Fastify-based API server for the Xala/Digilist Platform. 
 ```
 apps/api/
 ├── src/
-│   ├── modules/            # Feature modules
-│   │   ├── auth/           # Authentication
-│   │   ├── listings/       # Listing CRUD
-│   │   ├── bookings/       # Booking management
-│   │   ├── users/          # User management
-│   │   ├── audit/          # Audit logging
-│   │   ├── notifications/  # Notification system
-│   │   └── integrations/   # Third-party integrations
-│   ├── db/                 # Database layer
-│   │   ├── schema/         # Drizzle schema definitions
-│   │   ├── migrations/     # Database migrations
-│   │   └── seeds/          # Seed data
-│   ├── middleware/         # Fastify middleware
-│   │   ├── auth.ts         # Authentication middleware
-│   │   ├── tenant.ts       # Tenant isolation
-│   │   ├── audit.ts        # Audit logging
-│   │   └── error.ts        # Error handling
-│   ├── websocket/          # WebSocket server
-│   ├── utils/              # Helper utilities
-│   ├── types/              # TypeScript types
-│   └── main.ts             # App entry point
-├── tests/                  # API tests
-│   └── e2e/                # E2E API tests
-├── drizzle.config.ts       # Drizzle configuration
-├── tsconfig.json           # TypeScript config
-└── package.json            # Dependencies
+│   ├── main.ts              # Entry point
+│   ├── core/                # Core infrastructure
+│   │   ├── container.ts     # DI container
+│   │   ├── module.ts        # Module loader
+│   │   └── auth/            # JWT validation (shared)
+│   ├── adapters/
+│   │   └── fastify.adapter.ts
+│   ├── database/
+│   │   └── schema/          # Domain schema imports
+│   ├── graphql/
+│   │   └── schema.ts        # GraphQL schema
+│   └── modules/             # Domain modules ONLY
+│       ├── rental-objects/
+│       ├── booking/
+│       ├── bookings/
+│       ├── calendar/
+│       ├── availability/
+│       ├── blocks/
+│       ├── seasons/
+│       ├── seasonal-lease/
+│       ├── custody/
+│       ├── search/
+│       ├── pricing/
+│       ├── discount-codes/
+│       ├── reviews/
+│       ├── favorites/
+│       ├── amenities/
+│       ├── addons/
+│       ├── allocations/
+│       ├── conversations/
+│       ├── messages/
+│       ├── dashboard/
+│       ├── reports/
+│       ├── domain/
+│       ├── backoffice/
+│       ├── profile/
+│       ├── public/
+│       ├── help/
+│       ├── share/
+│       ├── widgets/
+│       ├── metadata/
+│       ├── minside/
+│       └── bulk/
+├── package.json
+├── tsconfig.json
+└── CLAUDE.md
 ```
 
 ---
@@ -72,7 +118,7 @@ pnpm --filter @digilist/api build      # Build for production
 pnpm --filter @digilist/api start      # Start production server
 
 # From this directory
-pnpm dev                               # Start dev server
+pnpm dev                               # Start dev server (port 4000)
 pnpm build                             # Build for production
 pnpm start                             # Start production server
 
@@ -85,10 +131,11 @@ pnpm db:studio                         # Open Drizzle Studio
 
 ---
 
-## API-Specific Rules
+## API Architecture
 
-### 1. RFC 7807 Problem Details
-**ALL errors MUST conform to RFC 7807:**
+### RFC 7807 Problem Details
+
+ALL errors MUST conform to RFC 7807:
 
 ```typescript
 interface ProblemDetails {
@@ -100,98 +147,31 @@ interface ProblemDetails {
 }
 ```
 
-Example:
+### Multi-Tenant Isolation
+
+ALL queries MUST be scoped to tenant:
+
 ```typescript
-return reply.status(404).send({
-  type: '/errors/not-found',
-  title: 'Resource Not Found',
-  status: 404,
-  detail: `Listing with ID ${id} not found`,
-  instance: `/api/listings/${id}`,
-});
+// CORRECT - Tenant-scoped query
+const rentalObjects = await db.select()
+  .from(rentalObjects)
+  .where(eq(rentalObjects.tenantId, request.tenantId));
+
+// WRONG - No tenant isolation
+const rentalObjects = await db.select().from(rentalObjects);
 ```
 
-### 2. Audit Logging Required
-**ALL state mutations MUST be audited:**
+### Cross-API Communication
+
+For platform operations, call the Platform API:
 
 ```typescript
-import { auditLog } from '../utils/audit';
+// Domain API needs to validate auth token
+// Token validation uses shared JWT secret
 
-async function updateListing(request, reply) {
-  const { id } = request.params;
-  const updates = request.body;
-
-  const listing = await db.update(listings)
-    .set(updates)
-    .where(eq(listings.id, id));
-
-  // REQUIRED: Log the mutation
-  await auditLog({
-    action: 'listing:update',
-    resourceType: 'listing',
-    resourceId: id,
-    userId: request.user.id,
-    tenantId: request.tenant.id,
-    changes: updates,
-    ip: request.ip,
-    userAgent: request.headers['user-agent'],
-  });
-
-  return listing;
-}
-```
-
-### 3. Multi-Tenant Isolation
-**ALL queries MUST be scoped to tenant:**
-
-```typescript
-// ✅ CORRECT - Tenant-scoped query
-const userListings = await db.select()
-  .from(listings)
-  .where(
-    and(
-      eq(listings.tenantId, request.tenant.id),
-      eq(listings.userId, request.user.id)
-    )
-  );
-
-// ❌ WRONG - No tenant isolation
-const allListings = await db.select().from(listings);
-```
-
-### 4. Input Validation
-Use Zod for all input validation:
-
-```typescript
-import { z } from 'zod';
-
-const createListingSchema = z.object({
-  title: z.string().min(3).max(200),
-  description: z.string().max(2000),
-  price: z.number().positive(),
-  categoryId: z.string().uuid(),
-});
-
-async function createListing(request, reply) {
-  const data = createListingSchema.parse(request.body);
-  // ... create listing
-}
-```
-
-### 5. Rate Limiting
-All routes should have rate limiting:
-
-```typescript
-fastify.route({
-  method: 'POST',
-  url: '/api/bookings',
-  config: {
-    rateLimit: {
-      max: 10,
-      timeWindow: '1 minute',
-    },
-  },
-  handler: createBooking,
+// For user details, call Platform API
+const response = await fetch('http://localhost:4001/api/users/me', {
+  headers: { Authorization: `Bearer ${token}` }
 });
 ```
 
@@ -202,94 +182,13 @@ fastify.route({
 Each module follows this structure:
 
 ```
-modules/listings/
-├── listings.controller.ts   # Route handlers
-├── listings.service.ts       # Business logic
-├── listings.schema.ts        # Zod validation schemas
-├── listings.types.ts         # TypeScript types
-└── listings.test.ts          # Unit tests
-```
-
----
-
-## Authentication Flow
-
-### JWT Token Structure
-```typescript
-interface JWTPayload {
-  userId: string;
-  tenantId: string;
-  role: string;
-  permissions: string[];
-  iat: number;
-  exp: number;
-}
-```
-
-### OAuth2 Flow (Vipps/Microsoft)
-1. User initiates login → redirect to OAuth provider
-2. Provider redirects back with authorization code
-3. Backend exchanges code for access token
-4. Backend creates JWT and sets HTTP-only cookie
-5. Frontend uses cookie for subsequent requests
-
----
-
-## Database Schema
-
-Using **Drizzle ORM** with PostgreSQL:
-
-```typescript
-// Example schema
-export const listings = pgTable('listings', {
-  id: uuid('id').primaryKey().defaultRandom(),
-  tenantId: uuid('tenant_id').notNull().references(() => tenants.id),
-  userId: uuid('user_id').notNull().references(() => users.id),
-  title: varchar('title', { length: 200 }).notNull(),
-  description: text('description'),
-  price: decimal('price', { precision: 10, scale: 2 }).notNull(),
-  status: varchar('status', { length: 20 }).notNull().default('draft'),
-  createdAt: timestamp('created_at').notNull().defaultNow(),
-  updatedAt: timestamp('updated_at').notNull().defaultNow(),
-});
-```
-
----
-
-## WebSocket Events
-
-Real-time event broadcasting:
-
-```typescript
-import { websocketServer } from '../websocket';
-
-// Broadcast booking event
-websocketServer.broadcast({
-  event: 'booking:created',
-  tenantId: booking.tenantId,
-  data: booking,
-});
-
-// Send to specific user
-websocketServer.sendToUser(userId, {
-  event: 'notification',
-  data: notification,
-});
-```
-
----
-
-## Testing
-
-```bash
-# Unit tests
-pnpm test
-
-# E2E API tests
-pnpm test:e2e
-
-# Specific module tests
-pnpm test src/modules/listings/
+modules/rental-objects/
+├── rental-object.controller.ts   # Route handlers
+├── rental-object.service.ts      # Business logic
+├── rental-object.repository.ts   # Data access
+├── rental-object.schema.ts       # Zod validation schemas
+├── rental-object.types.ts        # TypeScript types
+└── index.ts                      # Exports
 ```
 
 ---
@@ -304,17 +203,12 @@ HOST=0.0.0.0
 
 # Database
 DATABASE_URL=postgresql://user:password@localhost:5432/xala
-DATABASE_SSL=false
 
-# JWT
+# JWT (shared with platform API)
 JWT_SECRET=your-secret-key
-JWT_EXPIRES_IN=7d
 
-# OAuth
-VIPPS_CLIENT_ID=...
-VIPPS_CLIENT_SECRET=...
-MICROSOFT_CLIENT_ID=...
-MICROSOFT_CLIENT_SECRET=...
+# Platform API (for cross-API calls)
+PLATFORM_API_URL=http://localhost:4001
 
 # CORS
 CORS_ORIGIN=http://localhost:5173,http://localhost:5174,http://localhost:5175
@@ -322,154 +216,49 @@ CORS_ORIGIN=http://localhost:5173,http://localhost:5174,http://localhost:5175
 
 ---
 
-## Common Patterns
-
-### Create Operation with Audit
-```typescript
-async function createResource(request: FastifyRequest, reply: FastifyReply) {
-  const data = validateInput(request.body);
-
-  const resource = await db.insert(resources).values({
-    ...data,
-    tenantId: request.tenant.id,
-    createdBy: request.user.id,
-  }).returning();
-
-  await auditLog({
-    action: 'resource:create',
-    resourceType: 'resource',
-    resourceId: resource.id,
-    userId: request.user.id,
-    tenantId: request.tenant.id,
-    data: resource,
-  });
-
-  return reply.status(201).send(resource);
-}
-```
-
-### Error Handling
-```typescript
-try {
-  // ... operation
-} catch (error) {
-  if (error instanceof NotFoundError) {
-    return reply.status(404).send({
-      type: '/errors/not-found',
-      title: 'Resource Not Found',
-      status: 404,
-      detail: error.message,
-    });
-  }
-
-  // Unexpected error
-  reply.log.error(error);
-  return reply.status(500).send({
-    type: '/errors/internal',
-    title: 'Internal Server Error',
-    status: 500,
-    detail: 'An unexpected error occurred',
-  });
-}
-```
-
----
-
-## Deployment
+## Testing
 
 ```bash
-# Build for production
-pnpm build
+# Unit tests
+pnpm test
 
-# Run migrations
-pnpm db:migrate
+# E2E API tests
+pnpm test:e2e
 
-# Start with PM2
-pm2 start dist/main.js --name xala-api
-
-# Check logs
-pm2 logs xala-api
+# Specific module tests
+pnpm test src/modules/rental-objects/
 ```
 
 ---
 
 ## When in Doubt
 
-1. Does this mutate state? → Add audit logging
-2. Is this multi-tenant? → Add tenant isolation
-3. Is input validated? → Use Zod schemas
-4. Does this need auth? → Use auth middleware
-5. Should this be real-time? → Broadcast WebSocket event
-6. Check root CLAUDE.md for architecture rules
-7. Follow RFC 7807 for all errors
-8. Rate limit all user-facing endpoints
+1. Is this domain-specific? -> Put it here
+2. Is this platform/infrastructure? -> Put it in `apps/platform-api`
+3. Does this use tenant-scoped queries? -> YES, always
+4. Does this follow RFC 7807? -> YES, always
+5. Check root CLAUDE.md for architecture rules
 
 ---
 
-## 🔒 CRITICAL LESSONS LEARNED (2026-01-17)
+## CRITICAL: No Platform Imports
 
-> **⚠️ MANDATORY READING**
-> 
-> These lessons come from a 4-hour production debugging session that fixed critical authentication issues.
-> **ALL developers working on apps/api MUST read these.**
+The following imports are BANNED in domain modules:
 
-### Required Reading
-
-1. **`docs/architecture/AUTHENTICATION_SYSTEM.md`** (comprehensive)
-   - Complete authentication flow
-   - Cookie architecture
-   - Database schema requirements
-   - Troubleshooting guide
-
-2. **`docs/operations/LESSONS_LEARNED_AUTH_FIX_2026-01-17.md`** (detailed)
-   - Root cause analysis
-   - 10 critical lessons learned
-   - Anti-patterns to avoid
-   - Process improvements
-
-3. **Root `CLAUDE.md`** → Critical Lessons Learned section
-
-4. **Root `AI_RULES.md`** → Hard Lines section
-
-### Recommended AI Skill for apps/api
-
-When working on apps/api, use: **api-backend-expert**
-
-Available in: `.claude/skills/api-backend-expert/`
-
-### Critical Rules for apps/api
-
-1. **Database Schema:** Tables MUST be in named schemas (platform, domain, compliance)
-2. **Authentication:** System is LOCKED - no changes without approval
-3. **Deployment:** Follow mandatory checklist in AI_RULES.md
-4. **Testing:** Test authentication after ANY deployment
-5. **Documentation:** Update docs when making significant changes
-
-### Quick Validation
-
-Before deploying changes to apps/api:
-
-```bash
-# 1. Verify database schemas
-psql -d digilist_prod -c "\dn"
-
-# 2. Rebuild if SDK changed
-pnpm -F apps/api build
-
-# 3. Test locally
-pnpm -F apps/api dev
-
-# 4. Deploy
-# (Follow deployment checklist)
-
-# 5. Test authentication
-# - BankID login → Dashboard
-# - Demo login → Dashboard
-# - Check browser cookies
+```typescript
+// BANNED IMPORTS - Use Platform API instead
+import { ... } from '../auth';           // Use token validation only
+import { ... } from '../user';           // Call Platform API
+import { ... } from '../tenant';         // Call Platform API
+import { ... } from '../organizations';  // Call Platform API
+import { ... } from '../gdpr';           // In Platform API
+import { ... } from '../audit';          // In Platform API
+import { ... } from '../notifications';  // In Platform API
+import { ... } from '../saas';           // In Platform API
 ```
 
 ---
 
-**Last Updated:** 2026-01-17
-**Status:** Production Stable
-**Next Review:** After significant changes
+**Last Updated:** 2026-01-21
+**Status:** Domain-Only (Platform modules extracted to platform-api)
+**Port:** 4000

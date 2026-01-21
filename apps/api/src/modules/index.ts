@@ -1,13 +1,17 @@
 /**
- * Modules Index
+ * Domain Modules Index
+ *
+ * IMPORTANT: This API is DOMAIN-ONLY
+ * Platform modules (auth, tenant, user, etc.) are in platform-api (port 4001)
  */
-export * from './tenant';
+
+// Core domain modules
 export * from './booking';
-export * from './user';
-export * from './gdpr';
-export * from './monitoring';
-export * from './billing/billing.controller';
+export * from './rental-objects';
+export * from './custody';
+
+// Domain controllers (reviews, seasons, etc.)
 export * from './reviews/reviews.controller';
-export * from './saas';
-export * from './tenant-admin';
-export * from './capabilities';
+export * from './seasons/seasons.controller';
+export * from './calendar/calendar.controller';
+export * from './search/search.controller';

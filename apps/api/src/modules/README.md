@@ -1,38 +1,14 @@
-# API Modules
+# Domain API Modules
 
-This directory contains all API modules for the Xala/Digilist platform.
+This directory contains **domain-only** API modules for the Digilist rental booking platform.
 
-## Module Registry
+> **IMPORTANT:** Platform modules (auth, tenant, user, organizations, etc.) have been extracted to `apps/platform-api` (port 4001).
 
-All modules are classified in `/apps/api/src/module-registry.ts`. Consult this file for:
+## Current Module Structure
 
-- Module ownership (platform vs domain vs shared)
-- Module dependencies
-- Database schema access
-- Registration patterns
-- Route prefixes
-
-## Quick Classification Reference
-
-### Platform Modules (Domain-Agnostic)
-
-These modules are domain-agnostic and will be extracted to `@xalatechnologies/platform`:
-
-| Category | Modules | Description |
-|----------|---------|-------------|
-| **Core** | `auth`, `authz`, `tenant`, `user`, `organizations` | User, tenant, and org management |
-| **Infrastructure** | `health`, `websocket`, `storage`, `configuration`, `settings` | System infrastructure |
-| **Compliance** | `audit`, `gdpr`, `security` | Audit logging, GDPR, security |
-| **SaaS** | `billing`, `entitlements`, `license`, `seat-limits`, `feature-flags`, `saas`, `policy`, `menu` | SaaS billing and features |
-| **Notifications** | `notifications`, `push-notifications`, `notification-system` | Multi-channel notifications |
-| **RBAC** | `capabilities`, `permission-assignment`, `case-handler-scope`, `access-grant` | Role-based access control |
-| **Integrations** | `integrations`, `webhooks` | Third-party integrations |
-| **i18n** | `translations` | Internationalization |
-| **Monitoring** | `monitoring` | System monitoring |
+After the platform/domain split, this API contains only domain-specific modules:
 
 ### Domain Modules (Digilist-Specific)
-
-These modules contain Digilist business logic and stay in this repo:
 
 | Category | Modules | Description |
 |----------|---------|-------------|
@@ -40,177 +16,138 @@ These modules contain Digilist business logic and stay in this repo:
 | **Booking** | `bookings`, `booking`, `calendar`, `availability`, `blocks` | Booking and scheduling |
 | **Seasons** | `seasons`, `season-applications`, `seasonal-lease`, `allocations` | Seasonal allocation |
 | **Discovery** | `search`, `favorites`, `reviews` | Search and user engagement |
-| **Custody** | `custody` | Parental consent |
+| **Custody** | `custody` | Domain-specific custody |
 | **Pricing** | `pricing`, `discount-codes` | Pricing rules |
 | **Widgets** | `widgets` | Embeddable components |
-| **Domain** | `domain` | Domain utilities |
+| **Portal** | `backoffice`, `minside`, `dashboard`, `reports` | App-specific endpoints |
+| **Messaging** | `conversations`, `messages` | Domain messaging |
+| **Utilities** | `public`, `help`, `share`, `profile`, `bulk`, `metadata` | Shared utilities |
 
-### Shared Modules
+### Modules Removed (Now in Platform API)
 
-These modules are used by both platform and domain, need careful handling during split:
+The following modules have been moved to `apps/platform-api`:
 
-| Module | Purpose |
-|--------|---------|
-| `dashboard` | Dashboard aggregation |
-| `reports` | Analytics and reporting |
-| `conversations` | Messaging conversations |
-| `messages` | Message CRUD |
-| `public` | Public endpoints |
-| `help` | Help/support |
-| `share` | Sharing features |
-| `backoffice` | Backoffice portal |
-| `minside` | User portal |
-| `user-groups` | User group management |
-| `user-management` | Admin user management |
-| `tenant-admin` | Tenant administration |
-| `profile` | User profile |
-| `metadata` | Metadata management |
-| `bulk` | Bulk operations |
+- `auth`, `authz` - Authentication & authorization
+- `tenant`, `user`, `organizations` - Core identity
+- `audit`, `gdpr`, `security` - Compliance
+- `notifications`, `push-notifications`, `notification-system` - Notifications
+- `saas`, `billing`, `entitlements`, `license` - SaaS management
+- `policy`, `menu`, `feature-flags` - Configuration
+- `storage`, `webhooks`, `integrations` - Infrastructure
+- `translations`, `monitoring`, `health`, `websocket` - System services
+- `permission-assignment`, `case-handler-scope`, `access-grant`, `capabilities` - RBAC
 
 ## Module Tiers
 
 ```
-Tier 1: Infrastructure (Independent)
-├── auth, health, security, websocket, public
+Tier 1: Domain Core (Business Entities)
+├── rental-objects, booking, seasons, allocations, custody
 
-Tier 2: Core (Repositories + Services)
-├── tenant, user, organizations, monitoring, audit, gdpr
+Tier 2: Domain Features (Built on Core)
+├── amenities, addons, reviews, favorites, blocks, search
 
-Tier 3: Domain (Business Logic)
-├── rental-objects, booking, seasons, allocations
+Tier 3: Domain Portal (App-Specific)
+├── backoffice, minside, dashboard, reports, widgets
 
-Tier 4: Features (Built on Domain)
-├── amenities, addons, reviews, favorites, blocks
-
-Tier 5: Admin (Configuration)
-├── tenant-admin, saas, entitlements, policy, settings
-
-Tier 6: Portal (App-Specific)
-├── backoffice, minside, dashboard, reports
+Tier 4: Domain Utilities
+├── conversations, messages, public, help, share, profile
 ```
 
-## Future Route Structure
-
-After the platform/domain split, routes will be organized as:
+## API Split Architecture
 
 ```
-/api/
-├── platform/            # Platform modules
-│   ├── auth/
-│   ├── tenants/
-│   ├── organizations/
-│   ├── users/
-│   ├── notifications/
-│   └── ...
-├── domain/              # Domain modules
-│   ├── rental-objects/
-│   ├── bookings/
-│   ├── seasons/
-│   └── ...
-└── (shared)/            # Shared modules keep current paths
-    ├── search/
-    ├── storage/
-    └── ...
+                    ┌─────────────────────────────────────┐
+                    │        Frontend Apps                │
+                    │  web, minside, backoffice           │
+                    └───────────────┬─────────────────────┘
+                                    │
+              ┌─────────────────────┴─────────────────────┐
+              │                                           │
+    ┌─────────▼─────────┐                   ┌─────────────▼─────────────┐
+    │   Domain API      │                   │      Platform API         │
+    │   Port 4000       │                   │      Port 4001            │
+    │                   │                   │                           │
+    │  /api/            │                   │  /api/                    │
+    │  ├── rental-objects│                   │  ├── auth                 │
+    │  ├── bookings      │                   │  ├── users                │
+    │  ├── calendar      │                   │  ├── tenants              │
+    │  ├── seasons       │                   │  ├── organizations        │
+    │  ├── search        │                   │  ├── notifications        │
+    │  └── ...           │                   │  └── ...                  │
+    └───────────────────┘                   └───────────────────────────┘
+              │                                           │
+              └─────────────────────┬─────────────────────┘
+                                    │
+                    ┌───────────────▼───────────────┐
+                    │        PostgreSQL             │
+                    │  platform.*, domain.*,       │
+                    │  saas.*, compliance.*        │
+                    └───────────────────────────────┘
 ```
 
-## Registration Patterns
+## Cross-API Communication
 
-### Pattern A: Full Module (NestJS-style)
+When domain modules need platform data (e.g., user details):
 
 ```typescript
-@Module({
-  controllers: [TenantController],
-  providers: [TenantService, TenantRepository],
-  exports: ['TenantService', 'TenantRepository'],
-})
-export class TenantModule {}
+// Option 1: JWT token validation (shared secret)
+const jwtService = container.resolve('JwtService');
+const payload = jwtService.verify(token);
+
+// Option 2: Call Platform API
+const response = await fetch('http://localhost:4001/api/users/me', {
+  headers: { Authorization: `Bearer ${token}` }
+});
 ```
 
-**Used by:** tenant, user, booking, rental-objects, monitoring, custody
+## Module Registry
 
-### Pattern B: Direct Controller
+For historical reference and classification, see `/apps/api/src/module-registry.ts`.
+
+## Registration Pattern
+
+Most domain modules use direct controller registration:
 
 ```typescript
 // main.ts
-const controllers = [AuthController, DashboardController, ...];
+const controllers = [
+  RentalObjectController,
+  BookingController,
+  CalendarController,
+  // ...
+];
 ```
 
-**Used by:** Most modules (50+)
-
-### Pattern C: Fastify Plugin
+Some use Fastify plugins:
 
 ```typescript
 await app.register(amenitiesRoutes, { prefix: '/api' });
+await app.register(addonsRoutes, { prefix: '/api' });
+await app.register(favoritesRoutes, { prefix: '/api' });
 ```
-
-**Used by:** amenities, addons, favorites, feature-flags, menu
-
-### Pattern D: Shared Routes
-
-```typescript
-// src/routes/features.routes.ts
-```
-
-**Used by:** features, i18n, navigation, scanners
 
 ## Adding New Modules
 
-1. Create module folder in `src/modules/`
-2. Add entry to `src/module-registry.ts` in both:
-   - `MODULE_CLASSIFICATION` (simplified lookup)
-   - `MODULE_REGISTRY` (full metadata)
-3. Register in `src/main.ts` using appropriate pattern
-4. Classify ownership (platform/domain/shared)
-5. Document database schema access
+1. Determine if module is domain-specific or platform
+2. If domain-specific, create in `apps/api/src/modules/`
+3. If platform, create in `apps/platform-api/src/modules/`
+4. Register in appropriate `main.ts`
+5. Update documentation
 
-## Using the Registry
-
-```typescript
-import {
-  isPlatformModule,
-  isDomainModule,
-  isSharedModule,
-  getModuleCategory,
-  getModuleSubcategory,
-  MODULE_CLASSIFICATION,
-  MODULE_REGISTRY,
-  ROUTE_PREFIXES,
-} from '../module-registry';
-
-// Quick checks
-if (isPlatformModule('auth')) {
-  // Module is domain-agnostic
-}
-
-if (isDomainModule('rental-objects')) {
-  // Module is Digilist-specific
-}
-
-// Get category
-const category = getModuleCategory('booking'); // 'domain'
-
-// Get subcategory
-const subcategory = getModuleSubcategory('auth'); // 'core'
-
-// Get all platform core modules
-const coreModules = MODULE_CLASSIFICATION.platform.core;
-// ['auth', 'authz', 'tenant', 'user', 'organizations']
-
-// Get full metadata
-const authMetadata = MODULE_REGISTRY['auth'];
-// { name: 'auth', tier: 'infrastructure', category: 'auth', ... }
-```
-
-## Verification
-
-Run module verification:
+## Environment Variables
 
 ```bash
-pnpm -F @digilist/api run verify:modules
+# Database (shared with Platform API)
+DATABASE_URL=postgresql://user:password@localhost:5432/xala
+
+# JWT (shared with Platform API for token validation)
+JWT_SECRET=your-secret-key
+
+# Platform API URL (for cross-API calls)
+PLATFORM_API_URL=http://localhost:4001
 ```
 
-This checks:
-- All modules are classified in registry
-- No orphaned modules
-- Dependencies are valid
-- No circular dependencies
+---
+
+**Last Updated:** 2026-01-21
+**Status:** Domain-Only (Platform modules in apps/platform-api)
