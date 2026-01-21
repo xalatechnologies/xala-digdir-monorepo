@@ -24,7 +24,7 @@ import {
 import { useT } from '@xalatechnologies/platform/i18n';
 import { Sidebar } from './Sidebar';
 import { Header } from './Header';
-import { useAccountContext } from '@xalatechnologies/platform/runtime';
+import { useAccountContext } from '@digilist/runtime';
 
 interface LocationState {
   contextRedirectMessage?: string;

@@ -28,7 +28,7 @@ erDiagram
     Listing ||--o{ Amenity : has
     Listing ||--o{ Booking : receives
     Listing ||--o{ ListingReview : has
-    Listing ||--o{ ListingCategory : belongs_to
+    Listing ||--o{ RentalObjectCategory : belongs_to
     
     %% Booking System
     Booking ||--o{ BookingStatus : has
@@ -56,7 +56,7 @@ erDiagram
     Organization ||--o{ Theme : uses
     
     %% Relationships
-    ListingCategory ||--o{ Listing : categorizes
+    RentalObjectCategory ||--o{ Listing : categorizes
     Amenity ||--o{ ListingAmenity : links
     UserRole ||--o{ Permission : grants
     Integration ||--o{ IntegrationConfig : has

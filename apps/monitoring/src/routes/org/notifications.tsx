@@ -44,7 +44,7 @@ import type {
   NotificationPreferencesMatrixType,
   NotificationChannel,
 } from '../../components/notifications';
-import { useAccountContext } from '@xalatechnologies/platform/runtime';
+import { useAccountContext } from '@digilist/runtime';
 
 // ============================================================================
 // Types

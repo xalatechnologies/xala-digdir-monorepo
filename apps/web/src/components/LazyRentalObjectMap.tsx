@@ -1,7 +1,7 @@
 /**
  * LazyRentalObjectMap - Lazy-loaded map component wrapper
  *
- * Dynamically imports the RentalObjectMap component from @xalatechnologies/platform/ui/maps to reduce initial bundle size.
+ * Dynamically imports the RentalObjectMap component from @digilist/ui to reduce initial bundle size.
  * The map component and its dependencies (mapbox-gl ~500KB) are only loaded when needed.
  *
  * @example
@@ -16,12 +16,12 @@
 
 import React, { Suspense } from 'react';
 import { Stack, Spinner, Text } from '@xalatechnologies/platform/ui';
-import type { RentalObjectMapProps } from '@xalatechnologies/platform/ui/maps';
+import type { RentalObjectMapProps } from '@digilist/ui';
 import { useT } from '@xalatechnologies/platform/i18n';
 
 // Lazy load the map component - only loads when this component is rendered
 const RentalObjectMap = React.lazy(() =>
-  import('@xalatechnologies/platform/ui/maps').then((module) => ({
+  import('@digilist/ui').then((module) => ({
     default: module.RentalObjectMap,
   }))
 );

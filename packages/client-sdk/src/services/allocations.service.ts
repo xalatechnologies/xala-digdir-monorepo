@@ -58,7 +58,7 @@ export class AllocationsService extends BaseService {
   /**
    * Delete allocation
    */
-  async delete(id: string): Promise<void> {
+  async deleteAllocation(id: string): Promise<void> {
     return this.client.delete(this.buildPath(`/${id}`));
   }
 

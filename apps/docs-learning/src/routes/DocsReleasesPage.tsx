@@ -42,7 +42,7 @@ export function DocsReleasesPage() {
 
       <div style={{ /* releases - converted from CSS module */ }}>
         {RELEASES.map((release) => (
-          <Card key={release.version} style={{ /* releaseCard - converted from CSS module */ }} style={{ padding: 'var(--ds-spacing-4)' }}>
+          <Card key={release.version} style={{ padding: 'var(--ds-spacing-4)' }}>
             <div style={{ /* releaseHeader - converted from CSS module */ }}>
               <Heading level={3}>{release.version}</Heading>
               {release.isLatest && (

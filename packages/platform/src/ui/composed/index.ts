@@ -470,7 +470,7 @@ export type {
 export { SearchableSelect } from './SearchableSelect';
 export type {
   SearchableSelectProps,
-  SelectOption,
+  SelectOption as SearchableSelectOption,
 } from './SearchableSelect';
 
 // Rich Notification Toast (with queue management)
@@ -658,3 +658,11 @@ export type {
   CodeBlockProps,
   InlineCodeProps,
 } from './CodeBlock';
+
+// SimpleTabs & TabItem (convenience wrapper for Designsystemet Tabs)
+// Exports Tabs which supports both simple TabItem API and Designsystemet compound pattern
+export { SimpleTabs, TabItem, Tabs } from './SimpleTabs';
+export type {
+  SimpleTabsProps,
+  TabItemProps,
+} from './SimpleTabs';

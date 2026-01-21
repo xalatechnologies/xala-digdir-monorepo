@@ -36,7 +36,7 @@ export interface SaveFlowContextOptions {
   /** Selected dates */
   selectedDates?: string[];
   /** Selected time slots */
-  selectedSlots?: Array<{ startTime: string; endTime: string; [key: string]: unknown }>;
+  selectedSlots?: Array<{ startTime: string; endTime: string; date: string; [key: string]: unknown }>;
   /** Recurring booking rules */
   recurringRules?: Record<string, unknown>;
   /** Additional form data */
@@ -260,7 +260,7 @@ export function useFlowContext(): UseFlowContextReturn {
 
     // Calculate TTL if we have context
     const ttl = result.flowContext
-      ? getFlowContextTTL(result.flowContext)
+      ? getFlowContextTTL(result.flowContext as unknown as FlowContext)
       : undefined;
 
     return {

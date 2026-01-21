@@ -57,7 +57,10 @@ export function useAllocationConflicts(params: {
   endTime: string;
 }, options?: { enabled?: boolean }) {
   return useQuery({
-    queryKey: queryKeys.allocations.conflicts(params),
+    queryKey: queryKeys.allocations.conflicts(params.rentalObjectId, {
+      startDate: params.startTime,
+      endDate: params.endTime,
+    }),
     queryFn: () => allocationsService.checkConflicts(params),
     enabled: options?.enabled ?? true,
   });

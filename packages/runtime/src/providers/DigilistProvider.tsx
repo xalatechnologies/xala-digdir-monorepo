@@ -100,7 +100,9 @@ export const DigilistProvider: React.FC<DigilistProviderProps> = ({
     () => ({
       services: {
         useOrganizations: (filter?: { status?: string }) => {
-          const result = useOrganizations({ status: filter?.status });
+          // Cast to the domain-specific status type
+          const status = filter?.status as 'active' | 'inactive' | 'all' | undefined;
+          const result = useOrganizations({ status });
           return {
             data: result.data,
             isLoading: result.isLoading,

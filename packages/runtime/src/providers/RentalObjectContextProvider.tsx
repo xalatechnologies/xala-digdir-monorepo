@@ -291,7 +291,7 @@ export const RentalObjectContextProvider: React.FC<RentalObjectContextProviderPr
     data: detailData,
     isLoading: isLoadingDetail,
     error: detailError,
-  } = useRentalObject(selectedId ?? '', { enabled: !!selectedId });
+  } = useRentalObject(selectedId ?? '');
 
   // Fetch calendar config for selected rental object
   const { data: calendarConfigData } = useRentalObjectCalendarConfig(selectedId ?? '');

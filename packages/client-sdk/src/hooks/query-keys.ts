@@ -146,8 +146,15 @@ export const queryKeys = {
   // =========================================================================
   allocations: {
     all: ['allocations'] as const,
+    lists: () => [...queryKeys.allocations.all, 'list'] as const,
     list: (params?: { rentalObjectId?: string; startDate?: string; endDate?: string }) =>
-      [...queryKeys.allocations.all, 'list', params] as const,
+      [...queryKeys.allocations.lists(), params] as const,
+    details: () => [...queryKeys.allocations.all, 'detail'] as const,
+    detail: (id: string) => [...queryKeys.allocations.details(), id] as const,
+    byRentalObject: (rentalObjectId: string, params?: { startDate?: string; endDate?: string }) =>
+      [...queryKeys.allocations.all, 'byRentalObject', rentalObjectId, params] as const,
+    conflicts: (rentalObjectId: string, params?: { startDate?: string; endDate?: string }) =>
+      [...queryKeys.allocations.all, 'conflicts', rentalObjectId, params] as const,
   },
 
   // =========================================================================
@@ -161,6 +168,31 @@ export const queryKeys = {
     details: () => [...queryKeys.organizations.all, 'detail'] as const,
     detail: (id: string) => [...queryKeys.organizations.details(), id] as const,
     members: (id: string) => [...queryKeys.organizations.detail(id), 'members'] as const,
+  },
+
+  // =========================================================================
+  // User Groups Keys
+  // =========================================================================
+  userGroups: {
+    all: ['userGroups'] as const,
+    lists: () => [...queryKeys.userGroups.all, 'list'] as const,
+    list: (params?: { search?: string; status?: string }) => 
+      [...queryKeys.userGroups.lists(), params] as const,
+    details: () => [...queryKeys.userGroups.all, 'detail'] as const,
+    detail: (id: string) => [...queryKeys.userGroups.details(), id] as const,
+    members: (id: string) => [...queryKeys.userGroups.detail(id), 'members'] as const,
+    permissions: (id: string) => [...queryKeys.userGroups.detail(id), 'permissions'] as const,
+    forUser: (userId: string) => [...queryKeys.userGroups.all, 'forUser', userId] as const,
+  },
+
+  // =========================================================================
+  // Entitlements Keys
+  // =========================================================================
+  entitlements: {
+    all: ['entitlements'] as const,
+    current: () => [...queryKeys.entitlements.all, 'current'] as const,
+    navItems: (app?: string) => [...queryKeys.entitlements.all, 'navItems', app] as const,
+    features: () => [...queryKeys.entitlements.all, 'features'] as const,
   },
 
   // =========================================================================
@@ -358,6 +390,13 @@ export const queryKeys = {
     forOrgRentalObject: (orgId: string, rentalObjectId: string, userId?: string) =>
       [...queryKeys.permissionAssignments.all, 'orgRO', orgId, rentalObjectId, userId] as const,
     availablePermissions: () => [...queryKeys.permissionAssignments.all, 'availablePermissions'] as const,
+    forUser: (userId: string) => [...queryKeys.permissionAssignments.all, 'forUser', userId] as const,
+    forOrganization: (orgId: string) => [...queryKeys.permissionAssignments.all, 'forOrganization', orgId] as const,
+    effective: (userId: string, rentalObjectId?: string) => 
+      [...queryKeys.permissionAssignments.all, 'effective', userId, rentalObjectId] as const,
+    auditLog: (id: string) => [...queryKeys.permissionAssignments.detail(id), 'auditLog'] as const,
+    checkPermission: (userId: string, permission: string, resourceId?: string) =>
+      [...queryKeys.permissionAssignments.all, 'checkPermission', userId, permission, resourceId] as const,
   },
 
   // =========================================================================
@@ -372,6 +411,11 @@ export const queryKeys = {
     detail: (id: string) => [...queryKeys.caseHandlerScopes.details(), id] as const,
     byUser: (userId: string) => [...queryKeys.caseHandlerScopes.all, 'byUser', userId] as const,
     byRentalObject: (rentalObjectId: string) => [...queryKeys.caseHandlerScopes.all, 'byRO', rentalObjectId] as const,
+    forUser: (userId: string) => [...queryKeys.caseHandlerScopes.all, 'forUser', userId] as const,
+    forRentalObject: (rentalObjectId: string) => [...queryKeys.caseHandlerScopes.all, 'forRentalObject', rentalObjectId] as const,
+    auditLog: (id: string) => [...queryKeys.caseHandlerScopes.detail(id), 'auditLog'] as const,
+    checkAccess: (userId: string, rentalObjectId: string) => 
+      [...queryKeys.caseHandlerScopes.all, 'checkAccess', userId, rentalObjectId] as const,
   },
 
   // =========================================================================
@@ -390,12 +434,31 @@ export const queryKeys = {
   },
 
   // =========================================================================
+  // Seasonal Leases Keys
+  // =========================================================================
+  seasonalLeases: {
+    all: ['seasonalLeases'] as const,
+    lists: () => [...queryKeys.seasonalLeases.all, 'list'] as const,
+    list: (params?: { seasonId?: string; rentalObjectId?: string; status?: string }) => 
+      [...queryKeys.seasonalLeases.lists(), params] as const,
+    details: () => [...queryKeys.seasonalLeases.all, 'detail'] as const,
+    detail: (id: string) => [...queryKeys.seasonalLeases.details(), id] as const,
+    forSeason: (seasonId: string) => [...queryKeys.seasonalLeases.all, 'forSeason', seasonId] as const,
+    forRentalObject: (rentalObjectId: string) => [...queryKeys.seasonalLeases.all, 'forRentalObject', rentalObjectId] as const,
+    my: () => [...queryKeys.seasonalLeases.all, 'my'] as const,
+    paymentSchedule: (id: string) => [...queryKeys.seasonalLeases.detail(id), 'paymentSchedule'] as const,
+  },
+
+  // =========================================================================
   // Settings Keys
   // =========================================================================
   settings: {
     all: ['settings'] as const,
     tenant: () => [...queryKeys.settings.all, 'tenant'] as const,
     integrations: () => [...queryKeys.settings.all, 'integrations'] as const,
+    category: (category: string) => [...queryKeys.settings.all, 'category', category] as const,
+    notifications: () => [...queryKeys.settings.all, 'notifications'] as const,
+    privacy: () => [...queryKeys.settings.all, 'privacy'] as const,
   },
 
   // =========================================================================

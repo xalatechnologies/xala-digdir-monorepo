@@ -283,6 +283,15 @@ export type {
   AmenityChipsLabels,
 } from './AmenityChips';
 
+// Share Components
+export { ShareButton, ShareSheet } from './ShareButton';
+export type {
+  ShareButtonProps,
+  ShareSheetProps,
+  ShareData,
+  SharePlatform,
+} from './ShareButton';
+
 // =============================================================================
 // NOTE: Domain-specific components are available in @digilist/ui:
 // - RentalObject* (Card, Grid, ListItem, Toolbar, Map, TableView, DetailHeader, Tabs)

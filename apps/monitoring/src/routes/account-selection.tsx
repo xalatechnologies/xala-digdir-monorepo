@@ -14,7 +14,7 @@ import {
 } from '@xalatechnologies/platform/ui';
 import { useT } from '@xalatechnologies/platform/i18n';
 import { useAuth } from '@xalatechnologies/platform/auth';
-import { useAccountContext } from '@xalatechnologies/platform/runtime';
+import { useAccountContext } from '@digilist/runtime';
 import { AccountSelector, type AccountSelectionType } from '../components/AccountSelector';
 
 export function AccountSelectionPage(): React.ReactElement {

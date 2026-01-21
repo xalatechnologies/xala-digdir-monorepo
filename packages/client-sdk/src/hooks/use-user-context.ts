@@ -7,15 +7,9 @@
 import { useQuery, type UseQueryOptions } from '@tanstack/react-query';
 import { getClient } from '@/core/client-factory';
 import { menuQueryKeys } from './use-backoffice-menu';
+import type { UserContextResponse } from '@digilist/contracts/projections';
 
-export interface UserContextResponse {
-  userId: string;
-  tenantId: string;
-  orgId: string | null;
-  roles: string[];
-  permissions: string[];
-  language: string;
-}
+export type { UserContextResponse };
 
 async function fetchUserContext(): Promise<UserContextResponse> {
   const client = getClient();

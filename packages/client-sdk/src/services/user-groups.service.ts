@@ -49,7 +49,7 @@ export class UserGroupsService extends BaseService {
   /**
    * Delete user group
    */
-  async delete(id: string): Promise<void> {
+  async deleteGroup(id: string): Promise<void> {
     return this.client.delete(this.buildPath(`/${id}`));
   }
 

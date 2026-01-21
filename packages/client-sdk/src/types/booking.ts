@@ -230,6 +230,28 @@ export interface CreateAllocationDTO {
   };
 }
 
+export interface UpdateAllocationDTO {
+  startTime?: string | Date;
+  endTime?: string | Date;
+  title?: string;
+  status?: AllocationStatus;
+  notes?: string;
+  quantity?: number;
+}
+
+export interface AllocationQueryParams {
+  rentalObjectId?: string;
+  bookingId?: string;
+  allocationType?: 'BOOKING' | 'BLOCK' | 'MAINTENANCE' | 'SEASONAL';
+  status?: AllocationStatus;
+  startDate?: string;
+  endDate?: string;
+  page?: number;
+  limit?: number;
+  sortBy?: 'startTime' | 'endTime' | 'createdAt';
+  sortOrder?: 'asc' | 'desc';
+}
+
 // =============================================================================
 // Payment Transaction Types
 // =============================================================================

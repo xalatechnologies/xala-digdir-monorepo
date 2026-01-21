@@ -3,11 +3,13 @@
  * Single Responsibility: Define all enumeration and base types
  */
 
+import type { RentalObjectCategory } from './rental-object';
+
 // =============================================================================
 // Status Enums
 // =============================================================================
 
-/** @deprecated Use ListingCategory instead */
+/** @deprecated Use RentalObjectCategory instead */
 export type ListingType = 'SPACE' | 'RESOURCE' | 'SERVICE' | 'EVENT' | 'VEHICLE' | 'OTHER';
 
 /** @deprecated Use BookingTimeMode + ListingBookingFeatures instead */
@@ -17,12 +19,8 @@ export type BookingModel = 'TIME_RANGE' | 'SLOT' | 'ALL_DAY' | 'QUANTITY' | 'CAP
 // V2 Category & Booking Model (New System)
 // =============================================================================
 
-/** 4 Top-Level Listing Categories */
-export type ListingCategory =
-  | 'LOKALER_OG_BANER'           // Lokaler og baner
-  | 'UTSTYR_OG_INVENTAR'         // Utstyr og inventar
-  | 'KJORETOY_OG_TRANSPORT'      // Kjøretøy og transport
-  | 'OPPLEVELSER_OG_ARRANGEMENT'; // Opplevelser og arrangement
+// RentalObjectCategory is defined in rental-object.ts - do not duplicate here
+// Import from there if needed
 
 /** 3 Booking Time Modes */
 export type BookingTimeMode = 'PERIOD' | 'SLOT' | 'ALL_DAY';
@@ -74,7 +72,7 @@ export interface ListingBookingConfig {
  * i18n keys for category labels
  * Use t(key) to resolve the actual translated label
  */
-export const LISTING_CATEGORY_LABEL_KEYS: Record<ListingCategory, string> = {
+export const LISTING_CATEGORY_LABEL_KEYS: Record<RentalObjectCategory, string> = {
   LOKALER_OG_BANER: 'sdk.rentalObject.category.LOKALER_OG_BANER',
   UTSTYR_OG_INVENTAR: 'sdk.rentalObject.category.UTSTYR_OG_INVENTAR',
   KJORETOY_OG_TRANSPORT: 'sdk.rentalObject.category.KJORETOY_OG_TRANSPORT',

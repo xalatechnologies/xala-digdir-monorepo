@@ -10,7 +10,8 @@
  */
 
 import * as React from 'react';
-import { Paragraph, Heading, RentalObjectAvailabilityCalendar } from '@xalatechnologies/platform/ui';
+import { Paragraph, Heading } from '@xalatechnologies/platform/ui';
+import { RentalObjectAvailabilityCalendar } from '@digilist/ui/blocks';
 import {
   useRentalObjectCalendarConfig,
   useAvailabilityMatrix,

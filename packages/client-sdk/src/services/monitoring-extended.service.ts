@@ -48,7 +48,7 @@ class MonitoringExtendedService {
    */
   async getIncidents(filter?: IncidentFilterDTO): Promise<IncidentListResponseDTO> {
     return getClient().get<IncidentListResponseDTO>(`${this.basePath}/incidents`, {
-      params: filter as Record<string, unknown>,
+      params: filter as Record<string, string | number | boolean | undefined>,
     });
   }
 
@@ -179,7 +179,7 @@ class MonitoringExtendedService {
    */
   async getLogs(filter?: LogFilterDTO): Promise<LogListResponseDTO> {
     return getClient().get<LogListResponseDTO>(`${this.basePath}/logs`, {
-      params: filter as Record<string, unknown>,
+      params: filter as Record<string, string | number | boolean | undefined>,
     });
   }
 
@@ -207,7 +207,7 @@ class MonitoringExtendedService {
    */
   async getAuditEvents(filter?: AuditFilterDTO): Promise<AuditListResponseDTO> {
     return getClient().get<AuditListResponseDTO>(`${this.basePath}/audit`, {
-      params: filter as Record<string, unknown>,
+      params: filter as Record<string, string | number | boolean | undefined>,
     });
   }
 

@@ -63,7 +63,7 @@ export class CaseHandlerScopeService extends BaseService {
   /**
    * Delete case handler scope
    */
-  async delete(id: string): Promise<void> {
+  async deleteScope(id: string): Promise<void> {
     return this.client.delete(this.buildPath(`/${id}`));
   }
 

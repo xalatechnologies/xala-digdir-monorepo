@@ -1,82 +1,78 @@
 /**
  * Consent Hooks (GDPR)
- * TEMPORARY STUB - To be implemented when backend is ready
- *
- * This stub allows the app to load without breaking on missing import.
- * Returns empty consents until backend API is implemented.
+ * Production-ready hooks for GDPR consent management
+ * 
+ * Uses GdprService to call /api/gdpr/consents endpoints
  */
 
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { gdprService } from '@/services/gdpr.service';
+import type { ConsentSettings, UpdateConsentDTO } from '@/types/gdpr';
+import type { SingleResponse } from '@/types/enums';
 
-export interface Consent {
-  id: string;
-  userId: string;
-  type: 'marketing' | 'analytics' | 'essential' | 'preferences';
-  granted: boolean;
-  grantedAt?: string;
-  revokedAt?: string;
-  version: string;
-}
-
-interface ConsentsResponse {
-  data: Consent[];
-}
-
-interface UpdateConsentPayload {
-  type: Consent['type'];
-  granted: boolean;
-}
+// Re-export types for consumers
+export type { ConsentSettings, UpdateConsentDTO };
 
 /**
- * Fetch user's consent preferences
- *
- * TODO: Implement when backend endpoint is ready
- * Expected endpoint: GET /api/gdpr/consents
+ * Query keys for consent data
+ */
+export const consentKeys = {
+  all: ['consents'] as const,
+  settings: () => [...consentKeys.all, 'settings'] as const,
+};
+
+/**
+ * Fetch user's consent preferences from the GDPR API
+ * Endpoint: GET /api/gdpr/consents
  */
 export function useConsents() {
-  return useQuery<ConsentsResponse>({
-    queryKey: ['consents'],
+  return useQuery<SingleResponse<ConsentSettings>>({
+    queryKey: consentKeys.settings(),
     queryFn: async () => {
-      // STUB: Return empty array until backend is ready
-      return {
-        data: [],
-      };
+      return gdprService.getConsents();
     },
-    // Disable refetching since this is a stub
-    refetchOnMount: false,
-    refetchOnWindowFocus: false,
-    staleTime: Infinity,
+    staleTime: 5 * 60 * 1000, // 5 minutes
+    gcTime: 10 * 60 * 1000, // 10 minutes (formerly cacheTime)
   });
 }
 
 /**
  * Update user's consent preferences
- *
- * TODO: Implement when backend endpoint is ready
- * Expected endpoint: POST /api/gdpr/consents
+ * Endpoint: PUT /api/gdpr/consents
  */
 export function useUpdateConsents() {
   const queryClient = useQueryClient();
 
-  return useMutation<ConsentsResponse, Error, UpdateConsentPayload>({
-    mutationFn: async (_payload) => {
-      // STUB: Return unchanged data until backend is ready
-      return {
-        data: [],
-      };
+  return useMutation<SingleResponse<ConsentSettings>, Error, UpdateConsentDTO>({
+    mutationFn: async (payload) => {
+      return gdprService.updateConsents(payload);
     },
     onSuccess: () => {
-      // Invalidate consents query to refetch
-      queryClient.invalidateQueries({ queryKey: ['consents'] });
+      // Invalidate consents query to refetch updated data
+      queryClient.invalidateQueries({ queryKey: consentKeys.all });
     },
   });
 }
 
 /**
- * Check if a specific consent is granted
+ * Check if a specific consent type is granted
+ * @param type - The consent type to check ('marketing' | 'analytics' | 'thirdPartySharing')
  */
-export function useHasConsent(type: Consent['type']) {
+export function useHasConsent(type: 'marketing' | 'analytics' | 'thirdPartySharing') {
   const { data } = useConsents();
-  const consent = data?.data.find(c => c.type === type);
-  return consent?.granted ?? false;
+  
+  if (!data?.data) return false;
+  
+  const consents = data.data;
+  switch (type) {
+    case 'marketing':
+      return consents.marketing ?? false;
+    case 'analytics':
+      return consents.analytics ?? true; // Default to true for analytics
+    case 'thirdPartySharing':
+      return consents.thirdPartySharing ?? false;
+    default:
+      return false;
+  }
 }
+

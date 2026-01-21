@@ -128,7 +128,7 @@ export {
   type RentalObjectQueryParams as ListingQueryParams,
   
   // Legacy enums
-  RentalObjectCategorySchema as ListingCategorySchema,
+  RentalObjectCategorySchema as RentalObjectCategorySchema,
   
   // These are no longer needed - using rental object equivalents
   // ListingTypeSchema,

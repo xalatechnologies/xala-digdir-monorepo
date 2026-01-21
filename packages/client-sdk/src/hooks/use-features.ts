@@ -6,7 +6,8 @@
 import { useQuery } from '@tanstack/react-query';
 import { getClient } from '@/core/client-factory';
 import { queryKeys } from './query-keys';
-import type { TenantFeatures, RentalObjectCategory } from '@/types/feature-flags';
+import type { TenantFeatures } from '@/types/feature-flags';
+import type { RentalObjectCategory } from '@/types/rental-object';
 
 // ============================================================================
 // Query Hooks

@@ -72,7 +72,7 @@ export function DocsSearchPage() {
             to={`/${result.section}/${result.slug}`}
             style={{ /* resultLink - converted from CSS module */ }}
           >
-            <Card style={{ /* resultCard - converted from CSS module */ }} style={{ padding: 'var(--ds-spacing-4)' }}>
+            <Card style={{ padding: 'var(--ds-spacing-4)' }}>
               <Paragraph data-size="xs" style={{ /* resultSection - converted from CSS module */ }}>
                 {t(`docs.sections.${result.section}.title`)}
               </Paragraph>

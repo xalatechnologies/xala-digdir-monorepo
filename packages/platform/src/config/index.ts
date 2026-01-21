@@ -45,13 +45,49 @@
 // App profile types
 export type AppId = 'web' | 'minside' | 'backoffice' | 'saas-admin' | 'monitoring' | 'docs-learning';
 
+/**
+ * Auth configuration for app profiles
+ */
+export interface AppAuthConfig {
+  loginPath: string;
+  debug?: boolean;
+  sessionCheckInterval?: number;
+  requireAuth?: boolean;
+}
+
+/**
+ * App profile interface - extensible for domain-specific properties
+ *
+ * Core properties are required, while domain-specific extensions
+ * can be added through optional properties or the index signature.
+ */
 export interface AppProfile {
-  id: AppId;
-  name: string;
+  // Core identification - supports both platform and domain naming
+  id?: AppId;
+  appType?: string;  // Domain-specific app type
+  name?: string;
+  displayName?: string;  // Alternative to name
   description: string;
-  features: string[];
-  defaultRoute: string;
-  port: number;
+
+  // Features and routes
+  features?: string[];
+  featureFlags?: Record<string, boolean>;
+  defaultRoute?: string;
+
+  // Port configuration
+  port?: number;
+  defaultPort?: number;  // Alternative to port
+
+  // Theme and localization
+  locale?: string;
+  theme?: string;
+  colorScheme?: 'auto' | 'light' | 'dark';
+
+  // Auth configuration
+  authConfig?: AppAuthConfig;
+
+  // Allow additional domain-specific properties
+  [key: string]: unknown;
 }
 
 // App profiles registry
@@ -111,15 +147,132 @@ export function getAppProfile(id: AppId): AppProfile {
   return appProfiles[id];
 }
 
+/**
+ * Register additional app profiles from domain packages
+ * This allows domains to extend the base platform profiles
+ */
+export function registerAppProfiles(profiles: AppProfile[]): void {
+  for (const profile of profiles) {
+    appProfiles[profile.id as AppId] = profile;
+  }
+}
+
 // Feature flag types
 export interface FeatureFlags {
   [key: string]: boolean;
 }
 
-// TODO: Migrate from @xala/config
-// export { useFeatureFlag, FeatureFlagProvider } from './FeatureFlags';
-// export { useTenantConfig, TenantConfigProvider } from './TenantConfig';
-// export { useEnvironmentConfig } from './EnvironmentConfig';
+// ============================================================================
+// Environment Validation
+// ============================================================================
+
+export interface ValidatedEnv {
+  VITE_API_URL: string;
+  VITE_WS_URL?: string;
+  VITE_TENANT_ID?: string;
+  VITE_ENV: 'development' | 'staging' | 'production';
+  DEV: boolean;
+  PROD: boolean;
+  [key: string]: string | boolean | undefined;
+}
+
+/**
+ * Validates and parses environment variables
+ * @param env - Vite's import.meta.env object
+ * @returns Validated environment configuration
+ */
+export function validateEnv(env: Record<string, string | boolean | undefined>): ValidatedEnv {
+  // Determine environment
+  const envMode = (env.MODE as string) || 'development';
+  let viteEnv: 'development' | 'staging' | 'production' = 'development';
+  if (envMode === 'production' || env.PROD) {
+    viteEnv = 'production';
+  } else if (envMode === 'staging') {
+    viteEnv = 'staging';
+  }
+
+  return {
+    VITE_API_URL: (env.VITE_API_URL as string) || 'https://api.digilist.no',
+    VITE_WS_URL: env.VITE_WS_URL as string | undefined,
+    VITE_TENANT_ID: env.VITE_TENANT_ID as string | undefined,
+    VITE_ENV: viteEnv,
+    DEV: Boolean(env.DEV),
+    PROD: Boolean(env.PROD),
+    ...env,
+  };
+}
+
+// ============================================================================
+// App Configuration
+// ============================================================================
+
+export interface SdkConfig {
+  baseUrl: string;
+  wsUrl?: string;
+  tenantId?: string;
+  defaultHeaders?: Record<string, string>;
+}
+
+export interface RuntimeProviderConfig {
+  appType: AppId;
+  apiUrl: string;
+  wsUrl?: string;
+  tenantId?: string;
+  locale: 'nb' | 'en';
+  theme: string;
+  colorScheme: 'light' | 'dark' | 'auto';
+  authConfig: {
+    loginPath: string;
+    debug: boolean;
+    sessionCheckInterval: number;
+  };
+  featureFlags: Record<string, boolean>;
+}
+
+export interface AppConfig {
+  sdkConfig: SdkConfig;
+  runtimeConfig: RuntimeProviderConfig;
+}
+
+/**
+ * Creates SDK and RuntimeProvider configuration from app profile and validated env
+ * @param appId - Application identifier
+ * @param env - Validated environment configuration
+ * @returns Configuration for SDK and RuntimeProvider
+ */
+export function createAppConfig(appId: AppId, env: ValidatedEnv): AppConfig {
+  const profile = getAppProfile(appId);
+
+  const sdkConfig: SdkConfig = {
+    baseUrl: env.VITE_API_URL,
+    wsUrl: env.VITE_WS_URL,
+    tenantId: env.VITE_TENANT_ID,
+    defaultHeaders: {
+      'Accept-Language': 'nb',
+    },
+  };
+
+  const runtimeConfig: RuntimeProviderConfig = {
+    appType: appId,
+    apiUrl: env.VITE_API_URL,
+    wsUrl: env.VITE_WS_URL,
+    tenantId: env.VITE_TENANT_ID,
+    locale: 'nb',
+    theme: 'digilist',
+    colorScheme: 'auto',
+    authConfig: {
+      loginPath: '/login',
+      debug: env.DEV,
+      sessionCheckInterval: 60000,
+    },
+    featureFlags: (profile.features ?? []).reduce((acc, feature) => {
+      acc[feature] = true;
+      return acc;
+    }, {} as Record<string, boolean>),
+  };
+
+  return { sdkConfig, runtimeConfig };
+}
 
 // ============================================================================
 // Domain Registry - Multi-domain SaaS support

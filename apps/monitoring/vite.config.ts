@@ -111,6 +111,27 @@ export default defineConfig({
       '@digilist/client-sdk/types': path.resolve(__dirname, '../../packages/client-sdk/dist/types/index.mjs'),
       '@digilist/client-sdk/services': path.resolve(__dirname, '../../packages/client-sdk/dist/services/index.mjs'),
       '@digilist/client-sdk': path.resolve(__dirname, '../../packages/client-sdk/dist/index.mjs'),
+      // Domain runtime package
+      '@digilist/runtime': path.resolve(__dirname, '../../packages/runtime/dist/index.js'),
+      // Domain UI package
+      '@digilist/ui/features': path.resolve(__dirname, '../../packages/ui/dist/features/index.js'),
+      '@digilist/ui/blocks': path.resolve(__dirname, '../../packages/ui/dist/blocks/index.js'),
+      '@digilist/ui': path.resolve(__dirname, '../../packages/ui/dist/index.js'),
+      // Platform subpaths (order matters - more specific first)
+      '@xalatechnologies/platform/ui/patterns': path.resolve(__dirname, '../../packages/platform/dist/ui/patterns/index.js'),
+      '@xalatechnologies/platform/ui/primitives': path.resolve(__dirname, '../../packages/platform/dist/ui/primitives/index.js'),
+      '@xalatechnologies/platform/ui/composed': path.resolve(__dirname, '../../packages/platform/dist/ui/composed/index.js'),
+      '@xalatechnologies/platform/ui/blocks': path.resolve(__dirname, '../../packages/platform/dist/ui/blocks/index.js'),
+      '@xalatechnologies/platform/ui/shells': path.resolve(__dirname, '../../packages/platform/dist/ui/shells/index.js'),
+      '@xalatechnologies/platform/ui/styles': path.resolve(__dirname, '../../packages/platform/dist/ui/styles.js'),
+      '@xalatechnologies/platform/ui': path.resolve(__dirname, '../../packages/platform/dist/ui/index.js'),
+      '@xalatechnologies/platform/i18n': path.resolve(__dirname, '../../packages/platform/dist/i18n/index.js'),
+      '@xalatechnologies/platform/auth': path.resolve(__dirname, '../../packages/platform/dist/auth/index.js'),
+      '@xalatechnologies/platform/config': path.resolve(__dirname, '../../packages/platform/dist/config/index.js'),
+      '@xalatechnologies/platform/runtime': path.resolve(__dirname, '../../packages/platform/dist/runtime/index.js'),
+      '@xalatechnologies/platform/contracts': path.resolve(__dirname, '../../packages/platform/dist/contracts/index.js'),
+      '@xalatechnologies/platform/sdk': path.resolve(__dirname, '../../packages/platform/dist/sdk/index.js'),
+      '@xalatechnologies/platform': path.resolve(__dirname, '../../packages/platform/dist/index.js'),
       // CSS imports cannot be resolved by tsconfig paths
       '@digdir/designsystemet-css': path.resolve(__dirname, '../../node_modules/@digdir/designsystemet-css'),
     },

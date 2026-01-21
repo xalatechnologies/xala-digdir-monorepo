@@ -82,7 +82,7 @@ export function DocsSectionPage() {
               to={`/${section}/${article.slug}`}
               style={{ /* articleLink - converted from CSS module */ }}
             >
-              <Card style={{ /* articleCard - converted from CSS module */ }} style={{ padding: 'var(--ds-spacing-4)' }}>
+              <Card style={{ padding: 'var(--ds-spacing-4)' }}>
                 <div style={{ /* articleContent - converted from CSS module */ }}>
                   <div>
                     <Heading level={3} style={{ /* articleTitle - converted from CSS module */ }}>

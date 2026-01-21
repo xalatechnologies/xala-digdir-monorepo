@@ -178,34 +178,32 @@ export function useDeleteSeason() {
 }
 
 // ============================================================================
-// Season Venue Management Hooks (TODO: Implement backend service)
+// Season Venue Management Hooks
 // ============================================================================
 
 /**
  * Get venues (rental objects) linked to a season
- * @todo Implement backend service method seasonService.getVenues(seasonId)
+ * Endpoint: GET /api/seasons/:id/venues
  */
 export function useSeasonVenues(seasonId: string) {
   return useQuery({
     queryKey: [...seasonKeys.detail(seasonId), 'venues'],
-    queryFn: () => {
-      throw new Error('useSeasonVenues: Backend service not yet implemented. Please implement seasonService.getVenues(seasonId)');
-    },
-    enabled: false, // Disabled until backend is implemented
+    queryFn: () => seasonService.getVenues(seasonId),
+    enabled: !!seasonId,
+    staleTime: 2 * 60 * 1000, // 2 minutes
   });
 }
 
 /**
  * Add a rental object (venue) to a season
- * @todo Implement backend service method seasonService.addVenue(seasonId, rentalObjectId)
+ * Endpoint: POST /api/seasons/:id/venues
  */
 export function useAddVenueToSeason() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: ({ seasonId: _seasonId, rentalObjectId: _rentalObjectId }: { seasonId: string; rentalObjectId: string }) => {
-      throw new Error('useAddVenueToSeason: Backend service not yet implemented. Please implement seasonService.addVenue(seasonId, rentalObjectId)');
-    },
+    mutationFn: ({ seasonId, rentalObjectId }: { seasonId: string; rentalObjectId: string }) =>
+      seasonService.addVenue(seasonId, rentalObjectId),
     onSuccess: (_, { seasonId }) => {
       queryClient.invalidateQueries({ queryKey: [...seasonKeys.detail(seasonId), 'venues'] });
     },
@@ -214,17 +212,17 @@ export function useAddVenueToSeason() {
 
 /**
  * Remove a rental object (venue) from a season
- * @todo Implement backend service method seasonService.removeVenue(seasonId, rentalObjectId)
+ * Endpoint: DELETE /api/seasons/:id/venues/:rentalObjectId
  */
 export function useRemoveVenueFromSeason() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: ({ seasonId: _seasonId, rentalObjectId: _rentalObjectId }: { seasonId: string; rentalObjectId: string }) => {
-      throw new Error('useRemoveVenueFromSeason: Backend service not yet implemented. Please implement seasonService.removeVenue(seasonId, rentalObjectId)');
-    },
+    mutationFn: ({ seasonId, rentalObjectId }: { seasonId: string; rentalObjectId: string }) =>
+      seasonService.removeVenue(seasonId, rentalObjectId),
     onSuccess: (_, { seasonId }) => {
       queryClient.invalidateQueries({ queryKey: [...seasonKeys.detail(seasonId), 'venues'] });
     },
   });
 }
+

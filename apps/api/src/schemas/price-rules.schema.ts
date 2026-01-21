@@ -7,7 +7,7 @@ import { z } from 'zod';
 /**
  * Listing Category Enum (expanded for demo)
  */
-export const ListingCategorySchema = z.enum([
+export const RentalObjectCategorySchema = z.enum([
   'GYMSAL',
   'MUSIKKBINGE',
   'BYDELSHUS',
@@ -22,7 +22,7 @@ export const ListingCategorySchema = z.enum([
   'KURS',
   'OTHER',
 ]);
-export type ListingCategory = z.infer<typeof ListingCategorySchema>;
+export type RentalObjectCategory = z.infer<typeof RentalObjectCategorySchema>;
 
 /**
  * Price Rule Type Enum

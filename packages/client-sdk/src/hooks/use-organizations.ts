@@ -1,139 +1,128 @@
 /**
  * Organization Hooks (MinSide)
- * TEMPORARY STUB - To be implemented when backend is ready
- *
- * This stub allows the app to load without breaking on missing import.
- * Returns empty organizations array until backend API is implemented.
+ * Production-ready hooks for organization management
+ * 
+ * Uses OrganizationService for API calls
  */
 
-import { useQuery, useMutation } from '@tanstack/react-query';
-import type { Organization } from '@/types';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { organizationService } from '@/services/organization.service';
+import type { Organization, OrganizationMember } from '@/types/organization';
+import type { PaginatedResponse, SingleResponse, SuccessResponse } from '@/types/enums';
+
+/**
+ * Query keys for organization data
+ */
+export const organizationKeys = {
+  all: ['organizations'] as const,
+  lists: () => [...organizationKeys.all, 'list'] as const,
+  list: (filters?: { status?: string }) => [...organizationKeys.lists(), filters] as const,
+  details: () => [...organizationKeys.all, 'detail'] as const,
+  detail: (id: string) => [...organizationKeys.details(), id] as const,
+  members: (id: string) => [...organizationKeys.detail(id), 'members'] as const,
+};
 
 interface UseOrganizationsOptions {
   status?: 'active' | 'inactive' | 'all';
 }
 
-interface OrganizationsResponse {
-  data: Organization[];
-  meta?: {
-    total: number;
-    page: number;
-    limit: number;
-  };
-}
-
 /**
- * Fetch user's organizations (MinSide)
- *
- * TODO: Implement when backend endpoint is ready
- * Expected endpoint: GET /api/minside/organizations
+ * Fetch user's organizations from the API
+ * Endpoint: GET /api/organizations
  */
 export function useOrganizations(options?: UseOrganizationsOptions) {
-  return useQuery<OrganizationsResponse>({
-    queryKey: ['organizations', 'minside', options],
+  return useQuery<PaginatedResponse<Organization>>({
+    queryKey: organizationKeys.list(options),
     queryFn: async () => {
-      // STUB: Return empty array until backend is ready
-      return {
-        data: [],
-        meta: {
-          total: 0,
-          page: 1,
-          limit: 50,
-        },
-      };
+      // 'all' means no status filter
+      const status = options?.status === 'all' ? undefined : options?.status;
+      return organizationService.getAll(status ? { status } : undefined);
     },
-    // Disable refetching since this is a stub
-    refetchOnMount: false,
-    refetchOnWindowFocus: false,
-    staleTime: Infinity,
+    staleTime: 5 * 60 * 1000, // 5 minutes
+    gcTime: 10 * 60 * 1000, // 10 minutes
   });
 }
 
 /**
- * Fetch single organization (MinSide)
- *
- * TODO: Implement when backend endpoint is ready
+ * Fetch single organization by ID
+ * Endpoint: GET /api/organizations/:id
  */
 export function useOrganization(id: string) {
-  return useQuery<{ data: Organization }>({
-    queryKey: ['organizations', 'minside', 'detail', id],
+  return useQuery<SingleResponse<Organization>>({
+    queryKey: organizationKeys.detail(id),
     queryFn: async () => {
-      // STUB: Return null until backend is ready
-      throw new Error('Organization not found');
+      return organizationService.getById(id);
     },
-    enabled: false, // Disable until backend is ready
+    enabled: !!id,
+    staleTime: 5 * 60 * 1000,
+    gcTime: 10 * 60 * 1000,
   });
 }
 
-interface OrganizationMember {
-  id: string;
-  userId: string;
-  name: string;
-  email: string;
-  role: string;
-  status: string;
-}
-
 /**
- * Fetch organization members (MinSide)
- *
- * TODO: Implement when backend endpoint is ready
- * Expected endpoint: GET /api/organizations/:id/members
+ * Fetch organization members
+ * Endpoint: GET /api/organizations/:id/members
  */
 export function useOrganizationMembers(organizationId: string) {
-  return useQuery<{ data: OrganizationMember[] }>({
-    queryKey: ['organizations', organizationId, 'members'],
+  return useQuery<SingleResponse<OrganizationMember[]>>({
+    queryKey: organizationKeys.members(organizationId),
     queryFn: async () => {
-      // STUB: Return empty array until backend is ready
-      return {
-        data: [],
-      };
+      return organizationService.getMembers(organizationId);
     },
     enabled: !!organizationId,
-    refetchOnMount: false,
-    refetchOnWindowFocus: false,
-    staleTime: Infinity,
+    staleTime: 2 * 60 * 1000, // 2 minutes
+    gcTime: 5 * 60 * 1000,
   });
 }
 
 /**
- * Add member to organization (MinSide)
- *
- * TODO: Implement when backend endpoint is ready
+ * Add member to organization
+ * Endpoint: POST /api/organizations/:id/members
  */
 export function useAddOrganizationMember() {
-  return useMutation<{ data: OrganizationMember }, Error, { organizationId: string; userId: string }>({
-    mutationFn: async (_payload) => {
-      // STUB: Return unchanged until backend ready
-      return { data: {} as OrganizationMember };
+  const queryClient = useQueryClient();
+  
+  return useMutation<SuccessResponse, Error, { organizationId: string; userId: string; role?: string }>({
+    mutationFn: async ({ organizationId, userId, role }) => {
+      return organizationService.addMember(organizationId, { userId, role });
+    },
+    onSuccess: (_data, variables) => {
+      queryClient.invalidateQueries({ queryKey: organizationKeys.members(variables.organizationId) });
     },
   });
 }
 
 /**
- * Remove member from organization (MinSide)
- *
- * TODO: Implement when backend endpoint is ready
+ * Remove member from organization
+ * Endpoint: DELETE /api/organizations/:id/members/:memberId
  */
 export function useRemoveOrganizationMember() {
-  return useMutation<{ success: boolean }, Error, { organizationId: string; userId: string }>({
-    mutationFn: async (_payload) => {
-      // STUB: Return success until backend ready
-      return { success: true };
+  const queryClient = useQueryClient();
+  
+  return useMutation<SuccessResponse, Error, { organizationId: string; memberId: string }>({
+    mutationFn: async ({ organizationId, memberId }) => {
+      return organizationService.removeMember(organizationId, memberId);
+    },
+    onSuccess: (_data, variables) => {
+      queryClient.invalidateQueries({ queryKey: organizationKeys.members(variables.organizationId) });
     },
   });
 }
 
 /**
- * Update organization member (MinSide)
- *
- * TODO: Implement when backend endpoint is ready
+ * Update organization member role
+ * Endpoint: PUT /api/organizations/:id/members/:memberId
  */
 export function useUpdateOrganizationMember() {
-  return useMutation<{ data: OrganizationMember }, Error, { organizationId: string; userId: string; role?: string }>({
-    mutationFn: async (_payload) => {
-      // STUB: Return unchanged until backend ready
-      return { data: {} as OrganizationMember };
+  const queryClient = useQueryClient();
+  
+  return useMutation<SuccessResponse, Error, { organizationId: string; memberId: string; role: string }>({
+    mutationFn: async ({ organizationId, memberId, role }) => {
+      return organizationService.updateMember(organizationId, memberId, { role });
+    },
+    onSuccess: (_data, variables) => {
+      queryClient.invalidateQueries({ queryKey: organizationKeys.members(variables.organizationId) });
     },
   });
 }
+

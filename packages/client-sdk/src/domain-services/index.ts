@@ -70,14 +70,17 @@ export { ReviewService, reviewService } from '../services/review.service';
 export { pricingService, PricingService } from '../services/pricing.service';
 export {
   BackofficePriceRulesService,
-  BackofficeListingsService,
+  BackofficeRentalObjectsService,
+  // Alias for backward compatibility
+  BackofficeRentalObjectsService as BackofficeListingsService,
   backofficePriceRulesService,
+  backofficeRentalObjectsService,
   backofficeListingsService,
 } from '../services/price-rules.service';
 export type {
   PriceRuleType,
   PriceUnit,
-  ListingCategory,
+  // RentalObjectCategory exported from types/rental-object.ts, not from services
   PriceRule,
   CreatePriceRuleDTO,
   ListingRules,

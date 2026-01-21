@@ -10,7 +10,7 @@ import type {
   BackofficeMenuResponse,
   MenuTreeDTO,
   SupportedLanguage,
-} from '@xala/contracts/projections';
+} from '@digilist/contracts/projections';
 import { getClient } from '@/core/client-factory';
 
 interface UseBackofficeMenuOptions {

@@ -290,7 +290,79 @@ class SeasonService {
   }> {
     return getClient().get(`${this.basePath}/${id}/stats`);
   }
+
+  // ==========================================================================
+  // Season Venue Management
+  // ==========================================================================
+
+  /**
+   * Get venues (rental objects) linked to a season
+   * Returns list of rental objects that are available for applications in this season
+   *
+   * @param seasonId - Season identifier
+   * @returns Promise with list of season venues
+   *
+   * @example
+   * ```typescript
+   * const venues = await seasonService.getVenues('season-123');
+   * venues.data.forEach(v => console.log('Venue:', v.rentalObject.name));
+   * ```
+   */
+  async getVenues(seasonId: string): Promise<{ data: SeasonVenue[] }> {
+    return getClient().get<{ data: SeasonVenue[] }>(`${this.basePath}/${seasonId}/venues`);
+  }
+
+  /**
+   * Add a rental object (venue) to a season
+   * Links a rental object to a season, making it available for applications
+   *
+   * @param seasonId - Season identifier
+   * @param rentalObjectId - Rental object identifier to add
+   * @returns Promise with created season venue link
+   *
+   * @example
+   * ```typescript
+   * const venue = await seasonService.addVenue('season-123', 'rental-456');
+   * console.log('Venue added:', venue.data.rentalObjectId);
+   * ```
+   */
+  async addVenue(seasonId: string, rentalObjectId: string): Promise<{ data: SeasonVenue }> {
+    return getClient().post<{ data: SeasonVenue }>(`${this.basePath}/${seasonId}/venues`, { rentalObjectId });
+  }
+
+  /**
+   * Remove a rental object (venue) from a season
+   * Unlinks a rental object from a season
+   *
+   * @param seasonId - Season identifier
+   * @param rentalObjectId - Rental object identifier to remove
+   * @returns Promise that resolves when removal is complete
+   *
+   * @example
+   * ```typescript
+   * await seasonService.removeVenue('season-123', 'rental-456');
+   * console.log('Venue removed');
+   * ```
+   */
+  async removeVenue(seasonId: string, rentalObjectId: string): Promise<void> {
+    return getClient().delete(`${this.basePath}/${seasonId}/venues/${rentalObjectId}`);
+  }
+}
+
+/**
+ * Season venue link DTO
+ */
+export interface SeasonVenue {
+  id: string;
+  seasonId: string;
+  rentalObjectId: string;
+  rentalObject?: {
+    id: string;
+    name: string;
+  };
+  createdAt: string;
 }
 
 export const seasonService = new SeasonService();
 export default seasonService;
+

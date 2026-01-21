@@ -3,15 +3,8 @@
  * Tenant-controlled access to rental object categories and platform features
  */
 
-/**
- * Rental Object Categories (CANONICAL - matches DB enum)
- * Reference: apps/api/drizzle/0034_rental_object_categories_enum.sql
- */
-export enum RentalObjectCategory {
-  LOKALER_OG_BANER = 'LOKALER_OG_BANER',                   // Spaces and fields
-  ARRANGEMENTER_OG_TJENESTER = 'ARRANGEMENTER_OG_TJENESTER', // Events and services
-  UTSTYR_OG_KJORETOY = 'UTSTYR_OG_KJORETOY',               // Equipment and vehicles
-}
+import type { RentalObjectCategory } from './rental-object';
+// Note: RentalObjectCategory is exported from types/index.ts via rental-object.ts
 
 /**
  * Feature Flag Keys (CANONICAL - follows naming convention: feature.{module})
@@ -151,19 +144,23 @@ export const DEMO_FEATURE_FLAGS: FeatureFlags = {
 };
 
 /**
- * Category labels for UI (CANONICAL - matches DB enum)
+ * Category labels for UI (matches canonical categories in rental-object.ts)
  */
 export const RENTAL_OBJECT_CATEGORY_LABELS: Record<RentalObjectCategory, { no: string; en: string }> = {
-  [RentalObjectCategory.LOKALER_OG_BANER]: {
+  LOKALER_OG_BANER: {
     no: 'Lokaler og baner',
     en: 'Spaces and Fields',
   },
-  [RentalObjectCategory.ARRANGEMENTER_OG_TJENESTER]: {
-    no: 'Arrangementer og tjenester',
-    en: 'Events and Services',
+  UTSTYR_OG_INVENTAR: {
+    no: 'Utstyr og inventar',
+    en: 'Equipment and Inventory',
   },
-  [RentalObjectCategory.UTSTYR_OG_KJORETOY]: {
-    no: 'Utstyr og kjøretøy',
-    en: 'Equipment and Vehicles',
+  KJORETOY_OG_TRANSPORT: {
+    no: 'Kjøretøy og transport',
+    en: 'Vehicles and Transport',
+  },
+  OPPLEVELSER_OG_ARRANGEMENT: {
+    no: 'Opplevelser og arrangementer',
+    en: 'Experiences and Events',
   },
 };

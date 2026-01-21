@@ -82,13 +82,13 @@ export function RoleGuidePage() {
         <Heading level={2}>{t('docs.roleGuide.relevantArticles')}</Heading>
         <div style={{ /* articleGrid - converted from CSS module */ }}>
           <Link to="/booking/getting-started" style={{ /* articleLink - converted from CSS module */ }}>
-            <Card style={{ /* articleCard - converted from CSS module */ }} style={{ padding: 'var(--ds-spacing-4)' }}>
+            <Card style={{ padding: 'var(--ds-spacing-4)' }}>
               <Heading level={4}>{t('docs.article.gettingStartedBooking')}</Heading>
               <Paragraph data-size="sm">{t('docs.article.gettingStartedBookingDesc')}</Paragraph>
             </Card>
           </Link>
           <Link to="/payments/payment-methods" style={{ /* articleLink - converted from CSS module */ }}>
-            <Card style={{ /* articleCard - converted from CSS module */ }} style={{ padding: 'var(--ds-spacing-4)' }}>
+            <Card style={{ padding: 'var(--ds-spacing-4)' }}>
               <Heading level={4}>{t('docs.article.paymentMethods')}</Heading>
               <Paragraph data-size="sm">{t('docs.article.paymentMethodsDesc')}</Paragraph>
             </Card>

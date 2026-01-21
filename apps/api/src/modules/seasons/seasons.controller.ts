@@ -95,6 +95,56 @@ export class SeasonsController {
       return { data: [], meta: { total: 0 }, error: 'Failed to load seasons' };
     }
   }
+
+  // ==========================================================================
+  // Season Venue Management
+  // ==========================================================================
+
+  /**
+   * GET /api/seasons/:id/venues - List venues linked to season
+   */
+  @Get('/:id/venues')
+  async listVenues(request: FastifyRequest<{ Params: { id: string } }>, _reply: FastifyReply) {
+    try {
+      const venues = await this.service.listVenues(request.params.id);
+      return { data: venues };
+    } catch (error) {
+      console.error('Error listing season venues:', error);
+      return { data: [], error: 'Failed to list venues' };
+    }
+  }
+
+  /**
+   * POST /api/seasons/:id/venues - Add venue to season
+   */
+  @Post('/:id/venues')
+  async addVenue(request: FastifyRequest<{ Params: { id: string } }>, _reply: FastifyReply) {
+    try {
+      const { rentalObjectId } = request.body as { rentalObjectId: string };
+      const venue = await this.service.addVenue(request.params.id, rentalObjectId);
+      return { data: venue };
+    } catch (error) {
+      console.error('Error adding venue to season:', error);
+      return { data: null, error: 'Failed to add venue' };
+    }
+  }
+
+  /**
+   * DELETE /api/seasons/:id/venues/:rentalObjectId - Remove venue from season
+   */
+  @Delete('/:id/venues/:rentalObjectId')
+  async removeVenue(
+    request: FastifyRequest<{ Params: { id: string; rentalObjectId: string } }>,
+    _reply: FastifyReply
+  ) {
+    try {
+      await this.service.removeVenue(request.params.id, request.params.rentalObjectId);
+      return { data: { success: true } };
+    } catch (error) {
+      console.error('Error removing venue from season:', error);
+      return { data: null, error: 'Failed to remove venue' };
+    }
+  }
 }
 
 /**

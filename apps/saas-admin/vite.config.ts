@@ -40,7 +40,7 @@ export default defineConfig({
       '@xalatechnologies/platform/ui/composed': path.resolve(__dirname, '../../packages/platform/dist/ui/composed/index.js'),
       '@xalatechnologies/platform/ui/themes': path.resolve(__dirname, '../../packages/platform/dist/ui/themes/index.js'),
       '@xalatechnologies/platform/ui/primitives': path.resolve(__dirname, '../../packages/platform/dist/ui/primitives/index.js'),
-      '@xalatechnologies/platform/ui/styles': path.resolve(__dirname, '../../packages/platform/dist/ui/index.css'),
+      '@xalatechnologies/platform/ui/styles': path.resolve(__dirname, '../../packages/platform/dist/ui/styles.js'),
       '@xalatechnologies/platform/ui': path.resolve(__dirname, '../../packages/platform/dist/ui/index.js'),
       '@xalatechnologies/platform': path.resolve(__dirname, '../../packages/platform/dist/index.js'),
       // CSS imports cannot be resolved by tsconfig paths

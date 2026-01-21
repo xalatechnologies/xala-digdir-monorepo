@@ -58,6 +58,7 @@
     }
   },
   "dependencies": {
+    "@digilist/contracts": "workspace:*",
     "@xalatechnologies/platform": "workspace:*",
     "browser-image-compression": "^2.0.2"
   },

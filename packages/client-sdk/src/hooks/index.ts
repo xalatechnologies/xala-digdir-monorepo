@@ -744,12 +744,13 @@ export {
   useUpdateGdprRequestStatus,
 } from './use-gdpr';
 
-// Consent hooks (GDPR) - TEMPORARY STUB
+// Consent hooks (GDPR)
 export {
   useConsents,
   useUpdateConsents,
   useHasConsent,
-  type Consent,
+  type ConsentSettings,
+  type UpdateConsentDTO,
 } from './use-consents';
 
 // Integration Credentials hooks

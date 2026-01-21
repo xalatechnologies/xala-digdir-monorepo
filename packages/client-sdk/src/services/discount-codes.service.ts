@@ -57,7 +57,7 @@ export class DiscountCodesService extends BaseService {
   /**
    * Delete discount code
    */
-  async delete(id: string): Promise<void> {
+  async deleteCode(id: string): Promise<void> {
     return this.client.delete(this.buildPath(`/${id}`));
   }
 

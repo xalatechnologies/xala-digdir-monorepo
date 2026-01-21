@@ -1,135 +1,96 @@
 /**
  * User Management Hooks (MinSide)
- * TEMPORARY STUBS - To be implemented when backend is ready
- *
- * These stubs allow the app to load without breaking on missing imports.
+ * Production-ready hooks for user profile and preferences
+ * 
+ * Uses ProfileService and GdprService for API calls
  */
 
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-
-export interface UserPreferences {
-  language?: 'nb' | 'en';
-  locale?: string;
-  notifications?: {
-    email?: boolean;
-    sms?: boolean;
-    push?: boolean;
-  };
-  theme?: 'light' | 'dark' | 'auto';
-  colorScheme?: 'light' | 'dark' | 'auto';
-  fontSize?: 'small' | 'medium' | 'large';
-  defaultView?: string;
-  compactMode?: boolean;
-}
-
-interface UserPreferencesResponse {
-  data: UserPreferences;
-}
-
-interface UpdateUserPayload {
-  name?: string;
-  email?: string;
-  phone?: string;
-  dateOfBirth?: string;
-  nationalId?: string;
-  invoiceAddress?: {
-    street?: string;
-    city?: string;
-    postalCode?: string;
-    country?: string;
-  };
-  residenceAddress?: {
-    street?: string;
-    city?: string;
-    postalCode?: string;
-    country?: string;
-  };
-}
-
-interface UploadAvatarPayload {
-  file: File;
-  id?: string;
-  options?: Record<string, unknown>;
-}
+import { profileService } from '@/services/profile.service';
+import { gdprService } from '@/services/gdpr.service';
+import type { 
+  UserPreferences, 
+  UpdatePreferencesDTO,
+  UserProfile,
+  UpdateProfileDTO,
+} from '@/types/profile';
+import type { GdprDataExport } from '@/types/gdpr';
+import type { SingleResponse } from '@/types/enums';
 
 /**
- * Get user preferences
- * TODO: Implement when backend is ready
+ * Query keys for user data
+ */
+export const userKeys = {
+  all: ['user'] as const,
+  profile: () => [...userKeys.all, 'profile'] as const,
+  preferences: () => [...userKeys.all, 'preferences'] as const,
+};
+
+// Re-export types for consumers
+export type { UserPreferences } from '@/types/profile';
+
+/**
+ * Get user preferences from the Profile API
+ * Endpoint: GET /api/profile/preferences
  */
 export function useUserPreferences() {
-  return useQuery<UserPreferencesResponse>({
-    queryKey: ['user', 'preferences'],
+  return useQuery<SingleResponse<UserPreferences>>({
+    queryKey: userKeys.preferences(),
     queryFn: async () => {
-      return {
-        data: {
-          language: 'nb',
-          theme: 'auto',
-          notifications: {
-            email: true,
-            sms: false,
-            push: false,
-          },
-        },
-      };
+      return profileService.getPreferences();
     },
-    refetchOnMount: false,
-    refetchOnWindowFocus: false,
-    staleTime: Infinity,
+    staleTime: 5 * 60 * 1000, // 5 minutes
+    gcTime: 10 * 60 * 1000, // 10 minutes
   });
 }
 
 /**
  * Update user preferences
- * TODO: Implement when backend is ready
+ * Endpoint: PUT /api/profile/preferences
  */
 export function useUpdateUserPreferences() {
   const queryClient = useQueryClient();
 
-  return useMutation<UserPreferencesResponse, Error, Partial<UserPreferences>>({
+  return useMutation<SingleResponse<UserPreferences>, Error, UpdatePreferencesDTO>({
     mutationFn: async (payload) => {
-      // STUB: Return unchanged until backend ready
-      return {
-        data: payload as UserPreferences,
-      };
+      return profileService.updatePreferences(payload);
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['user', 'preferences'] });
+      queryClient.invalidateQueries({ queryKey: userKeys.preferences() });
+      queryClient.invalidateQueries({ queryKey: ['session'] });
     },
   });
 }
 
 /**
  * Update current user profile
- * TODO: Implement when backend is ready
+ * Endpoint: PUT /api/profile
  */
 export function useUpdateCurrentUser() {
   const queryClient = useQueryClient();
 
-  return useMutation<{ data: UpdateUserPayload }, Error, UpdateUserPayload>({
+  return useMutation<SingleResponse<UserProfile>, Error, UpdateProfileDTO>({
     mutationFn: async (payload) => {
-      // STUB: Return unchanged until backend ready
-      return {
-        data: payload,
-      };
+      return profileService.updateProfile(payload);
     },
     onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: userKeys.profile() });
       queryClient.invalidateQueries({ queryKey: ['session'] });
-      queryClient.invalidateQueries({ queryKey: ['user'] });
     },
   });
 }
 
 /**
  * Delete user account (GDPR right to erasure)
- * TODO: Implement when backend is ready
+ * Creates a GDPR deletion request
+ * Endpoint: POST /api/gdpr/requests (type: deletion)
  */
 export function useDeleteAccount() {
   const queryClient = useQueryClient();
 
-  return useMutation<{ success: boolean }, Error>({
+  return useMutation<SingleResponse<unknown>, Error>({
     mutationFn: async () => {
-      // STUB: Simulate deletion
-      return { success: true };
+      return gdprService.createRequest({ requestType: 'deletion' });
     },
     onSuccess: () => {
       // Clear all user data from cache
@@ -140,44 +101,31 @@ export function useDeleteAccount() {
 
 /**
  * Upload user avatar
- * TODO: Implement when backend is ready
+ * Endpoint: PUT /api/profile (with avatar field)
  */
 export function useUploadUserAvatar() {
   const queryClient = useQueryClient();
 
-  return useMutation<{ data: { avatarUrl: string } }, Error, UploadAvatarPayload>({
-    mutationFn: async (_payload) => {
-      // STUB: Return placeholder URL
-      return {
-        data: {
-          avatarUrl: '/placeholder-avatar.png',
-        },
-      };
+  return useMutation<SingleResponse<UserProfile>, Error, { avatar: string }>({
+    mutationFn: async (payload) => {
+      return profileService.updateProfile({ avatar: payload.avatar });
     },
     onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: userKeys.profile() });
       queryClient.invalidateQueries({ queryKey: ['session'] });
-      queryClient.invalidateQueries({ queryKey: ['user'] });
     },
   });
-}
-
-interface UserExportData {
-  profile?: Record<string, unknown>;
-  bookings?: Array<Record<string, unknown>>;
-  exportedAt?: string;
 }
 
 /**
  * Export user data (GDPR right to data portability)
- * TODO: Implement when backend is ready
+ * Endpoint: GET /api/gdpr/export
  */
 export function useExportData() {
-  return useMutation<{ data: UserExportData }, Error>({
+  return useMutation<SingleResponse<GdprDataExport>, Error>({
     mutationFn: async () => {
-      // STUB: Return empty data
-      return {
-        data: {},
-      };
+      return gdprService.exportData();
     },
   });
 }
+

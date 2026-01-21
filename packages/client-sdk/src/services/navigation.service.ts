@@ -27,14 +27,9 @@ export interface BackofficeMenuResponse {
   resolvedAt: string;
 }
 
-export interface UserContextResponse {
-  userId: string;
-  tenantId: string;
-  orgId: string | null;
-  roles: string[];
-  permissions: string[];
-  language: string;
-}
+// UserContextResponse is defined in @digilist/contracts/projections
+import type { UserContextResponse } from '@digilist/contracts/projections';
+export type { UserContextResponse };
 
 export class NavigationService {
   /**

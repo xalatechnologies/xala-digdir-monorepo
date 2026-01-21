@@ -11,7 +11,21 @@ import type {
   AmenityQueryParams,
   PaginatedResponse,
   SingleResponse,
+  SuccessResponse,
 } from '@/types';
+
+// Export request types for hooks
+export type CreateAmenityRequest = CreateAmenityDTO;
+export type UpdateAmenityRequest = UpdateAmenityDTO;
+
+export interface AssignAmenitiesRequest {
+  amenityIds: string[];
+}
+
+export interface AmenityGroup {
+  category: string;
+  amenities: Amenity[];
+}
 
 export class AmenitiesService extends BaseService {
   constructor() {
@@ -26,10 +40,31 @@ export class AmenitiesService extends BaseService {
   }
 
   /**
+   * List all amenities (alias for getAll)
+   */
+  async list(): Promise<PaginatedResponse<Amenity>> {
+    return this.getAll();
+  }
+
+  /**
+   * List amenities grouped by category
+   */
+  async listGrouped(): Promise<SingleResponse<AmenityGroup[]>> {
+    return this.client.get(this.buildPath('/grouped'));
+  }
+
+  /**
    * Get single amenity by ID
    */
   async getById(id: string): Promise<SingleResponse<Amenity>> {
     return this.client.get(this.buildPath(`/${id}`));
+  }
+
+  /**
+   * Get amenities for a specific rental object
+   */
+  async getForRentalObject(rentalObjectId: string): Promise<PaginatedResponse<Amenity>> {
+    return this.client.get(this.buildPath(`/rental-object/${rentalObjectId}`));
   }
 
   /**
@@ -56,10 +91,24 @@ export class AmenitiesService extends BaseService {
   }
 
   /**
-   * Delete amenity
+   * Delete amenity by ID
+   */
+  async deleteById(id: string): Promise<SuccessResponse> {
+    return this.client.delete(this.buildPath(`/${id}`));
+  }
+
+  /**
+   * Delete amenity (alias for deleteById)
    */
   async deleteAmenity(id: string): Promise<void> {
-    await this.client.delete(this.buildPath(`/${id}`));
+    await this.deleteById(id);
+  }
+
+  /**
+   * Assign amenities to rental object
+   */
+  async assignToRentalObject(rentalObjectId: string, data: AssignAmenitiesRequest): Promise<SuccessResponse> {
+    return this.client.post(this.buildPath(`/rental-object/${rentalObjectId}`), data);
   }
 
   /**
@@ -82,3 +131,4 @@ export class AmenitiesService extends BaseService {
 }
 
 export const amenitiesService = new AmenitiesService();
+

@@ -122,4 +122,63 @@ export class SeasonsService {
     
     return [];
   }
+
+  // ==========================================================================
+  // Season Venue Management
+  // ==========================================================================
+
+  /**
+   * List venues (rental objects) linked to a season
+   */
+  async listVenues(seasonId: string): Promise<any[]> {
+    // Query season_venues join table with rental object details
+    const result = await this.db.query.seasonVenues?.findMany({
+      where: (sv: any, { eq }: any) => eq(sv.seasonId, seasonId),
+      with: {
+        rentalObject: {
+          columns: { id: true, name: true },
+        },
+      },
+    });
+    
+    return result ?? [];
+  }
+
+  /**
+   * Add venue to season
+   */
+  async addVenue(seasonId: string, rentalObjectId: string): Promise<any> {
+    const id = `sv_${Date.now()}`;
+    
+    // Check if already exists
+    const existing = await this.db.query.seasonVenues?.findFirst({
+      where: (sv: any, { and, eq }: any) => 
+        and(eq(sv.seasonId, seasonId), eq(sv.rentalObjectId, rentalObjectId)),
+    });
+    
+    if (existing) {
+      return existing;
+    }
+    
+    // Insert new season venue link
+    const inserted = await this.db.insert?.(this.db.schema?.seasonVenues).values({
+      id,
+      seasonId,
+      rentalObjectId,
+      createdAt: new Date(),
+    }).returning?.();
+    
+    return inserted?.[0] ?? { id, seasonId, rentalObjectId, createdAt: new Date().toISOString() };
+  }
+
+  /**
+   * Remove venue from season
+   */
+  async removeVenue(seasonId: string, rentalObjectId: string): Promise<void> {
+    await this.db.delete?.(this.db.schema?.seasonVenues).where(
+      (sv: any, { and, eq }: any) => 
+        and(eq(sv.seasonId, seasonId), eq(sv.rentalObjectId, rentalObjectId))
+    );
+  }
 }
+

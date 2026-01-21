@@ -2,7 +2,7 @@ import { useState, useMemo } from 'react';
 import { Heading, Paragraph, Card, Button, Spinner, DashboardPageHeader } from '@xalatechnologies/platform/ui';
 import { useSeasonApplications } from '@digilist/client-sdk/hooks';
 import type { SeasonApplicationStatus } from '@digilist/client-sdk/types';
-import { useAccountContext } from '@xalatechnologies/platform/runtime';
+import { useAccountContext } from '@digilist/runtime';
 import { useNavigate } from 'react-router-dom';
 import { useT } from '@xalatechnologies/platform/i18n';
 

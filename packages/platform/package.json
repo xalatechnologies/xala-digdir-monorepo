@@ -3,145 +3,145 @@
   "version": "1.0.0",
   "description": "Unified platform package for Xala - UI components, runtime, auth, config, contracts, SDK, i18n, and observability",
   "type": "module",
-  "main": "dist/index.js",
-  "module": "dist/index.mjs",
+  "main": "dist/index.cjs",
+  "module": "dist/index.js",
   "types": "dist/index.d.ts",
   "sideEffects": false,
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
-      "import": "./dist/index.mjs",
-      "require": "./dist/index.js"
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
     },
     "./ui": {
       "types": "./dist/ui/index.d.ts",
-      "import": "./dist/ui/index.mjs",
-      "require": "./dist/ui/index.js"
+      "import": "./dist/ui/index.js",
+      "require": "./dist/ui/index.cjs"
     },
     "./ui/primitives": {
       "types": "./dist/ui/primitives/index.d.ts",
-      "import": "./dist/ui/primitives/index.mjs",
-      "require": "./dist/ui/primitives/index.js"
+      "import": "./dist/ui/primitives/index.js",
+      "require": "./dist/ui/primitives/index.cjs"
     },
     "./ui/composed": {
       "types": "./dist/ui/composed/index.d.ts",
-      "import": "./dist/ui/composed/index.mjs",
-      "require": "./dist/ui/composed/index.js"
+      "import": "./dist/ui/composed/index.js",
+      "require": "./dist/ui/composed/index.cjs"
     },
     "./ui/shells": {
       "types": "./dist/ui/shells/index.d.ts",
-      "import": "./dist/ui/shells/index.mjs",
-      "require": "./dist/ui/shells/index.js"
+      "import": "./dist/ui/shells/index.js",
+      "require": "./dist/ui/shells/index.cjs"
     },
     "./ui/blocks": {
       "types": "./dist/ui/blocks/index.d.ts",
-      "import": "./dist/ui/blocks/index.mjs",
-      "require": "./dist/ui/blocks/index.js"
+      "import": "./dist/ui/blocks/index.js",
+      "require": "./dist/ui/blocks/index.cjs"
     },
     "./ui/themes": {
       "types": "./dist/ui/themes/index.d.ts",
-      "import": "./dist/ui/themes/index.mjs",
-      "require": "./dist/ui/themes/index.js"
+      "import": "./dist/ui/themes/index.js",
+      "require": "./dist/ui/themes/index.cjs"
     },
     "./ui/patterns": {
       "types": "./dist/ui/patterns/index.d.ts",
-      "import": "./dist/ui/patterns/index.mjs",
-      "require": "./dist/ui/patterns/index.js"
+      "import": "./dist/ui/patterns/index.js",
+      "require": "./dist/ui/patterns/index.cjs"
     },
     "./runtime": {
       "types": "./dist/runtime/index.d.ts",
-      "import": "./dist/runtime/index.mjs",
-      "require": "./dist/runtime/index.js"
+      "import": "./dist/runtime/index.js",
+      "require": "./dist/runtime/index.cjs"
     },
     "./auth": {
       "types": "./dist/auth/index.d.ts",
-      "import": "./dist/auth/index.mjs",
-      "require": "./dist/auth/index.js"
+      "import": "./dist/auth/index.js",
+      "require": "./dist/auth/index.cjs"
     },
     "./config": {
       "types": "./dist/config/index.d.ts",
-      "import": "./dist/config/index.mjs",
-      "require": "./dist/config/index.js"
+      "import": "./dist/config/index.js",
+      "require": "./dist/config/index.cjs"
     },
     "./contracts": {
       "types": "./dist/contracts/index.d.ts",
-      "import": "./dist/contracts/index.mjs",
-      "require": "./dist/contracts/index.js"
+      "import": "./dist/contracts/index.js",
+      "require": "./dist/contracts/index.cjs"
     },
     "./sdk": {
       "types": "./dist/sdk/index.d.ts",
-      "import": "./dist/sdk/index.mjs",
-      "require": "./dist/sdk/index.js"
+      "import": "./dist/sdk/index.js",
+      "require": "./dist/sdk/index.cjs"
     },
     "./sdk/saas": {
       "types": "./dist/sdk/saas/index.d.ts",
-      "import": "./dist/sdk/saas/index.mjs",
-      "require": "./dist/sdk/saas/index.js"
+      "import": "./dist/sdk/saas/index.js",
+      "require": "./dist/sdk/saas/index.cjs"
     },
     "./i18n": {
       "types": "./dist/i18n/index.d.ts",
-      "import": "./dist/i18n/index.mjs",
-      "require": "./dist/i18n/index.js"
+      "import": "./dist/i18n/index.js",
+      "require": "./dist/i18n/index.cjs"
     },
     "./observability": {
       "types": "./dist/observability/index.d.ts",
-      "import": "./dist/observability/index.mjs",
-      "require": "./dist/observability/index.js"
+      "import": "./dist/observability/index.js",
+      "require": "./dist/observability/index.cjs"
     },
     "./observability/metrics": {
       "types": "./dist/observability/metrics/index.d.ts",
-      "import": "./dist/observability/metrics/index.mjs",
-      "require": "./dist/observability/metrics/index.js"
+      "import": "./dist/observability/metrics/index.js",
+      "require": "./dist/observability/metrics/index.cjs"
     },
     "./observability/exporters": {
       "types": "./dist/observability/exporters/index.d.ts",
-      "import": "./dist/observability/exporters/index.mjs",
-      "require": "./dist/observability/exporters/index.js"
+      "import": "./dist/observability/exporters/index.js",
+      "require": "./dist/observability/exporters/index.cjs"
     },
     "./observability/types": {
       "types": "./dist/observability/types/index.d.ts",
-      "import": "./dist/observability/types/index.mjs",
-      "require": "./dist/observability/types/index.js"
+      "import": "./dist/observability/types/index.js",
+      "require": "./dist/observability/types/index.cjs"
     },
     "./sdk/http": {
       "types": "./dist/sdk/http/index.d.ts",
-      "import": "./dist/sdk/http/index.mjs",
-      "require": "./dist/sdk/http/index.js"
+      "import": "./dist/sdk/http/index.js",
+      "require": "./dist/sdk/http/index.cjs"
     },
     "./sdk/errors": {
       "types": "./dist/sdk/errors/index.d.ts",
-      "import": "./dist/sdk/errors/index.mjs",
-      "require": "./dist/sdk/errors/index.js"
+      "import": "./dist/sdk/errors/index.js",
+      "require": "./dist/sdk/errors/index.cjs"
     },
     "./sdk/query": {
       "types": "./dist/sdk/query/index.d.ts",
-      "import": "./dist/sdk/query/index.mjs",
-      "require": "./dist/sdk/query/index.js"
+      "import": "./dist/sdk/query/index.js",
+      "require": "./dist/sdk/query/index.cjs"
     },
     "./sdk/retry": {
       "types": "./dist/sdk/retry/index.d.ts",
-      "import": "./dist/sdk/retry/index.mjs",
-      "require": "./dist/sdk/retry/index.js"
+      "import": "./dist/sdk/retry/index.js",
+      "require": "./dist/sdk/retry/index.cjs"
     },
     "./ui/styles": {
       "types": "./dist/ui/styles.d.ts",
-      "import": "./dist/ui/styles.mjs",
-      "require": "./dist/ui/styles.js"
+      "import": "./dist/ui/styles.js",
+      "require": "./dist/ui/styles.cjs"
     },
     "./ui/pages": {
       "types": "./dist/ui/pages/index.d.ts",
-      "import": "./dist/ui/pages/index.mjs",
-      "require": "./dist/ui/pages/index.js"
+      "import": "./dist/ui/pages/index.js",
+      "require": "./dist/ui/pages/index.cjs"
     },
     "./ui/tokens": {
       "types": "./dist/ui/tokens/index.d.ts",
-      "import": "./dist/ui/tokens/index.mjs",
-      "require": "./dist/ui/tokens/index.js"
+      "import": "./dist/ui/tokens/index.js",
+      "require": "./dist/ui/tokens/index.cjs"
     },
     "./i18n/locales": {
       "types": "./dist/i18n/locales/index.d.ts",
-      "import": "./dist/i18n/locales/index.mjs",
-      "require": "./dist/i18n/locales/index.js"
+      "import": "./dist/i18n/locales/index.js",
+      "require": "./dist/i18n/locales/index.cjs"
     }
   },
   "typesVersions": {

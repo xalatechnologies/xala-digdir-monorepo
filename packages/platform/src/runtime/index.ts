@@ -28,20 +28,6 @@
  * ```
  */
 
-// Runtime configuration types
-export interface RuntimeConfig {
-  /** Base URL for API requests */
-  apiUrl: string;
-  /** Tenant identifier for multi-tenancy */
-  tenantId?: string;
-  /** Application name */
-  appName?: string;
-  /** Environment (development, staging, production) */
-  environment?: 'development' | 'staging' | 'production';
-  /** Enable debug mode */
-  debug?: boolean;
-}
-
 // Environment utilities
 export function getEnvironment(): 'development' | 'staging' | 'production' {
   // Use globalThis for browser-safe access
@@ -79,8 +65,36 @@ export {
   type AbstractViewState,
 } from './MapContext';
 
-// TODO: Migrate from @xala/runtime
-// export { AppProvider } from './AppProvider';
-// export { RuntimeProvider, useRuntime } from './RuntimeProvider';
-// export { ErrorBoundary } from './ErrorBoundary';
-// export { AccountContextProvider } from './AccountContextProvider';
+// RuntimeProvider - Main app wrapper with all providers
+export {
+  RuntimeProvider,
+  useRuntime,
+  useFeatureFlag,
+} from './RuntimeProvider';
+export type {
+  RuntimeConfig,
+  RuntimeContextValue,
+  RuntimeProviderProps,
+} from './RuntimeProvider';
+
+// RuntimeServiceProvider - Dependency injection for domain services
+export {
+  RuntimeServiceProvider,
+  useRuntimeServices,
+  useInjectedOrganizations,
+} from './RuntimeServiceProvider';
+export type {
+  RuntimeServiceConfig,
+  RuntimeServiceProviderProps,
+  ServiceHookResult,
+} from './RuntimeServiceProvider';
+
+// NotificationCenter state management
+export {
+  NotificationCenterProvider,
+  useNotificationCenter,
+} from './NotificationCenterContext';
+export type {
+  NotificationCenterContextValue,
+  NotificationCenterProviderProps,
+} from './NotificationCenterContext';

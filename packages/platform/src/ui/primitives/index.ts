@@ -130,3 +130,9 @@ export type { ProgressProps } from './progress';
 
 export { Logo } from './Logo';
 export type { LogoProps } from './Logo';
+
+export { NativeSelect } from './NativeSelect';
+export type { NativeSelectProps } from './NativeSelect';
+
+export { SelectOption } from './SelectOption';
+export type { SelectOptionProps } from './SelectOption';

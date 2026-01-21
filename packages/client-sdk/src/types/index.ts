@@ -7,11 +7,11 @@
  */
 
 // =============================================================================
-// Re-export from @xala/contracts (Schema-Agnostic Contracts)
+// Re-export from @digilist/contracts (Domain Contracts)
 // These are the canonical type definitions derived from Zod schemas.
 // =============================================================================
 
-// Projection types from contracts
+// Projection types from domain contracts
 export type {
   RentalObjectCardProjection,
   RentalObjectDetailsProjection,
@@ -26,20 +26,20 @@ export type {
   UserCardProjection,
   UserDetailsProjection,
   CurrentUserProjection,
-} from '@xala/contracts/projections';
+} from '@digilist/contracts/projections';
 
-// Capability types from contracts
+// Capability types from domain contracts
 export type {
   Capability,
   UIHints,
   FeatureFlags,
   CapabilitiesResponse,
   CapabilityKey,
-} from '@xala/contracts/schemas';
+} from '@digilist/contracts/schemas';
 
 export {
   CAPABILITIES,
-} from '@xala/contracts/schemas';
+} from '@digilist/contracts/schemas';
 
 // =============================================================================
 // Legacy Types (for backward compatibility)
@@ -235,3 +235,6 @@ export type {
   NavigationResponse,
   NavigationApiResponse,
 } from './navigation';
+
+// User Group types
+export * from './user-group';

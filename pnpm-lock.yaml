@@ -819,6 +819,9 @@ importers:
 
   packages/client-sdk:
     dependencies:
+      '@digilist/contracts':
+        specifier: workspace:*
+        version: link:../contracts
       '@xalatechnologies/platform':
         specifier: workspace:*
         version: link:../platform
