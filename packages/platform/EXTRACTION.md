@@ -1,410 +1,322 @@
-# Platform Package Extraction Guide
+# @xalatechnologies/platform - Extraction Guide
 
-> **PR F.1: Platform Extraction Configuration**
-> **Package:** `@xalatechnologies/platform`
-> **Status:** Active Development
-
----
+> **Purpose:** This document describes how to extract and publish the platform package independently from the monorepo.
 
 ## Overview
 
-The `@xalatechnologies/platform` package consolidates all platform-level functionality into a single, domain-agnostic package with multi-entry exports. This guide documents how to extract, configure, and migrate to the unified platform package.
+`@xalatechnologies/platform` is designed to be **fully extractable** and publishable to npm as a standalone package. It contains all platform-agnostic functionality that can be reused across different domain implementations.
 
 ---
 
-## Package Architecture
+## Pre-Extraction Verification
 
-### Multi-Entry Exports
+Before extracting or publishing, run these verification commands:
 
-The package provides 8 main entry points:
-
-| Entry Point | Import Path | Source Package |
-|-------------|-------------|----------------|
-| UI | `@xalatechnologies/platform/ui` | `@xala/ds` |
-| Auth | `@xalatechnologies/platform/auth` | `@xala/auth` |
-| Config | `@xalatechnologies/platform/config` | `@xala/config` |
-| Runtime | `@xalatechnologies/platform/runtime` | `@xala/runtime` |
-| Contracts | `@xalatechnologies/platform/contracts` | `@xala/contracts` |
-| SDK | `@xalatechnologies/platform/sdk` | `@xala/sdk-core` |
-| i18n | `@xalatechnologies/platform/i18n` | `@xala/i18n` |
-| Observability | `@xalatechnologies/platform/observability` | `@xala/observability` |
-
-### UI Sub-Modules
-
-The UI module has additional sub-entries:
-
-| Entry Point | Import Path | Purpose |
-|-------------|-------------|---------|
-| Primitives | `@xalatechnologies/platform/ui/primitives` | Low-level Designsystemet components |
-| Composed | `@xalatechnologies/platform/ui/composed` | Mid-level composed components |
-| Shells | `@xalatechnologies/platform/ui/shells` | Application layout shells |
-| Blocks | `@xalatechnologies/platform/ui/blocks` | Business domain blocks |
-| Themes | `@xalatechnologies/platform/ui/themes` | Theme configuration |
-| Patterns | `@xalatechnologies/platform/ui/patterns` | Domain-neutral UI patterns |
-
----
-
-## Directory Structure
-
-```
-packages/platform/
-├── src/
-│   ├── index.ts              # Main barrel export
-│   ├── ui/
-│   │   ├── index.ts          # UI barrel export
-│   │   ├── primitives/       # Re-exports from @xala/ds primitives
-│   │   ├── composed/         # Re-exports from @xala/ds composed
-│   │   ├── shells/           # Re-exports from @xala/ds shells
-│   │   ├── blocks/           # Re-exports from @xala/ds blocks
-│   │   ├── themes/           # Theme utilities
-│   │   └── patterns/         # Domain-neutral patterns (ResourceCard, etc.)
-│   ├── auth/
-│   │   └── index.ts          # Re-exports from @xala/auth
-│   ├── config/
-│   │   ├── index.ts          # Re-exports from @xala/config
-│   │   └── domain-registry.ts # Domain registration utilities
-│   ├── runtime/
-│   │   └── index.ts          # Re-exports from @xala/runtime
-│   ├── contracts/
-│   │   └── index.ts          # Re-exports from @xala/contracts
-│   ├── sdk/
-│   │   ├── index.ts          # Re-exports from @xala/sdk-core
-│   │   ├── http/             # HTTP client utilities
-│   │   ├── errors/           # RFC 7807 error handling
-│   │   ├── query/            # Query key factory
-│   │   └── retry/            # Retry with DLQ
-│   ├── i18n/
-│   │   ├── index.ts          # Re-exports from @xala/i18n
-│   │   ├── locales/          # Translation files (nb, en)
-│   │   └── hooks.ts          # i18n hooks
-│   └── observability/
-│       ├── index.ts          # Re-exports from @xala/observability
-│       ├── metrics/          # Metric definitions
-│       └── exporters/        # Prometheus, etc.
-├── package.json              # Multi-entry configuration
-├── tsconfig.json             # TypeScript paths
-├── tsup.config.ts            # Multi-entry build
-├── EXTRACTION.md             # This file
-└── CLAUDE.md                 # AI assistant guidance
-```
-
----
-
-## Dependencies Resolution
-
-### Current Dependencies (to be consolidated)
-
-The platform package has the following workspace dependencies:
-
-```json
-{
-  "dependencies": {
-    "@digdir/designsystemet-react": "^1.9.0",
-    "@tanstack/react-query": "^5.62.16",
-    "react": "^18.3.1",
-    "react-dom": "^18.3.1",
-    "react-router-dom": "^6.22.0",
-    "zod": "^3.22.4"
-  }
-}
-```
-
-### Future Dependencies (after full extraction)
-
-After completing the extraction, the package should also include:
-
-```json
-{
-  "dependencies": {
-    "@xala/ds": "workspace:*",
-    "@xala/auth": "workspace:*",
-    "@xala/config": "workspace:*",
-    "@xala/runtime": "workspace:*",
-    "@xala/contracts": "workspace:*",
-    "@xala/sdk-core": "workspace:*",
-    "@xala/i18n": "workspace:*",
-    "@xala/observability": "workspace:*"
-  }
-}
-```
-
-### Peer Dependencies
-
-```json
-{
-  "peerDependencies": {
-    "react": ">=18.0.0",
-    "react-dom": ">=18.0.0"
-  }
-}
-```
-
----
-
-## Migration Guide
-
-### Phase 1: Compatibility Layer (Current)
-
-During the migration period, both old and new imports work:
-
-```typescript
-// Old imports (deprecated, will show console warning)
-import { Button } from '@xala/ds';
-import { useAuth } from '@xala/auth';
-import { validateEnv } from '@xala/config';
-
-// New imports (recommended)
-import { Button } from '@xalatechnologies/platform/ui';
-import { useAuth } from '@xalatechnologies/platform/auth';
-import { validateEnv } from '@xalatechnologies/platform/config';
-```
-
-### Phase 2: Update Import Paths
-
-Replace all imports in your application:
-
-```typescript
-// Before
-import { Button, Card, Grid } from '@xala/ds';
-import { AppShell, ContentLayout } from '@xala/ds';
-import { RuntimeProvider } from '@xala/runtime';
-import { AuthProvider, useAuth } from '@xala/auth';
-import { useT, I18nProvider } from '@xala/i18n';
-import { initializeClient, ApiError } from '@xala/sdk-core';
-import { ProblemDetailsSchema } from '@xala/contracts';
-import { createLogger } from '@xala/observability';
-import { validateEnv, getAppProfile } from '@xala/config';
-
-// After
-import { Button, Card, Grid } from '@xalatechnologies/platform/ui';
-import { AppShell, ContentLayout } from '@xalatechnologies/platform/ui/shells';
-import { RuntimeProvider } from '@xalatechnologies/platform/runtime';
-import { AuthProvider, useAuth } from '@xalatechnologies/platform/auth';
-import { useT, I18nProvider } from '@xalatechnologies/platform/i18n';
-import { initializeClient, ApiError } from '@xalatechnologies/platform/sdk';
-import { ProblemDetailsSchema } from '@xalatechnologies/platform/contracts';
-import { createLogger } from '@xalatechnologies/platform/observability';
-import { validateEnv, getAppProfile } from '@xalatechnologies/platform/config';
-```
-
-### Phase 3: Update tsconfig.json Paths (Optional)
-
-For monorepo setups, add path mappings:
-
-```json
-{
-  "compilerOptions": {
-    "paths": {
-      "@xalatechnologies/platform": ["./packages/platform/src/index.ts"],
-      "@xalatechnologies/platform/*": ["./packages/platform/src/*"]
-    }
-  }
-}
-```
-
----
-
-## Verification Steps
-
-### 1. Build Verification
+### 1. Verify No Domain Imports
 
 ```bash
+# Must return no matches (excluding comments/docs)
+grep -r "from '@digilist" src/ --include="*.ts" --include="*.tsx" | grep -v "// " | grep -v "* "
+
+# Expected output: (empty)
+```
+
+### 2. Verify No Workspace Dependencies
+
+```bash
+# Must return no matches
+grep "workspace:" package.json
+
+# Expected output: (empty)
+```
+
+### 3. Build Independence Test
+
+```bash
+# Build without workspace resolution
 cd packages/platform
-pnpm clean
+pnpm install --ignore-workspace
 pnpm build
+
+# Expected: Build succeeds
 ```
 
-Expected output:
-- `dist/index.js` and `dist/index.d.ts`
-- `dist/ui/index.js` and `dist/ui/index.d.ts`
-- `dist/auth/index.js` and `dist/auth/index.d.ts`
-- `dist/config/index.js` and `dist/config/index.d.ts`
-- `dist/runtime/index.js` and `dist/runtime/index.d.ts`
-- `dist/contracts/index.js` and `dist/contracts/index.d.ts`
-- `dist/sdk/index.js` and `dist/sdk/index.d.ts`
-- `dist/i18n/index.js` and `dist/i18n/index.d.ts`
-- `dist/observability/index.js` and `dist/observability/index.d.ts`
-
-### 2. Type Checking
+### 4. Type Check
 
 ```bash
-cd packages/platform
 pnpm typecheck
+
+# Expected: No type errors
 ```
 
-### 3. Import Verification
+---
 
-Create a test file to verify imports:
+## Package Structure
 
-```typescript
-// test-imports.ts
-import { Button } from '@xalatechnologies/platform/ui';
-import { useAuth } from '@xalatechnologies/platform/auth';
-import { validateEnv } from '@xalatechnologies/platform/config';
+```
+@xalatechnologies/platform/
+├── src/
+│   ├── index.ts                    # Main entry
+│   ├── ui/                         # Design system
+│   │   ├── index.ts               # UI exports
+│   │   ├── primitives/            # Base components
+│   │   ├── composed/              # Composed components
+│   │   ├── blocks/                # Business blocks
+│   │   ├── patterns/              # Reusable patterns
+│   │   └── shells/                # App shells
+│   ├── auth/                       # Authentication
+│   │   ├── index.ts
+│   │   ├── context.tsx
+│   │   ├── hooks.ts
+│   │   └── types.ts
+│   ├── config/                     # Configuration
+│   │   ├── index.ts
+│   │   ├── registry.ts
+│   │   └── types.ts
+│   ├── runtime/                    # Runtime providers
+│   │   ├── index.ts
+│   │   └── providers/
+│   ├── contracts/                  # API contracts
+│   │   ├── index.ts
+│   │   ├── schemas/
+│   │   └── projections/
+│   ├── sdk/                        # SDK core
+│   │   ├── index.ts
+│   │   ├── http-client.ts
+│   │   ├── errors.ts
+│   │   └── query-keys.ts
+│   ├── i18n/                       # Internationalization
+│   │   ├── index.ts
+│   │   ├── hooks.ts
+│   │   └── locales/
+│   └── observability/              # Metrics & logging
+│       ├── index.ts
+│       ├── metrics.ts
+│       └── logging.ts
+├── package.json
+├── tsconfig.json
+├── tsup.config.ts
+└── EXTRACTION.md (this file)
+```
+
+---
+
+## Subpath Exports
+
+The package exposes the following subpath exports:
+
+| Export Path | Description |
+|-------------|-------------|
+| `@xalatechnologies/platform` | Main entry (all exports) |
+| `@xalatechnologies/platform/ui` | Design system components |
+| `@xalatechnologies/platform/ui/primitives` | Base UI primitives |
+| `@xalatechnologies/platform/ui/composed` | Composed components |
+| `@xalatechnologies/platform/ui/blocks` | Business blocks |
+| `@xalatechnologies/platform/ui/patterns` | Reusable patterns |
+| `@xalatechnologies/platform/ui/shells` | App shells |
+| `@xalatechnologies/platform/ui/styles` | CSS styles |
+| `@xalatechnologies/platform/auth` | Authentication layer |
+| `@xalatechnologies/platform/config` | Configuration utilities |
+| `@xalatechnologies/platform/runtime` | Runtime providers |
+| `@xalatechnologies/platform/contracts` | API contracts (Zod) |
+| `@xalatechnologies/platform/sdk` | SDK core utilities |
+| `@xalatechnologies/platform/i18n` | Internationalization |
+| `@xalatechnologies/platform/observability` | Metrics & logging |
+
+---
+
+## Publishing to npm
+
+### 1. Prepare for Publishing
+
+```bash
+# Ensure clean state
+cd packages/platform
+rm -rf dist node_modules
+
+# Install dependencies (production only)
+pnpm install --prod
+
+# Build
+pnpm build
+
+# Verify dist structure
+ls -la dist/
+```
+
+### 2. Version Bump
+
+```bash
+# Patch release (bug fixes)
+pnpm version patch
+
+# Minor release (new features)
+pnpm version minor
+
+# Major release (breaking changes)
+pnpm version major
+```
+
+### 3. Publish
+
+```bash
+# Dry run first
+pnpm publish --dry-run
+
+# Publish to npm
+pnpm publish --access public
+```
+
+---
+
+## Usage in New Domains
+
+### Installation
+
+```bash
+pnpm add @xalatechnologies/platform
+```
+
+### Basic Setup
+
+```tsx
+// main.tsx
+import '@xalatechnologies/platform/ui/styles';
 import { RuntimeProvider } from '@xalatechnologies/platform/runtime';
-import { ProblemDetailsSchema } from '@xalatechnologies/platform/contracts';
-import { ApiError, initializeClient } from '@xalatechnologies/platform/sdk';
-import { useT, I18nProvider } from '@xalatechnologies/platform/i18n';
-import { createLogger } from '@xalatechnologies/platform/observability';
+import { AuthProvider } from '@xalatechnologies/platform/auth';
 
-console.log('All imports successful!');
-```
-
-### 4. Boundary Verification
-
-Verify platform does not import domain packages:
-
-```bash
-pnpm verify:boundaries
-```
-
-### 5. Banned Terms Verification
-
-Verify no banned terms in platform code:
-
-```bash
-pnpm verify:terms
-```
-
-Banned terms in platform packages:
-- "listing" (use "rentalObject")
-- "facility" (use "amenity")
-
----
-
-## Platform Patterns
-
-### Domain-Neutral UI Patterns
-
-The `@xalatechnologies/platform/ui/patterns` module provides domain-neutral UI patterns:
-
-| Pattern | Purpose |
-|---------|---------|
-| `ResourceCard` | Generic card for any resource type |
-| `ResourceGrid` | Responsive grid layout for cards |
-| `ResourceDetailHeader` | Header for detail pages |
-| `SlotCalendar` | Calendar with time slots |
-| `PricingSummary` | Price breakdown display |
-| `FeatureChips` | Feature/amenity chips |
-| `MetadataRow` | Key-value metadata display |
-| `ScheduleCard` | Schedule/hours display |
-| `FormWizardModal` | Multi-step form modal |
-| `ConfirmationView` | Confirmation screen |
-| `SuccessView` | Success screen |
-
-### Usage with Domain Feature Kits
-
-Platform patterns are designed to be composed by domain feature kits:
-
-```typescript
-// Domain feature kit (e.g., @digilist/ui/features/rental-objects)
-import { ResourceCard } from '@xalatechnologies/platform/ui/patterns';
-import { mapRentalObjectToResourceCard } from './mappers';
-
-export function RentalObjectCardWrapper({ rentalObject, t }) {
-  const props = mapRentalObjectToResourceCard(rentalObject, t);
-  return <ResourceCard {...props} />;
-}
-```
-
----
-
-## Compatibility Packages
-
-During the migration period, compatibility packages provide deprecation warnings:
-
-### @xala/ds -> @xalatechnologies/platform/ui
-
-```typescript
-// packages/xala-compat-ds/src/index.ts
-export * from '@xalatechnologies/platform/ui';
-
-if (process.env.NODE_ENV !== 'production') {
-  console.warn(
-    '[@xala/ds] This package is deprecated. ' +
-    'Please use @xalatechnologies/platform/ui instead.'
+function App() {
+  return (
+    <RuntimeProvider config={runtimeConfig}>
+      <AuthProvider>
+        <YourApp />
+      </AuthProvider>
+    </RuntimeProvider>
   );
 }
 ```
 
-Similar compatibility layers exist for:
-- `@xala/auth` -> `@xalatechnologies/platform/auth`
-- `@xala/config` -> `@xalatechnologies/platform/config`
-- `@xala/runtime` -> `@xalatechnologies/platform/runtime`
-- `@xala/i18n` -> `@xalatechnologies/platform/i18n`
+### Using UI Components
 
----
+```tsx
+import { Button, Card, Modal } from '@xalatechnologies/platform/ui';
+import { ResourceCard } from '@xalatechnologies/platform/ui/patterns';
 
-## Build Configuration
+function MyComponent() {
+  return (
+    <Card>
+      <ResourceCard
+        title="My Resource"
+        description="Description here"
+        image="/image.jpg"
+        onClick={() => {}}
+      />
+      <Button>Click Me</Button>
+    </Card>
+  );
+}
+```
 
-### tsup.config.ts
+### Using SDK Core
 
-```typescript
-import { defineConfig } from 'tsup';
+```tsx
+import { createHttpClient, ProblemDetailsError } from '@xalatechnologies/platform/sdk';
 
-export default defineConfig({
-  entry: {
-    // Main entry
-    index: 'src/index.ts',
+const client = createHttpClient({
+  baseUrl: 'https://api.example.com',
+});
 
-    // UI module and sub-modules
-    'ui/index': 'src/ui/index.ts',
-    'ui/primitives/index': 'src/ui/primitives/index.ts',
-    'ui/composed/index': 'src/ui/composed/index.ts',
-    'ui/shells/index': 'src/ui/shells/index.ts',
-    'ui/blocks/index': 'src/ui/blocks/index.ts',
-    'ui/themes/index': 'src/ui/themes/index.ts',
-    'ui/patterns/index': 'src/ui/patterns/index.ts',
+try {
+  const data = await client.get('/resource');
+} catch (error) {
+  if (error instanceof ProblemDetailsError) {
+    console.error(error.title, error.detail);
+  }
+}
+```
 
-    // Other modules
-    'runtime/index': 'src/runtime/index.ts',
-    'auth/index': 'src/auth/index.ts',
-    'config/index': 'src/config/index.ts',
-    'contracts/index': 'src/contracts/index.ts',
-    'sdk/index': 'src/sdk/index.ts',
-    'i18n/index': 'src/i18n/index.ts',
-    'observability/index': 'src/observability/index.ts',
-  },
-  format: ['cjs', 'esm'],
-  dts: true,
-  splitting: false,
-  sourcemap: true,
-  clean: true,
-  treeshake: true,
-  minify: false,
-  external: [
-    'react',
-    'react-dom',
-    'react-router-dom',
-    '@digdir/designsystemet-react',
-    '@digdir/designsystemet-css',
-    '@tanstack/react-query',
-    'zod',
-  ],
-  esbuildOptions(options) {
-    options.jsx = 'automatic';
-  },
+### Using Contracts
+
+```tsx
+import { z } from 'zod';
+import { BaseEntitySchema, PaginationSchema } from '@xalatechnologies/platform/contracts';
+
+// Extend base schemas for your domain
+const MyResourceSchema = BaseEntitySchema.extend({
+  name: z.string(),
+  status: z.enum(['active', 'inactive']),
 });
 ```
 
-### tsconfig.json Paths
+---
 
-```json
-{
-  "compilerOptions": {
-    "paths": {
-      "@xalatechnologies/platform": ["./src/index.ts"],
-      "@xalatechnologies/platform/ui": ["./src/ui/index.ts"],
-      "@xalatechnologies/platform/ui/*": ["./src/ui/*"],
-      "@xalatechnologies/platform/runtime": ["./src/runtime/index.ts"],
-      "@xalatechnologies/platform/auth": ["./src/auth/index.ts"],
-      "@xalatechnologies/platform/config": ["./src/config/index.ts"],
-      "@xalatechnologies/platform/contracts": ["./src/contracts/index.ts"],
-      "@xalatechnologies/platform/sdk": ["./src/sdk/index.ts"],
-      "@xalatechnologies/platform/i18n": ["./src/i18n/index.ts"],
-      "@xalatechnologies/platform/observability": ["./src/observability/index.ts"]
-    }
-  }
+## Dependencies
+
+### Runtime Dependencies
+
+| Package | Purpose |
+|---------|---------|
+| `@digdir/designsystemet-react` | UI component library |
+| `@digdir/designsystemet-css` | UI styles |
+| `@tanstack/react-query` | Data fetching |
+| `zod` | Schema validation |
+| `js-cookie` | Cookie management |
+| `prom-client` | Prometheus metrics |
+
+### Peer Dependencies
+
+| Package | Version |
+|---------|---------|
+| `react` | >=18.0.0 |
+| `react-dom` | >=18.0.0 |
+
+---
+
+## Domain Boundary Rules
+
+### Platform Package MUST:
+
+1. **Be domain-agnostic** - No business logic specific to any domain
+2. **Use generic terminology** - "resource" not "listing", "item" not "booking"
+3. **Accept pre-localized strings** - Components receive translated text as props
+4. **Provide patterns, not implementations** - Reusable patterns that domains compose
+
+### Platform Package MUST NOT:
+
+1. **Import from @digilist/*** - No domain package imports
+2. **Contain Norwegian domain terms** - No "kommune", "utleie", "booking"
+3. **Make domain-specific API calls** - SDK core provides utilities only
+4. **Include domain business logic** - Validation rules, pricing, etc.
+
+---
+
+## Creating Domain Adapters
+
+When using platform in a new domain, create adapters:
+
+```typescript
+// my-domain/src/features/resources/mappers.ts
+import type { ResourceCardProps } from '@xalatechnologies/platform/ui/patterns';
+import type { MyDomainResourceDTO } from '../types';
+
+export function mapMyResourceToCard(
+  resource: MyDomainResourceDTO,
+  t: (key: string) => string
+): ResourceCardProps {
+  return {
+    id: resource.id,
+    title: resource.name,
+    description: resource.summary,
+    image: resource.thumbnailUrl,
+    badges: resource.tags.map(tag => ({
+      label: t(`tags.${tag}`),
+      variant: 'info',
+    })),
+    metadata: [
+      { label: t('fields.status'), value: resource.status },
+      { label: t('fields.created'), value: formatDate(resource.createdAt) },
+    ],
+  };
 }
 ```
 
@@ -412,68 +324,59 @@ export default defineConfig({
 
 ## Troubleshooting
 
-### Module Not Found Errors
+### "Cannot find module '@xalatechnologies/platform/xyz'"
 
-If you see "Cannot find module '@xalatechnologies/platform/ui'":
+Ensure subpath is exported in package.json:
 
-1. Ensure the package is built: `pnpm build`
-2. Check `exports` in package.json matches your import
-3. Verify `typesVersions` for TypeScript resolution
-4. Clear node_modules and reinstall: `pnpm install`
+```json
+{
+  "exports": {
+    "./xyz": {
+      "import": "./dist/xyz/index.js",
+      "require": "./dist/xyz/index.cjs",
+      "types": "./dist/xyz/index.d.ts"
+    }
+  }
+}
+```
 
-### Type Resolution Issues
+### "Type errors after installing"
 
-If TypeScript cannot find types:
+Ensure TypeScript can resolve the types:
 
-1. Check `typesVersions` field in package.json
-2. Verify `.d.ts` files exist in `dist/`
-3. Restart TypeScript server in your IDE
-4. Try adding explicit paths in consuming project's tsconfig.json
+```json
+// tsconfig.json
+{
+  "compilerOptions": {
+    "moduleResolution": "bundler"
+  }
+}
+```
 
-### Circular Dependency Warnings
+### "Styles not loading"
 
-If you see circular dependency warnings:
+Import the styles entry point:
 
-1. Check that platform does not import from domain packages (@digilist/*)
-2. Use dynamic imports for optional features
-3. Review the dependency graph with `pnpm why <package>`
-
----
-
-## Next Steps
-
-### Immediate (PR F.1)
-
-- [x] Configure package.json with multi-entry exports
-- [x] Configure tsconfig.json with path mappings
-- [x] Configure tsup.config.ts for multi-entry build
-- [x] Create stub index files for all entry points
-- [x] Document extraction process (this file)
-
-### Short-term (PR F.2-F.4)
-
-- [ ] Complete UI patterns migration (ResourceCard, SlotCalendar, etc.)
-- [ ] Add domain registry for multi-domain support
-- [ ] Create compatibility layer deprecation warnings
-- [ ] Update all apps to use new import paths
-
-### Medium-term
-
-- [ ] Remove old @xala/* packages (after migration complete)
-- [ ] Update documentation with new import paths
-- [ ] Add automated migration codemod
-- [ ] Performance optimization (tree-shaking verification)
+```tsx
+import '@xalatechnologies/platform/ui/styles';
+```
 
 ---
 
-## References
+## Changelog
 
-- [Package Namespace Migration Guide](../../docs/architecture/PACKAGE_NAMESPACE_MIGRATION.md)
-- [Platform UI + Feature Kits Architecture](../../docs/architecture/PLATFORM_UI_FEATURE_KITS.md)
-- [Root CLAUDE.md](../../CLAUDE.md) - See "Package Namespace Migration" section
+### v1.0.0 (Initial Release)
+
+- UI components (primitives, composed, blocks, patterns, shells)
+- Authentication layer
+- Configuration utilities
+- Runtime providers
+- API contracts (Zod schemas)
+- SDK core (HTTP client, error handling)
+- Internationalization
+- Observability (metrics, logging)
 
 ---
 
 **Last Updated:** 2026-01-21
-**Status:** PR F.1 - Configuration Complete
-**Next PR:** F.2 - UI Patterns Extraction
+**Status:** Ready for Extraction

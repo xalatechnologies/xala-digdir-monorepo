@@ -1,323 +1,455 @@
-# Domain Template Repository Guide
+# Domain Template Guide
 
-This guide describes how to create a new SaaS domain using the Xala Platform.
+> **Purpose:** This guide describes how to create a new domain implementation based on the `@xalatechnologies/platform` package.
 
 ## Overview
 
-The Xala Platform is designed to be domain-agnostic at the platform layer, allowing new SaaS domains to be built on top of the shared infrastructure.
+The platform architecture separates **platform-agnostic** code from **domain-specific** code. This enables:
 
-**Platform (extractable):**
-- `@xalatechnologies/platform` - Core platform packages
-- Authentication, RBAC, multi-tenancy, audit, notifications
-- Design system, i18n, configuration
+1. **Reusability** - Platform code works across any domain
+2. **Consistency** - All domains share the same foundation
+3. **Maintainability** - Domain changes don't affect platform
+4. **Extractability** - Platform can be published and versioned independently
 
-**Domain (custom per SaaS):**
-- `@{domain}/sdk` - Domain SDK with services and hooks
-- `@{domain}/ui` - Domain UI components
-- `@{domain}/domain` - Domain contracts and types
-- `apps/*` - Domain-specific applications
+---
 
-## Creating a New Domain
+## Domain Package Structure
 
-### Step 1: Fork or Clone Template
+A new domain should create the following package structure:
 
-```bash
-# Clone the domain template
-git clone https://github.com/xalatechnologies/xala-domain-template.git my-saas-domain
-cd my-saas-domain
-
-# Remove git history and start fresh
-rm -rf .git
-git init
+```
+@my-domain/
+├── packages/
+│   ├── domain/                    # Types, schemas, validators
+│   │   ├── package.json          # @my-domain/domain
+│   │   ├── src/
+│   │   │   ├── index.ts
+│   │   │   ├── schemas/          # Zod schemas
+│   │   │   ├── projections/      # DTO types
+│   │   │   └── validators/       # Business validators
+│   │   └── CLAUDE.md
+│   │
+│   ├── sdk/                       # Services and hooks
+│   │   ├── package.json          # @my-domain/sdk
+│   │   ├── src/
+│   │   │   ├── index.ts
+│   │   │   ├── services/         # API services
+│   │   │   ├── hooks/            # React Query hooks
+│   │   │   └── realtime/         # WebSocket client
+│   │   └── CLAUDE.md
+│   │
+│   ├── ui/                        # Feature kits
+│   │   ├── package.json          # @my-domain/ui
+│   │   ├── src/
+│   │   │   ├── index.ts
+│   │   │   ├── features/         # Feature kits with mappers
+│   │   │   ├── blocks/           # Domain-specific components
+│   │   │   └── booking-engine/   # (if applicable)
+│   │   └── CLAUDE.md
+│   │
+│   ├── runtime/                   # App providers
+│   │   ├── package.json          # @my-domain/runtime
+│   │   ├── src/
+│   │   │   ├── index.ts
+│   │   │   ├── config/           # App profiles
+│   │   │   └── providers/        # Context providers
+│   │   └── CLAUDE.md
+│   │
+│   └── database-schema/           # Drizzle ORM
+│       ├── package.json          # @my-domain/database-schema
+│       ├── src/
+│       │   ├── index.ts
+│       │   ├── core/             # Core tables
+│       │   ├── domain/           # Domain tables
+│       │   └── schemas.ts        # PostgreSQL schemas
+│       └── CLAUDE.md
+│
+└── apps/
+    ├── web/                       # Public web app
+    ├── backoffice/               # Admin portal
+    ├── api/                      # Fastify API
+    └── ...
 ```
 
-### Step 2: Configure Domain Name
+---
 
-Update all package names from `@template` to your domain namespace:
+## Step 1: Create Domain Contracts
 
-```bash
-# Replace @template with your domain (e.g., @myapp)
-find . -type f -name "*.json" -exec sed -i '' 's/@template/@myapp/g' {} \;
-find . -type f -name "*.ts" -exec sed -i '' 's/@template/@myapp/g' {} \;
-find . -type f -name "*.tsx" -exec sed -i '' 's/@template/@myapp/g' {} \;
-```
-
-### Step 3: Install Platform Package
-
-```bash
-# Add platform dependency
-pnpm add @xalatechnologies/platform
-
-# Or for specific subpackages
-pnpm add @xalatechnologies/platform/ui
-pnpm add @xalatechnologies/platform/auth
-pnpm add @xalatechnologies/platform/config
-```
-
-### Step 4: Define Domain Schema
-
-Create your domain database schema:
+Domain contracts define your API types and validation:
 
 ```typescript
-// packages/domain/src/schema/index.ts
-import { pgTable, uuid, varchar, timestamp } from 'drizzle-orm/pg-core';
+// packages/domain/src/schemas/resource.schema.ts
+import { z } from 'zod';
+import { BaseEntitySchema } from '@xalatechnologies/platform/contracts';
 
-export const myEntities = pgTable('domain.my_entities', {
-  id: uuid('id').primaryKey().defaultRandom(),
-  tenantId: uuid('tenant_id').notNull(),
-  name: varchar('name', { length: 200 }).notNull(),
-  createdAt: timestamp('created_at').notNull().defaultNow(),
+export const MyResourceSchema = BaseEntitySchema.extend({
+  name: z.string().min(1).max(255),
+  description: z.string().optional(),
+  status: z.enum(['draft', 'active', 'archived']),
+  category: z.string(),
+  price: z.number().positive().optional(),
+  metadata: z.record(z.unknown()).optional(),
 });
+
+export type MyResource = z.infer<typeof MyResourceSchema>;
+
+// packages/domain/src/projections/resource.projection.ts
+export interface MyResourceCardProjection {
+  id: string;
+  name: string;
+  description?: string;
+  status: 'draft' | 'active' | 'archived';
+  category: string;
+  thumbnailUrl?: string;
+  price?: number;
+  permissions: {
+    canEdit: boolean;
+    canDelete: boolean;
+    canPublish: boolean;
+  };
+}
 ```
 
-### Step 5: Create Domain SDK
+---
 
-Create services and hooks for your domain:
+## Step 2: Create Domain SDK
+
+The SDK provides services and React hooks:
 
 ```typescript
-// packages/sdk/src/services/my-entity.service.ts
-import { getClient } from '@xalatechnologies/platform/sdk';
+// packages/sdk/src/services/resource.service.ts
+import { BaseService } from '@xalatechnologies/platform/sdk';
+import type { MyResource, MyResourceCardProjection } from '@my-domain/domain';
 
-export const myEntityService = {
-  async list() {
-    return getClient().get('/api/domain/my-entities');
-  },
-  async create(data: CreateMyEntity) {
-    return getClient().post('/api/domain/my-entities', data);
-  },
-};
+export class ResourceService extends BaseService {
+  async getResources(params?: { status?: string; page?: number }): Promise<{
+    data: MyResourceCardProjection[];
+    pagination: { page: number; totalPages: number };
+  }> {
+    return this.client.get('/api/resources', { params });
+  }
 
-// packages/sdk/src/hooks/use-my-entities.ts
-import { useQuery, useMutation } from '@tanstack/react-query';
-import { myEntityService } from '../services/my-entity.service';
+  async getResource(id: string): Promise<MyResource> {
+    return this.client.get(`/api/resources/${id}`);
+  }
 
-export function useMyEntities() {
+  async createResource(data: Omit<MyResource, 'id' | 'createdAt' | 'updatedAt'>): Promise<MyResource> {
+    return this.client.post('/api/resources', data);
+  }
+
+  async updateResource(id: string, data: Partial<MyResource>): Promise<MyResource> {
+    return this.client.patch(`/api/resources/${id}`, data);
+  }
+
+  async deleteResource(id: string): Promise<void> {
+    return this.client.delete(`/api/resources/${id}`);
+  }
+}
+
+// packages/sdk/src/hooks/useResources.ts
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { resourceService } from '../services';
+import type { MyResourceCardProjection } from '@my-domain/domain';
+
+export function useResources(params?: { status?: string; page?: number }) {
   return useQuery({
-    queryKey: ['my-entities'],
-    queryFn: () => myEntityService.list(),
+    queryKey: ['resources', params],
+    queryFn: () => resourceService.getResources(params),
+  });
+}
+
+export function useResource(id: string) {
+  return useQuery({
+    queryKey: ['resources', id],
+    queryFn: () => resourceService.getResource(id),
+    enabled: !!id,
+  });
+}
+
+export function useCreateResource() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: resourceService.createResource,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['resources'] });
+    },
   });
 }
 ```
 
-### Step 6: Create Domain UI Components
+---
 
-Build feature kits using platform patterns:
+## Step 3: Create Feature Kits
+
+Feature kits map domain DTOs to platform patterns:
 
 ```typescript
-// packages/ui/src/features/my-entity/MyEntityCard.tsx
-import { ResourceCard } from '@xalatechnologies/platform/ui/patterns';
-import { mapMyEntityToResourceCard } from './mappers';
+// packages/ui/src/features/resources/mappers.ts
+import type { ResourceCardProps } from '@xalatechnologies/platform/ui/patterns';
+import type { MyResourceCardProjection } from '@my-domain/domain';
 
-export function MyEntityCard({ entity, t }) {
-  const props = mapMyEntityToResourceCard(entity, t);
-  return <ResourceCard {...props} />;
+export function mapResourceToCard(
+  resource: MyResourceCardProjection,
+  t: (key: string) => string
+): ResourceCardProps {
+  return {
+    id: resource.id,
+    title: resource.name,
+    description: resource.description,
+    image: resource.thumbnailUrl,
+    status: {
+      label: t(`status.${resource.status}`),
+      variant: resource.status === 'active' ? 'success' : 'neutral',
+    },
+    badges: [
+      { label: resource.category, variant: 'info' },
+    ],
+    metadata: resource.price ? [
+      { label: t('fields.price'), value: `${resource.price} kr` },
+    ] : [],
+    actions: resource.permissions.canEdit ? [
+      { label: t('actions.edit'), action: 'edit' },
+    ] : [],
+  };
+}
+
+// packages/ui/src/features/resources/ResourceCardWrapper.tsx
+import { ResourceCard } from '@xalatechnologies/platform/ui/patterns';
+import { mapResourceToCard } from './mappers';
+import type { MyResourceCardProjection } from '@my-domain/domain';
+
+interface ResourceCardWrapperProps {
+  resource: MyResourceCardProjection;
+  onClick?: (id: string) => void;
+  onAction?: (id: string, action: string) => void;
+  t: (key: string) => string;
+}
+
+export function ResourceCardWrapper({
+  resource,
+  onClick,
+  onAction,
+  t,
+}: ResourceCardWrapperProps) {
+  const props = mapResourceToCard(resource, t);
+  return (
+    <ResourceCard
+      {...props}
+      onClick={() => onClick?.(resource.id)}
+      onAction={(action) => onAction?.(resource.id, action)}
+    />
+  );
 }
 ```
 
-### Step 7: Configure Applications
+---
 
-Each app imports from platform and domain packages:
+## Step 4: Create Domain Runtime
 
-```typescript
-// apps/web/src/main.tsx
-import { RuntimeProvider } from '@xalatechnologies/platform/runtime';
-import { initializeClient } from '@myapp/sdk';
-
-initializeClient({ baseUrl: 'https://api.myapp.com' });
-
-ReactDOM.render(
-  <RuntimeProvider config={config}>
-    <App />
-  </RuntimeProvider>,
-  document.getElementById('root')
-);
-```
-
-## Template Structure
-
-```
-xala-domain-template/
-├── apps/
-│   ├── web/                    # Public web app
-│   │   ├── src/
-│   │   │   ├── routes/
-│   │   │   ├── App.tsx
-│   │   │   └── main.tsx
-│   │   ├── package.json
-│   │   └── vite.config.ts
-│   ├── backoffice/             # Admin portal
-│   │   └── ...
-│   ├── minside/                # User portal
-│   │   └── ...
-│   └── api/                    # API server
-│       ├── src/
-│       │   ├── modules/
-│       │   │   └── my-domain/
-│       │   ├── database/
-│       │   └── main.ts
-│       └── package.json
-│
-├── packages/
-│   ├── domain/                 # Domain contracts
-│   │   ├── src/
-│   │   │   ├── schemas/        # Zod schemas
-│   │   │   ├── types/          # TypeScript types
-│   │   │   └── index.ts
-│   │   └── package.json
-│   ├── sdk/                    # Domain SDK
-│   │   ├── src/
-│   │   │   ├── services/
-│   │   │   ├── hooks/
-│   │   │   └── index.ts
-│   │   └── package.json
-│   ├── ui/                     # Domain UI
-│   │   ├── src/
-│   │   │   ├── features/
-│   │   │   └── index.ts
-│   │   └── package.json
-│   └── runtime/                # Domain runtime
-│       ├── src/
-│       │   └── providers/
-│       └── package.json
-│
-├── package.json
-├── pnpm-workspace.yaml
-├── turbo.json
-└── CLAUDE.md
-```
-
-## Package Dependencies
-
-```
-┌─────────────────────────────────────────────────────────────┐
-│                    DOMAIN APPLICATIONS                       │
-│     apps/web, apps/backoffice, apps/minside, apps/api       │
-├─────────────────────────────────────────────────────────────┤
-│                       DOMAIN LAYER                           │
-│  @{domain}/sdk    @{domain}/ui    @{domain}/runtime         │
-│  (services,       (feature kits,  (providers)               │
-│   hooks)          thin wrappers)                             │
-├─────────────────────────────────────────────────────────────┤
-│                     @{domain}/domain                         │
-│           (contracts, types, Zod schemas)                    │
-├─────────────────────────────────────────────────────────────┤
-│                    PLATFORM LAYER                            │
-│              @xalatechnologies/platform                      │
-│  /ui  /auth  /config  /runtime  /contracts  /sdk  /i18n    │
-└─────────────────────────────────────────────────────────────┘
-```
-
-## Import Rules
+Runtime configures app profiles and providers:
 
 ```typescript
-// ✅ Apps import from domain packages
-import { useMyEntities } from '@myapp/sdk';
-import { MyEntityCard } from '@myapp/ui';
+// packages/runtime/src/config/profiles.ts
+import { registerAppProfile } from '@xalatechnologies/platform/config';
 
-// ✅ Domain packages import from platform
-import { Button } from '@xalatechnologies/platform/ui';
-import { getClient } from '@xalatechnologies/platform/sdk';
+export type MyDomainAppType = 'web' | 'backoffice' | 'api';
 
-// ❌ Domain packages NEVER modify platform
-// ❌ Apps NEVER import directly from platform (go through domain layer)
-// ❌ Platform NEVER imports from domain
-```
-
-## Database Schema Conventions
-
-All domain tables should be in the `domain` schema:
-
-```sql
-CREATE SCHEMA IF NOT EXISTS domain;
-
--- Domain-specific tables
-CREATE TABLE domain.my_entities (...);
-CREATE TABLE domain.my_other_entities (...);
-```
-
-Platform tables use the `platform` schema (managed by platform):
-
-```sql
--- Platform tables (read-only from domain perspective)
-platform.users
-platform.tenants
-platform.organizations
-```
-
-## Configuration
-
-### Environment Variables
-
-```bash
-# Platform configuration (required)
-VITE_API_URL=https://api.myapp.com
-VITE_TENANT_ID=my-tenant
-
-# Domain-specific configuration
-VITE_MY_DOMAIN_FEATURE=true
-```
-
-### Platform Configuration
-
-```typescript
-// config/platform.ts
-export const platformConfig = {
-  auth: {
-    provider: 'bankid',
-    cookieDomain: '.myapp.com',
-  },
-  i18n: {
-    defaultLocale: 'nb',
-    supportedLocales: ['nb', 'en'],
-  },
-  theme: {
-    name: 'digdir',
-    colorScheme: 'auto',
-  },
+export const webProfile = {
+  appType: 'web' as const,
+  displayName: 'Public Portal',
+  port: 5173,
+  requiresAuth: false,
+  colorScheme: 'auto' as const,
+  themeId: 'my-domain' as const,
 };
+
+export const backofficeProfile = {
+  appType: 'backoffice' as const,
+  displayName: 'Admin Portal',
+  port: 5175,
+  requiresAuth: true,
+  colorScheme: 'auto' as const,
+  themeId: 'my-domain' as const,
+};
+
+// Register profiles (side-effect import)
+registerAppProfile('web', webProfile);
+registerAppProfile('backoffice', backofficeProfile);
+
+// packages/runtime/src/index.ts
+// Auto-register profiles on import
+import './config/profiles';
+
+export * from './config/profiles';
+export * from './providers';
 ```
-
-## Deployment
-
-### Build
-
-```bash
-# Build all packages and apps
-pnpm build
-
-# Build specific app
-pnpm --filter @myapp/web build
-```
-
-### Deploy
-
-Each app can be deployed independently:
-
-```bash
-# Deploy web app
-./scripts/deploy.sh web
-
-# Deploy API
-./scripts/deploy.sh api
-```
-
-## Migration from Digilist
-
-If migrating from an existing Digilist implementation:
-
-1. Replace `@digilist/client-sdk` → `@myapp/sdk`
-2. Replace `@digilist/ui` → `@myapp/ui`
-3. Replace `@digilist/domain` → `@myapp/domain`
-4. Keep `@xalatechnologies/platform` for platform features
-5. Update API routes from `/api/domain/*` to your domain
-
-## Support
-
-For questions about the Xala Platform:
-- Documentation: https://docs.xalatechnologies.com
-- Issues: https://github.com/xalatechnologies/platform/issues
 
 ---
 
-**Version:** 1.0.0
+## Step 5: App Integration
+
+Apps import domain packages and use platform components:
+
+```typescript
+// apps/web/src/main.tsx
+
+// Step 1: Import domain runtime (registers profiles)
+import '@my-domain/runtime';
+
+// Step 2: Import platform styles and utilities
+import '@xalatechnologies/platform/ui/styles';
+import { validateEnv, createAppConfig } from '@xalatechnologies/platform/config';
+import { RuntimeProvider } from '@xalatechnologies/platform/runtime';
+
+// Step 3: Import domain SDK
+import { initializeClient } from '@my-domain/sdk';
+
+// Step 4: Initialize
+const env = validateEnv(import.meta.env);
+const { sdkConfig, runtimeConfig } = createAppConfig('web', env);
+initializeClient(sdkConfig);
+
+// Step 5: Render
+createRoot(document.getElementById('root')!).render(
+  <RuntimeProvider config={runtimeConfig}>
+    <App />
+  </RuntimeProvider>
+);
+
+// apps/web/src/pages/ResourcesPage.tsx
+import { useResources } from '@my-domain/sdk';
+import { ResourceCardWrapper } from '@my-domain/ui/features/resources';
+import { Grid, Spinner } from '@xalatechnologies/platform/ui';
+import { useT } from '@xalatechnologies/platform/i18n';
+
+export function ResourcesPage() {
+  const t = useT();
+  const { data, isLoading } = useResources();
+
+  if (isLoading) return <Spinner />;
+
+  return (
+    <Grid columns={3} gap="md">
+      {data?.data.map(resource => (
+        <ResourceCardWrapper
+          key={resource.id}
+          resource={resource}
+          onClick={(id) => navigate(`/resources/${id}`)}
+          t={t}
+        />
+      ))}
+    </Grid>
+  );
+}
+```
+
+---
+
+## Package Dependencies
+
+### Domain Package Dependencies
+
+| Package | Dependencies |
+|---------|-------------|
+| `@my-domain/domain` | `@xalatechnologies/platform/contracts`, `zod` |
+| `@my-domain/sdk` | `@xalatechnologies/platform/sdk`, `@my-domain/domain`, `@tanstack/react-query` |
+| `@my-domain/ui` | `@xalatechnologies/platform/ui`, `@my-domain/domain` |
+| `@my-domain/runtime` | `@xalatechnologies/platform/runtime`, `@xalatechnologies/platform/config` |
+
+### Dependency Direction
+
+```
+@xalatechnologies/platform (NEVER imports domain)
+        ↑
+        |
+@my-domain/domain (types only)
+        ↑
+        |
+@my-domain/sdk (services + hooks)
+        ↑
+        |
+@my-domain/ui (feature kits)
+        ↑
+        |
+@my-domain/runtime (app config)
+        ↑
+        |
+apps/* (web, backoffice, etc.)
+```
+
+---
+
+## Checklist for New Domain
+
+- [ ] Create `@my-domain/domain` with schemas and projections
+- [ ] Create `@my-domain/sdk` with services and hooks
+- [ ] Create `@my-domain/ui` with feature kits (mappers + thin wrappers)
+- [ ] Create `@my-domain/runtime` with app profiles
+- [ ] Create `@my-domain/database-schema` if using PostgreSQL
+- [ ] Update apps to import domain runtime first
+- [ ] Verify no platform packages import domain packages
+- [ ] Add i18n translations for domain terms
+- [ ] Create CLAUDE.md for each package
+
+---
+
+## Anti-Patterns to Avoid
+
+### ❌ Wrong: Domain imports in platform
+
+```typescript
+// packages/platform/src/ui/patterns/ResourceCard.tsx
+import type { MyResourceCardProjection } from '@my-domain/domain'; // WRONG!
+```
+
+### ✅ Correct: Platform uses generic props
+
+```typescript
+// packages/platform/src/ui/patterns/ResourceCard.tsx
+interface ResourceCardProps {
+  id: string;
+  title: string;
+  description?: string;
+  image?: string;
+  // Generic props, no domain types
+}
+```
+
+### ❌ Wrong: Business logic in UI
+
+```typescript
+// packages/ui/src/features/resources/ResourceCard.tsx
+function ResourceCard({ resource }) {
+  // WRONG: Business logic in component
+  const canEdit = resource.createdBy === currentUser.id && resource.status !== 'archived';
+}
+```
+
+### ✅ Correct: Logic in projection
+
+```typescript
+// API returns permissions pre-computed
+interface MyResourceCardProjection {
+  // ...
+  permissions: {
+    canEdit: boolean;  // Computed on backend
+    canDelete: boolean;
+  };
+}
+```
+
+---
+
+## Reference Implementation
+
+See the Digilist domain implementation as a reference:
+
+- `@digilist/domain` - Domain contracts
+- `@digilist/sdk` - SDK with 30+ services
+- `@digilist/ui` - Feature kits for rental objects, booking, seasons
+- `@digilist/runtime` - App profiles for web, minside, backoffice
+
+---
+
 **Last Updated:** 2026-01-21
+**Status:** Template Ready
