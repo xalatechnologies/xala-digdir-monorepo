@@ -8,7 +8,7 @@
 
 import * as React from 'react';
 import { Tabs, Paragraph } from '@xalatechnologies/platform/ui';
-import { useT } from '@xala/i18n';
+import { useT } from '@xalatechnologies/platform/i18n';
 import type { BookingMode } from '../../types';
 
 // =============================================================================
@@ -298,7 +298,7 @@ export function BookingModeSelector({
  * @example
  * ```tsx
  * import { createBookingModeOptions } from './BookingModeSelector';
-import { useT } from '@xala/i18n';
+import { useT } from '@xalatechnologies/platform/i18n';
  *
  * const options = createBookingModeOptions(calendarConfig.bookingModes, t);
  * ```

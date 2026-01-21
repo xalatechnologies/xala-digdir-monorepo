@@ -23,7 +23,7 @@ import {
 import {
   useOrganizationMembers,
 } from '@digilist/client-sdk';
-import { useT } from '@xala/i18n';
+import { useT } from '@xalatechnologies/platform/i18n';
 import { NavLink } from 'react-router-dom';
 
 const MOBILE_BREAKPOINT = 768;

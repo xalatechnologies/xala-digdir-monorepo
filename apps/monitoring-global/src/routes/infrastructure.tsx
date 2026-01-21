@@ -15,7 +15,7 @@ import {
   CheckCircleIcon,
   AlertTriangleIcon,
 } from '@xalatechnologies/platform/ui';
-import { useT } from '@xala/i18n';
+import { useT } from '@xalatechnologies/platform/i18n';
 
 // Mock data - would be replaced with actual API calls
 const MOCK_DATABASE_STATUS = {

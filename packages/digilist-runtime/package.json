@@ -41,8 +41,7 @@
   "sideEffects": false,
   "dependencies": {
     "@digilist/client-sdk": "workspace:*",
-    "@xala/config": "workspace:*",
-    "@xala/runtime": "workspace:*"
+    "@xalatechnologies/platform": "workspace:*"
   },
   "peerDependencies": {
     "@tanstack/react-query": "^5.0.0",

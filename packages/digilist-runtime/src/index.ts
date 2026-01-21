@@ -96,7 +96,7 @@
  *
  * ```typescript
  * import '@digilist/runtime'; // Registers profiles
- * import { getAppProfile } from '@xala/config';
+ * import { getAppProfile } from '@xalatechnologies/platform/config';
  *
  * const profile = getAppProfile('backoffice'); // Now works!
  * ```

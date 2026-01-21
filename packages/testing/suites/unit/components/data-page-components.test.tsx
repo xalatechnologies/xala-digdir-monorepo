@@ -9,7 +9,7 @@
 
 import { describe, it, expect, beforeAll, afterAll, beforeEach } from 'vitest';
 import { render, screen, fireEvent } from '@testing-library/react';
-import { I18nProvider } from '@xala/i18n';
+import { I18nProvider } from '@xalatechnologies/platform/i18n';
 import { DesignsystemetProvider } from '@xalatechnologies/platform/ui';
 
 // Import components from @xalatechnologies/platform/ui (will be resolved via vitest aliases)

@@ -3,7 +3,7 @@
  * Final review and summary before publishing (all categories)
  */
 
-import { useT } from '@xala/i18n';
+import { useT } from '@xalatechnologies/platform/i18n';
 import {
   Heading,
   Paragraph,

@@ -25,7 +25,7 @@ import {
   type PlanStatus,
   type BillingPeriod,
 } from '@xalatechnologies/platform/sdk';
-import { useT } from '@xala/i18n';
+import { useT } from '@xalatechnologies/platform/i18n';
 
 const statusColors: Record<PlanStatus, 'success' | 'warning' | 'danger'> = {
   active: 'success',

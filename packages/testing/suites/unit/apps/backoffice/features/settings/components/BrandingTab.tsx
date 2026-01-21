@@ -14,7 +14,7 @@ import {
   SaveIcon,
 } from '@xalatechnologies/platform/ui';
 import { useBrandingSettings } from '@digilist/api/hooks/useBrandingSettings';
-import { useT } from '@xala/i18n';
+import { useT } from '@xalatechnologies/platform/i18n';
 
 export function BrandingTab() {
   // Translation function available for future localization

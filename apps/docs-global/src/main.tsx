@@ -9,7 +9,7 @@
  */
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import { RuntimeProvider } from '@xala/runtime';
+import { RuntimeProvider } from '@xalatechnologies/platform/runtime';
 
 import '@xalatechnologies/platform/ui/styles';
 import { App } from './App';

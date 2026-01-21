@@ -7,7 +7,7 @@
 import { useState, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Textfield, Button, SearchIcon } from '@xalatechnologies/platform/ui';
-import { useT, useLocale } from '@xala/i18n';
+import { useT, useLocale } from '@xalatechnologies/platform/i18n';
 
 export function DocsHeader() {
   const t = useT();

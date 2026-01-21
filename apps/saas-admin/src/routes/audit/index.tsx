@@ -17,7 +17,7 @@ import {
   Grid,
 } from '@xalatechnologies/platform/ui';
 import { useAuditLog, useAuditStats } from '@xalatechnologies/platform/sdk';
-import { useT } from '@xala/i18n';
+import { useT } from '@xalatechnologies/platform/i18n';
 
 export function AuditLogPage() {
   const t = useT();

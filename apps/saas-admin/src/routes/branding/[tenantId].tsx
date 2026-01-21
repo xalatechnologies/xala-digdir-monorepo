@@ -19,7 +19,7 @@ import {
   RefreshCwIcon,
 } from '@xalatechnologies/platform/ui';
 import { useSaasTenant } from '@xalatechnologies/platform/sdk';
-import { useT } from '@xala/i18n';
+import { useT } from '@xalatechnologies/platform/i18n';
 
 // Design system token mapping
 const DS_TOKENS = {

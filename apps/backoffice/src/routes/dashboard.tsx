@@ -17,8 +17,8 @@ import {
   type ActivityStatus,
 } from '@xalatechnologies/platform/ui';
 import { useDashboardStats, useDashboardActivity, usePendingItems, type RecentActivity } from '@digilist/client-sdk';
-import { useT, useLocale } from '@xala/i18n';
-import { useAuth } from '@xala/auth';
+import { useT, useLocale } from '@xalatechnologies/platform/i18n';
+import { useAuth } from '@xalatechnologies/platform/auth';
 import { useNavigate } from 'react-router-dom';
 import { useBackofficeRole } from '../hooks/useBackofficeRole';
 import { OrgMemberDashboard } from '../components/dashboard/OrgMemberDashboard';

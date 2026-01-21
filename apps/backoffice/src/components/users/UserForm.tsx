@@ -13,7 +13,7 @@ import {
 } from '@xalatechnologies/platform/ui';
 import type { User, CreateUserDTO, UserRole } from '@digilist/client-sdk';
 import { FormSection, FormActions, InfoBox } from '@xalatechnologies/platform/ui';
-import { useT } from '@xala/i18n';
+import { useT } from '@xalatechnologies/platform/i18n';
 
 interface UserFormProps {
   user?: User | null;

@@ -6,7 +6,7 @@
 import { useState, useMemo, useCallback } from 'react';
 import type { CalendarViewType, CalendarFilters } from '@digilist/api/types';
 import type { CalendarEvent } from '@digilist/client-sdk';
-import { useT } from '@xala/i18n';
+import { useT } from '@xalatechnologies/platform/i18n';
 
 interface CalendarStateOptions {
   initialView?: CalendarViewType;

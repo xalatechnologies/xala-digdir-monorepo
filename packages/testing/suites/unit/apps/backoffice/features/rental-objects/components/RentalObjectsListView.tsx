@@ -30,7 +30,7 @@ import { RentalObjectsTable } from './list/RentalObjectsTable';
 import { BulkCustodyModal } from './BulkCustodyModal';
 import { useRentalObjectFilters, STATUS_OPTIONS, SORT_OPTIONS } from '@digilist/api/hooks/useRentalObjectFilters';
 import { useRentalObjectPermissions } from '@digilist/api/hooks/useRentalObjectPermissions';
-import { useT } from '@xala/i18n';
+import { useT } from '@xalatechnologies/platform/i18n';
 
 // Capacity filter options for rental objects
 const CAPACITY_OPTIONS = [

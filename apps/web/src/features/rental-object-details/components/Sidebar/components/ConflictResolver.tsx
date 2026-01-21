@@ -13,7 +13,7 @@
 
 import * as React from 'react';
 import { Heading, Paragraph, Badge, Button, Card, Spinner } from '@xalatechnologies/platform/ui';
-import { useT } from '@xala/i18n';
+import { useT } from '@xalatechnologies/platform/i18n';
 import type { RecurringOccurrenceDTO, OccurrenceStatus } from '@digilist/client-sdk';
 
 // =============================================================================

@@ -3,7 +3,7 @@
  * Professional step indicator with smooth animations and better UX
  */
 
-import { useT } from '@xala/i18n';
+import { useT } from '@xalatechnologies/platform/i18n';
 import { CheckIcon } from '@xalatechnologies/platform/ui';
 import type { WizardStep } from '../../types';
 import { WIZARD_ICONS } from './WizardIcons';

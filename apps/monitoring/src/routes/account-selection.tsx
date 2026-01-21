@@ -12,9 +12,9 @@ import {
   ShieldCheckIcon,
   AutomationIcon,
 } from '@xalatechnologies/platform/ui';
-import { useT } from '@xala/i18n';
-import { useAuth } from '@xala/auth';
-import { useAccountContext } from '@xala/runtime';
+import { useT } from '@xalatechnologies/platform/i18n';
+import { useAuth } from '@xalatechnologies/platform/auth';
+import { useAccountContext } from '@xalatechnologies/platform/runtime';
 import { AccountSelector, type AccountSelectionType } from '../components/AccountSelector';
 
 export function AccountSelectionPage(): React.ReactElement {

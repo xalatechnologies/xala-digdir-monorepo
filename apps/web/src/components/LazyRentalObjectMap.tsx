@@ -17,7 +17,7 @@
 import React, { Suspense } from 'react';
 import { Stack, Spinner, Text } from '@xalatechnologies/platform/ui';
 import type { RentalObjectMapProps } from '@xalatechnologies/platform/ui/maps';
-import { useT } from '@xala/i18n';
+import { useT } from '@xalatechnologies/platform/i18n';
 
 // Lazy load the map component - only loads when this component is rendered
 const RentalObjectMap = React.lazy(() =>

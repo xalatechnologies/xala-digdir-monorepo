@@ -15,7 +15,7 @@ import {
   useRealtimeCalendar
 } from '../features/calendar';
 import { useToast } from '../providers/ToastProvider';
-import { useT } from '@xala/i18n';
+import { useT } from '@xalatechnologies/platform/i18n';
 
 type ViewType = 'day' | 'week' | 'month' | 'timeline';
 

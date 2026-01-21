@@ -14,7 +14,7 @@ import {
 } from '@xalatechnologies/platform/ui';
 import { useReviews, type ReviewStatus, type Review } from '@digilist/client-sdk';
 import { ReviewModerationTable } from './components/ReviewModerationTable';
-import { useT } from '@xala/i18n';
+import { useT } from '@xalatechnologies/platform/i18n';
 
 // Status filter options - hardcoded Norwegian to avoid module-level t() calls
 const STATUS_OPTIONS = [

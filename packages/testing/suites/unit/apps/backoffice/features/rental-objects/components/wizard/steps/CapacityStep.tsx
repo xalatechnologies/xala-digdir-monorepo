@@ -3,7 +3,7 @@
  * For setting capacity limits (venues and experiences)
  */
 
-import { useT } from '@xala/i18n';
+import { useT } from '@xalatechnologies/platform/i18n';
 import {
   Heading,
   Paragraph,

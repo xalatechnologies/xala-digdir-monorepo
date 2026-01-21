@@ -12,8 +12,8 @@ import {
   ShieldCheckIcon,
   ClipboardListIcon,
 } from '@xalatechnologies/platform/ui';
-import { useT } from '@xala/i18n';
-import { useAuth } from '@xala/auth';
+import { useT } from '@xalatechnologies/platform/i18n';
+import { useAuth } from '@xalatechnologies/platform/auth';
 import { useBackofficeRole, useNeedsRoleSelection } from '../hooks/useBackofficeRole';
 import { RoleSelector } from '../components/RoleSelector';
 import type { EffectiveBackofficeRole } from '../lib/capabilities';

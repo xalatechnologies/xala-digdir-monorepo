@@ -5,7 +5,7 @@
 
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useT } from '@xala/i18n';
+import { useT } from '@xalatechnologies/platform/i18n';
 import { authService } from '@xalatechnologies/platform/sdk';
 import type { DemoLoginFormData } from '@xalatechnologies/platform/ui';
 

@@ -1,7 +1,7 @@
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { ConflictIndicator, getConflictStyles, getConflictColors } from './ConflictIndicator';
-import { useT } from '@xala/i18n';
+import { useT } from '@xalatechnologies/platform/i18n';
 
 // SKIPPED
 describe.skip('ConflictIndicator', () => {

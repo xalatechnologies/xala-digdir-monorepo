@@ -6,7 +6,7 @@
  */
 
 import { Heading, Paragraph, Card, Tag, Tabs, TabItem } from '@xalatechnologies/platform/ui';
-import { useT } from '@xala/i18n';
+import { useT } from '@xalatechnologies/platform/i18n';
 
 interface ApiEndpoint {
   method: 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE';

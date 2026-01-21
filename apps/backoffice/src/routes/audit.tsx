@@ -30,7 +30,7 @@ import {
   useRentalObjects,
 } from '@digilist/client-sdk';
 import type { AuditLogEntry, AuditQueryParams } from '@digilist/client-sdk';
-import { useLocale, useT } from '@xala/i18n';
+import { useLocale, useT } from '@xalatechnologies/platform/i18n';
 
 // Helper to format date
 function formatDate(timestamp: string, locale: string): string {

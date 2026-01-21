@@ -31,8 +31,8 @@ import {
   useOrgAlerts,
   useAssignedRentalObjects,
 } from '@digilist/client-sdk/hooks';
-import { useT } from '@xala/i18n';
-import { useAuth } from '@xala/auth';
+import { useT } from '@xalatechnologies/platform/i18n';
+import { useAuth } from '@xalatechnologies/platform/auth';
 import { useNavigate } from 'react-router-dom';
 import { useCapabilityContext } from '../../providers/CapabilityProvider';
 

@@ -22,7 +22,7 @@ import {
   type DeliveryReport,
 } from '@digilist/client-sdk';
 import { useToast } from '@digilist/api/providers/ToastProvider';
-import { useT } from '@xala/i18n';
+import { useT } from '@xalatechnologies/platform/i18n';
 
 // Status badge color mapping
 const STATUS_COLORS: Record<string, 'success' | 'warning' | 'danger' | 'neutral'> = {

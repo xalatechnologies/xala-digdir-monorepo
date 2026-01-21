@@ -31,7 +31,7 @@ import {
   useInviteTenantUser,
   useOrganizations,
 } from '@digilist/client-sdk/hooks';
-import { useT } from '@xala/i18n';
+import { useT } from '@xalatechnologies/platform/i18n';
 import { useToast } from '../../../providers/ToastProvider';
 import type { TenantUserRole as UserRole } from '@digilist/client-sdk';
 

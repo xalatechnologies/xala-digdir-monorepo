@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { Button, Paragraph } from '@xalatechnologies/platform/ui';
 import { useBackofficeRole } from '../hooks/useBackofficeRole';
 import type { EffectiveBackofficeRole } from '../lib/capabilities';
-import { useT } from '@xala/i18n';
+import { useT } from '@xalatechnologies/platform/i18n';
 
 /**
  * Role Switcher Component

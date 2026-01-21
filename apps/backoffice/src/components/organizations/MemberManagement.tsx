@@ -21,7 +21,7 @@ import {
 } from '@xalatechnologies/platform/ui';
 import { useUsers, type OrganizationMember, organizationService } from '@digilist/client-sdk';
 import { useQueryClient } from '@tanstack/react-query';
-import { useT } from '@xala/i18n';
+import { useT } from '@xalatechnologies/platform/i18n';
 
 interface MemberManagementProps {
   organizationId: string;

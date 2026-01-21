@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import './PermissionManagement.css';
-import { useT } from '@xala/i18n';
+import { useT } from '@xalatechnologies/platform/i18n';
 import {
   useAdminPermissions,
   useGrantAdminPermission,

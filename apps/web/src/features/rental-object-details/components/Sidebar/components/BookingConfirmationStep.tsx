@@ -7,7 +7,7 @@
 import * as React from 'react';
 import { Heading, Paragraph, Button, UserIcon, BuildingIcon } from '@xalatechnologies/platform/ui';
 import type { FlowSelectedSlot, FlowBookingMode } from '@digilist/client-sdk';
-import { useT } from '@xala/i18n';
+import { useT } from '@xalatechnologies/platform/i18n';
 import { BookingVisibilitySelector, type BookingVisibility } from './BookingVisibilitySelector';
 
 function CheckCircleIcon({ size = 18 }: { size?: number }): React.ReactElement {

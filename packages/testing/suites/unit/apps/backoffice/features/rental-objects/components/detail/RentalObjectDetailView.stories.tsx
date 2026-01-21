@@ -4,7 +4,7 @@
 
 import type { Meta, StoryObj } from '@storybook/react';
 import { RentalObjectDetailView } from './RentalObjectDetailView';
-import { useT } from '@xala/i18n';
+import { useT } from '@xalatechnologies/platform/i18n';
 
 const meta: Meta<typeof RentalObjectDetailView> = {
   title: 'Features/RentalObjects/DetailView',

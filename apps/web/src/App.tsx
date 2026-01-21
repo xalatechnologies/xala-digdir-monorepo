@@ -17,9 +17,9 @@ import {
   ProtectedRoute,
   ConsentPopup,
 } from '@xalatechnologies/platform/ui';
-import { useT } from '@xala/i18n';
+import { useT } from '@xalatechnologies/platform/i18n';
 import { useNotificationUnreadCount } from '@digilist/client-sdk';
-import { useAuth, useOAuthCallback } from '@xala/auth';
+import { useAuth, useOAuthCallback } from '@xalatechnologies/platform/auth';
 import { useTheme } from '@xalatechnologies/platform/ui';
 
 // Pages

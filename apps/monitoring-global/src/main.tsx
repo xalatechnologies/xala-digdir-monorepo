@@ -11,7 +11,7 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { DesignsystemetProvider } from '@xalatechnologies/platform/ui';
-import { I18nProvider } from '@xala/i18n';
+import { I18nProvider } from '@xalatechnologies/platform/i18n';
 
 import '@xalatechnologies/platform/ui/styles';
 import { App } from './App';

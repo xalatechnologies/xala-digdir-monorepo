@@ -15,7 +15,7 @@ import {
   SaveIcon,
 } from '@xalatechnologies/platform/ui';
 import { useBookingSettings } from '../hooks/useBookingSettings';
-import { useT } from '@xala/i18n';
+import { useT } from '@xalatechnologies/platform/i18n';
 
 export function BookingTab() {
   const t = useT();

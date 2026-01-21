@@ -10,7 +10,7 @@ export type {
   CreateRentalObjectDTO,
   UpdateRentalObjectDTO,
   RentalObjectProjectionDTO,
-} from '@xala/contracts';
+} from '@xalatechnologies/platform/contracts';
 
 // Export wizard types
 export * from './wizard-types';

@@ -5,7 +5,7 @@
 
 import * as React from 'react';
 import { Heading, Paragraph } from '@xalatechnologies/platform/ui';
-import { useT } from '@xala/i18n';
+import { useT } from '@xalatechnologies/platform/i18n';
 
 // Icons
 function ShoppingCartIcon({ size = 20 }: { size?: number }): React.ReactElement {

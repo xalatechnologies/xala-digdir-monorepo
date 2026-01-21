@@ -3,8 +3,8 @@
  * Thin wrapper that wires SDK/auth hooks to DS PreferencesTab props
  */
 import { PreferencesTab as DSPreferencesTab } from '@xalatechnologies/platform/ui';
-import { useLocale } from '@xala/i18n';
-import { useAuth } from '@xala/auth';
+import { useLocale } from '@xalatechnologies/platform/i18n';
+import { useAuth } from '@xalatechnologies/platform/auth';
 
 export function PreferencesTab() {
   const { locale, setLocale } = useLocale();

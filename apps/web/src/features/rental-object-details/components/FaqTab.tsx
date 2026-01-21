@@ -8,7 +8,7 @@ import * as React from 'react';
 import { Heading, Paragraph, Details } from '@xalatechnologies/platform/ui';
 import type { FAQItem, RentalObjectType } from '../types';
 import { createPresenter } from '../presenters/rentalObjectTypePresenter';
-import { useT } from '@xala/i18n';
+import { useT } from '@xalatechnologies/platform/i18n';
 
 // =============================================================================
 // Icons

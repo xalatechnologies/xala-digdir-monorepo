@@ -24,7 +24,7 @@ import {
   useRentalObjects,
   type RentalObjectStatus,
 } from '@digilist/client-sdk';
-import { useT } from '@xala/i18n';
+import { useT } from '@xalatechnologies/platform/i18n';
 import { useRentalObjectPermissions } from '@/features/rental-objects/hooks/useRentalObjectPermissions';
 import { useRentalObjectFilters, getSortOptions, STATUS_OPTIONS } from '@/features/rental-objects/hooks/useRentalObjectFilters';
 import { RentalObjectsGrid } from '@/features/rental-objects/components/list/RentalObjectsGrid';

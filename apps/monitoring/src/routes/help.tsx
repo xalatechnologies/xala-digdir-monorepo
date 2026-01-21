@@ -21,7 +21,7 @@ import {
   PeopleIcon,
   BuildingIcon,
 } from '@xalatechnologies/platform/ui';
-import { useT } from '@xala/i18n';
+import { useT } from '@xalatechnologies/platform/i18n';
 
 const MOBILE_BREAKPOINT = 768;
 

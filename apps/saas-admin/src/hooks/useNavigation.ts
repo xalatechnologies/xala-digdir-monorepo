@@ -9,7 +9,7 @@
 
 import { useQuery, type UseQueryOptions } from '@tanstack/react-query';
 import { getClient } from '@xalatechnologies/platform/sdk';
-import { useAuth } from '@xala/auth';
+import { useAuth } from '@xalatechnologies/platform/auth';
 
 export interface NavItemFromApi {
   key: string;

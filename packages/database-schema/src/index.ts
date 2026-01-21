@@ -1,31 +1,12 @@
 /**
  * @digilist/database-schema
- * 
- * Single source of truth for all Drizzle ORM schema definitions.
- * Organized into modules by domain:
- * 
- * - schemas: pgSchema definitions (platform, domain, saas, compliance, monitoring)
- * - core: tenants, organizations, users (foundation tables)
- * - domain: rental-objects, bookings (business entities)
- * - platform: sessions, memberships, permissions (infrastructure)
- * - saas: entitlements, plans (multi-tenancy)
- * - compliance: audit-logs (governance)
+ *
+ * Domain-specific database schema for Digilist.
+ * Re-exports platform tables and adds domain-specific tables.
  */
 
-// Schema definitions
-export * from './schemas';
+// Re-export platform schemas (for backward compatibility)
+export * from '@xalatechnologies/database-schema';
 
-// Core module (foundation - no external deps)
-export * from './core';
-
-// Domain module (business entities)
+// Domain-specific tables
 export * from './domain';
-
-// Platform module (sessions, permissions)
-export * from './platform';
-
-// SaaS module (entitlements & subscriptions)
-export * from './saas';
-
-// Compliance module (audit logs)
-export * from './compliance';

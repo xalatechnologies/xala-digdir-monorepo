@@ -19,7 +19,7 @@ import {
   SearchIcon,
 } from '@xalatechnologies/platform/ui';
 import { useSaasTenants } from '@xalatechnologies/platform/sdk';
-import { useT } from '@xala/i18n';
+import { useT } from '@xalatechnologies/platform/i18n';
 
 // Mock branding data - will be replaced with real API
 const MOCK_BRANDING_STATUS: Record<string, { hasCustomBranding: boolean; primaryColor?: string; logoUrl?: string }> = {};

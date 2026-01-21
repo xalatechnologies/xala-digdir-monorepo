@@ -9,7 +9,7 @@ import {
   useUpdateCurrentUser,
   type Address,
 } from '@digilist/client-sdk';
-import { useT } from '@xala/i18n';
+import { useT } from '@xalatechnologies/platform/i18n';
 
 interface AddressFormData {
   invoiceAddress: Address;

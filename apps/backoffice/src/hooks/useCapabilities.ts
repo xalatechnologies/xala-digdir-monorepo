@@ -16,7 +16,7 @@ import {
   getCapabilitiesForRole,
   roleHasCapability,
 } from '../lib/capabilities';
-import { useT } from '@xala/i18n';
+import { useT } from '@xalatechnologies/platform/i18n';
 
 // =============================================================================
 // Re-exports for convenience

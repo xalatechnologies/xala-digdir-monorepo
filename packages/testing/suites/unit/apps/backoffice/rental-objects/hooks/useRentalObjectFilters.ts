@@ -5,7 +5,7 @@
 
 import { useState, useCallback, useMemo } from 'react';
 import type { RentalObjectStatus } from '@digilist/client-sdk';
-import { useT } from '@xala/i18n';
+import { useT } from '@xalatechnologies/platform/i18n';
 
 export const STATUS_OPTIONS = [
   { id: 'all', label: 'Alle', value: 'all' },

@@ -26,8 +26,8 @@ import {
   ExclamationTriangleIcon,
 } from '@xalatechnologies/platform/ui';
 import { Link, Navigate } from 'react-router-dom';
-import { useAuth } from '@xala/auth';
-import { useT } from '@xala/i18n';
+import { useAuth } from '@xalatechnologies/platform/auth';
+import { useT } from '@xalatechnologies/platform/i18n';
 import { useTraining } from '@digilist/client-sdk';
 
 // =============================================================================

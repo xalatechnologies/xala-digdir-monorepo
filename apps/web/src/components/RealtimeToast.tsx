@@ -9,7 +9,7 @@ import React, { useState, useCallback, useEffect } from 'react';
 import { Paragraph, CheckCircleIcon, InfoIcon, XCircleIcon, CloseIcon, AlertTriangleIcon } from '@xalatechnologies/platform/ui';
 import { useRealtimeBooking, useRealtimeNotification, useRealtimeStatus, useRealtimeSlotAvailability } from '../providers';
 import type { RealtimeEvent } from '@digilist/client-sdk';
-import { useT } from '@xala/i18n';
+import { useT } from '@xalatechnologies/platform/i18n';
 
 interface Toast {
   id: string;

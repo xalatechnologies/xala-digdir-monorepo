@@ -22,7 +22,7 @@ import {
   Spinner,
   DashboardPageHeader,
 } from '@xalatechnologies/platform/ui';
-import { useLocale, useT } from '@xala/i18n';
+import { useLocale, useT } from '@xalatechnologies/platform/i18n';
 import {
   useSeasons,
   useRentalObjects,

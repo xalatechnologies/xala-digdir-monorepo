@@ -9,7 +9,7 @@ import { Button, Stack, Text, Spinner } from '@xalatechnologies/platform/ui';
 import { useListingReviews } from '@digilist/client-sdk';
 import { ReviewCard } from './ReviewCard';
 import type { ReviewQueryParams } from '@digilist/client-sdk/types';
-import { useT } from '@xala/i18n';
+import { useT } from '@xalatechnologies/platform/i18n';
 
 export interface ReviewListProps {
   /** Listing ID to fetch reviews for */

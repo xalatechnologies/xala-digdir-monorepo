@@ -18,8 +18,8 @@ import {
   HomeIcon,
 } from '@xalatechnologies/platform/ui';
 import { useConversations, useMessages, useSendMessage, type Conversation, type Message, formatTime } from '@digilist/client-sdk';
-import { useAuth } from '@xala/auth';
-import { useT } from '@xala/i18n';
+import { useAuth } from '@xalatechnologies/platform/auth';
+import { useT } from '@xalatechnologies/platform/i18n';
 
 // Time ago formatting (returns key for translation)
 function getTimeAgoKey(dateStr: string): { key: string; value?: number } {

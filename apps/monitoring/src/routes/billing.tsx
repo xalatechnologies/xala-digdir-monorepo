@@ -23,7 +23,7 @@ import {
   useInvoices,
   useDownloadInvoice,
 } from '@digilist/client-sdk';
-import { useT, useLocale } from '@xala/i18n';
+import { useT, useLocale } from '@xalatechnologies/platform/i18n';
 
 // Mobile breakpoint
 const MOBILE_BREAKPOINT = 768;

@@ -6,7 +6,7 @@
 import { useParams, useNavigate } from 'react-router-dom';
 import { Button, Paragraph, Spinner, Card, BookingStatusBadge, PaymentStatusBadge, ArrowLeftIcon, CheckIcon, CloseIcon } from '@xalatechnologies/platform/ui';
 import { useBooking, useApproveBooking, useRejectBooking, useCancelBooking, useRentalObject, useUser, formatDate, formatTime } from '@digilist/client-sdk';
-import { useT } from '@xala/i18n';
+import { useT } from '@xalatechnologies/platform/i18n';
 import { useState } from 'react';
 
 export default function BookingDetailPage() {

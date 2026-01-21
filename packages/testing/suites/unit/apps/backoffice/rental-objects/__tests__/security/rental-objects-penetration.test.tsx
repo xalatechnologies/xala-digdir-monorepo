@@ -13,7 +13,7 @@ import { ToastProvider } from '@xala/backoffice/providers/ToastProvider';
 import { RentalObjectsListView } from '@digilist/api/components/RentalObjectsListView';
 import { RentalObjectDetailView } from '@digilist/api/components/detail/RentalObjectDetailView';
 import { RentalObjectWizard } from '@digilist/api/components/wizard/RentalObjectWizard';
-import { useT } from '@xala/i18n';
+import { useT } from '@xalatechnologies/platform/i18n';
 
 // Mock dependencies
 vi.mock('@digilist/client-sdk', async () => {

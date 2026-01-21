@@ -36,7 +36,7 @@ import {
 import { useQueryClient } from '@tanstack/react-query';
 import { useRealtimeRentalObject } from '../providers';
 import { LazyRentalObjectMap } from '../components/LazyRentalObjectMap';
-import { useT } from '@xala/i18n';
+import { useT } from '@xalatechnologies/platform/i18n';
 import { motion, AnimatePresence } from 'framer-motion';
 
 // API tokens from environment

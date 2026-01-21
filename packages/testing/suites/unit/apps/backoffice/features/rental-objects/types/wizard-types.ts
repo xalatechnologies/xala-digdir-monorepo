@@ -3,7 +3,7 @@
  * Type definitions for the rental object wizard
  */
 
-import type { RentalObject as ContractRentalObject } from '@xala/contracts';
+import type { RentalObject as ContractRentalObject } from '@xalatechnologies/platform/contracts';
 
 /**
  * Re-export RentalObject from contracts

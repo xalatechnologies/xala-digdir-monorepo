@@ -28,7 +28,7 @@ import type {
   AuditFilterDTO,
   AuditCorrelationDTO,
   AuditStatisticsDTO,
-} from '@xala/contracts';
+} from '@xalatechnologies/platform/contracts';
 
 class MonitoringExtendedService {
   private basePath = '/api/monitoring';

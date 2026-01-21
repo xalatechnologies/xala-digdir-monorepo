@@ -6,7 +6,7 @@
  */
 import { useState } from 'react';
 import {
-import { useT } from '@xala/i18n';
+import { useT } from '@xalatechnologies/platform/i18n';
   Button,
   Heading,
   Paragraph,

@@ -18,7 +18,7 @@ import './public/themes/digilist.css';
 import './public/themes/digilist-extensions.css';
 
 import { ThemeProvider } from '../src/ThemeProvider';
-import { I18nProvider } from '@xala/i18n';
+import { I18nProvider } from '../src/i18n';
 
 // Suppress React 18 act() warnings and WebSocket HMR noise
 const originalError = console.error;

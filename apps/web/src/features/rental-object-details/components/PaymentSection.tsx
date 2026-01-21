@@ -17,7 +17,7 @@ import {
 import { useInitiatePayment } from '@digilist/client-sdk/hooks';
 import { auditService } from '@digilist/client-sdk';
 import type { InitiatePaymentDTO } from '@digilist/client-sdk/types';
-import { useT } from '@xala/i18n';
+import { useT } from '@xalatechnologies/platform/i18n';
 
 // =============================================================================
 // Icons

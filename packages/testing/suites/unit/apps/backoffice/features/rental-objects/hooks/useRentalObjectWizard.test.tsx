@@ -13,7 +13,7 @@ import {
   useCreateRentalObject,
   useUpdateRentalObject,
 } from '@digilist/client-sdk';
-import { useT } from '@xala/i18n';
+import { useT } from '@xalatechnologies/platform/i18n';
 
 // Mock validation utilities
 const mockValidateStep = vi.fn((stepId, data, category) => {

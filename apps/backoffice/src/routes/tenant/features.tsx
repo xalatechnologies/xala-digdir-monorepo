@@ -6,7 +6,7 @@
  */
 
 import { useState, useEffect } from 'react';
-import { useT } from '@xala/i18n';
+import { useT } from '@xalatechnologies/platform/i18n';
 import {
   Card,
   Heading,

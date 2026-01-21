@@ -6,7 +6,7 @@
  */
 
 import { Heading, Paragraph, Card, Tag } from '@xalatechnologies/platform/ui';
-import { useT } from '@xala/i18n';
+import { useT } from '@xalatechnologies/platform/i18n';
 
 interface ArchLayer {
   name: string;
@@ -224,7 +224,7 @@ export function ArchitecturePage() {
             <code>{`// ✅ CORRECT - Apps import from facades
 import { Button } from '@xalatechnologies/platform/ui';
 import { useListings } from '@digilist/client-sdk/hooks';
-import { useT } from '@xala/i18n';
+import { useT } from '@xalatechnologies/platform/i18n';
 
 // ❌ WRONG - Direct imports forbidden
 import { Button } from '@${'digdir'}/designsystemet-react';

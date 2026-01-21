@@ -9,7 +9,7 @@ import * as React from 'react';
 import { Heading, Paragraph } from '@xalatechnologies/platform/ui';
 import type { Rule, RentalObjectType } from '../types';
 import { createPresenter } from '../presenters/rentalObjectTypePresenter';
-import { useT } from '@xala/i18n';
+import { useT } from '@xalatechnologies/platform/i18n';
 
 // =============================================================================
 // Icons

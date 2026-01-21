@@ -50,7 +50,7 @@ import type { SeasonalLease } from '@digilist/client-sdk/services/seasonal-lease
 import { MemberManagement } from '../../components/organizations/MemberManagement';
 import { FormSection } from '@xalatechnologies/platform/ui';
 import { useMemo } from 'react';
-import { useT } from '@xala/i18n';
+import { useT } from '@xalatechnologies/platform/i18n';
 
 // Actor type labels are now provided via translation function
 const getActorTypeLabel = (t: (key: string) => string, type: ActorType): string => {

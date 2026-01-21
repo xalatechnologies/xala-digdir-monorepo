@@ -7,7 +7,7 @@
  */
 
 import type { RentalObjectType, KeyFacts, BookingMode } from '../types';
-import { useT } from '@xala/i18n';
+import { useT } from '@xalatechnologies/platform/i18n';
 
 // =============================================================================
 // Presenter Configuration Types

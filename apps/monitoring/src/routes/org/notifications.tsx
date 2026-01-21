@@ -30,7 +30,7 @@ import {
   Label,
   Alert,
 } from '@xalatechnologies/platform/ui';
-import { useT } from '@xala/i18n';
+import { useT } from '@xalatechnologies/platform/i18n';
 import {
   // TODO: Re-enable when backend organization notification service is implemented
   // useOrganizationNotificationPreferences,
@@ -44,7 +44,7 @@ import type {
   NotificationPreferencesMatrixType,
   NotificationChannel,
 } from '../../components/notifications';
-import { useAccountContext } from '@xala/runtime';
+import { useAccountContext } from '@xalatechnologies/platform/runtime';
 
 // ============================================================================
 // Types

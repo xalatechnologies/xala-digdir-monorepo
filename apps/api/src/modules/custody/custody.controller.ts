@@ -16,7 +16,7 @@ import {
   CreateCustodyGrantDTOSchema, 
   BulkAssignCustodyGrantDTOSchema,
   CreateCustodySubgrantDTOSchema
-} from '@xala/contracts';
+} from '@xalatechnologies/platform/contracts';
 
 @Controller('/custody')
 export class CustodyController {

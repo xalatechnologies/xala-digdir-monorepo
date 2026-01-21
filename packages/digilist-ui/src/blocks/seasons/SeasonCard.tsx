@@ -5,7 +5,7 @@
  * Migrated from @xalatechnologies/platform/ui to @digilist/ui for platform decoupling.
  */
 import { Card, Heading, Paragraph, Button, Badge } from '@xalatechnologies/platform/ui/primitives';
-import { useT } from '@xala/i18n';
+import { useT } from '@xalatechnologies/platform/i18n';
 
 export type SeasonStatus = 'draft' | 'open' | 'closed' | 'cancelled' | 'completed';
 

@@ -26,7 +26,7 @@ import {
   type FeatureFlagCatalogItem,
   type FeatureFlagCategory,
 } from '@xalatechnologies/platform/sdk';
-import { useT } from '@xala/i18n';
+import { useT } from '@xalatechnologies/platform/i18n';
 
 // Category labels will be retrieved via i18n
 

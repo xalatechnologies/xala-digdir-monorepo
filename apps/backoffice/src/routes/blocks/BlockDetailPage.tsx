@@ -19,7 +19,7 @@ import {
   useDialog,
 } from '@xalatechnologies/platform/ui';
 import { useBlock, useDeleteBlock } from '@digilist/client-sdk/hooks';
-import { useT } from '@xala/i18n';
+import { useT } from '@xalatechnologies/platform/i18n';
 import { useNavigate, useParams, Link } from 'react-router-dom';
 import { useCapabilityContext } from '../../providers/CapabilityProvider';
 

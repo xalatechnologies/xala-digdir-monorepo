@@ -6,7 +6,7 @@
 
 import { Heading, Paragraph, Card, CalendarIcon, LockIcon, CreditCardIcon, SettingsIcon, TableIcon, ExternalLinkIcon, InfoIcon, UserIcon, BuildingIcon, SearchIcon } from '@xalatechnologies/platform/ui';
 import { Link } from 'react-router-dom';
-import { useT } from '@xala/i18n';
+import { useT } from '@xalatechnologies/platform/i18n';
 import { useFeatureFlags } from '@digilist/client-sdk';
 import { isSectionEnabled, DOCS_FEATURE_FLAGS } from '../lib/feature-flags';
 import { DOCS_SECTIONS, type DocsSection } from '../types';

@@ -5,7 +5,7 @@
 import { useEffect, useCallback, useRef } from 'react';
 import { useNavigate, useLocation, useSearchParams } from 'react-router-dom';
 import { LoginPage } from '@xalatechnologies/platform/ui';
-import { webAuthConfig } from '@xala/auth';
+import { webAuthConfig } from '@xalatechnologies/platform/auth';
 import {
   PlatformIcon,
   AutomationIcon,
@@ -14,7 +14,7 @@ import {
 import { useAuth } from '../hooks/useAuth';
 import { useDemoLogin } from '../hooks/useDemoLogin';
 import { idportenService } from '@digilist/client-sdk';
-import { useT } from '@xala/i18n';
+import { useT } from '@xalatechnologies/platform/i18n';
 
 /**
  * Navigation state passed when redirecting with flow context

@@ -8,8 +8,8 @@
  */
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { ProtectedRoute, AccountSelectionModal } from '@xalatechnologies/platform/ui';
-import { useOAuthCallback } from '@xala/auth';
-import { AccountContextProvider, useAccountContext, type DashboardContext } from '@xala/runtime';
+import { useOAuthCallback } from '@xalatechnologies/platform/auth';
+import { AccountContextProvider, useAccountContext, type DashboardContext } from '@xalatechnologies/platform/runtime';
 
 // Dashboard context constants
 const CONTEXT_PERSONAL: DashboardContext = 'personal';

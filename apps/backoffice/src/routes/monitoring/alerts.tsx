@@ -3,7 +3,7 @@
  * Displays tenant-scoped alerts, notifications, and system events.
  */
 import { useState } from 'react';
-import { useT } from '@xala/i18n';
+import { useT } from '@xalatechnologies/platform/i18n';
 import {
   Box,
   Heading,

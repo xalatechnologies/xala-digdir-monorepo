@@ -4,7 +4,7 @@ import { renderWithRuntime, screen, fireEvent, waitFor } from '@digilist/testing
 import { CalendarPage } from './calendar';
 import * as clientSDK from '@digilist/client-sdk';
 import { ToastProvider } from '@digilist/api/providers/ToastProvider';
-import { useT } from '@xala/i18n';
+import { useT } from '@xalatechnologies/platform/i18n';
 
 // Mock SDK hooks
 vi.mock('@digilist/client-sdk', () => ({

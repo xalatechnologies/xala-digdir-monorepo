@@ -1,6 +1,6 @@
 /**
  * Domain Tables: Rental Objects
- * Depends on: core/tenants, core/organizations
+ * Depends on: core/tenants, core/organizations from platform package
  */
 import {
   uuid,
@@ -12,8 +12,7 @@ import {
   integer,
   index,
 } from 'drizzle-orm/pg-core';
-import { domainSchema } from '../schemas';
-import { tenants, organizations } from '../core';
+import { domainSchema, tenants, organizations } from '@xalatechnologies/database-schema';
 
 export const rentalObjects = domainSchema.table('rental_objects', {
   id: uuid('id').primaryKey().defaultRandom(),

@@ -21,7 +21,7 @@ import {
   BellIcon,
   DashboardPageHeader,
 } from '@xalatechnologies/platform/ui';
-import { useT, useLocale } from '@xala/i18n';
+import { useT, useLocale } from '@xalatechnologies/platform/i18n';
 import {
   useMyNotifications,
   useNotificationUnreadCount,

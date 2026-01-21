@@ -37,7 +37,7 @@ function WarningIcon() {
 // TODO: Replace with actual SDK hooks when implemented
 // import { useAllocationProposal, useApplyAllocationProposal } from '@digilist/client-sdk';
   const t = useT();
-import { useT } from '@xala/i18n';
+import { useT } from '@xalatechnologies/platform/i18n';
 
 // Placeholder types matching backend interfaces
 interface AllocationSuggestion {

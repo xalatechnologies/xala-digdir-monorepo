@@ -7,7 +7,7 @@
 
 import { useState, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useT } from '@xala/i18n';
+import { useT } from '@xalatechnologies/platform/i18n';
 import {
   DashboardHeader,
   SearchIcon,
@@ -17,7 +17,7 @@ import {
   useTheme,
 } from '@xalatechnologies/platform/ui';
 import type { SearchResultItem, SearchResultGroup } from '@xalatechnologies/platform/ui';
-import { useAuth } from '@xala/auth';
+import { useAuth } from '@xalatechnologies/platform/auth';
 
 interface HeaderProps {
   title?: string;

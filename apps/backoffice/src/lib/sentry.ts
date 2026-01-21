@@ -6,7 +6,7 @@
  */
 
 import * as Sentry from '@sentry/react';
-import { useT } from '@xala/i18n';
+import { useT } from '@xalatechnologies/platform/i18n';
 
 /**
  * Initialize Sentry error tracking and performance monitoring

@@ -3,7 +3,7 @@
  * Task-oriented dashboard for org_member role with scoped widgets
  * Per master-prompt.md: Pending Tasks, Calendar Preview, Messages, Finance Alerts
  */
-import { useT } from '@xala/i18n';
+import { useT } from '@xalatechnologies/platform/i18n';
 import {
   Card,
   Heading,
@@ -18,7 +18,7 @@ import {
   ArrowRightIcon,
 } from '@xalatechnologies/platform/ui';
 import { useNavigate } from 'react-router-dom';
-import { useAuth } from '@xala/auth';
+import { useAuth } from '@xalatechnologies/platform/auth';
 import { usePendingItems } from '@digilist/client-sdk';
 import { useCapabilityContext } from '../../providers/CapabilityProvider';
 

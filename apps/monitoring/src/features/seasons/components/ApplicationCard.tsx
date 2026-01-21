@@ -2,7 +2,7 @@ import { Card, Heading, Paragraph, Button, Badge } from '@xalatechnologies/platf
 import { useNavigate } from 'react-router-dom';
 import type { SeasonApplication } from '@digilist/client-sdk/types';
 import { WEEKDAY_LABELS } from '../constants';
-import { useT } from '@xala/i18n';
+import { useT } from '@xalatechnologies/platform/i18n';
 
 /**
  * Application Card Component

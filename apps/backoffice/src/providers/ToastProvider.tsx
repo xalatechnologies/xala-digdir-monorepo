@@ -5,7 +5,7 @@
 
 import React, { createContext, useContext, useState, useCallback, type ReactNode } from 'react';
 import { Alert } from '@xalatechnologies/platform/ui';
-import { useT } from '@xala/i18n';
+import { useT } from '@xalatechnologies/platform/i18n';
 
 type ToastType = 'success' | 'info' | 'warning' | 'danger';
 

@@ -11,7 +11,7 @@ import { RentalObjectWizard } from './RentalObjectWizard';
 import { useRentalObjectWizard } from '@digilist/api/hooks/useRentalObjectWizard';
 import { useRentalObjectBySlug, useCreateRentalObject, useUpdateRentalObject } from '@digilist/client-sdk';
 import { ToastProvider } from '@xala/backoffice/providers/ToastProvider';
-import { useT } from '@xala/i18n';
+import { useT } from '@xalatechnologies/platform/i18n';
 
 // Mock dependencies
 vi.mock('../../hooks/useRentalObjectWizard');

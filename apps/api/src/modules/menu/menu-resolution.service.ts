@@ -18,7 +18,7 @@ import type {
   MenuCategoryDTO,
   MenuItemDTO,
   SupportedLanguage,
-} from '@xala/contracts/projections';
+} from '@xalatechnologies/platform/contracts/projections';
 import {
   menuTemplates,
   menuCategories,

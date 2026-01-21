@@ -5,15 +5,10 @@
  * Use "resource" instead of "listing" and "amenity" instead of "facility".
  */
 
-/**
- * Primary resource types from schema
- */
-export type ResourceType = 'SPACE' | 'RESOURCE' | 'EVENT' | 'SERVICE' | 'VEHICLE' | 'OTHER';
+import type { ResourceType, ListingType } from './resource-detail';
 
-/**
- * @deprecated Use ResourceType instead
- */
-export type ListingType = ResourceType;
+// Re-export for convenience (used in FilterState)
+export type { ResourceType, ListingType };
 
 /**
  * Venue/Category types (subcategories within resource types)

@@ -2,10 +2,10 @@ import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 import { DashboardHeader, type SearchResultGroup } from '@xalatechnologies/platform/ui';
 import { useUnreadCount } from '@digilist/client-sdk';
-import { useAuth } from '@xala/auth';
+import { useAuth } from '@xalatechnologies/platform/auth';
 import { useTheme } from '@xalatechnologies/platform/ui';
-import { useT } from '@xala/i18n';
-import { useNotificationCenter } from '@xala/runtime';
+import { useT } from '@xalatechnologies/platform/i18n';
+import { useNotificationCenter } from '@xalatechnologies/platform/runtime';
 
 interface HeaderProps {
   title?: string;

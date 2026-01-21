@@ -38,7 +38,7 @@ import {
   useVippsStatus,
   useCalendarSyncStatus,
 } from '@digilist/client-sdk';
-import { useT } from '@xala/i18n';
+import { useT } from '@xalatechnologies/platform/i18n';
 
 interface IntegrationStatus {
   provider: string;

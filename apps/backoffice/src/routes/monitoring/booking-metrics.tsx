@@ -3,7 +3,7 @@
  * Displays tenant-scoped domain metrics including bookings, usage patterns, and trends.
  */
 import { useState } from 'react';
-import { useT } from '@xala/i18n';
+import { useT } from '@xalatechnologies/platform/i18n';
 import {
   Box,
   Heading,

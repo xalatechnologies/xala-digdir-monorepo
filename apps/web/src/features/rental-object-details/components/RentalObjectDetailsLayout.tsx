@@ -32,7 +32,7 @@ import { ContactWidget } from './Sidebar/ContactWidget';
 import { MapWidget } from './Sidebar/MapWidget';
 import { OpeningHoursWidget } from './Sidebar/OpeningHoursWidget';
 import { BookingWidgetPlacement } from './Sidebar/BookingWidgetPlacement';
-import { useT } from '@xala/i18n';
+import { useT } from '@xalatechnologies/platform/i18n';
 
 // =============================================================================
 // Props

@@ -34,7 +34,8 @@ import {
   Button,
   Select,
 } from '@digdir/designsystemet-react';
-import { Stack, FormField } from '../../primitives';
+import { Stack } from '../../primitives';
+import { FormField } from '../../composed';
 
 // =============================================================================
 // Types

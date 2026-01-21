@@ -28,7 +28,7 @@ import {
   type AccessGrantWithDetails,
   type AccessGrantStatus,
 } from '@digilist/client-sdk';
-import { useT } from '@xala/i18n';
+import { useT } from '@xalatechnologies/platform/i18n';
 
 // Status colors mapping
 const statusColors: Record<AccessGrantStatus, 'success' | 'danger' | 'warning'> = {

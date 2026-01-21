@@ -5,7 +5,7 @@
 
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useT } from '@xala/i18n';
+import { useT } from '@xalatechnologies/platform/i18n';
 import {
   Card,
   Heading,
@@ -24,7 +24,7 @@ import {
   useExportData,
   useDeleteAccount,
 } from '@digilist/client-sdk';
-import { useAuth } from '@xala/auth';
+import { useAuth } from '@xalatechnologies/platform/auth';
 
 interface ConsentSettings {
   marketing: boolean;

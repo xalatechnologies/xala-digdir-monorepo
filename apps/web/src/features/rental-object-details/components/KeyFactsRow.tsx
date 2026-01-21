@@ -15,7 +15,7 @@ import {
 } from '@xalatechnologies/platform/ui';
 import type { KeyFacts, RentalObjectType, BookingMode } from '../types';
 import { createPresenter } from '../presenters/rentalObjectTypePresenter';
-import { useT } from '@xala/i18n';
+import { useT } from '@xalatechnologies/platform/i18n';
 
 // =============================================================================
 // Icon Mapping

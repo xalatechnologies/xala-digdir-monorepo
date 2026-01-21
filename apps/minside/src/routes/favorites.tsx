@@ -28,7 +28,7 @@ import {
   useRemoveFavorite,
   useFavoriteCount,
 } from '@digilist/client-sdk';
-import { useT } from '@xala/i18n';
+import { useT } from '@xalatechnologies/platform/i18n';
 import { useDialog } from '@xalatechnologies/platform/ui';
 
 // Web app URL for viewing rental objects

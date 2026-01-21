@@ -15,7 +15,7 @@ import { BookingSchema as ApiBookingSchema } from '../../../../apps/api/src/sche
 import { RentalObjectSchema as ApiRentalObjectSchema } from '../../../../apps/api/src/schemas/rental-object.schema';
 import { UserSchema as ApiUserSchema } from '../../../../apps/api/src/schemas/user.schema';
 import { OrganizationSchema as ApiOrganizationSchema } from '../../../../apps/api/src/schemas/organization.schema';
-import { BookingSchema as ContractBookingSchema } from '@xala/contracts';
+import { BookingSchema as ContractBookingSchema } from '@xalatechnologies/platform/contracts';
 
 // ============================================================================
 // 1. BOOKING SCHEMA

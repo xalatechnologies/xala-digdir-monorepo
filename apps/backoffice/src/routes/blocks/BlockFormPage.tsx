@@ -19,7 +19,7 @@ import {
   ArrowLeftIcon,
 } from '@xalatechnologies/platform/ui';
 import { useBlock, useCreateBlock, useUpdateBlock, useAssignedRentalObjects, useCheckConflicts } from '@digilist/client-sdk/hooks';
-import { useT } from '@xala/i18n';
+import { useT } from '@xalatechnologies/platform/i18n';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useCapabilityContext } from '../../providers/CapabilityProvider';
 

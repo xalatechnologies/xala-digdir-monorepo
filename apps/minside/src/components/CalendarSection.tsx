@@ -15,7 +15,7 @@
 import * as React from 'react';
 import { Paragraph } from '@xalatechnologies/platform/ui';
 import { RentalObjectAvailabilityCalendar } from '@digilist/ui';
-import { useT } from '@xala/i18n';
+import { useT } from '@xalatechnologies/platform/i18n';
 import {
   useCalendarConfig,
   useAvailabilityMatrix,

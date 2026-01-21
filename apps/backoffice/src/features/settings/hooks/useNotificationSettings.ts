@@ -8,7 +8,7 @@ import {
   useTenantSettings,
   useUpdateTenantSettings,
 } from '@digilist/client-sdk';
-import { useT } from '@xala/i18n';
+import { useT } from '@xalatechnologies/platform/i18n';
 
 export interface NotificationSettingsData {
   emailEnabled: boolean;

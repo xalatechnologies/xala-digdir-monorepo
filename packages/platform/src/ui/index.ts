@@ -18,8 +18,7 @@
  */
 
 // =============================================================================
-// Primitives - Custom components (icons, container, grid, etc.)
-// Note: @digdir/designsystemet-react components are re-exported from composed
+// Primitives - Base components (icons, container, grid, @digdir components)
 // =============================================================================
 export * from './primitives';
 
@@ -62,9 +61,11 @@ export * from './patterns';
 export * from './themes';
 
 // =============================================================================
-// Types
+// Types - Use subpath @xalatechnologies/platform/ui/types for full type exports
+// Types are also available through composed/blocks/patterns modules
 // =============================================================================
-export * from './types';
+// Commented out to avoid duplicate exports - types are already in their modules
+// export * from './types';
 
 // =============================================================================
 // Utilities

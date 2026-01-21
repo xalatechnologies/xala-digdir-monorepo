@@ -15,7 +15,7 @@ import {
   SaveIcon,
 } from '@xalatechnologies/platform/ui';
 import { useNotificationSettings } from '@digilist/api/hooks/useNotificationSettings';
-import { useT } from '@xala/i18n';
+import { useT } from '@xalatechnologies/platform/i18n';
 
 export function NotificationsTab() {
   // Translation function available for future localization

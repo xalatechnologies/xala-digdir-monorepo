@@ -9,7 +9,7 @@ import type {
   BulkAssignCustodyGrantDTO,
   CreateCustodySubgrantDTO,
   CustodySubgrant
-} from '@xala/contracts';
+} from '@xalatechnologies/platform/contracts';
 
 export type { CustodyGrant, CustodySubgrant };
 

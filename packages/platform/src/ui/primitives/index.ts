@@ -4,6 +4,11 @@
  * Low-level building blocks for the design system
  */
 
+// =============================================================================
+// @digdir/designsystemet-react base components (centralized re-export)
+// =============================================================================
+export * from './components';
+
 export { Container } from './container';
 export type { ContainerProps } from './container';
 
@@ -118,17 +123,10 @@ export {
 export { LayoutGrid } from './layout-grid';
 export type { LayoutGridProps } from './layout-grid';
 
-export { FormField } from './FormField';
-export type { FormFieldProps } from './FormField';
+// Note: FormField, CodeBlock, FilterChip are exported from composed with more features
 
 export { Progress } from './progress';
 export type { ProgressProps } from './progress';
-
-export { CodeBlock } from './CodeBlock';
-export type { CodeBlockProps } from './CodeBlock';
-
-export { FilterChip } from './FilterChip';
-export type { FilterChipProps } from './FilterChip';
 
 export { Logo } from './Logo';
 export type { LogoProps } from './Logo';

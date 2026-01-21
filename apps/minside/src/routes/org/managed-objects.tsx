@@ -3,7 +3,7 @@
  * Displays objects the organization has custody for.
  */
 import { useState } from 'react';
-import { useT } from '@xala/i18n';
+import { useT } from '@xalatechnologies/platform/i18n';
 import {
   Heading,
   Paragraph,
@@ -18,7 +18,7 @@ import {
   useOrganizationMembers,
   useOrgCustody
 } from '@digilist/client-sdk';
-import type { CustodyGrant } from '@xala/contracts';
+import type { CustodyGrant } from '@xalatechnologies/platform/contracts';
 import { useParams } from 'react-router-dom';
 
 export function ManagedRentalObjectsPage() {

@@ -32,7 +32,7 @@ import {
   formatDate,
   formatTime,
 } from '@digilist/client-sdk';
-import { useT, useLocale } from '@xala/i18n';
+import { useT, useLocale } from '@xalatechnologies/platform/i18n';
 import { useOfflineBookings } from '../hooks/useOfflineBookings';
 
 // Web app URL for new bookings

@@ -6,7 +6,7 @@
 import { Heading, Paragraph, Card, Skeleton, Button } from '@xalatechnologies/platform/ui';
 import { useNavigate, Link } from 'react-router-dom';
 import { useBookings } from '@digilist/client-sdk';
-import { useT } from '@xala/i18n';
+import { useT } from '@xalatechnologies/platform/i18n';
 
 export default function PendingBookingsPage() {
   const navigate = useNavigate();

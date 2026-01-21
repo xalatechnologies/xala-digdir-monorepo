@@ -35,7 +35,7 @@ import {
   type ActorType,
   type OrganizationStatus,
 } from '@digilist/client-sdk';
-import { useT } from '@xala/i18n';
+import { useT } from '@xalatechnologies/platform/i18n';
 
 // Actor type labels are now provided via translation function
 const getActorTypeLabel = (t: (key: string) => string, type: ActorType): string => {

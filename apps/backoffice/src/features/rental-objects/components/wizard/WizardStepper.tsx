@@ -3,7 +3,7 @@
  * Visual step indicator for the rental object wizard
  */
 
-import { useT } from '@xala/i18n';
+import { useT } from '@xalatechnologies/platform/i18n';
 import type { WizardStep } from '../../types';
 
 interface WizardStepperProps {

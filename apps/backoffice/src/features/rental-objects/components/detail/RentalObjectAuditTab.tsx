@@ -2,7 +2,7 @@
  * Rental Object Audit Tab
  * Displays audit history for a specific rental object.
  */
-import { useT } from '@xala/i18n';
+import { useT } from '@xalatechnologies/platform/i18n';
 import { 
   Heading, 
   Paragraph, 

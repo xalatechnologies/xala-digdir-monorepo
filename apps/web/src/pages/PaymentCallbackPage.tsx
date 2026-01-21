@@ -17,7 +17,7 @@ import {
   Stack,
 } from '@xalatechnologies/platform/ui';
 import { useVippsPayment } from '@digilist/client-sdk';
-import { useT } from '@xala/i18n';
+import { useT } from '@xalatechnologies/platform/i18n';
 
 export function PaymentCallbackPage(): React.ReactElement {
   const t = useT();

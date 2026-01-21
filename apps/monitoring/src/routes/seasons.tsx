@@ -2,10 +2,10 @@ import { useState, useMemo } from 'react';
 import { Container, Heading, Paragraph, Card, Button, Spinner } from '@xalatechnologies/platform/ui';
 import { useSeasons } from '@digilist/client-sdk/hooks';
 import type { SeasonStatus } from '@digilist/client-sdk/types';
-import { useAccountContext } from '@xala/runtime';
+import { useAccountContext } from '@xalatechnologies/platform/runtime';
 import { SeasonCard } from '../features/seasons/components/SeasonCard';
 import { SEASON_FILTER_OPTIONS } from '../features/seasons/constants';
-import { useT } from '@xala/i18n';
+import { useT } from '@xalatechnologies/platform/i18n';
 
 /**
  * Seasons List Page

@@ -42,7 +42,7 @@ import {
   useBulkGrantAccess,
   useRevokeAccess,
 } from '@digilist/client-sdk/hooks';
-import { useT } from '@xala/i18n';
+import { useT } from '@xalatechnologies/platform/i18n';
 import { useToast } from '../../providers/ToastProvider';
 
 interface RentalObject {

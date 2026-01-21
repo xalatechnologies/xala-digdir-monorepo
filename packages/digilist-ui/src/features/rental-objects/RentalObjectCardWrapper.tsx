@@ -36,7 +36,7 @@ export interface RentalObjectCardWrapperProps {
  * @example
  * ```tsx
  * import { RentalObjectCardWrapper } from '@digilist/ui/features/rental-objects';
- * import { useT } from '@xala/i18n';
+ * import { useT } from '@xalatechnologies/platform/i18n';
  *
  * function RentalObjectCardComponent({ rentalObject }: { rentalObject: RentalObjectCardProjection }) {
  *   const t = useT();

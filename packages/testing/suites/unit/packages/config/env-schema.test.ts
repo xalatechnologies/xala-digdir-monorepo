@@ -11,7 +11,7 @@ import {
   getDevEnvConfig,
   mergeWithDefaults,
   envSchema,
-} from '@xala/config';
+} from '@xalatechnologies/platform/config';
 
 describe('@xala/config env-schema', () => {
   describe('envSchema', () => {

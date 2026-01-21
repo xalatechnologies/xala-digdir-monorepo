@@ -26,7 +26,7 @@ import {
 
 import { GdprRequestQueue } from '../components/gdpr/GdprRequestQueue';
 import { RequestDetailModal } from '../components/gdpr/RequestDetailModal';
-import { useT } from '@xala/i18n';
+import { useT } from '@xalatechnologies/platform/i18n';
 
 // Status tabs for main navigation
 const STATUS_TABS = [

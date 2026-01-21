@@ -20,7 +20,7 @@ import {
   XCircleIcon,
 } from '@xalatechnologies/platform/ui';
 import { useSaasTenants, useGenerateSeed, type SeedEntityType } from '@xalatechnologies/platform/sdk';
-import { useT } from '@xala/i18n';
+import { useT } from '@xalatechnologies/platform/i18n';
 
 // Entity types available for AI generation (keys for i18n, translated in component)
 const ENTITY_TYPES = [

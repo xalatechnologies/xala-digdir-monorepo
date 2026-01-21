@@ -34,7 +34,7 @@ export {
   type Money,
   type ProblemDetails,
   type FieldError,
-} from '@xala/contracts/schemas';
+} from '@xalatechnologies/platform/contracts/schemas';
 
 // Capabilities schemas
 export {
@@ -47,7 +47,7 @@ export {
   type UIHints,
   type CapabilitiesResponse,
   type CapabilityKey,
-} from '@xala/contracts/schemas';
+} from '@xalatechnologies/platform/contracts/schemas';
 
 // =============================================================================
 // Local Schemas (API-specific, backwards compatible)

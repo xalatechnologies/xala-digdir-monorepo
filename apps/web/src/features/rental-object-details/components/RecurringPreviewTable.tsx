@@ -13,7 +13,7 @@ import type {
   RecurringSummary,
   OccurrenceStatus,
 } from '@digilist/client-sdk';
-import { useT } from '@xala/i18n';
+import { useT } from '@xalatechnologies/platform/i18n';
 
 // =============================================================================
 // Icons

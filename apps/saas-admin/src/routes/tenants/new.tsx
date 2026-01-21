@@ -27,7 +27,7 @@ import {
   type CreateSaasTenantRequest,
   type SeatLimits,
 } from '@xalatechnologies/platform/sdk';
-import { useT } from '@xala/i18n';
+import { useT } from '@xalatechnologies/platform/i18n';
 
 const DEFAULT_SEAT_LIMITS: SeatLimits = {
   maxUsers: 5,

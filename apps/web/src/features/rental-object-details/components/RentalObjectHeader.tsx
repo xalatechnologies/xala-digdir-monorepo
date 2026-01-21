@@ -10,7 +10,7 @@ import { Heading, Paragraph, Tag } from '@xalatechnologies/platform/ui';
 import type { Listing } from '../types';
 import { FavoriteButton } from './FavoriteButton';
 import { ShareButton } from './ShareButton';
-import { useT } from '@xala/i18n';
+import { useT } from '@xalatechnologies/platform/i18n';
 
 // =============================================================================
 // Icons

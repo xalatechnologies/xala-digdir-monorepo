@@ -3,7 +3,7 @@
  * Defines category configurations and step mappings for the rental object wizard
  */
 
-import type { RentalObjectCategory, BookingTimeMode } from '@xala/contracts';
+import type { RentalObjectCategory, BookingTimeMode } from '@xalatechnologies/platform/contracts';
 import type { WizardStepId } from './wizard-types';
 
 /**

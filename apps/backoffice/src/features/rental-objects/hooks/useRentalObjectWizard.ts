@@ -24,7 +24,7 @@ import {
   CATEGORY_CONFIGS,
 } from '../types';
 import { validateStep, validateAllSteps } from '../utils/wizard-validation';
-import { useT } from '@xala/i18n';
+import { useT } from '@xalatechnologies/platform/i18n';
 
 export interface UseRentalObjectWizardOptions {
   /** Rental object slug for edit mode */

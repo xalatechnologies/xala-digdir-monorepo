@@ -32,7 +32,7 @@ import {
   WEEKDAY_LABELS,
 } from '@digilist/api/types';
 import { useCalendarPermissions } from '@digilist/api/hooks/useCalendarPermissions';
-import { useT } from '@xala/i18n';
+import { useT } from '@xalatechnologies/platform/i18n';
 
 interface CreateBlockModalProps {
   isOpen: boolean;

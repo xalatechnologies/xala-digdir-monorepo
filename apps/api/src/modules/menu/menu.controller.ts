@@ -10,7 +10,7 @@
 
 import type { FastifyInstance, FastifyRequest, FastifyReply } from 'fastify';
 import { MenuResolutionService } from './menu-resolution.service';
-import type { SupportedLanguage } from '@xala/contracts/projections';
+import type { SupportedLanguage } from '@xalatechnologies/platform/contracts/projections';
 import { db } from '../../database/connection';
 import { ROLE_PERMISSIONS } from '../../core/permissions';
 

@@ -4,7 +4,7 @@
  */
 
 import { useMemo } from 'react';
-import { useAuth } from '@xala/auth';
+import { useAuth } from '@xalatechnologies/platform/auth';
 
 export interface CalendarPermissions {
   // View permissions

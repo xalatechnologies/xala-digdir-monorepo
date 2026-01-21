@@ -43,7 +43,8 @@ import {
   Button,
   Textfield,
 } from '@digdir/designsystemet-react';
-import { Stack, FormField, SaveIcon, UserIcon, CameraIcon } from '../../primitives';
+import { Stack, SaveIcon, UserIcon, CameraIcon } from '../../primitives';
+import { FormField } from '../../composed';
 
 // =============================================================================
 // Types

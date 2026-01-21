@@ -7,7 +7,7 @@
 
 import React, { createContext, useContext } from 'react';
 import { useAccessibilityMonitoring, type AccessibilityMonitoringAPI } from '@digilist/client-sdk/hooks';
-import { useT } from '@xala/i18n';
+import { useT } from '@xalatechnologies/platform/i18n';
 
 const AccessibilityMonitoringContext = createContext<AccessibilityMonitoringAPI | null>(null);
 

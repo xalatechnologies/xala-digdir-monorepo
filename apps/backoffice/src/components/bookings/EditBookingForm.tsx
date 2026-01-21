@@ -17,7 +17,7 @@ import {
   type UpdateBookingDTO,
 } from '@digilist/client-sdk';
 import { FormSection, FormActions, InfoBox } from '@xalatechnologies/platform/ui';
-import { useT } from '@xala/i18n';
+import { useT } from '@xalatechnologies/platform/i18n';
 
 interface EditBookingFormProps {
   booking: Booking;

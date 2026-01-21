@@ -20,7 +20,7 @@ import {
 import { useCalendarPermissions } from '../hooks/useCalendarPermissions';
 import { BLOCK_TYPE_CONFIG } from '../types';
 import type { BlockType } from '@digilist/client-sdk';
-import { useT } from '@xala/i18n';
+import { useT } from '@xalatechnologies/platform/i18n';
 
 interface EventDrawerProps {
   isOpen: boolean;

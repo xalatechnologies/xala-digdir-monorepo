@@ -5,16 +5,16 @@
 import { useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { LoginPage as LoginPageComponent } from '@xalatechnologies/platform/ui';
-import { saasAdminAuthConfig } from '@xala/auth';
+import { saasAdminAuthConfig } from '@xalatechnologies/platform/auth';
 import {
   ShieldCheckIcon,
   BuildingIcon,
   SettingsIcon,
 } from '@xalatechnologies/platform/ui';
-import { useAuth } from '@xala/auth';
+import { useAuth } from '@xalatechnologies/platform/auth';
 import { useDemoLogin } from '../hooks/useDemoLogin';
 import { idportenService } from '@xalatechnologies/platform/sdk';
-import { useT } from '@xala/i18n';
+import { useT } from '@xalatechnologies/platform/i18n';
 
 export function LoginPage(): React.ReactElement {
   const { isAuthenticated, isLoading } = useAuth();

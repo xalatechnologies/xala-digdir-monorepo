@@ -3,7 +3,7 @@
  * Navigation footer for the rental object wizard with prev/next/save/publish actions
  */
 
-import { useT } from '@xala/i18n';
+import { useT } from '@xalatechnologies/platform/i18n';
 import { Button, Stack, Spinner } from '@xalatechnologies/platform/ui';
 import type { UseRentalObjectWizardReturn } from '@digilist/api/hooks/useRentalObjectWizard';
 

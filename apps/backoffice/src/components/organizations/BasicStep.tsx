@@ -5,7 +5,7 @@
 
 import { Stack, FormField, Textfield, Select, Paragraph, Heading } from '@xalatechnologies/platform/ui';
 import type { ActorType } from '@digilist/client-sdk';
-import { useT } from '@xala/i18n';
+import { useT } from '@xalatechnologies/platform/i18n';
 
 export interface BasicData {
   name: string;

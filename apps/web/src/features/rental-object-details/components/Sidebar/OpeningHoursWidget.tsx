@@ -8,7 +8,7 @@
 import * as React from 'react';
 import { Paragraph } from '@xalatechnologies/platform/ui';
 import type { OpeningHours, DayHours } from '../../types';
-import { useT } from '@xala/i18n';
+import { useT } from '@xalatechnologies/platform/i18n';
 
 // =============================================================================
 // Icons

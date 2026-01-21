@@ -32,7 +32,7 @@ import {
   WEEKDAY_LABELS,
 } from '../types';
 import { useCalendarPermissions } from '../hooks/useCalendarPermissions';
-import { useT } from '@xala/i18n';
+import { useT } from '@xalatechnologies/platform/i18n';
 
 interface CreateBlockModalProps {
   isOpen: boolean;

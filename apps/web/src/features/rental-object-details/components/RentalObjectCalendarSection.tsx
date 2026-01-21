@@ -20,7 +20,7 @@ import {
 } from '@digilist/client-sdk';
 import type { CalendarSlot, CalendarConfig, CalendarSelection } from '@xalatechnologies/platform/ui';
 import { useTranslation } from 'react-i18next';
-import { useT } from '@xala/i18n';
+import { useT } from '@xalatechnologies/platform/i18n';
 
 // =============================================================================
 // Types

@@ -44,7 +44,7 @@ import {
   formatDate,
   formatTime,
 } from '@digilist/client-sdk';
-import { useT, useLocale } from '@xala/i18n';
+import { useT, useLocale } from '@xalatechnologies/platform/i18n';
 
 // Inline Copy Icon component
 const CopyIcon = ({ size = 14, style }: { size?: number; style?: React.CSSProperties }) => (

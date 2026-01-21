@@ -22,7 +22,7 @@ import {
 } from '@digilist/client-sdk';
 import { MemberManagement } from '../../components/organizations/MemberManagement';
 
-import { useT } from '@xala/i18n';
+import { useT } from '@xalatechnologies/platform/i18n';
 const actorTypeLabels: Record<ActorType, string> = {
   private: 'Privatperson',
   business: 'Bedrift',

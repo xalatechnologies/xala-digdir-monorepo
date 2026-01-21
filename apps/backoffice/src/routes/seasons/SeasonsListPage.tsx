@@ -25,7 +25,7 @@ import {
 import { useSeasons, useDeleteSeason } from '@digilist/client-sdk/hooks';
 import type { SeasonStatus } from '@digilist/client-sdk/types';
 // import { StatusBadge } from '../../components/shared';
-import { useT } from '@xala/i18n';
+import { useT } from '@xalatechnologies/platform/i18n';
 
 const statusVariants: Record<SeasonStatus, 'neutral' | 'info' | 'warning' | 'success'> = {
   draft: 'neutral',

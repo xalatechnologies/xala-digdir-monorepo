@@ -1,4 +1,4 @@
-import { useT } from '@xala/i18n';
+import { useT } from '@xalatechnologies/platform/i18n';
 import { Heading, Paragraph, Card, CalendarIcon, ClockIcon } from '@xalatechnologies/platform/ui';
 import { useRentalObjectWizard } from '@/features/rental-objects/hooks/useRentalObjectWizard';
 import { OpeningHoursStep } from './OpeningHoursStep';

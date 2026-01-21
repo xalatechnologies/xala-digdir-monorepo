@@ -19,7 +19,7 @@ import {
   docsLearningProfile,
   type AppType,
   type EnvConfig,
-} from '@xala/config';
+} from '@xalatechnologies/platform/config';
 
 // Mock environment config for tests
 const mockEnv: EnvConfig = {

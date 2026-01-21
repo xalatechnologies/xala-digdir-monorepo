@@ -5,17 +5,17 @@
 import { useEffect, useCallback, useRef } from 'react';
 import { useNavigate, useLocation, useSearchParams } from 'react-router-dom';
 import { LoginPage as LoginPageComponent, DemoRoleSwitcher } from '@xalatechnologies/platform/ui';
-import { backofficeAuthConfig } from '@xala/auth';
+import { backofficeAuthConfig } from '@xalatechnologies/platform/auth';
 import {
   PlatformIcon,
   AutomationIcon,
   ShieldCheckIcon,
 } from '@xalatechnologies/platform/ui';
-import { useAuth } from '@xala/auth';
+import { useAuth } from '@xalatechnologies/platform/auth';
 import { useBackofficeRole, useNeedsRoleSelection } from '../hooks/useBackofficeRole';
 import { useDemoLogin } from '../hooks/useDemoLogin';
 import { idportenService } from '@digilist/client-sdk';
-import { useT } from '@xala/i18n';
+import { useT } from '@xalatechnologies/platform/i18n';
 
 export interface FlowContextNavigationState {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any

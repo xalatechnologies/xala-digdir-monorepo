@@ -8,7 +8,7 @@
 import { useState, useEffect } from 'react';
 import { Card, Heading, Paragraph, Table, Badge, Spinner } from '@xalatechnologies/platform/ui';
 
-import { useT } from '@xala/i18n';
+import { useT } from '@xalatechnologies/platform/i18n';
 interface TestSummary {
   passed: number;
   failed: number;

@@ -17,7 +17,7 @@ import {
   Label,
 } from '@xalatechnologies/platform/ui';
 import { useRefundPayment, formatCurrency, type RefundPaymentDTO } from '@digilist/client-sdk';
-import { useT } from '@xala/i18n';
+import { useT } from '@xalatechnologies/platform/i18n';
 
 // =============================================================================
 // TYPES

@@ -20,7 +20,7 @@ import {
   // type ApplicationConflict,
   // type ConflictSummary,
 } from '@digilist/client-sdk';
-import { useT } from '@xala/i18n';
+import { useT } from '@xalatechnologies/platform/i18n';
 
 // Temporary type definitions and placeholder hooks until implemented in SDK
 type ApplicationConflict = {

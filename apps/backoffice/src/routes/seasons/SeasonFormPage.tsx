@@ -24,7 +24,7 @@ import {
   type CreateSeasonDTO,
 } from '@digilist/client-sdk';
 import { FormSection, FormActions } from '@xalatechnologies/platform/ui';
-import { useT } from '@xala/i18n';
+import { useT } from '@xalatechnologies/platform/i18n';
 
 export function SeasonFormPage() {
   const t = useT();

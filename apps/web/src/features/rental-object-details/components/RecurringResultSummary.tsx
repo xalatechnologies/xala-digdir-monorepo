@@ -12,7 +12,7 @@ import type {
   RecurringOccurrenceResultDTO,
 } from '@digilist/client-sdk';
 import { formatDate, formatTime } from '@digilist/client-sdk';
-import { useT } from '@xala/i18n';
+import { useT } from '@xalatechnologies/platform/i18n';
 
 // Icons are imported from @xalatechnologies/platform/ui above
 

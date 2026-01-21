@@ -35,7 +35,7 @@ import {
   type SaasTenant,
   type SaasTenantStatus,
 } from '@xalatechnologies/platform/sdk';
-import { useT } from '@xala/i18n';
+import { useT } from '@xalatechnologies/platform/i18n';
 
 const statusColors: Record<SaasTenantStatus, 'success' | 'warning' | 'danger' | 'info'> = {
   active: 'success',

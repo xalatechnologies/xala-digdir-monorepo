@@ -1,7 +1,7 @@
 import React from 'react';
 import { Container, Tabs, TabsList, TabsTab, TabsPanel } from '@xalatechnologies/platform/ui';
 import { ConsentSettings, DataSubjectRequestForm } from '@xalatechnologies/platform/ui';
-import { useT } from '@xala/i18n';
+import { useT } from '@xalatechnologies/platform/i18n';
 
 export function PrivacySettingsPage() {
   const t = useT();

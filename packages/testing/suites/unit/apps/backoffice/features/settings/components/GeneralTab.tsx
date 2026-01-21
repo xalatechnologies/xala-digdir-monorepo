@@ -15,7 +15,7 @@ import {
   SaveIcon,
 } from '@xalatechnologies/platform/ui';
 import { useGeneralSettings } from '@digilist/api/hooks/useGeneralSettings';
-import { useT } from '@xala/i18n';
+import { useT } from '@xalatechnologies/platform/i18n';
 
 export function GeneralTab() {
   // Translation function available for future localization

@@ -1,7 +1,7 @@
 import React, { createContext, useContext, useState, useEffect, useMemo, useCallback } from 'react';
 import type { EffectiveBackofficeRole } from '../lib/capabilities';
-import { useAuth } from '@xala/auth';
-import { useT } from '@xala/i18n';
+import { useAuth } from '@xalatechnologies/platform/auth';
+import { useT } from '@xalatechnologies/platform/i18n';
 
 /**
  * Backoffice Role Provider

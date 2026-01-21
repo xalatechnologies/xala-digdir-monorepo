@@ -11,7 +11,7 @@
 import type {
   RentalObjectCardProjection as ContractCardProjection,
   RentalObjectDetailsProjection as ContractDetailsProjection,
-} from '@xala/contracts/projections';
+} from '@xalatechnologies/platform/contracts/projections';
 
 // Re-export contract types for new code
 export type { ContractCardProjection, ContractDetailsProjection };

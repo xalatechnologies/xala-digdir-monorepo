@@ -5,7 +5,7 @@
 
 import { useState, useMemo } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { useT } from '@xala/i18n';
+import { useT } from '@xalatechnologies/platform/i18n';
 import {
   Card,
   Heading,

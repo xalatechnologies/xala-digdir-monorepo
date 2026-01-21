@@ -30,8 +30,8 @@ export interface StatusIndicator {
   label: string;
 }
 
-// Calendar cell for slot-based calendars
-export interface CalendarCell {
+// Slot calendar cell (different from types/resource-detail.ts CalendarCell)
+export interface SlotCalendarCell {
   id: string;
   date: Date;
   status: 'available' | 'unavailable' | 'selected' | 'partial' | 'blocked';
@@ -39,6 +39,9 @@ export interface CalendarCell {
   price?: string;
   metadata?: Record<string, unknown>;
 }
+
+// Legacy alias
+export type CalendarCell = SlotCalendarCell;
 
 // Legend item for calendars/charts
 export interface LegendItem {
@@ -68,8 +71,8 @@ export interface ActionButton {
   onClick: () => void;
 }
 
-// Breadcrumb item
-export interface BreadcrumbItem {
+// Simple breadcrumb for patterns (different from composed/Breadcrumbs)
+export interface PatternBreadcrumbItem {
   label: string;
   href?: string;
 }
@@ -90,8 +93,8 @@ export interface PatternFeatureItem {
   available?: boolean;
 }
 
-// Form wizard step
-export interface WizardStep {
+// Wizard step for pattern wizards (different from composed/WizardStepper)
+export interface PatternWizardStep {
   id: string;
   title: string;
   description?: string;

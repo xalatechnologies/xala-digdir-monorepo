@@ -4,7 +4,7 @@
 
 import { useParams, Link } from 'react-router-dom';
 import { Heading, Paragraph, Breadcrumb, Card } from '@xalatechnologies/platform/ui';
-import { useT } from '@xala/i18n';
+import { useT } from '@xalatechnologies/platform/i18n';
 
 // Role key mapping for i18n
 const ROLE_KEYS: Record<string, string> = {

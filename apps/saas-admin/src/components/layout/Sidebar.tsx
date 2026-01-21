@@ -22,8 +22,8 @@ import {
   UsersIcon,
   SparklesIcon,
 } from '@xalatechnologies/platform/ui';
-import { useT } from '@xala/i18n';
-import { useAuth, type SaasAdminRole } from '@xala/auth';
+import { useT } from '@xalatechnologies/platform/i18n';
+import { useAuth, type SaasAdminRole } from '@xalatechnologies/platform/auth';
 import { useNavigationItems, type NavItemFromApi } from '../../hooks/useNavigation';
 
 const ICON_MAP: Record<string, React.ReactNode> = {

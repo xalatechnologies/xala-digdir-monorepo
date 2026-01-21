@@ -1,7 +1,7 @@
 import { renderHook } from '@testing-library/react';
 import { useConflictDetection } from './useConflictDetection';
 import type { CalendarEvent } from '@digilist/client-sdk';
-import { useT } from '@xala/i18n';
+import { useT } from '@xalatechnologies/platform/i18n';
 
 // SKIPPED
 describe.skip('useConflictDetection', () => {

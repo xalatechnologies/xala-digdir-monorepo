@@ -29,7 +29,7 @@ import {
 } from '@digilist/client-sdk';
 import { SearchResults } from '../components/SearchResults';
 import { SavedFilters } from '../components/SavedFilters';
-import { useT } from '@xala/i18n';
+import { useT } from '@xalatechnologies/platform/i18n';
 
 export function SearchPage() {
   const t = useT();

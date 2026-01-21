@@ -7,7 +7,7 @@
 
 import { useCallback, useState } from 'react';
 import { Stack, FormField, Paragraph, Heading, Card, Button } from '@xalatechnologies/platform/ui';
-import { useT } from '@xala/i18n';
+import { useT } from '@xalatechnologies/platform/i18n';
 
 // =============================================================================
 // Types

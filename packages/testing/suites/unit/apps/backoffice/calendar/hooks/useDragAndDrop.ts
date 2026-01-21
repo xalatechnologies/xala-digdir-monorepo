@@ -4,7 +4,7 @@
  */
 
 import { useState, useCallback, useMemo, useRef } from 'react';
-import { useT } from '@xala/i18n';
+import { useT } from '@xalatechnologies/platform/i18n';
 
 interface DragPosition {
   x: number;

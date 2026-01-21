@@ -15,7 +15,7 @@ import {
   SaveIcon,
 } from '@xalatechnologies/platform/ui';
 import { useNotificationSettings } from '../hooks/useNotificationSettings';
-import { useT } from '@xala/i18n';
+import { useT } from '@xalatechnologies/platform/i18n';
 
 export function NotificationsTab() {
   const t = useT();

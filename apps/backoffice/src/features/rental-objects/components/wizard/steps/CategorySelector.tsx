@@ -3,7 +3,7 @@
  * First step in wizard - allows selecting the main category for a rental object
  */
 
-import { useT } from '@xala/i18n';
+import { useT } from '@xalatechnologies/platform/i18n';
 import { Heading, Paragraph, Card, Badge } from '@xalatechnologies/platform/ui';
 import type { UseRentalObjectWizardReturn } from '@/features/rental-objects';
 

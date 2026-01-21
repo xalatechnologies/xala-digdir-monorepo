@@ -6,8 +6,8 @@
  */
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { ProtectedRoute, Heading, Paragraph } from '@xalatechnologies/platform/ui';
-import { useT } from '@xala/i18n';
-import { useOAuthCallback } from '@xala/auth';
+import { useT } from '@xalatechnologies/platform/i18n';
+import { useOAuthCallback } from '@xalatechnologies/platform/auth';
 
 import { AppLayout } from './components/layout/AppLayout';
 import {

@@ -6,9 +6,9 @@
  */
 import * as React from 'react';
 import { Paragraph, Button, Heading, Link } from '@xalatechnologies/platform/ui';
-import { useAuth } from '@xala/auth';
+import { useAuth } from '@xalatechnologies/platform/auth';
 import { HelpLayout, HelpFAQItem, type TocItem } from './components';
-import { useT } from '@xala/i18n';
+import { useT } from '@xalatechnologies/platform/i18n';
 
 // =============================================================================
 // FAQ Data

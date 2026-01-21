@@ -25,7 +25,7 @@ import { RentalObjectBookingsTab } from './RentalObjectBookingsTab';
 import { RentalObjectAvailabilityTab } from './RentalObjectAvailabilityTab';
 import { RentalObjectAuditTab } from './RentalObjectAuditTab';
 import { RentalObjectCustodyTab } from './RentalObjectCustodyTab';
-import { useT } from '@xala/i18n';
+import { useT } from '@xalatechnologies/platform/i18n';
 
 /**
  * Error Boundary to catch JavaScript runtime errors

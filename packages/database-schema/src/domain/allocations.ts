@@ -1,7 +1,7 @@
 /**
  * Domain Tables: Allocations and Blocks
  * Used for calendar availability management - blocks, blackouts, and reserved periods
- * Depends on: core/tenants, core/users, domain/rental-objects, domain/bookings
+ * Depends on: core/tenants, core/users from platform package, domain/rental-objects, domain/bookings
  */
 import {
   uuid,
@@ -12,8 +12,7 @@ import {
   boolean,
   index,
 } from 'drizzle-orm/pg-core';
-import { domainSchema } from '../schemas';
-import { tenants, users } from '../core';
+import { domainSchema, tenants, users } from '@xalatechnologies/database-schema';
 import { rentalObjects } from './rental-objects';
 import { bookings } from './bookings';
 

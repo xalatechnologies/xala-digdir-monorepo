@@ -25,7 +25,7 @@ export { SlotCalendar } from './SlotCalendar';
 export type {
   SlotCalendarProps,
   SlotCalendarLabels,
-  ViewMode,
+  ViewMode as SlotViewMode,
   SelectionMode,
   CellStatus,
 } from './SlotCalendar';

@@ -6,8 +6,8 @@
  */
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import { validateEnv, createAppConfig } from '@xala/config';
-import { RuntimeProvider } from '@xala/runtime';
+import { validateEnv, createAppConfig } from '@xalatechnologies/platform/config';
+import { RuntimeProvider } from '@xalatechnologies/platform/runtime';
 import { initializeClient } from '@digilist/client-sdk';
 
 import '@xalatechnologies/platform/ui/styles';

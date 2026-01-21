@@ -67,8 +67,7 @@
   },
   "dependencies": {
     "@digilist/contracts": "workspace:*",
-    "@xalatechnologies/platform": "workspace:*",
-    "@xala/i18n": "workspace:*"
+    "@xalatechnologies/platform": "workspace:*"
   },
   "peerDependencies": {
     "react": "^18.2.0",

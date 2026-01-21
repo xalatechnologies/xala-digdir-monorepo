@@ -3,7 +3,7 @@
  * For configuring pickup/return locations (equipment and vehicles)
  */
 
-import { useT } from '@xala/i18n';
+import { useT } from '@xalatechnologies/platform/i18n';
 import {
   Heading,
   Paragraph,

@@ -40,7 +40,7 @@
 import * as React from 'react';
 import { Heading, Paragraph, Tag, Button } from '@digdir/designsystemet-react';
 import { cn } from './utils';
-import type { ResourceBadge, ActionButton, BreadcrumbItem } from './types';
+import type { ResourceBadge, ActionButton, PatternBreadcrumbItem } from './types';
 
 // Icon components (inline SVG for platform independence)
 const HeartIcon = ({ filled = false, size = 20 }: { filled?: boolean; size?: number }) => (
@@ -103,7 +103,7 @@ export interface ResourceDetailHeaderProps {
   /** Array of badges to display */
   badges?: ResourceBadge[];
   /** Breadcrumb navigation items */
-  breadcrumbs?: BreadcrumbItem[];
+  breadcrumbs?: PatternBreadcrumbItem[];
   /** Primary image */
   primaryImage?: {
     url: string;
@@ -124,7 +124,7 @@ export interface ResourceDetailHeaderProps {
   /** Callback when share is clicked */
   onShare?: () => void;
   /** Callback when a breadcrumb is clicked */
-  onBreadcrumbClick?: (item: BreadcrumbItem) => void;
+  onBreadcrumbClick?: (item: PatternBreadcrumbItem) => void;
   /** Additional CSS class name */
   className?: string;
 }
@@ -154,8 +154,8 @@ function Breadcrumbs({
   items,
   onItemClick,
 }: {
-  items: BreadcrumbItem[];
-  onItemClick?: (item: BreadcrumbItem) => void;
+  items: PatternBreadcrumbItem[];
+  onItemClick?: (item: PatternBreadcrumbItem) => void;
 }): React.ReactElement | null {
   if (!items.length) return null;
 

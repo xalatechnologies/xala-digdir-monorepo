@@ -25,7 +25,7 @@ import {
 } from '@digilist/client-sdk';
 import { formatDistanceToNow } from 'date-fns';
 import { nb } from 'date-fns/locale';
-import { useT } from '@xala/i18n';
+import { useT } from '@xalatechnologies/platform/i18n';
 
 // =============================================================================
 // Types

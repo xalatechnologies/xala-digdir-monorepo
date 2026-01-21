@@ -14,7 +14,7 @@
  *
  * @example
  * ```tsx
- * const steps: WizardStep[] = [
+ * const steps: PatternWizardStep[] = [
  *   { id: 'details', title: 'Details', isActive: true },
  *   { id: 'confirm', title: 'Confirm' },
  *   { id: 'complete', title: 'Complete' },
@@ -36,7 +36,7 @@
  */
 import * as React from 'react';
 import { Dialog, Heading, Paragraph, Button } from '@digdir/designsystemet-react';
-import type { WizardStep } from './types';
+import type { PatternWizardStep } from './types';
 import { cn } from './utils';
 
 // ============================================================================
@@ -63,7 +63,7 @@ export interface FormWizardModalProps {
   isOpen: boolean;
 
   /** Array of wizard steps */
-  steps: WizardStep[];
+  steps: PatternWizardStep[];
 
   /** Current step index (0-based) */
   currentStepIndex: number;
@@ -151,7 +151,7 @@ const CheckIcon = ({ size = 14 }: { size?: number }) => (
 
 /** Step indicator dot */
 interface StepIndicatorDotProps {
-  step: WizardStep;
+  step: PatternWizardStep;
   index: number;
   isActive: boolean;
   isCompleted: boolean;
@@ -244,7 +244,7 @@ function StepConnector({ isCompleted }: { isCompleted: boolean }) {
 
 /** Full step indicator component */
 interface StepIndicatorProps {
-  steps: WizardStep[];
+  steps: PatternWizardStep[];
   currentStepIndex: number;
   stepOfLabel?: string;
 }

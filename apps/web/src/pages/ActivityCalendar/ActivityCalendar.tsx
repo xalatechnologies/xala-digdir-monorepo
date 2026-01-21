@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { format } from 'date-fns';
 import { nb } from 'date-fns/locale';
-import { useT } from '@xala/i18n';
+import { useT } from '@xalatechnologies/platform/i18n';
 import { useActivities, type ActivityCategory } from '@digilist/client-sdk/hooks';
 import type { Activity } from '@digilist/client-sdk/services';
 import './ActivityCalendar.css';

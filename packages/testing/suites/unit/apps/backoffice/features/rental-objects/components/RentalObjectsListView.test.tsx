@@ -148,7 +148,7 @@ const mockRentalObjects = [
 ];
 
 import { ToastProvider } from '@xala/backoffice/providers/ToastProvider';
-import { useT } from '@xala/i18n';
+import { useT } from '@xalatechnologies/platform/i18n';
 
 const createTestWrapper = () => {
   const queryClient = new QueryClient({

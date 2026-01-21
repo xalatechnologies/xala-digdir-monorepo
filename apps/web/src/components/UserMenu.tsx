@@ -9,7 +9,7 @@
 import { useState, useRef, useEffect } from 'react';
 import { Button } from '@xalatechnologies/platform/ui';
 import { UserIcon, LogOutIcon } from '@xalatechnologies/platform/ui';
-import { useT } from '@xala/i18n';
+import { useT } from '@xalatechnologies/platform/i18n';
 
 interface UserMenuProps {
   userName: string;

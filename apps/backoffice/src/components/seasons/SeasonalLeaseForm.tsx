@@ -20,7 +20,7 @@ import {
   type CreateSeasonalLeaseDTO,
 } from '@digilist/client-sdk';
 import { FormSection, FormActions } from '@xalatechnologies/platform/ui';
-import { useT } from '@xala/i18n';
+import { useT } from '@xalatechnologies/platform/i18n';
 
 interface SeasonalLeaseFormProps {
   lease?: SeasonalLease | null;

@@ -15,7 +15,7 @@
 
 import * as React from 'react';
 import { Heading, Paragraph, Badge, Checkbox, Spinner, Card } from '@xalatechnologies/platform/ui';
-import { useT } from '@xala/i18n';
+import { useT } from '@xalatechnologies/platform/i18n';
 import type { RecurringOccurrenceDTO, OccurrenceStatus, RecurringSummary } from '@digilist/client-sdk';
 
 // =============================================================================

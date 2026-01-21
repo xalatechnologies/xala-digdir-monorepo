@@ -6,7 +6,7 @@
 import { useState, useCallback, useRef } from 'react';
 import { useRealtimeCalendar as useSDKRealtimeCalendar } from '@digilist/client-sdk';
 import type { RealtimeEvent } from '@digilist/client-sdk';
-import { useT } from '@xala/i18n';
+import { useT } from '@xalatechnologies/platform/i18n';
 
 export interface RealtimeCalendarOptions {
   /** Whether to enable realtime updates */

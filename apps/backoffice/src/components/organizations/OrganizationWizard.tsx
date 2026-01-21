@@ -9,7 +9,7 @@ import type { ActorType } from '@digilist/client-sdk';
 import { BasicStep } from './BasicStep';
 import { BrandingStep } from './BrandingStep';
 import { RolesStep } from './RolesStep';
-import { useT } from '@xala/i18n';
+import { useT } from '@xalatechnologies/platform/i18n';
 
 // =============================================================================
 // Types

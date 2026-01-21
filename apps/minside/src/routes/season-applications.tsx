@@ -2,9 +2,9 @@ import { useState, useMemo } from 'react';
 import { Heading, Paragraph, Card, Button, Spinner, DashboardPageHeader } from '@xalatechnologies/platform/ui';
 import { useSeasonApplications } from '@digilist/client-sdk/hooks';
 import type { SeasonApplicationStatus } from '@digilist/client-sdk/types';
-import { useAccountContext } from '@xala/runtime';
+import { useAccountContext } from '@xalatechnologies/platform/runtime';
 import { useNavigate } from 'react-router-dom';
-import { useT } from '@xala/i18n';
+import { useT } from '@xalatechnologies/platform/i18n';
 
 // Local type for season application status
 type SeasonApplicationStatus = 'pending' | 'approved' | 'rejected';

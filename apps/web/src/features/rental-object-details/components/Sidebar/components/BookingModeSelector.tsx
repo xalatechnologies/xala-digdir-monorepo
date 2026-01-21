@@ -11,7 +11,7 @@
 
 import * as React from 'react';
 import { Paragraph, Badge } from '@xalatechnologies/platform/ui';
-import { useT } from '@xala/i18n';
+import { useT } from '@xalatechnologies/platform/i18n';
 import type { BookingMode, RecurringConstraintsDTO } from '@digilist/client-sdk';
 
 // =============================================================================

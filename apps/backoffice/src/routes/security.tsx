@@ -20,8 +20,8 @@ import {
   useFailedLogins,
   useDataExports,
 } from '@digilist/client-sdk';
-import { useT } from '@xala/i18n';
-import { useAuth } from '@xala/auth';
+import { useT } from '@xalatechnologies/platform/i18n';
+import { useAuth } from '@xalatechnologies/platform/auth';
 
 // Map security event severity to activity status
 function mapSeverityToStatus(severity: string): ActivityStatus {

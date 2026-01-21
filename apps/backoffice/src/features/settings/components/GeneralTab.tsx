@@ -15,7 +15,7 @@ import {
   SaveIcon,
 } from '@xalatechnologies/platform/ui';
 import { useGeneralSettings } from '../hooks/useGeneralSettings';
-import { useT } from '@xala/i18n';
+import { useT } from '@xalatechnologies/platform/i18n';
 
 export function GeneralTab() {
   const t = useT();

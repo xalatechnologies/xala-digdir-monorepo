@@ -1,6 +1,6 @@
 /**
  * Domain Tables: Seasonal Leases
- * Depends on: core/tenants, core/organizations, domain/rental-objects
+ * Depends on: core/tenants, core/organizations from platform package, domain/rental-objects
  */
 import {
   uuid,
@@ -11,8 +11,7 @@ import {
   decimal,
   index,
 } from 'drizzle-orm/pg-core';
-import { domainSchema } from '../schemas';
-import { tenants, organizations } from '../core';
+import { domainSchema, tenants, organizations } from '@xalatechnologies/database-schema';
 import { rentalObjects } from './rental-objects';
 
 export const seasonalLeases = domainSchema.table('seasonal_leases', {

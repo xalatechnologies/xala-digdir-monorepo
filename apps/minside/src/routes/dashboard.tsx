@@ -28,9 +28,9 @@ import {
   QuickActionCard,
   EmptyState,
 } from '@xalatechnologies/platform/ui';
-import { useT } from '@xala/i18n';
+import { useT } from '@xalatechnologies/platform/i18n';
 import { useMyBookings, formatDate, formatTime, type Booking } from '@digilist/client-sdk';
-import { useAuth } from '@xala/auth';
+import { useAuth } from '@xalatechnologies/platform/auth';
 
 // Web app URL for booking - can be configured via env
 const WEB_APP_URL = import.meta.env.VITE_WEB_APP_URL || 'https://digilist.no';

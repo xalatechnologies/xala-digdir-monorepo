@@ -3,7 +3,7 @@
  * Provides tenant-scoped monitoring overview for backoffice admins.
  * Shows health status, key metrics, and recent alerts.
  */
-import { useT } from '@xala/i18n';
+import { useT } from '@xalatechnologies/platform/i18n';
 import {
   Box,
   Heading,

@@ -26,7 +26,7 @@ import {
   useRunDesignSystemScanner,
   useRunWcagScanner,
 } from '@xalatechnologies/platform/sdk';
-import { useT } from '@xala/i18n';
+import { useT } from '@xalatechnologies/platform/i18n';
 
 // Mock metrics data - will be replaced with real API
 const MOCK_SYSTEM_STATUS = {

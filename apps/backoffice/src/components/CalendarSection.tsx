@@ -20,7 +20,7 @@ import {
   useAvailabilityMatrix,
   useCalendarRealtime,
 } from '@digilist/client-sdk/hooks';
-import { useT } from '@xala/i18n';
+import { useT } from '@xalatechnologies/platform/i18n';
 
 // =============================================================================
 // Types

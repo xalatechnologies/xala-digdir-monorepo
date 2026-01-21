@@ -5,16 +5,16 @@
 import { useEffect, useCallback, useRef } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { LoginPage as LoginPageComponent } from '@xalatechnologies/platform/ui';
-import { minsideAuthConfig } from '@xala/auth';
+import { minsideAuthConfig } from '@xalatechnologies/platform/auth';
 import {
   PlatformIcon,
   AutomationIcon,
   ShieldCheckIcon,
 } from '@xalatechnologies/platform/ui';
-import { useAuth } from '@xala/auth';
+import { useAuth } from '@xalatechnologies/platform/auth';
 import { useDemoLogin } from '../hooks/useDemoLogin';
 import { idportenService } from '@digilist/client-sdk';
-import { useT } from '@xala/i18n';
+import { useT } from '@xalatechnologies/platform/i18n';
 
 export interface FlowContextNavigationState {
   flowContext: {

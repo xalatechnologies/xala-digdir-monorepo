@@ -6,7 +6,7 @@
  */
 
 import { Heading, Paragraph, Card, Tabs, TabItem, Tag } from '@xalatechnologies/platform/ui';
-import { useT } from '@xala/i18n';
+import { useT } from '@xalatechnologies/platform/i18n';
 
 interface ServiceInfo {
   name: string;
@@ -185,7 +185,7 @@ function CreateOrgForm() {
             'All SDK errors conform to RFC 7807 Problem Details:'}
         </Paragraph>
         <pre>
-          <code>{`import { isProblemDetails, HttpError } from '@xala/sdk-core';
+          <code>{`import { isProblemDetails, HttpError } from '@xalatechnologies/platform/sdk';
 
 try {
   await organizationService.create(data);

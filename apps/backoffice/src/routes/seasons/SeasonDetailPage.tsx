@@ -39,7 +39,7 @@ import { FormSection } from '@xalatechnologies/platform/ui';
 import { SeasonVenueManagement } from '../../components/seasons/SeasonVenueManagement';
 import { SeasonApplicationManagement } from '../../components/seasons/SeasonApplicationManagement';
 import { SeasonAllocationManagement } from '../../components/seasons/SeasonAllocationManagement';
-import { useT } from '@xala/i18n';
+import { useT } from '@xalatechnologies/platform/i18n';
 
 const statusVariants: Record<SeasonStatus, 'neutral' | 'info' | 'warning' | 'success'> = {
   draft: 'neutral',

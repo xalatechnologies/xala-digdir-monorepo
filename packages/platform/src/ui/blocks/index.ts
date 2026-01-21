@@ -66,9 +66,9 @@ export type {
   LoginLayoutProps
 } from './LoginComponents';
 
-// Dashboard Components
+// Dashboard Components (StatCard exported as BlockStatCard to avoid conflict with composed/StatCard)
 export {
-  StatCard,
+  StatCard as BlockStatCard,
   ActivityItem,
   ActivityFeed,
   QuickActionCard,
@@ -76,7 +76,7 @@ export {
   mapBookingStatusToActivity,
 } from './DashboardComponents';
 export type {
-  StatCardProps,
+  StatCardProps as BlockStatCardProps,
   ActivityItemProps,
   ActivityStatus,
   ActivityFeedProps,

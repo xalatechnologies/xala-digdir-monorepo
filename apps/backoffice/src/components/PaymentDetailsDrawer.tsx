@@ -19,7 +19,7 @@ import {
   Heading,
 } from '@xalatechnologies/platform/ui';
 import { usePaymentHistory, formatCurrency, formatDate, type PaymentTransaction } from '@digilist/client-sdk';
-import { useT } from '@xala/i18n';
+import { useT } from '@xalatechnologies/platform/i18n';
 
 // =============================================================================
 // TYPES

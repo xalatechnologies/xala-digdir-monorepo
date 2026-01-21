@@ -11,7 +11,7 @@
 
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { Paragraph } from '@xalatechnologies/platform/ui';
-import { useT } from '@xala/i18n';
+import { useT } from '@xalatechnologies/platform/i18n';
 import type { TocItem } from '../../types';
 
 interface DocsRightTOCProps {

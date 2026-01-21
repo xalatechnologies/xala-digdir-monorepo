@@ -1,6 +1,9 @@
 /**
  * API Module Registry
  *
+ * Classifies all API modules into platform (domain-agnostic) and domain (Digilist-specific) categories.
+ * This registry guides the eventual split of the API into two separate services.
+ *
  * Centralized categorization of all API modules for:
  * - Clear ownership (platform vs domain)
  * - Discovery (find modules by category/tier)
@@ -8,8 +11,161 @@
  * - Future extraction into separate packages
  *
  * @since 2026-01-21
- * @version 1.0.0
+ * @version 2.0.0
  */
+
+// =============================================================================
+// SIMPLIFIED MODULE CLASSIFICATION (for quick reference)
+// =============================================================================
+
+/**
+ * Simplified module classification for quick reference.
+ * This is the primary reference for determining module ownership.
+ */
+export const MODULE_CLASSIFICATION = {
+  /**
+   * Platform modules - Domain-agnostic, will be extracted to platform monorepo
+   * These modules have NO Digilist-specific business logic.
+   */
+  platform: {
+    /** Core user/tenant/org management */
+    core: ['auth', 'authz', 'tenant', 'user', 'organizations'],
+    /** Infrastructure services */
+    infrastructure: ['health', 'websocket', 'storage', 'configuration', 'settings'],
+    /** Audit, GDPR, security */
+    compliance: ['audit', 'gdpr', 'security'],
+    /** SaaS billing and feature management */
+    saas: ['billing', 'entitlements', 'license', 'seat-limits', 'feature-flags', 'saas', 'policy', 'menu'],
+    /** Multi-channel notifications */
+    notifications: ['notifications', 'push-notifications', 'notification-system'],
+    /** Role-based access control */
+    rbac: ['capabilities', 'permission-assignment', 'case-handler-scope', 'access-grant'],
+    /** Third-party integrations */
+    integrations: ['integrations', 'webhooks'],
+    /** Internationalization */
+    i18n: ['translations'],
+    /** System monitoring */
+    monitoring: ['monitoring'],
+  },
+
+  /**
+   * Domain modules - Digilist-specific, stay in this repo
+   * These modules contain Digilist business logic and terminology.
+   */
+  domain: {
+    /** Rental object management */
+    rentalObjects: ['rental-objects', 'rental-object-details', 'amenities', 'addons'],
+    /** Booking and calendar */
+    booking: ['bookings', 'booking', 'calendar', 'availability', 'blocks'],
+    /** Seasonal allocation */
+    seasons: ['seasons', 'season-applications', 'seasonal-lease', 'allocations'],
+    /** Search and discovery */
+    discovery: ['search', 'favorites', 'reviews'],
+    /** Custody (domain-specific) */
+    custody: ['custody'],
+    /** Pricing rules */
+    pricing: ['pricing', 'discount-codes'],
+    /** Embeddable widgets */
+    widgets: ['widgets'],
+    /** Domain utilities */
+    domain: ['domain'],
+  },
+
+  /**
+   * Shared modules - Used by both platform and domain, need careful handling
+   * These modules may need to be split or have clear interfaces defined.
+   */
+  shared: [
+    'dashboard',
+    'reports',
+    'conversations',
+    'messages',
+    'public',
+    'help',
+    'share',
+    'backoffice',
+    'minside',
+    'user-groups',
+    'user-management',
+    'tenant-admin',
+    'profile',
+    'metadata',
+    'bulk',
+  ],
+} as const;
+
+// =============================================================================
+// QUICK LOOKUP HELPERS
+// =============================================================================
+
+/**
+ * Check if a module is a platform module
+ */
+export function isPlatformModule(moduleName: string): boolean {
+  const platformModules = Object.values(MODULE_CLASSIFICATION.platform).flat();
+  return platformModules.includes(moduleName);
+}
+
+/**
+ * Check if a module is a domain module
+ */
+export function isDomainModule(moduleName: string): boolean {
+  const domainModules = Object.values(MODULE_CLASSIFICATION.domain).flat();
+  return domainModules.includes(moduleName);
+}
+
+/**
+ * Check if a module is a shared module
+ */
+export function isSharedModule(moduleName: string): boolean {
+  return MODULE_CLASSIFICATION.shared.includes(moduleName as (typeof MODULE_CLASSIFICATION.shared)[number]);
+}
+
+/**
+ * Get the category of a module
+ */
+export function getModuleCategory(moduleName: string): 'platform' | 'domain' | 'shared' | 'unknown' {
+  if (isPlatformModule(moduleName)) return 'platform';
+  if (isDomainModule(moduleName)) return 'domain';
+  if (isSharedModule(moduleName)) return 'shared';
+  return 'unknown';
+}
+
+/**
+ * Get the subcategory of a platform or domain module
+ */
+export function getModuleSubcategory(moduleName: string): string | null {
+  // Check platform subcategories
+  for (const [subcategory, modules] of Object.entries(MODULE_CLASSIFICATION.platform)) {
+    if ((modules as readonly string[]).includes(moduleName)) {
+      return subcategory;
+    }
+  }
+  // Check domain subcategories
+  for (const [subcategory, modules] of Object.entries(MODULE_CLASSIFICATION.domain)) {
+    if ((modules as readonly string[]).includes(moduleName)) {
+      return subcategory;
+    }
+  }
+  return null;
+}
+
+// =============================================================================
+// ROUTE PREFIX MAPPING
+// =============================================================================
+
+/**
+ * Route prefix mapping for future API split.
+ * Platform and domain modules will eventually be served from different prefixes.
+ */
+export const ROUTE_PREFIXES = {
+  /** Platform modules will be at /api/platform/* */
+  platform: '/api/platform',
+  /** Domain modules will be at /api/domain/* */
+  domain: '/api/domain',
+  /** Shared modules keep current paths at /api/* */
+  shared: '/api',
+} as const;
 
 // =============================================================================
 // MODULE TIERS

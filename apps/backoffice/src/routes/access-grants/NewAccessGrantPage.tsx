@@ -25,7 +25,7 @@ import {
   useGrantAccess,
   type CreateAccessGrantDTO,
 } from '@digilist/client-sdk';
-import { useT } from '@xala/i18n';
+import { useT } from '@xalatechnologies/platform/i18n';
 import { FormSection, FormActions } from '@xalatechnologies/platform/ui';
 
 export function NewAccessGrantPage() {

@@ -4,7 +4,7 @@
  * Category-aware wizard with dynamic steps based on rental object category
  */
 
-import { useT } from '@xala/i18n';
+import { useT } from '@xalatechnologies/platform/i18n';
 import { Heading, Paragraph, Badge, Spinner } from '@xalatechnologies/platform/ui';
 import { useRentalObjectWizard } from '@digilist/api/hooks/useRentalObjectWizard';
 import { WizardFooter } from './WizardFooter';

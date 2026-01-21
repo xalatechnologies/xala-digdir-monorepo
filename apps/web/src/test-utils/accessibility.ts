@@ -8,7 +8,7 @@
 import { ReactElement } from 'react';
 import { render, RenderOptions } from '@testing-library/react';
 import { axe, toHaveNoViolations, JestAxeConfigureOptions } from 'jest-axe';
-import { useT } from '@xala/i18n';
+import { useT } from '@xalatechnologies/platform/i18n';
 
 // Extend Vitest expect with jest-axe matchers
 expect.extend(toHaveNoViolations);

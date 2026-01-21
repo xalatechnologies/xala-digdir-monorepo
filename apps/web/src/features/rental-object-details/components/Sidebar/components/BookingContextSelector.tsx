@@ -13,7 +13,7 @@
 
 import * as React from 'react';
 import { Paragraph, Spinner } from '@xalatechnologies/platform/ui';
-import { useT } from '@xala/i18n';
+import { useT } from '@xalatechnologies/platform/i18n';
 import { useMyOrgMemberships } from '@digilist/client-sdk/hooks';
 
 // =============================================================================

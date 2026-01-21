@@ -7,7 +7,7 @@
 
 import { useState, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useT } from '@xala/i18n';
+import { useT } from '@xalatechnologies/platform/i18n';
 import {
   DashboardHeader,
   SearchIcon,
@@ -17,9 +17,9 @@ import {
 } from '@xalatechnologies/platform/ui';
 import type { SearchResultItem, SearchResultGroup } from '@xalatechnologies/platform/ui';
 import { useNotificationUnreadCount } from '@digilist/client-sdk';
-import { useAuth } from '@xala/auth';
+import { useAuth } from '@xalatechnologies/platform/auth';
 import { useTheme } from '@xalatechnologies/platform/ui';
-import { useNotificationCenter } from '@xala/runtime';
+import { useNotificationCenter } from '@xalatechnologies/platform/runtime';
 import { AccountSwitcher } from '../AccountSwitcher';
 
 interface HeaderProps {

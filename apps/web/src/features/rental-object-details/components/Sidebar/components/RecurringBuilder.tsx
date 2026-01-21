@@ -12,7 +12,7 @@
 
 import * as React from 'react';
 import { Heading, Paragraph, Button, Badge, Select, Radio, Textfield } from '@xalatechnologies/platform/ui';
-import { useT } from '@xala/i18n';
+import { useT } from '@xalatechnologies/platform/i18n';
 import type { RecurringConstraintsDTO, RecurringFrequency, RecurringEndCondition } from '@digilist/client-sdk';
 
 // =============================================================================

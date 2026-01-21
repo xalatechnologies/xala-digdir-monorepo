@@ -16,12 +16,12 @@ import {
   CheckCircleIcon,
   ShieldIcon,
 } from '@xalatechnologies/platform/ui';
-import { useAuth } from '@xala/auth';
+import { useAuth } from '@xalatechnologies/platform/auth';
 import { useBackofficeRole, type EffectiveBackofficeRole } from '../../hooks/useBackofficeRole';
 import { useCapabilityContext } from '../../providers/CapabilityProvider';
 import type { Capability } from '../../lib/capabilities';
 import { usePendingGdprRequests, useAdminNavigation } from '@digilist/client-sdk/hooks';
-import { useT } from '@xala/i18n';
+import { useT } from '@xalatechnologies/platform/i18n';
 
 interface NavItem {
   name: string;

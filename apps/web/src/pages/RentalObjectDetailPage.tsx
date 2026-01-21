@@ -34,7 +34,7 @@ import {
   logAuditEvent,
 } from '../features/rental-object-details';
 import { useAuth } from '../hooks/useAuth';
-import { useT } from '@xala/i18n';
+import { useT } from '@xalatechnologies/platform/i18n';
 
 const MAPBOX_TOKEN = import.meta.env.VITE_MAPBOX_TOKEN;
 const TENANT_ID = import.meta.env.VITE_TENANT_ID;

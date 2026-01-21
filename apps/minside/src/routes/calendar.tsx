@@ -1,7 +1,7 @@
 import { useState, useMemo } from 'react';
 import { Card, Heading, Paragraph, Button, Spinner, ChevronLeftIcon, ChevronRightIcon, CalendarIcon, DashboardPageHeader } from '@xalatechnologies/platform/ui';
 import { useMyBookings, type Booking, formatWeekRange } from '@digilist/client-sdk';
-import { useT, useLocale } from '@xala/i18n';
+import { useT, useLocale } from '@xalatechnologies/platform/i18n';
 
 const hours = Array.from({ length: 14 }, (_, i) => i + 7); // 07:00 - 20:00
 

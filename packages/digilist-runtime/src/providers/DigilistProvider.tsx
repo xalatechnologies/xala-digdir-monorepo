@@ -3,7 +3,7 @@ import {
   RuntimeProvider,
   RuntimeServiceProvider,
   type RuntimeConfig,
-} from '@xala/runtime';
+} from '@xalatechnologies/platform/runtime';
 import { useOrganizations } from '@digilist/client-sdk/hooks';
 import { AccountContextProvider, type AccountContextProviderProps } from './AccountContextProvider';
 

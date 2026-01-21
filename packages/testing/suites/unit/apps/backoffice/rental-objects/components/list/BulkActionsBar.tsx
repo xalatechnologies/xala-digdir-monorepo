@@ -3,7 +3,7 @@
  * Action bar that appears when rental objects are selected
  */
 
-import { useT } from '@xala/i18n';
+import { useT } from '@xalatechnologies/platform/i18n';
 import { Button, Badge, Stack } from '@xalatechnologies/platform/ui';
 
 export interface BulkActionsBarProps {

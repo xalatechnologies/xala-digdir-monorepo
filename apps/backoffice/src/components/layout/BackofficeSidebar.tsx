@@ -34,9 +34,9 @@ import {
   InfoIcon,
   Spinner,
 } from '@xalatechnologies/platform/ui';
-import { useAuth } from '@xala/auth';
+import { useAuth } from '@xalatechnologies/platform/auth';
 import { useBackofficeMenu, usePendingGdprRequests } from '@digilist/client-sdk/hooks';
-import { useT } from '@xala/i18n';
+import { useT } from '@xalatechnologies/platform/i18n';
 import { useBackofficeRole } from '../../hooks/useBackofficeRole';
 import { Sidebar as LegacySidebar } from './Sidebar';
 

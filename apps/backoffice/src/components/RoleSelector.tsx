@@ -21,7 +21,7 @@ import {
   Checkbox,
 } from '@xalatechnologies/platform/ui';
 import { ShieldCheckIcon, ClipboardListIcon } from '@xalatechnologies/platform/ui';
-import { useT } from '@xala/i18n';
+import { useT } from '@xalatechnologies/platform/i18n';
 import type { EffectiveBackofficeRole } from '../lib/capabilities';
 import { useBackofficeRole } from '../hooks/useBackofficeRole';
 

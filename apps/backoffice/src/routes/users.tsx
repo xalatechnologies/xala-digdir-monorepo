@@ -32,7 +32,7 @@ import {
   type UserRole,
   type UserStatus,
 } from '@digilist/client-sdk';
-import { useT } from '@xala/i18n';
+import { useT } from '@xalatechnologies/platform/i18n';
 
 const roleLabels: Record<UserRole, string> = {
   super_admin: 'Superadmin',

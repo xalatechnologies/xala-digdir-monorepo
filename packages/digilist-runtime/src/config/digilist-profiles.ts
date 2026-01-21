@@ -10,12 +10,12 @@
  * import '@digilist/runtime';
  *
  * // Then use the generic API
- * import { getAppProfile } from '@xala/config';
+ * import { getAppProfile } from '@xalatechnologies/platform/config';
  * const profile = getAppProfile('backoffice');
  * ```
  */
 
-import type { AppProfile } from '@xala/config';
+import type { AppProfile } from '@xalatechnologies/platform/config';
 import type { DigilistAppType } from './types';
 
 // ============================================================================

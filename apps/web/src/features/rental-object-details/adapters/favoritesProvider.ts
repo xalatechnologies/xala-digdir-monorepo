@@ -138,7 +138,7 @@ export function setFavoritesProvider(provider: FavoritesProvider): void {
 // =============================================================================
 
 import { useState, useCallback } from 'react';
-import { useT } from '@xala/i18n';
+import { useT } from '@xalatechnologies/platform/i18n';
 
 export interface UseFavoritesResult {
   isFavorited: boolean;

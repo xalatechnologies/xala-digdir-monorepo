@@ -40,8 +40,8 @@ import {
   useUpdateConsents,
   type Address,
 } from '@digilist/client-sdk';
-import { useLocale, useT } from '@xala/i18n';
-import { useAuth } from '@xala/auth';
+import { useLocale, useT } from '@xalatechnologies/platform/i18n';
+import { useAuth } from '@xalatechnologies/platform/auth';
 
 export function SettingsPage() {
   const navigate = useNavigate();

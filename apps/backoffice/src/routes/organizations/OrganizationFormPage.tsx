@@ -21,7 +21,7 @@ import {
 } from '@digilist/client-sdk';
 import { OrganizationForm } from '../../components/organizations/OrganizationForm';
 import { OrganizationWizard, type OrganizationWizardData } from '../../components/organizations/OrganizationWizard';
-import { useT } from '@xala/i18n';
+import { useT } from '@xalatechnologies/platform/i18n';
 
 export function OrganizationFormPage() {
   const t = useT();

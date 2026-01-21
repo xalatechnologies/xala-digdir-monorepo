@@ -26,8 +26,8 @@ import {
   useConsents,
   useUpdateConsents,
 } from '@digilist/client-sdk';
-import { useAuth } from '@xala/auth';
-import { useT } from '@xala/i18n';
+import { useAuth } from '@xalatechnologies/platform/auth';
+import { useT } from '@xalatechnologies/platform/i18n';
 
 const MOBILE_BREAKPOINT = 768;
 

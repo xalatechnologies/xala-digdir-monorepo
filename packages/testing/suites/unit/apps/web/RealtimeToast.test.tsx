@@ -8,7 +8,7 @@ import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { screen, waitFor } from '@testing-library/react';
 import { RealtimeToast } from './RealtimeToast';
 import { testAccessibility, testScreenReaderAnnouncements } from '@digilist/api/test-utils/accessibility';
-import { useT } from '@xala/i18n';
+import { useT } from '@xalatechnologies/platform/i18n';
 
 // Mock the realtime providers
 vi.mock('../providers', () => ({

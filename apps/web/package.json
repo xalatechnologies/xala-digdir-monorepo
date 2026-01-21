@@ -1,5 +1,5 @@
 {
-  "name": "@xala/web",
+  "name": "@digilist/web",
   "private": true,
   "version": "0.0.0",
   "type": "module",
@@ -14,13 +14,9 @@
     "test:coverage": "vitest run --coverage"
   },
   "dependencies": {
-    "@xala/config": "workspace:*",
-    "@xala/runtime": "workspace:*",
     "@digilist/client-sdk": "workspace:*",
     "@tanstack/react-query": "^5.0.0",
-    "@xala/auth": "workspace:^",
     "@xalatechnologies/platform": "workspace:*",
-    "@xala/i18n": "workspace:*",
     "framer-motion": "^12.26.2",
     "mapbox-gl": "^3.17.0",
     "react": "^18.3.1",
@@ -36,7 +32,7 @@
     "@types/react-dom": "^18.3.0",
     "@vitejs/plugin-react": "^4.3.1",
     "@vitest/coverage-v8": "^1.6.0",
-    "@xala/eslint-config": "workspace:*",
+    "@xalatechnologies/governance": "workspace:*",
     "eslint": "^9.10.0",
     "jsdom": "^23.0.1",
     "typescript": "^5.6.3",

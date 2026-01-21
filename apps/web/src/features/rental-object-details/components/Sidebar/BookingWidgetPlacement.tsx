@@ -11,8 +11,8 @@ import { bookingService, auditService, authService, type CreateBookingDTO, useOr
 import type { BookingConfig } from '../../types';
 import { BookingDialog, type BookingFormData, type BookingSlot } from '../BookingDialog';
 import { CalendarSection } from '../CalendarSection';
-import { useAuth } from '@xala/auth';
-import { useT } from '@xala/i18n';
+import { useAuth } from '@xalatechnologies/platform/auth';
+import { useT } from '@xalatechnologies/platform/i18n';
 import type { CalendarSelection, CalendarCell } from '@xalatechnologies/platform/ui';
 
 import { BookingStepperHeader, type BookingStep } from './components/BookingStepperHeader';

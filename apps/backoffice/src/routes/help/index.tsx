@@ -7,8 +7,8 @@
 import * as React from 'react';
 import { Heading, Paragraph, Card, Badge } from '@xalatechnologies/platform/ui';
 import { Link } from 'react-router-dom';
-import { useAuth } from '@xala/auth';
-import { useT } from '@xala/i18n';
+import { useAuth } from '@xalatechnologies/platform/auth';
+import { useT } from '@xalatechnologies/platform/i18n';
 
 // =============================================================================
 // Types (for translation lookup)

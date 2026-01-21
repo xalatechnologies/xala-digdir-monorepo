@@ -16,7 +16,7 @@ import {
   Stack,
 } from '@xalatechnologies/platform/ui';
 import { useUsers } from '@xalatechnologies/platform/sdk';
-import { useT } from '@xala/i18n';
+import { useT } from '@xalatechnologies/platform/i18n';
 
 export function UsersPage() {
   const t = useT();

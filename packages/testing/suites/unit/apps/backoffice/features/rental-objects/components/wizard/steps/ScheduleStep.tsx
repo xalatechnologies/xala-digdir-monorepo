@@ -3,7 +3,7 @@
  * For configuring experience scheduling (experiences only)
  */
 
-import { useT } from '@xala/i18n';
+import { useT } from '@xalatechnologies/platform/i18n';
 import {
   Heading,
   Paragraph,

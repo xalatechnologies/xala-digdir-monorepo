@@ -3,7 +3,7 @@
  * First step in wizard for basic information with category-specific fields
  */
 
-import { useT } from '@xala/i18n';
+import { useT } from '@xalatechnologies/platform/i18n';
 import { Textfield, Textarea, NativeSelect, Heading, Paragraph, Alert, Card } from '@xalatechnologies/platform/ui';
 import type { UseRentalObjectWizardReturn } from '@xala/backoffice/hooks/useRentalObjectWizard';
 

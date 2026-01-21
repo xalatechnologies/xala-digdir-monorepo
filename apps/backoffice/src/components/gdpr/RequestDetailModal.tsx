@@ -25,7 +25,7 @@ import {
   formatDate,
   formatTime,
 } from '@digilist/client-sdk';
-import { useT } from '@xala/i18n';
+import { useT } from '@xalatechnologies/platform/i18n';
 
 // Helper to calculate days remaining until 30-day GDPR deadline
 function calculateDaysRemaining(requestedAt: string): number {
