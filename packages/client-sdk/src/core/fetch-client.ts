@@ -2,10 +2,15 @@
  * Fetch HTTP Client Implementation
  * Single Responsibility: HTTP communication using fetch API
  * Open/Closed: Extensible through configuration, closed for modification
+ *
+ * Supports dual API routing:
+ * - Platform API (auth, users, tenants, etc.) → platformApiUrl
+ * - Domain API (bookings, rental-objects, etc.) → baseUrl
  */
 
 import type { IHttpClient, RequestOptions, ApiClientConfig, RequestBody } from './http-client.interface';
 import { ApiError } from './http-client.interface';
+import { routeRequest, type ApiType } from './api-router';
 
 export class FetchHttpClient implements IHttpClient {
   private config: ApiClientConfig;
@@ -28,9 +33,18 @@ export class FetchHttpClient implements IHttpClient {
     return this.config;
   }
 
-  private buildUrl(path: string, params?: Record<string, string | number | boolean | undefined>): string {
-    const url = new URL(path, this.config.baseUrl);
-    
+  /**
+   * Build the full URL for a request, routing to the appropriate API
+   */
+  private buildUrl(path: string, params?: Record<string, string | number | boolean | undefined>): { url: string; apiType: ApiType } {
+    // Route to the appropriate API based on path
+    const { baseUrl, apiType } = routeRequest(path, {
+      baseUrl: this.config.baseUrl,
+      platformApiUrl: this.config.platformApiUrl,
+    });
+
+    const url = new URL(path, baseUrl);
+
     if (params) {
       Object.entries(params).forEach(([key, value]) => {
         if (value !== undefined) {
@@ -39,7 +53,7 @@ export class FetchHttpClient implements IHttpClient {
       });
     }
 
-    return url.toString();
+    return { url: url.toString(), apiType };
   }
 
   private buildHeaders(customHeaders?: Record<string, string>, isFormData = false): Record<string, string> {
@@ -76,7 +90,7 @@ export class FetchHttpClient implements IHttpClient {
     path: string,
     options?: RequestOptions & { body?: RequestBody }
   ): Promise<T> {
-    const url = this.buildUrl(path, options?.params);
+    const { url } = this.buildUrl(path, options?.params);
 
     // Detect if body is FormData to handle Content-Type correctly
     const isFormData = options?.body instanceof FormData;

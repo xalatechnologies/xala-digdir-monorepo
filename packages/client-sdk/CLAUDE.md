@@ -28,26 +28,38 @@ This file provides guidance to Claude Code when working with the Domain SDK.
 │  │  Services   │ │    Hooks     │ │ Realtime │ │
 │  │  (30+)      │ │   (50+)      │ │   WS     │ │
 │  └─────────────┘ └──────────────┘ └──────────┘ │
+│                      │                          │
+│           ┌──────────┴──────────┐               │
+│           │    API Router       │               │
+│           │ (Platform vs Domain)│               │
+│           └──────────┬──────────┘               │
 ├─────────────────────────────────────────────────┤
 │              @xala/contracts                     │
 │  Zod schemas, projections, TypeScript types     │
 ├─────────────────────────────────────────────────┤
 │              @xala/sdk-core                      │
 │  HTTP client, errors, retry, query keys         │
-├─────────────────────────────────────────────────┤
-│              @digilist/api                       │
-│  Fastify server, PostgreSQL, business logic     │
-└─────────────────────────────────────────────────┘
+├──────────────────────┬──────────────────────────┤
+│    Platform API      │      Domain API          │
+│    Port 4001         │      Port 4000           │
+│  - auth, authz       │  - rental-objects        │
+│  - users, tenants    │  - bookings, calendar    │
+│  - organizations     │  - seasons, reviews      │
+│  - audit, GDPR       │  - pricing, allocations  │
+│  - notifications     │  - conversations         │
+│  - SaaS, billing     │  - dashboard, reports    │
+└──────────────────────┴──────────────────────────┘
 ```
 
 ---
 
 ## Initialization
 
+### Single API Mode (Legacy)
 ```typescript
 import { initializeClient } from '@digilist/client-sdk';
 
-// In main.tsx or app entry
+// All requests go to a single API
 initializeClient({
   baseUrl: import.meta.env.VITE_API_URL || 'https://api.digilist.no',
   tenantId: 'oslo-kommune',
@@ -55,6 +67,66 @@ initializeClient({
     'Accept-Language': 'nb',
   },
 });
+```
+
+### Dual API Mode (Recommended)
+```typescript
+import { initializeClient } from '@digilist/client-sdk';
+
+// Requests are automatically routed to the correct API
+initializeClient({
+  baseUrl: import.meta.env.VITE_API_URL || 'https://api.digilist.no',          // Domain API
+  platformApiUrl: import.meta.env.VITE_PLATFORM_API_URL || 'https://platform.digilist.no', // Platform API
+  tenantId: 'oslo-kommune',
+  defaultHeaders: {
+    'Accept-Language': 'nb',
+  },
+});
+```
+
+### Local Development
+```typescript
+initializeClient({
+  baseUrl: 'http://localhost:4000',          // Domain API
+  platformApiUrl: 'http://localhost:4001',   // Platform API
+  tenantId: 'test-tenant',
+});
+```
+
+---
+
+## API Routing
+
+The SDK automatically routes requests to the correct API based on the endpoint path:
+
+### Platform API Routes (port 4001)
+- `/api/auth/*` - Authentication
+- `/api/users/*`, `/api/me` - User management
+- `/api/tenants/*`, `/api/tenant/*` - Tenant management
+- `/api/organizations/*` - Organization management
+- `/api/permissions/*`, `/api/roles/*` - RBAC
+- `/api/audit/*`, `/api/gdpr/*` - Compliance
+- `/api/notifications/*` - Notifications
+- `/api/billing/*`, `/api/saas/*` - SaaS management
+- `/api/integrations/*` - External integrations
+
+### Domain API Routes (port 4000)
+- `/api/rental-objects/*` - Rental objects
+- `/api/bookings/*` - Bookings
+- `/api/calendar/*`, `/api/availability/*` - Calendar
+- `/api/seasons/*` - Seasons
+- `/api/reviews/*`, `/api/favorites/*` - User engagement
+- `/api/pricing/*` - Pricing
+- `/api/dashboard/*`, `/api/reports/*` - Analytics
+
+### Manual Route Checking
+```typescript
+import { isPlatformPath, isDomainPath } from '@digilist/client-sdk';
+
+isPlatformPath('/api/auth/login');    // true
+isPlatformPath('/api/bookings');       // false
+isDomainPath('/api/rental-objects');   // true
+isDomainPath('/api/users/me');         // false
 ```
 
 ---

@@ -41,8 +41,11 @@ export interface IHttpClient {
  * API Client Configuration
  */
 export interface ApiClientConfig {
-  /** Base URL for the API */
+  /** Base URL for the Domain API (e.g., https://api.digilist.no or http://localhost:4000) */
   baseUrl: string;
+  /** Base URL for the Platform API (e.g., https://platform.digilist.no or http://localhost:4001)
+   *  If not provided, all requests go to baseUrl (single API setup) */
+  platformApiUrl?: string;
   /** Current tenant ID */
   tenantId?: string;
   /** License key for the tenant */

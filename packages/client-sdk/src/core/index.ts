@@ -64,6 +64,21 @@ export {
 } from '@xala/sdk-core/query';
 
 // =============================================================================
+// API Router (for Platform vs Domain API routing)
+// =============================================================================
+
+export {
+  type ApiType,
+  getApiTypeForPath,
+  getBaseUrlForApiType,
+  routeRequest,
+  isPlatformPath,
+  isDomainPath,
+  getPlatformPaths,
+  getDomainPaths,
+} from './api-router';
+
+// =============================================================================
 // Legacy Exports (for backward compatibility)
 // =============================================================================
 

@@ -1,26 +1,31 @@
 /**
  * @digilist/client-sdk
  * Enterprise-grade type-safe SDK for the Digilist Backoffice API
- * 
+ *
+ * Supports dual API routing:
+ * - Platform API (port 4001): auth, users, tenants, organizations, RBAC, audit, GDPR, notifications
+ * - Domain API (port 4000): bookings, rental-objects, calendar, seasons, pricing, etc.
+ *
  * @example
  * ```typescript
  * import { initializeClient, listingService, useListings, realtimeClient } from '@digilist/client-sdk';
- * 
- * // Initialize client
+ *
+ * // Initialize client with dual API support
  * initializeClient({
- *   baseUrl: 'https://api.digilist.no',
+ *   baseUrl: 'https://api.digilist.no',           // Domain API
+ *   platformApiUrl: 'https://platform.digilist.no', // Platform API (optional)
  *   tenantId: 'your-tenant-id',
  * });
- * 
+ *
  * // Use service directly
  * const listings = await listingService.getAll();
- * 
+ *
  * // Or use React Query hook
  * function MyComponent() {
  *   const { data, isLoading } = useListings();
  *   ...
  * }
- * 
+ *
  * // Real-time events via WebSocket
  * realtimeClient.connect({ url: 'wss://api.digilist.no/ws/audit' });
  * realtimeClient.onAudit((event) => console.log('Audit:', event));
@@ -40,7 +45,23 @@ export {
   createClient,
   resetClient,
   isUsingMockData,
+  // Dual API support (Platform vs Domain)
+  setPlatformApiUrl,
+  getPlatformApiUrl,
+  isDualApiMode,
+  getDomainApiUrl,
 } from './core/client-factory';
+
+// API Routing - Platform vs Domain routing
+export {
+  type ApiType,
+  getApiTypeForPath,
+  isPlatformPath,
+  isDomainPath,
+  routeRequest,
+  getPlatformPaths,
+  getDomainPaths,
+} from './core/api-router';
 
 export type {
   IHttpClient,

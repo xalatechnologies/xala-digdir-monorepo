@@ -111,3 +111,38 @@ export function isUsingMockData(): boolean {
   const url = clientConfig.baseUrl.toLowerCase();
   return url === 'mock' || url === '' || url.includes('localhost:mock');
 }
+
+/**
+ * Set the Platform API URL for dual API routing
+ * Platform API handles: auth, users, tenants, organizations, RBAC, audit, GDPR, notifications, etc.
+ * Domain API handles: bookings, rental-objects, calendar, seasons, etc.
+ */
+export function setPlatformApiUrl(platformApiUrl: string): void {
+  updateClientConfig({ platformApiUrl });
+}
+
+/**
+ * Get the current Platform API URL
+ * Returns undefined if not configured (single API mode)
+ */
+export function getPlatformApiUrl(): string | undefined {
+  return clientConfig?.platformApiUrl;
+}
+
+/**
+ * Check if dual API mode is enabled
+ * Returns true if platformApiUrl is configured and different from baseUrl
+ */
+export function isDualApiMode(): boolean {
+  if (!clientConfig?.platformApiUrl) {
+    return false;
+  }
+  return clientConfig.platformApiUrl !== clientConfig.baseUrl;
+}
+
+/**
+ * Get the Domain API URL (same as baseUrl)
+ */
+export function getDomainApiUrl(): string | undefined {
+  return clientConfig?.baseUrl;
+}
