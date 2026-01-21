@@ -1,5 +1,4 @@
 packages:
   - 'apps/*'
   - 'packages/*'
-  # Explicit app entries for CI/CD and documentation
-  # saas-admin - SaaS-level administration portal
+  - 'packages/platform/testing'

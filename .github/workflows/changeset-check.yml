@@ -1,0 +1,98 @@
+name: Changeset Check
+
+on:
+  pull_request:
+    branches: [main]
+    types: [opened, synchronize, reopened]
+
+env:
+  NODE_VERSION: '20'
+  PNPM_VERSION: '9'
+
+jobs:
+  # ============================================================================
+  # CHECK FOR CHANGESETS
+  # ============================================================================
+
+  check:
+    name: Changeset Required
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: ${{ env.PNPM_VERSION }}
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Check for changesets
+        id: changeset-check
+        run: |
+          # Get list of changed packages
+          CHANGED_PACKAGES=$(pnpm changeset status --since=origin/main 2>&1 || true)
+
+          # Check if there are any markdown files in .changeset (excluding README.md and config.json)
+          CHANGESET_FILES=$(find .changeset -name "*.md" ! -name "README.md" 2>/dev/null | wc -l)
+
+          echo "changeset_count=$CHANGESET_FILES" >> $GITHUB_OUTPUT
+
+          if [ "$CHANGESET_FILES" -gt "0" ]; then
+            echo "has_changeset=true" >> $GITHUB_OUTPUT
+          else
+            echo "has_changeset=false" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Check if changeset is needed
+        id: needs-changeset
+        run: |
+          # Check if any publishable package files were modified
+          PACKAGE_CHANGES=$(git diff --name-only origin/main...HEAD | grep -E '^packages/(platform|enterprise|governance|client-sdk|digilist-contracts|digilist-domain|digilist-ui|digilist-runtime)/src/' || true)
+
+          if [ -n "$PACKAGE_CHANGES" ]; then
+            echo "needs_changeset=true" >> $GITHUB_OUTPUT
+            echo "changed_files<<EOF" >> $GITHUB_OUTPUT
+            echo "$PACKAGE_CHANGES" >> $GITHUB_OUTPUT
+            echo "EOF" >> $GITHUB_OUTPUT
+          else
+            echo "needs_changeset=false" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Report status
+        run: |
+          echo "# Changeset Status" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+
+          if [ "${{ steps.changeset-check.outputs.has_changeset }}" == "true" ]; then
+            echo "✅ **Changeset found** - This PR includes a changeset" >> $GITHUB_STEP_SUMMARY
+          elif [ "${{ steps.needs-changeset.outputs.needs_changeset }}" == "true" ]; then
+            echo "⚠️ **Changeset recommended** - Package source files were modified" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "Modified package files:" >> $GITHUB_STEP_SUMMARY
+            echo '```' >> $GITHUB_STEP_SUMMARY
+            echo "${{ steps.needs-changeset.outputs.changed_files }}" >> $GITHUB_STEP_SUMMARY
+            echo '```' >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "To add a changeset, run:" >> $GITHUB_STEP_SUMMARY
+            echo '```bash' >> $GITHUB_STEP_SUMMARY
+            echo "pnpm changeset" >> $GITHUB_STEP_SUMMARY
+            echo '```' >> $GITHUB_STEP_SUMMARY
+          else
+            echo "ℹ️ **No changeset needed** - No publishable package files were modified" >> $GITHUB_STEP_SUMMARY
+          fi
+
+      - name: Warn if changeset needed but missing
+        if: steps.needs-changeset.outputs.needs_changeset == 'true' && steps.changeset-check.outputs.has_changeset == 'false'
+        run: |
+          echo "::warning::Package source files were modified but no changeset was added. Consider running 'pnpm changeset' to add one."

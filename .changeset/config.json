@@ -1,0 +1,37 @@
+{
+  "$schema": "https://unpkg.com/@changesets/config@3.0.0/schema.json",
+  "changelog": [
+    "@changesets/changelog-github",
+    { "repo": "xalatechnologies/xala-digdir-monorepo" }
+  ],
+  "commit": false,
+  "fixed": [
+    ["@xalatechnologies/platform", "@xalatechnologies/enterprise", "@xalatechnologies/governance"],
+    ["@digilist/client-sdk", "@digilist/contracts", "@digilist/domain", "@digilist/ui", "@digilist/runtime", "@digilist/database-schema"]
+  ],
+  "access": "public",
+  "baseBranch": "main",
+  "updateInternalDependencies": "patch",
+  "ignore": [
+    "@digilist/testing-e2e",
+    "@digilist/testing",
+    "@digilist/api",
+    "@xalatechnologies/platform-api",
+    "@digilist/web",
+    "@digilist/minside",
+    "@digilist/backoffice",
+    "@xalatechnologies/saas-admin",
+    "@xalatechnologies/monitoring-global",
+    "@xalatechnologies/docs-global",
+    "@digilist/monitoring",
+    "@digilist/docs-learning"
+  ],
+  "privatePackages": {
+    "version": true,
+    "tag": false
+  },
+  "snapshot": {
+    "useCalculatedVersion": true,
+    "prereleaseTemplate": "{tag}-{datetime}"
+  }
+}
