@@ -108,8 +108,8 @@ Applications should be thin wrappers. All UI logic lives in the DS:
 // App code - thin wrapper
 import { RentalObjectGrid, AppShell } from '@xala/ds';
 
-function ListingsPage() {
-  const { data } = useListings();
+function ResourcesPage() {
+  const { data } = useResources();
   return (
     <AppShell>
       <RentalObjectGrid items={data} />
@@ -123,11 +123,11 @@ function ListingsPage() {
 Components expect data from `@digilist/client-sdk`:
 
 ```tsx
-import { useListings } from '@digilist/client-sdk/hooks';
+import { useResources } from '@digilist/client-sdk/hooks';
 import { RentalObjectGrid } from '@xala/ds';
 
 function Page() {
-  const { data, isLoading } = useListings();
+  const { data, isLoading } = useResources();
   if (isLoading) return <Spinner />;
   return <RentalObjectGrid items={data} />;
 }

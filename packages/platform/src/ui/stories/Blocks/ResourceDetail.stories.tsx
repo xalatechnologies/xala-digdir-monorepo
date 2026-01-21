@@ -14,11 +14,11 @@ import { ContactInfoCard } from '../../src/blocks/ContactInfoCard';
 import { LocationCard } from '../../src/blocks/LocationCard';
 import { OpeningHoursCard } from '../../src/blocks/OpeningHoursCard';
 import { CapacityCard } from '../../src/blocks/CapacityCard';
-import { FacilityChips } from '../../src/blocks/FacilityChips';
-import type { GalleryImage, Facility } from '../../src/types';
+import { AmenityChips } from '../../src/blocks/AmenityChips';
+import type { GalleryImage, Amenity } from '../../src/types';
 
 /**
- * Listing detail components for rental object detail pages.
+ * Resource detail components for rental object detail pages.
  *
  * ## Components
  * - **ImageGallery**: Hero image with vertical thumbnail sidebar
@@ -27,7 +27,7 @@ import type { GalleryImage, Facility } from '../../src/types';
  * - **LocationCard**: Location with map preview
  * - **OpeningHoursCard**: Opening hours display
  * - **CapacityCard**: Capacity and accessibility info
- * - **FacilityChips**: Facility/amenity chips
+ * - **AmenityChips**: Amenity chips
  *
  * ## Features
  * - Image navigation
@@ -36,7 +36,7 @@ import type { GalleryImage, Facility } from '../../src/types';
  * - Accessibility support
  */
 const meta: Meta<typeof ImageGallery> = {
-  title: 'Blocks/ListingDetail',
+  title: 'Blocks/ResourceDetail',
   component: ImageGallery,
   parameters: {
     layout: 'padded',
@@ -90,7 +90,7 @@ const sampleImages: GalleryImage[] = [
   },
 ];
 
-const sampleFacilities: Facility[] = [
+const sampleAmenities: Amenity[] = [
   { id: '1', label: 'Garderobe', icon: '🚿' },
   { id: '2', label: 'Dusj', icon: '🚿' },
   { id: '3', label: 'WiFi', icon: '📶' },
@@ -329,27 +329,27 @@ export const CapacitySimple: Story = {
 };
 
 // =============================================================================
-// Facility Chips Stories
+// Amenity Chips Stories
 // =============================================================================
 
 /**
- * Facility chips display
+ * Amenity chips display
  */
-export const Facilities: Story = {
+export const Amenities: Story = {
   render: () => (
-    <FacilityChips
-      facilities={sampleFacilities}
+    <AmenityChips
+      amenities={sampleAmenities}
     />
   ),
 };
 
 /**
- * Facility chips with max display
+ * Amenity chips with max display
  */
-export const FacilitiesLimited: Story = {
+export const AmenitiesLimited: Story = {
   render: () => (
-    <FacilityChips
-      facilities={sampleFacilities}
+    <AmenityChips
+      amenities={sampleAmenities}
       maxVisible={4}
     />
   ),
@@ -360,7 +360,7 @@ export const FacilitiesLimited: Story = {
 // =============================================================================
 
 /**
- * Complete listing detail sidebar
+ * Complete resource detail sidebar
  */
 export const CompleteDetailSidebar: Story = {
   render: () => (
@@ -385,12 +385,12 @@ export const CompleteDetailSidebar: Story = {
         maxCapacity={500}
       />
 
-      {/* Facilities */}
+      {/* Amenities */}
       <Card style={{ padding: 'var(--ds-spacing-4)' }}>
         <Heading level={4} data-size="xs" style={{ margin: '0 0 var(--ds-spacing-3) 0' }}>
           Fasiliteter
         </Heading>
-        <FacilityChips facilities={sampleFacilities} maxVisible={6} />
+        <AmenityChips amenities={sampleAmenities} maxVisible={6} />
       </Card>
 
       {/* Location */}
@@ -472,12 +472,12 @@ export const CompleteDetailPage: Story = {
           </Paragraph>
         </div>
 
-        {/* Facilities Section */}
+        {/* Amenities Section */}
         <div style={{ marginTop: 'var(--ds-spacing-6)' }}>
           <Heading level={2} data-size="sm" style={{ margin: '0 0 var(--ds-spacing-3) 0' }}>
             Fasiliteter
           </Heading>
-          <FacilityChips facilities={sampleFacilities} />
+          <AmenityChips amenities={sampleAmenities} />
         </div>
       </div>
 

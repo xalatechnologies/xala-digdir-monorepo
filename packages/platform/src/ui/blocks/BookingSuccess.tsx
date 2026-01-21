@@ -15,14 +15,14 @@ export interface BookingSuccessProps {
   bookingReference?: string;
   /** Booking details */
   bookingDetails: BookingDetails;
-  /** Listing name */
-  listingName: string;
+  /** Resource name */
+  resourceName: string;
   /** Contact email for the venue */
   venueEmail?: string;
   /** Contact phone for the venue */
   venuePhone?: string;
-  /** Callback to go back to listing */
-  onBackToListing?: () => void;
+  /** Callback to go back to resource detail */
+  onBackToResource?: () => void;
   /** Callback to make another booking */
   onNewBooking?: () => void;
   /** Custom class name */
@@ -35,10 +35,10 @@ export interface BookingSuccessProps {
 export function BookingSuccess({
   bookingReference,
   bookingDetails,
-  listingName,
+  resourceName,
   venueEmail,
   venuePhone,
-  onBackToListing,
+  onBackToResource,
   onNewBooking,
   className,
 }: BookingSuccessProps): React.ReactElement {
@@ -81,7 +81,7 @@ export function BookingSuccess({
           marginRight: 'auto',
         }}
       >
-        Din forespørsel om booking av <strong>{listingName}</strong> er mottatt.
+        Din forespørsel om booking av <strong>{resourceName}</strong> er mottatt.
       </Paragraph>
 
       {/* Reference Number */}
@@ -230,12 +230,12 @@ export function BookingSuccess({
             Ny booking
           </Button>
         )}
-        {onBackToListing && (
+        {onBackToResource && (
           <Button
             type="button"
             variant="primary"
             data-color="accent"
-            onClick={onBackToListing}
+            onClick={onBackToResource}
           >
             Tilbake til lokalet
           </Button>

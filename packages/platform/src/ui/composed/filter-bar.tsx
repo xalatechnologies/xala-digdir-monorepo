@@ -1,28 +1,28 @@
 /**
  * Filter Bar Component
- * 
+ *
  * Horizontal filter bar following DIGILIST patterns.
- * Supports primary listing type filter (top-level) and secondary filters.
+ * Supports primary resource type filter (top-level) and secondary filters.
  */
 
 import React, { forwardRef } from 'react';
 import { Select, Button } from '@digdir/designsystemet-react';
 import { Grid, Stack } from '../primitives';
 import { GridIcon, ListIcon, MapIcon } from '../primitives/icons';
-import type { FilterConfig, ListingType } from '../types/filters';
+import type { FilterConfig, ResourceType } from '../types/filters';
 
 export interface FilterBarProps extends React.HTMLAttributes<HTMLDivElement> {
   /**
-   * Primary listing type filter (top-level)
+   * Primary resource type filter (top-level)
    * This is the main filter that appears prominently at the top
    */
   primaryFilter?: {
-    /** Current selected listing type */
-    value: ListingType | 'ALL';
-    /** Available listing type options */
-    options: Array<{ id: ListingType | 'ALL'; label: string; count?: number }>;
+    /** Current selected resource type */
+    value: ResourceType | 'ALL';
+    /** Available resource type options */
+    options: Array<{ id: ResourceType | 'ALL'; label: string; count?: number }>;
     /** Change handler */
-    onChange: (value: ListingType | 'ALL') => void;
+    onChange: (value: ResourceType | 'ALL') => void;
     /** Label for the filter */
     label?: string;
   };
@@ -94,7 +94,7 @@ export const FilterBar = forwardRef<HTMLDivElement, FilterBarProps>(
         {...props}
       >
         <Stack spacing={spacingValue}>
-          {/* Primary Filter - Listing Type (Top Level) */}
+          {/* Primary Filter - Resource Type (Top Level) */}
           {primaryFilter && (
             <div>
               {primaryFilter.label && (
@@ -128,7 +128,7 @@ export const FilterBar = forwardRef<HTMLDivElement, FilterBarProps>(
               ) : (
                 <Select
                   value={primaryFilter.value}
-                  onChange={(e) => primaryFilter.onChange(e.target.value as ListingType | 'ALL')}
+                  onChange={(e) => primaryFilter.onChange(e.target.value as ResourceType | 'ALL')}
                   style={{ width: '100%', maxWidth: '300px' }}
                 >
                   {primaryFilter.options.map((option) => (

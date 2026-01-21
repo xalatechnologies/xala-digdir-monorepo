@@ -15,7 +15,7 @@ export type { ResultsSkeletonProps } from './ResultsSkeleton';
 export { ResultsEmptyState } from './ResultsEmptyState';
 export type { ResultsEmptyStateProps } from './ResultsEmptyState';
 
-// Listing Detail Components (platform-neutral)
+// Resource Detail Components (platform-neutral)
 export { ImageGallery } from './ImageGallery';
 export type { ImageGalleryProps } from './ImageGallery';
 
@@ -275,12 +275,20 @@ export type {
 
 // Activity Blocks
 
+// Amenity Chips
+export { AmenityChips } from './AmenityChips';
+export type {
+  Amenity,
+  AmenityChipsProps,
+  AmenityChipsLabels,
+} from './AmenityChips';
+
 // =============================================================================
 // NOTE: Domain-specific components are available in @digilist/ui:
 // - RentalObject* (Card, Grid, ListItem, Toolbar, Map, TableView, DetailHeader, Tabs)
 // - Booking* (FormModal, Confirmation, Success, PriceSummaryCard)
 // - Season* (SeasonCard, VenueCard)
-// - Amenity/Facility chips and calendars
+// - Amenity chips and calendars
 // 
 // The platform/ui package provides the foundational design system.
 // @digilist/ui builds on top of it for domain-specific components.

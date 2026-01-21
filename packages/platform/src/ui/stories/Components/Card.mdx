@@ -81,20 +81,20 @@ Use Card for:
 ```tsx
 import { Card, Heading, Paragraph, Button } from '@xala/ds';
 
-function ListingCard({ listing }) {
+function ResourceCard({ resource }) {
   return (
     <Card>
       <Heading level={3} data-size="sm">
-        {listing.title}
+        {resource.title}
       </Heading>
       <Paragraph>
-        {listing.description}
+        {resource.description}
       </Paragraph>
       <div style={{ display: 'flex', gap: 'var(--ds-spacing-2)' }}>
-        <Button variant="secondary" onClick={() => handleDetails(listing.id)}>
+        <Button variant="secondary" onClick={() => handleDetails(resource.id)}>
           Details
         </Button>
-        <Button variant="primary" onClick={() => handleBook(listing.id)}>
+        <Button variant="primary" onClick={() => handleBook(resource.id)}>
           Book Now
         </Button>
       </div>
@@ -105,5 +105,5 @@ function ListingCard({ listing }) {
 
 ## Related Components
 
-- **RentalObjectCard** - Business-specific card for listings
+- **RentalObjectCard** - Business-specific card for rental objects
 - **BookingCard** - Card for booking information

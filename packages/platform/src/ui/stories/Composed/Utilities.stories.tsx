@@ -153,7 +153,7 @@ const sampleCommands: CommandItem[] = [
     description: 'Finn tilgjengelige anlegg',
     shortcut: ['⌘', 'K'],
     group: 'actions',
-    onSelect: () => console.log('Search facilities'),
+    onSelect: () => console.log('Search resources'),
   },
   {
     id: 'profile',
@@ -766,7 +766,7 @@ export const DrawerLeftFilters: DrawerStory = {
               <Checkbox aria-label="Over 1000 kr" value="high">Over 1000 kr</Checkbox>
             </div>
           </DrawerSection>
-          <DrawerSection title="Fasiliteter" collapsible defaultCollapsed>
+          <DrawerSection title="Amenities" collapsible defaultCollapsed>
             <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--ds-spacing-2)' }}>
               <Checkbox aria-label="WiFi" value="wifi">WiFi</Checkbox>
               <Checkbox aria-label="Parkering" value="parking">Parkering</Checkbox>

@@ -11,7 +11,7 @@ import {
   TimestampsSchema,
   PaginationSchema,
   SortOrderSchema,
-} from '@xala/contracts/schemas';
+} from '@xalatechnologies/platform/contracts';
 
 // =============================================================================
 // Enums

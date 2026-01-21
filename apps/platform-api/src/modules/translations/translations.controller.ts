@@ -4,7 +4,7 @@
  */
 import { Controller, Get } from '../../core/decorators';
 import { container } from '../../core/container';
-import { translations } from '@xalatechnologies/database-schema';
+import { translations } from '@xalatechnologies/platform-schema';
 import { eq, and, isNull, or } from 'drizzle-orm';
 import type { FastifyRequest, FastifyReply } from 'fastify';
 

@@ -147,7 +147,7 @@ export const FormModalDefault: Story = {
           open={open}
           onClose={() => setOpen(false)}
           selectedSlots={sampleTimeSlots}
-          listingName="Møterom 101 - Rådhuset"
+          resourceName="Møterom 101 - Rådhuset"
           basePrice={450}
           currency="NOK"
           maxCapacity={20}
@@ -179,7 +179,7 @@ export const FormModalWithServices: Story = {
           selectedSlots={sampleTimeSlots}
           selectedServices={['av-equipment', 'catering']}
           availableServices={sampleServices}
-          listingName="Konferansesal Fjord - Kulturhuset"
+          resourceName="Konferansesal Fjord - Kulturhuset"
           basePrice={1200}
           currency="NOK"
           maxCapacity={50}
@@ -209,7 +209,7 @@ export const FormModalFreeBooking: Story = {
           open={open}
           onClose={() => setOpen(false)}
           selectedSlots={sampleTimeSlots.slice(0, 1)}
-          listingName="Frivillighetssentralen - Rom A"
+          resourceName="Frivillighetssentralen - Rom A"
           maxCapacity={10}
           onConfirm={(details) => {
             console.log('Free booking:', details);
@@ -237,7 +237,7 @@ export const ConfirmationDefault: Story = {
         <BookingConfirmation
           bookingDetails={sampleBookingDetails}
           selectedSlots={sampleTimeSlots}
-          listingName="Møterom 101 - Rådhuset"
+          resourceName="Møterom 101 - Rådhuset"
           basePrice={450}
           currency="NOK"
           isSubmitting={isSubmitting}
@@ -263,7 +263,7 @@ export const ConfirmationWithServices: Story = {
         selectedSlots={sampleTimeSlots}
         selectedServices={['av-equipment', 'catering']}
         availableServices={sampleServices}
-        listingName="Konferansesal Fjord"
+        resourceName="Konferansesal Fjord"
         basePrice={1200}
         currency="NOK"
         onBack={() => console.log('Go back')}
@@ -282,7 +282,7 @@ export const ConfirmationSubmitting: Story = {
       <BookingConfirmation
         bookingDetails={sampleBookingDetails}
         selectedSlots={sampleTimeSlots}
-        listingName="Møterom 101"
+        resourceName="Møterom 101"
         basePrice={450}
         isSubmitting={true}
         onBack={() => {}}
@@ -306,10 +306,10 @@ export const SuccessDefault: Story = {
         <BookingSuccess
           bookingReference="BK-2026-001234"
           bookingDetails={sampleBookingDetails}
-          listingName="Møterom 101 - Rådhuset"
+          resourceName="Møterom 101 - Rådhuset"
           venueEmail="booking@kommune.no"
           venuePhone="+47 22 33 44 55"
-          onBackToListing={() => console.log('Back to listing')}
+          onBackToResource={() => console.log('Back to resource')}
           onNewBooking={() => console.log('New booking')}
         />
       </Card>
@@ -326,9 +326,9 @@ export const SuccessNoReference: Story = {
       <Card>
         <BookingSuccess
           bookingDetails={sampleBookingDetails}
-          listingName="Frivillighetssentralen"
+          resourceName="Frivillighetssentralen"
           venueEmail="info@frivillig.no"
-          onBackToListing={() => console.log('Back')}
+          onBackToResource={() => console.log('Back')}
         />
       </Card>
     </div>
@@ -345,8 +345,8 @@ export const SuccessMinimal: Story = {
         <BookingSuccess
           bookingReference="REF-789"
           bookingDetails={sampleBookingDetails}
-          listingName="Utleielokale"
-          onBackToListing={() => console.log('Back')}
+          resourceName="Utleielokale"
+          onBackToResource={() => console.log('Back')}
         />
       </Card>
     </div>
@@ -469,7 +469,7 @@ export const CompleteBookingFlow: Story = {
               open={formOpen}
               onClose={() => setFormOpen(false)}
               selectedSlots={sampleTimeSlots}
-              listingName="Møterom 101 - Rådhuset"
+              resourceName="Møterom 101 - Rådhuset"
               basePrice={450}
               maxCapacity={20}
               onConfirm={handleFormConfirm}
@@ -481,7 +481,7 @@ export const CompleteBookingFlow: Story = {
           <BookingConfirmation
             bookingDetails={details}
             selectedSlots={sampleTimeSlots}
-            listingName="Møterom 101 - Rådhuset"
+            resourceName="Møterom 101 - Rådhuset"
             basePrice={450}
             isSubmitting={isSubmitting}
             onBack={() => setStep('form')}
@@ -494,10 +494,10 @@ export const CompleteBookingFlow: Story = {
             <BookingSuccess
               bookingReference="BK-2026-DEMO"
               bookingDetails={details}
-              listingName="Møterom 101 - Rådhuset"
+              resourceName="Møterom 101 - Rådhuset"
               venueEmail="booking@kommune.no"
               venuePhone="+47 22 33 44 55"
-              onBackToListing={resetFlow}
+              onBackToResource={resetFlow}
               onNewBooking={resetFlow}
             />
           </Card>

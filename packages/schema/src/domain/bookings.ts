@@ -12,7 +12,7 @@ import {
   index,
   integer,
 } from 'drizzle-orm/pg-core';
-import { domainSchema, tenants, users, organizations } from '@xalatechnologies/database-schema';
+import { domainSchema, tenants, users, organizations } from '@xalatechnologies/platform-schema';
 import { rentalObjects } from './rental-objects';
 
 export const bookings = domainSchema.table('bookings', {

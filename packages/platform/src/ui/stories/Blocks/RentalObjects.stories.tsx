@@ -15,7 +15,7 @@ import type { RentalObjectCardProps } from '../../src/blocks/RentalObjectCard';
 import type { RentalObjectListItemProps } from '../../src/blocks/RentalObjectListItem';
 
 /**
- * RentalObject components for displaying rental objects (listings/venues).
+ * RentalObject components for displaying rental objects.
  *
  * ## Components
  * - **RentalObjectCard**: Card view for grid layouts
@@ -23,11 +23,11 @@ import type { RentalObjectListItemProps } from '../../src/blocks/RentalObjectLis
  * - **RentalObjectListItem**: Horizontal list view with image and map
  *
  * ## Features
- * - Multiple listing types (SPACE, RESOURCE, EVENT, SERVICE, VEHICLE)
+ * - Multiple resource types (SPACE, RESOURCE, EVENT, SERVICE, VEHICLE)
  * - Favorite and share actions
  * - Location map integration
  * - Price display
- * - Facility chips
+ * - Amenity chips
  * - Capacity indicator
  *
  * ## Accessibility
@@ -49,7 +49,7 @@ Rental object display components for Norwegian municipal booking systems.
 - **Grid**: 3-column responsive grid with cards
 - **List**: Horizontal items with image, content, and map
 
-## Listing Types
+## Resource Types
 - SPACE: Meeting rooms, sports halls, venues
 - RESOURCE: Equipment, tools
 - EVENT: Concerts, workshops
@@ -69,16 +69,16 @@ type Story = StoryObj<typeof RentalObjectGrid>;
 // Sample Data
 // =============================================================================
 
-const sampleListings: (RentalObjectCardProps & { id: string })[] = [
+const sampleResources: (RentalObjectCardProps & { id: string })[] = [
   {
     id: '1',
     name: 'Idrettshall Sentrum',
     type: 'Idrettshall',
-    listingType: 'SPACE',
+    resourceType: 'SPACE',
     location: 'Oslo Sentrum',
     description: 'Moderne idrettshall med plass til 500 tilskuere. Perfekt for håndball, basketball og innendørs fotball.',
     image: 'https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=800&q=80',
-    facilities: ['Garderobe', 'Dusj', 'Parkering', 'WiFi'],
+    amenities: ['Garderobe', 'Dusj', 'Parkering', 'WiFi'],
     capacity: 500,
     price: 1500,
     priceUnit: 'time',
@@ -88,11 +88,11 @@ const sampleListings: (RentalObjectCardProps & { id: string })[] = [
     id: '2',
     name: 'Møterom Fjorden',
     type: 'Møterom',
-    listingType: 'SPACE',
+    resourceType: 'SPACE',
     location: 'Bergen Sentrum',
     description: 'Elegant møterom med utsikt over Vågen. Utstyrt med moderne AV-utstyr og videokonferanse.',
     image: 'https://images.unsplash.com/photo-1497366216548-37526070297c?w=800&q=80',
-    facilities: ['Projektor', 'Whiteboard', 'Kaffe', 'WiFi'],
+    amenities: ['Projektor', 'Whiteboard', 'Kaffe', 'WiFi'],
     capacity: 20,
     price: 800,
     priceUnit: 'time',
@@ -102,11 +102,11 @@ const sampleListings: (RentalObjectCardProps & { id: string })[] = [
     id: '3',
     name: 'Kulturhus Aurora',
     type: 'Kulturhus',
-    listingType: 'EVENT',
+    resourceType: 'EVENT',
     location: 'Tromsø',
     description: 'Kulturhus med scene og sal for 300 personer. Ideelt for konserter, teater og konferanser.',
     image: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=800&q=80',
-    facilities: ['Scene', 'Lys', 'Lyd', 'Garderobe', 'Bar'],
+    amenities: ['Scene', 'Lys', 'Lyd', 'Garderobe', 'Bar'],
     capacity: 300,
     price: 5000,
     priceUnit: 'dag',
@@ -116,11 +116,11 @@ const sampleListings: (RentalObjectCardProps & { id: string })[] = [
     id: '4',
     name: 'Svømmehall Vest',
     type: 'Svømmehall',
-    listingType: 'SPACE',
+    resourceType: 'SPACE',
     location: 'Stavanger',
     description: '50-meters olympisk basseng med stupetårn. Åpent for klubber og private arrangementer.',
     image: 'https://images.unsplash.com/photo-1519315901367-f34ff9154487?w=800&q=80',
-    facilities: ['Garderobe', 'Sauna', 'Kafeteria', 'Parkering'],
+    amenities: ['Garderobe', 'Sauna', 'Kafeteria', 'Parkering'],
     capacity: 200,
     price: 2500,
     priceUnit: 'time',
@@ -130,11 +130,11 @@ const sampleListings: (RentalObjectCardProps & { id: string })[] = [
     id: '5',
     name: 'Motorsykkel Honda CBR',
     type: 'Motorsykkel',
-    listingType: 'VEHICLE',
+    resourceType: 'VEHICLE',
     location: 'Trondheim',
     description: 'Honda CBR 600RR sportssykkel for daglig leie. Hjelm og sikkerhetsutstyr inkludert.',
     image: 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=800&q=80',
-    facilities: ['Hjelm', 'Hansker', 'GPS'],
+    amenities: ['Hjelm', 'Hansker', 'GPS'],
     capacity: 1,
     price: 1200,
     priceUnit: 'dag',
@@ -144,11 +144,11 @@ const sampleListings: (RentalObjectCardProps & { id: string })[] = [
     id: '6',
     name: 'Profesjonelt kamerautstyr',
     type: 'Utstyr',
-    listingType: 'RESOURCE',
+    resourceType: 'RESOURCE',
     location: 'Kristiansand',
     description: 'Canon EOS R5 med objektiver og belysningssett for profesjonell fotografering.',
     image: 'https://images.unsplash.com/photo-1516035069371-29a1b244cc32?w=800&q=80',
-    facilities: ['Kamera', 'Objektiver', 'Stativ', 'Belysning'],
+    amenities: ['Kamera', 'Objektiver', 'Stativ', 'Belysning'],
     capacity: 1,
     price: 600,
     priceUnit: 'dag',
@@ -175,14 +175,14 @@ export const GridDefault: Story = {
 
     return (
       <RentalObjectGrid>
-        {sampleListings.map((listing) => (
+        {sampleResources.map((resource) => (
           <RentalObjectCard
-            key={listing.id}
-            {...listing}
-            isFavorited={favorites.includes(listing.id)}
-            onFavorite={() => toggleFavorite(listing.id)}
-            onShare={() => console.log('Share:', listing.id)}
-            onClick={() => console.log('Click:', listing.id)}
+            key={resource.id}
+            {...resource}
+            isFavorited={favorites.includes(resource.id)}
+            onFavorite={() => toggleFavorite(resource.id)}
+            onShare={() => console.log('Share:', resource.id)}
+            onClick={() => console.log('Click:', resource.id)}
           />
         ))}
       </RentalObjectGrid>
@@ -196,11 +196,11 @@ export const GridDefault: Story = {
 export const GridTwoColumns: Story = {
   render: () => (
     <RentalObjectGrid maxColumns={2}>
-      {sampleListings.slice(0, 4).map((listing) => (
+      {sampleResources.slice(0, 4).map((resource) => (
         <RentalObjectCard
-          key={listing.id}
-          {...listing}
-          onClick={() => console.log('Click:', listing.id)}
+          key={resource.id}
+          {...resource}
+          onClick={() => console.log('Click:', resource.id)}
         />
       ))}
     </RentalObjectGrid>
@@ -213,11 +213,11 @@ export const GridTwoColumns: Story = {
 export const GridCustomGap: Story = {
   render: () => (
     <RentalObjectGrid gap={48}>
-      {sampleListings.slice(0, 3).map((listing) => (
+      {sampleResources.slice(0, 3).map((resource) => (
         <RentalObjectCard
-          key={listing.id}
-          {...listing}
-          onClick={() => console.log('Click:', listing.id)}
+          key={resource.id}
+          {...resource}
+          onClick={() => console.log('Click:', resource.id)}
         />
       ))}
     </RentalObjectGrid>
@@ -243,25 +243,25 @@ export const ListView: Story = {
 
     return (
       <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--ds-spacing-4)' }}>
-        {sampleListings.slice(0, 4).map((listing) => (
+        {sampleResources.slice(0, 4).map((resource) => (
           <RentalObjectListItem
-            key={listing.id}
-            id={listing.id}
-            name={listing.name}
-            type={listing.type}
-            listingType={listing.listingType}
-            location={listing.location}
-            description={listing.description}
-            image={listing.image}
-            facilities={listing.facilities}
-            capacity={listing.capacity}
-            price={listing.price}
-            priceUnit={listing.priceUnit}
-            currency={listing.currency}
-            isFavorited={favorites.includes(listing.id)}
-            onFavorite={() => toggleFavorite(listing.id)}
-            onShare={() => console.log('Share:', listing.id)}
-            onClick={() => console.log('Click:', listing.id)}
+            key={resource.id}
+            id={resource.id}
+            name={resource.name}
+            type={resource.type}
+            resourceType={resource.resourceType}
+            location={resource.location}
+            description={resource.description}
+            image={resource.image}
+            amenities={resource.amenities}
+            capacity={resource.capacity}
+            price={resource.price}
+            priceUnit={resource.priceUnit}
+            currency={resource.currency}
+            isFavorited={favorites.includes(resource.id)}
+            onFavorite={() => toggleFavorite(resource.id)}
+            onShare={() => console.log('Share:', resource.id)}
+            onClick={() => console.log('Click:', resource.id)}
           />
         ))}
       </div>
@@ -278,11 +278,11 @@ export const ListItemNoMap: Story = {
       id="1"
       name="Idrettshall Sentrum"
       type="Idrettshall"
-      listingType="SPACE"
+      resourceType="SPACE"
       location="Oslo Sentrum"
       description="Moderne idrettshall med plass til 500 tilskuere. Perfekt for håndball, basketball og innendørs fotball."
       image="https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=800&q=80"
-      facilities={['Garderobe', 'Dusj', 'Parkering', 'WiFi']}
+      amenities={['Garderobe', 'Dusj', 'Parkering', 'WiFi']}
       capacity={500}
       price={1500}
       priceUnit="time"
@@ -301,11 +301,11 @@ export const ListItemWithCoordinates: Story = {
       id="1"
       name="Operahuset"
       type="Konsertsal"
-      listingType="EVENT"
+      resourceType="EVENT"
       location="Bjørvika, Oslo"
       description="Den Norske Opera & Ballett. Verdensledende scene for opera og ballett i hjertet av Oslo."
       image="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=800&q=80"
-      facilities={['Scene', 'Lyd', 'Lys', 'Garderobe', 'Restaurant']}
+      amenities={['Scene', 'Lyd', 'Lys', 'Garderobe', 'Restaurant']}
       capacity={1364}
       price={50000}
       priceUnit="dag"
@@ -330,11 +330,11 @@ export const ListItemMinimal: Story = {
       description="Enkelt møterom for 6 personer."
       image="https://images.unsplash.com/photo-1497366216548-37526070297c?w=800&q=80"
       showCapacity={false}
-      showFacilities={false}
+      showAmenities={false}
       showMap={false}
       showPrice={false}
       showTypeBadge={false}
-      showListingType={false}
+      showResourceType={false}
       onClick={() => console.log('Click')}
     />
   ),
@@ -371,7 +371,7 @@ export const ViewModeToggle: Story = {
           borderRadius: 'var(--ds-border-radius-md)',
         }}>
           <Paragraph data-size="sm" style={{ margin: 0 }}>
-            {sampleListings.length} resultater
+            {sampleResources.length} resultater
           </Paragraph>
           <div style={{ display: 'flex', gap: 'var(--ds-spacing-2)' }}>
             <Button
@@ -394,38 +394,38 @@ export const ViewModeToggle: Story = {
         {/* Content */}
         {viewMode === 'grid' ? (
           <RentalObjectGrid>
-            {sampleListings.map((listing) => (
+            {sampleResources.map((resource) => (
               <RentalObjectCard
-                key={listing.id}
-                {...listing}
-                isFavorited={favorites.includes(listing.id)}
-                onFavorite={() => toggleFavorite(listing.id)}
-                onShare={() => console.log('Share:', listing.id)}
-                onClick={() => console.log('Click:', listing.id)}
+                key={resource.id}
+                {...resource}
+                isFavorited={favorites.includes(resource.id)}
+                onFavorite={() => toggleFavorite(resource.id)}
+                onShare={() => console.log('Share:', resource.id)}
+                onClick={() => console.log('Click:', resource.id)}
               />
             ))}
           </RentalObjectGrid>
         ) : (
           <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--ds-spacing-4)' }}>
-            {sampleListings.map((listing) => (
+            {sampleResources.map((resource) => (
               <RentalObjectListItem
-                key={listing.id}
-                id={listing.id}
-                name={listing.name}
-                type={listing.type}
-                listingType={listing.listingType}
-                location={listing.location}
-                description={listing.description}
-                image={listing.image}
-                facilities={listing.facilities}
-                capacity={listing.capacity}
-                price={listing.price}
-                priceUnit={listing.priceUnit}
-                currency={listing.currency}
-                isFavorited={favorites.includes(listing.id)}
-                onFavorite={() => toggleFavorite(listing.id)}
-                onShare={() => console.log('Share:', listing.id)}
-                onClick={() => console.log('Click:', listing.id)}
+                key={resource.id}
+                id={resource.id}
+                name={resource.name}
+                type={resource.type}
+                resourceType={resource.resourceType}
+                location={resource.location}
+                description={resource.description}
+                image={resource.image}
+                amenities={resource.amenities}
+                capacity={resource.capacity}
+                price={resource.price}
+                priceUnit={resource.priceUnit}
+                currency={resource.currency}
+                isFavorited={favorites.includes(resource.id)}
+                onFavorite={() => toggleFavorite(resource.id)}
+                onShare={() => console.log('Share:', resource.id)}
+                onClick={() => console.log('Click:', resource.id)}
               />
             ))}
           </div>
@@ -436,15 +436,15 @@ export const ViewModeToggle: Story = {
 };
 
 // =============================================================================
-// Listing Type Variations
+// Resource Type Variations
 // =============================================================================
 
 /**
- * All listing types showcased
+ * All resource types showcased
  */
-export const ListingTypes: Story = {
+export const ResourceTypes: Story = {
   render: () => {
-    const listingTypes: { type: RentalObjectCardProps['listingType']; name: string; description: string }[] = [
+    const resourceTypes: { type: RentalObjectCardProps['resourceType']; name: string; description: string }[] = [
       { type: 'SPACE', name: 'Møterom Aker', description: 'Lokaler og rom' },
       { type: 'RESOURCE', name: 'Projektor HD', description: 'Utstyr og ressurser' },
       { type: 'EVENT', name: 'Sommerfest 2026', description: 'Arrangementer' },
@@ -455,13 +455,13 @@ export const ListingTypes: Story = {
 
     return (
       <RentalObjectGrid>
-        {listingTypes.map((item, i) => (
+        {resourceTypes.map((item, i) => (
           <RentalObjectCard
             key={i}
             id={`type-${i}`}
             name={item.name}
             type={item.description}
-            listingType={item.type}
+            resourceType={item.type}
             location="Oslo"
             description={`Eksempel på ${item.description.toLowerCase()} for booking.`}
             image={`https://images.unsplash.com/photo-${1500000000000 + i * 10000}?w=800&q=80`}

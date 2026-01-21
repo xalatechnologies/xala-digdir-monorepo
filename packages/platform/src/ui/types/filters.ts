@@ -5,10 +5,10 @@
  * Use "resource" instead of "listing" and "amenity" instead of "facility".
  */
 
-import type { ResourceType, ListingType } from './resource-detail';
+import type { ResourceType } from './resource-detail';
 
 // Re-export for convenience (used in FilterState)
-export type { ResourceType, ListingType };
+export type { ResourceType };
 
 /**
  * Venue/Category types (subcategories within resource types)
@@ -101,13 +101,6 @@ export interface AmenitiesFilter {
   amenityIds: string[];
 }
 
-/**
- * @deprecated Use AmenitiesFilter instead
- */
-export interface FacilitiesFilter {
-  /** @deprecated Use amenityIds instead */
-  facilityIds: string[];
-}
 
 /**
  * Date/Time filter for availability
@@ -126,10 +119,6 @@ export interface FilterState {
   /** Primary resource type filter (top-level) */
   resourceType?: ResourceType | 'ALL';
 
-  /**
-   * @deprecated Use resourceType instead
-   */
-  listingType?: ResourceType | 'ALL';
 
   /** Venue/category type filter */
   venueType?: VenueType | 'all';
@@ -152,10 +141,6 @@ export interface FilterState {
   /** Amenities filter */
   amenities?: AmenitiesFilter;
 
-  /**
-   * @deprecated Use amenities instead
-   */
-  facilities?: FacilitiesFilter;
 
   /** Date/time filter for booking availability */
   dateTime?: DateTimeFilter;
@@ -204,10 +189,6 @@ export const mockFilterData = {
     { id: 'VEHICLE', label: 'Kjorertoy', count: 3 },
   ],
 
-  /**
-   * @deprecated Use resourceTypes instead
-   */
-  listingTypes: (): FilterOption[] => mockFilterData.resourceTypes(),
 
   /**
    * Venue type options (subcategories)
@@ -279,8 +260,4 @@ export const mockFilterData = {
     { id: 'lighting', label: 'Profesjonell belysning', count: 2 },
   ],
 
-  /**
-   * @deprecated Use amenities instead
-   */
-  facilities: (): FilterOption[] => mockFilterData.amenities(),
 };

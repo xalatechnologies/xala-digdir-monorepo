@@ -133,10 +133,10 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
 // App.tsx
 import { RouterProvider, createBrowserRouter } from 'react-router-dom';
 import { AppShell, PageHeader, DataTable, Button } from '@xala/ds';
-import { useListings } from '@digilist/client-sdk/hooks';
+import { useResources } from '@digilist/client-sdk/hooks';
 
-function ListingsPage() {
-  const { data, isLoading } = useListings();
+function ResourcesPage() {
+  const { data, isLoading } = useResources();
 
   return (
     <AppShell title="Backoffice">

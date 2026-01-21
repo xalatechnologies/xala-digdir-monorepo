@@ -61,7 +61,7 @@ export function BookingConfirmStep({
             )}
             <div className="rental-object-info">
               <Heading level={4} data-size="xs" style={{ margin: 0 }}>{rentalObjectName}</Heading>
-              <span className="rental-object-type">{config.rentalObjectType}</span>
+              {config.category && <span className="rental-object-type">{config.category}</span>}
             </div>
           </div>
 

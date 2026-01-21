@@ -79,8 +79,8 @@ export const WithBreadcrumbs: Story = {
  */
 export const WithActions: Story = {
   args: {
-    title: 'Listings',
-    subtitle: 'Manage your rental listings',
+    title: 'Resources',
+    subtitle: 'Manage your rental resources',
     actions: (
       <>
         <Button variant="secondary" type="button">
@@ -89,7 +89,7 @@ export const WithActions: Story = {
         </Button>
         <Button variant="primary" type="button">
           <PlusIcon />
-          Add Listing
+          Add Resource
         </Button>
       </>
     ),

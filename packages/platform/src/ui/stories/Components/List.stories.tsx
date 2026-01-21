@@ -43,7 +43,7 @@ export const Ordered: Story = {
   render: () => (
     <List.Ordered>
       <List.Item>Create an account</List.Item>
-      <List.Item>Browse available listings</List.Item>
+      <List.Item>Browse available resources</List.Item>
       <List.Item>Select a date and time</List.Item>
       <List.Item>Complete your booking</List.Item>
       <List.Item>Receive confirmation email</List.Item>
@@ -55,7 +55,7 @@ export const Nested: Story = {
   render: () => (
     <List.Unordered>
       <List.Item>
-        Indoor facilities
+        Indoor amenities
         <List.Unordered>
           <List.Item>Basketball court</List.Item>
           <List.Item>Swimming pool</List.Item>
@@ -63,7 +63,7 @@ export const Nested: Story = {
         </List.Unordered>
       </List.Item>
       <List.Item>
-        Outdoor facilities
+        Outdoor amenities
         <List.Unordered>
           <List.Item>Football field</List.Item>
           <List.Item>Tennis court</List.Item>

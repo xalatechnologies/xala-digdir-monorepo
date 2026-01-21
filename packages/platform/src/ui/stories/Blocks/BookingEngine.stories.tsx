@@ -43,7 +43,7 @@ const meta: Meta<typeof UnifiedBookingEngine> = {
     docs: {
       description: {
         component: `
-UnifiedBookingEngine provides a complete booking experience for all listing types.
+UnifiedBookingEngine provides a complete booking experience for all resource types.
 
 ## Booking Modes
 - **slots**: Time slot selection with weekly calendar
@@ -148,8 +148,8 @@ function getWeekStart(): Date {
 
 // Base config for slots mode
 const slotsConfig: BookingConfig = {
-  listingId: 'listing-1',
-  listingType: 'SPACE',
+  resourceId: 'resource-1',
+  resourceType: 'SPACE',
   mode: 'slots',
   slotDurationMinutes: 60,
   pricing: {
@@ -180,7 +180,7 @@ const slotsConfig: BookingConfig = {
 // Daily mode config
 const dailyConfig: BookingConfig = {
   ...slotsConfig,
-  listingType: 'RESOURCE',
+  resourceType: 'RESOURCE',
   mode: 'daily',
   pricing: {
     basePrice: 2000,
@@ -194,7 +194,7 @@ const dailyConfig: BookingConfig = {
 // Date range config
 const dateRangeConfig: BookingConfig = {
   ...slotsConfig,
-  listingType: 'VEHICLE',
+  resourceType: 'VEHICLE',
   mode: 'dateRange',
   pricing: {
     basePrice: 1500,
@@ -208,7 +208,7 @@ const dateRangeConfig: BookingConfig = {
 // Event config
 const eventConfig: BookingConfig = {
   ...slotsConfig,
-  listingType: 'EVENT',
+  resourceType: 'EVENT',
   mode: 'event',
   eventCapacity: 50,
   eventDate: new Date(Date.now() + 14 * 24 * 60 * 60 * 1000), // 2 weeks from now
@@ -424,8 +424,8 @@ export const SportsHallBooking: Story = {
     }
 
     const sportsHallConfig: BookingConfig = {
-      listingId: 'sports-hall-a',
-      listingType: 'SPACE',
+      resourceId: 'sports-hall-a',
+      resourceType: 'SPACE',
       mode: 'slots',
       slotDurationMinutes: 60,
       pricing: {
@@ -520,8 +520,8 @@ export const CabinBooking: Story = {
     }
 
     const cabinConfig: BookingConfig = {
-      listingId: 'cabin-1',
-      listingType: 'SPACE',
+      resourceId: 'cabin-1',
+      resourceType: 'SPACE',
       mode: 'dateRange',
       pricing: {
         basePrice: 1200,
@@ -578,8 +578,8 @@ export const WorkshopBooking: Story = {
     const [step, setStep] = useState(0);
 
     const workshopConfig: BookingConfig = {
-      listingId: 'workshop-3dprint',
-      listingType: 'EVENT',
+      resourceId: 'workshop-3dprint',
+      resourceType: 'EVENT',
       mode: 'event',
       eventCapacity: 20,
       eventDate: new Date(Date.now() + 21 * 24 * 60 * 60 * 1000),

@@ -1,7 +1,7 @@
 /**
- * AmenityChips / FacilityChips Component
+ * AmenityChips Component
  *
- * Displays a list of amenities/facilities as chips.
+ * Displays a list of amenities as chips.
  * Domain-agnostic - receives all data via props.
  *
  * @example
@@ -49,9 +49,6 @@ export interface Amenity {
   available?: boolean;
 }
 
-/** @deprecated Use Amenity instead */
-export type Facility = Amenity;
-
 export interface AmenityChipsLabels {
   /** Text for "and X more" indicator */
   moreLabel: string;
@@ -74,9 +71,6 @@ export interface AmenityChipsProps {
   style?: React.CSSProperties;
 }
 
-/** @deprecated Use AmenityChipsProps instead */
-export type FacilityChipsProps = AmenityChipsProps;
-
 // =============================================================================
 // Default Labels
 // =============================================================================
@@ -92,7 +86,7 @@ const DEFAULT_LABELS: AmenityChipsLabels = {
 /**
  * AmenityChips component
  *
- * Displays a list of amenities/facilities as chips with optional icons.
+ * Displays a list of amenities as chips with optional icons.
  */
 export function AmenityChips({
   amenities,
@@ -130,26 +124,23 @@ export function AmenityChips({
       }}
     >
       {visibleAmenities.map((amenity) => (
-        <Chip key={amenity.id} size={size}>
+        <Chip.Button key={amenity.id} data-size={size}>
           {showIcons && amenity.icon && (
             <span style={{ marginRight: 'var(--ds-spacing-1)', display: 'flex', alignItems: 'center' }}>
               {amenity.icon}
             </span>
           )}
           {amenity.name}
-        </Chip>
+        </Chip.Button>
       ))}
 
       {hiddenCount > 0 && (
-        <Chip size={size} variant="neutral">
+        <Chip.Button data-size={size}>
           {moreText}
-        </Chip>
+        </Chip.Button>
       )}
     </div>
   );
 }
-
-/** @deprecated Use AmenityChips instead */
-export const FacilityChips = AmenityChips;
 
 export default AmenityChips;

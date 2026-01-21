@@ -8,18 +8,18 @@ const meta: Meta<typeof RentalObjectCard> = {
     docs: {
       description: {
         component: `
-RentalObjectCard displays rental listing information with images, pricing, and actions.
+RentalObjectCard displays rental resource information with images, pricing, and actions.
 
 ## Features
 - Grid and detailed variants
 - Image with badge overlays
 - Favorite and share actions
 - Capacity and pricing display
-- Facility tags
+- Amenity tags
 
 ## When to Use
-- Listing grids and search results
-- Featured listings
+- Resource grids and search results
+- Featured resources
 - Popup/modal detail views
         `,
       },
@@ -31,15 +31,15 @@ RentalObjectCard displays rental listing information with images, pricing, and a
 export default meta;
 type Story = StoryObj<typeof RentalObjectCard>;
 
-const sampleListing = {
+const sampleResource = {
   id: '1',
   name: 'Stort møterom med projektor',
   type: 'Møterom',
-  listingType: 'SPACE' as const,
+  resourceType: 'SPACE' as const,
   location: 'Oslo Sentrum',
   description: 'Moderne møterom med plass til 20 personer. Utstyrt med projektor, whiteboard og videokonferanseutstyr.',
   image: 'https://images.unsplash.com/photo-1497366216548-37526070297c?w=400&h=300&fit=crop',
-  facilities: ['WiFi', 'Projektor', 'Whiteboard'],
+  amenities: ['WiFi', 'Projektor', 'Whiteboard'],
   capacity: 20,
   price: 500,
   priceUnit: 'time',
@@ -52,7 +52,7 @@ const sampleListing = {
  */
 export const Default: Story = {
   args: {
-    ...sampleListing,
+    ...sampleResource,
     onClick: (id: string) => console.log('Clicked:', id),
     onFavorite: (id: string) => console.log('Favorite:', id),
     onShare: (id: string) => console.log('Share:', id),
@@ -64,7 +64,7 @@ export const Default: Story = {
  */
 export const WithRating: Story = {
   args: {
-    ...sampleListing,
+    ...sampleResource,
     showRating: true,
     rating: 4.8,
     reviewCount: 24,
@@ -77,7 +77,7 @@ export const WithRating: Story = {
  */
 export const WithPrice: Story = {
   args: {
-    ...sampleListing,
+    ...sampleResource,
     showPrice: true,
     onClick: (id: string) => console.log('Clicked:', id),
   },
@@ -88,7 +88,7 @@ export const WithPrice: Story = {
  */
 export const Favorited: Story = {
   args: {
-    ...sampleListing,
+    ...sampleResource,
     isFavorited: true,
     onClick: (id: string) => console.log('Clicked:', id),
     onFavorite: (id: string) => console.log('Toggle favorite:', id),
@@ -96,11 +96,11 @@ export const Favorited: Story = {
 };
 
 /**
- * Unavailable listing
+ * Unavailable resource
  */
 export const Unavailable: Story = {
   args: {
-    ...sampleListing,
+    ...sampleResource,
     available: false,
     onClick: (id: string) => console.log('Clicked:', id),
   },
@@ -111,7 +111,7 @@ export const Unavailable: Story = {
  */
 export const Detailed: Story = {
   args: {
-    ...sampleListing,
+    ...sampleResource,
     variant: 'detailed',
     showPrice: true,
     onClick: (id: string) => console.log('Clicked:', id),
@@ -120,12 +120,12 @@ export const Detailed: Story = {
 };
 
 /**
- * Minimal card (no facilities, no description)
+ * Minimal card (no amenities, no description)
  */
 export const Minimal: Story = {
   args: {
-    ...sampleListing,
-    showFacilities: false,
+    ...sampleResource,
+    showAmenities: false,
     showDescription: false,
     showFavoriteButton: false,
     showShareButton: false,
@@ -134,30 +134,30 @@ export const Minimal: Story = {
 };
 
 /**
- * Different listing types
+ * Different resource types
  */
-export const ListingTypes: Story = {
+export const ResourceTypes: Story = {
   render: () => (
     <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 'var(--ds-spacing-4)' }}>
       <RentalObjectCard
-        {...sampleListing}
+        {...sampleResource}
         id="1"
         name="Møterom A"
-        listingType="SPACE"
+        resourceType="SPACE"
         type="Lokale"
       />
       <RentalObjectCard
-        {...sampleListing}
+        {...sampleResource}
         id="2"
         name="Projektor HD"
-        listingType="RESOURCE"
+        resourceType="RESOURCE"
         type="Utstyr"
       />
       <RentalObjectCard
-        {...sampleListing}
+        {...sampleResource}
         id="3"
         name="Sommerfest 2024"
-        listingType="EVENT"
+        resourceType="EVENT"
         type="Arrangement"
       />
     </div>

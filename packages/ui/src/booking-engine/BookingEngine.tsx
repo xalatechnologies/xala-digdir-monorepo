@@ -1,5 +1,5 @@
 /**
- * UnifiedBookingEngine
+ * BookingEngine
  *
  * Comprehensive booking system that adapts to all rental object types.
  * Supports: Slot-based, Daily, Date Range, Event, Recurring bookings.
@@ -53,9 +53,9 @@ import { BookingFormStep } from './steps/BookingFormStep';
 import { BookingConfirmStep } from './steps/BookingConfirmStep';
 
 // Import styles
-import { unifiedBookingEngineStyles } from './styles';
+import { bookingEngineStyles } from './styles';
 
-export interface UnifiedBookingEngineProps {
+export interface BookingEngineProps {
   /** Booking configuration */
   config: BookingConfig;
   /** Rental object name for display */
@@ -89,9 +89,9 @@ const stepIconMap: Record<string, React.FC<{ size?: number }>> = {
 };
 
 /**
- * UnifiedBookingEngine component
+ * BookingEngine component
  */
-export function UnifiedBookingEngine({
+export function BookingEngine({
   config,
   rentalObjectName,
   rentalObjectImage,
@@ -103,7 +103,7 @@ export function UnifiedBookingEngine({
   onSubmit,
   onSelectionChange,
   className,
-}: UnifiedBookingEngineProps): React.ReactElement {
+}: BookingEngineProps): React.ReactElement {
   // Steps
   const steps = React.useMemo(() => getBookingSteps(config.mode, false), [config.mode]);
 
@@ -457,15 +457,17 @@ export function UnifiedBookingEngine({
   const today = new Date().toDateString();
 
   return (
-    <div className={cn('unified-booking-engine', className)}>
+    <div className={cn('booking-engine', className)}>
       {/* Main Card */}
       <div className="booking-engine-card">
         {/* Header */}
         <div className="booking-engine-header">
           <div className="header-content">
-            <div className="header-badge">
-              <span className="badge-label">{config.rentalObjectType}</span>
-            </div>
+            {config.category && (
+              <div className="header-badge">
+                <span className="badge-label">{config.category}</span>
+              </div>
+            )}
             <Heading level={2} data-size="lg" style={{ margin: 0 }}>
               {rentalObjectName}
             </Heading>
@@ -847,7 +849,7 @@ export function UnifiedBookingEngine({
       </div>
 
       {/* Styles */}
-      <style>{unifiedBookingEngineStyles}</style>
+      <style>{bookingEngineStyles}</style>
     </div>
   );
 }

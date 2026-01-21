@@ -102,7 +102,7 @@ export const WithImage: Story = {
         <span style={{ color: 'var(--ds-color-neutral-text-subtle)' }}>Image Placeholder</span>
       </div>
       <div style={{ padding: 'var(--ds-spacing-4)' }}>
-        <Heading level={3} data-size="sm">Featured Listing</Heading>
+        <Heading level={3} data-size="sm">Featured Resource</Heading>
         <Paragraph>
           A beautiful meeting space in the city center.
         </Paragraph>

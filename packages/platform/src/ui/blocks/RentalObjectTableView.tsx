@@ -360,7 +360,7 @@ export function RentalObjectTableView({
         </table>
       </div>
 
-      {/* Footer with listing count */}
+      {/* Footer with resource count */}
       <div
         style={{
           padding: 'var(--ds-spacing-4)',

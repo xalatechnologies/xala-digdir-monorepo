@@ -11,22 +11,22 @@ import { cn } from '../utils';
 export interface RentalObjectListItemProps {
   /** Unique identifier */
   id: string;
-  /** Listing name/title */
+  /** Resource name/title */
   name: string;
   /** Category/type label */
   type: string;
-  /** Listing type from schema */
-  listingType?: 'SPACE' | 'RESOURCE' | 'EVENT' | 'SERVICE' | 'VEHICLE' | 'OTHER';
+  /** Category type from schema */
+  category?: 'SPACE' | 'RESOURCE' | 'EVENT' | 'SERVICE' | 'VEHICLE' | 'OTHER';
   /** Location text */
   location: string;
   /** Description text */
   description: string;
   /** Image URL */
   image: string;
-  /** List of facilities */
-  facilities?: string[];
-  /** Number of additional facilities not shown */
-  moreFacilities?: number;
+  /** List of amenities */
+  amenities?: string[];
+  /** Number of additional amenities not shown */
+  moreAmenities?: number;
   /** Capacity (number of people) */
   capacity?: number;
   /** Price amount */
@@ -41,7 +41,7 @@ export interface RentalObjectListItemProps {
   onFavorite?: (id: string) => void;
   /** Click handler for share button */
   onShare?: (id: string) => void;
-  /** Whether this listing is favorited */
+  /** Whether this resource is favorited */
   isFavorited?: boolean;
   /** Custom class name */
   className?: string;
@@ -51,17 +51,17 @@ export interface RentalObjectListItemProps {
   mapWidth?: number;
   /** Show/hide different elements */
   showCapacity?: boolean;
-  showFacilities?: boolean;
+  showAmenities?: boolean;
   showDescription?: boolean;
   showLocation?: boolean;
   showTypeBadge?: boolean;
   showMap?: boolean;
   showFavoriteButton?: boolean;
   showShareButton?: boolean;
-  showListingType?: boolean;
+  showCategory?: boolean;
   showPrice?: boolean;
-  /** Max facilities to display */
-  maxFacilities?: number;
+  /** Max amenities to display */
+  maxAmenities?: number;
   /** Latitude for map */
   latitude?: number;
   /** Longitude for map */
@@ -100,8 +100,8 @@ const ShareIcon = () => (
   </svg>
 );
 
-// Listing type labels in Norwegian
-const listingTypeLabels: Record<string, string> = {
+// Category labels in Norwegian
+const categoryLabels: Record<string, string> = {
   SPACE: 'Lokale',
   RESOURCE: 'Ressurs',
   EVENT: 'Arrangement',
@@ -110,8 +110,8 @@ const listingTypeLabels: Record<string, string> = {
   OTHER: 'Annet',
 };
 
-// Listing type colors for badges
-const listingTypeColors: Record<string, string> = {
+// Category colors for badges
+const categoryColors: Record<string, string> = {
   SPACE: 'accent',
   RESOURCE: 'info',
   EVENT: 'success',
@@ -124,12 +124,12 @@ export function RentalObjectListItem({
   id,
   name,
   type,
-  listingType,
+  category,
   location,
   description,
   image,
-  facilities = [],
-  moreFacilities = 0,
+  amenities = [],
+  moreAmenities = 0,
   capacity,
   price,
   priceUnit = 'time',
@@ -142,16 +142,16 @@ export function RentalObjectListItem({
   imageWidth = 380,
   mapWidth = 340,
   showCapacity = true,
-  showFacilities = true,
+  showAmenities = true,
   showDescription = true,
   showLocation = true,
   showTypeBadge = true,
   showMap = true,
   showFavoriteButton = true,
   showShareButton = true,
-  showListingType = true,
+  showCategory = true,
   showPrice = true,
-  maxFacilities = 4,
+  maxAmenities = 4,
   latitude,
   longitude,
   mapboxToken,
@@ -220,7 +220,7 @@ export function RentalObjectListItem({
         {/* Type badge on image */}
         {showTypeBadge && (
           <div style={{ position: 'absolute', top: 'var(--ds-spacing-3)', left: 'var(--ds-spacing-3)' }}>
-            <Tag data-size="sm" data-color={listingTypeColors[listingType || 'OTHER'] || 'neutral'} style={{ paddingInline: 'var(--ds-spacing-2)' }}>
+            <Tag data-size="sm" data-color={categoryColors[category || 'OTHER'] || 'neutral'} style={{ paddingInline: 'var(--ds-spacing-2)' }}>
               {type}
             </Tag>
           </div>
@@ -295,7 +295,7 @@ export function RentalObjectListItem({
         flexDirection: 'column',
         minWidth: 0
       }}>
-        {/* Header with title and listing type */}
+        {/* Header with title and category */}
         <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 'var(--ds-spacing-3)', marginBottom: 'var(--ds-spacing-2)' }}>
           <h3 style={{
             margin: 0,
@@ -307,9 +307,9 @@ export function RentalObjectListItem({
           } as React.CSSProperties}>
             {name}
           </h3>
-          {showListingType && listingType && (
-            <Tag data-size="sm" data-color={listingTypeColors[listingType] || 'neutral'} style={{ paddingInline: 'var(--ds-spacing-2)', flexShrink: 0 }}>
-              {listingTypeLabels[listingType] || listingType}
+          {showCategory && category && (
+            <Tag data-size="sm" data-color={categoryColors[category] || 'neutral'} style={{ paddingInline: 'var(--ds-spacing-2)', flexShrink: 0 }}>
+              {categoryLabels[category] || category}
             </Tag>
           )}
         </div>
@@ -347,22 +347,22 @@ export function RentalObjectListItem({
           </p>
         )}
 
-        {/* Facility tags */}
-        {showFacilities && facilities.length > 0 && (
+        {/* Amenity tags */}
+        {showAmenities && amenities.length > 0 && (
           <div style={{
             display: 'flex',
             flexWrap: 'wrap',
             gap: 'var(--ds-spacing-2)',
             marginBottom: 'var(--ds-spacing-3)'
           }}>
-            {facilities.slice(0, maxFacilities).map((facility) => (
-              <Tag key={facility} data-size="sm" data-color="accent" style={{ paddingInline: 'var(--ds-spacing-2)' }}>
-                {facility}
+            {amenities.slice(0, maxAmenities).map((amenity) => (
+              <Tag key={amenity} data-size="sm" data-color="accent" style={{ paddingInline: 'var(--ds-spacing-2)' }}>
+                {amenity}
               </Tag>
             ))}
-            {moreFacilities > 0 && (
+            {moreAmenities > 0 && (
               <Tag data-size="sm" data-color="neutral" style={{ paddingInline: 'var(--ds-spacing-2)' }}>
-                +{moreFacilities} flere
+                +{moreAmenities} flere
               </Tag>
             )}
           </div>

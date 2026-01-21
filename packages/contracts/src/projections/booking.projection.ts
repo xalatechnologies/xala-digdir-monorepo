@@ -13,7 +13,7 @@ export const BookingCardProjectionSchema = z.object({
   id: z.string(),
 
   // Display strings
-  listingName: z.string(),
+  rentalObjectName: z.string(),
   dateDisplay: z.string(),
   timeDisplay: z.string(),
   durationDisplay: z.string(),
@@ -31,7 +31,7 @@ export const BookingCardProjectionSchema = z.object({
   userEmail: z.string().optional(),
 
   // Images
-  listingImageUrl: z.string().optional(),
+  rentalObjectImageUrl: z.string().optional(),
 
   // Computed
   isPast: z.boolean(),
@@ -51,7 +51,7 @@ export const BookingDetailsProjectionSchema = BookingCardProjectionSchema.extend
   endTime: z.string(),
 
   // Rental object details
-  listingDetails: z.object({
+  rentalObjectDetails: z.object({
     id: z.string(),
     name: z.string(),
     address: z.string().optional(),
@@ -133,7 +133,7 @@ export const BookingReceiptProjectionSchema = z.object({
 
   // Booking details
   booking: z.object({
-    listingName: z.string(),
+    rentalObjectName: z.string(),
     date: z.string(),
     time: z.string(),
     duration: z.string(),

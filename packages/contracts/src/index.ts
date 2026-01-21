@@ -129,4 +129,31 @@ export type {
 
   // Projections - Capabilities
   CapabilitiesProjection,
+
+  // Booking UI Types (for @digilist/ui components)
+  BookingMode,
+  BookingPriceUnit,
+  SlotStatus,
+  AvailabilitySlot,
+  DayAvailability,
+  BookingPricing,
+  BookingRules,
+  DaySchedule,
+  BookingConfig,
+  BookingSelection,
+  BookingFormData,
+  PriceItem,
+  BookingPriceCalculation,
+  BookingStepConfig,
+  ListingType,
+  AdditionalService,
+  BookingDetails,
+} from './types';
+
+// Booking UI Utility Functions
+export {
+  getBookingSteps,
+  determineBookingMode,
+  formatPrice,
+  formatPriceUnit,
 } from './types';

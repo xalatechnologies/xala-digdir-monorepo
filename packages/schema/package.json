@@ -27,7 +27,7 @@
     "seed": "tsx seeds/import-all.ts"
   },
   "dependencies": {
-    "@xalatechnologies/platform": "workspace:*",
+    "@xalatechnologies/platform-schema": "workspace:*",
     "drizzle-orm": "0.36.4",
     "postgres": "^3.4.5"
   },

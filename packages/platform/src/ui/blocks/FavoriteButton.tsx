@@ -1,7 +1,7 @@
 /**
  * FavoriteButton
  *
- * Interactive button for favoriting/unfavoriting listings.
+ * Interactive button for favoriting/unfavoriting resources.
  * Supports auth gating with callback for unauthenticated users.
  */
 import * as React from 'react';

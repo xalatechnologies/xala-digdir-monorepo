@@ -1,7 +1,7 @@
 /**
  * ShareButton
  *
- * Button for sharing listings with support for native share API,
+ * Button for sharing resources with support for native share API,
  * clipboard copy, and social media sharing options.
  */
 import * as React from 'react';

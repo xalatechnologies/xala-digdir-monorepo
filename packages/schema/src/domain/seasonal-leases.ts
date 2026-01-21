@@ -11,7 +11,7 @@ import {
   decimal,
   index,
 } from 'drizzle-orm/pg-core';
-import { domainSchema, tenants, organizations } from '@xalatechnologies/database-schema';
+import { domainSchema, tenants, organizations } from '@xalatechnologies/platform-schema';
 import { rentalObjects } from './rental-objects';
 
 export const seasonalLeases = domainSchema.table('seasonal_leases', {

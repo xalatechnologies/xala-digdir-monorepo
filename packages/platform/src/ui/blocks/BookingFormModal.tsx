@@ -29,8 +29,8 @@ export interface BookingFormModalProps {
   selectedServices?: string[];
   /** Available additional services */
   availableServices?: AdditionalService[];
-  /** Listing name for display */
-  listingName: string;
+  /** Resource name for display */
+  resourceName: string;
   /** Base price per hour */
   basePrice?: number;
   /** Currency */
@@ -105,7 +105,7 @@ function formatSelectedSlots(slots: TimeSlot[]): { date: string; timeRange: stri
  *   open={showModal}
  *   onClose={() => setShowModal(false)}
  *   selectedSlots={selectedSlots}
- *   listingName="Møterom 101"
+ *   resourceName="Møterom 101"
  *   basePrice={450}
  *   onConfirm={(details) => handleBookingConfirm(details)}
  * />
@@ -117,7 +117,7 @@ export function BookingFormModal({
   selectedSlots,
   selectedServices = [],
   availableServices = [],
-  listingName,
+  resourceName,
   basePrice,
   currency = 'NOK',
   maxCapacity,
@@ -258,7 +258,7 @@ export function BookingFormModal({
             Bekreft booking
           </Heading>
           <Paragraph data-size="sm" style={{ margin: 0, marginTop: 'var(--ds-spacing-1)', color: 'var(--ds-color-neutral-text-subtle)' }}>
-            {listingName}
+            {resourceName}
           </Paragraph>
         </div>
         <button

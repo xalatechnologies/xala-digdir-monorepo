@@ -26,8 +26,8 @@ export interface BookingConfirmationProps {
   selectedServices?: string[];
   /** Available services for display */
   availableServices?: AdditionalService[];
-  /** Listing name */
-  listingName: string;
+  /** Resource name */
+  resourceName: string;
   /** Base price per hour */
   basePrice?: number;
   /** Currency */
@@ -96,7 +96,7 @@ export function BookingConfirmation({
   selectedSlots,
   selectedServices = [],
   availableServices = [],
-  listingName,
+  resourceName,
   basePrice,
   currency = 'NOK',
   isSubmitting = false,
@@ -153,7 +153,7 @@ export function BookingConfirmation({
                 Lokale
               </Paragraph>
               <Paragraph data-size="sm" style={{ margin: 0, fontWeight: 'var(--ds-font-weight-semibold)' }}>
-                {listingName}
+                {resourceName}
               </Paragraph>
             </div>
 

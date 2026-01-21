@@ -111,18 +111,18 @@ export const WithSorting: Story = {
 export const WithPrimaryAction: Story = {
   args: {
     search: {
-      placeholder: 'Search listings...',
+      placeholder: 'Search resources...',
       value: '',
       onChange: (value: string) => console.log('Search:', value),
     },
     filters: defaultFilters,
     onFilterChange: (filterId: string, value: string | undefined) => console.log('Filter:', filterId, value),
     resultsCount: 42,
-    resultsLabel: 'listings',
+    resultsLabel: 'resources',
     primaryAction: (
       <Button variant="primary" type="button">
         <PlusIcon />
-        Add Listing
+        Add Resource
       </Button>
     ),
   },
@@ -134,7 +134,7 @@ export const WithPrimaryAction: Story = {
 export const FullFeatured: Story = {
   args: {
     search: {
-      placeholder: 'Search listings...',
+      placeholder: 'Search resources...',
       value: '',
       onChange: (value: string) => console.log('Search:', value),
     },
@@ -144,7 +144,7 @@ export const FullFeatured: Story = {
     sortValue: 'date-desc',
     onSortChange: (value: string) => console.log('Sort:', value),
     resultsCount: 42,
-    resultsLabel: 'listings',
+    resultsLabel: 'resources',
     primaryAction: (
       <Button variant="primary" type="button">
         <PlusIcon />

@@ -90,7 +90,7 @@ const samplePermissions: Permission[] = [
   { id: 'booking.read', name: 'View Bookings', description: 'View booking list and details', category: 'Bookings', risk: 'low' },
   { id: 'booking.create', name: 'Create Bookings', description: 'Create new bookings', category: 'Bookings', risk: 'low' },
   { id: 'booking.approve', name: 'Approve Bookings', description: 'Approve pending bookings', category: 'Bookings', risk: 'medium' },
-  { id: 'listing.manage', name: 'Manage Listings', description: 'Create and edit rental objects', category: 'Listings', risk: 'medium' },
+  { id: 'resource.manage', name: 'Manage Resources', description: 'Create and edit rental objects', category: 'Resources', risk: 'medium' },
   { id: 'reports.view', name: 'View Reports', description: 'Access analytics and reports', category: 'Reports', risk: 'low' },
   { id: 'settings.manage', name: 'Manage Settings', description: 'Configure system settings', category: 'Settings', risk: 'high' },
 ];
@@ -106,9 +106,9 @@ const sampleRolesWithPermissions: Role[] = [
   {
     id: 'manager',
     name: 'Manager',
-    description: 'Manage bookings and listings',
+    description: 'Manage bookings and resources',
     color: '#2563eb',
-    permissions: ['user.read', 'booking.read', 'booking.create', 'booking.approve', 'listing.manage', 'reports.view'],
+    permissions: ['user.read', 'booking.read', 'booking.create', 'booking.approve', 'resource.manage', 'reports.view'],
   },
   {
     id: 'operator',

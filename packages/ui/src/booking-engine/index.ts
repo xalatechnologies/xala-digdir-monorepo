@@ -6,12 +6,12 @@
  *
  * @example
  * ```tsx
- * import { UnifiedBookingEngine } from '@digilist/ui/booking-engine';
+ * import { BookingEngine } from '@digilist/ui/booking-engine';
  * import type { BookingConfig } from '@digilist/contracts';
  *
  * function BookingPage({ config }: { config: BookingConfig }) {
  *   return (
- *     <UnifiedBookingEngine
+ *     <BookingEngine
  *       config={config}
  *       rentalObjectName="Meeting Room A"
  *       onSubmit={handleSubmit}
@@ -25,8 +25,8 @@
 // Main Booking Engine Component
 // =============================================================================
 
-export { UnifiedBookingEngine } from './UnifiedBookingEngine';
-export type { UnifiedBookingEngineProps } from './UnifiedBookingEngine';
+export { BookingEngine } from './BookingEngine';
+export type { BookingEngineProps } from './BookingEngine';
 
 // =============================================================================
 // Mode View Components
@@ -92,4 +92,4 @@ export {
 // Styles
 // =============================================================================
 
-export { unifiedBookingEngineStyles } from './styles';
+export { bookingEngineStyles } from './styles';

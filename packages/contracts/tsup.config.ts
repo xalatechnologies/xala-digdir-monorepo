@@ -14,5 +14,5 @@ export default defineConfig({
   clean: true,
   treeshake: true,
   minify: false,
-  external: ['zod', '@xala/contracts'],
+  external: ['zod', '@xalatechnologies/platform'],
 });

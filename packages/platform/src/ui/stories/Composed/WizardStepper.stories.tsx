@@ -115,7 +115,7 @@ export const RentalObjectWizard: Story = {
       { id: 'type', label: 'Type utleieobjekt' },
       { id: 'info', label: 'Grunninfo' },
       { id: 'location', label: 'Plassering' },
-      { id: 'facilities', label: 'Fasiliteter' },
+      { id: 'amenities', label: 'Fasiliteter' },
       { id: 'images', label: 'Bilder' },
       { id: 'pricing', label: 'Priser' },
       { id: 'availability', label: 'Tilgjengelighet' },

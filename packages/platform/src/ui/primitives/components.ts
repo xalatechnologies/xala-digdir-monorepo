@@ -45,6 +45,7 @@ export {
 export {
   Card,
   Details,
+  Dialog,
   Divider,
   Link,
   List,
@@ -57,3 +58,5 @@ export {
   Chip,
   Dropdown,
 } from '@digdir/designsystemet-react';
+
+// Note: Badge is exported from composed (custom implementation with more features)

@@ -49,7 +49,7 @@ export type { FilterBarProps } from './filter-bar';
 
 // Filter Types
 export type {
-  ListingType,
+  ResourceType,
   VenueType,
   PriceUnit,
   AvailabilityStatus,
@@ -58,7 +58,7 @@ export type {
   CapacityRangeFilter,
   RatingFilter,
   LocationFilter,
-  FacilitiesFilter,
+  AmenitiesFilter,
   DateTimeFilter,
   FilterState,
   FilterConfig

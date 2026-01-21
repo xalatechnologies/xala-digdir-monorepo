@@ -18,9 +18,9 @@ import { ShareButton, type ShareData, type SharePlatform } from './ShareButton';
 export interface RentalObjectDetailHeaderProps {
   /** Category label (e.g., "Rom", "Møterom") */
   category: string;
-  /** Listing type for styling (e.g., "SPACE", "EQUIPMENT") */
-  listingType?: string;
-  /** Listing title */
+  /** Resource type for styling (e.g., "SPACE", "EQUIPMENT") */
+  resourceType?: string;
+  /** Resource title */
   title: string;
   /** Location address */
   location: string;
@@ -32,7 +32,7 @@ export interface RentalObjectDetailHeaderProps {
   onFavorite?: () => void;
   /** Callback when share is initiated */
   onShare?: (platform?: SharePlatform) => void;
-  /** Whether the listing is favorited */
+  /** Whether the resource is favorited */
   isFavorited?: boolean;
   /** Whether user is authenticated (for favorite gating) */
   isAuthenticated?: boolean;
@@ -70,7 +70,7 @@ export interface RentalObjectDetailHeaderProps {
  * // Advanced usage with key facts
  * <RentalObjectDetailHeader
  *   category="Rom"
- *   listingType="SPACE"
+ *   resourceType="SPACE"
  *   title="Møterom 101"
  *   location="Storgata 1, 0155 Oslo"
  *   keyFacts={[
@@ -87,7 +87,7 @@ export interface RentalObjectDetailHeaderProps {
  */
 export function RentalObjectDetailHeader({
   category,
-  listingType,
+  resourceType,
   title,
   location,
   capacity,
@@ -119,9 +119,9 @@ export function RentalObjectDetailHeader({
     return [];
   }, [keyFacts, capacity]);
 
-  // Get tag color based on listing type
+  // Get tag color based on resource type
   const getTypeColor = (): 'neutral' | 'first' | 'second' | 'third' => {
-    switch (listingType) {
+    switch (resourceType) {
       case 'SPACE':
         return 'first';
       case 'RESOURCE':

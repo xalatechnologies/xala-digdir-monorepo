@@ -170,14 +170,6 @@ export interface BookingConfig {
   /** Supported activity types */
   activityTypes?: string[];
 
-  /**
-   * @deprecated Use resourceId instead
-   */
-  listingId?: string;
-  /**
-   * @deprecated Use resourceType instead
-   */
-  listingType?: BookingResourceType;
 }
 
 /**

@@ -172,11 +172,11 @@ function BookingWizard() {
 Standard pattern for data tables with filtering and pagination:
 
 ```tsx
-function ListingsTable() {
+function ResourcesTable() {
   const [filters, setFilters] = useState({});
   const [pagination, setPagination] = useState({ page: 1, pageSize: 20 });
 
-  const { data, isLoading } = useListings({ filters, ...pagination });
+  const { data, isLoading } = useResources({ filters, ...pagination });
 
   return (
     <div>

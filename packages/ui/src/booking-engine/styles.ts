@@ -1,12 +1,12 @@
 /**
- * UnifiedBookingEngine Styles
+ * BookingEngine Styles
  *
- * Extracted CSS styles for the UnifiedBookingEngine component.
+ * Extracted CSS styles for the BookingEngine component.
  * This file contains all the inline styles that were previously embedded in the component.
  */
 
-export const unifiedBookingEngineStyles = `
-  .unified-booking-engine {
+export const bookingEngineStyles = `
+  .booking-engine {
     --ube-radius: var(--ds-border-radius-xl);
     --ube-shadow: 0 4px 24px rgba(0, 0, 0, 0.06), 0 1px 2px rgba(0, 0, 0, 0.04);
   }

@@ -109,8 +109,8 @@ export {
 
 export {
   // Main component
-  UnifiedBookingEngine,
-  type UnifiedBookingEngineProps,
+  BookingEngine,
+  type BookingEngineProps,
 
   // Mode views
   DailyModeView,

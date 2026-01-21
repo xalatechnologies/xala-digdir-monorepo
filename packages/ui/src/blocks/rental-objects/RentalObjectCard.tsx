@@ -2,7 +2,7 @@
  * RentalObjectCard
  *
  * A reusable card component for displaying rental object/venue information.
- * Supports images, ratings, pricing, facilities, and action buttons.
+ * Supports images, ratings, pricing, amenities, and action buttons.
  */
 import * as React from 'react';
 import { Tag, Heading, Paragraph } from '@xalatechnologies/platform/ui';
@@ -18,18 +18,18 @@ export interface RentalObjectCardProps {
   name: string;
   /** Category/type label (displayed on image badge) */
   type: string;
-  /** Rental object type from schema: 'SPACE' | 'RESOURCE' | 'EVENT' | 'SERVICE' | 'VEHICLE' | 'OTHER' */
-  rentalObjectType?: 'SPACE' | 'RESOURCE' | 'EVENT' | 'SERVICE' | 'VEHICLE' | 'OTHER';
+  /** Category identifier for internal use */
+  category?: string;
   /** Location text */
   location: string;
   /** Description text */
   description: string;
   /** Image URL */
   image: string;
-  /** List of facilities */
-  facilities?: string[];
-  /** Number of additional facilities not shown */
-  moreFacilities?: number;
+  /** List of amenities */
+  amenities?: string[];
+  /** Number of additional amenities not shown */
+  moreAmenities?: number;
   /** Capacity (number of people) */
   capacity?: number;
   /** Price amount */
@@ -64,7 +64,7 @@ export interface RentalObjectCardProps {
   showRating?: boolean;
   showPrice?: boolean;
   showCapacity?: boolean;
-  showFacilities?: boolean;
+  showAmenities?: boolean;
   showDescription?: boolean;
   showLocation?: boolean;
   showTypeBadge?: boolean;
@@ -72,7 +72,7 @@ export interface RentalObjectCardProps {
   showGradientOverlay?: boolean;
   showFavoriteButton?: boolean;
   showShareButton?: boolean;
-  showRentalObjectType?: boolean;
+  showCategory?: boolean;
   /** Max amenities to display */
   maxAmenities?: number;
 }
@@ -129,13 +129,13 @@ const PeopleIcon = () => (
   </svg>
 );
 
-// Rental object type labels in Norwegian
-const rentalObjectTypeLabels: Record<string, string> = {
+// Category labels in Norwegian
+const categoryLabels: Record<string, string> = {
   SPACE: 'Lokale',
   RESOURCE: 'Ressurs',
   EVENT: 'Arrangement',
   SERVICE: 'Tjeneste',
-  VEHICLE: 'Kjoretoy',
+  VEHICLE: 'Kjøretøy',
   OTHER: 'Annet',
 };
 
@@ -143,12 +143,12 @@ export function RentalObjectCard({
   id,
   name,
   type,
-  rentalObjectType,
+  category,
   location,
   description,
   image,
-  facilities = [],
-  moreFacilities = 0,
+  amenities = [],
+  moreAmenities = 0,
   capacity,
   price,
   priceUnit = 'time',
@@ -167,7 +167,7 @@ export function RentalObjectCard({
   showRating = false, // Disabled by default, enable when rating system is ready
   showPrice = false,
   showCapacity = true,
-  showFacilities = true,
+  showAmenities = true,
   showDescription = true,
   showLocation = true,
   showTypeBadge = true,
@@ -175,7 +175,7 @@ export function RentalObjectCard({
   showGradientOverlay = true,
   showFavoriteButton = true,
   showShareButton = true,
-  showRentalObjectType: _showRentalObjectType = true,
+  showCategory: _showCategory = true,
   maxAmenities = 3,
 }: RentalObjectCardProps): React.ReactElement {
   const [isHovered, setIsHovered] = React.useState(false);
@@ -271,8 +271,8 @@ export function RentalObjectCard({
           )}
 
           <div style={{ padding: 'var(--ds-spacing-5)' }}>
-            {/* Rental object type badge */}
-            {rentalObjectType && (
+            {/* Category badge */}
+            {category && (
               <span style={{
                 display: 'inline-block',
                 marginBottom: 'var(--ds-spacing-3)',
@@ -285,7 +285,7 @@ export function RentalObjectCard({
                 color: 'var(--ds-color-accent-text-default)',
                 borderRadius: 'var(--ds-border-radius-sm)',
               }}>
-                {rentalObjectTypeLabels[rentalObjectType] || rentalObjectType}
+                {categoryLabels[category] || category}
               </span>
             )}
 
@@ -334,15 +334,15 @@ export function RentalObjectCard({
               </div>
             )}
 
-            {/* Facilities */}
-            {facilities && facilities.length > 0 && (
+            {/* Amenities */}
+            {amenities && amenities.length > 0 && (
               <div style={{
                 display: 'flex',
                 flexWrap: 'wrap',
                 gap: 'var(--ds-spacing-2)',
                 marginBottom: 'var(--ds-spacing-4)',
               }}>
-                {facilities.slice(0, 4).map((facility, idx) => (
+                {amenities.slice(0, 4).map((amenity, idx) => (
                   <span
                     key={idx}
                     style={{
@@ -353,16 +353,16 @@ export function RentalObjectCard({
                       borderRadius: 'var(--ds-border-radius-sm)',
                     }}
                   >
-                    {facility}
+                    {amenity}
                   </span>
                 ))}
-                {facilities.length > 4 && (
+                {amenities.length > 4 && (
                   <span style={{
                     padding: 'var(--ds-spacing-2) var(--ds-spacing-3)',
                     fontSize: 'var(--ds-font-size-sm)',
                     color: 'var(--ds-color-neutral-text-subtle)',
                   }}>
-                    +{facilities.length - 4}
+                    +{amenities.length - 4}
                   </span>
                 )}
               </div>
@@ -602,7 +602,7 @@ export function RentalObjectCard({
         )}
 
         {/* Amenity tags */}
-        {showFacilities && facilities.length > 0 && (
+        {showAmenities && amenities.length > 0 && (
           <div style={{
             display: 'flex',
             flexWrap: 'nowrap',
@@ -610,14 +610,14 @@ export function RentalObjectCard({
             marginBottom: 'var(--ds-spacing-4)',
             overflow: 'hidden'
           }}>
-            {facilities.slice(0, maxAmenities).map((amenity) => (
+            {amenities.slice(0, maxAmenities).map((amenity) => (
               <Tag key={amenity} data-size="sm" data-color="accent" style={{ paddingInline: 'var(--ds-spacing-2)', flexShrink: 0 }}>
                 {amenity}
               </Tag>
             ))}
-            {moreFacilities > 0 && (
+            {moreAmenities > 0 && (
               <Tag data-size="sm" data-color="neutral" style={{ paddingInline: 'var(--ds-spacing-2)', flexShrink: 0 }}>
-                +{moreFacilities} mer
+                +{moreAmenities} mer
               </Tag>
             )}
           </div>

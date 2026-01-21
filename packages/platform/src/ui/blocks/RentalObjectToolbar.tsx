@@ -36,7 +36,7 @@ export interface RentalObjectToolbarProps {
 
 export function RentalObjectToolbar({
   count,
-  countLabel = 'listings',
+  countLabel = 'resources',
   activeFilterCount = 0,
   onFilterClick,
   viewMode = 'grid',

@@ -1,23 +1,23 @@
 /**
  * Drizzle ORM Database Schema for Platform API
  *
- * RE-EXPORTS from @digilist/database-schema package (single source of truth)
- * ONLY platform-related tables - NO domain-specific tables
+ * RE-EXPORTS from @xalatechnologies/platform-schema package (platform tables ONLY)
+ * NO domain-specific tables - those stay in @digilist/database-schema
  *
- * @see packages/database-schema for the canonical schema definitions
+ * @see packages/platform-schema for the canonical platform schema definitions
  */
 
 // ============================================================================
-// RE-EXPORT FROM @digilist/database-schema (PLATFORM TABLES ONLY)
+// RE-EXPORT FROM @xalatechnologies/platform-schema (PLATFORM TABLES ONLY)
 // ============================================================================
 
-// Schema definitions
+// Schema definitions (platform schemas only - NO domainSchema)
 export {
   platformSchema,
   saasSchema,
   complianceSchema,
   monitoringSchema,
-} from '@digilist/database-schema';
+} from '@xalatechnologies/platform-schema';
 
 // Core platform tables
 export {
@@ -30,7 +30,7 @@ export {
   type NewOrganization,
   type User,
   type NewUser,
-} from '@digilist/database-schema';
+} from '@xalatechnologies/platform-schema';
 
 // Platform session and auth tables
 export {
@@ -49,7 +49,7 @@ export {
   type NewCaseHandlerScope,
   type AuthDemoToken,
   type NewAuthDemoToken,
-} from '@digilist/database-schema';
+} from '@xalatechnologies/platform-schema';
 
 // SaaS tables (entitlements, policies)
 export {
@@ -60,11 +60,11 @@ export {
   navPolicies,
   globalKillSwitches,
   entitlementAuditLog,
-} from '@digilist/database-schema';
+} from '@xalatechnologies/platform-schema';
 
 // Compliance tables
 export {
   auditLogs,
   type AuditLog,
   type NewAuditLog,
-} from '@digilist/database-schema';
+} from '@xalatechnologies/platform-schema';

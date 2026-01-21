@@ -42,10 +42,10 @@ const meta: Meta<typeof RentalObjectAvailabilityCalendar> = {
 RentalObjectAvailabilityCalendar is the primary calendar component for the booking engine.
 
 ## Use Cases
-- Hourly facility booking (TIME_SLOTS)
+- Hourly resource booking (TIME_SLOTS)
 - Full-day equipment rental (ALL_DAY)
 - Multi-day accommodation booking (MULTI_DAY)
-- Seasonal facility allocation
+- Seasonal resource allocation
 
 ## Status Types
 - **AVAILABLE**: Can be booked

@@ -64,6 +64,21 @@ export function isStaging(): boolean {
   return getEnvironment() === 'staging';
 }
 
+// Map Provider with Dependency Injection
+export {
+  MapProvider,
+  useMapComponents,
+  MapNotConfigured,
+  type MapProviderProps,
+  type MapComponents,
+  type MapContextValue,
+  type AbstractMapRef,
+  type AbstractMapProps,
+  type AbstractMarkerProps,
+  type AbstractNavigationControlProps,
+  type AbstractViewState,
+} from './MapContext';
+
 // TODO: Migrate from @xala/runtime
 // export { AppProvider } from './AppProvider';
 // export { RuntimeProvider, useRuntime } from './RuntimeProvider';

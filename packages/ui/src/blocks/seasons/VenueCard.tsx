@@ -4,7 +4,8 @@
  * Domain-specific component for displaying venue information in seasonal context.
  * Migrated from @xalatechnologies/platform/ui to @digilist/ui for platform decoupling.
  */
-import { Card, Heading, Paragraph, Button, Badge } from '@xalatechnologies/platform/ui/primitives';
+import { Card, Heading, Paragraph, Button } from '@xalatechnologies/platform/ui/primitives';
+import { Badge } from '@xalatechnologies/platform/ui';
 import { useT } from '@xalatechnologies/platform/i18n';
 
 export interface VenueCardData {

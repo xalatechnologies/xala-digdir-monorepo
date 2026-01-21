@@ -121,8 +121,8 @@ export const EmptyList: Story = {
 export const NoBookings: Story = {
   args: {
     title: 'No bookings',
-    description: 'You have no upcoming bookings. Browse available listings to make a reservation.',
-    action: <Button variant="primary" type="button">Browse Listings</Button>,
+    description: 'You have no upcoming bookings. Browse available resources to make a reservation.',
+    action: <Button variant="primary" type="button">Browse Resources</Button>,
   },
 };
 
@@ -143,7 +143,7 @@ export const Error: Story = {
 export const FirstTimeUser: Story = {
   args: {
     title: 'Welcome to Digilist',
-    description: 'This is where your bookings will appear. Start by exploring available listings.',
+    description: 'This is where your bookings will appear. Start by exploring available resources.',
     action: (
       <div style={{ display: 'flex', gap: 'var(--ds-spacing-2)' }}>
         <Button variant="secondary" type="button">Take a Tour</Button>

@@ -470,7 +470,7 @@ export function UnifiedBookingEngine({
         <div className="booking-engine-header">
           <div className="header-content">
             <div className="header-badge">
-              <span className="badge-label">{config.listingType}</span>
+              <span className="badge-label">{config.resourceType}</span>
             </div>
             <Heading level={2} data-size="lg" style={{ margin: 0 }}>
               {rentalObjectName}

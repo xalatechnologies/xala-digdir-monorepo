@@ -38,6 +38,21 @@ export const SlugSchema = z.string().regex(/^[a-z0-9-]+$/);
 export const EmailSchema = z.string().email();
 export const DateSchema = z.string().datetime();
 
+// Metadata schema (key-value store for extensibility)
+export const MetadataSchema = z.record(z.unknown()).optional().default({});
+export type Metadata = z.infer<typeof MetadataSchema>;
+
+// Timestamps schema (for audit)
+export const TimestampsSchema = z.object({
+  createdAt: z.coerce.date(),
+  updatedAt: z.coerce.date(),
+});
+export type Timestamps = z.infer<typeof TimestampsSchema>;
+
+// ISO 4217 Currency codes
+export const CurrencyCodeSchema = z.enum(['NOK', 'SEK', 'DKK', 'EUR', 'USD', 'GBP']);
+export type CurrencyCode = z.infer<typeof CurrencyCodeSchema>;
+
 // Pagination schema
 export const PaginationSchema = z.object({
   page: z.number().int().positive().default(1),

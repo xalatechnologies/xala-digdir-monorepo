@@ -12,7 +12,7 @@ import {
   boolean,
   index,
 } from 'drizzle-orm/pg-core';
-import { domainSchema, tenants, users } from '@xalatechnologies/database-schema';
+import { domainSchema, tenants, users } from '@xalatechnologies/platform-schema';
 import { rentalObjects } from './rental-objects';
 import { bookings } from './bookings';
 

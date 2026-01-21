@@ -4,7 +4,8 @@
  * Domain-specific component for displaying seasonal booking information.
  * Migrated from @xalatechnologies/platform/ui to @digilist/ui for platform decoupling.
  */
-import { Card, Heading, Paragraph, Button, Badge } from '@xalatechnologies/platform/ui/primitives';
+import { Card, Heading, Paragraph, Button } from '@xalatechnologies/platform/ui/primitives';
+import { Badge } from '@xalatechnologies/platform/ui';
 import { useT } from '@xalatechnologies/platform/i18n';
 
 export type SeasonStatus = 'draft' | 'open' | 'closed' | 'cancelled' | 'completed';
@@ -29,8 +30,8 @@ export interface SeasonCardProps {
   'data-testid'?: string;
 }
 
-const STATUS_CONFIG: Record<SeasonStatus, { label: string; color: 'info' | 'success' | 'warning' | 'danger' | 'neutral' }> = {
-  draft: { label: 'Utkast', color: 'neutral' },
+const STATUS_CONFIG: Record<SeasonStatus, { label: string; color: 'info' | 'success' | 'warning' | 'danger' | 'default' }> = {
+  draft: { label: 'Utkast', color: 'default' },
   open: { label: 'Åpen', color: 'success' },
   closed: { label: 'Stengt', color: 'warning' },
   cancelled: { label: 'Kansellert', color: 'danger' },

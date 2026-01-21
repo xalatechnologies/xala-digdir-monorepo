@@ -132,8 +132,8 @@ export const Success: Story = {
             console.log('Published');
             setOpen(false);
           }}
-          title="Publish Listing"
-          description="Your listing will be visible to all users. Continue?"
+          title="Publish Resource"
+          description="Your resource will be visible to all users. Continue?"
           variant="success"
           confirmLabel="Publish"
           cancelLabel="Cancel"

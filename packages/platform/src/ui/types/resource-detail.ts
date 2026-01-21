@@ -10,10 +10,6 @@
  */
 export type ResourceType = 'SPACE' | 'RESOURCE' | 'EVENT' | 'SERVICE' | 'VEHICLE' | 'OTHER';
 
-/**
- * @deprecated Use ResourceType instead
- */
-export type ListingType = ResourceType;
 
 /**
  * Time slot availability status
@@ -39,10 +35,6 @@ export interface Amenity {
   icon?: string;
 }
 
-/**
- * @deprecated Use Amenity instead
- */
-export type Facility = Amenity;
 
 /**
  * Additional service with pricing
@@ -204,34 +196,6 @@ export interface ResourceDetail {
   currency?: string;
 }
 
-/**
- * @deprecated Use ResourceDetail instead
- */
-export interface ListingDetail {
-  id: string;
-  name: string;
-  category: string;
-  /** @deprecated Use resourceType instead */
-  listingType: ResourceType;
-  location: string;
-  description: string;
-  images: GalleryImage[];
-  capacity?: number;
-  /** @deprecated Use amenities instead */
-  facilities: Amenity[];
-  additionalServices?: AdditionalService[];
-  contact?: ContactInfo;
-  coordinates?: Coordinates;
-  openingHours?: OpeningHoursDay[];
-  guidelines?: GuidelineSection[];
-  faq?: FAQItem[];
-  /** Base price */
-  price?: number;
-  /** Price unit (e.g., 'time', 'dag') */
-  priceUnit?: string;
-  /** Currency code */
-  currency?: string;
-}
 
 // =============================================================================
 // Calendar Component Types

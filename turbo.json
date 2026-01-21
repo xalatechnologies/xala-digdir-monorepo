@@ -43,16 +43,20 @@
       "outputs": ["dist/**"],
       "inputs": ["src/**/*.ts", "package.json", "tsconfig.json", "tsup.config.ts"]
     },
-    "@xala/ds#build": {
+    "@xalatechnologies/platform-schema#build": {
       "dependsOn": [],
-      "outputs": [],
-      "inputs": ["src/**/*.{ts,tsx}", "package.json", "tsconfig.json"]
+      "outputs": ["dist/**"],
+      "inputs": ["src/**/*.ts", "package.json", "tsconfig.json", "tsup.config.ts"]
+    },
+    "@digilist/database-schema#build": {
+      "dependsOn": ["@xalatechnologies/platform-schema#build"],
+      "outputs": ["dist/**"],
+      "inputs": ["src/**/*.ts", "package.json", "tsconfig.json", "tsup.config.ts"]
     },
     "@digilist/ui#build": {
       "dependsOn": [
         "@xalatechnologies/platform#build",
         "@digilist/domain#build",
-        "@xala/i18n#build",
         "@digilist/contracts#build"
       ],
       "outputs": ["dist/**"],

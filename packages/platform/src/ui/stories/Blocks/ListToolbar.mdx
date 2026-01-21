@@ -93,12 +93,12 @@ data-testid="toolbar-results-count"
 // In your app page component
 import { ListToolbar } from '@xala/ds';
 
-function ListingsPage() {
+function ResourcesPage() {
   const [search, setSearch] = useState('');
   const [filters, setFilters] = useState({});
   const [sort, setSort] = useState('date-desc');
   
-  const { data } = useListings({ search, filters, sort });
+  const { data } = useResources({ search, filters, sort });
 
   return (
     <>
@@ -106,7 +106,7 @@ function ListingsPage() {
         search={{
           value: search,
           onChange: setSearch,
-          placeholder: t('listings.search'),
+          placeholder: t('resources.search'),
         }}
         filters={filterConfig}
         activeFilters={filters}
@@ -117,14 +117,14 @@ function ListingsPage() {
         sortValue={sort}
         onSortChange={setSort}
         resultsCount={data?.total}
-        resultsLabel={t('listings.results')}
+        resultsLabel={t('resources.results')}
         primaryAction={
           <Button variant="primary" onClick={openCreateModal}>
-            {t('listings.create')}
+            {t('resources.create')}
           </Button>
         }
       />
-      <ListingGrid items={data?.items} />
+      <ResourceGrid items={data?.items} />
     </>
   );
 }

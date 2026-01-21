@@ -137,13 +137,13 @@ export interface DaySchedule {
 }
 
 /**
- * Complete booking configuration for a listing
+ * Complete booking configuration for a rental object
  */
 export interface BookingConfig {
-  /** Listing ID */
-  listingId: string;
-  /** Listing type */
-  listingType: 'SPACE' | 'RESOURCE' | 'EVENT' | 'SERVICE' | 'VEHICLE' | 'OTHER';
+  /** Rental object ID */
+  rentalObjectId: string;
+  /** Rental object category */
+  category?: string;
   /** Booking mode */
   mode: BookingMode;
   /** Pricing configuration */

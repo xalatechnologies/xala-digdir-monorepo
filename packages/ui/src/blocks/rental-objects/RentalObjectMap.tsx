@@ -1,18 +1,38 @@
 /**
  * RentalObjectMap - Full map view with location pins and popups
  *
- * Uses Mapbox GL for interactive map display with rental object markers.
- * Custom popup renders outside map container to avoid clipping.
+ * Uses dependency injection for map components. The Map, Marker, and NavigationControl
+ * components are injected via MapProvider at the app level.
+ *
  * Supports dark mode with automatic map style switching.
+ *
+ * @example
+ * ```tsx
+ * // In app main.tsx - inject map implementation
+ * import Map, { Marker, NavigationControl } from 'react-map-gl/mapbox';
+ * import { MapProvider } from '@xalatechnologies/platform/runtime';
+ *
+ * <MapProvider
+ *   components={{ Map, Marker, NavigationControl }}
+ *   accessToken={MAPBOX_TOKEN}
+ * >
+ *   <App />
+ * </MapProvider>
+ *
+ * // In component - uses injected map
+ * <RentalObjectMap rentalObjects={objects} />
+ * ```
  */
 import * as React from 'react';
 import { useState, useCallback, useMemo, useRef, useEffect } from 'react';
-import Map, { Marker, NavigationControl } from 'react-map-gl/mapbox';
-import type { MapRef } from 'react-map-gl/mapbox';
-import 'mapbox-gl/dist/mapbox-gl.css';
+import {
+  useMapComponents,
+  MapNotConfigured,
+  type AbstractMapRef,
+} from '@xalatechnologies/platform/runtime';
 import { RentalObjectCard } from './RentalObjectCard';
 
-// Mapbox style URLs
+// Mapbox style URLs (fallbacks if not provided via context)
 const MAP_STYLES = {
   light: 'mapbox://styles/mapbox/streets-v12',
   dark: 'mapbox://styles/mapbox/dark-v11',
@@ -27,18 +47,19 @@ export interface MapRentalObject {
   latitude: number;
   longitude: number;
   type?: string;
-  rentalObjectType?: string;
+  category?: string;
   description?: string;
   capacity?: number;
   price?: number;
   priceUnit?: string;
-  facilities?: string[];
+  amenities?: string[];
   available?: boolean;
 }
 
 export interface RentalObjectMapProps {
   rentalObjects: MapRentalObject[];
-  mapboxToken: string;
+  /** Override access token (uses MapProvider token if not provided) */
+  mapboxToken?: string;
   initialLatitude?: number;
   initialLongitude?: number;
   initialZoom?: number;
@@ -165,7 +186,7 @@ function useColorScheme(colorScheme: 'light' | 'dark' | 'auto'): 'light' | 'dark
 
 export function RentalObjectMap({
   rentalObjects,
-  mapboxToken,
+  mapboxToken: propToken,
   initialZoom: _initialZoom = 12,
   height = '600px',
   onRentalObjectClick,
@@ -175,13 +196,28 @@ export function RentalObjectMap({
   colorScheme = 'auto',
   className,
 }: RentalObjectMapProps): React.ReactElement {
-  const mapRef = useRef<MapRef>(null);
+  // Get injected map components from context
+  const {
+    isConfigured,
+    accessToken: contextToken,
+    defaultMapStyle,
+    darkModeMapStyle,
+    Map,
+    Marker,
+    NavigationControl,
+  } = useMapComponents();
+
+  const mapRef = useRef<AbstractMapRef>(null);
   const [selectedRentalObject, setSelectedRentalObject] = useState<MapRentalObject | null>(null);
   const [mapLoaded, setMapLoaded] = useState(false);
 
+  // Use prop token or context token
+  const mapboxToken = propToken || contextToken;
+
   // Detect color scheme for map style
   const detectedColorScheme = useColorScheme(colorScheme);
-  const effectiveMapStyle = mapStyle || MAP_STYLES[detectedColorScheme];
+  const effectiveMapStyle = mapStyle ||
+    (detectedColorScheme === 'dark' ? (darkModeMapStyle || MAP_STYLES.dark) : (defaultMapStyle || MAP_STYLES.light));
 
   // Calculate bounds for all rental objects
   const bounds = useMemo(() => {
@@ -257,22 +293,6 @@ export function RentalObjectMap({
 
   const heightValue = typeof height === 'number' ? `${height}px` : height;
 
-  const markers = useMemo(() =>
-    rentalObjects.map((rentalObject) => (
-      <Marker
-        key={rentalObject.id}
-        latitude={rentalObject.latitude}
-        longitude={rentalObject.longitude}
-        anchor="bottom"
-        onClick={(e: { originalEvent: MouseEvent }) => {
-          e.originalEvent.stopPropagation();
-          handleMarkerClick(rentalObject);
-        }}
-      >
-        <MapPin isSelected={selectedRentalObject?.id === rentalObject.id} />
-      </Marker>
-    )), [rentalObjects, selectedRentalObject, handleMarkerClick]);
-
   // CSS for dark mode navigation controls - uses token fallbacks
   const darkModeControlStyles = detectedColorScheme === 'dark' ? `
     .mapboxgl-ctrl-group {
@@ -300,6 +320,27 @@ export function RentalObjectMap({
     }
   ` : '';
 
+  // If map not configured or missing token, show fallback
+  if (!isConfigured || !Map || !mapboxToken) {
+    return <MapNotConfigured height={heightValue} />;
+  }
+
+  // Create markers using injected Marker component
+  const markers = Marker ? rentalObjects.map((rentalObject) => (
+    <Marker
+      key={rentalObject.id}
+      latitude={rentalObject.latitude}
+      longitude={rentalObject.longitude}
+      anchor="bottom"
+      onClick={(e: { originalEvent: MouseEvent }) => {
+        e.originalEvent.stopPropagation();
+        handleMarkerClick(rentalObject);
+      }}
+    >
+      <MapPin isSelected={selectedRentalObject?.id === rentalObject.id} />
+    </Marker>
+  )) : null;
+
   return (
     <div
       className={className}
@@ -314,7 +355,7 @@ export function RentalObjectMap({
         <style dangerouslySetInnerHTML={{ __html: darkModeControlStyles }} />
       )}
       <Map
-        ref={mapRef}
+        ref={mapRef as React.RefObject<AbstractMapRef>}
         initialViewState={initialViewState}
         mapStyle={effectiveMapStyle}
         mapboxAccessToken={mapboxToken}
@@ -327,7 +368,7 @@ export function RentalObjectMap({
         }}
         reuseMaps
       >
-        <NavigationControl position="top-right" />
+        {NavigationControl && <NavigationControl position="top-right" />}
         {markers}
       </Map>
 
@@ -358,13 +399,13 @@ export function RentalObjectMap({
               showShareButton={!!onShare}
               showDescription={true}
               showPrice={true}
-              {...(selectedRentalObject.rentalObjectType && {
-                rentalObjectType: selectedRentalObject.rentalObjectType as 'SPACE' | 'RESOURCE' | 'EVENT' | 'SERVICE' | 'VEHICLE' | 'OTHER'
+              {...(selectedRentalObject.category && {
+                category: selectedRentalObject.category
               })}
               {...(selectedRentalObject.capacity !== undefined && { capacity: selectedRentalObject.capacity })}
               {...(selectedRentalObject.price !== undefined && { price: selectedRentalObject.price })}
               {...(selectedRentalObject.priceUnit && { priceUnit: selectedRentalObject.priceUnit })}
-              {...(selectedRentalObject.facilities && { facilities: selectedRentalObject.facilities })}
+              {...(selectedRentalObject.amenities && { amenities: selectedRentalObject.amenities })}
               {...(selectedRentalObject.available !== undefined && { available: selectedRentalObject.available })}
               {...(onRentalObjectClick && { onClick: () => onRentalObjectClick(selectedRentalObject.id, selectedRentalObject.slug) })}
               {...(onFavorite && { onFavorite: () => onFavorite(selectedRentalObject.id) })}

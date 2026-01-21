@@ -31,7 +31,7 @@ export interface NotificationItemData {
   createdAt: string;
   readAt?: string | null;
   relatedBookingId?: string;
-  relatedListingId?: string;
+  relatedResourceId?: string;
   metadata?: Record<string, unknown>;
 }
 

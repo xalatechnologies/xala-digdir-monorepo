@@ -12,7 +12,7 @@ import {
   integer,
   index,
 } from 'drizzle-orm/pg-core';
-import { domainSchema, tenants, organizations } from '@xalatechnologies/database-schema';
+import { domainSchema, tenants, organizations } from '@xalatechnologies/platform-schema';
 
 export const rentalObjects = domainSchema.table('rental_objects', {
   id: uuid('id').primaryKey().defaultRandom(),

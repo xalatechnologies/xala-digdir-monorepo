@@ -55,7 +55,7 @@ export const Stepper: Story = {
           steps={sampleSteps}
           currentStep={currentStep}
           onStepClick={(step) => step < currentStep && setCurrentStep(step)}
-          title="Create Listing"
+          title="Create Resource"
           showStepCounter
         />
         <div style={{ padding: 'var(--ds-spacing-6)', textAlign: 'center' }}>
@@ -83,7 +83,7 @@ export const WithErrors: Story = {
       steps={sampleSteps}
       currentStep={2}
       errors={{ details: ['Missing required field'] }}
-      title="Create Listing"
+      title="Create Resource"
     />
   ),
 };
@@ -128,7 +128,7 @@ export const FullExample: Story = {
     const isLastStep = currentStep === sampleSteps.length - 1;
 
     const stepContent: Record<string, React.ReactNode> = {
-      info: <div>Enter basic information about your listing...</div>,
+      info: <div>Enter basic information about your resource...</div>,
       details: <div>Add detailed description and features...</div>,
       pricing: <div>Set your pricing and availability...</div>,
       review: <div>Review all information before publishing...</div>,
@@ -140,7 +140,7 @@ export const FullExample: Story = {
           steps={sampleSteps}
           currentStep={currentStep}
           onStepClick={(step) => step < currentStep && setCurrentStep(step)}
-          title="Create Listing"
+          title="Create Resource"
           showStepCounter
         />
         <div style={{ padding: 'var(--ds-spacing-6)', minHeight: 'var(--ds-spacing-48)' }}>
@@ -158,7 +158,7 @@ export const FullExample: Story = {
             prevLabel="Previous"
             nextLabel="Next"
             cancelLabel="Cancel"
-            completeLabel="Publish Listing"
+            completeLabel="Publish Resource"
           />
         </div>
       </div>

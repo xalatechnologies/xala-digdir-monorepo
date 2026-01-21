@@ -62,10 +62,10 @@ export const Default: Story = {
 export const WithCaption: Story = {
   render: () => (
     <Table>
-      <caption>Available Facilities</caption>
+      <caption>Available Resources</caption>
       <Table.Head>
         <Table.Row>
-          <Table.HeaderCell>Facility</Table.HeaderCell>
+          <Table.HeaderCell>Resource</Table.HeaderCell>
           <Table.HeaderCell>Price/hour</Table.HeaderCell>
           <Table.HeaderCell>Available</Table.HeaderCell>
         </Table.Row>

@@ -18,8 +18,8 @@ import {
 import type { TimeSlot, BookingStep } from '../types';
 
 export interface BookingSectionProps {
-  /** Listing name */
-  listingName: string;
+  /** Resource name */
+  resourceName: string;
   /** Base price per hour */
   basePrice?: number;
   /** Currency */
@@ -118,7 +118,7 @@ function getDayNames(): string[] {
  * BookingSection component
  */
 export function BookingSection({
-  listingName: _listingName,
+  resourceName: _resourceName,
   basePrice,
   currency = 'NOK',
   steps,

@@ -30,7 +30,7 @@ import {
   permissions,
   featureFlags,
   tenantFeatureFlags,
-} from '@xalatechnologies/database-schema';
+} from '@xalatechnologies/platform-schema';
 
 interface MenuResolutionContext {
   tenantId: string;

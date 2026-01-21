@@ -1,7 +1,7 @@
 /**
  * Data Page Components
  * 
- * Reusable components for data-heavy pages (listings, bookings, etc.)
+ * Reusable components for data-heavy pages (resources, bookings, etc.)
  * Consolidates common patterns across dashboard apps
  */
 

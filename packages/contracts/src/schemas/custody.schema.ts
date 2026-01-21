@@ -5,7 +5,7 @@
  * These are Digilist-specific structures for managing access delegation.
  */
 import { z } from 'zod';
-import { UUIDSchema } from '@xala/contracts/schemas';
+import { UUIDSchema } from '@xalatechnologies/platform/contracts';
 
 // =============================================================================
 // Enums

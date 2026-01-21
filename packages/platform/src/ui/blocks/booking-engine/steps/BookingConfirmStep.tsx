@@ -67,7 +67,7 @@ export function BookingConfirmStep({
             )}
             <div className="rental-object-info">
               <Heading level={4} data-size="xs" style={{ margin: 0 }}>{rentalObjectName}</Heading>
-              <span className="rental-object-type">{config.listingType}</span>
+              <span className="rental-object-type">{config.resourceType}</span>
             </div>
           </div>
 
