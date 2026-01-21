@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { useState } from 'react';
 import { AvailabilityCalendar, Button, Card, Heading, Paragraph } from '@xalatechnologies/platform/ui';
-import type { TimeSlot, TimeSlotStatus } from '../../src/types/listing-detail';
+import type { TimeSlot, TimeSlotStatus } from '../../src/types';
 
 /**
  * AvailabilityCalendar is a weekly calendar grid component for booking time slots.

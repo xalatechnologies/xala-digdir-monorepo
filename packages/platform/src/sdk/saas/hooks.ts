@@ -22,7 +22,10 @@ import type {
   UpdateCategoryEntitlementsRequest,
   UpdateSecretRequest,
   AuditQueryParams,
+  ListUsersQuery,
+  UserListResponse,
 } from './types';
+import { getClient } from '../http';
 
 // =============================================================================
 // SaaS Admin Identity
@@ -342,6 +345,32 @@ export function useGenerateSeed() {
   return useMutation({
     mutationFn: (params: { entityType: string; count?: number; tenantId?: string; config?: object }) =>
       saasService.generateSeed(params),
+  });
+}
+
+// =============================================================================
+// User Management Hooks (Platform-wide admin)
+// =============================================================================
+
+/**
+ * List all users (platform admin only)
+ * Used for cross-tenant user management in SaaS admin
+ */
+export function useUsers(query?: Partial<ListUsersQuery>) {
+  return useQuery({
+    queryKey: saasQueryKeys.users.list(query),
+    queryFn: async () => {
+      const params = query
+        ? new URLSearchParams(
+            Object.entries(query)
+              .filter(([, v]) => v !== undefined)
+              .map(([k, v]) => [k, String(v)])
+          )
+        : undefined;
+      const url = params ? `/api/admin/users?${params}` : '/api/admin/users';
+      return getClient().get<UserListResponse>(url);
+    },
+    staleTime: 2 * 60 * 1000, // 2 minutes
   });
 }
 

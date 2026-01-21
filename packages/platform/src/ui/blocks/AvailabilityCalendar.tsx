@@ -8,7 +8,7 @@ import * as React from 'react';
 import { Button, Heading, Paragraph } from '@digdir/designsystemet-react';
 import { cn } from '../utils';
 import { ChevronLeftIcon, ChevronRightIcon, InfoIcon } from '../primitives/icons';
-import type { TimeSlot, TimeSlotStatus } from '../types/listing-detail';
+import type { TimeSlot, TimeSlotStatus } from '../types';
 
 export interface AvailabilityCalendarProps {
   /** Start date for the week view */

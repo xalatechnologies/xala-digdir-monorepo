@@ -18,12 +18,8 @@
  */
 
 // =============================================================================
-// @digdir/designsystemet-react - Re-export all base components
-// =============================================================================
-export * from '@digdir/designsystemet-react';
-
-// =============================================================================
 // Primitives - Custom components (icons, container, grid, etc.)
+// Note: @digdir/designsystemet-react components are re-exported from composed
 // =============================================================================
 export * from './primitives';
 
@@ -36,22 +32,9 @@ export { ThemeProvider, useTheme } from './ThemeProvider';
 export type { ThemeProviderProps, ThemeContextValue } from './ThemeProvider';
 
 // =============================================================================
-// Composed Components (selective exports to avoid conflicts)
+// Composed Components
 // =============================================================================
-export {
-  ContentLayout,
-  FormSection,
-  FormActions,
-  GlobalSearch,
-  LanguageSwitcher,
-  HeaderSearch,
-  UserMenu,
-  ConfirmDialog,
-  DataTable,
-  FilterPanel,
-  DialogProvider,
-  useDialog,
-} from './composed';
+export * from './composed';
 
 // =============================================================================
 // Blocks - Business logic components
@@ -77,6 +60,11 @@ export * from './patterns';
 // Themes - Theme utilities
 // =============================================================================
 export * from './themes';
+
+// =============================================================================
+// Types
+// =============================================================================
+export * from './types';
 
 // =============================================================================
 // Utilities

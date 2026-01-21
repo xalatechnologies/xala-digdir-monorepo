@@ -92,5 +92,8 @@ export {
   clearDLQ,
 } from './retry';
 
+// Auth (Demo Login, OAuth, ID-porten)
+export * from './auth';
+
 // SaaS Admin (Tenant Management, Plans, Feature Flags, Billing)
 export * from './saas';

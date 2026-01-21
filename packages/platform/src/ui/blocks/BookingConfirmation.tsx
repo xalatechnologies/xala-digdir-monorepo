@@ -15,7 +15,7 @@ import {
   CheckCircleIcon,
   ChevronLeftIcon,
 } from '../primitives/icons';
-import type { TimeSlot, BookingDetails, AdditionalService } from '../types/listing-detail';
+import type { TimeSlot, BookingDetails, AdditionalService } from '../types';
 
 export interface BookingConfirmationProps {
   /** Booking details from the form */

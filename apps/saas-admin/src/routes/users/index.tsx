@@ -15,7 +15,7 @@ import {
   Text,
   Stack,
 } from '@xalatechnologies/platform/ui';
-import { useUsers } from '@digilist/client-sdk/hooks'; // platform-exempt: user management is domain-specific
+import { useUsers } from '@xalatechnologies/platform/sdk';
 import { useT } from '@xala/i18n';
 
 export function UsersPage() {

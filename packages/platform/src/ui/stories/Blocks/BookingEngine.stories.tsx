@@ -9,7 +9,7 @@ import type {
   AvailabilitySlot,
   DayAvailability,
 } from '../../src/types/booking';
-import type { AdditionalService } from '../../src/types/listing-detail';
+import type { AdditionalService } from '../../src/types';
 
 /**
  * UnifiedBookingEngine is a comprehensive booking system that adapts to all rental object types.

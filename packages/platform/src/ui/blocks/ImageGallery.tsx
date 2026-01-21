@@ -1,14 +1,14 @@
 /**
  * ImageGallery
  *
- * Hero image with vertical thumbnail sidebar for listing detail pages.
+ * Hero image with vertical thumbnail sidebar for resource detail pages.
  * Displays main image on left (~70%) with vertical thumbnails on right (~30%).
  * Supports image navigation and counter display.
  */
 import * as React from 'react';
 import { Paragraph } from '@digdir/designsystemet-react';
 import { cn } from '../utils';
-import type { GalleryImage } from '../types/listing-detail';
+import type { GalleryImage } from '../types';
 
 export interface ImageGalleryProps {
   /** Array of images to display */
@@ -28,7 +28,7 @@ export interface ImageGalleryProps {
 }
 
 /**
- * ImageGallery component for listing detail pages
+ * ImageGallery component for resource detail pages
  *
  * @example
  * ```tsx

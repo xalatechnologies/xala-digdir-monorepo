@@ -14,7 +14,7 @@ import type {
   BookingConfig,
 } from '../../../types/booking';
 import { formatPrice } from '../../../types/booking';
-import type { AdditionalService } from '../../../types/listing-detail';
+import type { AdditionalService } from '../../../types';
 
 export interface BookingFormStepProps {
   formData: Partial<BookingFormData>;

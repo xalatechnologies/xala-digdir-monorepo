@@ -11,7 +11,7 @@ import { BookingFormModal } from '../../src/blocks/BookingFormModal';
 import { BookingConfirmation } from '../../src/blocks/BookingConfirmation';
 import { BookingSuccess } from '../../src/blocks/BookingSuccess';
 import { PriceSummaryCard } from '../../src/blocks/PriceSummaryCard';
-import type { TimeSlot, BookingDetails, AdditionalService } from '../../src/types/listing-detail';
+import type { TimeSlot, BookingDetails, AdditionalService } from '../../src/types';
 
 /**
  * Booking flow components for the rental object booking experience.

@@ -15,7 +15,7 @@ import { LocationCard } from '../../src/blocks/LocationCard';
 import { OpeningHoursCard } from '../../src/blocks/OpeningHoursCard';
 import { CapacityCard } from '../../src/blocks/CapacityCard';
 import { FacilityChips } from '../../src/blocks/FacilityChips';
-import type { GalleryImage, Facility } from '../../src/types/listing-detail';
+import type { GalleryImage, Facility } from '../../src/types';
 
 /**
  * Listing detail components for rental object detail pages.

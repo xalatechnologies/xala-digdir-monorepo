@@ -1,8 +1,8 @@
 /**
  * RentalObjectTabs
  *
- * Tabbed navigation component for listing detail pages.
- * Supports dynamic tabs based on listing type and available content.
+ * Tabbed navigation component for resource detail pages.
+ * Supports dynamic tabs based on resource type and available content.
  */
 import * as React from 'react';
 import { Tabs } from '@digdir/designsystemet-react';

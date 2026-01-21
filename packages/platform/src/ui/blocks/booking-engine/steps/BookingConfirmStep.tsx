@@ -19,7 +19,7 @@ import type {
   BookingPriceCalculation,
 } from '../../../types/booking';
 import { formatPrice } from '../../../types/booking';
-import type { AdditionalService } from '../../../types/listing-detail';
+import type { AdditionalService } from '../../../types';
 
 export interface BookingConfirmStepProps {
   selection: BookingSelection;

@@ -2,8 +2,15 @@
  * Booking Types
  *
  * Comprehensive type definitions for the unified booking system.
- * Supports all listing types: SPACE, RESOURCE, EVENT, SERVICE, VEHICLE
+ * Supports all resource types: SPACE, RESOURCE, EVENT, SERVICE, VEHICLE
+ *
+ * Platform-neutral terminology - use "resource" instead of "listing".
  */
+
+/**
+ * Resource type for booking configuration
+ */
+export type BookingResourceType = 'SPACE' | 'RESOURCE' | 'EVENT' | 'SERVICE' | 'VEHICLE' | 'OTHER';
 
 /**
  * Booking mode determines the UI and flow
@@ -137,13 +144,13 @@ export interface DaySchedule {
 }
 
 /**
- * Complete booking configuration for a listing
+ * Complete booking configuration for a resource
  */
 export interface BookingConfig {
-  /** Listing ID */
-  listingId: string;
-  /** Listing type */
-  listingType: 'SPACE' | 'RESOURCE' | 'EVENT' | 'SERVICE' | 'VEHICLE' | 'OTHER';
+  /** Resource ID */
+  resourceId: string;
+  /** Resource type */
+  resourceType: BookingResourceType;
   /** Booking mode */
   mode: BookingMode;
   /** Pricing configuration */
@@ -162,6 +169,15 @@ export interface BookingConfig {
   eventDate?: Date;
   /** Supported activity types */
   activityTypes?: string[];
+
+  /**
+   * @deprecated Use resourceId instead
+   */
+  listingId?: string;
+  /**
+   * @deprecated Use resourceType instead
+   */
+  listingType?: BookingResourceType;
 }
 
 /**
@@ -250,6 +266,10 @@ export interface BookingStepConfig {
 
 /**
  * Get default booking steps based on mode
+ *
+ * @param mode - The booking mode
+ * @param requirePayment - Whether payment step is required
+ * @returns Array of booking step configurations
  */
 export function getBookingSteps(mode: BookingMode, requirePayment: boolean = false): BookingStepConfig[] {
   const baseSteps: BookingStepConfig[] = [
@@ -262,7 +282,7 @@ export function getBookingSteps(mode: BookingMode, requirePayment: boolean = fal
     baseSteps.push({ id: 'payment', label: 'Betaling', icon: 'payment' });
   }
 
-  baseSteps.push({ id: 'complete', label: 'Fullført', icon: 'success' });
+  baseSteps.push({ id: 'complete', label: 'Fullfort', icon: 'success' });
 
   // Customize based on mode
   switch (mode) {
@@ -273,13 +293,13 @@ export function getBookingSteps(mode: BookingMode, requirePayment: boolean = fal
       baseSteps[0] = { id: 'select', label: 'Velg datoer', icon: 'calendar' };
       break;
     case 'recurring':
-      baseSteps[0] = { id: 'select', label: 'Velg mønster', icon: 'calendar' };
+      baseSteps[0] = { id: 'select', label: 'Velg monster', icon: 'calendar' };
       break;
     case 'instant':
       return [
         { id: 'details', label: 'Detaljer', icon: 'form' },
         { id: 'confirm', label: 'Bekreft', icon: 'confirm' },
-        { id: 'complete', label: 'Fullført', icon: 'success' },
+        { id: 'complete', label: 'Fullfort', icon: 'success' },
       ];
   }
 
@@ -287,16 +307,21 @@ export function getBookingSteps(mode: BookingMode, requirePayment: boolean = fal
 }
 
 /**
- * Determine booking mode from listing type and config
+ * Determine booking mode from resource type and config
+ *
+ * @param resourceType - The type of resource being booked
+ * @param pricingUnit - The pricing unit for the resource
+ * @param hasEventDate - Whether the resource has a specific event date
+ * @returns The appropriate booking mode
  */
 export function determineBookingMode(
-  listingType: string,
+  resourceType: string,
   pricingUnit: BookingPriceUnit,
   hasEventDate?: boolean
 ): BookingMode {
   if (hasEventDate) return 'event';
 
-  switch (listingType) {
+  switch (resourceType) {
     case 'EVENT':
       return 'event';
     case 'VEHICLE':
@@ -316,6 +341,11 @@ export function determineBookingMode(
 
 /**
  * Format price for display
+ *
+ * @param amount - The price amount
+ * @param currency - Currency code (default: 'NOK')
+ * @param locale - Locale for formatting (default: 'nb-NO')
+ * @returns Formatted price string
  */
 export function formatPrice(
   amount: number,
@@ -332,13 +362,16 @@ export function formatPrice(
 
 /**
  * Format price unit for display (Norwegian)
+ *
+ * @param unit - The booking price unit
+ * @returns Norwegian display string for the unit
  */
 export function formatPriceUnit(unit: BookingPriceUnit): string {
   const unitMap: Record<BookingPriceUnit, string> = {
     hour: 'time',
     day: 'dag',
     week: 'uke',
-    month: 'måned',
+    month: 'maned',
     booking: 'booking',
     person: 'person',
     unit: 'stk',

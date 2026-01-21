@@ -8,7 +8,7 @@ import * as React from 'react';
 import { Heading, Paragraph } from '@digdir/designsystemet-react';
 import { cn } from '../utils';
 import { ClockIcon } from '../primitives/icons';
-import type { OpeningHoursDay } from '../types/listing-detail';
+import type { OpeningHoursDay } from '../types';
 
 export interface OpeningHoursCardProps {
   /** Array of opening hours for each day */

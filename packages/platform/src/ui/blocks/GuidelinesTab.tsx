@@ -7,7 +7,7 @@
 import * as React from 'react';
 import { Details, DetailsSummary, DetailsContent, Heading, Paragraph } from '@digdir/designsystemet-react';
 import { cn } from '../utils';
-import type { GuidelineSection } from '../types/listing-detail';
+import type { GuidelineSection } from '../types';
 
 export interface GuidelinesTabProps {
   /** Array of guideline sections */

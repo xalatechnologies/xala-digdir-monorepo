@@ -7,7 +7,7 @@
 import * as React from 'react';
 import { Link } from '@digdir/designsystemet-react';
 import { cn } from '../utils';
-import type { BreadcrumbItem } from '../types/listing-detail';
+import type { BreadcrumbItem } from '../types';
 
 export interface BreadcrumbProps {
   /** List of breadcrumb items */

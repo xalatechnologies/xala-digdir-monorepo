@@ -6,8 +6,8 @@ import type {
   CalendarCell,
   CalendarSelection,
   CalendarSlotStatus,
-} from '../../src/types/listing-detail';
-import { DEFAULT_CALENDAR_LEGEND } from '../../src/types/listing-detail';
+} from '../../src/types';
+import { DEFAULT_CALENDAR_LEGEND } from '../../src/types';
 
 /**
  * RentalObjectAvailabilityCalendar is a dynamic calendar component with multiple modes.

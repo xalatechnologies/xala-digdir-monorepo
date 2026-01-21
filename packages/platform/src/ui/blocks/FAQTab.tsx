@@ -7,7 +7,7 @@
 import * as React from 'react';
 import { Details, DetailsSummary, DetailsContent, Heading, Paragraph } from '@digdir/designsystemet-react';
 import { cn } from '../utils';
-import type { FAQItem } from '../types/listing-detail';
+import type { FAQItem } from '../types';
 
 export interface FAQTabProps {
   /** Array of FAQ items */
@@ -71,7 +71,7 @@ export function FAQTab({
             color: 'var(--ds-color-neutral-text-subtle)',
           }}
         >
-          Finn svar på de vanligste spørsmålene om denne fasiliteten.
+          Finn svar på de vanligste spørsmålene om denne ressursen.
         </Paragraph>
       </div>
 

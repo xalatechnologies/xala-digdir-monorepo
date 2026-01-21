@@ -58,4 +58,6 @@ export {
   useAuditStats,
   // Seed Generation
   useGenerateSeed,
+  // User Management (Platform-wide)
+  useUsers,
 } from './hooks';

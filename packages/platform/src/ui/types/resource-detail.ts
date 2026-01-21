@@ -1,13 +1,19 @@
 /**
- * Listing Detail Types
+ * Resource Detail Types
  *
- * Type definitions for the listing detail page components.
+ * Type definitions for resource detail page components.
+ * Platform-neutral terminology - use "resource" instead of "listing".
  */
 
 /**
- * Listing type enum matching the schema
+ * Resource type enum matching the schema
  */
-export type ListingType = 'SPACE' | 'RESOURCE' | 'EVENT' | 'SERVICE' | 'VEHICLE' | 'OTHER';
+export type ResourceType = 'SPACE' | 'RESOURCE' | 'EVENT' | 'SERVICE' | 'VEHICLE' | 'OTHER';
+
+/**
+ * @deprecated Use ResourceType instead
+ */
+export type ListingType = ResourceType;
 
 /**
  * Time slot availability status
@@ -25,13 +31,18 @@ export interface GalleryImage {
 }
 
 /**
- * Facility with optional icon
+ * Amenity with optional icon
  */
-export interface Facility {
+export interface Amenity {
   id: string;
   label: string;
   icon?: string;
 }
+
+/**
+ * @deprecated Use Amenity instead
+ */
+export type Facility = Amenity;
 
 /**
  * Additional service with pricing
@@ -103,7 +114,7 @@ export interface BookingStep {
  * Activity type for booking
  */
 export type ActivityType =
-  | 'meeting'      // Møte
+  | 'meeting'      // Mote
   | 'training'     // Trening
   | 'event'        // Arrangement
   | 'workshop'     // Workshop
@@ -167,18 +178,47 @@ export interface FAQItem {
 }
 
 /**
- * Complete listing detail data
+ * Complete resource detail data
+ */
+export interface ResourceDetail {
+  id: string;
+  name: string;
+  category: string;
+  resourceType: ResourceType;
+  location: string;
+  description: string;
+  images: GalleryImage[];
+  capacity?: number;
+  amenities: Amenity[];
+  additionalServices?: AdditionalService[];
+  contact?: ContactInfo;
+  coordinates?: Coordinates;
+  openingHours?: OpeningHoursDay[];
+  guidelines?: GuidelineSection[];
+  faq?: FAQItem[];
+  /** Base price */
+  price?: number;
+  /** Price unit (e.g., 'time', 'dag') */
+  priceUnit?: string;
+  /** Currency code */
+  currency?: string;
+}
+
+/**
+ * @deprecated Use ResourceDetail instead
  */
 export interface ListingDetail {
   id: string;
   name: string;
   category: string;
-  listingType: ListingType;
+  /** @deprecated Use resourceType instead */
+  listingType: ResourceType;
   location: string;
   description: string;
   images: GalleryImage[];
   capacity?: number;
-  facilities: Facility[];
+  /** @deprecated Use amenities instead */
+  facilities: Amenity[];
   additionalServices?: AdditionalService[];
   contact?: ContactInfo;
   coordinates?: Coordinates;

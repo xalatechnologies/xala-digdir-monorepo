@@ -8,7 +8,7 @@ import * as React from 'react';
 import { Heading, Paragraph, Button } from '@digdir/designsystemet-react';
 import { cn } from '../utils';
 import { CheckCircleIcon, CalendarIcon, MailIcon, PhoneIcon } from '../primitives/icons';
-import type { BookingDetails } from '../types/listing-detail';
+import type { BookingDetails } from '../types';
 
 export interface BookingSuccessProps {
   /** Booking reference number */

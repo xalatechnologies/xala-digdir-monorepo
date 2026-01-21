@@ -33,7 +33,7 @@ import type {
   BookingPricing,
 } from '../../types/booking';
 import { getBookingSteps } from '../../types/booking';
-import type { AdditionalService } from '../../types/listing-detail';
+import type { AdditionalService } from '../../types';
 
 // Import extracted utilities
 import { getModeLabel, getModeDescription, formatPrice, formatPriceUnit } from './utils';

@@ -21,13 +21,13 @@ import type {
   CalendarSelection,
   CalendarLegendItem,
   CalendarViewMode,
-} from '../types/listing-detail';
+} from '../types';
 import {
   CALENDAR_SLOT_STATUS_LABELS,
   DEFAULT_CALENDAR_LEGEND,
   isCalendarSlotSelectable,
   getCalendarSlotLabel,
-} from '../types/listing-detail';
+} from '../types';
 import type { BadgeColor } from './StatusBadges';
 
 // =============================================================================
@@ -413,7 +413,7 @@ function TimeSlotsCell({
 
   return (
     <div
-      className={cn('listing-calendar-cell', isSelected && 'selected')}
+      className={cn('resource-calendar-cell', isSelected && 'selected')}
       data-status={status}
       data-status-color={statusConfig.color}
       onClick={handleClick}
@@ -514,7 +514,7 @@ function AllDayCell({
 
   return (
     <div
-      className={cn('listing-calendar-day-cell', isSelected && 'selected')}
+      className={cn('resource-calendar-day-cell', isSelected && 'selected')}
       data-status={status}
       data-status-color={statusConfig.color}
       data-current-month={isCurrentMonth}
@@ -658,7 +658,7 @@ function MultiDayCell({
   return (
     <div
       className={cn(
-        'listing-calendar-multiday-cell',
+        'resource-calendar-multiday-cell',
         isRangeStart && 'range-start',
         isRangeEnd && 'range-end',
         isInRange && 'in-range'
@@ -891,7 +891,7 @@ export function RentalObjectAvailabilityCalendar({
   // Render TIME_SLOTS mode
   const renderTimeSlotsMode = (): React.ReactElement => {
     return (
-      <div className="listing-calendar-timeslots">
+      <div className="resource-calendar-timeslots">
         {/* Week Navigation */}
         <div
           style={{
@@ -934,7 +934,7 @@ export function RentalObjectAvailabilityCalendar({
 
         {/* Calendar Grid */}
         <div
-          className="listing-calendar-grid"
+          className="resource-calendar-grid"
           style={{
             display: 'grid',
             gridTemplateColumns: '60px repeat(7, 1fr)',
@@ -1155,7 +1155,7 @@ export function RentalObjectAvailabilityCalendar({
     const weekDayHeaders = ['MAN', 'TIR', 'ONS', 'TOR', 'FRE', 'LØR', 'SØN'];
 
     return (
-      <div className="listing-calendar-allday">
+      <div className="resource-calendar-allday">
         {/* Month Navigation */}
         <div
           style={{
@@ -1198,7 +1198,7 @@ export function RentalObjectAvailabilityCalendar({
 
         {/* Calendar Grid */}
         <div
-          className="listing-calendar-month-grid"
+          className="resource-calendar-month-grid"
           style={{
             display: 'grid',
             gridTemplateColumns: 'repeat(7, 1fr)',
@@ -1490,7 +1490,7 @@ export function RentalObjectAvailabilityCalendar({
     const weekDayHeaders = ['MAN', 'TIR', 'ONS', 'TOR', 'FRE', 'LØR', 'SØN'];
 
     return (
-      <div className="listing-calendar-multiday">
+      <div className="resource-calendar-multiday">
         {/* Selection phase indicator */}
         <div
           style={{
@@ -1560,7 +1560,7 @@ export function RentalObjectAvailabilityCalendar({
 
         {/* Calendar Grid */}
         <div
-          className="listing-calendar-month-grid"
+          className="resource-calendar-month-grid"
           style={{
             display: 'grid',
             gridTemplateColumns: 'repeat(7, 1fr)',
@@ -1745,7 +1745,7 @@ export function RentalObjectAvailabilityCalendar({
   };
 
   return (
-    <div className={cn('listing-availability-calendar', className)}>
+    <div className={cn('resource-availability-calendar', className)}>
       {/* Header - only show if title is provided */}
       {title && (
         <div

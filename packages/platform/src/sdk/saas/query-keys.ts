@@ -65,4 +65,17 @@ export const saasQueryKeys = {
     stats: () => [...saasQueryKeys.audit.all(), 'stats'] as const,
     detail: (id: string) => [...saasQueryKeys.audit.all(), 'detail', id] as const,
   },
+
+  // Users (Platform-wide user management)
+  users: {
+    all: () => [...saasQueryKeys.all, 'users'] as const,
+    lists: () => [...saasQueryKeys.users.all(), 'list'] as const,
+    list: (params?: object) => [...saasQueryKeys.users.lists(), params ?? {}] as const,
+    details: () => [...saasQueryKeys.users.all(), 'detail'] as const,
+    detail: (id: string) => [...saasQueryKeys.users.details(), id] as const,
+    stats: () => [...saasQueryKeys.users.all(), 'stats'] as const,
+    search: (term: string) => [...saasQueryKeys.users.all(), 'search', term] as const,
+    byTenant: (tenantId: string) => [...saasQueryKeys.users.all(), 'byTenant', tenantId] as const,
+    byOrganization: (orgId: string) => [...saasQueryKeys.users.all(), 'byOrganization', orgId] as const,
+  },
 } as const;

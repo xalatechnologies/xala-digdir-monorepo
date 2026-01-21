@@ -9,7 +9,7 @@ import * as React from 'react';
 import { Heading, Paragraph } from '@digdir/designsystemet-react';
 import { cn } from '../utils';
 import { CheckIcon } from '../primitives/icons';
-import type { BookingStep } from '../types/listing-detail';
+import type { BookingStep } from '../types';
 
 export interface BookingStepperProps {
   /** Array of booking steps */

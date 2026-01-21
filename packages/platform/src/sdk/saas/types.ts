@@ -436,3 +436,38 @@ export interface SeedGenerationConfig {
   options?: Record<string, unknown>;
 }
 
+// =============================================================================
+// User Management Types (Platform-wide admin)
+// =============================================================================
+
+export interface PlatformUser {
+  id: string;
+  email?: string;
+  name?: string;
+  role?: string;
+  tenantId?: string;
+  organizationId?: string;
+  active?: boolean;
+  createdAt?: string;
+  updatedAt?: string;
+}
+
+export interface UserListResponse {
+  data: PlatformUser[];
+  pagination?: {
+    page: number;
+    limit: number;
+    total: number;
+    totalPages: number;
+  };
+}
+
+export interface ListUsersQuery {
+  page?: number;
+  limit?: number;
+  search?: string;
+  tenantId?: string;
+  role?: string;
+  status?: 'active' | 'suspended' | 'pending';
+}
+

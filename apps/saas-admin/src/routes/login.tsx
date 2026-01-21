@@ -13,7 +13,7 @@ import {
 } from '@xalatechnologies/platform/ui';
 import { useAuth } from '@xala/auth';
 import { useDemoLogin } from '../hooks/useDemoLogin';
-import { idportenService } from '@digilist/client-sdk'; // platform-exempt: ID-porten is domain-specific
+import { idportenService } from '@xalatechnologies/platform/sdk';
 import { useT } from '@xala/i18n';
 
 export function LoginPage(): React.ReactElement {

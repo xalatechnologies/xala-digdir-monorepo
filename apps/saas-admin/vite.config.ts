@@ -43,17 +43,11 @@ export default defineConfig({
       '@xalatechnologies/platform/ui/styles': path.resolve(__dirname, '../../packages/platform/dist/ui/index.css'),
       '@xalatechnologies/platform/ui': path.resolve(__dirname, '../../packages/platform/dist/ui/index.js'),
       '@xalatechnologies/platform': path.resolve(__dirname, '../../packages/platform/dist/index.js'),
-      // Force SDK to use dist (avoids @/ path alias conflicts with SDK source)
-      '@digilist/client-sdk/hooks': path.resolve(__dirname, '../../packages/client-sdk/dist/hooks/index.mjs'),
-      '@digilist/client-sdk/types': path.resolve(__dirname, '../../packages/client-sdk/dist/types/index.mjs'),
-      '@digilist/client-sdk/services': path.resolve(__dirname, '../../packages/client-sdk/dist/services/index.mjs'),
-      '@digilist/client-sdk': path.resolve(__dirname, '../../packages/client-sdk/dist/index.mjs'),
       // CSS imports cannot be resolved by tsconfig paths
       '@digdir/designsystemet-css': path.resolve(__dirname, '../../node_modules/@digdir/designsystemet-css'),
     },
   },
   optimizeDeps: {
-    exclude: ['@digilist/client-sdk'],
     include: ['@digdir/designsystemet-css'],
   },
   build: {

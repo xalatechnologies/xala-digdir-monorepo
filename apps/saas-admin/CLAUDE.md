@@ -146,15 +146,19 @@ pnpm preview                              # Preview build
 
 ### SDK Services Used
 ```tsx
+// Platform SDK (domain-agnostic)
 import {
-  useAuth,                # Authentication
-  usePlans,               # Plan management
-  useEntitlements,        # Entitlement CRUD
-  useRoutePolicies,       # Route policy config
-  useNavPolicies,         # Nav policy config
-  useTenants,             # Tenant management
-  useSeedData,            # Seed data operations
-} from '@digilist/client-sdk/hooks';
+  authService,            # Demo login, session management
+  idportenService,        # BankID/ID-porten authentication
+  useUsers,               # Platform-wide user management
+  useSaasTenants,         # Tenant management
+  useSaasPlans,           # Plan management
+  useSaasFeatureFlagsCatalog,  # Feature flags
+  useAuditLog,            # Audit log queries
+} from '@xalatechnologies/platform/sdk';
+
+// Auth package
+import { useAuth } from '@xala/auth';
 ```
 
 ### SaaS Schema Tables

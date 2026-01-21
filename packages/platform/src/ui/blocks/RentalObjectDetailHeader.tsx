@@ -1,7 +1,7 @@
 /**
  * RentalObjectDetailHeader
  *
- * Header section for listing detail page showing category, title,
+ * Header section for resource detail page showing category, title,
  * key facts, location, and action buttons (favorite, share).
  *
  * Supports both simple usage with capacity prop and advanced usage

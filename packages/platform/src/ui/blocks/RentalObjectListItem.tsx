@@ -2,7 +2,7 @@
  * RentalObjectListItem
  *
  * A horizontal list item component for displaying rental object/venue information.
- * Used in list view mode. Supports images, location map, facilities, and capacity.
+ * Used in list view mode. Supports images, location map, amenities, and capacity.
  */
 import * as React from 'react';
 import { Tag } from '@digdir/designsystemet-react';

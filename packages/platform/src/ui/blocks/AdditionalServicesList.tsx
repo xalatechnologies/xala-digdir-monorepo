@@ -7,7 +7,7 @@
 import * as React from 'react';
 import { Paragraph } from '@digdir/designsystemet-react';
 import { cn } from '../utils';
-import type { AdditionalService } from '../types/listing-detail';
+import type { AdditionalService } from '../types';
 
 export interface AdditionalServicesListProps {
   /** Array of additional services */

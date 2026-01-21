@@ -15,7 +15,7 @@ import {
   ChevronRightIcon,
   CloseIcon,
 } from '../primitives/icons';
-import type { TimeSlot, BookingStep } from '../types/listing-detail';
+import type { TimeSlot, BookingStep } from '../types';
 
 export interface BookingSectionProps {
   /** Listing name */

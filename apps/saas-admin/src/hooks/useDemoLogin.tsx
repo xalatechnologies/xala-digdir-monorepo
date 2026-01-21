@@ -6,7 +6,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useT } from '@xala/i18n';
-import { authService } from '@digilist/client-sdk'; // platform-exempt: auth is domain-specific
+import { authService } from '@xalatechnologies/platform/sdk';
 import type { DemoLoginFormData } from '@xalatechnologies/platform/ui';
 
 export function useDemoLogin() {

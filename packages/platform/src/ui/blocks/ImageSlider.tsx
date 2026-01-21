@@ -8,7 +8,7 @@ import * as React from 'react';
 import { Paragraph } from '@digdir/designsystemet-react';
 import { cn } from '../utils';
 import { ChevronLeftIcon, ChevronRightIcon, CloseIcon } from '../primitives/icons';
-import type { GalleryImage } from '../types/listing-detail';
+import type { GalleryImage } from '../types';
 
 export interface ImageSliderProps {
   /** Array of images to display */

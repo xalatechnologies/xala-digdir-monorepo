@@ -1,8 +1,8 @@
 /**
  * KeyFactsRow
  *
- * Displays key listing facts as a horizontal row of badges/chips.
- * Adapts based on listing type to show relevant information.
+ * Displays key resource facts as a horizontal row of badges/chips.
+ * Adapts based on resource type to show relevant information.
  */
 import * as React from 'react';
 import { cn } from '../utils';

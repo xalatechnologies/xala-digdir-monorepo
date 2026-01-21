@@ -1,18 +1,24 @@
 /**
  * Filter Types and Schemas
- * 
- * Based on Digilist Platform requirements and listing schema
+ *
+ * Platform-neutral filter types for resource discovery and search.
+ * Use "resource" instead of "listing" and "amenity" instead of "facility".
  */
 
 /**
- * Primary listing types from schema
+ * Primary resource types from schema
  */
-export type ListingType = 'SPACE' | 'RESOURCE' | 'EVENT' | 'SERVICE' | 'VEHICLE' | 'OTHER';
+export type ResourceType = 'SPACE' | 'RESOURCE' | 'EVENT' | 'SERVICE' | 'VEHICLE' | 'OTHER';
 
 /**
- * Venue/Category types (subcategories within listing types)
+ * @deprecated Use ResourceType instead
  */
-export type VenueType = 
+export type ListingType = ResourceType;
+
+/**
+ * Venue/Category types (subcategories within resource types)
+ */
+export type VenueType =
   | 'idrettshall'
   | 'moterom'
   | 'svommebasseng'
@@ -27,7 +33,7 @@ export type VenueType =
 /**
  * Price unit types
  */
-export type PriceUnit = 'time' | 'dag' | 'uke' | 'måned' | 'person' | 'stk';
+export type PriceUnit = 'time' | 'dag' | 'uke' | 'maned' | 'person' | 'stk';
 
 /**
  * Availability status
@@ -93,10 +99,18 @@ export interface LocationFilter {
 }
 
 /**
- * Facilities filter (multi-select)
+ * Amenities filter (multi-select)
+ */
+export interface AmenitiesFilter {
+  /** Selected amenity IDs */
+  amenityIds: string[];
+}
+
+/**
+ * @deprecated Use AmenitiesFilter instead
  */
 export interface FacilitiesFilter {
-  /** Selected facility IDs */
+  /** @deprecated Use amenityIds instead */
   facilityIds: string[];
 }
 
@@ -114,33 +128,43 @@ export interface DateTimeFilter {
  * Complete filter state
  */
 export interface FilterState {
-  /** Primary listing type filter (top-level) */
-  listingType?: ListingType | 'ALL';
-  
+  /** Primary resource type filter (top-level) */
+  resourceType?: ResourceType | 'ALL';
+
+  /**
+   * @deprecated Use resourceType instead
+   */
+  listingType?: ResourceType | 'ALL';
+
   /** Venue/category type filter */
   venueType?: VenueType | 'all';
-  
+
   /** Price range filter */
   priceRange?: PriceRangeFilter;
-  
+
   /** Capacity range filter */
   capacity?: CapacityRangeFilter;
-  
+
   /** Rating filter */
   rating?: RatingFilter;
-  
+
   /** Availability status */
   availability?: AvailabilityStatus;
-  
+
   /** Location filter */
   location?: LocationFilter;
-  
-  /** Facilities filter */
+
+  /** Amenities filter */
+  amenities?: AmenitiesFilter;
+
+  /**
+   * @deprecated Use amenities instead
+   */
   facilities?: FacilitiesFilter;
-  
+
   /** Date/time filter for booking availability */
   dateTime?: DateTimeFilter;
-  
+
   /** Search query (text search) */
   searchQuery?: string;
 }
@@ -160,7 +184,7 @@ export interface FilterConfig {
   /** Current value(s) */
   value?: string | string[] | number | number[] | PriceRangeFilter | CapacityRangeFilter | RatingFilter;
   /** Change handler */
-  onChange: (value: any) => void;
+  onChange: (value: unknown) => void;
   /** Whether this filter is active */
   isActive?: boolean;
   /** Optional placeholder text */
@@ -174,16 +198,21 @@ export interface FilterConfig {
  */
 export const mockFilterData = {
   /**
-   * Listing type options
+   * Resource type options
    */
-  listingTypes: (): FilterOption[] => [
+  resourceTypes: (): FilterOption[] => [
     { id: 'ALL', label: 'Alle typer', count: 15 },
     { id: 'SPACE', label: 'Lokaler', count: 3 },
     { id: 'RESOURCE', label: 'Ressurser', count: 3 },
     { id: 'EVENT', label: 'Arrangementer', count: 3 },
     { id: 'SERVICE', label: 'Tjenester', count: 3 },
-    { id: 'VEHICLE', label: 'Kjøretøy', count: 3 },
+    { id: 'VEHICLE', label: 'Kjorertoy', count: 3 },
   ],
+
+  /**
+   * @deprecated Use resourceTypes instead
+   */
+  listingTypes: (): FilterOption[] => mockFilterData.resourceTypes(),
 
   /**
    * Venue type options (subcategories)
@@ -191,9 +220,9 @@ export const mockFilterData = {
   venueTypes: (): FilterOption[] => [
     { id: 'all', label: 'Alle kategorier', count: 15 },
     { id: 'idrettshall', label: 'Idrettshall', count: 3 },
-    { id: 'moterom', label: 'Møterom', count: 2 },
-    { id: 'svommebasseng', label: 'Svømmebasseng', count: 2 },
-    { id: 'utendors', label: 'Utendørs', count: 1 },
+    { id: 'moterom', label: 'Moterom', count: 2 },
+    { id: 'svommebasseng', label: 'Svommebasseng', count: 2 },
+    { id: 'utendors', label: 'Utendors', count: 1 },
     { id: 'kulturhus', label: 'Kulturhus', count: 2 },
     { id: 'bibliotek', label: 'Bibliotek', count: 1 },
     { id: 'park', label: 'Park', count: 1 },
@@ -236,15 +265,15 @@ export const mockFilterData = {
    * Availability options
    */
   availability: (): FilterOption[] => [
-    { id: 'available', label: 'Tilgjengelig nå', count: 12 },
+    { id: 'available', label: 'Tilgjengelig na', count: 12 },
     { id: 'unavailable', label: 'Ikke tilgjengelig', count: 3 },
     { id: 'soon', label: 'Tilgjengelig snart', count: 2 },
   ],
 
   /**
-   * Common facilities
+   * Common amenities
    */
-  facilities: (): FilterOption[] => [
+  amenities: (): FilterOption[] => [
     { id: 'wifi', label: 'WiFi', count: 10 },
     { id: 'parking', label: 'Parkering', count: 8 },
     { id: 'projector', label: 'Projektor', count: 6 },
@@ -254,4 +283,9 @@ export const mockFilterData = {
     { id: 'sound', label: 'Lydanlegg', count: 3 },
     { id: 'lighting', label: 'Profesjonell belysning', count: 2 },
   ],
+
+  /**
+   * @deprecated Use amenities instead
+   */
+  facilities: (): FilterOption[] => mockFilterData.amenities(),
 };
