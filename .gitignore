@@ -49,6 +49,12 @@ logs/security/
 # Staging environment (local only)
 .env.staging
 apps/web/.env.local
+# Vite temp files (HMR timestamps)
+*.timestamp-*.mjs
+
+# Generated reports
+infra/scripts/i18n-comprehensive-report.json
+
 # Test artifacts and reports
 tests/artifacts/*
 tests/playwright-report/*
