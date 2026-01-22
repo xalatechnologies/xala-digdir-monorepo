@@ -18,7 +18,7 @@
     "@digilist/api",
     "@xalatechnologies/platform-api",
     "@digilist/web",
-    "@digilist/minside",
+    "@digilist/dashboard",
     "@digilist/backoffice",
     "@xalatechnologies/saas-admin",
     "@xalatechnologies/monitoring-global",

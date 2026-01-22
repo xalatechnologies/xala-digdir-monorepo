@@ -57,11 +57,11 @@ module.exports = {
 
     // MinSide App (User Portal)
     {
-      name: 'minside-staging-build',
+      name: 'dashboard-staging-build',
       script: 'npm',
       args: 'run build',
-      cwd: '/var/www/digilist/minside',
-      env_file: '/etc/digilist/minside/staging.env',
+      cwd: '/var/www/digilist/dashboard',
+      env_file: '/etc/digilist/dashboard/staging.env',
       autorestart: false,
       watch: false,
     },

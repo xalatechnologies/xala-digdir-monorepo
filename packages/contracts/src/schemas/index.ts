@@ -185,3 +185,103 @@ export {
   type BulkAssignCustodyGrantDTO,
   type CreateCustodySubgrantDTO,
 } from './custody.schema';
+
+// Allocation schemas
+export {
+  // Enum schemas
+  AllocationStatusSchema,
+  AllocationTypeSchema,
+  AllocationSourceSchema,
+
+  // Main entity schemas
+  AllocationSchema,
+  CreateAllocationSchema,
+  UpdateAllocationSchema,
+  TransferAllocationSchema,
+  CancelAllocationSchema,
+  AllocationFilterSchema,
+  AllocationConflictCheckSchema,
+  AllocationHistoryEntrySchema,
+  AllocationAvailabilitySlotSchema,
+  BulkAllocationSchema,
+
+  // Types
+  type AllocationStatus,
+  type AllocationType,
+  type AllocationSource,
+  type CreateAllocationInput,
+  type UpdateAllocationInput,
+  type TransferAllocationInput,
+  type CancelAllocationInput,
+  type AllocationFilter,
+  type AllocationConflictCheckInput,
+  type AllocationHistoryEntry,
+  type Allocation,
+  type AllocationAvailabilitySlot,
+  type BulkAllocationInput,
+  type AllocationId,
+  type AllocationWithRelations,
+  type AllocationSummary,
+  type AllocationCalendarEvent,
+  type AllocationConflict,
+  type BulkAllocationResult,
+  type AllocationStatistics,
+  type AllocationAction,
+  type AllocationPermission,
+  type AllocationMatrixCell,
+  type AllocationMatrixRow,
+  type AllocationMatrix,
+} from './allocation.schema';
+
+// Season schemas
+export {
+  // Enum schemas
+  SeasonStatusSchema,
+  SeasonApplicationStatusSchema,
+  PriorityRuleTypeSchema,
+
+  // Nested schemas
+  SeasonPricingTierSchema,
+  SeasonDateRangeSchema,
+  ApplicationWindowSchema,
+  PriorityRuleSchema,
+
+  // Main entity schemas
+  SeasonSchema,
+  SeasonApplicationSchema,
+  CreateSeasonSchema,
+  UpdateSeasonSchema,
+  CreateSeasonApplicationSchema,
+  UpdateSeasonApplicationSchema,
+  SeasonFilterSchema,
+  SeasonApplicationFilterSchema,
+
+  // Types
+  type SeasonStatus,
+  type SeasonApplicationStatus,
+  type PriorityRuleType,
+  type SeasonPricingTier,
+  type SeasonDateRange,
+  type ApplicationWindow,
+  type PriorityRule,
+  type CreateSeasonInput,
+  type UpdateSeasonInput,
+  type CreateSeasonApplicationInput,
+  type UpdateSeasonApplicationInput,
+  type SeasonFilter,
+  type SeasonApplicationFilter,
+  type Season,
+  type SeasonApplication,
+  type SeasonId,
+  type SeasonApplicationId,
+  type SeasonWithRelations,
+  type SeasonApplicationWithRelations,
+  type SeasonSummary,
+  type SeasonApplicationSummary,
+  type SeasonStatistics,
+  type SeasonTimelineEvent,
+  type SeasonAction,
+  type SeasonApplicationAction,
+  type SeasonPermission,
+  type SeasonApplicationPermission,
+} from './season.schema';

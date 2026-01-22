@@ -533,24 +533,56 @@ const metrics = await monitoringService.getMetrics();
 const alerts = await monitoringService.getAlerts();
 ```
 
-### Allocation Service
-**File:** `allocation.service.ts`
+### Allocations Service
+**File:** `allocations.service.ts`
 
 ```typescript
-import { allocationService } from '@digilist/client-sdk/services';
+import { allocationsService } from '@digilist/client-sdk/services';
 
 // List allocations
-const allocations = await allocationService.list();
+const allocations = await allocationsService.getAll();
+
+// Get single allocation
+const allocation = await allocationsService.getById(id);
+
+// Get allocations by rental object
+const objectAllocations = await allocationsService.getByRentalObject('uuid');
+
+// Get allocations by date range
+const rangeAllocations = await allocationsService.getByDateRange(
+  '2026-01-01',
+  '2026-12-31'
+);
 
 // Create allocation
-await allocationService.create({
+await allocationsService.create({
   rentalObjectId: 'uuid',
-  organizationId: 'uuid',
-  startDate: '2026-01-01',
-  endDate: '2026-12-31',
-  hoursPerWeek: 4
+  startTime: '2026-01-01T10:00:00Z',
+  endTime: '2026-01-01T12:00:00Z',
+  status: 'blocked'
+});
+
+// Update allocation
+await allocationsService.update(id, { status: 'confirmed' });
+
+// Delete allocation
+await allocationsService.deleteAllocation(id);
+
+// Bulk create allocations
+await allocationsService.bulkCreate([
+  { rentalObjectId: 'uuid', startTime: '...', endTime: '...' },
+  { rentalObjectId: 'uuid', startTime: '...', endTime: '...' }
+]);
+
+// Check for conflicts
+const conflicts = await allocationsService.checkConflicts({
+  rentalObjectId: 'uuid',
+  startTime: '2026-01-01T10:00:00Z',
+  endTime: '2026-01-01T12:00:00Z'
 });
 ```
+
+> **Note:** The `allocationService` alias is deprecated. Use `allocationsService` instead.
 
 ### Amenities Service
 **File:** `amenities.service.ts`
@@ -769,7 +801,7 @@ configure({
 21. profile.service.ts
 22. gdpr.service.ts
 23. monitoring.service.ts
-24. allocation.service.ts
+24. allocations.service.ts
 25. amenities.service.ts
 26. billing.service.ts
 27. conversation.service.ts

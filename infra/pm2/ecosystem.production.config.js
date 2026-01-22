@@ -67,11 +67,11 @@ module.exports = {
 
     // MinSide App (User Portal)
     {
-      name: 'minside-production-build',
+      name: 'dashboard-production-build',
       script: 'npm',
       args: 'run build',
-      cwd: '/var/www/digilist/minside',
-      env_file: '/etc/digilist/minside/production.env',
+      cwd: '/var/www/digilist/dashboard',
+      env_file: '/etc/digilist/dashboard/production.env',
       autorestart: false,
       watch: false,
     },

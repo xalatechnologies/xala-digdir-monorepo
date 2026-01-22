@@ -33,10 +33,13 @@ export {
   rentalObjectCalendarService,
   availabilityMatrixService,
 } from '../services/calendar.service';
-export {
-  allocationService as standaloneAllocationService,
-} from '../services/allocation.service';
 export { AllocationsService, allocationsService } from '../services/allocations.service';
+
+/**
+ * @deprecated Use allocationsService instead. The standalone allocation.service.ts
+ * has been deleted and consolidated into allocations.service.ts.
+ */
+export { allocationsService as standaloneAllocationService } from '../services/allocations.service';
 export { blocksService } from '../services/blocks.service';
 export type { BlockQueryParams, BlockListResponse } from '../services/blocks.service';
 
@@ -88,8 +91,13 @@ export type {
   BackofficeListingParams,
 } from '../services/price-rules.service';
 export { economyService, EconomyService } from '../services/economy.service';
-export { discountCodeService } from '../services/discount-code.service';
 export { discountCodesService, DiscountCodesService } from '../services/discount-codes.service';
+
+/**
+ * @deprecated Use discountCodesService instead. The standalone discount-code.service.ts
+ * has been deleted and consolidated into discount-codes.service.ts.
+ */
+export { discountCodesService as discountCodeService } from '../services/discount-codes.service';
 
 // =============================================================================
 // Reports & Analytics

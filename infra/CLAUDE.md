@@ -196,7 +196,7 @@ git push  # Triggers deployment
 
 ## Frontend vs Backend Secrets
 
-### Frontend Apps (Web, MinSide, Backoffice, etc.)
+### Frontend Apps (Web, Dashboard, Backoffice, etc.)
 
 **CAN have:**
 - `VITE_API_URL` - Public API endpoint

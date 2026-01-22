@@ -108,6 +108,14 @@ export class DiscountCodesService extends BaseService {
   async activate(id: string): Promise<SingleResponse<DiscountCode>> {
     return this.client.post(this.buildPath(`/${id}/activate`), {});
   }
+
+  /**
+   * Toggle discount code active status
+   * @deprecated Use activate() or deactivate() instead for explicit control
+   */
+  async toggleActive(id: string): Promise<SingleResponse<DiscountCode>> {
+    return this.client.put(this.buildPath(`/${id}/toggle`), {});
+  }
 }
 
 export const discountCodesService = new DiscountCodesService();

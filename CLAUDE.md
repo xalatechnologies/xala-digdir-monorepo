@@ -1,829 +1,59 @@
-# CLAUDE.md
+# CLAUDE.md - Digilist Domain Repository
 
 This file provides guidance to Claude Code (claude.ai/code) when working with
 code in this repository.
 
----
-
-## 🚨 CRITICAL: Database Migration System (PERMANENT FIX - 2026-01-18)
-
-### **ROOT CAUSE IDENTIFIED AND PERMANENTLY FIXED**
-
-**Problem:** Old migrations were fragmented across 6 files (0000-0005) and **completely missing saas schema tables**. Drizzle Kit reported "no changes detected" because it compared against incomplete migrations.
-
-**Symptoms:**
-- `relation "saas.route_policies" does not exist`
-- `relation "saas.plans" does not exist`
-- Drizzle Kit says "no changes" but tables don't exist
-- Seeds fail with missing table errors
-
-### **PERMANENT SOLUTION APPLIED:**
-
-1. **✅ Deleted all old fragmented migrations** (0000-0005)
-2. **✅ Generated fresh single migration** (`0000_fuzzy_living_tribunal.sql`)
-3. **✅ Verified all 19 tables across 5 schemas:**
-   - `platform.*` - 8 tables
-   - `domain.*` - 3 tables  
-   - `saas.*` - 7 tables (route_policies, nav_policies, plan_entitlements, etc.)
-   - `compliance.*` - 1 table
-   - `monitoring.*` - 0 tables (monitoring tables are separate)
-
-4. **✅ Fixed seed script permanently:**
-   - Changed from `postgres.sql` to `queryClient` template literals
-   - Added table existence check before querying
-   - Gracefully skips missing tables (e.g., saas.plans)
-   - Properly handles plan entitlements when plans table exists
-
-### **How to Set Up Database (GUARANTEED TO WORK):**
-
-```bash
-# 1. Create fresh test database
-docker exec digilist-dev-postgres psql -U digilist_dev -d digilist_dev -c "DROP DATABASE IF EXISTS digilist_test;"
-docker exec digilist-dev-postgres psql -U digilist_dev -d digilist_dev -c "CREATE DATABASE digilist_test;"
-
-# 2. Create schemas
-docker exec digilist-dev-postgres psql -U digilist_dev -d digilist_test -c "
-CREATE SCHEMA IF NOT EXISTS platform;
-CREATE SCHEMA IF NOT EXISTS domain;
-CREATE SCHEMA IF NOT EXISTS compliance;
-CREATE SCHEMA IF NOT EXISTS monitoring;
-CREATE SCHEMA IF NOT EXISTS saas;
-"
-
-# 3. Apply migration (single file, all tables)
-cd packages/database-schema
-docker exec -i digilist-dev-postgres psql -U digilist_dev -d digilist_test < migrations/0000_fuzzy_living_tribunal.sql
-
-# 4. Run seeds (route_policies, nav_policies)
-DATABASE_URL="postgresql://digilist_dev:dev_password_2026@localhost:5433/digilist_test" pnpm seed
-
-# 5. Verify
-docker exec digilist-dev-postgres psql -U digilist_dev -d digilist_test -c "
-SELECT schemaname, COUNT(*) as table_count 
-FROM pg_tables 
-WHERE schemaname IN ('platform', 'domain', 'saas', 'compliance', 'monitoring') 
-GROUP BY schemaname 
-ORDER BY schemaname;
-"
-```
-
-### **Expected Output:**
-```
- schemaname | table_count 
-------------+-------------
- compliance |           1
- domain     |           3
- platform   |           8
- saas       |           7
-```
-
-### **NEVER DO THIS AGAIN:**
-- ❌ Do NOT use `drizzle-kit push` - it doesn't work reliably
-- ❌ Do NOT create multiple migration files manually
-- ❌ Do NOT modify migrations after they're generated
-- ✅ ALWAYS use `pnpm db:generate` to create migrations
-- ✅ ALWAYS apply migrations with raw SQL via psql
-- ✅ ALWAYS verify tables exist before running seeds
-
-### **If You See Migration Issues:**
-1. Check if schemas exist: `\dn` in psql
-2. Check if tables exist: `\dt saas.*` in psql
-3. If tables missing, apply migration file directly
-4. Never trust "no changes detected" - verify manually
+> **Domain Repository:** This is the Digilist domain repository containing
+> rental object and booking management functionality. Platform infrastructure
+> is consumed from `@xalatechnologies/platform` npm package.
 
 ---
 
 ## System Context
 
-You are operating inside the **Xala / Digilist Platform** - a Norwegian
-municipal booking and resource management system.
+**Digilist** is a Norwegian municipal booking and resource management system.
 
-**System Characteristics:**
-
+**Domain Characteristics:**
 - Multi-tenant (kommune-level isolation)
-- Audit-first (all mutations logged for compliance)
+- Rental object management (boat slips, parking, recreational facilities)
+- Booking workflow (request → approval → confirmation)
+- Seasonal allocation management
 - SDK-driven (@digilist/client-sdk is THE integration layer)
-- RFC 7807 compliant (Problem Details for errors)
-- RBAC enforced (role-based access control)
-- GDPR compliant (consent management, data subject rights, Article 30 audit trails)
-- Multi-channel notifications (in-app, email, SMS, push with WebSocket realtime)
-- Production live
+- GDPR compliant (consent management, data subject rights)
+
+**Platform Dependencies (from @xalatechnologies/platform):**
+- Authentication (BankID, ID-porten, Vipps)
+- Design system (@xalatechnologies/platform/ui)
+- i18n infrastructure (@xalatechnologies/platform/i18n)
+- RFC 7807 error handling
+- Observability (metrics, logging)
 
 ---
 
-## 🏗️ INFRASTRUCTURE (NEW - 2026-01-18)
-
-**ALL infrastructure configuration is now in `infra/` directory:**
+## Repository Structure
 
 ```
-infra/
-├── docker/          # Docker configs (dev, staging, production)
-├── pm2/             # PM2 process manager configs
-├── env/             # Environment variable templates
-├── secrets/         # Encrypted secrets (age encryption)
-├── scripts/         # Deployment scripts
-└── docs/            # Infrastructure documentation
-```
-
-**Critical Infrastructure Rules:**
-
-1. **Secrets Management:**
-   - ALL secrets encrypted with `age` before committing
-   - Private key (`age.key`) NEVER committed
-   - Public key (`age.key.pub`) safe to commit
-   - Secrets decrypted at deploy-time, NOT runtime
-   - Stored on VPS at `/etc/digilist/<app>/<env>.env` (root:root 0600)
-
-2. **Deployment:**
-   - Staging: `./infra/scripts/deploy-staging.sh`
-   - Production: `./infra/scripts/deploy-production.sh`
-   - PM2 manages processes (zero-downtime with `pm2 reload`)
-   - Secrets injected via PM2 `env_file` parameter
-
-3. **Docker:**
-   - Development: `infra/docker/compose/docker-compose.dev.yml` (hot reload)
-   - Staging: `infra/docker/compose/docker-compose.staging.yml` (production builds)
-   - Production: `infra/docker/compose/docker-compose.production.yml` (optimized + secure)
-
-4. **Environment Files:**
-   - Templates in `infra/env/`
-   - NEVER commit `.env` files
-   - Use encrypted secrets in `infra/secrets/staging/` and `infra/secrets/production/`
-
-**See:** [infra/CLAUDE.md](infra/CLAUDE.md) for complete infrastructure context
-
----
-
-## 🔒 CRITICAL LESSONS LEARNED (2026-01-17)
-
-> **HARD LINE - READ THIS FIRST**
->
-> The following lessons are from real production incidents and MUST be followed.
-> These are non-negotiable and have been learned the hard way.
-
-### 1. Database Schema Structure (CRITICAL)
-
-**⚠️ HARD REQUIREMENT:** The application code expects tables in **named schemas**, NOT the `public` schema.
-
-```sql
--- REQUIRED: These schemas MUST exist
-CREATE SCHEMA IF NOT EXISTS platform;   -- User/tenant infrastructure
-CREATE SCHEMA IF NOT EXISTS domain;     -- Business domain tables
-CREATE SCHEMA IF NOT EXISTS compliance; -- Audit and GDPR
-CREATE SCHEMA IF NOT EXISTS monitoring; -- Health checks, metrics
-CREATE SCHEMA IF NOT EXISTS saas;       -- Billing, subscriptions
-```
-
-**Schema Assignment:**
-- `platform` schema: users, tenants, organizations, sessions, org_memberships, permission_assignments, case_handler_scopes, branding_tokens, branding_versions
-- `domain` schema: rental_objects, bookings, alerts, allocations, seasonal_leases, conversations, messages, seasons, season_applications, priority_rules, access_grants
-- `compliance` schema: audit_logs, gdpr_requests
-
-**Why This Matters:**
-- ❌ Tables in `public` schema will cause "relation does not exist" errors
-- ❌ Authentication will fail completely
-- ❌ All database operations will fail
-
-**Validation:**
-```bash
-# Before deployment, verify schema structure
-psql -d digilist_prod -c "\dn"  # Should show all 5 schemas
-psql -d digilist_prod -c "SELECT schemaname, COUNT(*) FROM pg_tables WHERE schemaname IN ('platform', 'domain', 'compliance') GROUP BY schemaname;"
-```
-
-### 2. BankID / Signicat Authentication (LOCKED ✅)
-
-**🔒 HARD LINE - NO CHANGES WITHOUT APPROVAL**
-
-**Status:** ✅ WORKING AND TESTED (2026-01-17)
-
-Authentication is **STABLE AND WORKING**. It took **4+ hours** to debug and configure correctly. Do not modify without explicit approval.
-
-**✅ WORKING CONFIGURATION (LOCKED):**
-
-```bash
-# Environment Variables (Production VPS)
-IDPORTEN_BASE_URL=https://digilist.sandbox.signicat.com          # OAuth token endpoint
-IDPORTEN_API_URL=https://api.signicat.com                        # REST API (PRODUCTION, not sandbox!)
-IDPORTEN_CALLBACK_URL=https://api.digilist.no/api/auth/idporten/callback
-IDPORTEN_CLIENT_ID=sandbox-fantastic-house-812
-IDPORTEN_CLIENT_SECRET=US1SxD0ett3Hczv00dOzdSxPyGjYK1PtbbDrXmMJLTVAkvlB
-```
-
-**🔑 KEY INSIGHT:** The REST API sessions endpoint uses **production API** (`https://api.signicat.com`) even when using sandbox credentials. This is by design.
-
-**Critical Files (DO NOT CHANGE):**
-- `apps/api/src/modules/auth/idporten.controller.ts` - BankID REST API (ONLY ONE)
-- `apps/api/src/modules/auth/session.service.ts` - Session management
-- `apps/api/src/config/cookies.ts` - Cookie configuration
-- `packages/client-sdk/src/services/idporten.service.ts` - Frontend SDK
-
-**Authentication Flow:**
-1. User clicks "Logg inn med BankID"
-2. API gets OAuth access token from `https://digilist.sandbox.signicat.com/oauth/token`
-3. API creates session at `https://api.signicat.com/auth/rest/sessions` (production API!)
-4. User completes BankID authentication
-5. Callback to `https://api.digilist.no/api/auth/idporten/callback`
-6. API sets 3 HTTP-only cookies: `dl_at`, `dl_rt`, `dl_csrf` with domain `.digilist.no`
-7. User redirected to original page (preserves full URL path)
-
-**Testing Checklist:**
-- [ ] BankID login → Dashboard (not login page)
-- [ ] Cookies visible in dev tools with domain `.digilist.no`
-- [ ] Session API returns user data (not 401)
-- [ ] Deep link preserved (e.g., `/bookings/create/step-2`)
-- [ ] Logout clears cookies
-- [ ] Cross-subdomain SSO works
-
-**📚 Complete Documentation:** `docs/guides/SIGNICAT_BANKID_AUTHENTICATION.md` (comprehensive 400+ line guide)
-
-### 3. Deployment Checklist (MANDATORY)
-
-Before deploying ANY changes:
-
-- [ ] Verify database schemas exist and tables are in correct schemas
-- [ ] Rebuild ALL dependent apps after SDK changes (`pnpm -r build`)
-- [ ] Test authentication (both BankID and demo login)
-- [ ] Check API logs for errors (`pm2 logs xala-api`)
-- [ ] Verify cookies are set with correct domain in browser dev tools
-- [ ] Monitor for 10 minutes after deployment
-
-### 4. Debugging Principles (LEARN FROM MISTAKES)
-
-**When debugging authentication/session issues:**
-
-1. **Trace the full request path:** Frontend → SDK → API endpoint
-   - Don't assume which API is being called - verify in SDK code
-   - Check actual endpoint URLs in network tab
-
-2. **Read BOTH frontend console AND backend logs**
-   - Database errors appear in API logs, not frontend
-   - Cookie issues appear in both places
-
-3. **Check infrastructure before application logic**
-   - Database schemas, cookie domains, CORS settings
-   - These cause symptoms that look like logic bugs
-
-4. **Fix one thing at a time**
-   - Deploy and test after each change
-   - Don't batch multiple fixes together
-
-5. **Verify assumptions**
-   - "It should work" ≠ "It does work"
-   - Test every change, don't assume success
-
-**Common Pitfall:** Same symptom ("redirects to login") can have multiple causes:
-- Missing database schemas
-- Cookies on wrong domain
-- Wrong API endpoint being called
-- Session not created
-- Redirect to wrong domain
-
----
-
-## Monorepo Structure
-
-This is a **Turborepo** using **pnpm workspaces**.
-
-```
-xala-digdir-monorepo/
-├── apps/                           # Applications (7 total)
-│   ├── web/                        # Public web app (port 5173)
-│   ├── minside/                    # User portal (port 5174)
-│   ├── backoffice/                 # Admin portal (port 5175)
-│   ├── saas-admin/                 # SaaS administration (port 5177)
-│   ├── monitoring/                 # System monitoring (port 5178)
-│   ├── docs-learning/              # Documentation portal (port 5179)
-│   └── api/                        # Fastify API server (port 4000)
+xala-digilist/
+├── apps/
+│   ├── api/                    # Domain API (port 4000)
+│   ├── web/                    # Public discovery (port 5173)
+│   ├── dashboard/              # User dashboard (port 5174) [renamed from minside]
+│   ├── backoffice/             # Admin portal (port 5175)
+│   ├── monitoring/             # Domain monitoring (port 5178)
+│   └── docs-learning/          # Documentation (port 5179)
 │
-├── packages/                       # Shared packages (14 total)
-│   ├── client-sdk/                 # Enterprise SDK ⭐
-│   ├── contracts/                  # API contracts (Zod schemas) ⭐
-│   ├── sdk-core/                   # SDK primitives (HTTP, RFC7807)
-│   ├── database-schema/            # Drizzle ORM definitions
-│   ├── auth/                       # Authentication layer
-│   ├── ds/                         # Design System facade ⭐
-│   ├── ds-themes/                  # Theme CSS files
-│   ├── ds-registry/                # Component documentation
-│   ├── i18n/                       # Internationalization ⭐
-│   ├── observability/              # Metrics, logging
-│   ├── testing/                    # Test infrastructure ⭐
-│   │   ├── suites/                 # All test suites
-│   │   │   ├── e2e/                # Playwright E2E tests
-│   │   │   ├── unit/               # Vitest unit tests
-│   │   │   ├── integration/        # Integration tests
-│   │   │   ├── performance/        # Performance tests
-│   │   │   ├── security/           # Security tests
-│   │   │   ├── compliance/         # Compliance tests
-│   │   │   └── contracts/          # Contract tests
-│   │   ├── mocks/                  # Mock implementations
-│   │   ├── stubs/                  # Test stubs
-│   │   ├── fixtures/               # Test data
-│   │   └── reports/                # Test output (gitignored)
-│   ├── testing-e2e/                # Playwright E2E utilities
-│   ├── docs-content/               # Documentation content
-│   └── eslint-config/              # Shared ESLint rules
+├── packages/
+│   ├── client-sdk/             # @digilist/client-sdk (domain services)
+│   ├── contracts/              # @digilist/contracts (Zod schemas, types)
+│   ├── ui/                     # @digilist/ui (domain components)
+│   ├── runtime/                # @digilist/runtime (app configuration)
+│   ├── schema/                 # @digilist/database-schema (domain tables)
+│   ├── testing/                # @digilist/testing
+│   └── testing-e2e/            # @digilist/testing-e2e
 │
-├── docs/                           # Documentation ⭐
-│   ├── architecture/               # Architecture docs and proposals
-│   ├── guides/                     # Development guides
-│   ├── operations/                 # Operational docs
-│   │   ├── deployments/            # Deployment reports
-│   │   ├── migrations/             # Migration reports
-│   │   └── archive/                # Historical artifacts
-│   ├── apps/                       # App-specific docs
-│   ├── packages/                   # Package-specific docs
-│   └── reference/                  # Reference materials
-│
-├── scripts/                        # Build & deployment scripts
-└── (root config files)
-```
-
-### Applications (apps/)
-
-- **apps/web** - Public-facing Vite + React app (port 5173)
-  - Public listing discovery and booking initiation
-  - SEO-optimized, mobile-first design
-  - [CLAUDE.md](./apps/web/CLAUDE.md) | [AGENTS.md](./apps/web/AGENTS.md)
-
-- **apps/backoffice** - Admin portal Vite + React app (port 5175)
-  - Protected admin application with RBAC
-  - Listing/booking management, reports, integrations
-  - Real-time updates via WebSocket
-  - [CLAUDE.md](./apps/backoffice/CLAUDE.md) | [AGENTS.md](./apps/backoffice/AGENTS.md)
-
-- **apps/minside** - User dashboard Vite + React app (port 5174)
-  - User portal for booking management
-  - Mobile-optimized, GDPR-compliant
-  - Notification center, profile management
-  - [CLAUDE.md](./apps/minside/CLAUDE.md) | [AGENTS.md](./apps/minside/AGENTS.md)
-
-- **apps/api** - Fastify API server (port 4000)
-  - Backend with 30+ feature modules
-  - PostgreSQL + Drizzle ORM
-  - Audit logging, multi-tenant isolation
-  - WebSocket server for real-time events
-  - [CLAUDE.md](./apps/api/CLAUDE.md) | [AGENTS.md](./apps/api/AGENTS.md)
-
-- **apps/saas-admin** - SaaS administration portal Vite + React app (port 5177)
-  - Billing, subscriptions, feature management
-  - Plan and entitlement configuration
-  - Route and navigation policy management
-  - [CLAUDE.md](./apps/saas-admin/CLAUDE.md) | [AGENTS.md](./apps/saas-admin/AGENTS.md)
-
-- **apps/monitoring** - System monitoring dashboard Vite + React app (port 5178)
-  - Health checks and performance monitoring
-  - System metrics visualization
-  - Error tracking and alerting
-  - [CLAUDE.md](./apps/monitoring/CLAUDE.md) | [AGENTS.md](./apps/monitoring/AGENTS.md)
-
-- **apps/docs-learning** - Documentation and learning portal Vite + React app (port 5179)
-  - Training materials and guides
-  - Interactive documentation
-  - [CLAUDE.md](./apps/docs-learning/CLAUDE.md) | [AGENTS.md](./apps/docs-learning/AGENTS.md)
-
-### Packages (packages/)
-
-- **@xala/sdk-core** - Generic SDK primitives (HTTP client, RFC7807 errors, retry, query keys)
-  - Schema-agnostic, domain-independent utilities
-  - [CLAUDE.md](./packages/sdk-core/CLAUDE.md) | [AGENTS.md](./packages/sdk-core/AGENTS.md)
-
-- **@xala/contracts** - API contracts (Zod schemas, projections, TypeScript types)
-  - Single source of truth for API contracts
-  - [CLAUDE.md](./packages/contracts/CLAUDE.md) | [AGENTS.md](./packages/contracts/AGENTS.md)
-
-- **@digilist/client-sdk** - Domain SDK with 30+ services, WebSocket realtime, React Query hooks
-  - Depends on @xala/sdk-core and @xala/contracts
-  - [CLAUDE.md](./packages/client-sdk/CLAUDE.md) | [AGENTS.md](./packages/client-sdk/AGENTS.md)
-
-- **@xala/ds** - UI facade (ONLY allowed import for Designsystemet components)
-  - Re-exports @digdir/designsystemet-react
-  - Custom composed components, blocks, shells
-  - Single CSS import point
-  - [CLAUDE.md](./packages/ds/CLAUDE.md) | [AGENTS.md](./packages/ds/AGENTS.md)
-
-- **@xala/ds-themes** - Theme URL registry for runtime switching (digdir,
-  altinn, uutilsynet, portal)
-
-- **@xala/ds-registry** - Documentation and examples
-
-- **@xala/i18n** - Internationalization utilities
-  - Norwegian (nb) and English (en) translations
-  - React hooks (useT)
-  - [CLAUDE.md](./packages/i18n/CLAUDE.md) | [AGENTS.md](./packages/i18n/AGENTS.md)
-
-- **@xala/eslint-config** - Shared ESLint with design system guardrails
-  - Custom rules for design tokens
-  - Component pattern enforcement
-  - Compliance scanner
-  - [CLAUDE.md](./packages/eslint-config/CLAUDE.md) | [AGENTS.md](./packages/eslint-config/AGENTS.md)
-
-- **@xala/auth** - Authentication layer
-  - Session management, token handling
-  - BankID/ID-porten integration support
-  - [CLAUDE.md](./packages/auth/CLAUDE.md) | [AGENTS.md](./packages/auth/AGENTS.md)
-
-- **@digilist/database-schema** - Drizzle ORM table definitions
-  - PostgreSQL schema definitions (platform, domain, saas, compliance, monitoring)
-  - Migration management
-  - [CLAUDE.md](./packages/database-schema/CLAUDE.md) | [AGENTS.md](./packages/database-schema/AGENTS.md)
-
-- **@xala/observability** - Observability and monitoring utilities
-  - Prometheus metrics, Grafana dashboards
-  - Structured logging, distributed tracing
-
-- **@digilist/testing** - Shared testing utilities
-  - Test fixtures, mock data
-  - Custom matchers, setup functions
-  - [CLAUDE.md](./packages/testing/CLAUDE.md) | [AGENTS.md](./packages/testing/AGENTS.md)
-
-- **@digilist/testing-e2e** - Playwright E2E test configuration
-  - E2E test helpers and utilities
-  - Browser automation patterns
-
-- **@xala/docs-content** - Documentation content
-  - Markdown-based documentation
-  - Guides and training materials
-
-### Dependency Graph
-
-```
-┌──────────────────────────────────────────────────────────────────────────────┐
-│                            FRONTEND APPLICATIONS (6)                          │
-├──────────────────────────────────────────────────────────────────────────────┤
-│                                                                              │
-│  ┌──────────┐ ┌──────────┐ ┌───────────┐ ┌───────────┐ ┌──────────┐ ┌─────┐│
-│  │   web    │ │ minside  │ │ backoffice│ │ saas-admin│ │monitoring│ │docs ││
-│  │  :5173   │ │  :5174   │ │   :5175   │ │   :5177   │ │  :5178   │ │:5179││
-│  └────┬─────┘ └────┬─────┘ └─────┬─────┘ └─────┬─────┘ └────┬─────┘ └──┬──┘│
-│       │            │             │             │            │          │    │
-│       └────────────┴─────────────┴─────────────┴────────────┴──────────┘    │
-│                                    │                                         │
-│                                    ▼                                         │
-│              ┌────────────────────────────────────────┐                      │
-│              │      @digilist/client-sdk ⭐          │                      │
-│              │  (30+ services, React Query hooks)    │                      │
-│              └────────────────────┬───────────────────┘                      │
-│                                   │                                          │
-│                                   ▼                                          │
-│              ┌────────────────────────────────────────┐                      │
-│              │          apps/api ⭐ (port 4000)       │                      │
-│              │  (Fastify, PostgreSQL, WebSocket)     │                      │
-│              │     https://api.digilist.no           │                      │
-│              └────────────────────────────────────────┘                      │
-│                                                                              │
-├──────────────────────────────────────────────────────────────────────────────┤
-│                           SHARED PACKAGES                                    │
-├──────────────────────────────────────────────────────────────────────────────┤
-│                                                                              │
-│  All 6 frontend apps depend on:                                              │
-│                                                                              │
-│  ┌─────────────────────┐  ┌─────────────────────┐  ┌─────────────────────┐  │
-│  │      @xala/ds       │  │     @xala/i18n      │  │   @xala/auth        │  │
-│  │ (Design System)     │  │ (Internationalization)│  │ (Authentication)   │  │
-│  └─────────────────────┘  └─────────────────────┘  └─────────────────────┘  │
-│                                                                              │
-│  ┌─────────────────────┐  ┌─────────────────────┐  ┌─────────────────────┐  │
-│  │  @xala/sdk-core     │  │  @xala/contracts    │  │ @xala/observability │  │
-│  │ (HTTP, RFC7807)     │  │ (Zod schemas)       │  │ (Metrics, Logging)  │  │
-│  └─────────────────────┘  └─────────────────────┘  └─────────────────────┘  │
-│                                                                              │
-│  Backend-only:                                                               │
-│  ┌─────────────────────────────────────────────────────────────────────┐    │
-│  │  @digilist/database-schema (Drizzle ORM, PostgreSQL)                │    │
-│  └─────────────────────────────────────────────────────────────────────┘    │
-│                                                                              │
-│  Testing:                                                                    │
-│  ┌─────────────────────────┐  ┌─────────────────────────┐                   │
-│  │  @digilist/testing      │  │  @digilist/testing-e2e  │                   │
-│  │  (Unit test utilities)  │  │  (Playwright E2E)       │                   │
-│  └─────────────────────────┘  └─────────────────────────┘                   │
-│                                                                              │
-└──────────────────────────────────────────────────────────────────────────────┘
-```
-
-### Import Rules (Critical)
-
-```typescript
-// ✅ CORRECT - Apps import from facades
-import { Button } from '@xala/ds';              // Design system
-import { useListings } from '@digilist/client-sdk/hooks';  // SDK hooks
-import { useT } from '@xala/i18n';              // Translations
-
-// ❌ WRONG - Direct imports forbidden
-import { Button } from '@digdir/designsystemet-react';  // ❌
-import axios from 'axios';                              // ❌
-```
-
-**See [docs/PROJECT_STRUCTURE.md](./docs/PROJECT_STRUCTURE.md) for complete directory trees.**
-
----
-
-## Package Namespace Migration (2026-01-21)
-
-### New Package Structure
-
-The platform has been migrated to the @xalatechnologies namespace:
-
-**Platform Packages (@xalatechnologies/*):**
-- `@xalatechnologies/platform` - Core platform package
-  - `@xalatechnologies/platform/ui` - Design system (from @xala/ds)
-  - `@xalatechnologies/platform/runtime` - Runtime providers
-  - `@xalatechnologies/platform/auth` - Authentication
-  - `@xalatechnologies/platform/config` - Configuration
-  - `@xalatechnologies/platform/contracts` - API contracts
-  - `@xalatechnologies/platform/sdk` - SDK core (HTTP, errors)
-  - `@xalatechnologies/platform/i18n` - Internationalization
-  - `@xalatechnologies/platform/observability` - Metrics, logging
-- `@xalatechnologies/enterprise` - Enterprise features
-- `@xalatechnologies/governance` - Testing, ESLint, verification
-
-**Domain Packages (@digilist/*):**
-- `@digilist/domain` - Domain contracts and types
-- `@digilist/sdk` - Domain SDK (services, hooks)
-- `@digilist/ui` - Domain UI components
-- `@digilist/runtime` - Domain runtime providers
-- `@digilist/database-schema` - Database schema
-
-### Import Rules
-
-```typescript
-// ✅ Platform packages - domain agnostic
-import { Button } from '@xalatechnologies/platform/ui';
-import { useAuth } from '@xalatechnologies/platform/auth';
-
-// ✅ Domain packages - Digilist specific
-import { useBookings } from '@digilist/sdk';
-import { RentalObjectCard } from '@digilist/ui';
-```
-
-### Compatibility Layer
-
-Old @xala/* imports still work but are deprecated:
-```typescript
-// ⚠️ Deprecated - will show console warning
-import { Button } from '@xala/ds';
-
-// ✅ New way
-import { Button } from '@xalatechnologies/platform/ui';
-```
-
-### Banned Terms
-
-The following terms are BANNED in platform packages:
-- "listing" → use "rentalObject"
-- "facility" → use "amenity"
-
-Run `pnpm verify:terms` to check for violations.
-
----
-
-## Platform UI + Feature Kits Architecture (2026-01-21)
-
-### Architecture Overview
-
-The UI has been restructured into two layers:
-
-1. **Platform Patterns** (`@xalatechnologies/platform/ui/patterns`)
-   - Domain-neutral, reusable UI patterns
-   - Single Storybook, single maintenance point
-   - NO domain-specific terms (no "listing", "facility", "booking")
-   - Props-driven with pre-localized strings
-
-2. **Domain Feature Kits** (`@digilist/ui/features/*`)
-   - Thin wrappers (~50 lines) that compose Platform patterns
-   - Mappers to convert domain DTOs to pattern props
-   - Domain-specific terminology and business logic
-
-### Platform Patterns Available
-
-| Pattern | Purpose |
-|---------|---------|
-| `ResourceCard` | Generic card for any resource type |
-| `ResourceGrid` | Responsive grid layout for cards |
-| `ResourceDetailHeader` | Header for detail pages |
-| `SlotCalendar` | Calendar with time slots |
-| `PricingSummary` | Price breakdown display |
-| `FeatureChips` | Feature/amenity chips |
-| `MetadataRow` | Key-value metadata display |
-| `ScheduleCard` | Schedule/hours display |
-| `FormWizardModal` | Multi-step form modal |
-| `ConfirmationView` | Confirmation screen |
-| `SuccessView` | Success screen |
-
-### Feature Kits Available
-
-| Feature Kit | Components |
-|-------------|------------|
-| `@digilist/ui/features/rental-objects` | RentalObjectCard, RentalObjectGrid, etc. |
-| `@digilist/ui/features/booking` | BookingFormModal, PriceSummaryCard, etc. |
-| `@digilist/ui/features/seasons` | SeasonCard, VenueCard |
-
-### Import Rules
-
-```typescript
-// ✅ RECOMMENDED: Use Platform patterns with Feature Kit mappers
-import { ResourceCard } from '@xalatechnologies/platform/ui/patterns';
-import { mapRentalObjectToResourceCard } from '@digilist/ui/features/rental-objects';
-
-const props = mapRentalObjectToResourceCard(dto, t);
-return <ResourceCard {...props} />;
-
-// ✅ ALSO OK: Use Feature Kit thin wrappers
-import { RentalObjectCardWrapper } from '@digilist/ui/features/rental-objects';
-
-return <RentalObjectCardWrapper rentalObject={dto} t={t} />;
-
-// ⚠️ DEPRECATED: Import domain components from @xala/ds
-// These still work but will show deprecation warnings
-import { RentalObjectCard } from '@xala/ds'; // ⚠️ Deprecated
-
-// ❌ NEVER: Import domain components in platform packages
-// Platform must NEVER import from @digilist/*
-```
-
-### Thin Wrapper Pattern
-
-Feature Kit components should be thin wrappers (<50 lines):
-
-```typescript
-// packages/digilist-ui/src/features/rental-objects/RentalObjectCardWrapper.tsx
-import { ResourceCard } from '@xalatechnologies/platform/ui/patterns';
-import { mapRentalObjectToResourceCard } from './mappers';
-
-export function RentalObjectCardWrapper({
-  rentalObject,
-  onClick,
-  onFavorite,
-  t,
-}: RentalObjectCardWrapperProps) {
-  const props = mapRentalObjectToResourceCard(rentalObject, t);
-  return <ResourceCard {...props} onClick={onClick} onFavorite={onFavorite} />;
-}
-```
-
-### Verification Commands
-
-```bash
-# Verify platform does not import from domain
-pnpm verify:boundaries
-
-# Verify no banned terms in platform
-pnpm verify:terms
-```
-
----
-
-## Development Commands
-
-### Essential Commands
-
-```bash
-# Install dependencies
-pnpm install
-
-# Run all apps in parallel
-pnpm dev
-
-# Build all packages and apps
-pnpm build
-
-# Run linting (includes guardrail checks)
-pnpm lint
-
-# Format code
-pnpm format
-```
-
-### Testing
-
-```bash
-# Run tests in watch mode
-pnpm test
-
-# Run tests with UI
-pnpm test:ui
-
-# Run tests once
-pnpm test:run
-
-# Generate coverage report
-pnpm test:coverage
-
-# Run E2E tests (Playwright)
-pnpm test:e2e
-```
-
-### Package-Specific Development
-
-```bash
-# Work on specific app
-cd apps/web && pnpm dev
-
-# Work on SDK
-cd packages/client-sdk && pnpm dev
-
-# Run SDK tests
-cd packages/client-sdk && pnpm test
-```
-
-### Design System Compliance
-
-```bash
-# Full scan with default rules
-pnpm scan
-
-# Strict mode (all rules as errors)
-pnpm scan:strict
-
-# Scan design tokens only
-pnpm scan:tokens
-
-# Scan component patterns only
-pnpm scan:components
-
-# Scan accessibility issues
-pnpm scan:a11y
-
-# Auto-fix where possible
-pnpm scan:fix
-
-# Compliance scan (colors, spacing, typography)
-pnpm scan:compliance
-
-# JSON output for CI/CD
-pnpm scan:compliance:json
-
-# Run all scans (design system + i18n + duplicates)
-pnpm scan:all
-```
-
-### Duplicate Code Scanner
-
-```bash
-# Scan for duplicate controllers, seeds, schemas
-pnpm scan:duplicates
-
-# Strict mode (exit code 1 if issues found)
-pnpm scan:duplicates:strict
-```
-
-**Exit codes:**
-- 0: No code duplication issues found
-- 1: Duplicate code detected (MUST fix before committing)
-
-**What it detects:**
-- Multiple controllers for the same feature domain
-- Controller naming aliases (e.g., "signicat" instead of "idporten")
-- Duplicate seed files
-- Duplicate schema definitions
-- Registration inconsistencies in main.ts
-
-**See:** [docs/guides/DUPLICATE_CODE_SCANNER.md](./docs/guides/DUPLICATE_CODE_SCANNER.md) for complete documentation.
-
-### i18n Localization Compliance
-
-```bash
-# Scan entire minside app for hardcoded strings
-node scripts/scan-i18n.js apps/minside/src
-
-# Scan specific directory
-node scripts/scan-i18n.js apps/minside/src/routes
-
-# Scan single file
-node scripts/scan-i18n.js apps/minside/src/components/MyComponent.tsx
-
-# View detailed JSON report
-cat i18n-scan-report.json
-```
-
-**Exit codes:**
-- 0: No localization issues found
-- 1: Hardcoded strings detected (MUST fix before committing)
-
-### Theme Generation
-
-```bash
-# Create theme tokens from config
-pnpm tokens:create
-
-# Build theme CSS files
-pnpm tokens:build
-```
-
-### Deployment
-
-```bash
-# Deploy specific app
-pnpm deploy:web
-pnpm deploy:backoffice
-pnpm deploy:minside
-
-# Deploy all apps
-pnpm deploy:all
-
-# Setup SSL certificates
-pnpm deploy:ssl
+├── docs/                       # Domain documentation
+├── scripts/                    # Domain scripts
+└── infra/                      # Infrastructure configuration
 ```
 
 ---
@@ -839,796 +69,250 @@ pnpm deploy:ssl
 
 If SDK lacks a method → **report gap, do NOT bypass**.
 
-**Example:**
-
 ```tsx
 // ❌ WRONG
-const response = await fetch("/api/listings");
+const response = await fetch("/api/bookings");
 
 // ✅ CORRECT
-import { useListings } from "@digilist/client-sdk/hooks";
+import { useBookings } from "@digilist/client-sdk/hooks";
 
 function MyComponent() {
-  const { data, isLoading } = useListings();
-  // ...
+  const { data, isLoading } = useBookings();
 }
 ```
 
-### 2. NO BUSINESS LOGIC IN UI
+### 2. DOMAIN TERMINOLOGY
 
-- React components = orchestration + rendering only
-- All logic lives in: API, SDK services, typed hooks
-- Components should be presentational
+Use **correct domain terminology**:
 
-### 3. RFC 7807 COMPLIANCE
+| ✅ Correct | ❌ Incorrect |
+|------------|--------------|
+| rentalObject | listing, facility |
+| booking | reservation |
+| organization | kommune (in code) |
+| dashboard | minside (legacy) |
 
-All errors MUST conform to Problem Details:
+### 3. PLATFORM IMPORTS
 
 ```typescript
-interface ProblemDetails {
-  type: string; // URI identifying error type
-  title: string; // Human-readable summary
-  status: number; // HTTP status code
-  detail?: string; // Human-readable explanation
-}
+// ✅ CORRECT - Platform packages from npm
+import { Button, Card } from '@xalatechnologies/platform/ui';
+import { useAuth } from '@xalatechnologies/platform/auth';
+import { useT } from '@xalatechnologies/platform/i18n';
+
+// ✅ CORRECT - Domain packages (local)
+import { useBookings } from '@digilist/client-sdk/hooks';
+import { RentalObjectCard } from '@digilist/ui';
+import { BookingSchema } from '@digilist/contracts';
+
+// ❌ WRONG - Direct design system imports
+import { Button } from '@digdir/designsystemet-react';
+
+// ❌ WRONG - Platform source paths
+import { ... } from '../../../platform/src/...';
 ```
 
-### 4. AUDIT-FIRST PRINCIPLE
+### 4. NO BUSINESS LOGIC IN UI
 
-- Any state mutation MUST be auditable
-- If action is not logged → **block implementation**
-- Required audit fields: `who`, `what`, `when`, `tenantId`, `ip/ua`
+- React components = orchestration + rendering only
+- All logic lives in: API services, SDK services, typed hooks
+- Components should be presentational
 
-### 5. RBAC IS SOURCE OF TRUTH
-
-- Feature access derives from role matrix
-- No role checks hardcoded in UI
-- Use capability-based guards
-
-### 6. DESIGNSYSTEMET GUARDRAILS
-
-```
-❌ NEVER import @digdir/* directly in apps
-✅ ONLY import from @xala/ds
-```
-
-**Critical Rules:**
-
-- Import `@xala/ds/styles` exactly once in main.tsx
-- Use `DesignsystemetProvider` for theme controls
-- No custom UI components in apps
-- No hardcoded colors, spacing, or typography
-- No raw HTML elements (use @xala/ds components)
-- No inline styles (use design tokens)
-
-**Example:**
-
-```tsx
-// ❌ WRONG
-import { Button } from "@digdir/designsystemet-react";
-import "@digdir/designsystemet-css";
-
-// ✅ CORRECT
-import { Button } from "@xala/ds";
-```
-
-### 7. ZERO TRANSFORMERS (Contract-First)
-
-```
-❌ FORBIDDEN in apps/:
-- toXxx(), fromXxx(), mapXxx(), adaptXxx() functions
-- *VM, *ViewModel, *UiModel types
-- Reshaping API DTOs before rendering
-- Computing permissions/actions in frontend
-- "select:" in useQuery that transforms data
-
-✅ REQUIRED:
-- Use Projection DTOs directly from SDK
-- Read permissions from dto.permissions
-- Read actions from dto.availableActions
-- Components accept SDK types as props
-```
-
-**Terminology: Use "listing" (never facility)**
-
-**Example:**
-
-```tsx
-// ❌ WRONG - Transformer
-function toCardModel(listing) {
-  return { ...listing, displayName: listing.name };
-}
-
-// ✅ CORRECT - Use Projection DTO directly
-function ListingCard({ listing }: { listing: ListingCardProjectionDTO }) {
-  return <Card>{listing.title}</Card>;
-}
-```
-
-### 8. i18n LOCALIZATION-FIRST
+### 5. i18n LOCALIZATION-FIRST
 
 ```
 ❌ NEVER use hardcoded strings in UI components
-❌ NEVER show untranslated text to users (Norwegian or English)
-✅ ALWAYS use t() function from @xala/i18n
+✅ ALWAYS use t() function from @xalatechnologies/platform/i18n
 ✅ ALWAYS define translations in both nb.ts AND en.ts
 ```
 
-All user-facing text MUST go through the i18n system:
-
-**Required Pattern:**
-
 ```tsx
-// ❌ WRONG - Hardcoded strings
+// ❌ WRONG
 <Heading>Velg rolle</Heading>
-<Button>Submit</Button>
-<Text>Loading...</Text>
 
-// ✅ CORRECT - Use t() function
-import { useT } from '@xala/i18n';
+// ✅ CORRECT
+import { useT } from '@xalatechnologies/platform/i18n';
 
 function MyComponent() {
   const t = useT();
-  return (
-    <>
-      <Heading>{t('auth.roleSelection.title')}</Heading>
-      <Button>{t('common.submit')}</Button>
-      <Text>{t('common.loading')}</Text>
-    </>
-  );
+  return <Heading>{t('auth.roleSelection.title')}</Heading>;
 }
 ```
 
-**When adding new text:**
+---
 
-1. Add key to `packages/i18n/src/locales/nb.ts` (Norwegian)
-2. Add key to `packages/i18n/src/locales/en.ts` (English)
-3. Use `t('namespace.key')` in component
-4. Rebuild i18n package: `pnpm -F @xala/i18n build`
-
-**Key naming convention:**
-
-- `common.*` - Shared strings (save, cancel, loading, error)
-- `auth.*` - Authentication pages
-- `nav.*` - Navigation items
-- `dashboard.*` - Dashboard page
-- `listings.*` - Listing management
-- `bookings.*` - Booking management
-- `backoffice.*` - Backoffice-specific UI
-- `gdpr.*` - GDPR consent and data subject requests
-- `notifications.*` - Notification system UI
-
-**If i18n key is missing → STOP and add it first.**
-
-### i18n Localization Scanner
-
-**Before committing code, ALWAYS run the i18n scanner to verify compliance:**
+## Development Commands
 
 ```bash
-# Scan entire app
-node scripts/scan-i18n.js apps/minside/src
+# Install dependencies
+pnpm install
 
-# Scan specific directory
-node scripts/scan-i18n.js apps/minside/src/routes
+# Run all apps in parallel
+pnpm dev
 
-# Scan single file
-node scripts/scan-i18n.js apps/minside/src/routes/settings.tsx
+# Build all packages and apps
+pnpm build
+
+# Run tests
+pnpm test
+
+# Run E2E tests
+pnpm test:e2e
+
+# Verify domain boundaries
+./scripts/verify-domain-boundaries.sh
+
+# Verify SDK structure
+./scripts/verify-sdk-structure.sh
+
+# Verify modules registration
+pnpm verify:modules
 ```
 
-**The scanner detects:**
-- ✅ Hardcoded text in JSX elements
-- ✅ String props (title, label, placeholder, description, etc.)
-- ✅ Alert/confirm messages
-- ✅ Missing `useT()` imports in files with user-facing text
-- ✅ Object values that should be localized
+---
 
-**The scanner intelligently ignores:**
-- ✅ Already localized strings using `t()`
-- ✅ URLs, file paths, CSS classes, data attributes
-- ✅ Code identifiers (camelCase, types, constants)
-- ✅ Environment variables, technical strings
+## Database Schema
 
-**Scanner output:**
-- Console report with file-by-file breakdown
-- JSON report: `i18n-scan-report.json` (for CI/CD integration)
-- Exit code 1 if issues found (fails CI builds)
+Domain tables are in the `domain` schema:
 
-**If scanner finds issues → FIX them before committing.**
+```sql
+CREATE SCHEMA IF NOT EXISTS domain;
 
-See `docs/I18N_SCAN_REPORT_2026-01-15.md` for detailed analysis.
-
-### 9. SINGLE SOURCE OF TRUTH (No Duplicates)
-
-```
-❌ NEVER create duplicate controllers for the same feature domain
-❌ NEVER use alias names (use canonical names: "idporten" not "signicat")
-❌ NEVER create duplicate seed files or schema definitions
-✅ ALWAYS keep ONE controller per feature
-✅ ALWAYS use canonical names consistently
-✅ ALWAYS consolidate duplicates immediately
+-- Domain tables:
+-- rental_objects, bookings, allocations, seasonal_leases,
+-- conversations, messages, seasons, season_applications,
+-- priority_rules, access_grants
 ```
 
-**Critical Rule:** Each feature domain must have exactly ONE controller, ONE seed file, ONE schema definition.
+Platform tables (users, tenants, organizations, sessions) are in the `platform` schema.
 
-**Example:**
+---
+
+## Domain SDK Services
+
+The `@digilist/client-sdk` provides domain-specific services:
+
+### Booking Domain
+- `bookingService` - Booking CRUD, approval workflow
+- `calendarService` - Availability, calendar views
+- `pricingService` - Price calculation, quotes
+- `allocationsService` - Resource allocation management
+- `favoritesService` - User favorites
+
+### Rental Objects
+- `rentalObjectService` - Rental object CRUD
+- `amenitiesService` - Amenities management
+- `blocksService` - Block/unavailability management
+
+### Seasonal Management
+- `seasonService` - Season configuration
+- `seasonApplicationService` - Application workflow
+
+### Engagement
+- `conversationService` - Messaging
+- `reviewService` - Reviews and ratings
+
+### Business
+- `dashboardService` - Dashboard data
+- `reportsService` - Analytics and reporting
+- `discountCodesService` - Discount code management
+
+---
+
+## Domain Components (@digilist/ui)
+
+Feature kits wrap platform patterns for domain use:
 
 ```typescript
-// ❌ WRONG - Multiple controllers for authentication
-apps/api/src/modules/auth/
-├── idporten.controller.ts
-├── signicat.controller.ts      // ❌ Duplicate!
-└── idporten-oidc.controller.ts // ❌ Duplicate!
-
-// ✅ CORRECT - Single source of truth
-apps/api/src/modules/auth/
-└── idporten.controller.ts       // ✅ Only one
+// Feature kits available:
+import { RentalObjectCard, RentalObjectGrid } from '@digilist/ui/features/rental-objects';
+import { BookingFormModal, PriceSummaryCard } from '@digilist/ui/features/booking';
+import { SeasonCard, VenueCard } from '@digilist/ui/features/seasons';
 ```
 
-**Canonical Names (use these, not aliases):**
-- `idporten` (not signicat, bankid, eid-hub)
-- `rental-object` (not listing, facility, resource)
-- `organization` (not kommune, municipality)
+---
 
-**Before committing, ALWAYS run the duplicate scanner:**
+## Testing
 
-```bash
-# Scan for duplicates
-pnpm scan:duplicates
+All tests are organized under `packages/testing/`:
 
-# Strict mode (blocks commit if issues found)
-pnpm scan:duplicates:strict
+```
+packages/testing/
+├── suites/
+│   ├── unit/          # Vitest unit tests
+│   ├── e2e/           # Playwright E2E tests
+│   │   ├── backoffice/
+│   │   ├── dashboard/   # (renamed from minside)
+│   │   └── web/
+│   └── integration/   # Integration tests
+├── mocks/             # Mock implementations
+├── fixtures/          # Test data
+└── reports/           # Test output (gitignored)
 ```
 
-**The scanner detects:**
-- ✅ Duplicate controllers for same feature
-- ✅ Controller naming aliases
-- ✅ Duplicate seed files
-- ✅ Duplicate schema definitions
-- ✅ Registration inconsistencies in main.ts
-
-**If scanner finds issues → FIX them before committing.**
-
-**See:** [docs/guides/DUPLICATE_CODE_SCANNER.md](./docs/guides/DUPLICATE_CODE_SCANNER.md) for complete documentation.
-
-**History:** This rule was added after a 4-hour debugging session on 2026-01-17 where duplicate authentication controllers caused significant confusion. User directive: "make it to one !!! only call it idporten, and never do that mistake again with anything seeds, schema, controllers anything !!!"
+---
 
 ## Architecture Layers
 
 ```
-┌─────────────────────────────────────────────┐
-│  FRONTEND (React)                           │
-│  - apps/web, apps/backoffice, apps/minside  │
-│  - Orchestration only                       │
-│  - Uses SDK hooks                           │
-│  - No API calls, no business logic          │
-├─────────────────────────────────────────────┤
-│  SDK (@digilist/client-sdk)                 │
-│  - packages/client-sdk                      │
-│  - Typed services (24+ services)            │
-│  - React Query hooks                        │
-│  - Realtime WebSocket client                │
-│  - RFC 7807 error handling                  │
-├─────────────────────────────────────────────┤
-│  UI FACADE (@xala/ds)                       │
-│  - packages/ds                              │
-│  - Re-exports Designsystemet components     │
-│  - Primitives, Composed, Blocks, Shells     │
-│  - Theme provider and utilities             │
-├─────────────────────────────────────────────┤
-│  API (Fastify)                              │
-│  - Business logic                           │
-│  - Persistence (Drizzle/Postgres)           │
-│  - Audit logging                            │
-│  - Multi-tenant isolation                   │
-└─────────────────────────────────────────────┘
-```
-
-**Cross-layer imports are FORBIDDEN.**
-
----
-
-## SDK Architecture
-
-The `@digilist/client-sdk` package provides:
-
-### Services (30+)
-
-Located in `packages/client-sdk/src/services/`:
-
-- `allocationService` - Resource allocation management
-- `auditService` - Audit log queries
-- `authService` - Authentication
-- `bookingService` - Booking CRUD
-- `conversationService` - Messaging
-- `dashboardService` - Dashboard data
-- `discountCodeService` - Discount codes
-- `gdprService` - GDPR consent and data subject requests
-- `integrationService` - Third-party integrations
-- `listingService` - Listing management
-- `monitoringService` - System monitoring
-- `notificationService` - Push notifications and preferences
-- `notificationSystemService` - Multi-channel notifications with templates
-- `organizationService` - Organization/Kommune management
-- `reportsService` - Analytics and reporting
-- And more...
-
-### React Query Hooks
-
-Located in `packages/client-sdk/src/hooks/`:
-
-```tsx
-import {
-  useAuth,
-  useBookings,
-  useListings,
-  useOrganizations,
-  // ... 20+ hooks
-} from "@digilist/client-sdk/hooks";
-```
-
-### Realtime WebSocket Client
-
-Located in `packages/client-sdk/src/realtime/`:
-
-```tsx
-import { realtimeClient } from "@digilist/client-sdk";
-
-realtimeClient.connect({
-  url: "wss://api.digilist.no/ws/audit",
-  tenantId: "your-tenant",
-  autoReconnect: true,
-});
-
-realtimeClient.onAudit((event) => {
-  console.log("Audit event:", event);
-});
-```
-
-### Initialization
-
-```tsx
-import { initializeClient } from "@digilist/client-sdk";
-
-initializeClient({
-  baseUrl: "https://api.digilist.no",
-  tenantId: "your-tenant-id",
-});
-```
-
----
-
-## Design System Component Hierarchy
-
-### Primitives (Low-level)
-
-Re-exported from `@digdir/designsystemet-react`:
-
-- Layout: `Container`, `Grid`, `Stack`
-- Forms: `Button`, `Input`, `Select`, `Checkbox`, `Radio`
-- Display: `Card`, `Badge`, `Avatar`, `Tag`
-- Typography: `Heading`, `Paragraph`, `Label`
-
-### Composed (Mid-level)
-
-Custom components built from primitives:
-
-- `ContentLayout`, `ContentSection`
-- `PageHeader`, `AppHeader`
-- `Navigation`, `NavigationLink`
-- `FilterBar`, `Drawer`
-- `HeaderLogo`, `HeaderSearch`, `HeaderActions`
-
-### Blocks (Business logic)
-
-Domain-specific components:
-
-- `StatsGrid`, `KPICard`
-- `ListingCard`, `BookingCard`
-
-### Shells (Application level)
-
-- `AppShell` - Complete application layout with header, nav, content area
-
-**Example:**
-
-```tsx
-import { AppShell, ContentLayout, ContentSection, Grid } from "@xala/ds";
-
-function MyApp() {
-  return (
-    <AppShell title="My App">
-      <ContentLayout>
-        <ContentSection title="Dashboard">
-          <Grid columns="repeat(3, 1fr)" gap={24}>
-            <Card>Content</Card>
-          </Grid>
-        </ContentSection>
-      </ContentLayout>
-    </AppShell>
-  );
-}
-```
-
----
-
-## Theme System
-
-### Available Themes
-
-- `digdir` - Default Digdir theme
-- `altinn` - Altinn theme
-- `uutilsynet` - Utsynet theme
-- `portal` - Portal theme
-
-### Theme Provider
-
-```tsx
-import { DesignsystemetProvider } from "@xala/ds";
-
-function App() {
-  return (
-    <DesignsystemetProvider
-      theme="digdir"
-      colorScheme="auto"
-      size="md"
-      typography="primary"
-    >
-      {/* Your app */}
-    </DesignsystemetProvider>
-  );
-}
-```
-
-### Data Attributes
-
-Set on `<html>` element:
-
-- `data-color-scheme`: `"auto" | "light" | "dark"`
-- `data-size`: `"sm" | "md" | "lg"`
-- `data-typography`: `"primary" | "secondary"`
-
----
-
-## Testing Strategy
-
-### Test Organization (REQUIRED STRUCTURE)
-
-All tests MUST be organized under `packages/testing/`:
-
-```
-packages/testing/
-├── suites/                     # All test suites
-│   ├── unit/                  # Vitest unit tests
-│   │   ├── sdk/              # SDK service tests
-│   │   ├── components/       # React component tests
-│   │   └── hooks/            # React hooks tests
-│   ├── e2e/                   # Playwright E2E tests
-│   │   ├── auth/             # Authentication flows
-│   │   ├── backoffice/       # Backoffice tests (rbac/, workflows/, etc.)
-│   │   ├── minside/          # User portal tests
-│   │   ├── web/              # Public web tests
-│   │   └── scenarios/        # Cross-app scenarios
-│   ├── integration/           # Integration tests
-│   │   ├── api/              # API integration
-│   │   └── services/         # Service integration
-│   ├── performance/           # Performance tests
-│   ├── security/             # Security/penetration tests
-│   ├── compliance/           # Compliance tests
-│   └── contracts/            # Contract tests
-├── mocks/                      # Mock implementations
-├── stubs/                      # Test stubs
-├── fixtures/                   # Test data
-├── scripts/                    # Test scripts
-├── reports/                    # Test output (gitignored)
-└── test-results/               # Test results (gitignored)
-```
-
-**⚠️ CRITICAL RULES:**
-- All test files MUST go in `packages/testing/suites/`
-- All test output MUST go in `packages/testing/reports/`
-- NEVER create test folders at the root level (e.g., `tests/`, `test-results/`, `playwright-report/`)
-- Co-located unit tests (`*.test.ts`) are allowed in `packages/*/src/`
-
-### Documentation Organization (REQUIRED STRUCTURE)
-
-All documentation MUST be organized under the `docs/` directory:
-
-```
-docs/
-├── architecture/      # Architecture docs and proposals
-├── guides/           # Development guides
-├── operations/       # Operational docs
-│   ├── deployments/  # Deployment reports
-│   ├── migrations/   # Migration reports
-│   └── archive/      # Historical artifacts
-├── apps/             # App-specific docs
-├── packages/         # Package-specific docs
-└── reference/        # Reference materials
-```
-
-**⚠️ CRITICAL RULES:**
-- **NEVER create documentation files in the repository root**
-- **NEVER create documentation in `reports/` folder** (reserved for technical reports)
-- All new documentation MUST go in appropriate `docs/` subdirectories
-- Deployment reports → `docs/operations/deployments/`
-- Migration reports → `docs/operations/migrations/`
-- Architecture proposals → `docs/architecture/`
-- Development guides → `docs/guides/`
-- Historical/archived docs → `docs/operations/archive/`
-
-**Exceptions (ONLY these files allowed in root):**
-- `README.md` - Main repository README
-- `AGENTS.md` - AI agent guidance
-- `CLAUDE.md` - Claude-specific guidance
-- `AI_RULES.md` - AI coding rules
-
-### Script Organization (REQUIRED STRUCTURE)
-
-All scripts MUST be organized under the `scripts/` directory:
-
-**⚠️ CRITICAL RULES:**
-- **NEVER create script files (.sh, .js, .mjs, .ts) in the repository root**
-- All utility scripts → `scripts/`
-- All deployment scripts → `scripts/`
-- All test scripts → `scripts/`
-- All build scripts → `scripts/`
-- All migration scripts → `scripts/`
-
-**Examples of properly organized scripts:**
-- `scripts/deploy.sh` - Deployment automation
-- `scripts/scan-i18n.js` - i18n localization scanner
-- `scripts/test-rate-limit.sh` - Rate limit testing
-- `scripts/scan-compliance.mjs` - Design system compliance
-- `scripts/setup-ssl.sh` - SSL certificate setup
-
-### Unit Tests (Vitest)
-
-Located in `packages/testing/suites/unit/` AND co-located with source code:
-
-- **Co-located tests** (preferred for packages): `packages/*/src/**/*.{test,spec}.{ts,tsx}`
-- **Organized tests** (preferred for integration): `packages/testing/suites/unit/{sdk,components,hooks}/`
-
-Configuration: `packages/testing/vitest.config.ts`
-
-**Commands:**
-```bash
-pnpm test              # Run all unit tests (watch mode)
-pnpm test:run          # Run once
-pnpm test:coverage     # With coverage report → packages/testing/reports/coverage/
-```
-
-### E2E Tests (Playwright)
-
-Located in `packages/testing/suites/e2e/`:
-- `suites/e2e/auth/` - Authentication and RBAC flows
-- `suites/e2e/backoffice/` - Backoffice tests (rbac/, workflows/, crud/)
-- `suites/e2e/minside/` - User portal tests
-- `suites/e2e/web/` - Public web tests
-- `suites/e2e/scenarios/` - Cross-app user scenarios
-
-Configuration: `packages/testing-e2e/playwright.config.ts`
-
-**Commands:**
-```bash
-pnpm test:e2e                         # Run all E2E tests
-pnpm --filter @xala/testing test:e2e  # Run via package
-```
-
-**Output:**
-- Reports: `packages/testing/reports/e2e/`
-- Screenshots: `packages/testing/test-results/`
-
-### Integration Tests
-
-Located in `packages/testing/suites/integration/`:
-- `integration/api/` - API endpoint integration
-- `integration/services/` - Service-to-service integration
-
-### Performance Tests
-
-Located in `packages/testing/suites/performance/`:
-- Load testing
-- Response time benchmarks
-- Memory leak detection
-
-### Security Tests
-
-Located in `packages/testing/suites/security/`:
-- OWASP Top 10 coverage
-- Penetration testing
-- Vulnerability scans
-
-### Test Helpers & Fixtures
-
-**Mocks**: `packages/testing/mocks/`
-- Mock service implementations
-- Mock API responses
-
-**Stubs**: `packages/testing/stubs/`
-- Test stubs and spies
-
-**Fixtures**: `packages/testing/fixtures/`
-- Mock data
-- Seed data
-- Test configurations
-
----
-
-## ESLint Guardrails
-
-Custom rules in `packages/eslint-config/rules/`:
-
-### Design Token Rules
-
-- `digdir/no-hardcoded-colors` - Enforce design token usage
-- `digdir/no-hardcoded-spacing` - No px/rem values
-- `digdir/no-hardcoded-typography` - No font-size/weight
-- `digdir/no-hardcoded-border-radius` - Use token values
-
-### Component Pattern Rules
-
-- `digdir/as-child-single-child` - Enforce single child with asChild
-- `digdir/require-button-type` - Buttons must have explicit type
-- `digdir/require-interactive-labels` - Labels need htmlFor
-- `digdir/prefer-ds-components` - Use @xala/ds over raw HTML
-- `digdir/require-provider` - Enforce DesignsystemetProvider
-
-### Import Restrictions
-
-- Block direct `@digdir/*` imports in apps
-- Only `packages/ds/src/styles.ts` can import theme CSS
-
----
-
-## UI Rules
-
-| Rule       | Correct       | Incorrect             |
-| :--------- | :------------ | :-------------------- |
-| Components | `@xala/ds`    | Raw HTML, `@digdir/*` |
-| Styling    | Design tokens | Inline styles         |
-| Data       | SDK hooks     | `fetch()`, axios      |
-| Constants  | i18n keys     | Magic strings         |
-
----
-
-## Failure Modes
-
-**STOP and ask for clarification if:**
-
-- SDK method does not exist
-- Role matrix is ambiguous
-- Audit event type is undefined
-- Tenant context is missing
-- Error contract is unclear
-- Design token is not available
-- Component pattern violates guardrails
-
----
-
-## Vite Configuration
-
-Apps use Vite with SDK path aliases:
-
-```typescript
-// apps/web/vite.config.ts
-resolve: {
-  alias: {
-    '@digilist/client-sdk': path.resolve(__dirname, '../../packages/client-sdk/src'),
-    '@digilist/client-sdk/hooks': path.resolve(__dirname, '../../packages/client-sdk/src/hooks'),
-    '@digilist/client-sdk/types': path.resolve(__dirname, '../../packages/client-sdk/src/types'),
-  },
-}
-```
-
----
-
-## Development URLs
-
-- Web app: http://localhost:5173
-- Minside: http://localhost:5174
-- Backoffice: http://localhost:5175
-- SaaS Admin: http://localhost:5177
-- Monitoring: http://localhost:5178
-- Docs Learning: http://localhost:5179
-- API: http://localhost:4000
-- API health: http://localhost:4000/health
-
----
-
-## Key Patterns
-
-### Feature-Based Organization
-
-Apps use feature folders:
-
-```
-apps/web/src/
-├── features/
-│   ├── listing-details/
-│   │   ├── adapters/
-│   │   ├── presenters/
-│   │   └── types.ts
-│   └── bookings/
-├── providers/
-├── routes/
-└── components/
-```
-
-### Realtime Provider Pattern
-
-Wrap app in RealtimeProvider for WebSocket events:
-
-```tsx
-import { RealtimeProvider } from "./providers/RealtimeProvider";
-
-function App() {
-  return (
-    <RealtimeProvider>
-      <YourApp />
-    </RealtimeProvider>
-  );
-}
-```
-
-### Internationalization
-
-Use `@xala/i18n` for translations:
-
-```tsx
-import { useTranslation } from "@xala/i18n";
-
-function MyComponent() {
-  const { t } = useTranslation();
-  return <Heading>{t("dashboard.title")}</Heading>;
-}
+┌─────────────────────────────────────────┐
+│  FRONTEND (React)                       │
+│  apps/web, apps/dashboard, apps/backoffice
+│  - Orchestration only                   │
+│  - Uses SDK hooks                       │
+│  - No API calls, no business logic      │
+├─────────────────────────────────────────┤
+│  SDK (@digilist/client-sdk)             │
+│  - Domain services                      │
+│  - React Query hooks                    │
+│  - WebSocket realtime                   │
+├─────────────────────────────────────────┤
+│  PLATFORM (@xalatechnologies/platform)  │
+│  - UI components, auth, i18n            │
+│  - Consumed from npm                    │
+├─────────────────────────────────────────┤
+│  API (apps/api)                         │
+│  - Domain business logic                │
+│  - Drizzle ORM / PostgreSQL             │
+│  - Multi-tenant isolation               │
+└─────────────────────────────────────────┘
 ```
 
 ---
 
 ## Production Constraints
 
-### Assume Production Context
-
 - System is live, multi-tenant, and regulated
 - Any change impacts multiple municipalities
 - Audit trails are legally required
-- Performance matters (map rendering, realtime updates)
 
 **Forbidden phrases:**
-
 - "In a real system you would…"
 - "For simplicity…"
 - "This is just a prototype…"
-
-### Multi-Tenancy
-
-- All API calls include `tenantId`
-- Data isolation at query level
-- No cross-tenant data leakage
-- Kommune-specific configuration
-
----
-
-## Common Pitfalls
-
-1. **Bypassing the SDK** - Always use `@digilist/client-sdk`, never direct
-   fetch()
-2. **Direct Designsystemet imports** - Always use `@xala/ds` facade
-3. **Hardcoded values** - Use design tokens, no magic numbers/colors
-4. **Missing audit logging** - All mutations must be auditable
-5. **Business logic in components** - Keep components presentational
-6. **Ignoring realtime events** - Consider WebSocket updates for live data
-7. **Missing RBAC checks** - Use capability-based guards
-8. **Non-compliant errors** - Follow RFC 7807 Problem Details format
 
 ---
 
 ## When in Doubt
 
 1. Check if SDK method exists → use it
-2. Check if @xala/ds component exists → use it
-3. Check if design token exists → use it
-4. Verify audit logging → ensure mutation is logged
-5. Confirm RBAC guard → ensure proper authorization
+2. Check if @digilist/ui component exists → use it
+3. Check platform docs for auth/i18n/design system
+4. Verify domain terminology (rentalObject, not listing)
+5. Run verification scripts before committing
 
 **If any rule cannot be satisfied, STOP and report the gap.**
+
+---
+
+## Platform Documentation Reference
+
+For platform-level details, refer to:
+- Authentication: `@xalatechnologies/platform` documentation
+- Design System: `@xalatechnologies/platform/ui` documentation
+- i18n: `@xalatechnologies/platform/i18n` documentation
+
+---
+
+**Last Updated:** 2026-01-21
+**Repository Type:** Domain Repository (Digilist)
