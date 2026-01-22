@@ -50,6 +50,76 @@ docker-compose -f docker-compose.dev.yml up -d
 
 ---
 
+## 🎨 **UI PACKAGE SEPARATION (CRITICAL UPDATE - 2026-01-22)**
+
+**The UI components have been separated into a standalone package.**
+
+### **What Changed**
+
+| Old | New |
+|-----|-----|
+| `@xala-technologies/platform/ui` | `@xala-technologies/platform-ui` |
+
+### **Required Actions for Digilist Apps**
+
+1. **Update package.json:**
+```json
+{
+  "dependencies": {
+    "@xala-technologies/platform": "^1.0.0",
+    "@xala-technologies/platform-ui": "^1.0.1"
+  }
+}
+```
+
+2. **Update imports:**
+```typescript
+// ❌ OLD (will break)
+import { Button, Card } from '@xala-technologies/platform/ui';
+
+// ✅ NEW (required)
+import { Button, Card } from '@xala-technologies/platform-ui';
+```
+
+3. **Run migration:**
+```bash
+# In each app directory
+find src -type f \( -name "*.ts" -o -name "*.tsx" \) \
+  -exec sed -i '' 's|@xala-technologies/platform/ui|@xala-technologies/platform-ui|g' {} \;
+
+pnpm add @xala-technologies/platform-ui
+pnpm typecheck && pnpm build
+```
+
+### **ESLint Enforcement**
+
+Platform now blocks direct UI library imports:
+
+```typescript
+// ❌ FORBIDDEN (ESLint will fail)
+import { Button } from '@digdir/designsystemet-react';
+import { HomeIcon } from 'lucide-react';
+
+// ✅ REQUIRED
+import { Button } from '@xala-technologies/platform-ui';
+import { HomeIcon } from '@xala-technologies/platform-ui/primitives';
+```
+
+### **Design Token Requirements**
+
+UI package enforces Designsystemet design tokens:
+- **No raw HTML** - Use Designsystemet components
+- **No inline styles** - Use data attributes or design token variables
+- **No custom CSS** - Only `ds-` prefixed classes
+
+### **Documentation**
+
+- **Migration Guide**: [docs/UI_PACKAGE_SEPARATION.md](docs/UI_PACKAGE_SEPARATION.md)
+- **UI Package Docs**: https://github.com/Xala-Technologies/xala-platform-ui/tree/main/docs
+- **Platform Docs**: https://github.com/Xala-Technologies/xala-platform/tree/main/docs
+
+---
+
 ## 🚨 **CRITICAL LESSONS LEARNED**
 
 > **⚠️ MANDATORY READING - LEARN FROM REAL INCIDENTS**
