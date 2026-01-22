@@ -1,22 +1,43 @@
 # DigiList Design System Rules
 
 > **LLM Training Document**
-> **Purpose:** Design System usage rules for AI agents
-> **Last Updated:** 2026-01-20
+> **Purpose:** Governance rules for Designsystemet usage
+> **Status:** Production
+> **Last Updated:** 2026-01-22 (UI Package Separation)
 
 ---
 
-## Core Rule
+## Core Rules
 
+### 1. Use @xala/ds Package
 **All UI MUST use `@xala/ds`.** Direct `@digdir/*` imports are FORBIDDEN.
 
 ```tsx
-// ✅ ONLY THIS
+// ✅ CORRECT
 import { Button, Card, DataTable } from '@xala/ds';
 
-// ❌ NEVER THIS
+// ❌ FORBIDDEN
 import { Button } from '@digdir/designsystemet-react';
 ```
+
+### 2. UI Package Separation (NEW - 2026-01-22)
+**Platform UI components are now in a separate package.**
+
+```tsx
+// ✅ CORRECT - For platform infrastructure components
+import { Button, Card } from '@xala-technologies/platform-ui';
+import { DataTable } from '@xala-technologies/platform-ui/composed';
+import { HomeIcon } from '@xala-technologies/platform-ui/primitives';
+
+// ❌ FORBIDDEN - Direct library imports
+import { Button } from '@digdir/designsystemet-react';
+import { HomeIcon } from 'lucide-react';
+
+// ✅ CORRECT - For Digilist domain components
+import { RentalObjectCard, BookingFormModal } from '@xala/ds';
+```
+
+**See:** [UI Package Boundary](./doctrine/boundaries/UI_PACKAGE_BOUNDARY.md) for complete rules.
 
 ---
 

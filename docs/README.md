@@ -1,26 +1,18 @@
-# Digilist Platform Documentation
+# Digilist Documentation
 
-Welcome to the comprehensive documentation for the Digilist/Xala SaaS platform.
+> **Multi-tenant booking and rental management system for Norwegian municipalities**
 
-## 📖 Table of Contents
+## 📚 Quick Links
 
-### 🚀 Getting Started
-- [Introduction](./01-introduction.md) - Platform overview and concepts
-- [Quick Start](./02-quick-start.md) - Get up and running in minutes
-- [Development Workflow](./03-development-workflow.md) - Daily development practices
+### Getting Started
+- [Introduction](./01-introduction.md) - Platform overview
+- [Quick Start](./02-quick-start.md) - Get up and running
+- [Development Workflow](./03-development-workflow.md) - Daily development
 
-### 🏗️ Architecture
-- [Overview](./architecture/01-overview.md) - System architecture overview
-- [Monorepo Structure](./architecture/02-monorepo.md) - How the monorepo is organized
-- [Applications](./architecture/03-applications.md) - Frontend and backend apps
-- [Design System](./architecture/04-design-system.md) - UI component library
-- [Security](./architecture/05-security.md) - Security architecture and best practices
-- **[Authentication System](./architecture/AUTHENTICATION_SYSTEM.md)** ⭐ - Complete auth documentation
-- [Database Schema](./architecture/database-schema.md) - Database design
-- **[Rental Object Custody & Delegation](./architecture/rental-object-custody-delegation.md)** - Custody system documentation
+### Critical Updates
+- **[UI Package Migration](./UI_PACKAGE_SEPARATION.md)** - **NEW (2026-01-22)**
 
-### 📱 Applications
-- [Web App](./apps/01-web.md) - Public booking platform
+## 📖 Documentation Sections
 - [Backoffice App](./apps/02-backoffice.md) - Admin management portal
 - [MinSide App](./apps/03-minside.md) - User dashboard
 - [API](./apps/04-api.md) - Backend API documentation
