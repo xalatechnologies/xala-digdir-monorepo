@@ -100,7 +100,7 @@ const mockRentalObject = {
   capacity: 10,
   location: 'Oslo',
   image: 'https://example.com/image.jpg',
-  facilities: [t("amenity.wifi"), 'Parking'],
+  amenities: [t("amenity.wifi"), 'Parking'],
   price: 1000,
   priceUnit: 'hour' as const,
   currency: 'NOK',

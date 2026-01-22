@@ -37,7 +37,7 @@ The following endpoints must be implemented or updated to accept `multipart/form
 
 **Endpoint:** `POST /api/listings/:id/media`
 
-**Purpose:** Upload one or more images to a facility listing
+**Purpose:** Upload one or more images to a rental object listing
 
 **Request:**
 - **Content-Type:** `multipart/form-data`

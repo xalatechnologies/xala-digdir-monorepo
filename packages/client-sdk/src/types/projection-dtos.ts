@@ -203,7 +203,7 @@ export interface RentalObjectDetailsProjectionDTO extends RentalObjectCardProjec
   // === ALL AMENITIES ===
   allAmenities: RentalObjectAmenityDTO[];
 
-  // === FACILITIES/EQUIPMENT ===
+  // === EQUIPMENT ===
   includedEquipment: RentalObjectEquipmentDTO[];
 
   // === ADDITIONAL SERVICES (purchasable add-ons) ===

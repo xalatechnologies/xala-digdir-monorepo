@@ -1,7 +1,7 @@
 /**
  * OpeningHoursWidget Component
  *
- * Displays weekly opening hours for facilities.
+ * Displays weekly opening hours for venues and rental objects.
  * Shows grouped days with same hours (e.g., "Mandag-Fredag: 08:00 - 22:00").
  */
 

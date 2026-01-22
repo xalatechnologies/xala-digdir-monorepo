@@ -366,7 +366,7 @@ function getPrimaryImage(obj: DbRentalObject): { url: string; thumbnail: string;
 
 function getAmenities(obj: DbRentalObject, maxCount: number = 3): { visible: string[]; moreCount: number } {
   const meta = safeParseMetadata(obj.metadata);
-  const all = safeArray<string>(meta.amenities) || safeArray<string>(meta.facilities);
+  const all = safeArray<string>(meta.amenities);
   
   // Ensure amenity keys have the 'amenity.' prefix for i18n translation
   const prefixedAmenities = all.map(a => {
@@ -520,7 +520,7 @@ export function toDetailsProjection(
       })
     : [];
 
-  const rawAmenities = safeArray<string>(meta.amenities) || safeArray<string>(meta.facilities);
+  const rawAmenities = safeArray<string>(meta.amenities);
   const allAmenities: RentalObjectAmenityDTO[] = rawAmenities.map((name, i) => ({
     id: `amenity-${i}`,
     name,

@@ -142,7 +142,6 @@ export interface ListingMetadata {
     city?: string;
     municipality?: string;
   };
-  facilities?: string[];
   amenities?: string[];
   openingHours?: Record<string, { open: string; close: string }>;
   rules?: string[];

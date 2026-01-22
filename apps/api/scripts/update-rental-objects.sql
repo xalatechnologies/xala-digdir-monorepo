@@ -55,7 +55,7 @@ SET
   pricing = '{"basePrice": 4500, "currency": "NOK", "unit": "day", "hourlyRate": 700}'::jsonb
 WHERE name = 'Rådhussalen';
 
--- Sports facilities
+-- Sports venues
 UPDATE rental_objects 
 SET 
   description = 'Moderne idrettshall med full størrelse håndballbane. Egnet for kamper, trening og arrangementer.',

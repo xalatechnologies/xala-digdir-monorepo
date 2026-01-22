@@ -17,6 +17,8 @@ export type {
   ExceptionalDay,
   OpeningHours,
   Amenity,
+  IncludedEquipment,
+  /** @deprecated Use IncludedEquipment instead */
   IncludedFacility,
   Rule,
   FAQItem,

@@ -3,7 +3,7 @@ const TENANT_SKIEN = 'f47ac10b-58cc-4372-a567-0e02b2c3d479';
 const ORG_SKIEN_HALL = '11111111-1111-1111-1111-111111111111'; // Skien Idrettshall
 const HALL_A_ID = 'd0000001-0000-0000-0000-000000000001';
 
-const FACILITY_TYPES = [
+const RENTAL_OBJECT_TYPES = [
   'Idrettshall A', 'Fotballbane 1', 'Tennisbane 1', 'Svømmehall', 'Treningsstudio 1',
   'Kunstgressbane', 'Basketballbane', 'Håndballhall', 'Turnhall', 'Klatrehall',
   'Dansestudio', 'Kampsportstudio', 'Yogastudio', 'Squashbane', 'Badmintonhall',
@@ -70,12 +70,12 @@ function generateId(index) {
   return `d0000001-0000-${hex}-0000-000000000000`;
 }
 
-const objects = FACILITY_TYPES.map((facilityType, i) => {
+const objects = RENTAL_OBJECT_TYPES.map((rentalObjectType, i) => {
   const city = CITIES[i % CITIES.length];
   const street = STREETS[i % STREETS.length];
   const streetNumber = (i % 50) + 1;
   const postalCode = `37${20 + (i % 80)}`;
-  const size = facilityType.includes('studio') || facilityType.includes('rom') ? 'small' : facilityType.includes('hall') || facilityType.includes('bane') ? 'large' : 'medium';
+  const size = rentalObjectType.includes('studio') || rentalObjectType.includes('rom') ? 'small' : rentalObjectType.includes('hall') || rentalObjectType.includes('bane') ? 'large' : 'medium';
   const basePrices = { small: 500, medium: 1000, large: 1500 };
   const basePrice = basePrices[size];
   const capacity = size === 'small' ? 20 : size === 'medium' ? 100 : 300;
@@ -84,13 +84,13 @@ const objects = FACILITY_TYPES.map((facilityType, i) => {
     id: generateId(i),
     tenantId: TENANT_SKIEN,
     organizationId: ORG_SKIEN_HALL,
-    name: facilityType,
-    slug: generateSlug(facilityType, i),
+    name: rentalObjectType,
+    slug: generateSlug(rentalObjectType, i),
     type: 'SPACE',
     categoryKey: 'LOKALER_OG_BANER',
     timeMode: 'PERIOD',
     status: 'published',
-    description: `Moderne ${facilityType.toLowerCase()} i ${city}. Perfekt for treninger, kamper og arrangementer. Godt vedlikeholdt med moderne fasiliteter.`,
+    description: `Moderne ${rentalObjectType.toLowerCase()} i ${city}. Perfekt for treninger, kamper og arrangementer. Godt vedlikeholdt med moderne utstyr.`,
     capacity,
     pricing: {
       basePrice,
@@ -108,7 +108,7 @@ const objects = FACILITY_TYPES.map((facilityType, i) => {
         { type: 'nonprofit', percentage: 25, label: 'Frivillig organisasjon' },
       ],
     },
-    images: getImages(facilityType),
+    images: getImages(rentalObjectType),
     metadata: {
       location: { address: `${street} ${streetNumber}`, postalCode, city, country: 'Norway' },
       contactName: 'Booking Avdeling',

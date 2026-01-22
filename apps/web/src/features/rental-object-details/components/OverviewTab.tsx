@@ -1,8 +1,8 @@
 /**
  * OverviewTab Component
  *
- * Displays listing description, capacity card, facilities, and additional services.
- * Matches the Digilist design with pill-style facilities and service cards.
+ * Displays rental object description, capacity card, amenities, and additional services.
+ * Matches the Digilist design with pill-style amenities and service cards.
  */
 
 import * as React from 'react';
@@ -34,7 +34,7 @@ function UsersIcon({ size = 24 }: { size?: number }): React.ReactElement {
   );
 }
 
-// Facility Icons
+// Amenity Icons
 function ProjectorIcon({ size = 16 }: { size?: number }): React.ReactElement {
   return (
     <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -198,7 +198,7 @@ function getAmenityIcon(name: string): React.ReactElement {
   if (lowerName.includes('lyd') || lowerName.includes('høyttaler') || lowerName.includes('speaker') || lowerName.includes('sound')) return <SpeakerIcon />;
   if (lowerName.includes('mikrofon') || lowerName.includes('microphone') || lowerName.includes('mic')) return <MicrophoneIcon />;
 
-  // Facilities
+  // Amenities - Convenience
   if (lowerName.includes('parkering') || lowerName.includes('parking')) return <ParkingIcon />;
   if (lowerName.includes('kaffe') || lowerName.includes('coffee') || lowerName.includes('te') || lowerName.includes('drikke')) return <CoffeeIcon />;
   if (lowerName.includes('toalett') || lowerName.includes('wc') || lowerName.includes('bad') || lowerName.includes('toilet')) return <ToiletIcon />;
@@ -341,11 +341,11 @@ export function OverviewTab({
         </section>
       )}
 
-      {/* Facilities (Amenities) */}
+      {/* Amenities */}
       {metadata.amenities && metadata.amenities.length > 0 && (
         <section>
           <Paragraph data-size="xs" style={{ margin: 0, marginBottom: 'var(--ds-spacing-3)', color: 'var(--ds-color-neutral-text-subtle)', textTransform: 'uppercase', letterSpacing: '0.05em', fontWeight: 'var(--ds-font-weight-medium)' }}>
-            {t('overview.facilities')}
+            {t('overview.amenities')}
           </Paragraph>
           <div style={{ display: 'flex', flexWrap: 'wrap', gap: 'var(--ds-spacing-2)' }}>
             {metadata.amenities.map((amenity: Amenity) => (
@@ -450,8 +450,8 @@ export function OverviewTab({
         </section>
       )}
 
-      {/* Included Facilities */}
-      {metadata.includedFacilities && metadata.includedFacilities.length > 0 && (
+      {/* Included Equipment */}
+      {metadata.includedEquipment && metadata.includedEquipment.length > 0 && (
         <section>
           <Heading level={2} data-size="sm" style={{ margin: 0, marginBottom: 'var(--ds-spacing-4)' }}>
             {t('overview.includedEquipment')}
@@ -463,9 +463,9 @@ export function OverviewTab({
               gap: 'var(--ds-spacing-3)',
             }}
           >
-            {metadata.includedFacilities.map((facility) => (
+            {metadata.includedEquipment.map((equipment) => (
               <div
-                key={facility.id}
+                key={equipment.id}
                 style={{
                   display: 'flex',
                   alignItems: 'center',
@@ -477,8 +477,8 @@ export function OverviewTab({
               >
                 <CheckIcon size={16} />
                 <Paragraph data-size="sm" style={{ margin: 0 }}>
-                  {facility.name}
-                  {facility.quantity && facility.quantity > 1 && ` (${facility.quantity})`}
+                  {equipment.name}
+                  {equipment.quantity && equipment.quantity > 1 && ` (${equipment.quantity})`}
                 </Paragraph>
               </div>
             ))}

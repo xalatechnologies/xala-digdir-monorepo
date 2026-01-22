@@ -303,7 +303,7 @@ export default function BookingMetricsPage() {
     { category: t('categories.sportsVenues'), bookings: 245, revenue: 89500, avgDuration: 2.5, utilizationRate: 78 },
     { category: t('categories.meetingRooms'), bookings: 189, revenue: 45200, avgDuration: 1.5, utilizationRate: 65 },
     { category: t('categories.equipment'), bookings: 156, revenue: 23400, avgDuration: 4.0, utilizationRate: 52 },
-    { category: t('categories.outdoorFacilities'), bookings: 98, revenue: 34800, avgDuration: 3.0, utilizationRate: 45 },
+    { category: t('categories.outdoorAmenities'), bookings: 98, revenue: 34800, avgDuration: 3.0, utilizationRate: 45 },
   ];
 
   // Mock top rental objects - in production this would come from API

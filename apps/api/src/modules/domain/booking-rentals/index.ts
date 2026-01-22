@@ -21,8 +21,8 @@ const manifest: DomainModuleDefinition['manifest'] = {
     nb: 'Booking og Utleie',
   },
   description: {
-    en: 'Complete booking and rental management system for facilities, equipment, and spaces',
-    nb: 'Komplett booking- og utleiesystem for lokaler, utstyr og fasiliteter',
+    en: 'Complete booking and rental management system for venues, equipment, and spaces',
+    nb: 'Komplett booking- og utleiesystem for lokaler, utstyr og rom',
   },
   version: '1.0.0',
   category: 'domain',
@@ -469,9 +469,9 @@ const docs: DomainModuleDefinition['docs'] = {
   ],
   faq: [
     {
-      question: { en: 'How do I book a facility?', nb: 'Hvordan booker jeg et lokale?' },
+      question: { en: 'How do I book a rental object?', nb: 'Hvordan booker jeg et lokale?' },
       answer: {
-        en: 'Navigate to the facility page and click "Book Now" to start the booking process.',
+        en: 'Navigate to the rental object page and click "Book Now" to start the booking process.',
         nb: 'Gå til lokalesiden og klikk "Book nå" for å starte bookingprosessen.',
       },
       category: 'booking',

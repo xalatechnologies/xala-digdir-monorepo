@@ -98,7 +98,7 @@ describe.skip('Contract Parity - RentalObject Schema', () => {
   });
 
   it('validates category enum', () => {
-    const categories = ['space', 'equipment', 'facility', 'vehicle'];
+    const categories = ['space', 'equipment', 'rental_object', 'vehicle'];
     categories.forEach(category => {
       const obj = { ...sampleRentalObject, category };
       expect(ApiRentalObjectSchema.safeParse(obj).success).toBe(true);

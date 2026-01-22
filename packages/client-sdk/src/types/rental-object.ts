@@ -101,7 +101,7 @@ export interface RentalObjectMetadata {
   postalCode?: string;
   location?: RentalObjectLocation;
   amenities?: string[];
-  /** @deprecated Use amenities instead */
+  /** @deprecated Use amenities instead. The term "facilities" is deprecated in favor of "amenities" for features/equipment. */
   facilities?: string[];
   openingHours?: Record<string, { open: string; close: string }>;
   rules?: string[];

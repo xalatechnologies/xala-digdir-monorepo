@@ -26,11 +26,11 @@ const periodLabels: Record<ReportPeriod, string> = {
 };
 
 // Filter options
-const FACILITY_OPTIONS = [
+const RENTAL_OBJECT_OPTIONS = [
   { id: 'all', label: t('common.alle_lokaler') },
-  { id: 'facility-1', label: t('common.moterom_a') },
-  { id: 'facility-2', label: t('common.konferansesal_b') },
-  { id: 'facility-3', label: t('common.fellesareal_c') },
+  { id: 'rental-object-1', label: t('common.moterom_a') },
+  { id: 'rental-object-2', label: t('common.konferansesal_b') },
+  { id: 'rental-object-3', label: t('common.fellesareal_c') },
 ];
 
 const ORGANIZATION_OPTIONS = [
@@ -62,7 +62,7 @@ export function ReportsPage() {
   });
 
   // Filter state
-  const [facilityId, setFacilityId] = useState<string>('all');
+  const [rentalObjectId, setRentalObjectId] = useState<string>('all');
   const [organizationId, setOrganizationId] = useState<string>('all');
   const [bookingType, setBookingType] = useState<string>('all');
 
@@ -73,7 +73,7 @@ export function ReportsPage() {
     period,
     ...(dateRange.startDate && { startDate: dateRange.startDate }),
     ...(dateRange.endDate && { endDate: dateRange.endDate }),
-    ...(facilityId !== 'all' && { facilityId }),
+    ...(rentalObjectId !== 'all' && { rentalObjectId }),
     ...(organizationId !== 'all' && { organizationId }),
     ...(bookingType !== 'all' && { bookingType }),
   };
@@ -84,7 +84,7 @@ export function ReportsPage() {
     period,
     ...(dateRange.startDate && { startDate: dateRange.startDate }),
     ...(dateRange.endDate && { endDate: dateRange.endDate }),
-    ...(facilityId !== 'all' && { facilityId }),
+    ...(rentalObjectId !== 'all' && { rentalObjectId }),
     ...(organizationId !== 'all' && { organizationId }),
     ...(bookingType !== 'all' && { bookingType }),
   };
@@ -94,7 +94,7 @@ export function ReportsPage() {
   const bookingStatsParams = {
     ...(dateRange.startDate && { startDate: dateRange.startDate }),
     ...(dateRange.endDate && { endDate: dateRange.endDate }),
-    ...(facilityId !== 'all' && { facilityId }),
+    ...(rentalObjectId !== 'all' && { rentalObjectId }),
     ...(organizationId !== 'all' && { organizationId }),
     ...(bookingType !== 'all' && { bookingType }),
   };
@@ -103,7 +103,7 @@ export function ReportsPage() {
   const heatmapParams = {
     ...(dateRange.startDate && { startDate: dateRange.startDate }),
     ...(dateRange.endDate && { endDate: dateRange.endDate }),
-    ...(facilityId !== 'all' && { facilityId }),
+    ...(rentalObjectId !== 'all' && { rentalObjectId }),
     ...(organizationId !== 'all' && { organizationId }),
     ...(bookingType !== 'all' && { bookingType }),
   };
@@ -113,7 +113,7 @@ export function ReportsPage() {
   const seasonalParams = {
     ...(dateRange.startDate && { startDate: dateRange.startDate }),
     ...(dateRange.endDate && { endDate: dateRange.endDate }),
-    ...(facilityId !== 'all' && { facilityId }),
+    ...(rentalObjectId !== 'all' && { rentalObjectId }),
     ...(organizationId !== 'all' && { organizationId }),
     ...(bookingType !== 'all' && { bookingType }),
   };
@@ -320,12 +320,12 @@ export function ReportsPage() {
           </div>
           <div style={{ display: 'flex', gap: 'var(--ds-spacing-3)', flex: 1 }}>
             <Dropdown
-              items={FACILITY_OPTIONS.map((opt) => ({
+              items={RENTAL_OBJECT_OPTIONS.map((opt) => ({
                 id: opt.id,
                 label: opt.label,
-                onSelect: () => setFacilityId(opt.id),
+                onSelect: () => setRentalObjectId(opt.id),
               }))}
-              label={FACILITY_OPTIONS.find((opt) => opt.id === facilityId)?.label || 'Velg lokale'}
+              label={RENTAL_OBJECT_OPTIONS.find((opt) => opt.id === rentalObjectId)?.label || 'Velg lokale'}
               data-size="md"
             />
             <Dropdown

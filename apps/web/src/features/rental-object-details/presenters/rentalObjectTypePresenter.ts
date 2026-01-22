@@ -84,9 +84,9 @@ const formatAccessibility = (value: unknown): string => {
 // Presenter Configurations per Type
 // =============================================================================
 
-const facilityConfig: RentalObjectTypeConfig = {
+const venueConfig: RentalObjectTypeConfig = {
   type: 'FACILITY',
-  labelKey: 'listingTypes.facility',
+  labelKey: 'listingTypes.venue',
   iconName: 'building',
   keyFacts: [
     {
@@ -145,10 +145,10 @@ const facilityConfig: RentalObjectTypeConfig = {
   defaultBookingMode: 'SLOTS',
   emptyStates: {
     description: 'rentalObject.emptyState.description',
-    amenities: 'rentalObject.emptyState.amenities.facility',
-    rules: 'rentalObject.emptyState.rules.facility',
+    amenities: 'rentalObject.emptyState.amenities.venue',
+    rules: 'rentalObject.emptyState.rules.venue',
     faq: 'rentalObject.emptyState.faq',
-    activity: 'rentalObject.emptyState.activity.facility',
+    activity: 'rentalObject.emptyState.activity.venue',
   },
 };
 
@@ -342,7 +342,7 @@ const otherConfig: RentalObjectTypeConfig = {
 // =============================================================================
 
 const configMap: Record<RentalObjectType, RentalObjectTypeConfig> = {
-  FACILITY: facilityConfig,
+  FACILITY: venueConfig,
   EQUIPMENT: equipmentConfig,
   EVENT: eventConfig,
   OTHER: otherConfig,
@@ -474,7 +474,7 @@ export function getBookingModeLabel(mode: BookingMode): string {
 }
 
 /**
- * Check if listing is currently open (for facilities)
+ * Check if rental object is currently open (for venues/FACILITY type)
  */
 export function isCurrentlyOpen(
   openingHours: { regular: Array<{ dayIndex: number; open?: string; close?: string; isClosed: boolean }> } | undefined

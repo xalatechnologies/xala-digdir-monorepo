@@ -307,7 +307,7 @@ export class CalendarService {
         return 'MULTI_DAY';
       case 'SPACE':
       case 'MEETING_ROOM':
-      case 'FACILITY':
+      case 'VENUE':
       case 'RESOURCE':
         return 'TIME_SLOTS';
       case 'EVENT':

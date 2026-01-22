@@ -97,7 +97,7 @@ describe.skip('Calendar Contracts API', () => {
         startDate: '2026-02-15',
         endDate: '2026-02-16',
         reason: 'Annual maintenance',
-        notes: 'Full facility closure',
+        notes: 'Full rental object closure',
       };
 
       // Mock response

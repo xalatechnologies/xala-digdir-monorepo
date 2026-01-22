@@ -1,6 +1,6 @@
 /**
  * Category Metadata Schemas
- * 3 categories: LOCALE (facilities), ARRANGEMENT (events), UTSTYR (equipment)
+ * 3 categories: LOCALE (venues/rental objects), ARRANGEMENT (events), UTSTYR (equipment)
  */
 
 // =============================================================================
@@ -14,7 +14,7 @@ export type Category = typeof CATEGORIES[number];
 // METADATA PER CATEGORY
 // =============================================================================
 
-/** LOCALE - Facilities, venues, halls, rooms */
+/** LOCALE - Venues, halls, rooms, rental objects */
 export interface LocaleMetadata {
   address: string;
   capacity: number;

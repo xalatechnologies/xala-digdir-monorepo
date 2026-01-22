@@ -28,7 +28,7 @@ const mockRentalObject = {
   capacity: 50,
   location: 'Oslo',
   image: 'https://picsum.photos/800/600',
-  facilities: [t("amenity.wifi"), 'Parking', 'Accessible'],
+  amenities: [t("amenity.wifi"), 'Parking', 'Accessible'],
   createdAt: new Date().toISOString(),
   updatedAt: new Date().toISOString(),
 };

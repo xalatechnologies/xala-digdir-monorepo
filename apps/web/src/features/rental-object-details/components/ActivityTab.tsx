@@ -2,7 +2,7 @@
  * ActivityTab Component
  *
  * Displays activity/history based on rental object type:
- * - Facilities: Events and arrangements calendar
+ * - Venues (FACILITY type): Events and arrangements calendar
  * - Equipment: Rental history timeline
  * - Events: Session calendar
  */

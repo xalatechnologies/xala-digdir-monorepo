@@ -56,7 +56,7 @@ const generateRentalObjects = (count: number) =>
     capacity: Math.floor(Math.random() * 100) + 1,
     location: `Location ${i + 1}`,
     image: `https://picsum.photos/400/300?random=${i}`,
-    facilities: ['WiFi', 'Parking', 'Accessible'],
+    amenities: ['WiFi', 'Parking', 'Accessible'],
     createdAt: new Date().toISOString(),
     updatedAt: new Date().toISOString(),
   }));

@@ -71,7 +71,7 @@ export {
   SettingsIcon,
   ShoppingCartIcon,
 
-  // Facility icons
+  // Amenity icons
   WifiIcon,
   BoardIcon,
   ProjectorIcon,

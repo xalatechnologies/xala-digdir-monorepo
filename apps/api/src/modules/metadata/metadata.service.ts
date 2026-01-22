@@ -30,7 +30,7 @@ export class MetadataService {
       {
         key: 'LOKALER_OG_BANER',
         label: 'metadata.category.LOKALER_OG_BANER',
-        description: 'Sports facilities, gyms, and courts',
+        description: 'Sports venues, gyms, and courts',
         sortOrder: 1,
         enabled: true,
         icon: 'sports',
@@ -48,7 +48,7 @@ export class MetadataService {
       {
         key: 'MØTEROM_OG_KONFERANSE',
         label: 'metadata.category.MØTEROM_OG_KONFERANSE',
-        description: 'Meeting rooms and conference facilities',
+        description: 'Meeting rooms and conference venues',
         sortOrder: 3,
         enabled: true,
         icon: 'meeting',

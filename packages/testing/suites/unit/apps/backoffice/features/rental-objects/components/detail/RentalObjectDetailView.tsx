@@ -166,7 +166,7 @@ export function RentalObjectDetailView({ slug }: RentalObjectDetailViewProps) {
                 <Skeleton width="80%" height={16} />
               </div>
 
-              {/* Facilities skeleton */}
+              {/* Amenities skeleton */}
               <div>
                 <Skeleton width="25%" height={24} style={{ marginBottom: 'var(--ds-spacing-3)' }} />
                 <div style={{ display: 'flex', gap: 'var(--ds-spacing-2)', flexWrap: 'wrap' }}>

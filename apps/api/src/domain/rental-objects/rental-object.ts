@@ -109,7 +109,7 @@ export interface BookingConfig {
 
 /**
  * Amenity Value Object
- * Represents a facility or feature available at the rental object
+ * Represents an amenity or feature available at the rental object
  */
 export interface Amenity {
   id: string;
@@ -184,7 +184,7 @@ export interface AdditionalService {
  *   category: { key: 'LOKALER_OG_BANER', label: 'Lokaler og baner' },
  *   timeMode: 'PERIOD',
  *   features: ['SHARED_CAPACITY'],
- *   ruleSet: 'SPORTS_FACILITIES',
+ *   ruleSet: 'SPORTS_VENUES',
  *   status: 'PUBLISHED',
  *   requiresApproval: true,
  *   // ... rest of fields
@@ -224,7 +224,7 @@ export interface RentalObject {
   /** Feature flags (INVENTORY, SHARED_CAPACITY, PACKAGES) */
   features: Array<'INVENTORY' | 'SHARED_CAPACITY' | 'PACKAGES'>;
 
-  /** Rule set key (e.g., 'SPORTS_FACILITIES', 'VEHICLES') */
+  /** Rule set key (e.g., 'SPORTS_VENUES', 'VEHICLES') */
   ruleSet: string | null;
 
   // === STATUS & WORKFLOW ===

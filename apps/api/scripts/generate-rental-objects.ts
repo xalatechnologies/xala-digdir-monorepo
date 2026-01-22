@@ -1,13 +1,13 @@
 /**
  * Generate 40 Comprehensive Rental Objects
- * Norwegian facilities with complete metadata
+ * Norwegian venues with complete metadata
  */
 
 const TENANT_SKIEN = 'f47ac10b-58cc-4372-a567-0e02b2c3d479';
 const ORG_SKIEN_HALL = '11111111-1111-1111-1111-111111111111';
 
-// Facility types for "LOKALER_OG_BANER" category
-const FACILITY_TYPES = [
+// Rental object types for "LOKALER_OG_BANER" category
+const RENTAL_OBJECT_TYPES = [
   'Idrettshall', 'Fotballbane', 'Tennisbane', 'Svømmehall', 'Treningsstudio',
   'Kunstgressbane', 'Basketballbane', 'Håndballhall', 'Turnhall', 'Klatrehall',
   'Dansestudio', 'Kampsportstudio', 'Yogastudio', 'Squashbane', 'Badmintonhall',
@@ -17,7 +17,7 @@ const FACILITY_TYPES = [
 const CITIES = ['Skien', 'Porsgrunn', 'Bamble', 'Notodden', 'Kragerø'];
 const STREETS = ['Idrettsveien', 'Parkveien', 'Håndballgata', 'Kulturhusgata', 'Sportsbakken', 'Hallveien'];
 
-// Image sets for different facility types
+// Image sets for different rental object types
 const IMAGE_SETS = {
   sports_hall: [
     'https://images.unsplash.com/photo-1519861531473-9200262188bf?w=1200&q=80',
@@ -46,11 +46,11 @@ const IMAGE_SETS = {
   ],
 };
 
-function getImages(facilityName: string): string[] {
-  if (facilityName.includes('Fotball')) return IMAGE_SETS.football;
-  if (facilityName.includes('Tennis')) return IMAGE_SETS.tennis;
-  if (facilityName.includes('Trenings') || facilityName.includes('Kamp') || facilityName.includes('Yoga')) return IMAGE_SETS.gym;
-  if (facilityName.includes('Svømme')) return IMAGE_SETS.pool;
+function getImages(rentalObjectName: string): string[] {
+  if (rentalObjectName.includes('Fotball')) return IMAGE_SETS.football;
+  if (rentalObjectName.includes('Tennis')) return IMAGE_SETS.tennis;
+  if (rentalObjectName.includes('Trenings') || rentalObjectName.includes('Kamp') || rentalObjectName.includes('Yoga')) return IMAGE_SETS.gym;
+  if (rentalObjectName.includes('Svømme')) return IMAGE_SETS.pool;
   return IMAGE_SETS.sports_hall;
 }
 
@@ -98,7 +98,7 @@ function generateOpeningHours() {
   };
 }
 
-function generateFAQ(facilityType: string) {
+function generateFAQ(rentalObjectType: string) {
   return [
     { question: 'Hva er kapasiteten?', answer: `Lokalet passer perfekt for treninger, kamper og arrangementer.` },
     { question: 'Er det parkeringsmuligheter?', answer: 'Ja, gratis parkering rett utenfor anlegget.' },
@@ -144,20 +144,20 @@ function generateBookingRules() {
 
 export function generate40RentalObjects() {
   const rentalObjects = [];
-  
+
   for (let i = 0; i < 40; i++) {
-    const facilityType = FACILITY_TYPES[i % FACILITY_TYPES.length];
-    const number = Math.floor(i / FACILITY_TYPES.length) + 1;
+    const rentalObjectType = RENTAL_OBJECT_TYPES[i % RENTAL_OBJECT_TYPES.length];
+    const number = Math.floor(i / RENTAL_OBJECT_TYPES.length) + 1;
     const suffix = number > 1 ? ` ${number}` : '';
-    const name = `${facilityType}${suffix}`;
+    const name = `${rentalObjectType}${suffix}`;
     const city = CITIES[i % CITIES.length];
     const street = STREETS[i % STREETS.length];
     const streetNumber = (i % 50) + 1;
     const postalCode = `37${20 + (i % 80)}`;
-    
-    // Determine size based on facility type
-    const size = facilityType.includes('studio') || facilityType.includes('rom') ? 'small' :
-                 facilityType.includes('hall') || facilityType.includes('bane') ? 'large' : 'medium';
+
+    // Determine size based on rental object type
+    const size = rentalObjectType.includes('studio') || rentalObjectType.includes('rom') ? 'small' :
+                 rentalObjectType.includes('hall') || rentalObjectType.includes('bane') ? 'large' : 'medium';
     
     const capacity = size === 'small' ? 20 : size === 'medium' ? 100 : 300;
     
@@ -167,7 +167,7 @@ export function generate40RentalObjects() {
       organizationId: ORG_SKIEN_HALL,
       name,
       slug: generateSlug(name),
-      description: `Moderne ${facilityType.toLowerCase()} i ${city}. Perfekt for treninger, kamper og arrangementer. Godt vedlikeholdt og med moderne fasiliteter.`,
+      description: `Moderne ${rentalObjectType.toLowerCase()} i ${city}. Perfekt for treninger, kamper og arrangementer. Godt vedlikeholdt med moderne utstyr.`,
       capacity,
       pricing: generatePricing(size),
       images: getImages(name),
@@ -188,7 +188,7 @@ export function generate40RentalObjects() {
         amenities: ['changing_rooms', 'showers', 'parking', 'wifi', 'first_aid'],
         regulations: generateRegulations(),
         bookingRules: generateBookingRules(),
-        faq: generateFAQ(facilityType),
+        faq: generateFAQ(rentalObjectType),
         rules: generateRules(),
       },
     });

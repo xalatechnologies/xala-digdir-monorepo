@@ -165,7 +165,7 @@ test.describe('Golden Booking Journey - Reject Path', () => {
     console.log('   ✅ Reject button visible');
     
     // Reject with reason
-    const rejectionReason = 'Unfortunately, the facility is undergoing maintenance during this time.';
+    const rejectionReason = 'Unfortunately, the rental object is undergoing maintenance during this time.';
     await caseDetails.rejectBooking(rejectionReason);
     console.log(`   ✅ Rejection submitted with reason: "${rejectionReason}"`);
     
@@ -195,7 +195,7 @@ test.describe('Golden Booking Journey - Reject Path', () => {
     // Verify rejection reason is visible (if implemented)
     // This is optional depending on UI implementation
     const pageContent = await minsidePage.content();
-    const hasRejectionReason = pageContent.includes('facility is undergoing maintenance');
+    const hasRejectionReason = pageContent.includes('rental object is undergoing maintenance');
     
     if (hasRejectionReason) {
       console.log('   ✅ Rejection reason visible to citizen');

@@ -80,7 +80,7 @@ export interface OpeningHours {
 }
 
 // =============================================================================
-// Amenities & Facilities
+// Amenities & Included Equipment
 // =============================================================================
 
 export interface Amenity {
@@ -91,12 +91,17 @@ export interface Amenity {
   description?: string;
 }
 
-export interface IncludedFacility {
+export interface IncludedEquipment {
   id: string;
   name: string;
   description?: string;
   quantity?: number;
 }
+
+/**
+ * @deprecated Use IncludedEquipment instead. This alias is for backward compatibility.
+ */
+export type IncludedFacility = IncludedEquipment;
 
 // =============================================================================
 // Rules & FAQ
@@ -176,7 +181,11 @@ export interface RentalObjectMetadata {
   description?: string;
   shortDescription?: string;
   amenities: Amenity[];
-  includedFacilities: IncludedFacility[];
+  includedEquipment: IncludedEquipment[];
+  /**
+   * @deprecated Use includedEquipment instead. This alias is for backward compatibility.
+   */
+  includedFacilities?: IncludedEquipment[];
   rules: Rule[];
   faq: FAQItem[];
   tags?: string[];
@@ -205,7 +214,7 @@ export interface KeyFacts {
   capacity?: number;
   capacityLabel?: string;
 
-  // Facility specific
+  // Venue specific (FACILITY type)
   area?: number;
   areaUnit?: 'sqm' | 'sqft';
   floors?: number;
@@ -251,7 +260,7 @@ export interface RentalObject {
   // Contact
   contact?: ContactInfo;
 
-  // Hours (primarily for facilities)
+  // Hours (primarily for venues/FACILITY type)
   openingHours?: OpeningHours;
 
   // Key characteristics

@@ -1,6 +1,6 @@
 /**
  * Season Applications Controller
- * Manages seasonal facility applications from sports clubs
+ * Manages seasonal rental object applications from sports clubs
  */
 import { Controller, Get, Post, Put, Delete } from '../../core/decorators';
 import { container } from '../../core/container';

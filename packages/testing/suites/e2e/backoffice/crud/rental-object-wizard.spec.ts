@@ -15,7 +15,7 @@ import { test, expect } from '@digilist/api/fixtures/evidence.fixture';
  * - Address/Location
  * - Pricing
  * - Opening hours
- * - Amenities/Facilities
+ * - Amenities
  */
 test.describe('Rental Object Wizard', () => {
   setupMockApi();
@@ -238,7 +238,7 @@ test.describe('Rental Object Wizard', () => {
     });
   });
 
-  test.describe('Amenities/Facilities', () => {
+  test.describe('Amenities', () => {
   setupMockApi();
     test('should have amenities checkbox list', async ({ page }) => {
       const amenities = page.locator('[data-testid="amenities"], [class*="amenities"], input[type="checkbox"][name*="amenit"]');

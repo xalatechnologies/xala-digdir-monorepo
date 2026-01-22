@@ -191,11 +191,11 @@ function transformApiToListing(api: ApiListing, t: (key: string) => string): Ren
     description: dto.description || '',
     shortDescription: dto.descriptionExcerpt || dto.description?.slice(0, 150) || '',
     amenities,
-    includedFacilities: (dto.includedEquipment || []).map((f: any, i: number) => ({
-      id: f.id || `facility-${i}`,
-      name: f.name || f,
-      quantity: f.quantity,
-      description: f.description,
+    includedEquipment: (dto.includedEquipment || []).map((item: any, i: number) => ({
+      id: item.id || `equipment-${i}`,
+      name: item.name || item,
+      quantity: item.quantity,
+      description: item.description,
     })),
     rules,
     faq,

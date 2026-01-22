@@ -2,7 +2,7 @@ openapi: 3.1.0
 info:
   title: Digilist Backoffice API
   description: |
-    Complete API for the Digilist facility booking and management platform.
+    Complete API for the Digilist rental object booking and management platform.
 
     ## Authentication
 

@@ -562,7 +562,7 @@ function parseCalendarType(raw: unknown): BookingConfig['calendarType'] {
 }
 
 function extractAmenities(meta: Record<string, unknown>): Amenity[] {
-  const amenities = meta.amenities || meta.facilities;
+  const amenities = meta.amenities;
   if (!Array.isArray(amenities)) return [];
 
   return amenities.map((name: any, i) => ({

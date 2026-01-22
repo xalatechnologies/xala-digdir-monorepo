@@ -207,17 +207,17 @@ export function RentalObjectsPage(): React.ReactElement {
   const [viewMode, setViewMode] = React.useState<ViewMode>('grid');
   const [selectedArea, setSelectedArea] = React.useState<string>('all');
   const [selectedCapacity, setSelectedCapacity] = React.useState<string>('all');
-  const [selectedFacilities, setSelectedFacilities] = React.useState<string[]>([]);
+  const [selectedAmenities, setSelectedAmenities] = React.useState<string[]>([]);
 
   // Show more state
   const [showMoreType, setShowMoreType] = React.useState(false);
   const [showMoreArea, setShowMoreArea] = React.useState(false);
   const [showMoreCapacity, setShowMoreCapacity] = React.useState(false);
-  const [showMoreFacilities, setShowMoreFacilities] = React.useState(false);
+  const [showMoreAmenities, setShowMoreAmenities] = React.useState(false);
   const MAX_VISIBLE_ITEMS = 4;
 
   const typeCounts = React.useMemo(() => getCategoryCounts(listings), [listings]);
-  const allFacilities = React.useMemo(() => getAllAmenities(listings), [listings]);
+  const allAmenities = React.useMemo(() => getAllAmenities(listings), [listings]);
 
   const locationAreas = React.useMemo(() => {
     const areas: { id: string; label: string }[] = [{ id: 'all', label: t('alle.områder') }];
@@ -250,14 +250,14 @@ export function RentalObjectsPage(): React.ReactElement {
         if (capacityOption && (l.capacity < capacityOption.min || l.capacity > capacityOption.max)) return false;
       }
 
-      if (selectedFacilities.length > 0) {
+      if (selectedAmenities.length > 0) {
         const listingAmenities = l.amenities || [];
-        if (!selectedFacilities.every(f => listingAmenities.includes(f))) return false;
+        if (!selectedAmenities.every(a => listingAmenities.includes(a))) return false;
       }
 
       return true;
     });
-  }, [listings, listingType, selectedArea, selectedCapacity, selectedFacilities]);
+  }, [listings, listingType, selectedArea, selectedCapacity, selectedAmenities]);
 
   const ITEMS_PER_PAGE = 6;
   const [visibleCount, setVisibleCount] = React.useState(ITEMS_PER_PAGE);
@@ -266,7 +266,7 @@ export function RentalObjectsPage(): React.ReactElement {
 
   React.useEffect(() => {
     setVisibleCount(ITEMS_PER_PAGE);
-  }, [listingType, selectedArea, selectedCapacity, selectedFacilities]);
+  }, [listingType, selectedArea, selectedCapacity, selectedAmenities]);
 
   const handleSearchChange = (value: string) => {
     setSearchQuery(value);
@@ -312,10 +312,10 @@ export function RentalObjectsPage(): React.ReactElement {
     (listingType !== 'ALL' ? 1 : 0) +
     (selectedArea !== 'all' ? 1 : 0) +
     (selectedCapacity !== 'all' ? 1 : 0) +
-    selectedFacilities.length;
+    selectedAmenities.length;
 
   const getFilterChips = () => {
-    const chips: { id: string, label: string, type: 'category' | 'area' | 'capacity' | 'facility', value: string }[] = [];
+    const chips: { id: string, label: string, type: 'category' | 'area' | 'capacity' | 'amenity', value: string }[] = [];
 
     if (listingType !== 'ALL') {
       const cat = CATEGORY_OPTIONS.find(c => c.id === listingType);
@@ -332,8 +332,8 @@ export function RentalObjectsPage(): React.ReactElement {
       if (cap) chips.push({ id: 'cap', label: t(cap.labelKey), type: 'capacity', value: selectedCapacity });
     }
 
-    selectedFacilities.forEach(f => {
-      chips.push({ id: `fac-${f}`, label: f, type: 'facility', value: f });
+    selectedAmenities.forEach(a => {
+      chips.push({ id: `amenity-${a}`, label: a, type: 'amenity', value: a });
     });
 
     return chips;
@@ -344,7 +344,7 @@ export function RentalObjectsPage(): React.ReactElement {
       case 'category': setRentalObjectType('ALL'); break;
       case 'area': setSelectedArea('all'); break;
       case 'capacity': setSelectedCapacity('all'); break;
-      case 'facility': setSelectedFacilities(prev => prev.filter(f => f !== chip.value)); break;
+      case 'amenity': setSelectedAmenities(prev => prev.filter(a => a !== chip.value)); break;
     }
   };
 
@@ -433,28 +433,28 @@ export function RentalObjectsPage(): React.ReactElement {
             )}
           </Stack>
         </DrawerSection>
-        {/* Facilities Filter */}
+        {/* Amenities Filter */}
         <DrawerSection title={t('fasiliteter')} collapsible defaultCollapsed>
           <Stack spacing="var(--ds-spacing-1)">
-            {(showMoreFacilities ? allFacilities : allFacilities.slice(0, MAX_VISIBLE_ITEMS)).map((facility) => (
+            {(showMoreAmenities ? allAmenities : allAmenities.slice(0, MAX_VISIBLE_ITEMS)).map((amenity) => (
               <DrawerItem
-                key={facility}
+                key={amenity}
                 left={
                   <Checkbox
-                    checked={selectedFacilities.includes(facility)}
-                    onChange={() => setSelectedFacilities(prev => prev.includes(facility) ? prev.filter(f => f !== facility) : [...prev, facility])}
-                    aria-label={facility}
+                    checked={selectedAmenities.includes(amenity)}
+                    onChange={() => setSelectedAmenities(prev => prev.includes(amenity) ? prev.filter(a => a !== amenity) : [...prev, amenity])}
+                    aria-label={amenity}
                   />
                 }
-                onClick={() => setSelectedFacilities(prev => prev.includes(facility) ? prev.filter(f => f !== facility) : [...prev, facility])}
-                selected={selectedFacilities.includes(facility)}
+                onClick={() => setSelectedAmenities(prev => prev.includes(amenity) ? prev.filter(a => a !== amenity) : [...prev, amenity])}
+                selected={selectedAmenities.includes(amenity)}
               >
-                <Text size="sm" color="var(--ds-color-neutral-text-default)">{facility}</Text>
+                <Text size="sm" color="var(--ds-color-neutral-text-default)">{amenity}</Text>
               </DrawerItem>
             ))}
-            {allFacilities.length > MAX_VISIBLE_ITEMS && (
-              <Button type="button" variant="tertiary" style={{ marginTop: 'var(--ds-spacing-2)', width: '100%' }} onClick={() => setShowMoreFacilities(!showMoreFacilities)}>
-                {showMoreFacilities ? 'Vis mindre' : `Vis mer (${allFacilities.length - MAX_VISIBLE_ITEMS})`}
+            {allAmenities.length > MAX_VISIBLE_ITEMS && (
+              <Button type="button" variant="tertiary" style={{ marginTop: 'var(--ds-spacing-2)', width: '100%' }} onClick={() => setShowMoreAmenities(!showMoreAmenities)}>
+                {showMoreAmenities ? 'Vis mindre' : `Vis mer (${allAmenities.length - MAX_VISIBLE_ITEMS})`}
               </Button>
             )}
           </Stack>
@@ -641,7 +641,7 @@ export function RentalObjectsPage(): React.ReactElement {
                             setRentalObjectType('ALL');
                             setSelectedArea('all');
                             setSelectedCapacity('all');
-                            setSelectedFacilities([]);
+                            setSelectedAmenities([]);
                           }}
                           style={{ 
                             fontSize: 'var(--ds-font-size-sm)', 

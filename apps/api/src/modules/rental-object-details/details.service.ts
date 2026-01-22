@@ -186,7 +186,7 @@ export class RentalObjectDetailsService {
     const categories: Record<string, string> = {
       CABIN: 'Hytte',
       BOAT: 'Båt',
-      SPORTS_FACILITY: 'Idrettsanlegg',
+      SPORTS_VENUE: 'Idrettsanlegg',
       MEETING_ROOM: 'Møterom',
     };
     return categories[categoryKey] || categoryKey;

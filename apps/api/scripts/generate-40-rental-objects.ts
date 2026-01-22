@@ -10,7 +10,7 @@ export function generate40RentalObjects(params: {
 }) {
   const { TENANT_SKIEN, ORG_SKIEN_HALL, RENTAL_HALL_A_ID } = params;
 
-  const FACILITY_TYPES = [
+  const RENTAL_OBJECT_TYPES = [
     'Idrettshall A', 'Fotballbane 1', 'Tennisbane 1', 'Svømmehall', 'Treningsstudio 1',
     'Kunstgressbane', 'Basketballbane', 'Håndballhall', 'Turnhall', 'Klatrehall',
     'Dansestudio', 'Kampsportstudio', 'Yogastudio', 'Squashbane', 'Badmintonhall',
@@ -70,14 +70,14 @@ export function generate40RentalObjects(params: {
       .replace(/^-|-$/g, '') + `-${index}`;
   }
 
-  return FACILITY_TYPES.map((facilityType, i) => {
+  return RENTAL_OBJECT_TYPES.map((rentalObjectType, i) => {
     const city = CITIES[i % CITIES.length];
     const street = STREETS[i % STREETS.length];
     const streetNumber = (i % 50) + 1;
     const postalCode = `37${20 + (i % 80)}`;
 
-    const size = facilityType.includes('studio') || facilityType.includes('rom') ? 'small' :
-                 facilityType.includes('hall') || facilityType.includes('bane') ? 'large' : 'medium';
+    const size = rentalObjectType.includes('studio') || rentalObjectType.includes('rom') ? 'small' :
+                 rentalObjectType.includes('hall') || rentalObjectType.includes('bane') ? 'large' : 'medium';
 
     const basePrices: Record<string, number> = { small: 500, medium: 1000, large: 1500 };
     const basePrice = basePrices[size];
@@ -87,13 +87,13 @@ export function generate40RentalObjects(params: {
       id: i === 0 ? RENTAL_HALL_A_ID : `${RENTAL_HALL_A_ID.substring(0, 28)}${String(i).padStart(4, '0')}`,
       tenantId: TENANT_SKIEN,
       organizationId: ORG_SKIEN_HALL,
-      name: facilityType,
-      slug: generateSlug(facilityType, i),
+      name: rentalObjectType,
+      slug: generateSlug(rentalObjectType, i),
       type: 'SPACE',
       categoryKey: 'LOKALER_OG_BANER',
       timeMode: 'PERIOD',
       status: 'published',
-      description: `Moderne ${facilityType.toLowerCase()} i ${city}. Perfekt for treninger, kamper og arrangementer. Godt vedlikeholdt med moderne fasiliteter.`,
+      description: `Moderne ${rentalObjectType.toLowerCase()} i ${city}. Perfekt for treninger, kamper og arrangementer. Godt vedlikeholdt med moderne utstyr.`,
       capacity,
       pricing: {
         basePrice,
@@ -111,7 +111,7 @@ export function generate40RentalObjects(params: {
           { type: 'nonprofit', percentage: 25, label: 'Frivillig organisasjon' },
         ],
       },
-      images: getImages(facilityType),
+      images: getImages(rentalObjectType),
       metadata: {
         location: { address: `${street} ${streetNumber}`, postalCode, city, country: 'Norway' },
         contactName: 'Booking Avdeling',
