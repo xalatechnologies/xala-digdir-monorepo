@@ -22,8 +22,11 @@ interface TenantRequest extends FastifyRequest {
   tenantId?: string | null;
   userId?: string | null;
   user?: {
-    id: string;
+    userId: string;
+    tenantId: string;
+    email?: string;
     role?: string;
+    isSaasAdmin?: boolean;
     organizationId?: string;
   };
 }
@@ -167,7 +170,7 @@ export class BlocksController {
         visibility: blocks.visibility,
         status: blocks.status,
         createdBy: blocks.createdBy,
-        createdByName: users.name,
+        createdByName: users.displayName,
         createdAt: blocks.createdAt,
         updatedAt: blocks.updatedAt,
       })
@@ -221,7 +224,7 @@ export class BlocksController {
         visibility: blocks.visibility,
         status: blocks.status,
         createdBy: blocks.createdBy,
-        createdByName: users.name,
+        createdByName: users.displayName,
         createdAt: blocks.createdAt,
         updatedAt: blocks.updatedAt,
       })

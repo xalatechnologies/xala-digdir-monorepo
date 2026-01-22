@@ -26,11 +26,6 @@ import {
 interface TenantRequest extends FastifyRequest {
   tenantId?: string | null;
   userId?: string | null;
-  user?: {
-    id: string;
-    role?: string;
-    organizationId?: string;
-  };
 }
 
 /**
@@ -244,7 +239,7 @@ export class OrgDashboardController {
         rentalObjectId: bookings.rentalObjectId,
         rentalObjectName: rentalObjects.name,
         userId: bookings.userId,
-        userName: users.name,
+        userName: users.displayName,
         startTime: bookings.startTime,
         endTime: bookings.endTime,
         status: bookings.status,
@@ -356,7 +351,7 @@ export class OrgDashboardController {
         rentalObjectId: bookings.rentalObjectId,
         rentalObjectName: rentalObjects.name,
         userId: bookings.userId,
-        userName: users.name,
+        userName: users.displayName,
         startTime: bookings.startTime,
         endTime: bookings.endTime,
         status: bookings.status,

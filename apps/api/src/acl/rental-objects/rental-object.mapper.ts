@@ -32,10 +32,128 @@ import type {
   AdditionalService,
 } from '../../domain/rental-objects';
 
-import type {
-  RentalObjectCardProjectionDTO,
-  RentalObjectDetailsProjectionDTO,
-} from '@digilist/client-sdk/types/projection-dtos';
+// =============================================================================
+// PROJECTION TYPES (API Response DTOs)
+// These are screen-ready, flat data structures for UI consumption
+// =============================================================================
+
+/**
+ * Card projection for rental object grids/lists
+ */
+export interface RentalObjectCardProjectionDTO {
+  id: string;
+  slug: string;
+  name: string;
+  title?: string;
+  tenantId: string;
+  type: string;
+  typeLabel: string;
+  locationFormatted: string;
+  city: string;
+  latitude: number | null;
+  longitude: number | null;
+  primaryImageUrl: string;
+  primaryImageThumbnail: string;
+  primaryImageAlt: string;
+  imageCount: number;
+  priceAmount: number;
+  priceCurrency: string;
+  priceUnit: string;
+  priceDisplay: string;
+  capacity: number;
+  capacityLabel: string;
+  amenities: string[];
+  moreAmenitiesCount: number;
+  averageRating: number;
+  reviewCount: number;
+  ratingDisplay: string;
+  descriptionExcerpt: string;
+  isAvailable: boolean;
+  isFeatured: boolean;
+}
+
+/**
+ * Details projection for rental object detail pages
+ */
+export interface RentalObjectDetailsProjectionDTO extends RentalObjectCardProjectionDTO {
+  description: string | null;
+  images: Array<{
+    id: string;
+    url: string;
+    thumbnailUrl: string;
+    alt: string;
+    isPrimary: boolean;
+    order: number;
+  }>;
+  addressStreet: string;
+  addressPostalCode: string;
+  addressCity: string;
+  addressMunicipality: string;
+  addressCountry: string;
+  contactName: string;
+  contactEmail: string;
+  contactPhone: string;
+  contactWebsite: string;
+  allAmenities: Array<{
+    id: string;
+    name: string;
+    icon: string;
+    category: string;
+  }>;
+  includedEquipment: Array<{
+    id: string;
+    name: string;
+    quantity: number;
+    description: string;
+  }>;
+  additionalServices: Array<{
+    id: string;
+    name: string;
+    description: string;
+    price: number;
+    currency: string;
+    priceDisplay: string;
+    isOptional: boolean;
+  }>;
+  openingHours: Array<{
+    day: string;
+    dayIndex: number;
+    openTime: string;
+    closeTime: string;
+    hoursDisplay: string;
+    isClosed: boolean;
+  }>;
+  isOpenNow: boolean;
+  todayHoursDisplay: string;
+  rules: Array<{
+    id: string;
+    title: string;
+    content: string;
+  }>;
+  faq: Array<{
+    id: string;
+    question: string;
+    answer: string;
+  }>;
+  highlights: string[];
+  upcomingEvents: Array<unknown>;
+  bookingCalendarType: 'time_slots' | 'day_booking' | 'season_allocation' | 'request_only';
+  minBookingDuration: number;
+  minBookingDurationDisplay: string;
+  maxBookingDuration: number;
+  maxBookingDurationDisplay: string;
+  advanceBookingDays: number;
+  advanceBookingDisplay: string;
+  cancellationPolicyDisplay: string;
+  requiresApproval: boolean;
+  instantBookingEnabled: boolean;
+  canBook: boolean;
+  canEdit: boolean;
+  canViewPricing: boolean;
+  availableActions: string[];
+  createdAt: string;
+  updatedAt: string;
+}
 
 // =============================================================================
 // PERSISTENCE TYPES (Database Schema)

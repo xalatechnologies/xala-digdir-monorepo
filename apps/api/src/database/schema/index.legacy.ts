@@ -403,6 +403,31 @@ export const bookings = domainSchema.table('bookings', {
 }));
 
 // ============================================================================
+// Reports
+// ============================================================================
+
+export const reports = domainSchema.table('reports', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  tenantId: uuid('tenant_id').notNull().references(() => tenants.id, { onDelete: 'cascade' }),
+  userId: uuid('user_id').notNull().references(() => users.id, { onDelete: 'cascade' }),
+  type: varchar('type', { length: 50 }).notNull(), // 'BOOKINGS' | 'REVENUE' | 'USAGE' | 'AUDIT'
+  format: varchar('format', { length: 10 }).notNull().default('JSON'), // 'PDF' | 'XLSX' | 'CSV' | 'JSON'
+  status: varchar('status', { length: 20 }).notNull().default('QUEUED'), // 'QUEUED' | 'GENERATING' | 'READY' | 'FAILED'
+  parameters: jsonb('parameters').default({}),
+  metadata: jsonb('metadata').default({}),
+  completedAt: timestamp('completed_at'),
+  createdAt: timestamp('created_at').notNull().defaultNow(),
+  updatedAt: timestamp('updated_at').notNull().defaultNow(),
+}, (table) => ({
+  tenantIdx: index('reports_tenant_idx').on(table.tenantId),
+  userIdx: index('reports_user_idx').on(table.userId),
+  statusIdx: index('reports_status_idx').on(table.status),
+}));
+
+export type Report = typeof reports.$inferSelect;
+export type NewReport = typeof reports.$inferInsert;
+
+// ============================================================================
 // Monitoring & Alerts
 // ============================================================================
 
@@ -858,6 +883,14 @@ export type BrandingVersion = typeof brandingVersions.$inferSelect;
 export type NewBrandingVersion = typeof brandingVersions.$inferInsert;
 export type { GdprRequest, NewGdprRequest } from './gdpr-requests';
 
+// Season-related types
+export type Season = typeof seasons.$inferSelect;
+export type NewSeason = typeof seasons.$inferInsert;
+export type SeasonApplication = typeof seasonApplications.$inferSelect;
+export type NewSeasonApplication = typeof seasonApplications.$inferInsert;
+export type PriorityRule = typeof priorityRules.$inferSelect;
+export type NewPriorityRule = typeof priorityRules.$inferInsert;
+
 // ============================================================================
 // Custody & Delegation
 // ============================================================================
@@ -895,22 +928,47 @@ export const seasons = domainSchema.table('seasons', {
 
 export const seasonApplications = domainSchema.table('season_applications', {
   id: uuid('id').primaryKey().defaultRandom(),
+  tenantId: uuid('tenant_id').notNull().references(() => tenants.id, { onDelete: 'cascade' }),
   seasonId: uuid('season_id').notNull().references(() => seasons.id, { onDelete: 'cascade' }),
-  userId: uuid('user_id').notNull().references(() => users.id, { onDelete: 'cascade' }),
+  rentalObjectId: uuid('rental_object_id').notNull().references(() => rentalObjects.id, { onDelete: 'cascade' }),
+  organizationId: uuid('organization_id').references(() => organizations.id, { onDelete: 'set null' }),
+  applicantName: varchar('applicant_name', { length: 255 }).notNull(),
+  applicantEmail: varchar('applicant_email', { length: 255 }).notNull(),
+  applicantPhone: varchar('applicant_phone', { length: 50 }),
+  weekday: integer('weekday').notNull(), // 0=Sunday, 1=Monday, etc.
+  startTime: varchar('start_time', { length: 10 }).notNull(), // e.g., "09:00"
+  endTime: varchar('end_time', { length: 10 }).notNull(), // e.g., "17:00"
   status: varchar('status', { length: 50 }).notNull().default('pending'),
+  priority: integer('priority'),
+  notes: text('notes'),
+  rejectionReason: text('rejection_reason'),
+  metadata: jsonb('metadata').default({}),
   createdAt: timestamp('created_at').notNull().defaultNow(),
   updatedAt: timestamp('updated_at').notNull().defaultNow(),
-});
+}, (table) => ({
+  tenantIdx: index('season_applications_tenant_idx').on(table.tenantId),
+  seasonIdx: index('season_applications_season_idx').on(table.seasonId),
+  rentalObjectIdx: index('season_applications_rental_object_idx').on(table.rentalObjectId),
+  orgIdx: index('season_applications_org_idx').on(table.organizationId),
+  statusIdx: index('season_applications_status_idx').on(table.status),
+}));
 
 export const priorityRules = domainSchema.table('priority_rules', {
   id: uuid('id').primaryKey().defaultRandom(),
   tenantId: uuid('tenant_id').notNull().references(() => tenants.id, { onDelete: 'cascade' }),
+  seasonId: uuid('season_id').notNull().references(() => seasons.id, { onDelete: 'cascade' }),
   name: varchar('name', { length: 255 }).notNull(),
+  ruleType: varchar('rule_type', { length: 50 }).notNull().default('custom'),
   priority: integer('priority').notNull().default(0),
   conditions: jsonb('conditions').default({}),
+  enabled: boolean('enabled').notNull().default(true),
+  metadata: jsonb('metadata').default({}),
   createdAt: timestamp('created_at').notNull().defaultNow(),
   updatedAt: timestamp('updated_at').notNull().defaultNow(),
-});
+}, (table) => ({
+  tenantIdx: index('priority_rules_tenant_idx').on(table.tenantId),
+  seasonIdx: index('priority_rules_season_idx').on(table.seasonId),
+}));
 
 // ============================================================================
 // Notifications & Delivery Tracking

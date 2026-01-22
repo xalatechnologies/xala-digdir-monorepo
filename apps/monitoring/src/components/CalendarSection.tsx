@@ -1,67 +1,26 @@
 /**
- * CalendarSection Component
+ * CalendarSection Component (Monitoring App)
  *
- * Integrates the ListingAvailabilityCalendar from @xalatechnologies/platform/ui with SDK hooks.
- * Displays dynamic availability calendar based on rental object configuration.
- * Supports TIME_SLOTS, ALL_DAY, and MULTI_DAY modes.
+ * Thin wrapper that connects SDK hooks to the unified CalendarSection
+ * from @digilist/ui/features/calendar.
  *
- * This is the minside app version, intended for user's rental object views
- * where users can view availability for rental objects they're interested in.
- *
- * Following the SDK-first rule: all data comes from API projection DTOs.
- * No local rule evaluation or transformation.
+ * This is the monitoring app version - for system monitoring views
+ * where operators can view rental object availability.
  */
 
 import * as React from 'react';
-import { Paragraph } from '@xalatechnologies/platform/ui';
-import { RentalObjectAvailabilityCalendar } from '@digilist/ui';
+import {
+  CalendarSection as CalendarSectionUI,
+  getDateRangeForMode,
+  type CalendarSelection,
+  type CalendarMode,
+} from '@digilist/ui/features/calendar';
 import { useT } from '@xalatechnologies/platform/i18n';
 import {
   useListingCalendarConfig,
   useAvailabilityMatrix,
   useCalendarRealtime,
 } from '@digilist/client-sdk/hooks';
-
-// =============================================================================
-// Types
-// =============================================================================
-
-/** Calendar mode as returned by config */
-type CalendarMode = 'TIME_SLOTS' | 'ALL_DAY' | 'MULTI_DAY';
-
-/** Availability status for calendar slots */
-type CalendarSlotStatus =
-  | 'AVAILABLE'
-  | 'RESERVED'
-  | 'BOOKED'
-  | 'BLOCKED'
-  | 'BLACKOUT'
-  | 'CLOSED';
-
-/** Single cell in the availability calendar */
-interface CalendarCell {
-  id: string;
-  start: string;
-  end: string;
-  status: CalendarSlotStatus;
-  reasonKey?: string;
-  bookingId?: string;
-  blockId?: string;
-  lockedUntil?: string;
-}
-
-/** Current calendar selection state */
-interface CalendarSelection {
-  cells: CalendarCell[];
-  range?: {
-    startDate: string;
-    endDate: string;
-    startTime?: string;
-    endTime?: string;
-  };
-  isValid: boolean;
-  errorKey?: string;
-}
 
 export interface CalendarSectionProps {
   /** Rental object ID to fetch calendar data for */
@@ -78,81 +37,6 @@ export interface CalendarSectionProps {
   className?: string;
 }
 
-// =============================================================================
-// Utility Functions
-// =============================================================================
-
-/**
- * Format date to ISO date string (YYYY-MM-DD)
- */
-function formatDateToISO(date: Date): string {
-  return date.toISOString().split('T')[0]!;
-}
-
-/**
- * Get week start date (Monday)
- */
-function getWeekStart(date: Date): Date {
-  const d = new Date(date);
-  const day = d.getDay();
-  const diff = d.getDate() - day + (day === 0 ? -6 : 1);
-  d.setDate(diff);
-  d.setHours(0, 0, 0, 0);
-  return d;
-}
-
-/**
- * Get week end date (Sunday)
- */
-function getWeekEnd(date: Date): Date {
-  const weekStart = getWeekStart(date);
-  const weekEnd = new Date(weekStart);
-  weekEnd.setDate(weekEnd.getDate() + 6);
-  return weekEnd;
-}
-
-/**
- * Get month start date
- */
-function getMonthStart(date: Date): Date {
-  return new Date(date.getFullYear(), date.getMonth(), 1);
-}
-
-/**
- * Get month end date
- */
-function getMonthEnd(date: Date): Date {
-  return new Date(date.getFullYear(), date.getMonth() + 1, 0);
-}
-
-/**
- * Map SDK AvailabilityCellDTO to ds CalendarCell
- */
-function mapToCalendarCell(cell: {
-  start: string;
-  end: string;
-  status: string;
-  reasonKey?: string | null;
-  bookingId?: string | null;
-  blockId?: string | null;
-  lockedUntil?: string | null;
-}): CalendarCell {
-  return {
-    id: `${cell.start}-${cell.end}`,
-    start: cell.start,
-    end: cell.end,
-    status: cell.status as CalendarSlotStatus,
-    reasonKey: cell.reasonKey ?? undefined,
-    bookingId: cell.bookingId ?? undefined,
-    blockId: cell.blockId ?? undefined,
-    lockedUntil: cell.lockedUntil ?? undefined,
-  };
-}
-
-// =============================================================================
-// Component
-// =============================================================================
-
 export function CalendarSection({
   rentalObjectId,
   listingId: deprecatedListingId,
@@ -161,16 +45,15 @@ export function CalendarSection({
   readOnly = false,
   className,
 }: CalendarSectionProps): React.ReactElement {
+  const t = useT();
+
   // Support both rentalObjectId (new) and listingId (backward compatibility)
   const effectiveRentalObjectId = rentalObjectId || deprecatedListingId || '';
-  const t = useT();
-  // Current date for calendar navigation
+
+  // Navigation state
   const [currentDate, setCurrentDate] = React.useState<Date>(new Date());
 
-  // Current selection state
-  const [selection, setSelection] = React.useState<CalendarSelection | undefined>(undefined);
-
-  // Warning message for selection invalidation
+  // Warning message for realtime updates
   const [warningMessage, setWarningMessage] = React.useState<string | undefined>(undefined);
 
   // Fetch calendar configuration from API
@@ -184,25 +67,13 @@ export function CalendarSection({
   const config = configResponse?.data;
 
   // Determine calendar mode from config
-  const calendarMode: CalendarMode = React.useMemo(() => {
-    if (!config) return 'TIME_SLOTS';
-    return config.granularity as CalendarMode;
-  }, [config]);
+  const calendarMode: CalendarMode = config?.granularity ?? 'TIME_SLOTS';
 
-  // Calculate date range based on mode and current date
-  const dateRange = React.useMemo(() => {
-    if (calendarMode === 'TIME_SLOTS') {
-      // Week view - Monday to Sunday
-      const from = getWeekStart(currentDate);
-      const to = getWeekEnd(currentDate);
-      return { from: formatDateToISO(from), to: formatDateToISO(to) };
-    } else {
-      // Month view for ALL_DAY and MULTI_DAY
-      const from = getMonthStart(currentDate);
-      const to = getMonthEnd(currentDate);
-      return { from: formatDateToISO(from), to: formatDateToISO(to) };
-    }
-  }, [calendarMode, currentDate]);
+  // Calculate date range based on mode
+  const dateRange = React.useMemo(
+    () => getDateRangeForMode(calendarMode, currentDate),
+    [calendarMode, currentDate]
+  );
 
   // Fetch availability matrix from API
   const {
@@ -219,156 +90,38 @@ export function CalendarSection({
     { enabled: !!config }
   );
 
-  // Extract cells from matrix response
-  const cells: CalendarCell[] = React.useMemo(() => {
-    if (!matrixResponse?.data?.cells) return [];
-    return matrixResponse.data.cells.map(mapToCalendarCell);
-  }, [matrixResponse]);
-
   // Subscribe to realtime events for availability updates
   useCalendarRealtime((event) => {
-    // Check if any selected cells have been affected
-    if (selection && selection.cells.length > 0) {
-      // Check if event affects any selected cells
-      const affectedSelection = selection.cells.some(() => {
-        // Simple check: if event is for this rental object, we might need to revalidate
-        if (('rentalObjectId' in event && event.rentalObjectId === effectiveRentalObjectId) ||
-            ('listingId' in event && event.listingId === effectiveRentalObjectId)) {
-          return true;
-        }
-        return false;
-      });
-
-      if (affectedSelection) {
-        setWarningMessage(
-          t('components.calendar.selectionChanged')
-        );
-      }
+    if (
+      ('rentalObjectId' in event && event.rentalObjectId === effectiveRentalObjectId) ||
+      ('listingId' in event && event.listingId === effectiveRentalObjectId)
+    ) {
+      setWarningMessage(t('components.calendar.selectionChanged'));
+      setTimeout(() => setWarningMessage(undefined), 5000);
     }
   });
 
-  // Handle cell click
-  const handleCellClick = React.useCallback(
-    (cell: CalendarCell) => {
-      if (readOnly) return;
-
-      setSelection((prev) => {
-        // Toggle selection
-        const alreadySelected = prev?.cells.some((c) => c.id === cell.id);
-
-        let newCells: CalendarCell[];
-        if (alreadySelected) {
-          // Remove from selection
-          newCells = prev?.cells.filter((c) => c.id !== cell.id) ?? [];
-        } else {
-          // Add to selection
-          newCells = [...(prev?.cells ?? []), cell];
-        }
-
-        const newSelection: CalendarSelection = {
-          cells: newCells,
-          isValid: newCells.length > 0,
-        };
-
-        return newSelection;
-      });
-
-      // Clear warning when user interacts
-      setWarningMessage(undefined);
-    },
-    [readOnly]
-  );
-
-  // Handle selection change and propagate to parent
-  React.useEffect(() => {
-    if (onSelectionChange && selection) {
-      onSelectionChange(selection);
-    }
-  }, [selection, onSelectionChange]);
-
-  // Handle date navigation
-  const handleDateChange = React.useCallback((date: Date) => {
-    setCurrentDate(date);
-    // Clear warning on navigation
-    setWarningMessage(undefined);
-  }, []);
-
-  // Loading state
-  const isLoading = isConfigLoading || isMatrixLoading;
-
-  // Error message
+  // Build error message
   const errorMessage = React.useMemo(() => {
-    if (configError) {
-      return t('components.calendar.couldNotLoadSettings');
-    }
-    if (matrixError) {
-      return t('components.calendar.couldNotLoadAvailability');
-    }
+    if (configError) return t('components.calendar.couldNotLoadSettings');
+    if (matrixError) return t('components.calendar.couldNotLoadAvailability');
     return undefined;
   }, [configError, matrixError, t]);
 
-  // Get legend from matrix or use default
-  const legend = React.useMemo(() => {
-    if (!matrixResponse?.data?.legend) {
-      return [
-        { status: 'AVAILABLE' as const, label: t('components.calendar.statusAvailable') },
-        { status: 'RESERVED' as const, label: t('components.calendar.statusReserved') },
-        { status: 'BOOKED' as const, label: t('components.calendar.statusBooked') },
-        { status: 'BLOCKED' as const, label: t('components.calendar.statusBlocked') },
-        { status: 'BLACKOUT' as const, label: t('components.calendar.statusBlackout') },
-        { status: 'CLOSED' as const, label: t('components.calendar.statusClosed') },
-      ];
-    }
-    return matrixResponse.data.legend.map((item: { status: string; labelKey: string }) => ({
-      status: item.status as CalendarCell['status'],
-      label: item.labelKey.includes('.') ? item.labelKey.split('.').pop()! : item.labelKey,
-    }));
-  }, [matrixResponse, t]);
-
-  // Check permissions
-  const canSelect = config?.permissions?.canSelectSlot ?? true;
-
-  // Empty state if no config
-  if (!isLoading && !config && !configError) {
-    return (
-      <div
-        className={className}
-        style={{
-          textAlign: 'center',
-          padding: 'var(--ds-spacing-8)',
-          color: 'var(--ds-color-neutral-text-subtle)',
-        }}
-      >
-        <Paragraph data-size="sm" style={{ margin: 0, fontStyle: 'italic' }}>
-          {t('components.calendar.notAvailable')}
-        </Paragraph>
-      </div>
-    );
-  }
-
   return (
-    <div className={className}>
-      <RentalObjectAvailabilityCalendar
-        mode={calendarMode}
-        cells={cells}
-        selection={selection}
-        legend={legend}
-        currentDate={currentDate}
-        onDateChange={handleDateChange}
-        onCellClick={handleCellClick}
-        onSelectionChange={setSelection}
-        startHour={config?.openingHours?.weekly?.['1']?.open ? parseInt(config.openingHours.weekly['1'].open.split(':')[0]!, 10) : 8}
-        endHour={config?.openingHours?.weekly?.['1']?.close ? parseInt(config.openingHours.weekly['1'].close.split(':')[0]!, 10) : 17}
-        slotSizeMinutes={config?.slotSizeMinutes ?? 60}
-        showTips={true}
-        title={t('components.calendar.selectTime')}
-        subtitle={calendarMode === 'TIME_SLOTS' ? t('components.calendar.selectTimeSlots') : calendarMode === 'ALL_DAY' ? t('components.calendar.selectDays') : t('components.calendar.selectPeriod')}
-        isLoading={isLoading}
-        errorMessage={errorMessage}
-        warningMessage={warningMessage}
-        readOnly={readOnly || !canSelect}
-      />
-    </div>
+    <CalendarSectionUI
+      config={config}
+      cells={matrixResponse?.data?.cells}
+      legend={matrixResponse?.data?.legend}
+      currentDate={currentDate}
+      onDateChange={setCurrentDate}
+      onSelectionChange={onSelectionChange}
+      readOnly={readOnly}
+      isLoading={isConfigLoading || isMatrixLoading}
+      errorMessage={errorMessage}
+      warningMessage={warningMessage}
+      className={className}
+    />
   );
 }
 

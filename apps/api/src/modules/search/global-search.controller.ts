@@ -41,9 +41,9 @@ interface TypeaheadQueryParams {
 }
 
 interface AuthenticatedUser {
-  id: string;
+  userId: string;
   tenantId: string;
-  role: string;
+  role?: string;
 }
 
 // =============================================================================
@@ -127,7 +127,7 @@ export class GlobalSearchController {
 
     const results = await this.service!.search(searchRequest, {
       tenantId: user.tenantId,
-      userId: user.id,
+      userId: user.userId,
     });
 
     return reply.send({ data: results });
@@ -165,7 +165,7 @@ export class GlobalSearchController {
 
     const results = await this.service!.search(searchRequest, {
       tenantId: user.tenantId,
-      userId: user.id,
+      userId: user.userId,
     });
 
     return reply.send({ data: results });

@@ -26,17 +26,17 @@ export type { SystemRole, OrgRole } from '../rbac/permission-matrix';
 
 /**
  * Request type extended with user context
+ * Note: The user type matches the FastifyRequest.user type from src/types/fastify.d.ts
  */
 interface RBACRequest extends FastifyRequest {
   tenantId?: string | null;
   userId?: string | null;
   user?: {
-    id: string;
-    email: string;
-    name: string;
-    role: string;
+    userId: string;
     tenantId: string;
-    organizationId?: string | null;
+    email?: string;
+    role?: string;
+    isSaasAdmin?: boolean;
   };
 }
 
@@ -45,7 +45,7 @@ interface RBACRequest extends FastifyRequest {
  */
 function getUserId(request: RBACRequest): string | null {
   return (request as any).userId ||
-         (request.user?.id) ||
+         (request.user?.userId) ||
          (request.headers['x-user-id'] as string) ||
          null;
 }

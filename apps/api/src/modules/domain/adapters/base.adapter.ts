@@ -182,7 +182,7 @@ export abstract class BaseDomainAdapter<TLegacyService> {
       
       if (policyResult !== null && this.config.emitMetrics) {
         // Compare results (for metrics)
-        this.emitComparisonMetric(operationName, policyResult, legacyResult);
+        this.emitComparisonMetric(operationName, policyResult as T, legacyResult);
       }
 
       return {

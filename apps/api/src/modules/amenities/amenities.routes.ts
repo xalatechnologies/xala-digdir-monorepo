@@ -4,7 +4,7 @@
  * Fastify route definitions with authorization guards.
  */
 
-import type { FastifyInstance, FastifyRequest, FastifyReply } from 'fastify';
+import type { FastifyInstance } from 'fastify';
 import { AmenitiesController } from './amenities.controller';
 import { AmenitiesService } from './amenities.service';
 import { getAuditService } from '../../core/audit/audit.service';
@@ -41,61 +41,55 @@ export async function amenitiesRoutes(fastify: FastifyInstance) {
    * GET /api/amenities
    * List all amenities
    */
-  fastify.get(
-    '/amenities',
-    { preHandler: [requireAuth] },
-    controller.listAmenities.bind(controller)
-  );
+  fastify.get('/amenities', {
+    preHandler: [requireAuth],
+    handler: controller.listAmenities.bind(controller),
+  });
 
   /**
    * GET /api/amenities/grouped
    * List amenities grouped by category
    */
-  fastify.get(
-    '/amenities/grouped',
-    { preHandler: [requireAuth] },
-    controller.listAmenitiesByGroup.bind(controller)
-  );
+  fastify.get('/amenities/grouped', {
+    preHandler: [requireAuth],
+    handler: controller.listAmenitiesByGroup.bind(controller),
+  });
 
   /**
    * GET /api/amenities/:id
    * Get single amenity
    */
-  fastify.get(
-    '/amenities/:id',
-    { preHandler: [requireAuth] },
-    controller.getAmenity.bind(controller)
-  );
+  fastify.get('/amenities/:id', {
+    preHandler: [requireAuth],
+    handler: controller.getAmenity.bind(controller),
+  });
 
   /**
    * POST /api/amenities
    * Create amenity (admin only)
    */
-  fastify.post(
-    '/amenities',
-    { preHandler: [requireAuth, requireRole(UserRole.ADMIN)] },
-    controller.createAmenity.bind(controller)
-  );
+  fastify.post('/amenities', {
+    preHandler: [requireAuth, requireRole(UserRole.ADMIN)],
+    handler: controller.createAmenity.bind(controller),
+  });
 
   /**
    * PUT /api/amenities/:id
    * Update amenity (admin only)
    */
-  fastify.put(
-    '/amenities/:id',
-    { preHandler: [requireAuth, requireRole(UserRole.ADMIN)] },
-    controller.updateAmenity.bind(controller)
-  );
+  fastify.put('/amenities/:id', {
+    preHandler: [requireAuth, requireRole(UserRole.ADMIN)],
+    handler: controller.updateAmenity.bind(controller),
+  });
 
   /**
    * DELETE /api/amenities/:id
    * Delete amenity (admin only)
    */
-  fastify.delete(
-    '/amenities/:id',
-    { preHandler: [requireAuth, requireRole(UserRole.ADMIN)] },
-    controller.deleteAmenity.bind(controller)
-  );
+  fastify.delete('/amenities/:id', {
+    preHandler: [requireAuth, requireRole(UserRole.ADMIN)],
+    handler: controller.deleteAmenity.bind(controller),
+  });
 
   // ========================================================================
   // RENTAL OBJECT AMENITIES ENDPOINTS
@@ -105,19 +99,17 @@ export async function amenitiesRoutes(fastify: FastifyInstance) {
    * GET /api/rental-objects/:id/amenities
    * Get amenities for rental object
    */
-  fastify.get(
-    '/rental-objects/:id/amenities',
-    { preHandler: [requireAuth] },
-    controller.getAmenitiesForRentalObject.bind(controller)
-  );
+  fastify.get('/rental-objects/:id/amenities', {
+    preHandler: [requireAuth],
+    handler: controller.getAmenitiesForRentalObject.bind(controller),
+  });
 
   /**
    * PUT /api/rental-objects/:id/amenities
    * Assign amenities to rental object (admin only)
    */
-  fastify.put(
-    '/rental-objects/:id/amenities',
-    { preHandler: [requireAuth, requireRole(UserRole.ADMIN)] },
-    controller.assignAmenitiesToRentalObject.bind(controller)
-  );
+  fastify.put('/rental-objects/:id/amenities', {
+    preHandler: [requireAuth, requireRole(UserRole.ADMIN)],
+    handler: controller.assignAmenitiesToRentalObject.bind(controller),
+  });
 }

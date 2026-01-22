@@ -274,21 +274,21 @@ export async function withRetry<T>(
     } catch (error) {
       lastError = error instanceof Error ? error : new Error(String(error));
       
-      logger.warn(`Retry attempt ${attempt}/${policy.maxAttempts} failed`, {
+      logger.warn({
         operationType: options.operationType,
         operationId: options.operationId,
         error: lastError.message,
         attempt,
         elapsedMs,
-      });
+      }, `Retry attempt ${attempt}/${policy.maxAttempts} failed`);
       
       // Check if retryable
       if (!isRetryableError(error, policy)) {
-        logger.error('Non-retryable error encountered', {
+        logger.error({
           operationType: options.operationType,
           operationId: options.operationId,
           error: lastError.message,
-        });
+        }, 'Non-retryable error encountered');
         break;
       }
       
@@ -326,17 +326,17 @@ export async function withRetry<T>(
     
     try {
       await options.onDLQ(dlqEntry);
-      logger.info('Operation sent to DLQ', {
+      logger.info({
         operationType: options.operationType,
         operationId: options.operationId,
         dlqEntryId: dlqEntry.id,
-      });
+      }, 'Operation sent to DLQ');
     } catch (dlqError) {
-      logger.error('Failed to send to DLQ', {
+      logger.error({
         operationType: options.operationType,
         operationId: options.operationId,
         dlqError: dlqError instanceof Error ? dlqError.message : String(dlqError),
-      });
+      }, 'Failed to send to DLQ');
     }
   }
   
@@ -368,9 +368,13 @@ export async function addToDLQ(entry: DLQEntry): Promise<void> {
   // Audit log the DLQ entry
   try {
     const auditService = getAuditService();
-    await auditService.logCreate('dlq_entry', entry.id, {
+    await auditService.log({
+      action: 'create',
+      resource: 'integration',
+      resourceId: entry.id,
       tenantId: entry.tenantId,
       metadata: {
+        type: 'dlq_entry',
         operationType: entry.operationType,
         operationId: entry.operationId,
         error: entry.error,
@@ -378,7 +382,7 @@ export async function addToDLQ(entry: DLQEntry): Promise<void> {
       },
     });
   } catch (e) {
-    logger.warn('Failed to audit log DLQ entry', { error: e });
+    logger.warn({ error: e }, 'Failed to audit log DLQ entry');
   }
 }
 

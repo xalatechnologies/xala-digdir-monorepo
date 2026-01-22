@@ -66,7 +66,9 @@ export class AzureKeyVaultProvider implements ISecretsProvider {
 
     try {
       // Dynamic imports to avoid hard dependency
+      // @ts-expect-error - Azure SDK types are optional dependencies
       const { DefaultAzureCredential, ClientSecretCredential } = await import('@azure/identity');
+      // @ts-expect-error - Azure SDK types are optional dependencies
       const { SecretClient } = await import('@azure/keyvault-secrets');
 
       let credential;

@@ -19,71 +19,61 @@ export async function favoritesRoutes(fastify: FastifyInstance) {
   // USER FAVORITES
   // ====================================================================
 
-  fastify.get(
-    '/me/favorites',
-    { preHandler: [requireAuth] },
-    controller.listFavorites.bind(controller)
-  );
+  fastify.get('/me/favorites', {
+    preHandler: [requireAuth],
+    handler: controller.listFavorites.bind(controller),
+  });
 
-  fastify.get(
-    '/me/favorites/count',
-    { preHandler: [requireAuth] },
-    controller.getFavoriteCount.bind(controller)
-  );
+  fastify.get('/me/favorites/count', {
+    preHandler: [requireAuth],
+    handler: controller.getFavoriteCount.bind(controller),
+  });
 
-  fastify.get(
-    '/me/favorites/:id',
-    { preHandler: [requireAuth] },
-    controller.getFavorite.bind(controller)
-  );
+  fastify.get('/me/favorites/:id', {
+    preHandler: [requireAuth],
+    handler: controller.getFavorite.bind(controller),
+  });
 
-  fastify.post(
-    '/me/favorites',
-    { preHandler: [requireAuth] },
-    controller.addFavorite.bind(controller)
-  );
+  fastify.post('/me/favorites', {
+    preHandler: [requireAuth],
+    handler: controller.addFavorite.bind(controller),
+  });
 
-  fastify.patch(
-    '/me/favorites/:id',
-    { preHandler: [requireAuth] },
-    controller.updateFavorite.bind(controller)
-  );
+  fastify.patch('/me/favorites/:id', {
+    preHandler: [requireAuth],
+    handler: controller.updateFavorite.bind(controller),
+  });
 
-  fastify.delete(
-    '/me/favorites/:id',
-    { preHandler: [requireAuth] },
-    controller.removeFavorite.bind(controller)
-  );
+  fastify.delete('/me/favorites/:id', {
+    preHandler: [requireAuth],
+    handler: controller.removeFavorite.bind(controller),
+  });
 
-  fastify.delete(
-    '/me/favorites/by-object/:rentalObjectId',
-    { preHandler: [requireAuth] },
-    controller.removeFavoriteByObjectId.bind(controller)
-  );
+  fastify.delete('/me/favorites/by-object/:rentalObjectId', {
+    preHandler: [requireAuth],
+    handler: controller.removeFavoriteByObjectId.bind(controller),
+  });
 
   // ====================================================================
   // RENTAL OBJECT FAVORITES CHECK
   // ====================================================================
 
-  fastify.get(
-    '/rental-objects/:id/is-favorited',
-    {}, // No auth required - returns false if not authenticated
-    controller.checkIsFavorited.bind(controller)
-  );
+  fastify.get('/rental-objects/:id/is-favorited', {
+    // No auth required - returns false if not authenticated
+    handler: controller.checkIsFavorited.bind(controller),
+  });
 
   // ====================================================================
   // BULK OPERATIONS
   // ====================================================================
 
-  fastify.post(
-    '/me/favorites/bulk',
-    { preHandler: [requireAuth] },
-    controller.bulkAddFavorites.bind(controller)
-  );
+  fastify.post('/me/favorites/bulk', {
+    preHandler: [requireAuth],
+    handler: controller.bulkAddFavorites.bind(controller),
+  });
 
-  fastify.delete(
-    '/me/favorites/bulk',
-    { preHandler: [requireAuth] },
-    controller.bulkRemoveFavorites.bind(controller)
-  );
+  fastify.delete('/me/favorites/bulk', {
+    preHandler: [requireAuth],
+    handler: controller.bulkRemoveFavorites.bind(controller),
+  });
 }

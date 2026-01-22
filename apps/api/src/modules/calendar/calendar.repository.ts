@@ -92,7 +92,7 @@ export class CalendarRepository {
         status: allocations.status,
         bookingId: allocations.bookingId,
         userId: allocations.userId,
-        userName: users.name,
+        userName: users.displayName,
         notes: allocations.notes,
         metadata: allocations.metadata,
       })
@@ -123,7 +123,7 @@ export class CalendarRepository {
         status: allocations.status,
         bookingId: allocations.bookingId,
         userId: allocations.userId,
-        userName: users.name,
+        userName: users.displayName,
         notes: allocations.notes,
         metadata: allocations.metadata,
       })

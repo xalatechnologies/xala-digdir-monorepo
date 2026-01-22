@@ -167,20 +167,21 @@ export class PublicController {
 
   /**
    * GET /api/public/categories - List categories
-   * Now fetches from database via ConfigurationService
+   * Returns hardcoded category list for public consumption
    */
   @Get('/categories')
-  async getCategories(request: FastifyRequest, reply: FastifyReply) {
-    const categories = await this.configService.getCategories(false);
-    return {
-      data: categories.map(cat => ({
-        id: cat.code,
-        name: cat.name,
-        nameEn: cat.nameEn,
-        icon: cat.icon,
-        description: cat.description,
-      })),
-    };
+  async getCategories(_request: FastifyRequest, _reply: FastifyReply) {
+    const categories = [
+      { id: 'LOKALER_OG_BANER', name: 'Lokaler og baner', nameEn: 'Venues and courts', icon: 'sports', description: 'Sports venues, gyms, and courts' },
+      { id: 'KULTURHUS_OG_SCENE', name: 'Kulturhus og scene', nameEn: 'Cultural centers', icon: 'theater', description: 'Cultural centers and stages' },
+      { id: 'MØTEROM_OG_KONFERANSE', name: 'Møterom og konferanse', nameEn: 'Meeting rooms', icon: 'meeting', description: 'Meeting rooms and conference venues' },
+      { id: 'UTSTYR', name: 'Utstyr', nameEn: 'Equipment', icon: 'equipment', description: 'Equipment and tools' },
+      { id: 'TRANSPORT', name: 'Transport', nameEn: 'Transport', icon: 'car', description: 'Vehicles and transportation' },
+      { id: 'UTENDØRS', name: 'Utendørs', nameEn: 'Outdoors', icon: 'park', description: 'Outdoor spaces and areas' },
+      { id: 'BÅTPLASS', name: 'Båtplass', nameEn: 'Boat slips', icon: 'boat', description: 'Boat slips and marina facilities' },
+      { id: 'PARKERING', name: 'Parkering', nameEn: 'Parking', icon: 'parking', description: 'Parking spaces and garages' },
+    ];
+    return { data: categories };
   }
 
   /**
@@ -235,8 +236,7 @@ export class PublicController {
         id: rentalObjects.id,
         name: rentalObjects.name,
         slug: rentalObjects.slug,
-        category: rentalObjects.category,
-        subcategory: rentalObjects.subcategory,
+        categoryKey: rentalObjects.categoryKey,
         description: rentalObjects.description,
         pricing: rentalObjects.pricing,
         images: rentalObjects.images,

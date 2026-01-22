@@ -301,3 +301,117 @@ export {
   type SeasonPermission,
   type SeasonApplicationPermission,
 } from './season.schema';
+
+// Favorites schemas
+export {
+  // Main entity schemas
+  FavoriteSchema,
+  CreateFavoriteSchema,
+  UpdateFavoriteSchema,
+  ListFavoritesQuerySchema,
+
+  // Response schemas
+  FavoriteRentalObjectSchema,
+  FavoriteDetailSchema,
+  FavoritesListResponseSchema,
+  IsFavoritedResponseSchema,
+
+  // Bulk operation schemas
+  BulkAddFavoritesSchema,
+  BulkRemoveFavoritesSchema,
+  BulkFavoriteErrorSchema,
+  BulkFavoritesResponseSchema,
+
+  // Enum schemas
+  FavoritesSortBySchema,
+
+  // Types
+  type Favorite,
+  type CreateFavoriteDTO,
+  type UpdateFavoriteDTO,
+  type ListFavoritesQuery,
+  type FavoriteRentalObject,
+  type FavoriteDetail,
+  type FavoritesListResponse,
+  type IsFavoritedResponse,
+  type BulkAddFavoritesDTO,
+  type BulkRemoveFavoritesDTO,
+  type BulkFavoriteError,
+  type BulkFavoritesResponse,
+  type FavoritesSortBy,
+} from './favorites.schema';
+
+// Pricing schemas
+export {
+  // Enum schemas
+  QuotePriceUnitSchema,
+  QuoteRuleTypeSchema,
+
+  // Request schemas
+  PricingQuoteRequestSchema,
+
+  // Response schemas
+  QuoteLineItemSchema,
+  AppliedPriceRuleSchema,
+  PricingQuoteResponseSchema,
+
+  // Helper
+  PricingPaginatedSchema,
+
+  // Types
+  type QuotePriceUnit,
+  type QuoteRuleType,
+  type PricingQuoteRequest,
+  type QuoteLineItem,
+  type AppliedPriceRule,
+  type PricingQuoteResponse,
+  type PricingPaginated,
+} from './pricing.schema';
+
+// Price Rules schemas
+export {
+  // Enum schemas
+  PriceRuleTypeSchema,
+  PriceUnitSchema,
+
+  // Main entity schemas
+  PriceRuleSchema,
+  CreatePriceRuleSchema,
+  UpdatePriceRuleSchema,
+
+  // Listing rules schemas
+  ListingRulesSchema,
+  UpsertListingRulesSchema,
+
+  // Query schemas
+  PriceRulesQuerySchema,
+
+  // Types
+  type PriceRuleType,
+  type PriceUnit,
+  type PriceRule,
+  type CreatePriceRuleDTO,
+  type UpdatePriceRuleDTO,
+  type ListingRules,
+  type UpsertListingRulesDTO,
+  type PriceRulesQuery,
+} from './price-rules.schema';
+
+// User Group schemas
+export {
+  // Enum schemas
+  UserGroupCodeSchema,
+
+  // Main entity schemas
+  UserGroupSchema,
+  CreateUserGroupSchema,
+  UpdateUserGroupSchema,
+  UserGroupsQuerySchema,
+
+  // Types
+  type UserGroupCode,
+  type UserGroup,
+  type CreateUserGroupDTO,
+  type UpdateUserGroupDTO,
+  type UserGroupsQuery,
+} from './user-group.schema';

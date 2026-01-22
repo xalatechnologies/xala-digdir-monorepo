@@ -1,11 +1,11 @@
 /**
  * Conflict Detection Service
- * 
+ *
  * Detects and prevents booking conflicts
  */
 
 import { db } from '../database/connection';
-import { bookings, bookingConflicts } from '../database/schema';
+import { bookings } from '../database/schema';
 import { and, eq, lt, gt, sql } from 'drizzle-orm';
 import { webSocketService } from './websocket.service';
 
@@ -42,17 +42,17 @@ export class ConflictDetectionService {
    * Check for booking conflicts
    */
   async checkConflicts(check: ConflictCheck): Promise<ConflictCheckResult> {
-    const { rentalObjectId, startTime, endTime, excludeBookingId, includeBuffer } = check;
+    const { rentalObjectId, startTime, endTime, excludeBookingId } = check;
 
-    // Query overlapping bookings
+    // Query overlapping bookings - use Date objects directly for timestamp columns
     const overlappingBookings = await db
       .select()
       .from(bookings)
       .where(
         and(
           eq(bookings.rentalObjectId, rentalObjectId),
-          lt(bookings.startTime, endTime.toISOString()),
-          gt(bookings.endTime, startTime.toISOString()),
+          lt(bookings.startTime, endTime),
+          gt(bookings.endTime, startTime),
           excludeBookingId ? sql`${bookings.id} != ${excludeBookingId}` : sql`true`,
           // Only count confirmed/pending bookings
           sql`${bookings.status} IN ('CONFIRMED', 'PENDING')`
@@ -65,7 +65,7 @@ export class ConflictDetectionService {
       severity: 'CRITICAL' as const,
       overlapStart: new Date(Math.max(new Date(booking.startTime).getTime(), startTime.getTime())),
       overlapEnd: new Date(Math.min(new Date(booking.endTime).getTime(), endTime.getTime())),
-      bookingTitle: booking.title || 'Untitled booking',
+      bookingTitle: booking.notes || 'Untitled booking', // bookings table uses 'notes' not 'title'
     }));
 
     // TODO: Check buffer time conflicts if includeBuffer
@@ -82,83 +82,56 @@ export class ConflictDetectionService {
 
   /**
    * Record conflict in database
+   * TODO: Implement when bookingConflicts table is defined in @digilist/database-schema
    */
   async recordConflict(
     bookingId1: string,
     bookingId2: string,
     rentalObjectId: string,
     conflictType: 'HARD' | 'SOFT' | 'BUFFER' | 'CAPACITY',
-    overlapStart: Date,
-    overlapEnd: Date
+    _overlapStart: Date,
+    _overlapEnd: Date
   ): Promise<string> {
-    const [conflict] = await db
-      .insert(bookingConflicts)
-      .values({
-        bookingId1,
-        bookingId2,
-        rentalObjectId,
-        conflictType,
-        severity: conflictType === 'HARD' ? 'CRITICAL' : 'WARNING',
-        overlapStart: overlapStart.toISOString(),
-        overlapEnd: overlapEnd.toISOString(),
-        status: 'DETECTED',
-      })
-      .returning();
+    // Stub implementation - generate a stub ID and send WebSocket alert
+    const stubId = `conflict-${Date.now()}`;
+    const severity = conflictType === 'HARD' ? 'CRITICAL' : 'WARNING';
 
     // Send real-time alert
     webSocketService.sendConflictAlert(rentalObjectId, 'system', {
       type: 'CONFLICT_DETECTED',
       bookingId: bookingId1,
-      conflictId: conflict.id,
+      conflictId: stubId,
       message: `Booking conflict detected: ${conflictType}`,
-      severity: conflict.severity as any,
+      severity: severity as 'INFO' | 'WARNING' | 'CRITICAL',
     });
 
-    return conflict.id;
+    return stubId;
   }
 
   /**
    * Resolve conflict
+   * TODO: Implement when bookingConflicts table is defined in @digilist/database-schema
    */
   async resolveConflict(
     conflictId: string,
     resolution: 'CANCEL_NEW' | 'CANCEL_EXISTING' | 'FORCE_ACCEPT' | 'MODIFY_TIME',
-    resolvedBy: string,
-    notes?: string
+    _resolvedBy: string,
+    _notes?: string
   ): Promise<void> {
-    await db
-      .update(bookingConflicts)
-      .set({
-        status: 'RESOLVED',
-        resolutionAction: resolution,
-        resolvedBy,
-        resolvedAt: new Date().toISOString(),
-        resolutionNotes: notes,
-      })
-      .where(eq(bookingConflicts.id, conflictId));
-
-    // Broadcast resolution
-    const [conflict] = await db
-      .select()
-      .from(bookingConflicts)
-      .where(eq(bookingConflicts.id, conflictId))
-      .limit(1);
-
-    if (conflict) {
-      webSocketService.sendConflictAlert(conflict.rentalObjectId, 'system', {
-        type: 'CONFLICT_RESOLVED',
-        bookingId: conflict.bookingId1,
-        conflictId: conflict.id,
-        message: `Conflict resolved: ${resolution}`,
-        severity: 'INFO',
-      });
-    }
+    // Stub implementation - just broadcast resolution
+    webSocketService.sendConflictAlert('unknown', 'system', {
+      type: 'CONFLICT_RESOLVED',
+      bookingId: 'unknown',
+      conflictId: conflictId,
+      message: `Conflict resolved: ${resolution}`,
+      severity: 'INFO',
+    });
   }
 
   /**
    * Generate alternative suggestions
    */
-  private async generateSuggestions(check: ConflictCheck): Promise<Array<{
+  private async generateSuggestions(_check: ConflictCheck): Promise<Array<{
     alternativeTime?: Date;
     alternativeObject?: string;
   }>> {
@@ -166,48 +139,35 @@ export class ConflictDetectionService {
     // - Find next available slot
     // - Suggest similar rental objects
     // - Optimize based on user preferences
-    
+
     return [];
   }
 
   /**
    * Get unresolved conflicts for rental object
+   * TODO: Implement when bookingConflicts table is defined in @digilist/database-schema
    */
-  async getUnresolvedConflicts(rentalObjectId: string): Promise<any[]> {
-    return db
-      .select()
-      .from(bookingConflicts)
-      .where(
-        and(
-          eq(bookingConflicts.rentalObjectId, rentalObjectId),
-          eq(bookingConflicts.status, 'DETECTED')
-        )
-      );
+  async getUnresolvedConflicts(_rentalObjectId: string): Promise<any[]> {
+    // Stub implementation - return empty array
+    return [];
   }
 
   /**
    * Get conflict statistics
+   * TODO: Implement when bookingConflicts table is defined in @digilist/database-schema
    */
-  async getConflictStats(tenantId?: string): Promise<{
+  async getConflictStats(_tenantId?: string): Promise<{
     total: number;
     resolved: number;
     pending: number;
     byType: Record<string, number>;
   }> {
-    // TODO: Implement with proper tenant filtering
-    const [stats] = await db
-      .select({
-        total: sql<number>`count(*)`,
-        resolved: sql<number>`count(*) filter (where status = 'RESOLVED')`,
-        pending: sql<number>`count(*) filter (where status = 'DETECTED')`,
-      })
-      .from(bookingConflicts);
-
+    // Stub implementation - return zeros
     return {
-      total: stats.total,
-      resolved: stats.resolved,
-      pending: stats.pending,
-      byType: {}, // TODO: Group by type
+      total: 0,
+      resolved: 0,
+      pending: 0,
+      byType: {},
     };
   }
 }

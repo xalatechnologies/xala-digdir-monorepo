@@ -170,7 +170,7 @@ export async function registerLegacyRedirects(
         switch (mode) {
           case 'redirect':
             // 301 Permanent Redirect
-            return reply.redirect(301, newUrl);
+            return reply.redirect(newUrl);
 
           case 'deprecated':
             // Add deprecation warning header but continue

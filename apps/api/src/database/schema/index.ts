@@ -56,15 +56,31 @@ export {
 } from '@digilist/database-schema';
 
 // Platform tables
+// NOTE: sessions, orgMemberships, accessGrants, permissionAssignments,
+// caseHandlerScopes, authDemoTokens are NOT exported from @digilist/database-schema.
+// These platform tables should be in a separate platform module or defined locally.
+// See packages/schema/CLAUDE.md for guidance on adding new tables.
+
+// SaaS tables (entitlements)
+// NOTE: planEntitlements, tenantEntitlementOverrides, integrationConfigs, routePolicies,
+// navPolicies, globalKillSwitches, entitlementAuditLog are NOT exported from @digilist/database-schema.
+// These tables are defined locally in ./entitlements.ts
+
+// Compliance tables
+// NOTE: auditLogs is NOT exported from @digilist/database-schema.
+// It is defined in ./index.legacy.ts
+
+// ============================================================================
+// REMAINING TABLES (from legacy file)
+// ============================================================================
+
 export {
+  // Platform tables (sessions, auth, access control)
   sessions,
   orgMemberships,
   accessGrants,
   permissionAssignments,
   caseHandlerScopes,
-  authDemoTokens,
-  type Session,
-  type NewSession,
   type OrgMembership,
   type NewOrgMembership,
   type AccessGrant,
@@ -73,55 +89,39 @@ export {
   type NewPermissionAssignment,
   type CaseHandlerScope,
   type NewCaseHandlerScope,
-  type AuthDemoToken,
-  type NewAuthDemoToken,
-} from '@digilist/database-schema';
 
-// SaaS tables (entitlements)
-export {
-  planEntitlements,
-  tenantEntitlementOverrides,
-  integrationConfigs,
-  routePolicies,
-  navPolicies,
-  globalKillSwitches,
-  entitlementAuditLog,
-} from '@digilist/database-schema';
-
-// Compliance tables
-export {
+  // Compliance tables
   auditLogs,
   type AuditLog,
   type NewAuditLog,
-} from '@digilist/database-schema';
 
-// ============================================================================
-// REMAINING TABLES (from legacy file)
-// ============================================================================
+  // Reports
+  reports,
+  type Report,
+  type NewReport,
 
-export {
   // Plans & Subscriptions
   plans,
   subscriptions,
   categoryEntitlements,
   usage,
-  
+
   // Feature Flags (note: catalog, not featureFlags)
   featureFlagsCatalog,
   tenantFeatureFlags,
   orgFeatureFlags,
-  
+
   // Favorites
   favorites,
-  
+
   // Alerts & Incidents
   alerts,
   incidents,
-  
+
   // Messaging
   conversations,
   messages,
-  
+
   // Availability
   seasons,
   seasonApplications,
@@ -141,27 +141,33 @@ export {
   amenities,
   amenityGroups,
   rentalObjectAmenities,
-  
+
   // Addons
   addons,
   rentalObjectAddons,
   bookingAddons,
-  
+
   // Categories
   categories,
-  
+
   // Branding
   brandingTokens,
   brandingVersions,
-  
+
   // Notification
   notificationPreferences,
-  
+
   // Types
   type Plan,
   type NewPlan,
   type Subscription,
   type NewSubscription,
+  type Season,
+  type NewSeason,
+  type SeasonApplication,
+  type NewSeasonApplication,
+  type PriorityRule,
+  type NewPriorityRule,
 } from './index.legacy';
 
 // Re-export custody tables from separate file

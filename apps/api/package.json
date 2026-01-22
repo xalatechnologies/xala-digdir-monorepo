@@ -33,6 +33,7 @@
     "deploy:staging": "bash scripts/deploy.sh staging"
   },
   "dependencies": {
+    "@digilist/contracts": "workspace:*",
     "@digilist/database-schema": "workspace:*",
     "@fastify/cookie": "^10.0.1",
     "@fastify/cors": "^11.2.0",

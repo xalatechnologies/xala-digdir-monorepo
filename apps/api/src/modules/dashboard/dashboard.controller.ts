@@ -219,7 +219,7 @@ export class DashboardController {
         userId: auditLogs.userId,
         metadata: auditLogs.metadata,
         timestamp: auditLogs.timestamp,
-        userName: users.name,
+        userName: users.displayName,
       })
       .from(auditLogs)
       .leftJoin(users, eq(auditLogs.userId, users.id))

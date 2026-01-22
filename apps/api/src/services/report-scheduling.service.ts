@@ -1,19 +1,38 @@
-import cron from 'node-cron';
-import nodemailer from 'nodemailer';
-import { db } from '../../database/connection';
-import { scheduledReports, reportSchedules } from '../../database/schema';
-import { eq, and, lte } from 'drizzle-orm';
-
 /**
  * Report Scheduling Service
- * 
+ *
  * Automated report generation and delivery
  * Features:
  * - Cron-based scheduling
  * - Email delivery
  * - PDF generation
  * - Multiple report types
+ *
+ * TODO: Install dependencies when implementing:
+ * - pnpm add node-cron nodemailer
+ * - pnpm add -D @types/node-cron @types/nodemailer
+ * TODO: Define reportSchedules and scheduledReports tables in @digilist/database-schema
  */
+
+// Stub types for node-cron until installed
+interface ScheduledTask {
+  stop(): void;
+}
+interface CronModule {
+  validate(expression: string): boolean;
+  schedule(expression: string, fn: () => void | Promise<void>): ScheduledTask;
+}
+
+// Stub types for nodemailer until installed
+interface Transporter {
+  sendMail(options: {
+    from: string;
+    to: string;
+    subject: string;
+    html: string;
+    attachments?: Array<{ filename: string; content: Buffer }>;
+  }): Promise<void>;
+}
 
 interface ScheduledReport {
   id: string;
@@ -22,7 +41,7 @@ interface ScheduledReport {
   schedule: string; // Cron expression
   recipients: string[];
   format: 'PDF' | 'CSV' | 'EXCEL';
-  filters?: any;
+  filters?: unknown;
   tenantId: string;
   isActive: boolean;
 }
@@ -30,7 +49,7 @@ interface ScheduledReport {
 interface ReportData {
   title: string;
   generatedAt: Date;
-  data: any;
+  data: unknown;
   summary?: {
     totalRecords: number;
     dateRange?: { start: Date; end: Date };
@@ -38,35 +57,65 @@ interface ReportData {
 }
 
 export class ReportSchedulingService {
-  private scheduledJobs = new Map<string, cron.ScheduledTask>();
-  private emailTransporter: nodemailer.Transporter;
+  private scheduledJobs = new Map<string, ScheduledTask>();
+  private emailTransporter: Transporter | null = null;
+  private cron: CronModule | null = null;
 
   constructor() {
-    // Initialize email transporter
-    this.emailTransporter = nodemailer.createTransport({
-      host: process.env.SMTP_HOST || 'smtp.gmail.com',
-      port: parseInt(process.env.SMTP_PORT || '587'),
-      secure: process.env.SMTP_SECURE === 'true',
-      auth: {
-        user: process.env.SMTP_USER,
-        pass: process.env.SMTP_PASSWORD,
-      },
-    });
+    // Try to load optional dependencies
+    this.loadDependencies();
+  }
+
+  private async loadDependencies(): Promise<void> {
+    try {
+      // Dynamic imports for optional dependencies using require to avoid TS module resolution errors
+      // eslint-disable-next-line @typescript-eslint/no-require-imports
+      const nodeCron = await Promise.resolve().then(() => {
+        try { return require('node-cron'); } catch { return null; }
+      });
+      // eslint-disable-next-line @typescript-eslint/no-require-imports
+      const nodemailer = await Promise.resolve().then(() => {
+        try { return require('nodemailer'); } catch { return null; }
+      });
+
+      if (nodeCron) {
+        this.cron = nodeCron.default || nodeCron;
+      }
+
+      if (nodemailer) {
+        const createTransport = (nodemailer.default || nodemailer).createTransport;
+        this.emailTransporter = createTransport({
+          host: process.env.SMTP_HOST || 'smtp.gmail.com',
+          port: parseInt(process.env.SMTP_PORT || '587'),
+          secure: process.env.SMTP_SECURE === 'true',
+          auth: {
+            user: process.env.SMTP_USER,
+            pass: process.env.SMTP_PASSWORD,
+          },
+        });
+      }
+    } catch {
+      console.warn('Report scheduling dependencies not available');
+    }
   }
 
   /**
    * Initialize all active scheduled reports
+   * TODO: Implement when reportSchedules table is defined in @digilist/database-schema
    */
-  async initialize() {
+  async initialize(): Promise<void> {
     console.log('📊 Initializing report scheduler...');
 
-    const activeSchedules = await db
-      .select()
-      .from(reportSchedules)
-      .where(eq(reportSchedules.isActive, true));
+    if (!this.cron) {
+      console.warn('⚠️ node-cron not available, report scheduling disabled');
+      return;
+    }
+
+    // Stub implementation - no database table yet
+    const activeSchedules: ScheduledReport[] = [];
 
     for (const schedule of activeSchedules) {
-      this.scheduleReport(schedule as any);
+      this.scheduleReport(schedule);
     }
 
     console.log(`✅ Initialized ${activeSchedules.length} scheduled reports`);
@@ -75,9 +124,14 @@ export class ReportSchedulingService {
   /**
    * Schedule a report
    */
-  scheduleReport(report: ScheduledReport) {
+  scheduleReport(report: ScheduledReport): void {
+    if (!this.cron) {
+      console.error('❌ node-cron not available');
+      return;
+    }
+
     // Validate cron expression
-    if (!cron.validate(report.schedule)) {
+    if (!this.cron.validate(report.schedule)) {
       console.error(`❌ Invalid cron expression: ${report.schedule}`);
       return;
     }
@@ -88,7 +142,7 @@ export class ReportSchedulingService {
     }
 
     // Schedule new job
-    const task = cron.schedule(report.schedule, async () => {
+    const task = this.cron.schedule(report.schedule, async () => {
       await this.generateAndSendReport(report);
     });
 
@@ -99,7 +153,7 @@ export class ReportSchedulingService {
   /**
    * Unschedule a report
    */
-  unscheduleReport(reportId: string) {
+  unscheduleReport(reportId: string): void {
     const task = this.scheduledJobs.get(reportId);
     if (task) {
       task.stop();
@@ -111,7 +165,7 @@ export class ReportSchedulingService {
   /**
    * Generate and send report
    */
-  private async generateAndSendReport(report: ScheduledReport) {
+  private async generateAndSendReport(report: ScheduledReport): Promise<void> {
     try {
       console.log(`📊 Generating report: ${report.name}`);
 
@@ -144,16 +198,16 @@ export class ReportSchedulingService {
     switch (report.type) {
       case 'BOOKING_SUMMARY':
         return this.generateBookingSummary(report.tenantId, startOfMonth, now);
-      
+
       case 'REVENUE':
         return this.generateRevenueReport(report.tenantId, startOfMonth, now);
-      
+
       case 'OCCUPANCY':
         return this.generateOccupancyReport(report.tenantId, startOfMonth, now);
-      
+
       case 'USER_ACTIVITY':
         return this.generateUserActivityReport(report.tenantId, startOfMonth, now);
-      
+
       default:
         throw new Error(`Unsupported report type: ${report.type}`);
     }
@@ -163,7 +217,7 @@ export class ReportSchedulingService {
    * Generate booking summary report
    */
   private async generateBookingSummary(
-    tenantId: string,
+    _tenantId: string,
     startDate: Date,
     endDate: Date
   ): Promise<ReportData> {
@@ -192,7 +246,7 @@ export class ReportSchedulingService {
    * Generate revenue report
    */
   private async generateRevenueReport(
-    tenantId: string,
+    _tenantId: string,
     startDate: Date,
     endDate: Date
   ): Promise<ReportData> {
@@ -220,7 +274,7 @@ export class ReportSchedulingService {
    * Generate occupancy report
    */
   private async generateOccupancyReport(
-    tenantId: string,
+    _tenantId: string,
     startDate: Date,
     endDate: Date
   ): Promise<ReportData> {
@@ -248,7 +302,7 @@ export class ReportSchedulingService {
    * Generate user activity report
    */
   private async generateUserActivityReport(
-    tenantId: string,
+    _tenantId: string,
     startDate: Date,
     endDate: Date
   ): Promise<ReportData> {
@@ -277,7 +331,7 @@ export class ReportSchedulingService {
    */
   private async generateReportFile(
     reportData: ReportData,
-    format: 'PDF' | 'CSV' | 'EXCEL'
+    _format: 'PDF' | 'CSV' | 'EXCEL'
   ): Promise<Buffer> {
     // TODO: Implement actual file generation with libraries
     // For now, return simple JSON as CSV
@@ -288,7 +342,12 @@ export class ReportSchedulingService {
   /**
    * Send report via email
    */
-  private async sendReportEmail(report: ScheduledReport, file: Buffer) {
+  private async sendReportEmail(report: ScheduledReport, file: Buffer): Promise<void> {
+    if (!this.emailTransporter) {
+      console.warn('⚠️ Email transporter not available, skipping email');
+      return;
+    }
+
     const mailOptions = {
       from: process.env.SMTP_FROM || 'reports@digilist.no',
       to: report.recipients.join(', '),
@@ -307,7 +366,7 @@ export class ReportSchedulingService {
       `,
       attachments: [
         {
-          filename: `${report.name.replace(/\s+/g, '_')}_${Date.now()}.${format.toLowerCase()}`,
+          filename: `${report.name.replace(/\s+/g, '_')}_${Date.now()}.${report.format.toLowerCase()}`,
           content: file,
         },
       ],
@@ -318,51 +377,32 @@ export class ReportSchedulingService {
 
   /**
    * Record report execution
+   * TODO: Implement when scheduledReports table is defined in @digilist/database-schema
    */
   private async recordExecution(
     reportId: string,
     status: 'SUCCESS' | 'FAILED',
     error?: string
-  ) {
-    try {
-      await db.insert(scheduledReports).values({
-        reportScheduleId: reportId,
-        status,
-        error,
-        generatedAt: new Date().toISOString(),
-      });
-    } catch (err) {
-      console.error('Failed to record execution:', err);
-    }
+  ): Promise<void> {
+    // Stub implementation - just log
+    console.log(`📝 Recording execution: ${reportId} - ${status}${error ? ` (${error})` : ''}`);
   }
 
   /**
    * Get execution history
+   * TODO: Implement when scheduledReports table is defined in @digilist/database-schema
    */
-  async getExecutionHistory(reportId: string, limit = 10) {
-    return db
-      .select()
-      .from(scheduledReports)
-      .where(eq(scheduledReports.reportScheduleId, reportId))
-      .limit(limit)
-      .orderBy(scheduledReports.generatedAt);
+  async getExecutionHistory(_reportId: string, _limit = 10): Promise<unknown[]> {
+    // Stub implementation - return empty array
+    return [];
   }
 
   /**
    * Test report generation (manual trigger)
+   * TODO: Implement when reportSchedules table is defined in @digilist/database-schema
    */
-  async testReport(reportId: string) {
-    const schedule = await db
-      .select()
-      .from(reportSchedules)
-      .where(eq(reportSchedules.id, reportId))
-      .limit(1);
-
-    if (schedule.length === 0) {
-      throw new Error('Report schedule not found');
-    }
-
-    await this.generateAndSendReport(schedule[0] as any);
+  async testReport(_reportId: string): Promise<void> {
+    throw new Error('Report schedules not yet implemented - table not defined in schema');
   }
 }
 

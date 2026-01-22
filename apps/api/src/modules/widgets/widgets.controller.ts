@@ -6,7 +6,7 @@ import { Controller, Get } from '../../core/decorators';
 import { container } from '../../core/container';
 import type { FastifyRequest, FastifyReply } from 'fastify';
 import { eq, desc } from 'drizzle-orm';
-import { listings } from '../../database/schema/index';
+import { rentalObjects } from '../../database/schema/index';
 
 @Controller('/api/widgets')
 export class WidgetsController {
@@ -20,19 +20,18 @@ export class WidgetsController {
 
     const result = await db
       .select({
-        id: listings.id,
-        name: listings.name,
-        slug: listings.slug,
-        category: listings.category,
-        subcategory: listings.subcategory,
-        description: listings.description,
-        pricing: listings.pricing,
-        images: listings.images,
-        timeMode: listings.timeMode,
+        id: rentalObjects.id,
+        name: rentalObjects.name,
+        slug: rentalObjects.slug,
+        categoryKey: rentalObjects.categoryKey,
+        description: rentalObjects.description,
+        pricing: rentalObjects.pricing,
+        images: rentalObjects.images,
+        timeMode: rentalObjects.timeMode,
       })
-      .from(listings)
-      .where(eq(listings.status, 'published'))
-      .orderBy(desc(listings.createdAt))
+      .from(rentalObjects)
+      .where(eq(rentalObjects.status, 'published'))
+      .orderBy(desc(rentalObjects.createdAt))
       .limit(Number(limit));
 
     return { data: result };

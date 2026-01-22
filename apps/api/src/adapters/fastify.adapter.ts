@@ -236,12 +236,12 @@ export async function createFastifyApp(
   // Global rate limit: 100 req/min, Auth endpoints: 5 req/min
   await app.register(rateLimit, {
     ...globalRateLimitConfig,
-    max: async (request) => {
+    max: async (request, _key) => {
       // Apply stricter limit to authentication endpoints
       const isAuthEndpoint = authEndpoints.some((endpoint) =>
         request.url.startsWith(endpoint)
       );
-      return isAuthEndpoint ? authRateLimitConfig.max : globalRateLimitConfig.max;
+      return (isAuthEndpoint ? authRateLimitConfig.max : globalRateLimitConfig.max) as number;
     },
     errorResponseBuilder: (request, context) => {
       // Use auth-specific error for auth endpoints

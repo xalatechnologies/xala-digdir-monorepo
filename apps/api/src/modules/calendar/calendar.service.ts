@@ -89,20 +89,22 @@ export class CalendarService {
 
     const db = container.resolve<any>('Database');
 
-    // Get user's role
+    // Get user's preferences (role is stored in preferences.role or metadata)
     const [user] = await db
-      .select({ role: users.role })
+      .select({ preferences: users.preferences })
       .from(users)
       .where(eq(users.id, userId))
       .limit(1);
 
     // Admin/super_admin bypass scope checks
-    if (!user || ['admin', 'super_admin'].includes(user.role)) {
+    // Role is stored in preferences or can be determined from user context
+    const userRole = (user?.preferences as Record<string, unknown>)?.role as string | undefined;
+    if (!user || ['admin', 'super_admin'].includes(userRole || '')) {
       return;
     }
 
     // org_member and saksbehandler require scope validation
-    if (['org_member', 'saksbehandler'].includes(user.role)) {
+    if (['org_member', 'saksbehandler'].includes(userRole || '')) {
       // Check for 'all' scope first
       const [allScope] = await db
         .select({ id: caseHandlerScopes.id })

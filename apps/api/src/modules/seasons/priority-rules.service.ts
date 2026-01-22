@@ -146,6 +146,10 @@ export async function calculateApplicationPriority(
   const rules = await getPriorityRules(seasonId, tenantId);
 
   // Get organization details
+  if (!application.organizationId) {
+    return { score: 0, reasons: ['No organization associated'] };
+  }
+
   const orgResult = await db
     .select()
     .from(organizations)
@@ -196,13 +200,15 @@ export async function sortApplicationsByPriority(
     const { score, reasons } = await calculateApplicationPriority(application, seasonId, tenantId);
 
     // Get organization details for display
-    const orgResult = await db
-      .select()
-      .from(organizations)
-      .where(eq(organizations.id, application.organizationId))
-      .limit(1);
-
-    const organization = orgResult[0] || { name: 'Unknown', type: 'other' };
+    let organization = { name: 'Unknown', type: 'other' };
+    if (application.organizationId) {
+      const orgResult = await db
+        .select()
+        .from(organizations)
+        .where(eq(organizations.id, application.organizationId))
+        .limit(1);
+      organization = orgResult[0] || organization;
+    }
 
     applicationsWithPriority.push({
       ...application,

@@ -26,19 +26,24 @@ export class FeatureFlagsService {
    * Get tenant features
    */
   async getTenantFeatures(tenantId: string): Promise<TenantFeatures> {
-    const tenant = await this.db.query.tenants.findFirst({
-      where: eq(tenants.id, tenantId),
-    });
+    const [tenant] = await this.db
+      .select()
+      .from(tenants)
+      .where(eq(tenants.id, tenantId))
+      .limit(1);
 
     if (!tenant) {
       throw new Error('Tenant not found');
     }
 
+    // Features are stored in the 'features' jsonb field
+    const features = (tenant.features as Record<string, unknown>) || {};
+
     return {
       tenantId: tenant.id,
       tenantName: tenant.name,
-      enabledRentalObjectCategories: tenant.enabledRentalObjectCategories || ['LOCALE', 'ARRANGEMENT'],
-      featureFlags: (tenant.featureFlags as Record<string, boolean>) || {},
+      enabledRentalObjectCategories: (features.enabledRentalObjectCategories as string[]) || ['LOCALE', 'ARRANGEMENT'],
+      featureFlags: (features.featureFlags as Record<string, boolean>) || {},
     };
   }
 
@@ -67,24 +72,26 @@ export class FeatureFlagsService {
   ): Promise<TenantFeatures> {
     const current = await this.getTenantFeatures(tenantId);
 
-    const updateData: any = {
-      updatedAt: new Date(),
+    // Build updated features object
+    const updatedFeatures: Record<string, unknown> = {
+      featureFlags: current.featureFlags,
+      enabledRentalObjectCategories: current.enabledRentalObjectCategories,
     };
 
     if (updates.featureFlags) {
-      updateData.featureFlags = {
+      updatedFeatures.featureFlags = {
         ...current.featureFlags,
         ...updates.featureFlags,
       };
     }
 
     if (updates.enabledRentalObjectCategories) {
-      updateData.enabledRentalObjectCategories = updates.enabledRentalObjectCategories;
+      updatedFeatures.enabledRentalObjectCategories = updates.enabledRentalObjectCategories;
     }
 
     await this.db
       .update(tenants)
-      .set(updateData)
+      .set({ features: updatedFeatures, updatedAt: new Date() })
       .where(eq(tenants.id, tenantId));
 
     return this.getTenantFeatures(tenantId);

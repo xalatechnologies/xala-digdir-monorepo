@@ -226,7 +226,7 @@ export class GlobalSearchService {
         .where(
           and(
             eq(organizations.tenantId, tenantId),
-            eq(organizations.status, 'active'),
+            eq(organizations.isActive, true),
             ilike(organizations.name, `%${query}%`)
           )
         )
@@ -408,7 +408,7 @@ export class GlobalSearchService {
     const conditions = [eq(organizations.tenantId, tenantId)];
 
     if (filters?.status) {
-      conditions.push(eq(organizations.status, filters.status));
+      conditions.push(eq(organizations.isActive, filters.status === 'active'));
     }
 
     const results = await this.db
@@ -417,7 +417,7 @@ export class GlobalSearchService {
         name: organizations.name,
         slug: organizations.slug,
         type: organizations.type,
-        status: organizations.status,
+        isActive: organizations.isActive,
         rank: sql<number>`ts_rank(
           to_tsvector('norwegian', coalesce(${organizations.name}, '') || ' ' || coalesce(${organizations.slug}, '')),
           plainto_tsquery('norwegian', ${searchQuery})
@@ -459,7 +459,7 @@ export class GlobalSearchService {
         metadata: {
           slug: r.slug,
           type: r.type,
-          status: r.status,
+          isActive: r.isActive,
         },
       })),
       count: Number(count),
@@ -476,18 +476,17 @@ export class GlobalSearchService {
     const conditions = [eq(users.tenantId, tenantId)];
 
     if (filters?.status) {
-      conditions.push(eq(users.status, filters.status));
+      conditions.push(eq(users.isActive, filters.status === 'active'));
     }
 
     const results = await this.db
       .select({
         id: users.id,
-        name: users.name,
+        displayName: users.displayName,
         email: users.email,
-        role: users.role,
-        status: users.status,
+        isActive: users.isActive,
         rank: sql<number>`ts_rank(
-          to_tsvector('norwegian', coalesce(${users.name}, '') || ' ' || coalesce(${users.email}, '')),
+          to_tsvector('norwegian', coalesce(${users.displayName}, '') || ' ' || coalesce(${users.email}, '')),
           plainto_tsquery('norwegian', ${searchQuery})
         )`.as('rank'),
       })
@@ -495,7 +494,7 @@ export class GlobalSearchService {
       .where(
         and(
           ...conditions,
-          sql`to_tsvector('norwegian', coalesce(${users.name}, '') || ' ' || coalesce(${users.email}, '')) @@ plainto_tsquery('norwegian', ${searchQuery})`
+          sql`to_tsvector('norwegian', coalesce(${users.displayName}, '') || ' ' || coalesce(${users.email}, '')) @@ plainto_tsquery('norwegian', ${searchQuery})`
         )
       )
       .orderBy(desc(sql`rank`))
@@ -507,7 +506,7 @@ export class GlobalSearchService {
       .where(
         and(
           ...conditions,
-          sql`to_tsvector('norwegian', coalesce(${users.name}, '') || ' ' || coalesce(${users.email}, '')) @@ plainto_tsquery('norwegian', ${searchQuery})`
+          sql`to_tsvector('norwegian', coalesce(${users.displayName}, '') || ' ' || coalesce(${users.email}, '')) @@ plainto_tsquery('norwegian', ${searchQuery})`
         )
       );
 
@@ -515,13 +514,12 @@ export class GlobalSearchService {
       results: results.map((r: any) => ({
         id: r.id,
         type: 'user' as SearchEntityType,
-        title: r.name,
+        title: r.displayName || r.email || 'User',
         description: r.email,
         rank: r.rank || 0,
         metadata: {
           email: r.email,
-          role: r.role,
-          status: r.status,
+          isActive: r.isActive,
         },
       })),
       count: Number(count),

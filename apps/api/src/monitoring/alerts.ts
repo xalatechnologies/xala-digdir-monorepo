@@ -4,7 +4,7 @@
  */
 import { Injectable, Inject } from '../core/decorators';
 
-interface Alert {
+export interface Alert {
   id: string;
   severity: 'low' | 'medium' | 'high' | 'critical';
   title: string;

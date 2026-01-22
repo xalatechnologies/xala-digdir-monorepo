@@ -8,6 +8,7 @@ import { ReportsService } from './reports.service';
 import type { FastifyRequest, FastifyReply } from 'fastify';
 import { eq, sql, and, gte, lte, count, sum } from 'drizzle-orm';
 import { rentalObjects, bookings, organizations, users, seasonalLeases } from '../../database/schema/index';
+import { container } from '../../core/container';
 
 interface TenantRequest extends FastifyRequest {
   tenantId?: string | null;
@@ -183,7 +184,7 @@ export class ReportsController {
         activeSeasonalLeases: sql<number>`0`,
       })
       .from(organizations)
-      .where(eq(organizations.status, 'active'))
+      .where(eq(organizations.isActive, true))
       .orderBy(organizations.name);
 
     return {

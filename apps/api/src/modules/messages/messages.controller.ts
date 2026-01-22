@@ -12,7 +12,7 @@ import { getMessagesRepository } from './messages.repository';
 import { ForbiddenError } from '../../core/errors/problem-details';
 import { container } from '../../core/container';
 import { eq, and } from 'drizzle-orm';
-import { users, caseHandlerScopes, bookings, conversations } from '../../database/schema/index';
+import { orgMemberships, caseHandlerScopes, bookings, conversations } from '../../database/schema/index';
 
 interface TenantRequest extends FastifyRequest {
   tenantId?: string | null;
@@ -32,18 +32,18 @@ export class MessagesController {
 
     const db = container.resolve<any>('Database');
 
-    // Get user role
-    const [user] = await db
-      .select({ role: users.role })
-      .from(users)
-      .where(eq(users.id, userId))
+    // Get user role from org membership
+    const [membership] = await db
+      .select({ orgRole: orgMemberships.orgRole })
+      .from(orgMemberships)
+      .where(eq(orgMemberships.userId, userId))
       .limit(1);
 
-    // Admin/super_admin bypass
-    if (!user || ['admin', 'super_admin'].includes(user.role)) return;
+    // Admin/super_admin bypass (or no membership found)
+    if (!membership || ['admin', 'super_admin'].includes(membership.orgRole)) return;
 
     // For org_member/saksbehandler, check scope via booking
-    if (['org_member', 'saksbehandler'].includes(user.role)) {
+    if (['org_member', 'saksbehandler', 'member'].includes(membership.orgRole)) {
       const [conv] = await db
         .select({ bookingId: conversations.bookingId })
         .from(conversations)

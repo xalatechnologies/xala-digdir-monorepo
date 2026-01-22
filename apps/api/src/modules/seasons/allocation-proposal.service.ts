@@ -253,7 +253,7 @@ export async function generateAllocationProposal(
       // No conflicts - approve as-is
       suggestion = {
         applicationId: app.id,
-        organizationId: app.organizationId,
+        organizationId: app.organizationId || '',
         organizationName: app.organizationName || 'Unknown',
         rentalObjectId: app.rentalObjectId,
         listingName: app.listingName || 'Unknown',
@@ -276,7 +276,7 @@ export async function generateAllocationProposal(
       // Has conflicts but none are with already-approved applications - approve as-is
       suggestion = {
         applicationId: app.id,
-        organizationId: app.organizationId,
+        organizationId: app.organizationId || '',
         organizationName: app.organizationName || 'Unknown',
         rentalObjectId: app.rentalObjectId,
         listingName: app.listingName || 'Unknown',
@@ -311,7 +311,7 @@ export async function generateAllocationProposal(
         // Found alternative time slot - suggest adjustment
         suggestion = {
           applicationId: app.id,
-          organizationId: app.organizationId,
+          organizationId: app.organizationId || '',
           organizationName: app.organizationName || 'Unknown',
           rentalObjectId: app.rentalObjectId,
           listingName: app.listingName || 'Unknown',
@@ -333,7 +333,7 @@ export async function generateAllocationProposal(
         // No alternative found - reject
         suggestion = {
           applicationId: app.id,
-          organizationId: app.organizationId,
+          organizationId: app.organizationId || '',
           organizationName: app.organizationName || 'Unknown',
           rentalObjectId: app.rentalObjectId,
           listingName: app.listingName || 'Unknown',

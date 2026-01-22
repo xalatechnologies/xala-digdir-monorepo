@@ -15,6 +15,8 @@ export default defineConfig({
     'features/seasons/index': 'src/features/seasons/index.ts',
     'features/reviews/index': 'src/features/reviews/index.ts',
     'features/rental-object-details/index': 'src/features/rental-object-details/index.ts',
+    'features/calendar/index': 'src/features/calendar/index.ts',
+    'blocks/calendar/index': 'src/blocks/calendar/index.ts',
   },
   format: ['esm'],
   dts: true,

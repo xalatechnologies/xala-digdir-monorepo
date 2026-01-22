@@ -4,10 +4,13 @@
  */
 import { Controller, Get } from '../core/decorators';
 import { Inject } from '../core/decorators';
-import { HealthCheckService } from './health';
+import { HealthCheckService, type HealthStatus } from './health';
 import { APMService } from './apm';
-import { AlertManager } from './alerts';
+import { AlertManager, type Alert } from './alerts';
 import type { FastifyRequest, FastifyReply } from 'fastify';
+
+// Re-export types to satisfy TypeScript module resolution
+export type { HealthStatus, Alert };
 
 @Controller('/monitoring')
 export class MonitoringController {

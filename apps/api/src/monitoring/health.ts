@@ -4,7 +4,7 @@
  */
 import { Injectable, Inject } from '../core/decorators';
 
-interface HealthStatus {
+export interface HealthStatus {
   status: 'healthy' | 'degraded' | 'unhealthy';
   timestamp: number;
   uptime: number;

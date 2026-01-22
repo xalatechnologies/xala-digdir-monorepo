@@ -67,23 +67,26 @@ export class RentalObjectDetailsService {
       throw new Error('Rental object not found');
     }
 
+    // Extract location from metadata if available
+    const metadata = rentalObject.metadata as Record<string, unknown> | null;
+
     const core: RentalObjectDTO = {
       id: rentalObject.id,
       tenantId: rentalObject.tenantId,
-      categoryKey: rentalObject.typeCode, // Assuming typeCode is category
-      categoryName: this.getCategoryName(rentalObject.typeCode),
-      typeCode: rentalObject.typeCode,
-      timeMode: rentalObject.timeMode || 'PERIOD',
-      title: rentalObject.title,
+      categoryKey: rentalObject.categoryKey,
+      categoryName: this.getCategoryName(rentalObject.categoryKey),
+      typeCode: rentalObject.categoryKey,
+      timeMode: (rentalObject.timeMode || 'PERIOD') as 'PERIOD' | 'HOURLY' | 'DAILY',
+      title: rentalObject.name,
       slug: rentalObject.slug,
-      description: rentalObject.description,
-      address: rentalObject.address,
-      postalCode: rentalObject.postalCode,
-      city: rentalObject.city,
-      capacity: rentalObject.capacity,
+      description: rentalObject.description ?? undefined,
+      address: (metadata?.address as string) ?? undefined,
+      postalCode: (metadata?.postalCode as string) ?? undefined,
+      city: (metadata?.city as string) ?? undefined,
+      capacity: rentalObject.capacity ?? undefined,
       images: [], // TODO: Load from attachments
-      status: rentalObject.status,
-      publishedAt: rentalObject.publishedAt?.toISOString(),
+      status: rentalObject.status as 'DRAFT' | 'PUBLISHED' | 'ARCHIVED',
+      publishedAt: undefined, // Field not in schema
       createdAt: rentalObject.createdAt.toISOString(),
       updatedAt: rentalObject.updatedAt.toISOString(),
     };

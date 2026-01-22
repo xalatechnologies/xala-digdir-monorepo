@@ -6,7 +6,7 @@ import {
   ListFavoritesQuerySchema,
   BulkAddFavoritesSchema,
   BulkRemoveFavoritesSchema,
-} from '../../schemas/favorites.schema';
+} from '@digilist/contracts/schemas';
 
 /**
  * Favorites Controller
@@ -22,7 +22,7 @@ export class FavoritesController {
    */
   async listFavorites(request: FastifyRequest<{ Querystring: unknown }>, reply: FastifyReply) {
     try {
-      const userId = request.user!.id;
+      const userId = request.user!.userId;
       const tenantId = request.user!.tenantId;
       const query = ListFavoritesQuerySchema.parse(request.query);
       const result = await this.service.listFavorites(userId, tenantId, query);
@@ -43,7 +43,7 @@ export class FavoritesController {
    */
   async getFavorite(request: FastifyRequest<{ Params: { id: string } }>, reply: FastifyReply) {
     try {
-      const userId = request.user!.id;
+      const userId = request.user!.userId;
       const { id } = request.params;
       const favorite = await this.service.getFavoriteById(id, userId);
       return reply.code(200).send(favorite);
@@ -60,7 +60,7 @@ export class FavoritesController {
    */
   async addFavorite(request: FastifyRequest<{ Body: unknown }>, reply: FastifyReply) {
     try {
-      const userId = request.user!.id;
+      const userId = request.user!.userId;
       const tenantId = request.user!.tenantId;
       const data = CreateFavoriteSchema.parse(request.body);
       const favorite = await this.service.addFavorite(userId, tenantId, data);
@@ -83,7 +83,7 @@ export class FavoritesController {
    */
   async updateFavorite(request: FastifyRequest<{ Params: { id: string }; Body: unknown }>, reply: FastifyReply) {
     try {
-      const userId = request.user!.id;
+      const userId = request.user!.userId;
       const { id } = request.params;
       const data = UpdateFavoriteSchema.parse(request.body);
       const favorite = await this.service.updateFavorite(id, userId, data);
@@ -101,7 +101,7 @@ export class FavoritesController {
    */
   async removeFavorite(request: FastifyRequest<{ Params: { id: string } }>, reply: FastifyReply) {
     try {
-      const userId = request.user!.id;
+      const userId = request.user!.userId;
       const { id } = request.params;
       await this.service.removeFavorite(id, userId);
       return reply.code(204).send();
@@ -118,7 +118,7 @@ export class FavoritesController {
    */
   async removeFavoriteByObjectId(request: FastifyRequest<{ Params: { rentalObjectId: string } }>, reply: FastifyReply) {
     try {
-      const userId = request.user!.id;
+      const userId = request.user!.userId;
       const { rentalObjectId } = request.params;
       await this.service.removeFavoriteByObjectId(rentalObjectId, userId);
       return reply.code(204).send();
@@ -134,7 +134,7 @@ export class FavoritesController {
    * GET /api/rental-objects/:id/is-favorited
    */
   async checkIsFavorited(request: FastifyRequest<{ Params: { id: string } }>, reply: FastifyReply) {
-    const userId = request.user?.id;
+    const userId = request.user?.userId;
     if (!userId) {
       return reply.code(200).send({ isFavorited: false });
     }
@@ -148,7 +148,7 @@ export class FavoritesController {
    */
   async bulkAddFavorites(request: FastifyRequest<{ Body: unknown }>, reply: FastifyReply) {
     try {
-      const userId = request.user!.id;
+      const userId = request.user!.userId;
       const tenantId = request.user!.tenantId;
       const data = BulkAddFavoritesSchema.parse(request.body);
       const result = await this.service.bulkAddFavorites(userId, tenantId, data);
@@ -163,7 +163,7 @@ export class FavoritesController {
    */
   async bulkRemoveFavorites(request: FastifyRequest<{ Body: unknown }>, reply: FastifyReply) {
     try {
-      const userId = request.user!.id;
+      const userId = request.user!.userId;
       const data = BulkRemoveFavoritesSchema.parse(request.body);
       const result = await this.service.bulkRemoveFavorites(userId, data);
       return reply.code(200).send(result);
@@ -177,7 +177,7 @@ export class FavoritesController {
    */
   async getFavoriteCount(request: FastifyRequest, reply: FastifyReply) {
     try {
-      const userId = request.user!.id;
+      const userId = request.user!.userId;
       const count = await this.service.getFavoriteCount(userId);
       return reply.code(200).send({ count });
     } catch (error) {

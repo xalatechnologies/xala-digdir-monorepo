@@ -27,9 +27,9 @@ interface AuditService {
     action: string;
     entityType: string;
     entityId: string;
-    oldValue?: any;
-    newValue?: any;
-  }): Promise<void>;
+    oldValue?: unknown;
+    newValue?: unknown;
+  }): Promise<unknown>;
 }
 
 export class AddOnsService {

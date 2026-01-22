@@ -1,77 +1,25 @@
 /**
- * CalendarSection Component (Backoffice)
+ * CalendarSection Component (Backoffice App)
  *
- * Integrates the RentalObjectAvailabilityCalendar from @digilist/ui with SDK hooks.
- * Displays dynamic availability calendar based on listing configuration.
- * Supports TIME_SLOTS, ALL_DAY, and MULTI_DAY modes.
+ * Thin wrapper that connects SDK hooks to the unified CalendarSection
+ * from @digilist/ui/features/calendar.
  *
  * This is the backoffice app version - designed for administrators to VIEW
- * listing availability. View-only mode by default (no slot selection).
- *
- * Following the SDK-first rule: all data comes from API projection DTOs.
- * No local rule evaluation or transformation.
+ * listing availability. View-only mode (no slot selection).
  */
 
 import * as React from 'react';
-import { Paragraph } from '@xalatechnologies/platform/ui';
-import { RentalObjectAvailabilityCalendar } from '@digilist/ui';
+import {
+  CalendarSection as CalendarSectionUI,
+  getDateRangeForMode,
+  type CalendarMode,
+} from '@digilist/ui/features/calendar';
+import { useT } from '@xalatechnologies/platform/i18n';
 import {
   useListingCalendarConfig,
   useAvailabilityMatrix,
   useCalendarRealtime,
 } from '@digilist/client-sdk/hooks';
-import { useT } from '@xalatechnologies/platform/i18n';
-
-// =============================================================================
-// Types
-// =============================================================================
-
-/** Calendar mode as returned by config */
-type CalendarMode = 'TIME_SLOTS' | 'ALL_DAY' | 'MULTI_DAY';
-
-/** Availability status for calendar slots */
-type CalendarSlotStatus =
-  | 'AVAILABLE'
-  | 'RESERVED'
-  | 'BOOKED'
-  | 'BLOCKED'
-  | 'BLACKOUT'
-  | 'CLOSED';
-
-/** Single cell in the availability calendar */
-interface CalendarCell {
-  id: string;
-  start: string;
-  end: string;
-  status: CalendarSlotStatus;
-  reasonKey?: string;
-  bookingId?: string;
-  blockId?: string;
-  lockedUntil?: string;
-}
-
-/** Current calendar selection state */
-interface CalendarSelection {
-  cells: CalendarCell[];
-  range?: {
-    startDate: string;
-    endDate: string;
-    startTime?: string;
-    endTime?: string;
-  };
-  isValid: boolean;
-  errorKey?: string;
-}
-
-/** Realtime event types from WebSocket */
-interface RealtimeEvent {
-  type: string;
-  listingId?: string;
-  bookingId?: string;
-  blockId?: string;
-  start?: string;
-  end?: string;
-}
 
 export interface CalendarSectionProps {
   /** Listing ID to fetch calendar data for */
@@ -86,87 +34,6 @@ export interface CalendarSectionProps {
   subtitle?: string;
 }
 
-// =============================================================================
-// Utility Functions
-// =============================================================================
-
-/**
- * Format date to ISO date string (YYYY-MM-DD)
- */
-function formatDateToISO(date: Date): string {
-  return date.toISOString().split('T')[0]!;
-}
-
-/**
- * Get week start date (Monday)
- */
-function getWeekStart(date: Date): Date {
-  const d = new Date(date);
-  const day = d.getDay();
-  const diff = d.getDate() - day + (day === 0 ? -6 : 1);
-  d.setDate(diff);
-  d.setHours(0, 0, 0, 0);
-  return d;
-}
-
-/**
- * Get week end date (Sunday)
- */
-function getWeekEnd(date: Date): Date {
-  const weekStart = getWeekStart(date);
-  const weekEnd = new Date(weekStart);
-  weekEnd.setDate(weekEnd.getDate() + 6);
-  return weekEnd;
-}
-
-/**
- * Get month start date
- */
-function getMonthStart(date: Date): Date {
-  return new Date(date.getFullYear(), date.getMonth(), 1);
-}
-
-/**
- * Get month end date
- */
-function getMonthEnd(date: Date): Date {
-  return new Date(date.getFullYear(), date.getMonth() + 1, 0);
-}
-
-/**
- * Map SDK AvailabilityCellDTO to ds CalendarCell
- */
-function mapToCalendarCell(cell: {
-  start: string;
-  end: string;
-  status: string;
-  reasonKey?: string | null;
-  bookingId?: string | null;
-  blockId?: string | null;
-  lockedUntil?: string | null;
-}): CalendarCell {
-  return {
-    id: `${cell.start}-${cell.end}`,
-    start: cell.start,
-    end: cell.end,
-    status: cell.status as CalendarSlotStatus,
-    reasonKey: cell.reasonKey ?? undefined,
-    bookingId: cell.bookingId ?? undefined,
-    blockId: cell.blockId ?? undefined,
-    lockedUntil: cell.lockedUntil ?? undefined,
-  };
-}
-
-// =============================================================================
-// Component
-// =============================================================================
-
-/**
- * CalendarSection for backoffice app.
- *
- * This is a view-only calendar component that displays listing availability
- * for administrators. Selection is disabled by default.
- */
 export function CalendarSection({
   listingId,
   bookingType,
@@ -174,13 +41,10 @@ export function CalendarSection({
   title,
   subtitle,
 }: CalendarSectionProps): React.ReactElement {
-  // Translation function
   const t = useT();
-  // Current date for calendar navigation
-  const [currentDate, setCurrentDate] = React.useState<Date>(new Date());
 
-  // Selection state (view-only but needed for component props)
-  const [selection] = React.useState<CalendarSelection | undefined>(undefined);
+  // Navigation state
+  const [currentDate, setCurrentDate] = React.useState<Date>(new Date());
 
   // Warning message for realtime updates
   const [warningMessage, setWarningMessage] = React.useState<string | undefined>(undefined);
@@ -196,25 +60,13 @@ export function CalendarSection({
   const config = configResponse?.data;
 
   // Determine calendar mode from config
-  const calendarMode: CalendarMode = React.useMemo(() => {
-    if (!config) return 'TIME_SLOTS';
-    return config.granularity as CalendarMode;
-  }, [config]);
+  const calendarMode: CalendarMode = config?.granularity ?? 'TIME_SLOTS';
 
-  // Calculate date range based on mode and current date
-  const dateRange = React.useMemo(() => {
-    if (calendarMode === 'TIME_SLOTS') {
-      // Week view - Monday to Sunday
-      const from = getWeekStart(currentDate);
-      const to = getWeekEnd(currentDate);
-      return { from: formatDateToISO(from), to: formatDateToISO(to) };
-    } else {
-      // Month view for ALL_DAY and MULTI_DAY
-      const from = getMonthStart(currentDate);
-      const to = getMonthEnd(currentDate);
-      return { from: formatDateToISO(from), to: formatDateToISO(to) };
-    }
-  }, [calendarMode, currentDate]);
+  // Calculate date range based on mode
+  const dateRange = React.useMemo(
+    () => getDateRangeForMode(calendarMode, currentDate),
+    [calendarMode, currentDate]
+  );
 
   // Fetch availability matrix from API
   const {
@@ -231,119 +83,51 @@ export function CalendarSection({
     { enabled: !!config }
   );
 
-  // Extract cells from matrix response
-  const cells: CalendarCell[] = React.useMemo(() => {
-    if (!matrixResponse?.data?.cells) return [];
-    return matrixResponse.data.cells.map(mapToCalendarCell);
-  }, [matrixResponse]);
-
   // Subscribe to realtime events for availability updates
-  useCalendarRealtime((event: RealtimeEvent) => {
-    // For backoffice view-only mode, show a notification when data might be stale
-    if (event.listingId && event.listingId === listingId) {
-      setWarningMessage(
-        'Tilgjengeligheten har blitt oppdatert. Kalenderen viser nå siste data.'
-      );
-      // Clear warning after a short delay
+  useCalendarRealtime((event) => {
+    if ('listingId' in event && event.listingId === listingId) {
+      setWarningMessage(t('components.calendar.dataUpdated'));
       setTimeout(() => setWarningMessage(undefined), 5000);
     }
   });
 
-  // Handle date navigation
-  const handleDateChange = React.useCallback((date: Date) => {
-    setCurrentDate(date);
-    // Clear warning on navigation
-    setWarningMessage(undefined);
-  }, []);
-
-  // Loading state
-  const isLoading = isConfigLoading || isMatrixLoading;
-
-  // Error message
+  // Build error message
   const errorMessage = React.useMemo(() => {
-    if (configError) {
-      return 'Kunne ikke laste kalenderinnstillinger. Vennligst prøv igjen.';
-    }
-    if (matrixError) {
-      return 'Kunne ikke laste tilgjengelighet. Vennligst prøv igjen.';
-    }
+    if (configError) return t('components.calendar.couldNotLoadSettings');
+    if (matrixError) return t('components.calendar.couldNotLoadAvailability');
     return undefined;
-  }, [configError, matrixError]);
+  }, [configError, matrixError, t]);
 
-  // Get legend from matrix or use default
-  const legend = React.useMemo(() => {
-    if (!matrixResponse?.data?.legend) {
-      return [
-        { status: 'AVAILABLE' as const, label: t('state.available') },
-        { status: 'RESERVED' as const, label: t('state.reserved') },
-        { status: 'BOOKED' as const, label: t('state.booked') },
-        { status: 'BLOCKED' as const, label: t('state.blocked') },
-        { status: 'BLACKOUT' as const, label: t('state.unavailable') },
-        { status: 'CLOSED' as const, label: t('state.closed') },
-      ];
-    }
-    return matrixResponse.data.legend.map((item: { status: string; labelKey: string }) => ({
-      status: item.status as CalendarCell['status'],
-      label: item.labelKey.includes('.') ? item.labelKey.split('.').pop()! : item.labelKey,
-    }));
-  }, [matrixResponse]);
-
-  // Compute default titles based on mode
-  const defaultTitle = 'Tilgjengelighet';
+  // Default titles based on mode
+  const defaultTitle = t('components.calendar.availability');
   const defaultSubtitle = React.useMemo(() => {
     switch (calendarMode) {
       case 'TIME_SLOTS':
-        return 'Oversikt over tilgjengelige tidspunkter';
+        return t('components.calendar.overviewTimeSlots');
       case 'ALL_DAY':
-        return 'Oversikt over tilgjengelige dager';
+        return t('components.calendar.overviewDays');
       case 'MULTI_DAY':
-        return 'Oversikt over tilgjengelige perioder';
+        return t('components.calendar.overviewPeriods');
       default:
-        return 'Tilgjengelighetsoversikt';
+        return t('components.calendar.overviewAvailability');
     }
-  }, [calendarMode]);
-
-  // Empty state if no config
-  if (!isLoading && !config && !configError) {
-    return (
-      <div
-        className={className}
-        style={{
-          textAlign: 'center',
-          padding: 'var(--ds-spacing-8)',
-          color: 'var(--ds-color-neutral-text-subtle)',
-        }}
-      >
-        <Paragraph data-size="sm" style={{ margin: 0, fontStyle: 'italic' }}>
-          Kalender er ikke tilgjengelig for dette lokalet.
-        </Paragraph>
-      </div>
-    );
-  }
+  }, [calendarMode, t]);
 
   return (
-    <div className={className}>
-      <RentalObjectAvailabilityCalendar
-        mode={calendarMode}
-        cells={cells}
-        selection={selection}
-        legend={legend}
-        currentDate={currentDate}
-        onDateChange={handleDateChange}
-        onCellClick={undefined}
-        onSelectionChange={undefined}
-        startHour={config?.openingHours?.weekly?.['1']?.open ? parseInt(config.openingHours.weekly['1'].open.split(':')[0]!, 10) : 8}
-        endHour={config?.openingHours?.weekly?.['1']?.close ? parseInt(config.openingHours.weekly['1'].close.split(':')[0]!, 10) : 17}
-        slotSizeMinutes={config?.slotSizeMinutes ?? 60}
-        showTips={true}
-        title={title ?? defaultTitle}
-        subtitle={subtitle ?? defaultSubtitle}
-        isLoading={isLoading}
-        errorMessage={errorMessage}
-        warningMessage={warningMessage}
-        readOnly={true}
-      />
-    </div>
+    <CalendarSectionUI
+      config={config}
+      cells={matrixResponse?.data?.cells}
+      legend={matrixResponse?.data?.legend}
+      currentDate={currentDate}
+      onDateChange={setCurrentDate}
+      readOnly={true}
+      isLoading={isConfigLoading || isMatrixLoading}
+      errorMessage={errorMessage}
+      warningMessage={warningMessage}
+      title={title ?? defaultTitle}
+      subtitle={subtitle ?? defaultSubtitle}
+      className={className}
+    />
   );
 }
 

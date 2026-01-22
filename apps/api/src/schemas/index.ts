@@ -120,16 +120,16 @@ export {
   CreateRentalObjectSchema as CreateListingSchema,
   UpdateRentalObjectSchema as UpdateListingSchema,
   RentalObjectQuerySchema as ListingQuerySchema,
-  
+
   // Legacy types (mapped to new rental object types)
   type RentalObject as Listing,
   type CreateRentalObjectDTO as CreateListingDTO,
   type UpdateRentalObjectDTO as UpdateListingDTO,
   type RentalObjectQueryParams as ListingQueryParams,
-  
-  // Legacy enums
-  RentalObjectCategorySchema as RentalObjectCategorySchema,
-  
+
+  // Legacy enums - removed duplicate export
+  // RentalObjectCategorySchema is already exported above
+
   // These are no longer needed - using rental object equivalents
   // ListingTypeSchema,
   // ListingStatusSchema,
@@ -137,7 +137,7 @@ export {
   // CreateListingSchemaV2,
   // UpdateListingSchemaV2,
   // LEGACY_LISTING_TYPES,
-  
+
   // type ListingType,
   // type ListingStatus,
   // type ListingQueryParamsV2,

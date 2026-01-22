@@ -132,8 +132,8 @@ export class ReportGeneratorWorker {
    */
   private async generateBookingsReport(params: ReportParameters): Promise<any[]> {
     const conditions = [
-      gte(bookings.startDate, new Date(params.dateFrom)),
-      lte(bookings.endDate, new Date(params.dateTo)),
+      gte(bookings.startTime, new Date(params.dateFrom)),
+      lte(bookings.endTime, new Date(params.dateTo)),
     ];
 
     if (params.rentalObjectIds && params.rentalObjectIds.length > 0) {

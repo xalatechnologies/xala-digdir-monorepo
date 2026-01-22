@@ -154,7 +154,7 @@ export class DiscountCodesController {
       updatedAt: new Date().toISOString(),
     };
 
-    discountCodes.set(key, updatedCode);
+    discountCodes.set(key!, updatedCode);
 
     return { data: updatedCode };
   }

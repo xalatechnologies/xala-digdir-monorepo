@@ -43,6 +43,14 @@
       "types": "./dist/features/rental-object-details/index.d.ts",
       "import": "./dist/features/rental-object-details/index.js"
     },
+    "./features/calendar": {
+      "types": "./dist/features/calendar/index.d.ts",
+      "import": "./dist/features/calendar/index.js"
+    },
+    "./blocks/calendar": {
+      "types": "./dist/blocks/calendar/index.d.ts",
+      "import": "./dist/blocks/calendar/index.js"
+    },
     "./rental-objects": {
       "types": "./dist/blocks/rental-objects/index.d.ts",
       "import": "./dist/blocks/rental-objects/index.js"

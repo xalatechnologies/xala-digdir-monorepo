@@ -31,45 +31,38 @@ export async function addonsRoutes(fastify: FastifyInstance) {
   const service = new AddOnsService(db, auditServiceAdapter);
   const controller = new AddOnsController(service);
 
-  fastify.get(
-    '/addons',
-    { preHandler: [requireAuth] },
-    controller.listAddOns.bind(controller)
-  );
+  fastify.get('/addons', {
+    preHandler: [requireAuth],
+    handler: controller.listAddOns.bind(controller),
+  });
 
-  fastify.get(
-    '/addons/:id',
-    { preHandler: [requireAuth] },
-    controller.getAddOn.bind(controller)
-  );
+  fastify.get('/addons/:id', {
+    preHandler: [requireAuth],
+    handler: controller.getAddOn.bind(controller),
+  });
 
-  fastify.post(
-    '/addons',
-    { preHandler: [requireAuth, requireRole(UserRole.ADMIN)] },
-    controller.createAddOn.bind(controller)
-  );
+  fastify.post('/addons', {
+    preHandler: [requireAuth, requireRole(UserRole.ADMIN)],
+    handler: controller.createAddOn.bind(controller),
+  });
 
-  fastify.put(
-    '/addons/:id',
-    { preHandler: [requireAuth, requireRole(UserRole.ADMIN)] },
-    controller.updateAddOn.bind(controller)
-  );
+  fastify.put('/addons/:id', {
+    preHandler: [requireAuth, requireRole(UserRole.ADMIN)],
+    handler: controller.updateAddOn.bind(controller),
+  });
 
-  fastify.delete(
-    '/addons/:id',
-    { preHandler: [requireAuth, requireRole(UserRole.ADMIN)] },
-    controller.deleteAddOn.bind(controller)
-  );
+  fastify.delete('/addons/:id', {
+    preHandler: [requireAuth, requireRole(UserRole.ADMIN)],
+    handler: controller.deleteAddOn.bind(controller),
+  });
 
-  fastify.get(
-    '/rental-objects/:id/addons',
-    { preHandler: [requireAuth] },
-    controller.getAddOnsForRentalObject.bind(controller)
-  );
+  fastify.get('/rental-objects/:id/addons', {
+    preHandler: [requireAuth],
+    handler: controller.getAddOnsForRentalObject.bind(controller),
+  });
 
-  fastify.put(
-    '/rental-objects/:id/addons',
-    { preHandler: [requireAuth, requireRole(UserRole.ADMIN)] },
-    controller.assignAddOnsToRentalObject.bind(controller)
-  );
+  fastify.put('/rental-objects/:id/addons', {
+    preHandler: [requireAuth, requireRole(UserRole.ADMIN)],
+    handler: controller.assignAddOnsToRentalObject.bind(controller),
+  });
 }

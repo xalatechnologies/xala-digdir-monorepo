@@ -102,7 +102,7 @@ export const MODULE_CLASSIFICATION = {
  * Check if a module is a platform module
  */
 export function isPlatformModule(moduleName: string): boolean {
-  const platformModules = Object.values(MODULE_CLASSIFICATION.platform).flat();
+  const platformModules = Object.values(MODULE_CLASSIFICATION.platform).flat() as string[];
   return platformModules.includes(moduleName);
 }
 
@@ -110,7 +110,7 @@ export function isPlatformModule(moduleName: string): boolean {
  * Check if a module is a domain module
  */
 export function isDomainModule(moduleName: string): boolean {
-  const domainModules = Object.values(MODULE_CLASSIFICATION.domain).flat();
+  const domainModules = Object.values(MODULE_CLASSIFICATION.domain).flat() as string[];
   return domainModules.includes(moduleName);
 }
 

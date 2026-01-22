@@ -20,7 +20,7 @@ import type {
   BulkAddFavoritesDTO,
   BulkRemoveFavoritesDTO,
   BulkFavoritesResponse,
-} from '../../schemas/favorites.schema';
+} from '@digilist/contracts/schemas';
 
 export class FavoritesService {
   constructor(private readonly db: any) {}

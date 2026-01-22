@@ -39,7 +39,7 @@ export class AllocationsController {
         status: allocations.status,
         bookingId: allocations.bookingId,
         userId: allocations.userId,
-        userName: users.name,
+        userName: users.displayName,
         notes: allocations.notes,
         metadata: allocations.metadata,
         createdAt: allocations.createdAt,

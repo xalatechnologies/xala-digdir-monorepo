@@ -7,8 +7,6 @@
 
 import type { FastifyRequest, FastifyReply } from 'fastify';
 import { AmenitiesService } from './amenities.service';
-import { PERMISSIONS } from '../../core/permissions';
-import { requirePermission } from '../../core/guards/permission.guard';
 import { z } from 'zod';
 
 // ========================================================================
@@ -50,7 +48,8 @@ export class AmenitiesController {
     request: FastifyRequest,
     reply: FastifyReply
   ): Promise<void> {
-    const { tenantId, userId } = request.user;
+    const tenantId = request.user!.tenantId;
+    const userId = request.user!.userId;
 
     const amenities = await this.service.listAmenities(tenantId, userId);
 
@@ -70,7 +69,7 @@ export class AmenitiesController {
     request: FastifyRequest,
     reply: FastifyReply
   ): Promise<void> {
-    const { tenantId } = request.user;
+    const tenantId = request.user!.tenantId;
 
     const groups = await this.service.listAmenitiesByGroup(tenantId);
 
@@ -88,7 +87,7 @@ export class AmenitiesController {
     reply: FastifyReply
   ): Promise<void> {
     const { id } = request.params;
-    const { tenantId } = request.user;
+    const tenantId = request.user!.tenantId;
 
     const amenity = await this.service.getAmenity(id, tenantId);
 
@@ -118,7 +117,8 @@ export class AmenitiesController {
     // Validate request body
     const data = CreateAmenitySchema.parse(request.body);
 
-    const { tenantId, userId } = request.user;
+    const tenantId = request.user!.tenantId;
+    const userId = request.user!.userId;
 
     const amenity = await this.service.createAmenity(data, tenantId, userId);
 
@@ -138,7 +138,8 @@ export class AmenitiesController {
     const { id } = request.params;
     const data = UpdateAmenitySchema.parse(request.body);
 
-    const { tenantId, userId } = request.user;
+    const tenantId = request.user!.tenantId;
+    const userId = request.user!.userId;
 
     try {
       const amenity = await this.service.updateAmenity(
@@ -174,7 +175,8 @@ export class AmenitiesController {
     reply: FastifyReply
   ): Promise<void> {
     const { id } = request.params;
-    const { tenantId, userId } = request.user;
+    const tenantId = request.user!.tenantId;
+    const userId = request.user!.userId;
 
     try {
       await this.service.deleteAmenity(id, tenantId, userId);
@@ -203,7 +205,7 @@ export class AmenitiesController {
     reply: FastifyReply
   ): Promise<void> {
     const { id } = request.params;
-    const { tenantId } = request.user;
+    const tenantId = request.user!.tenantId;
 
     const amenities = await this.service.getAmenitiesForRentalObject(
       id,
@@ -226,7 +228,8 @@ export class AmenitiesController {
     const { id } = request.params;
     const { amenityIds } = AssignAmenitiesSchema.parse(request.body);
 
-    const { tenantId, userId } = request.user;
+    const tenantId = request.user!.tenantId;
+    const userId = request.user!.userId;
 
     await this.service.assignAmenitiesToRentalObject(
       id,

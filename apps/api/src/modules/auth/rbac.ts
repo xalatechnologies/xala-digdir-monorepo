@@ -35,11 +35,12 @@ export interface Permission {
  * Check if a role is an admin-level role
  */
 export function isAdminRole(role: string): boolean {
-  return [
+  const adminRoles: string[] = [
     Roles.SAAS_SUPER_ADMIN,
     Roles.TENANT_ADMIN,
     Roles.COMMUNE_ADMIN,
-  ].includes(role as RoleName);
+  ];
+  return adminRoles.includes(role);
 }
 
 /**

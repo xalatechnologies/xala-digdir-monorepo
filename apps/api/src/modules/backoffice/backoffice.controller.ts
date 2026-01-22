@@ -6,8 +6,7 @@
 import { Controller, Get, Post, Put, Patch, Delete } from '../../core/decorators';
 import { mockDb } from '../../adapters/db.adapter';
 import { validate } from '../../core/validation/zod-pipe';
-import { CreateUserGroupSchema } from '../../schemas/user-group.schema';
-import { CreatePriceRuleSchema, UpsertListingRulesSchema } from '../../schemas/price-rules.schema';
+import { CreateUserGroupSchema, CreatePriceRuleSchema, UpsertListingRulesSchema } from '@digilist/contracts/schemas';
 import { createProblemDetails } from '../../core/errors/problem-details';
 import type { FastifyRequest, FastifyReply } from 'fastify';
 

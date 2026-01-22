@@ -33,7 +33,7 @@ export class AddOnsController {
   constructor(private readonly service: AddOnsService) {}
 
   async listAddOns(request: FastifyRequest, reply: FastifyReply): Promise<void> {
-    const { tenantId } = request.user;
+    const { tenantId } = request.user!;
     const addons = await this.service.listAddOns(tenantId);
     reply.code(200).send({ data: addons, meta: { total: addons.length } });
   }
@@ -43,7 +43,7 @@ export class AddOnsController {
     reply: FastifyReply
   ): Promise<void> {
     const { id } = request.params;
-    const { tenantId } = request.user;
+    const { tenantId } = request.user!;
     const addon = await this.service.getAddOn(id, tenantId);
 
     if (!addon) {
@@ -60,7 +60,7 @@ export class AddOnsController {
 
   async createAddOn(request: FastifyRequest<{ Body: unknown }>, reply: FastifyReply): Promise<void> {
     const data = CreateAddOnSchema.parse(request.body);
-    const { tenantId, userId } = request.user;
+    const { tenantId, userId } = request.user!;
     const addon = await this.service.createAddOn(data, tenantId, userId);
     reply.code(201).send({ data: addon });
   }
@@ -71,7 +71,7 @@ export class AddOnsController {
   ): Promise<void> {
     const { id } = request.params;
     const data = UpdateAddOnSchema.parse(request.body);
-    const { tenantId, userId } = request.user;
+    const { tenantId, userId } = request.user!;
 
     try {
       const addon = await this.service.updateAddOn(id, data, tenantId, userId);
@@ -94,7 +94,7 @@ export class AddOnsController {
     reply: FastifyReply
   ): Promise<void> {
     const { id } = request.params;
-    const { tenantId, userId } = request.user;
+    const { tenantId, userId } = request.user!;
 
     try {
       await this.service.deleteAddOn(id, tenantId, userId);
@@ -117,7 +117,7 @@ export class AddOnsController {
     reply: FastifyReply
   ): Promise<void> {
     const { id } = request.params;
-    const { tenantId } = request.user;
+    const { tenantId } = request.user!;
     const addons = await this.service.getAddOnsForRentalObject(id, tenantId);
     reply.code(200).send({ data: addons });
   }
@@ -128,7 +128,7 @@ export class AddOnsController {
   ): Promise<void> {
     const { id } = request.params;
     const { addonIds } = AssignAddOnsSchema.parse(request.body);
-    const { tenantId, userId } = request.user;
+    const { tenantId, userId } = request.user!;
     await this.service.assignAddOnsToRentalObject(id, addonIds, tenantId, userId);
     reply.code(204).send();
   }

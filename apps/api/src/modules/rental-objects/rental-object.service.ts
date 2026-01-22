@@ -37,18 +37,21 @@ export class RentalObjectService {
       name: validated.name,
       slug,
       organizationId: validated.organizationId || null,
-      category: validated.category,
-      subcategory: validated.subcategory || null,
-      tags: validated.tags || [],
+      categoryKey: validated.category,
       timeMode: validated.timeMode || 'PERIOD',
-      bookingFeatures: validated.bookingFeatures || {},
+      features: validated.bookingFeatures ? [validated.bookingFeatures] : [],
       status: 'draft',
       description: validated.description || null,
       images: validated.images || [],
       pricing: validated.pricing || { basePrice: 0, currency: 'NOK', unit: 'hour' },
       capacity: validated.capacity || null,
-      fixedLocation: validated.fixedLocation ?? true,
-      metadata: validated.metadata || {},
+      requiresApproval: (validated.bookingFeatures as any)?.requiresApproval ?? false,
+      metadata: {
+        ...(validated.metadata || {}),
+        subcategory: validated.subcategory || null,
+        tags: validated.tags || [],
+        fixedLocation: validated.fixedLocation ?? true,
+      },
     });
 
     this.adapters?.log?.info('Rental object created', { id: rentalObject.id, tenantId });
@@ -58,10 +61,10 @@ export class RentalObjectService {
       action: 'create',
       resource: 'rental-object',
       resourceId: rentalObject.id,
-      metadata: { name: rentalObject.name, category: rentalObject.category },
+      metadata: { name: rentalObject.name, category: rentalObject.categoryKey },
     });
 
-    return rentalObject as RentalObject;
+    return rentalObject as unknown as RentalObject;
   }
 
   /**
@@ -75,7 +78,7 @@ export class RentalObjectService {
    * Get rental object by ID or throw
    */
   async findByIdOrFail(id: string): Promise<RentalObject> {
-    return this.repository.findByIdOrFail(id) as Promise<RentalObject>;
+    return this.repository.findByIdOrFail(id) as unknown as Promise<RentalObject>;
   }
 
   /**
@@ -109,7 +112,7 @@ export class RentalObjectService {
       metadata: { changes: Object.keys(validated) },
     });
 
-    return rentalObject as RentalObject;
+    return rentalObject as unknown as RentalObject;
   }
 
   /**
@@ -127,7 +130,7 @@ export class RentalObjectService {
       metadata: { newStatus: 'published' },
     });
     
-    return rentalObject as RentalObject;
+    return rentalObject as unknown as RentalObject;
   }
 
   /**
@@ -145,7 +148,7 @@ export class RentalObjectService {
       metadata: { newStatus: 'draft' },
     });
     
-    return rentalObject as RentalObject;
+    return rentalObject as unknown as RentalObject;
   }
 
   /**
@@ -164,7 +167,7 @@ export class RentalObjectService {
       metadata: { newStatus: 'archived' },
     });
     
-    return rentalObject as RentalObject;
+    return rentalObject as unknown as RentalObject;
   }
 
   /**
@@ -182,7 +185,7 @@ export class RentalObjectService {
       metadata: { newStatus: 'draft', previousStatus: 'archived' },
     });
     
-    return rentalObject as RentalObject;
+    return rentalObject as unknown as RentalObject;
   }
 
   /**
@@ -211,7 +214,7 @@ export class RentalObjectService {
       metadata: { originalId: id, originalName: original.name },
     });
     
-    return newRentalObject as RentalObject;
+    return newRentalObject as unknown as RentalObject;
   }
 
   /**
@@ -320,8 +323,8 @@ export class RentalObjectService {
    */
   async getBookingPolicy(id: string): Promise<any> {
     const rentalObject = await this.findByIdOrFail(id);
-    const features = rentalObject.bookingFeatures || {};
-    
+    const features = (rentalObject.bookingFeatures || {}) as Record<string, unknown>;
+
     return {
       rentalObjectId: rentalObject.id,
       modes: {
@@ -362,9 +365,9 @@ export class RentalObjectService {
    */
   async getPaymentPolicy(id: string): Promise<any> {
     const rentalObject = await this.findByIdOrFail(id);
-    const features = rentalObject.bookingFeatures || {};
-    const pricing = rentalObject.pricing || {};
-    
+    const features = (rentalObject.bookingFeatures || {}) as Record<string, unknown>;
+    const pricing = (rentalObject.pricing || {}) as Record<string, unknown>;
+
     return {
       rentalObjectId: rentalObject.id,
       requiresApproval: features.requiresApproval === true,
@@ -382,10 +385,10 @@ export class RentalObjectService {
         paymentTiming: 'BEFORE_SUBMIT' as const,
       },
       payment: {
-        payNowEnabled: pricing.basePrice > 0,
+        payNowEnabled: (pricing.basePrice as number) > 0,
         payLaterEnabled: features.requiresApproval === true,
         payOnlineRequired: false,
-        providers: pricing.basePrice > 0 ? ['VIPPS' as const, 'STRIPE' as const] : [],
+        providers: (pricing.basePrice as number) > 0 ? ['VIPPS' as const, 'STRIPE' as const] : [],
       },
       cancellation: {
         feeCents: 0,

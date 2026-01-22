@@ -1,6 +1,6 @@
 import { FastifyInstance } from 'fastify';
 import { bulkOperationsController } from './bulk.controller';
-import { requireAuth } from '../../middleware/auth';
+import { requireAuth } from '../../middleware/rbac';
 
 /**
  * Bulk Operations Routes

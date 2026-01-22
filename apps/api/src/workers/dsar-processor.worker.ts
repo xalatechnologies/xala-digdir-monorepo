@@ -7,7 +7,7 @@
  */
 import { Injectable, Inject } from '../core/decorators';
 import { eq, and } from 'drizzle-orm';
-import { gdprRequests, users, bookings, auditLog } from '../database/schema/index';
+import { gdprRequests, users, bookings, auditLogs } from '../database/schema/index';
 
 interface DSARExportData {
   personal_data: {
@@ -189,8 +189,8 @@ export class DSARProcessorWorker {
     if (categories.includes('audit_log') || categories.length === 0) {
       const userAuditLog = await this.db
         .select()
-        .from(auditLog)
-        .where(eq(auditLog.userId, userId))
+        .from(auditLogs)
+        .where(eq(auditLogs.userId, userId))
         .limit(1000); // Limit to most recent 1000 entries
 
       data.audit_log = userAuditLog.map((log: any) => ({

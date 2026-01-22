@@ -166,17 +166,17 @@ export class BookingService {
       if (userIds.length > 0) {
         const db = container.resolve('db') as any;
         const userResults = await db
-          .select({ id: users.id, name: users.name, email: users.email })
+          .select({ id: users.id, displayName: users.displayName, email: users.email })
           .from(users)
           .where(or(...userIds.map((id: string) => eq(users.id, id))));
-        
-        const userMap = new Map<string, { name: string; email: string }>(
-          userResults.map((u: { id: string; name: string; email: string }) => [u.id, { name: u.name, email: u.email }])
+
+        const userMap = new Map<string, { displayName: string | null; email: string | null }>(
+          userResults.map((u: { id: string; displayName: string | null; email: string | null }) => [u.id, { displayName: u.displayName, email: u.email }])
         );
-        
+
         result.data = result.data.map((booking: any) => ({
           ...booking,
-          userName: userMap.get(booking.userId)?.name || null,
+          userName: userMap.get(booking.userId)?.displayName || null,
           userEmail: userMap.get(booking.userId)?.email || null,
         }));
       }

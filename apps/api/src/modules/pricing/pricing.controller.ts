@@ -7,7 +7,7 @@ import { Controller, Post } from '../../core/decorators';
 import { Inject } from '../../core/decorators';
 import { PricingService } from './pricing.service';
 import { validate } from '../../core/validation/zod-pipe';
-import { PricingQuoteRequestSchema } from '../../schemas/pricing.schema';
+import { PricingQuoteRequestSchema } from '@digilist/contracts/schemas';
 import { createProblemDetails } from '../../core/errors/problem-details';
 import type { FastifyRequest, FastifyReply } from 'fastify';
 
@@ -28,13 +28,16 @@ export class PricingController {
     try {
       const quoteRequest = validate(PricingQuoteRequestSchema, request.body);
 
+      // Get tenant and user from request context (set by auth middleware)
+      const tenantId = (request as any).tenantId || '';
+      const userId = (request as any).userId || '';
+
       const quote = await this.pricingService.calculateQuote({
         rentalObjectId: quoteRequest.rentalObjectId,
-        start: quoteRequest.start,
-        end: quoteRequest.end,
-        userGroupId: quoteRequest.userGroupId,
-        units: quoteRequest.units,
-      });
+        userId,
+        startTime: new Date(quoteRequest.start),
+        endTime: new Date(quoteRequest.end),
+      }, tenantId);
       
       return reply.send({
         data: quote,

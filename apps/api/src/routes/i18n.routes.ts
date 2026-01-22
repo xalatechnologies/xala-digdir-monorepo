@@ -38,6 +38,15 @@ export const i18nRoutes: FastifyPluginAsync = async (fastify) => {
           type: 'object',
           additionalProperties: { type: 'string' },
         },
+        500: {
+          type: 'object',
+          properties: {
+            type: { type: 'string' },
+            title: { type: 'string' },
+            status: { type: 'number' },
+            detail: { type: 'string' },
+          },
+        },
       },
     },
     handler: async (request, reply) => {
@@ -85,9 +94,9 @@ export const i18nRoutes: FastifyPluginAsync = async (fastify) => {
 
         return reply.send(result);
       } catch (error) {
-        fastify.log.error('Failed to fetch translations:', error);
-        
-        return reply.status(500).send({
+        fastify.log.error({ err: error }, 'Failed to fetch translations');
+
+        return reply.code(500).send({
           type: 'https://api.digilist.no/errors/internal',
           title: 'Internal Server Error',
           status: 500,
@@ -161,9 +170,9 @@ export const i18nRoutes: FastifyPluginAsync = async (fastify) => {
 
         return reply.send(result);
       } catch (error) {
-        fastify.log.error('Failed to fetch namespace translations:', error);
-        
-        return reply.status(500).send({
+        fastify.log.error({ err: error }, 'Failed to fetch namespace translations');
+
+        return reply.code(500).send({
           type: 'https://api.digilist.no/errors/internal',
           title: 'Internal Server Error',
           status: 500,
@@ -192,7 +201,7 @@ export const i18nRoutes: FastifyPluginAsync = async (fastify) => {
           .from(translations)
           .where(eq(translations.isSystemDefault, true));
 
-        const keys = rows.map(r => `${r.namespace}.${r.key}`);
+        const keys = rows.map((r: { namespace: string; key: string }) => `${r.namespace}.${r.key}`);
         
         return reply.send({
           data: keys,
@@ -201,9 +210,9 @@ export const i18nRoutes: FastifyPluginAsync = async (fastify) => {
           },
         });
       } catch (error) {
-        fastify.log.error('Failed to fetch translation keys:', error);
-        
-        return reply.status(500).send({
+        fastify.log.error({ err: error }, 'Failed to fetch translation keys');
+
+        return reply.code(500).send({
           type: 'https://api.digilist.no/errors/internal',
           title: 'Internal Server Error',
           status: 500,
