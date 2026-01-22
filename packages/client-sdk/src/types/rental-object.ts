@@ -100,8 +100,9 @@ export interface RentalObjectMetadata {
   city?: string;
   postalCode?: string;
   location?: RentalObjectLocation;
-  facilities?: string[];
   amenities?: string[];
+  /** @deprecated Use amenities instead */
+  facilities?: string[];
   openingHours?: Record<string, { open: string; close: string }>;
   rules?: string[];
   faq?: Array<{ id?: string; question: string; answer: string }>;
@@ -245,8 +246,8 @@ export interface UiRentalObject {
   subcategoryLabel?: string;
   location: string;
   description: string;
-  facilities: string[];
-  moreFacilities: number;
+  amenities: string[];
+  moreAmenities: number;
   capacity: number;
   price: number;
   priceUnit: string;
@@ -325,7 +326,7 @@ export function toUiRentalObject(obj: RentalObject): UiRentalObject {
   const metadata = obj.metadata || {};
   const location = obj.location || metadata.location || {};
   const amenities = metadata.amenities || [];
-  const maxFacilities = 3;
+  const maxAmenities = 3;
 
   // Build location string
   const locationParts: string[] = [];
@@ -343,8 +344,8 @@ export function toUiRentalObject(obj: RentalObject): UiRentalObject {
     subcategoryLabel: obj.subcategory,
     location: locationString,
     description: obj.description || '',
-    facilities: amenities.slice(0, maxFacilities),
-    moreFacilities: Math.max(0, amenities.length - maxFacilities),
+    amenities: amenities.slice(0, maxAmenities),
+    moreAmenities: Math.max(0, amenities.length - maxAmenities),
     capacity: obj.capacity || 0,
     price: obj.pricing?.basePrice || 0,
     priceUnit: mapPricingUnit((obj.pricing?.unit as PricingUnit) || 'hour'),

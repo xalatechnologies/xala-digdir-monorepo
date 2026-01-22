@@ -2,7 +2,7 @@
  * RentalObjectListItem
  *
  * A horizontal list item component for displaying rental object/venue information.
- * Used in list view mode. Supports images, location map, facilities, and capacity.
+ * Used in list view mode. Supports images, location map, amenities, and capacity.
  */
 import * as React from 'react';
 import { Tag } from '@xalatechnologies/platform/ui';
@@ -23,10 +23,10 @@ export interface RentalObjectListItemProps {
   description: string;
   /** Image URL */
   image: string;
-  /** List of facilities */
-  facilities?: string[];
-  /** Number of additional facilities not shown */
-  moreFacilities?: number;
+  /** List of amenities */
+  amenities?: string[];
+  /** Number of additional amenities not shown */
+  moreAmenities?: number;
   /** Capacity (number of people) */
   capacity?: number;
   /** Price amount */
@@ -51,7 +51,7 @@ export interface RentalObjectListItemProps {
   mapWidth?: number;
   /** Show/hide different elements */
   showCapacity?: boolean;
-  showFacilities?: boolean;
+  showAmenities?: boolean;
   showDescription?: boolean;
   showLocation?: boolean;
   showTypeBadge?: boolean;
@@ -60,8 +60,8 @@ export interface RentalObjectListItemProps {
   showShareButton?: boolean;
   showRentalObjectType?: boolean;
   showPrice?: boolean;
-  /** Max facilities to display */
-  maxFacilities?: number;
+  /** Max amenities to display */
+  maxAmenities?: number;
   /** Latitude for map */
   latitude?: number;
   /** Longitude for map */
@@ -128,8 +128,8 @@ export function RentalObjectListItem({
   location,
   description,
   image,
-  facilities = [],
-  moreFacilities = 0,
+  amenities = [],
+  moreAmenities = 0,
   capacity,
   price,
   priceUnit = 'time',
@@ -142,7 +142,7 @@ export function RentalObjectListItem({
   imageWidth = 380,
   mapWidth = 340,
   showCapacity = true,
-  showFacilities = true,
+  showAmenities = true,
   showDescription = true,
   showLocation = true,
   showTypeBadge = true,
@@ -151,7 +151,7 @@ export function RentalObjectListItem({
   showShareButton = true,
   showRentalObjectType = true,
   showPrice = true,
-  maxFacilities = 4,
+  maxAmenities = 4,
   latitude,
   longitude,
   mapboxToken,
@@ -337,22 +337,22 @@ export function RentalObjectListItem({
           </p>
         )}
 
-        {/* Facility tags */}
-        {showFacilities && facilities.length > 0 && (
+        {/* Amenity tags */}
+        {showAmenities && amenities.length > 0 && (
           <div style={{
             display: 'flex',
             flexWrap: 'wrap',
             gap: 'var(--ds-spacing-2)',
             marginBottom: 'var(--ds-spacing-3)'
           }}>
-            {facilities.slice(0, maxFacilities).map((facility) => (
-              <Tag key={facility} data-size="sm" data-color="accent" style={{ paddingInline: 'var(--ds-spacing-2)' }}>
-                {facility}
+            {amenities.slice(0, maxAmenities).map((amenity) => (
+              <Tag key={amenity} data-size="sm" data-color="accent" style={{ paddingInline: 'var(--ds-spacing-2)' }}>
+                {amenity}
               </Tag>
             ))}
-            {moreFacilities > 0 && (
+            {moreAmenities > 0 && (
               <Tag data-size="sm" data-color="neutral" style={{ paddingInline: 'var(--ds-spacing-2)' }}>
-                +{moreFacilities} flere
+                +{moreAmenities} flere
               </Tag>
             )}
           </div>

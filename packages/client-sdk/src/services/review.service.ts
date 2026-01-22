@@ -55,7 +55,7 @@ export class ReviewService extends BaseService {
    * const review = await reviewService.create({
    *   listingId: 'listing-123',
    *   rating: 5,
-   *   comment: 'Excellent facility!'
+   *   comment: 'Excellent rental object!'
    * });
    * ```
    */

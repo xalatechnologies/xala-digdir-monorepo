@@ -299,7 +299,7 @@ export interface PeriodComparison {
 }
 
 export interface EnhancedReportFilter extends ReportQueryParams {
-  facilityId?: string;
+  rentalObjectId?: string;
   bookingType?: string;
 }
 

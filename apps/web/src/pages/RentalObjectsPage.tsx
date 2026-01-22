@@ -701,8 +701,8 @@ export function RentalObjectsPage(): React.ReactElement {
                           location={listing.locationFormatted}
                           description={listing.descriptionExcerpt}
                           image={listing.primaryImageUrl}
-                          facilities={listing.amenities?.map((key: string) => t(key) || key)}
-                          moreFacilities={listing.moreAmenitiesCount}
+                          amenities={listing.amenities?.map((key: string) => t(key) || key)}
+                          moreAmenities={listing.moreAmenitiesCount}
                           capacity={listing.capacity}
                           price={listing.priceAmount}
                           priceUnit={PRICE_UNIT_LABELS[listing.priceUnit] || listing.priceUnit}
@@ -712,7 +712,7 @@ export function RentalObjectsPage(): React.ReactElement {
                           imageHeight={260}
                           showLocation={true}
                           showDescription={true}
-                          showFacilities={true}
+                          showAmenities={true}
                           showCapacity={true}
                           showRating={false}
                           showPrice={true}
@@ -744,8 +744,8 @@ export function RentalObjectsPage(): React.ReactElement {
                           location={listing.locationFormatted}
                           description={listing.descriptionExcerpt}
                           image={listing.primaryImageUrl}
-                          facilities={listing.amenities?.map((key: string) => t(key) || key)}
-                          moreFacilities={listing.moreAmenitiesCount}
+                          amenities={listing.amenities?.map((key: string) => t(key) || key)}
+                          moreAmenities={listing.moreAmenitiesCount}
                           capacity={listing.capacity}
                           price={listing.priceAmount}
                           priceUnit={PRICE_UNIT_LABELS[listing.priceUnit] || listing.priceUnit}
@@ -786,7 +786,7 @@ export function RentalObjectsPage(): React.ReactElement {
                       capacity: l.capacity,
                       price: l.priceAmount,
                       priceUnit: l.priceUnit,
-                      facilities: l.amenities,
+                      amenities: l.amenities,
                       available: l.isAvailable,
                     }))}
                   mapboxToken={MAPBOX_TOKEN || ''}
