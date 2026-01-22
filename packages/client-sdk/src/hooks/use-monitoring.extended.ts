@@ -29,7 +29,7 @@ import type {
   AuditFilterDTO,
   AuditCorrelationDTO,
   AuditStatisticsDTO,
-} from '@xalatechnologies/platform/contracts';
+} from '@/types/monitoring.types';
 
 // ==================== Query Keys ====================
 

@@ -9,13 +9,13 @@
  * // Just import @digilist/runtime to register profiles
  * import '@digilist/runtime';
  *
- * // Then use the generic API
- * import { getAppProfile } from '@xalatechnologies/platform/config';
+ * // Then use the config API
+ * import { getAppProfile, createAppConfig } from '@digilist/runtime';
  * const profile = getAppProfile('backoffice');
  * ```
  */
 
-import type { AppProfile } from '@xalatechnologies/platform/config';
+import type { AppProfile } from './app-profile';
 import type { DigilistAppType } from './types';
 
 // ============================================================================

@@ -5,6 +5,20 @@
  */
 
 // =============================================================================
+// RuntimeProvider (Core Provider)
+// =============================================================================
+
+export {
+  RuntimeProvider,
+  RuntimeServiceProvider,
+  useRuntimeConfig,
+  useRuntimeServices,
+  type RuntimeProviderProps,
+  type RuntimeServiceProviderProps,
+  type RuntimeConfig,
+} from './RuntimeProvider';
+
+// =============================================================================
 // DigilistProvider (Main Provider)
 // =============================================================================
 

@@ -12,13 +12,14 @@
  * // Option 2: Import config submodule directly
  * import '@digilist/runtime/config';
  *
- * // Then use the generic API from @xala/config
- * import { getAppProfile, createAppConfig } from '@xalatechnologies/platform/config';
- * const profile = getAppProfile('backoffice');
+ * // Then use the config API
+ * import { getAppProfile, createAppConfig, validateEnv } from '@digilist/runtime';
+ * const env = validateEnv(import.meta.env);
+ * const { sdkConfig, runtimeConfig } = createAppConfig('backoffice', env);
  * ```
  */
 
-import { registerAppProfiles } from '@xalatechnologies/platform/config';
+import { registerAppProfiles } from './app-profile';
 import { digilistProfiles } from './digilist-profiles';
 
 // ============================================================================
@@ -34,6 +35,18 @@ registerAppProfiles(digilistProfiles);
 // ============================================================================
 // Exports
 // ============================================================================
+
+// App Profile types and registry
+export type { AppProfile, AuthConfig } from './app-profile';
+export { registerAppProfiles, getAppProfile, getAllProfiles } from './app-profile';
+
+// Environment validation
+export type { ValidatedEnv } from './env-validation';
+export { validateEnv } from './env-validation';
+
+// App config factory
+export type { SDKConfig, RuntimeConfig, AppConfig } from './app-config';
+export { createAppConfig } from './app-config';
 
 // Types
 export type { DigilistAppType, DigilistThemeId } from './types';

@@ -3,6 +3,7 @@ import { defineConfig } from 'tsup';
 export default defineConfig({
   entry: {
     index: 'src/index.ts',
+    'compat/index': 'src/compat/index.ts',
     'blocks/index': 'src/blocks/index.ts',
     'blocks/rental-objects/index': 'src/blocks/rental-objects/index.ts',
     'blocks/booking/index': 'src/blocks/booking/index.ts',
@@ -13,11 +14,8 @@ export default defineConfig({
     'features/booking/index': 'src/features/booking/index.ts',
     'features/seasons/index': 'src/features/seasons/index.ts',
   },
-  format: ['cjs', 'esm'],
-  // DTS disabled due to circular dependency with @xalatechnologies/platform/ui
-  // Types are available via TypeScript's direct source access when using bundlers
-  // TODO: Re-enable once @xalatechnologies/platform/ui no longer depends on @digilist/ui
-  dts: false,
+  format: ['esm'],
+  dts: true,
   splitting: false,
   sourcemap: true,
   clean: true,
@@ -26,14 +24,21 @@ export default defineConfig({
   external: [
     'react',
     'react-dom',
-    '@xalatechnologies/platform/ui',
+    'react-router-dom',
+    // Designsystemet - provided externally
+    '@digdir/designsystemet-react',
+    // Platform package - marked as external (provided by apps)
+    /^@xalatechnologies\/platform/,
     '@xala/i18n',
     '@digilist/contracts',
+    '@digilist/runtime',
     // Mapbox dependencies - marked as external since they require an API key
     // and should be optional peer dependencies
     'react-map-gl',
     'react-map-gl/mapbox',
     'mapbox-gl',
     'mapbox-gl/dist/mapbox-gl.css',
+    // TanStack React Query
+    '@tanstack/react-query',
   ],
 });

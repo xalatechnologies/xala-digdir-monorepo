@@ -24,7 +24,7 @@ import {
   type DomainApp,
   type RouteConfig,
   type NavPolicy,
-} from '@xalatechnologies/platform/config';
+} from './types/domain-registry';
 
 // ============================================================================
 // Digilist Apps

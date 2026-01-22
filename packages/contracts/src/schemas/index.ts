@@ -4,6 +4,22 @@
  * Re-exports all domain-specific schemas for the Digilist rental booking platform.
  */
 
+// Base schemas (common utilities)
+export {
+  UUIDSchema,
+  SlugSchema,
+  MetadataSchema,
+  TimestampsSchema,
+  CurrencyCodeSchema,
+  PaginationSchema,
+  SortOrderSchema,
+  ProblemDetailsSchema,
+  createPaginatedResponseSchema,
+  type Pagination,
+  type SortOrder,
+  type ProblemDetails,
+} from './base.schema';
+
 // Rental Object schemas
 export {
   // Category/Type schemas

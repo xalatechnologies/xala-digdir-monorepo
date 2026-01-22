@@ -23,84 +23,63 @@
       "dependsOn": ["^build"],
       "outputs": []
     },
-    "@xalatechnologies/platform#build": {
-      "dependsOn": [],
-      "outputs": ["dist/**"],
-      "inputs": ["src/**/*.{ts,tsx}", "package.json", "tsconfig.json", "tsup.config.ts"]
-    },
-    "@xalatechnologies/enterprise#build": {
-      "dependsOn": [],
-      "outputs": ["dist/**"],
-      "inputs": ["src/**/*.{ts,tsx}", "package.json", "tsconfig.json", "tsup.config.ts"]
-    },
-    "@xalatechnologies/governance#build": {
-      "dependsOn": [],
-      "outputs": ["dist/**"],
-      "inputs": ["src/**/*.ts", "package.json", "tsconfig.json"]
-    },
-    "@digilist/domain#build": {
-      "dependsOn": [],
-      "outputs": ["dist/**"],
-      "inputs": ["src/**/*.ts", "package.json", "tsconfig.json", "tsup.config.ts"]
-    },
-    "@xalatechnologies/platform-schema#build": {
-      "dependsOn": [],
-      "outputs": ["dist/**"],
-      "inputs": ["src/**/*.ts", "package.json", "tsconfig.json", "tsup.config.ts"]
-    },
     "@digilist/database-schema#build": {
-      "dependsOn": ["@xalatechnologies/platform-schema#build"],
+      "dependsOn": [],
+      "outputs": ["dist/**"],
+      "inputs": ["src/**/*.ts", "package.json", "tsconfig.json", "tsup.config.ts"]
+    },
+    "@digilist/contracts#build": {
+      "dependsOn": [],
       "outputs": ["dist/**"],
       "inputs": ["src/**/*.ts", "package.json", "tsconfig.json", "tsup.config.ts"]
     },
     "@digilist/ui#build": {
-      "dependsOn": [
-        "@xalatechnologies/platform#build",
-        "@digilist/domain#build",
-        "@digilist/contracts#build"
-      ],
+      "dependsOn": ["@digilist/contracts#build"],
       "outputs": ["dist/**"],
       "inputs": ["src/**/*.{ts,tsx}", "package.json", "tsconfig.json", "tsup.config.ts"]
     },
-    "@xalatechnologies/platform#test": {
-      "dependsOn": ["@xalatechnologies/platform#build"],
-      "outputs": []
+    "@digilist/client-sdk#build": {
+      "dependsOn": ["@digilist/contracts#build"],
+      "outputs": ["dist/**"],
+      "inputs": ["src/**/*.{ts,tsx}", "package.json", "tsconfig.json", "tsup.config.ts"]
     },
-    "@xalatechnologies/enterprise#test": {
-      "dependsOn": ["@xalatechnologies/enterprise#build"],
-      "outputs": []
+    "@digilist/runtime#build": {
+      "dependsOn": ["@digilist/contracts#build", "@digilist/client-sdk#build"],
+      "outputs": ["dist/**"],
+      "inputs": ["src/**/*.{ts,tsx}", "package.json", "tsconfig.json", "tsup.config.ts"]
     },
-    "@xalatechnologies/governance#test": {
-      "dependsOn": ["@xalatechnologies/governance#build"],
-      "outputs": []
-    },
-    "@digilist/domain#test": {
-      "dependsOn": ["@digilist/domain#build"],
-      "outputs": []
+    "@digilist/platform-compat#build": {
+      "dependsOn": ["@digilist/client-sdk#build", "@digilist/runtime#build"],
+      "outputs": ["dist/**"],
+      "inputs": ["src/**/*.{ts,tsx}", "package.json", "tsconfig.json", "tsup.config.ts"]
     },
     "@digilist/ui#test": {
       "dependsOn": ["@digilist/ui#build"],
       "outputs": []
     },
-    "@xalatechnologies/platform#lint": {
-      "dependsOn": [],
-      "outputs": []
-    },
-    "@xalatechnologies/enterprise#lint": {
-      "dependsOn": [],
-      "outputs": []
-    },
-    "@xalatechnologies/governance#lint": {
-      "dependsOn": [],
-      "outputs": []
-    },
-    "@digilist/domain#lint": {
-      "dependsOn": [],
-      "outputs": []
-    },
     "@digilist/ui#lint": {
       "dependsOn": [],
       "outputs": []
+    },
+    "@digilist/web#build": {
+      "dependsOn": ["@digilist/platform-compat#build", "@digilist/runtime#build", "@digilist/client-sdk#build", "@digilist/ui#build"],
+      "outputs": ["dist/**"]
+    },
+    "@digilist/dashboard#build": {
+      "dependsOn": ["@digilist/platform-compat#build", "@digilist/runtime#build", "@digilist/client-sdk#build", "@digilist/ui#build"],
+      "outputs": ["dist/**"]
+    },
+    "@digilist/backoffice#build": {
+      "dependsOn": ["@digilist/platform-compat#build", "@digilist/runtime#build", "@digilist/client-sdk#build", "@digilist/ui#build"],
+      "outputs": ["dist/**"]
+    },
+    "@digilist/monitoring#build": {
+      "dependsOn": ["@digilist/platform-compat#build", "@digilist/runtime#build", "@digilist/client-sdk#build", "@digilist/ui#build"],
+      "outputs": ["dist/**"]
+    },
+    "@digilist/docs-learning#build": {
+      "dependsOn": ["@digilist/platform-compat#build", "@digilist/runtime#build", "@digilist/client-sdk#build", "@digilist/ui#build"],
+      "outputs": ["dist/**"]
     }
   }
 }

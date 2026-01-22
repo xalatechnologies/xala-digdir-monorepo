@@ -1,0 +1,27 @@
+/**
+ * Designsystemet CSS
+ *
+ * This file imports the base Designsystemet styles.
+ * For Storybook, these are served as static assets.
+ */
+
+/* Import base designsystemet theme */
+@import '@digdir/designsystemet-css/dist/theme/designsystemet.css';
+
+/* Import designsystemet component styles */
+@import '@digdir/designsystemet-css';
+
+/* Custom theme tokens for Digilist */
+:root {
+  /* Brand colors */
+  --digilist-brand-primary: #0062BA;
+  --digilist-brand-secondary: #76b5fb;
+
+  /* Ensure proper sizing */
+  --ds-sizing-base: 4px;
+}
+
+[data-color-scheme="dark"] {
+  --digilist-brand-primary: #76b5fb;
+  --digilist-brand-secondary: #0062BA;
+}

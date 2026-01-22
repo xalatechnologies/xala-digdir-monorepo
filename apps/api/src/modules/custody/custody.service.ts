@@ -9,7 +9,7 @@ import {
   rentalObjectCustodySubgrants
 } from '../../database/schema/index';
 import { NotFoundError, BadRequestError, ForbiddenError } from '../../core/errors/problem-details';
-import type { CustodyScope, GranteeType } from '@xalatechnologies/platform/contracts';
+import type { CustodyScope, GranteeType } from '../../types/custody';
 
 @Injectable()
 export class CustodyService {

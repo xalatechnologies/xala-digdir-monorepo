@@ -1,16 +1,13 @@
 /**
- * minside Entry Point
+ * dashboard Entry Point
  *
- * Uses @xala/config for centralized configuration validation.
- * Uses @xala/runtime for unified provider management.
+ * Uses @digilist/runtime for centralized configuration validation.
  */
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import { validateEnv, createAppConfig } from '@xalatechnologies/platform/config';
-import { RuntimeProvider } from '@xalatechnologies/platform/runtime';
+import { validateEnv, createAppConfig, RuntimeProvider } from '@digilist/runtime';
 import { initializeClient } from '@digilist/client-sdk';
 
-import '@xalatechnologies/platform/ui/styles';
 import './root.css';
 import { App } from './App';
 

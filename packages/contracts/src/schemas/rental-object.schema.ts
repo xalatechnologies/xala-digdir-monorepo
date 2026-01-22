@@ -13,7 +13,7 @@ import {
   CurrencyCodeSchema,
   PaginationSchema,
   SortOrderSchema,
-} from '@xalatechnologies/platform/contracts';
+} from './base.schema';
 
 // =============================================================================
 // Dynamic Configuration Types

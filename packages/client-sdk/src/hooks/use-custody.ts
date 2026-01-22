@@ -4,7 +4,7 @@
  */
 import { useQuery, useMutation, useQueryClient, type UseQueryResult } from '@tanstack/react-query';
 import { custodyService } from '@/services/custody.service';
-import type { CustodyGrant, CustodyScope, CreateCustodyGrantDTO, CreateCustodySubgrantDTO } from '@xalatechnologies/platform/contracts';
+import type { CustodyGrant, CustodyScope, CreateCustodyGrantDTO, CreateCustodySubgrantDTO } from '@digilist/contracts/schemas';
 
 const custodyKeys = {
   all: ['custody'] as const,

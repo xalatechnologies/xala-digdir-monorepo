@@ -3,63 +3,59 @@
   "version": "1.0.0",
   "description": "Domain-specific UI components for the Digilist rental booking platform",
   "type": "module",
-  "main": "./src/index.ts",
-  "types": "./src/index.ts",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
   "sideEffects": false,
   "exports": {
     ".": {
-      "types": "./src/index.ts",
-      "import": "./src/index.ts",
-      "require": "./dist/index.cjs"
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./compat": {
+      "types": "./dist/compat/index.d.ts",
+      "import": "./dist/compat/index.js"
     },
     "./blocks": {
-      "types": "./src/blocks/index.ts",
-      "import": "./src/blocks/index.ts",
-      "require": "./dist/blocks/index.cjs"
+      "types": "./dist/blocks/index.d.ts",
+      "import": "./dist/blocks/index.js"
     },
     "./features": {
-      "types": "./src/features/index.ts",
-      "import": "./src/features/index.ts",
-      "require": "./dist/features/index.cjs"
+      "types": "./dist/features/index.d.ts",
+      "import": "./dist/features/index.js"
     },
     "./features/rental-objects": {
-      "types": "./src/features/rental-objects/index.ts",
-      "import": "./src/features/rental-objects/index.ts",
-      "require": "./dist/features/rental-objects/index.cjs"
+      "types": "./dist/features/rental-objects/index.d.ts",
+      "import": "./dist/features/rental-objects/index.js"
     },
     "./features/booking": {
-      "types": "./src/features/booking/index.ts",
-      "import": "./src/features/booking/index.ts",
-      "require": "./dist/features/booking/index.cjs"
+      "types": "./dist/features/booking/index.d.ts",
+      "import": "./dist/features/booking/index.js"
     },
     "./features/seasons": {
-      "types": "./src/features/seasons/index.ts",
-      "import": "./src/features/seasons/index.ts",
-      "require": "./dist/features/seasons/index.cjs"
+      "types": "./dist/features/seasons/index.d.ts",
+      "import": "./dist/features/seasons/index.js"
     },
     "./rental-objects": {
-      "types": "./src/blocks/rental-objects/index.ts",
-      "import": "./src/blocks/rental-objects/index.ts",
-      "require": "./dist/blocks/rental-objects/index.cjs"
+      "types": "./dist/blocks/rental-objects/index.d.ts",
+      "import": "./dist/blocks/rental-objects/index.js"
     },
     "./booking": {
-      "types": "./src/blocks/booking/index.ts",
-      "import": "./src/blocks/booking/index.ts",
-      "require": "./dist/blocks/booking/index.cjs"
+      "types": "./dist/blocks/booking/index.d.ts",
+      "import": "./dist/blocks/booking/index.js"
     },
     "./seasons": {
-      "types": "./src/blocks/seasons/index.ts",
-      "import": "./src/blocks/seasons/index.ts",
-      "require": "./dist/blocks/seasons/index.cjs"
+      "types": "./dist/blocks/seasons/index.d.ts",
+      "import": "./dist/blocks/seasons/index.js"
     },
     "./booking-engine": {
-      "types": "./src/booking-engine/index.ts",
-      "import": "./src/booking-engine/index.ts",
-      "require": "./dist/booking-engine/index.cjs"
+      "types": "./dist/booking-engine/index.d.ts",
+      "import": "./dist/booking-engine/index.js"
     }
   },
+  "files": ["dist"],
   "scripts": {
     "build": "tsup",
+    "dev": "tsup --watch",
     "lint": "eslint src --ext ts,tsx",
     "typecheck": "tsc --noEmit",
     "storybook": "storybook dev -p 6007",
@@ -67,11 +63,12 @@
   },
   "dependencies": {
     "@digilist/contracts": "workspace:*",
-    "@xalatechnologies/platform": "workspace:*"
+    "@digdir/designsystemet-react": "^1.0.0-rc.1"
   },
   "peerDependencies": {
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "react-router-dom": "^6.28.0",
     "react-map-gl": "^7.0.0",
     "mapbox-gl": "^3.0.0"
   },
@@ -84,8 +81,23 @@
     }
   },
   "devDependencies": {
+    "@digdir/designsystemet-css": "^1.0.0",
+    "@fontsource/inter": "^5.0.0",
+    "@storybook/addon-a11y": "^10.0.0",
+    "@storybook/addon-docs": "^10.0.0",
+    "@storybook/addon-interactions": "^10.0.0",
+    "@storybook/addon-links": "^10.0.0",
+    "@storybook/addon-viewport": "^10.0.0",
+    "@storybook/manager-api": "^10.0.0",
+    "@storybook/preview-api": "^10.0.0",
+    "@storybook/theming": "^10.0.0",
+    "@storybook/react": "^10.0.0",
+    "@storybook/react-vite": "^10.0.0",
     "@types/node": "^22.0.0",
     "@types/react": "^18.2.0",
+    "@types/react-dom": "^18.3.0",
+    "@vueless/storybook-dark-mode": "^4.0.0",
+    "storybook": "^10.0.0",
     "tsup": "^8.0.0",
     "typescript": "^5.3.0"
   }

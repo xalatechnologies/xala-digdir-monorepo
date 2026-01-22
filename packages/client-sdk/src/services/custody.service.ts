@@ -3,13 +3,13 @@
  * Handles resource-scoped delegation grants and subgrants.
  */
 import { BaseService } from './base.service';
-import type { 
-  CustodyGrant, 
-  CreateCustodyGrantDTO, 
+import type {
+  CustodyGrant,
+  CreateCustodyGrantDTO,
   BulkAssignCustodyGrantDTO,
   CreateCustodySubgrantDTO,
   CustodySubgrant
-} from '@xalatechnologies/platform/contracts';
+} from '@digilist/contracts/schemas';
 
 export type { CustodyGrant, CustodySubgrant };
 

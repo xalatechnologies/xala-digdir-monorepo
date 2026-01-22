@@ -96,7 +96,7 @@
  *
  * ```typescript
  * import '@digilist/runtime'; // Registers profiles
- * import { getAppProfile } from '@xalatechnologies/platform/config';
+ * import { getAppProfile } from '@digilist/runtime';
  *
  * const profile = getAppProfile('backoffice'); // Now works!
  * ```
@@ -113,8 +113,31 @@ import './config';
 // Re-export Config Types and Utilities
 // =============================================================================
 
-export type { DigilistAppType, DigilistThemeId } from './config';
+// Core config utilities
+export {
+  validateEnv,
+  createAppConfig,
+  getAppProfile,
+  getAllProfiles,
+  registerAppProfiles,
+} from './config';
+
+// Config types
+export type {
+  ValidatedEnv,
+  SDKConfig,
+  RuntimeConfig,
+  AppConfig,
+  AppProfile,
+  AuthConfig,
+  DigilistAppType,
+  DigilistThemeId,
+} from './config';
+
+// Type guards
 export { isDigilistAppType, isDigilistThemeId } from './config';
+
+// Profile definitions
 export {
   webProfile,
   minsideProfile,

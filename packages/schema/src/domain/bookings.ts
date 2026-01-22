@@ -1,6 +1,6 @@
 /**
  * Domain Tables: Bookings
- * Depends on: core/tenants, core/users from platform package, domain/rental-objects
+ * Depends on: core/tenants, core/users, core/organizations, domain/rental-objects
  */
 import {
   uuid,
@@ -12,7 +12,8 @@ import {
   index,
   integer,
 } from 'drizzle-orm/pg-core';
-import { domainSchema, tenants, users, organizations } from '@xalatechnologies/platform-schema';
+import { domainSchema } from '../schemas';
+import { tenants, users, organizations } from '../core';
 import { rentalObjects } from './rental-objects';
 
 export const bookings = domainSchema.table('bookings', {

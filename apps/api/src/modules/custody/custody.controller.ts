@@ -12,11 +12,11 @@ import {
 import { RequireCapability } from '../../core/decorators/require-capability';
 import { CustodyService } from './custody.service';
 import type { FastifyRequest, FastifyReply } from 'fastify';
-import { 
-  CreateCustodyGrantDTOSchema, 
+import {
+  CreateCustodyGrantDTOSchema,
   BulkAssignCustodyGrantDTOSchema,
   CreateCustodySubgrantDTOSchema
-} from '@xalatechnologies/platform/contracts';
+} from '../../types/custody';
 
 @Controller('/custody')
 export class CustodyController {

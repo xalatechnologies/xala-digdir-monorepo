@@ -18,7 +18,7 @@ import {
   type ModuleInfoDTO,
   type ModuleValidationResult,
   type UpdateModuleDTO,
-} from '@xalatechnologies/platform/contracts/modules';
+} from '../types/modules';
 
 // =============================================================================
 // Types

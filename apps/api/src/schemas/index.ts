@@ -14,7 +14,7 @@
 // Re-export from @xala/contracts (Schema-Agnostic Contracts)
 // =============================================================================
 
-// Common schemas
+// Common schemas (from local types)
 export {
   UUIDSchema,
   SlugSchema,
@@ -34,9 +34,9 @@ export {
   type Money,
   type ProblemDetails,
   type FieldError,
-} from '@xalatechnologies/platform/contracts/schemas';
+} from '../types/contracts';
 
-// Capabilities schemas
+// Capabilities schemas (from local types)
 export {
   CapabilitySchema,
   UIHintsSchema,
@@ -47,7 +47,7 @@ export {
   type UIHints,
   type CapabilitiesResponse,
   type CapabilityKey,
-} from '@xalatechnologies/platform/contracts/schemas';
+} from '../types/contracts';
 
 // =============================================================================
 // Local Schemas (API-specific, backwards compatible)

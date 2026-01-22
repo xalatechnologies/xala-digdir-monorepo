@@ -56,7 +56,6 @@
     "report:html": "vitest run --reporter=html --outputFile=reports/html/index.html"
   },
   "devDependencies": {
-    "@xalatechnologies/platform": "workspace:*",
     "@tanstack/react-query": "^5.0.0",
     "@testing-library/jest-dom": "^6.4.0",
     "@testing-library/react": "^14.2.0",

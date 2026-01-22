@@ -10,7 +10,7 @@ import { useRentalObjectContextOptional } from '../providers/RentalObjectContext
  * import them directly from @xala/runtime:
  *
  * ```typescript
- * import { useRuntimeConfig, useFeatureFlags } from '@xalatechnologies/platform/runtime';
+ * import { useRuntimeConfig, useFeatureFlags } from '@digilist/runtime';
  * ```
  */
 export interface DigilistRuntimeValue {
@@ -51,7 +51,7 @@ export interface DigilistRuntimeValue {
  * @example Basic Usage
  * ```tsx
  * import { useDigilistRuntime } from '@digilist/runtime';
- * import { useRuntimeConfig, useLocalization } from '@xalatechnologies/platform/runtime';
+ * import { useRuntimeConfig, useLocalization } from '@digilist/runtime';
  *
  * function MyComponent() {
  *   const { account, isOrganizationMode, currentOrganizationId } = useDigilistRuntime();

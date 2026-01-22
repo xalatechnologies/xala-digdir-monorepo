@@ -2,35 +2,18 @@
  * @digilist/ui
  *
  * Domain-specific UI components for the Digilist rental booking platform.
- *
- * This package contains business components specific to the rental booking domain.
- * For platform-agnostic UI components (Button, Card, etc.), use @xalatechnologies/platform/ui.
- *
- * ## Recommended: Feature Kits with Mappers
- *
- * Feature kits provide thin wrappers that compose Platform patterns with domain mapping:
- *
- * ```tsx
- * import {
- *   RentalObjectCardWrapper,
- *   mapRentalObjectToResourceCard,
- * } from '@digilist/ui/features/rental-objects';
- *
- * import { BookingSuccess, mapBookingToCardDisplay } from '@digilist/ui/features/booking';
- * import { SeasonCard, mapSeasonDTOToCardData } from '@digilist/ui/features/seasons';
- * ```
- *
- * ## Direct Component Usage (Legacy)
- *
- * ```tsx
- * import { RentalObjectCard, BookingSuccess } from '@digilist/ui';
- * ```
+ * Extends @xalatechnologies/platform/ui with domain-specific components.
  *
  * ## Package Structure
  *
  * ```
  * @digilist/ui
- * ├── features/            # Feature kits with thin wrappers + mappers (RECOMMENDED)
+ * ├── compat/              # Platform UI compatibility layer (extends platform)
+ * │   ├── Designsystemet components (Button, Card, etc.)
+ * │   ├── AppHeader, ContentLayout, Grid, Stack
+ * │   ├── BookingStatusBadge, PaymentStatusBadge
+ * │   └── Icons, Hooks, Types
+ * ├── features/            # Feature kits with thin wrappers + mappers
  * │   ├── rental-objects/  # RentalObjectCardWrapper, mapRentalObjectToResourceCard
  * │   ├── booking/         # mapBookingToCardDisplay, mapBookingToPriceSummary
  * │   └── seasons/         # mapSeasonDTOToCardData, mapVenueDTOToCardData
@@ -41,15 +24,33 @@
  * └── booking-engine/      # Multi-step booking wizard
  * ```
  *
- * ## Feature Kit Pattern
+ * ## Usage Examples
  *
- * Each feature kit exports:
- * 1. **Thin Wrappers** - Components that compose Platform patterns with domain mapping
- * 2. **Mappers** - Functions to transform domain DTOs to component props
- * 3. **Re-exports** - Domain components from blocks for direct use
+ * ```tsx
+ * // Platform UI components from compat layer
+ * import { Button, Card, AppHeader, BookingStatusBadge } from '@digilist/ui/compat';
  *
- * @see [Feature Kits Documentation](./features/index.ts)
+ * // Domain components
+ * import { RentalObjectCard, BookingSuccess } from '@digilist/ui';
+ *
+ * // Feature kits with mappers
+ * import {
+ *   RentalObjectCardWrapper,
+ *   mapRentalObjectToResourceCard,
+ * } from '@digilist/ui/features/rental-objects';
+ * ```
+ *
+ * @see [Compat Layer](./compat/index.ts) for platform UI components
+ * @see [Feature Kits](./features/index.ts) for domain feature kits
  */
+
+// =============================================================================
+// Platform UI Compatibility Layer (extends @xalatechnologies/platform/ui)
+// =============================================================================
+// Re-exports Designsystemet + custom platform components
+// Use @digilist/ui/compat for platform UI components
+
+export * from './compat';
 
 // =============================================================================
 // Feature Kits (RECOMMENDED - Thin Wrappers + Mappers)

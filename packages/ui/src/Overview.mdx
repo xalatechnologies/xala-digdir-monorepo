@@ -1,0 +1,88 @@
+# @digilist/ui
+
+Welcome to the Digilist UI component library. This package provides domain-specific UI components for the Digilist rental booking platform.
+
+## Package Structure
+
+The package is organized into several layers:
+
+### Compat Layer (`@digilist/ui/compat`)
+
+Platform-compatible UI components that re-export Designsystemet components and provide custom platform components.
+
+**Includes:**
+- Layout components (Grid, Stack, Container, Box)
+- Navigation (AppHeader, AppNavigation, BottomNavigation)
+- Forms (FormSection, FormField, FormActions)
+- Status badges (BookingStatusBadge, PaymentStatusBadge, GenericStatusBadge)
+- Dashboard components (StatCard, DashboardHeader, QuickActionCard)
+- Feedback (EmptyState, LoadingFallback)
+- And more...
+
+### Blocks (`@digilist/ui/blocks`)
+
+Domain-specific composite components for rental objects, bookings, and seasons.
+
+### Features (`@digilist/ui/features`)
+
+Feature kits with thin wrapper components and mappers for transforming domain DTOs to component props.
+
+**Available feature kits:**
+- `@digilist/ui/features/rental-objects`
+- `@digilist/ui/features/booking`
+- `@digilist/ui/features/seasons`
+
+### Booking Engine (`@digilist/ui/booking-engine`)
+
+Multi-step booking wizard for creating and managing bookings.
+
+## Usage
+
+```tsx
+// Compat layer components
+import { StatCard, BookingStatusBadge, EmptyState } from '@digilist/ui/compat';
+
+// Feature kit components
+import { RentalObjectCardWrapper, mapRentalObjectToResourceCard } from '@digilist/ui/features/rental-objects';
+
+// Blocks
+import { RentalObjectCard, RentalObjectGrid } from '@digilist/ui/blocks';
+
+// Booking engine
+import { UnifiedBookingEngine } from '@digilist/ui/booking-engine';
+```
+
+## Design System
+
+This package builds on top of the Norwegian Design System (Designsystemet). All components follow WCAG 2.1 accessibility guidelines and support both light and dark modes.
+
+## Storybook Composition
+
+This Storybook is configured to compose with the **Platform UI Storybook**. This means you can view both:
+
+- **Digilist UI** - Domain-specific components (this Storybook)
+- **Platform UI** - Generic platform components (external reference)
+
+### Running with Composition
+
+To see Platform UI stories alongside Digilist UI stories:
+
+```bash
+# Terminal 1: Start Platform Storybook (port 6006)
+cd /path/to/xala-platform/packages/platform
+pnpm storybook
+
+# Terminal 2: Start Digilist Storybook (port 6007)
+cd /path/to/Digilist/packages/ui
+pnpm storybook
+```
+
+The Platform UI stories will appear in the sidebar under "Platform UI" (collapsed by default).
+
+### Custom Platform URL
+
+To reference a deployed Platform Storybook:
+
+```bash
+STORYBOOK_PLATFORM_URL=https://platform-storybook.example.com pnpm storybook
+```
