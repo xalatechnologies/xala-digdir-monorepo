@@ -89,6 +89,25 @@ const patterns = {
   
   // Transition/animation violations
   hardcodedTransition: /transition:\s*([^;]+)/gi,
+  
+  // Raw HTML elements (should use platform components)
+  rawButton: /<button(?![^>]*className="ds-button")/g,
+  rawInput: /<input(?![^>]*type="hidden")/g,
+  rawTextarea: /<textarea/g,
+  rawSelect: /<select/g,
+  rawH1: /<h1(?![^>]*className)/g,
+  rawH2: /<h2(?![^>]*className)/g,
+  rawH3: /<h3(?![^>]*className)/g,
+  rawH4: /<h4(?![^>]*className)/g,
+  rawH5: /<h5(?![^>]*className)/g,
+  rawH6: /<h6(?![^>]*className)/g,
+  rawP: /<p(?![^>]*className)/g,
+  
+  // Hardcoded maxWidth/maxHeight/width/height with pixel values
+  hardcodedMaxWidth: /maxWidth:\s*['"]?(\d+)px['"]?/g,
+  hardcodedMaxHeight: /maxHeight:\s*['"]?(\d+)px['"]?/g,
+  hardcodedWidth: /(?<!min|max)width:\s*['"]?(\d+)px['"]?/g,
+  hardcodedHeight: /(?<!min|max)height:\s*['"]?(\d+)px['"]?/g,
 };
 
 // Allowed patterns (exceptions)
@@ -98,6 +117,8 @@ const allowedPatterns = [
   /var\(--font-/,         // Extension typography tokens  
   /var\(--spacing-/,      // Extension spacing tokens
   /0px/,                  // Zero values are OK
+  /1px/,                  // 1px borders are OK
+  /2px/,                  // 2px borders are OK
   /1px/,                  // 1px for borders is common
   /100%/,                 // Percentages are OK
   /50%/,                  // Common percentage values
@@ -131,8 +152,8 @@ function isAllowed(value, context) {
 }
 
 function getSeverity(type) {
-  const critical = ['hexColor', 'rgbColor', 'hardcodedFontSize', 'hardcodedFontWeight'];
-  const major = ['hardcodedPx', 'hardcodedBorderRadius', 'hardcodedZIndex'];
+  const critical = ['hexColor', 'rgbColor', 'hardcodedFontSize', 'hardcodedFontWeight', 'rawButton', 'rawInput', 'rawH1', 'rawH2', 'rawH3', 'rawH4'];
+  const major = ['hardcodedPx', 'hardcodedBorderRadius', 'hardcodedZIndex', 'hardcodedMaxWidth', 'hardcodedMaxHeight', 'hardcodedWidth', 'hardcodedHeight', 'rawTextarea', 'rawSelect', 'rawP'];
   
   if (critical.includes(type)) return 'critical';
   if (major.includes(type)) return 'major';
@@ -172,6 +193,12 @@ function scanFile(filePath, relativePath) {
     
     // Check for z-index violations
     checkZIndexPattern(line, lineNumber, fileViolations, relativePath);
+    
+    // Check for raw HTML elements
+    checkRawHtmlElements(line, lineNumber, fileViolations, relativePath);
+    
+    // Check for hardcoded dimensions
+    checkHardcodedDimensions(line, lineNumber, fileViolations, relativePath);
   });
   
   return fileViolations;
@@ -274,11 +301,111 @@ function checkZIndexPattern(line, lineNumber, fileViolations, filePath) {
   stats.bySeverity['major']++;
 }
 
+function checkRawHtmlElements(line, lineNumber, fileViolations, filePath) {
+  const rawElementChecks = [
+    { pattern: patterns.rawButton, type: 'rawButton', description: 'Raw <button> element - use <Button> component', suggestion: 'import { Button } from "@xala-technologies/platform/ui"' },
+    { pattern: patterns.rawInput, type: 'rawInput', description: 'Raw <input> element - use <Textfield> component', suggestion: 'import { Textfield } from "@xala-technologies/platform/ui"' },
+    { pattern: patterns.rawTextarea, type: 'rawTextarea', description: 'Raw <textarea> element - use <Textfield> component', suggestion: 'import { Textfield } from "@xala-technologies/platform/ui"' },
+    { pattern: patterns.rawSelect, type: 'rawSelect', description: 'Raw <select> element - use platform Select component', suggestion: 'Use platform Select component' },
+    { pattern: patterns.rawH1, type: 'rawH1', description: 'Raw <h1> element - use <Heading level={1}>', suggestion: 'import { Heading } from "@xala-technologies/platform/ui"' },
+    { pattern: patterns.rawH2, type: 'rawH2', description: 'Raw <h2> element - use <Heading level={2}>', suggestion: 'import { Heading } from "@xala-technologies/platform/ui"' },
+    { pattern: patterns.rawH3, type: 'rawH3', description: 'Raw <h3> element - use <Heading level={3}>', suggestion: 'import { Heading } from "@xala-technologies/platform/ui"' },
+    { pattern: patterns.rawH4, type: 'rawH4', description: 'Raw <h4> element - use <Heading level={4}>', suggestion: 'import { Heading } from "@xala-technologies/platform/ui"' },
+    { pattern: patterns.rawP, type: 'rawP', description: 'Raw <p> element - use <Paragraph> component', suggestion: 'import { Paragraph } from "@xala-technologies/platform/ui"' },
+  ];
+  
+  rawElementChecks.forEach(({ pattern, type, description, suggestion }) => {
+    const match = pattern.exec(line);
+    if (match) {
+      const severity = getSeverity(type);
+      const violation = {
+        file: filePath,
+        line: lineNumber,
+        column: match.index + 1,
+        type,
+        description,
+        value: match[0],
+        severity,
+        lineContent: line.trim().substring(0, 100),
+        suggestion,
+      };
+      
+      fileViolations.push(violation);
+      violations.push(violation);
+      stats.totalViolations++;
+      stats.byType[type] = (stats.byType[type] || 0) + 1;
+      stats.bySeverity[severity]++;
+    }
+  });
+}
+
+function checkHardcodedDimensions(line, lineNumber, fileViolations, filePath) {
+  const dimensionChecks = [
+    { pattern: patterns.hardcodedMaxWidth, type: 'hardcodedMaxWidth', description: 'Hardcoded maxWidth with px', suggestion: 'Remove maxWidth or use design tokens' },
+    { pattern: patterns.hardcodedMaxHeight, type: 'hardcodedMaxHeight', description: 'Hardcoded maxHeight with px', suggestion: 'Remove maxHeight or use design tokens' },
+    { pattern: patterns.hardcodedWidth, type: 'hardcodedWidth', description: 'Hardcoded width with px', suggestion: 'Use design tokens or percentages' },
+    { pattern: patterns.hardcodedHeight, type: 'hardcodedHeight', description: 'Hardcoded height with px', suggestion: 'Use var(--ds-spacing-*) or design tokens' },
+  ];
+  
+  dimensionChecks.forEach(({ pattern, type, description, suggestion }) => {
+    let match;
+    const regex = new RegExp(pattern.source, pattern.flags);
+    
+    while ((match = regex.exec(line)) !== null) {
+      const pxValue = parseInt(match[1]);
+      
+      // Skip if using design tokens
+      if (/var\(--/.test(line)) continue;
+      
+      const severity = getSeverity(type);
+      const violation = {
+        file: filePath,
+        line: lineNumber,
+        column: match.index + 1,
+        type,
+        description: `${description}: ${pxValue}px`,
+        value: match[0],
+        severity,
+        lineContent: line.trim().substring(0, 100),
+        suggestion,
+      };
+      
+      fileViolations.push(violation);
+      violations.push(violation);
+      stats.totalViolations++;
+      stats.byType[type] = (stats.byType[type] || 0) + 1;
+      stats.bySeverity[severity]++;
+    }
+  });
+}
+
 function getSpacingToken(pxValue) {
   const spacingMap = {
     4: '1', 8: '2', 12: '3', 16: '4', 20: '5', 24: '6', 32: '8', 40: '10', 48: '12', 64: '16',
   };
   return spacingMap[pxValue] || Math.round(pxValue / 4);
+}
+
+function shouldScanFile(filePath) {
+  const ext = path.extname(filePath);
+  
+  // Exclude theme CSS files - they define the design tokens
+  if (filePath.includes('/themes/') && ext === '.css') {
+    return false;
+  }
+  
+  // Skip brand-colors.css (official third-party brand colors)
+  if (path.basename(filePath) === 'brand-colors.css') {
+    return false;
+  }
+
+  // DO NOT skip Storybook files - they should follow all rules too!
+  // Storybook stories are production code and must comply
+  // if (filePath.includes('.stories.') || filePath.includes('/stories/')) {
+  //   return false;
+  }
+  
+  return ['.tsx', '.ts', '.jsx', '.js', '.css'].includes(ext);
 }
 
 function findFiles(dir, extensions = ['.ts', '.tsx', '.css']) {
@@ -403,12 +530,19 @@ if (targetPath) {
     }
   }
   
-  // Scan key packages
-  const packages = ['ds', 'ds-registry', 'auth', 'i18n', 'client-sdk'];
-  for (const pkg of packages) {
-    const pkgPath = path.join(rootDir, 'packages', pkg);
-    if (fs.existsSync(pkgPath)) {
-      targets.push({ name: `packages/${pkg}`, path: pkgPath });
+  // Targets to scan
+  const SCAN_TARGETS = [
+    'packages/platform/src',
+    'packages/governance/src',
+    'apps/platform-api/src',
+    'apps/backoffice/src',
+    'apps/monitoring/src',
+    'apps/docs/src',
+  ];
+  for (const target of SCAN_TARGETS) {
+    const targetPath = path.join(rootDir, target);
+    if (fs.existsSync(targetPath)) {
+      targets.push({ name: target, path: targetPath });
     }
   }
 }
