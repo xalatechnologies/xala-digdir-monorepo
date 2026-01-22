@@ -64,6 +64,13 @@ export { StatusTag } from './StatusBadges';
 export type { StatusTagProps, StatusBadgeConfig, BadgeColor } from './StatusBadges';
 
 // =============================================================================
+// Bulk Actions
+// =============================================================================
+
+export { BulkActionsBar } from './BulkActionsBar';
+export type { BulkActionsBarProps } from './BulkActionsBar';
+
+// =============================================================================
 // Supporting components - AmenityChips (renamed from FacilityChips)
 // =============================================================================
 

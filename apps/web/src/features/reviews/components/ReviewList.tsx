@@ -7,7 +7,7 @@
 import * as React from 'react';
 import { Button, Stack, Text, Spinner } from '@xalatechnologies/platform/ui';
 import { useListingReviews } from '@digilist/client-sdk';
-import { ReviewCard } from './ReviewCard';
+import { ReviewCard, mapReviewDTOToCardProps } from '@digilist/ui/features/reviews';
 import type { ReviewQueryParams } from '@digilist/client-sdk/types';
 import { useT } from '@xalatechnologies/platform/i18n';
 
@@ -148,7 +148,7 @@ export function ReviewList({
         {visibleReviews.map((review) => (
           <ReviewCard
             key={review.id}
-            review={review}
+            review={mapReviewDTOToCardProps(review)}
             showHelpfulCount={showHelpfulCount}
             showStatus={showStatus}
             onMarkHelpful={onMarkHelpful}

@@ -13,6 +13,8 @@ export default defineConfig({
     'features/rental-objects/index': 'src/features/rental-objects/index.ts',
     'features/booking/index': 'src/features/booking/index.ts',
     'features/seasons/index': 'src/features/seasons/index.ts',
+    'features/reviews/index': 'src/features/reviews/index.ts',
+    'features/rental-object-details/index': 'src/features/rental-object-details/index.ts',
   },
   format: ['esm'],
   dts: true,

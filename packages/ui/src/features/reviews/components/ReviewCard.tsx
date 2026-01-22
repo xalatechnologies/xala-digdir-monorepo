@@ -3,16 +3,52 @@
  *
  * A reusable card component for displaying individual reviews.
  * Displays star rating, review text, author name, date, and helpful count.
+ *
+ * @example
+ * ```tsx
+ * import { ReviewCard } from '@digilist/ui/features/reviews';
+ *
+ * <ReviewCard
+ *   review={reviewData}
+ *   showHelpfulCount
+ *   onMarkHelpful={(id) => handleMarkHelpful(id)}
+ * />
+ * ```
  */
 import * as React from 'react';
-import { Card, Stack, Heading, Paragraph, Badge, StarIcon } from '@xalatechnologies/platform/ui';
+import { Card, Heading, Paragraph, Badge, StarIcon } from '@xalatechnologies/platform/ui';
 import { cn } from '@xalatechnologies/platform/ui';
-import type { Review } from '@digilist/client-sdk/types';
 import { useT } from '@xalatechnologies/platform/i18n';
+
+// =============================================================================
+// Types
+// =============================================================================
+
+/**
+ * Review status
+ */
+export type ReviewStatus = 'approved' | 'pending' | 'rejected';
+
+/**
+ * Review data structure
+ * Compatible with @digilist/client-sdk Review type
+ */
+export interface ReviewData {
+  id: string;
+  userName?: string;
+  rating: number;
+  comment?: string;
+  createdAt: string;
+  status: ReviewStatus;
+  metadata?: {
+    helpfulCount?: number;
+    moderatorNotes?: string;
+  };
+}
 
 export interface ReviewCardProps {
   /** Review data */
-  review: Review;
+  review: ReviewData;
   /** Show helpful count badge */
   showHelpfulCount?: boolean;
   /** Show moderation status badge */
@@ -25,40 +61,48 @@ export interface ReviewCardProps {
   variant?: 'default' | 'compact';
 }
 
+// =============================================================================
+// Helper Components
+// =============================================================================
+
 /**
  * Formats a date string to a human-readable format
  */
-const formatDate = (dateString: string): string => {
-  const date = new Date(dateString);
-  const now = new Date();
-  const diffInMs = now.getTime() - date.getTime();
-  const diffInDays = Math.floor(diffInMs / (1000 * 60 * 60 * 24));
+function useFormatDate() {
+  const t = useT();
 
-  if (diffInDays === 0) {
-    return 'I dag';
-  } else if (diffInDays === 1) {
-    return 'I går';
-  } else if (diffInDays < 7) {
-    return `${diffInDays} dager siden`;
-  } else if (diffInDays < 30) {
-    const weeks = Math.floor(diffInDays / 7);
-    return `${weeks} ${weeks === 1 ? 'uke' : 'uker'} siden`;
-  } else if (diffInDays < 365) {
-    const months = Math.floor(diffInDays / 30);
-    return `${months} ${months === 1 ? 'måned' : 'måneder'} siden`;
-  } else {
-    return date.toLocaleDateString('nb-NO', {
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric',
-    });
-  }
-};
+  return React.useCallback((dateString: string): string => {
+    const date = new Date(dateString);
+    const now = new Date();
+    const diffInMs = now.getTime() - date.getTime();
+    const diffInDays = Math.floor(diffInMs / (1000 * 60 * 60 * 24));
+
+    if (diffInDays === 0) {
+      return t('common.today') || 'I dag';
+    } else if (diffInDays === 1) {
+      return t('common.yesterday') || 'I går';
+    } else if (diffInDays < 7) {
+      return t('common.daysAgo', { count: diffInDays }) || `${diffInDays} dager siden`;
+    } else if (diffInDays < 30) {
+      const weeks = Math.floor(diffInDays / 7);
+      return t('common.weeksAgo', { count: weeks }) || `${weeks} ${weeks === 1 ? 'uke' : 'uker'} siden`;
+    } else if (diffInDays < 365) {
+      const months = Math.floor(diffInDays / 30);
+      return t('common.monthsAgo', { count: months }) || `${months} ${months === 1 ? 'måned' : 'måneder'} siden`;
+    } else {
+      return date.toLocaleDateString('nb-NO', {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric',
+      });
+    }
+  }, [t]);
+}
 
 /**
  * Renders star rating display (1-5 stars)
  */
-const StarRating = ({ rating }: { rating: number }): React.ReactElement => {
+function StarRating({ rating }: { rating: number }): React.ReactElement {
   return (
     <div
       style={{
@@ -92,12 +136,12 @@ const StarRating = ({ rating }: { rating: number }): React.ReactElement => {
       </span>
     </div>
   );
-};
+}
 
 /**
  * Returns badge color based on review status
  */
-const getStatusColor = (status: Review['status']): 'success' | 'warning' | 'danger' => {
+function getStatusColor(status: ReviewStatus): 'success' | 'warning' | 'danger' {
   switch (status) {
     case 'approved':
       return 'success';
@@ -108,23 +152,11 @@ const getStatusColor = (status: Review['status']): 'success' | 'warning' | 'dang
     default:
       return 'warning';
   }
-};
+}
 
-/**
- * Returns badge label based on review status
- */
-const getStatusLabel = (status: Review['status']): string => {
-  switch (status) {
-    case 'approved':
-      return 'Godkjent';
-    case 'pending':
-      return t("status.pending");
-    case 'rejected':
-      return 'Avvist';
-    default:
-      return status;
-  }
-};
+// =============================================================================
+// Main Component
+// =============================================================================
 
 export function ReviewCard({
   review,
@@ -135,11 +167,27 @@ export function ReviewCard({
   variant = 'default',
 }: ReviewCardProps): React.ReactElement {
   const t = useT();
+  const formatDate = useFormatDate();
+
   const handleHelpful = () => {
     onMarkHelpful?.(review.id);
   };
 
   const isCompact = variant === 'compact';
+
+  // Status label with i18n
+  const getStatusLabel = (status: ReviewStatus): string => {
+    switch (status) {
+      case 'approved':
+        return t('status.approved') || 'Godkjent';
+      case 'pending':
+        return t('status.pending') || 'Venter';
+      case 'rejected':
+        return t('status.rejected') || 'Avvist';
+      default:
+        return status;
+    }
+  };
 
   return (
     <Card
@@ -152,7 +200,7 @@ export function ReviewCard({
         transition: 'box-shadow 0.2s ease',
       }}
     >
-      <Stack gap="16px">
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
         {/* Header: Author, Date, and Status */}
         <div
           style={{
@@ -166,16 +214,16 @@ export function ReviewCard({
           <div style={{ flex: 1 }}>
             <Heading
               level={isCompact ? 4 : 3}
-              size={isCompact ? 'xs' : 'sm'}
+              data-size={isCompact ? 'xs' : 'sm'}
               style={{
                 marginBottom: 'var(--ds-spacing-1)',
                 color: 'var(--ds-color-neutral-text-default)',
               }}
             >
-              {review.userName || 'Anonym bruker'}
+              {review.userName || t('common.anonymousUser') || 'Anonym bruker'}
             </Heading>
             <Paragraph
-              size="sm"
+              data-size="sm"
               style={{
                 color: 'var(--ds-color-neutral-text-subtle)',
                 margin: 0,
@@ -187,7 +235,7 @@ export function ReviewCard({
 
           {/* Status Badge (for moderation) */}
           {showStatus && (
-            <Badge color={getStatusColor(review.status)} size="sm">
+            <Badge data-color={getStatusColor(review.status)} data-size="sm">
               {getStatusLabel(review.status)}
             </Badge>
           )}
@@ -199,7 +247,7 @@ export function ReviewCard({
         {/* Review Comment/Text */}
         {review.comment && (
           <Paragraph
-            size={isCompact ? 'sm' : 'md'}
+            data-size={isCompact ? 'sm' : 'md'}
             style={{
               color: 'var(--ds-color-neutral-text-default)',
               lineHeight: 'var(--ds-line-height-lg)',
@@ -225,15 +273,14 @@ export function ReviewCard({
             {/* Helpful Count Display */}
             {review.metadata.helpfulCount > 0 && (
               <Paragraph
-                size="sm"
+                data-size="sm"
                 style={{
                   color: 'var(--ds-color-neutral-text-subtle)',
                   margin: 0,
                 }}
               >
-                {review.metadata.helpfulCount}{' '}
-                {review.metadata.helpfulCount === 1 ? 'person' : 'personer'} fant
-                dette nyttig
+                {t('reviews.helpfulCount', { count: review.metadata.helpfulCount }) ||
+                  `${review.metadata.helpfulCount} ${review.metadata.helpfulCount === 1 ? 'person' : 'personer'} fant dette nyttig`}
               </Paragraph>
             )}
 
@@ -254,14 +301,14 @@ export function ReviewCard({
                   transition: 'all 0.2s ease',
                 }}
                 onMouseEnter={(e) => {
-                  e.currentTarget.style.backgroundColor =
-                    'var(--ds-color-accent-surface-hover)';
+                  e.currentTarget.style.backgroundColor = 'var(--ds-color-accent-surface-hover)';
                 }}
                 onMouseLeave={(e) => {
                   e.currentTarget.style.backgroundColor = 'transparent';
-                }} type="button"
+                }}
+                type="button"
               >
-                Nyttig
+                {t('reviews.helpful') || 'Nyttig'}
               </button>
             )}
           </div>
@@ -278,17 +325,17 @@ export function ReviewCard({
             }}
           >
             <Paragraph
-              size="sm"
+              data-size="sm"
               style={{
                 fontWeight: 600,
                 marginBottom: 'var(--ds-spacing-1)',
                 color: 'var(--ds-color-info-text-default)',
               }}
             >
-              Moderatornotat:
+              {t('reviews.moderatorNote') || 'Moderatornotat:'}
             </Paragraph>
             <Paragraph
-              size="sm"
+              data-size="sm"
               style={{
                 color: 'var(--ds-color-neutral-text-default)',
                 margin: 0,
@@ -298,7 +345,7 @@ export function ReviewCard({
             </Paragraph>
           </div>
         )}
-      </Stack>
+      </div>
     </Card>
   );
 }
