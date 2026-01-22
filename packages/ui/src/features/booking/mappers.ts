@@ -28,7 +28,7 @@ export type BookingStatusColor =
   | 'info'
   | 'neutral';
 
-export interface BookingStatusBadge {
+export interface StatusBadgeData {
   label: string;
   color: BookingStatusColor;
 }
@@ -50,8 +50,8 @@ export interface BookingCardDisplayProps {
   durationDisplay?: string;
   priceDisplay?: string;
   imageUrl?: string;
-  status: BookingStatusBadge;
-  paymentStatus?: BookingStatusBadge;
+  status: StatusBadgeData;
+  paymentStatus?: StatusBadgeData;
   isPast: boolean;
   isUpcoming: boolean;
   isCancellable: boolean;

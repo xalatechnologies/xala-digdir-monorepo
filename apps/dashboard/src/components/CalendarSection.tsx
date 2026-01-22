@@ -14,54 +14,26 @@
 
 import * as React from 'react';
 import { Paragraph } from '@xalatechnologies/platform/ui';
-import { RentalObjectAvailabilityCalendar } from '@digilist/ui';
+import {
+  RentalObjectAvailabilityCalendar,
+  formatDateToISO,
+  getWeekStart,
+  getWeekEnd,
+  getMonthStart,
+  getMonthEnd,
+  mapToCalendarCell,
+  buildCalendarLegend,
+  type CalendarMode,
+  type CalendarSlotStatus,
+  type CalendarCell,
+  type CalendarSelection,
+} from '@digilist/ui/blocks/calendar';
 import { useT } from '@xalatechnologies/platform/i18n';
 import {
   useCalendarConfig,
   useAvailabilityMatrix,
   useCalendarRealtime,
 } from '@digilist/client-sdk/hooks';
-
-// =============================================================================
-// Types
-// =============================================================================
-
-/** Calendar mode as returned by config */
-type CalendarMode = 'TIME_SLOTS' | 'ALL_DAY' | 'MULTI_DAY';
-
-/** Availability status for calendar slots */
-type CalendarSlotStatus =
-  | 'AVAILABLE'
-  | 'RESERVED'
-  | 'BOOKED'
-  | 'BLOCKED'
-  | 'BLACKOUT'
-  | 'CLOSED';
-
-/** Single cell in the availability calendar */
-interface CalendarCell {
-  id: string;
-  start: string;
-  end: string;
-  status: CalendarSlotStatus;
-  reasonKey?: string;
-  bookingId?: string;
-  blockId?: string;
-  lockedUntil?: string;
-}
-
-/** Current calendar selection state */
-interface CalendarSelection {
-  cells: CalendarCell[];
-  range?: {
-    startDate: string;
-    endDate: string;
-    startTime?: string;
-    endTime?: string;
-  };
-  isValid: boolean;
-  errorKey?: string;
-}
 
 export interface CalendarSectionProps {
   /** Rental object ID to fetch calendar data for */
@@ -79,75 +51,10 @@ export interface CalendarSectionProps {
 }
 
 // =============================================================================
-// Utility Functions
+// Utility Functions (imported from @digilist/ui/blocks/calendar)
 // =============================================================================
-
-/**
- * Format date to ISO date string (YYYY-MM-DD)
- */
-function formatDateToISO(date: Date): string {
-  return date.toISOString().split('T')[0]!;
-}
-
-/**
- * Get week start date (Monday)
- */
-function getWeekStart(date: Date): Date {
-  const d = new Date(date);
-  const day = d.getDay();
-  const diff = d.getDate() - day + (day === 0 ? -6 : 1);
-  d.setDate(diff);
-  d.setHours(0, 0, 0, 0);
-  return d;
-}
-
-/**
- * Get week end date (Sunday)
- */
-function getWeekEnd(date: Date): Date {
-  const weekStart = getWeekStart(date);
-  const weekEnd = new Date(weekStart);
-  weekEnd.setDate(weekEnd.getDate() + 6);
-  return weekEnd;
-}
-
-/**
- * Get month start date
- */
-function getMonthStart(date: Date): Date {
-  return new Date(date.getFullYear(), date.getMonth(), 1);
-}
-
-/**
- * Get month end date
- */
-function getMonthEnd(date: Date): Date {
-  return new Date(date.getFullYear(), date.getMonth() + 1, 0);
-}
-
-/**
- * Map SDK AvailabilityCellDTO to ds CalendarCell
- */
-function mapToCalendarCell(cell: {
-  start: string;
-  end: string;
-  status: string;
-  reasonKey?: string | null;
-  bookingId?: string | null;
-  blockId?: string | null;
-  lockedUntil?: string | null;
-}): CalendarCell {
-  return {
-    id: `${cell.start}-${cell.end}`,
-    start: cell.start,
-    end: cell.end,
-    status: cell.status as CalendarSlotStatus,
-    reasonKey: cell.reasonKey ?? undefined,
-    bookingId: cell.bookingId ?? undefined,
-    blockId: cell.blockId ?? undefined,
-    lockedUntil: cell.lockedUntil ?? undefined,
-  };
-}
+// formatDateToISO, getWeekStart, getWeekEnd, getMonthStart, getMonthEnd,
+// mapToCalendarCell are now imported from shared utilities
 
 // =============================================================================
 // Component
@@ -219,7 +126,7 @@ export function CalendarSection({
   // Extract cells from matrix response
   const cells: CalendarCell[] = React.useMemo(() => {
     if (!matrixResponse?.data?.cells) return [];
-    return matrixResponse.data.cells.map(mapToCalendarCell);
+    return matrixResponse.data.cells.map(mapToCalendarCell) as CalendarCell[];
   }, [matrixResponse]);
 
   // Subscribe to realtime events for availability updates

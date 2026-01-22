@@ -85,7 +85,7 @@ export {
   getModeDescription,
   formatPrice,
   formatPriceUnit,
-  cn,
+  // Note: cn is exported from compat, not here to avoid duplicate exports
 } from './utils';
 
 // =============================================================================

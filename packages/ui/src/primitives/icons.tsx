@@ -108,3 +108,47 @@ export {
   OrganizationIcon,
   ClipboardListIcon,
 } from '@xalatechnologies/platform/ui';
+
+// =============================================================================
+// Domain-Specific Icons (not available in platform)
+// =============================================================================
+
+export {
+  // Booking Mode Icons
+  LayersIcon,
+  DateRangeIcon,
+
+  // Status Icons
+  AlertCircleIcon,
+  WarningIcon,
+
+  // Visibility Icons
+  EyeIcon,
+  EyeOffIcon,
+
+  // UI Control Icons
+  ChevronDownIcon,
+  MinusIcon,
+  TagIcon,
+
+  // Amenity Icons
+  AccessibilityIcon,
+  AirConditionerIcon,
+  CoffeeIcon,
+  KitchenIcon,
+  MicrophoneIcon,
+  ParkingIcon,
+  SpeakerIcon,
+  StorageIcon,
+  ToiletIcon,
+  TVIcon,
+  WhiteboardIcon,
+
+  // Rules & Constraints Icons
+  UtensilsIcon,
+  VolumeOffIcon,
+  WrenchIcon,
+
+  // User Icons
+  UserCheckIcon,
+} from './domain-icons';

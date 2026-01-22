@@ -7,9 +7,8 @@
 
 import * as React from 'react';
 import { Heading, Paragraph, Tag } from '@xalatechnologies/platform/ui';
+import { FavoriteButton, ShareButton, type ShareData } from '@digilist/ui/blocks/rental-objects';
 import type { Listing } from '../types';
-import { FavoriteButton } from './FavoriteButton';
-import { ShareButton } from './ShareButton';
 import { useT } from '@xalatechnologies/platform/i18n';
 
 // =============================================================================
@@ -35,7 +34,10 @@ export interface RentalObjectHeaderProps {
   isFavoriteLoading?: boolean;
   isAuthenticated: boolean;
   onFavoriteToggle: () => void;
-  onShare: () => void;
+  /** Share callback - called when user shares via any platform */
+  onShare?: () => void;
+  /** URL to share (defaults to current page if not provided) */
+  shareUrl?: string;
   onAuthRequired: () => void;
   className?: string;
 }
@@ -51,10 +53,18 @@ export function RentalObjectHeader({
   isAuthenticated,
   onFavoriteToggle,
   onShare,
+  shareUrl,
   onAuthRequired,
   className,
 }: RentalObjectHeaderProps): React.ReactElement {
   const t = useT();
+
+  // Build share data for ShareButton
+  const shareData: ShareData = React.useMemo(() => ({
+    url: shareUrl || (typeof window !== 'undefined' ? window.location.href : ''),
+    title: listing.title || listing.name || '',
+    description: listing.description,
+  }), [shareUrl, listing.title, listing.name, listing.description]);
   return (
     <header
       className={className}
@@ -115,10 +125,12 @@ export function RentalObjectHeader({
             isAuthenticated={isAuthenticated}
             onToggle={onFavoriteToggle}
             onAuthRequired={onAuthRequired}
+            variant="button"
           />
           <ShareButton
+            shareData={shareData}
             onShare={onShare}
-            listingName={listing.title || listing.name}
+            variant="button"
           />
         </div>
       </div>

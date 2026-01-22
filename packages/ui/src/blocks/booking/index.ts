@@ -32,16 +32,17 @@ export {
   type PriceLineItem,
 } from './PriceSummaryCard';
 
+export {
+  BookingModeSelector,
+  createBookingModeOptions,
+  type BookingModeSelectorProps,
+  type BookingModeOption,
+  type BookingModeType,
+  type RecurringConstraints,
+} from './BookingModeSelector';
+
 // =============================================================================
 // Re-exports from @xalatechnologies/platform/ui (Backward Compatibility)
 // =============================================================================
-// These components are re-exported from platform for backward compatibility.
-// They are domain-agnostic and should be imported directly from platform.
-//
-// @deprecated Import from @xalatechnologies/platform/ui instead.
-
-export { BookingSection } from './BookingSection';
-export type { BookingSectionProps } from './BookingSection';
-
-export { AdditionalServicesList } from './AdditionalServicesList';
-export type { AdditionalServicesListProps } from './AdditionalServicesList';
+// Note: BookingSection and AdditionalServicesList should be imported
+// directly from @xalatechnologies/platform/ui when needed.

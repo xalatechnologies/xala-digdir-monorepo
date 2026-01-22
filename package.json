@@ -23,25 +23,8 @@
     "test:booking": "pnpm --filter @digilist/testing test:booking",
     "test:ci": "pnpm --filter @digilist/testing test:ci",
     "test:all": "pnpm --filter @digilist/testing test:all",
-    "scan": "node ./infra/scripts/scan-design-system-compliance.js",
-    "scan:strict": "node ./infra/scripts/scan-design-system-compliance.js --strict",
-    "scan:tokens": "node ./infra/scripts/scan-design-system-compliance.js --tokens",
-    "scan:components": "node ./infra/scripts/scan-design-system-compliance.js --components",
-    "scan:a11y": "node ./infra/scripts/scan-design-system-compliance.js --a11y",
-    "scan:fix": "node ./infra/scripts/scan-design-system-compliance.js --fix",
-    "scan:compliance": "node ./infra/scripts/legacy/scan-compliance.mjs",
-    "scan:compliance:json": "node ./infra/scripts/legacy/scan-compliance.mjs --json",
-    "scan:compliance:strict": "node ./infra/scripts/legacy/scan-compliance.mjs --strict",
     "scan:duplicates": "node ./infra/scripts/legacy/scan-duplicates.js",
     "scan:duplicates:strict": "node ./infra/scripts/legacy/scan-duplicates.js --strict",
-    "scan:all": "pnpm scan && pnpm scan:compliance && pnpm scan:duplicates && pnpm i18n:scan",
-    "i18n:check": "node ./infra/scripts/legacy/check-i18n-keys.js",
-    "i18n:check:strict": "node ./infra/scripts/legacy/check-i18n-keys.js --strict",
-    "i18n:unused": "node ./infra/scripts/legacy/check-unused-keys.js",
-    "i18n:scan": "node ./infra/scripts/legacy/scan-i18n.js",
-    "i18n:inventory": "node ./infra/scripts/scan-i18n-inventory.js",
-    "i18n:migrate": "node ./infra/scripts/legacy/migrate-i18n-keys.js",
-    "i18n:migrate:report": "node ./infra/scripts/legacy/migrate-i18n-keys.js --report",
     "tokens:create": "npx @digdir/designsystemet tokens create --config designsystemet.config.json",
     "tokens:build": "npx @digdir/designsystemet tokens build --tokens ./packages/ds-themes/generated --out-dir ./packages/ds-themes/generated",
     "deploy:web": "./scripts/deploy.sh web",
@@ -65,12 +48,6 @@
     "prepare": "node -e \"if (process.env.CI !== 'true' && process.env.DOCKER !== 'true') { require('child_process').exec('husky') }\""
   },
   "lint-staged": {
-    "packages/i18n/src/locales/*.ts": [
-      "node infra/scripts/legacy/check-i18n-keys.js"
-    ],
-    "apps/*/src/**/*.{ts,tsx}": [
-      "node infra/scripts/legacy/scan-i18n-comprehensive.js"
-    ],
     "apps/api/src/modules/**/*.controller.{ts,js}": [
       "node infra/scripts/legacy/scan-duplicates.js --strict"
     ],
@@ -85,6 +62,7 @@
     ]
   },
   "devDependencies": {
+    "@xala-technologies/governance": "file:../xala-platform/packages/governance",
     "@axe-core/playwright": "^4.11.0",
     "@changesets/changelog-github": "^0.5.2",
     "@changesets/cli": "^2.29.8",

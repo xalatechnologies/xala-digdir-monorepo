@@ -21,7 +21,7 @@ import { BookingPricingStep, type PriceGroup, type AdditionalService } from './c
 import { BookingConfirmationStep } from './components/BookingConfirmationStep';
 import type { BookingVisibility } from './components/BookingVisibilitySelector';
 import { BookingAvailabilityConflictDialog, type SlotAvailability } from './components/BookingAvailabilityConflictDialog';
-import { BookingModeSelector } from './components/BookingModeSelector';
+import { BookingModeSelector, type BookingModeType } from '@digilist/ui/features/booking';
 import { RecurringBuilder, type RecurringPattern } from './components/RecurringBuilder';
 import { RecurringPreview } from './components/RecurringPreview';
 import { ConflictResolver, type ConflictResolution, type AlternativeSlot } from './components/ConflictResolver';
@@ -1041,10 +1041,12 @@ export function BookingWidgetPlacement({
             <>
               {/* Booking Mode Selector (Single / Recurring / Seasonal) */}
               <BookingModeSelector
-                value={bookingMode as unknown as 'single' | 'recurring' | 'in-game'}
-                onChange={setBookingMode as unknown as (mode: 'single' | 'recurring' | 'in-game') => void}
-                availableModes={availableBookingModes as unknown as ('single' | 'recurring' | 'in-game')[]}
+                value={bookingMode as BookingModeType}
+                onChange={(mode) => setBookingMode(mode as BookingMode)}
+                availableModes={availableBookingModes as BookingModeType[]}
                 recurringConstraints={recurringConstraints}
+                variant="buttons"
+                hideWhenSingleMode={false}
               />
 
               {/* SINGLE_SLOT Mode: Use CalendarSection component */}

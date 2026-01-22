@@ -8,6 +8,7 @@
 export * from './rental-objects';
 export * from './booking';
 export * from './seasons';
+export * from './calendar';
 
 // =============================================================================
 // Detail Page Components (Re-exports from Platform)

@@ -48,11 +48,6 @@
       "outputs": ["dist/**"],
       "inputs": ["src/**/*.{ts,tsx}", "package.json", "tsconfig.json", "tsup.config.ts"]
     },
-    "@digilist/platform-compat#build": {
-      "dependsOn": ["@digilist/client-sdk#build", "@digilist/runtime#build"],
-      "outputs": ["dist/**"],
-      "inputs": ["src/**/*.{ts,tsx}", "package.json", "tsconfig.json", "tsup.config.ts"]
-    },
     "@digilist/ui#test": {
       "dependsOn": ["@digilist/ui#build"],
       "outputs": []
@@ -62,23 +57,23 @@
       "outputs": []
     },
     "@digilist/web#build": {
-      "dependsOn": ["@digilist/platform-compat#build", "@digilist/runtime#build", "@digilist/client-sdk#build", "@digilist/ui#build"],
+      "dependsOn": ["@digilist/runtime#build", "@digilist/client-sdk#build", "@digilist/ui#build"],
       "outputs": ["dist/**"]
     },
     "@digilist/dashboard#build": {
-      "dependsOn": ["@digilist/platform-compat#build", "@digilist/runtime#build", "@digilist/client-sdk#build", "@digilist/ui#build"],
+      "dependsOn": ["@digilist/runtime#build", "@digilist/client-sdk#build", "@digilist/ui#build"],
       "outputs": ["dist/**"]
     },
     "@digilist/backoffice#build": {
-      "dependsOn": ["@digilist/platform-compat#build", "@digilist/runtime#build", "@digilist/client-sdk#build", "@digilist/ui#build"],
+      "dependsOn": ["@digilist/runtime#build", "@digilist/client-sdk#build", "@digilist/ui#build"],
       "outputs": ["dist/**"]
     },
     "@digilist/monitoring#build": {
-      "dependsOn": ["@digilist/platform-compat#build", "@digilist/runtime#build", "@digilist/client-sdk#build", "@digilist/ui#build"],
+      "dependsOn": ["@digilist/runtime#build", "@digilist/client-sdk#build", "@digilist/ui#build"],
       "outputs": ["dist/**"]
     },
     "@digilist/docs-learning#build": {
-      "dependsOn": ["@digilist/platform-compat#build", "@digilist/runtime#build", "@digilist/client-sdk#build", "@digilist/ui#build"],
+      "dependsOn": ["@digilist/runtime#build", "@digilist/client-sdk#build", "@digilist/ui#build"],
       "outputs": ["dist/**"]
     }
   }

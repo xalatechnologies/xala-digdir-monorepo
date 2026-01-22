@@ -18,5 +18,10 @@ export { RecurringBuilder, type RecurringBuilderProps, type RecurringPattern } f
 export { RecurringPreview, type RecurringPreviewProps } from './components/RecurringPreview';
 export { ConflictResolver, type ConflictResolverProps, type AlternativeSlot, type ConflictResolution } from './components/ConflictResolver';
 
-// Booking Mode Selector
-export { BookingModeSelector, type BookingModeSelectorProps } from './components/BookingModeSelector';
+// Booking Mode Selector (re-exported from @digilist/ui)
+export {
+  BookingModeSelector,
+  type BookingModeSelectorProps,
+  type BookingModeOption,
+  type BookingModeType,
+} from '@digilist/ui/features/booking';

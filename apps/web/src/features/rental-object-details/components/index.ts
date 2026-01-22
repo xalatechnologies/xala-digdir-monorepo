@@ -7,9 +7,19 @@ export { RentalObjectDetailsLayout, type RentalObjectDetailsLayoutProps } from '
 
 // Header components
 export { RentalObjectHeader, type RentalObjectHeaderProps } from './RentalObjectHeader';
-export { KeyFactsRow, type KeyFactsRowProps } from './KeyFactsRow';
-export { FavoriteButton, type FavoriteButtonProps } from './FavoriteButton';
-export { ShareButton, type ShareButtonProps } from './ShareButton';
+
+// Re-export from @digilist/ui (domain components)
+export {
+  KeyFactsRow,
+  type KeyFactsRowProps,
+  type KeyFact,
+  FavoriteButton,
+  type FavoriteButtonProps,
+  ShareButton,
+  type ShareButtonProps,
+  type ShareData,
+  type SharePlatform,
+} from '@digilist/ui/blocks/rental-objects';
 
 // Tab content components
 export { OverviewTab, type OverviewTabProps } from './OverviewTab';
@@ -17,13 +27,14 @@ export { ActivityTab, type ActivityTabProps } from './ActivityTab';
 export { RulesTab, type RulesTabProps } from './RulesTab';
 export { FaqTab, type FaqTabProps } from './FaqTab';
 
-// Booking mode selector
+// Booking mode selector (re-exported from @digilist/ui)
 export {
   BookingModeSelector,
   createBookingModeOptions,
   type BookingModeSelectorProps,
   type BookingModeOption,
-} from './BookingModeSelector';
+  type BookingModeType,
+} from '@digilist/ui/features/booking';
 
 // Sidebar widgets
 export {

@@ -71,7 +71,7 @@ export {
 
   // Status types
   type BookingStatusColor,
-  type BookingStatusBadge,
+  type StatusBadgeData,
 } from './mappers';
 
 // =============================================================================
@@ -96,6 +96,14 @@ export {
   PriceSummaryCard,
   type PriceSummaryCardProps,
   type PriceLineItem,
+
+  // Mode selector (unified component)
+  BookingModeSelector,
+  createBookingModeOptions,
+  type BookingModeSelectorProps,
+  type BookingModeOption,
+  type BookingModeType,
+  type RecurringConstraints,
 } from '../../blocks/booking';
 
 // =============================================================================

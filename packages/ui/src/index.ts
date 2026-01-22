@@ -47,10 +47,17 @@
 // =============================================================================
 // Platform UI Compatibility Layer (extends @xalatechnologies/platform/ui)
 // =============================================================================
-// Re-exports Designsystemet + custom platform components
-// Use @digilist/ui/compat for platform UI components
+// IMPORTANT: For platform UI components, import from '@digilist/ui/compat'
+// The compat module is NOT re-exported here to avoid conflicts with domain components.
+//
+// Example:
+//   import { AppHeader, Stack, Grid } from '@digilist/ui/compat';
+//   import { BookingStatusBadge } from '@digilist/ui/compat';
+//
+// Domain components are exported below via features.
 
-export * from './compat';
+// NOTE: Compat module is available at '@digilist/ui/compat' but not re-exported here
+// to prevent duplicate exports with domain components (StatusTag, ShareButton, etc.)
 
 // =============================================================================
 // Feature Kits (RECOMMENDED - Thin Wrappers + Mappers)
