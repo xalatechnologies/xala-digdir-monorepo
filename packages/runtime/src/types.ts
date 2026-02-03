@@ -23,7 +23,7 @@ export type SupportedLocale = 'nb' | 'en';
 
 export type ColorScheme = 'light' | 'dark' | 'auto';
 
-export type ThemeId = 'digilist' | 'altinn';
+export type ThemeId = 'digilist' | 'digdir' | 'altinn' | 'uutilsynet' | 'portal';
 
 // ============================================================================
 // Runtime Configuration

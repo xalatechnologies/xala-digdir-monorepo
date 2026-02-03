@@ -6,7 +6,7 @@
 /**
  * Application types that use this auth package
  */
-export type AppType = 'minside' | 'backoffice' | 'saas-admin' | 'tenant-admin' | 'web';
+export type AppType = 'minside' | 'backoffice' | 'saas-admin' | 'tenant-admin' | 'web' | 'monitoring' | 'docs-learning';
 
 /**
  * All possible user roles across the platform

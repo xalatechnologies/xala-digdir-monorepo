@@ -30,7 +30,9 @@ import React, { createContext, useContext, useMemo, useState, type ReactNode } f
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { I18nProvider } from '@xala/i18n';
 import { AuthProvider } from '@xala/auth';
-import { ErrorBoundary, ThemeProvider, DialogProvider } from '@xala/ds';
+// Import base styles (must be first to ensure CSS loads)
+import '@xala/ds/styles';
+import { ErrorBoundary, DesignsystemetProvider, DialogProvider } from '@xala/ds';
 import type { RuntimeConfig, FeatureFlagsContext, TenantContext, NotificationCenterContext } from './types';
 
 // ============================================================================
@@ -184,12 +186,16 @@ export function RuntimeProvider({ config, children, queryClient }: RuntimeProvid
   return (
     <RuntimeConfigContext.Provider value={config}>
       <QueryClientProvider client={qc}>
-        <ThemeProvider>
+        <DesignsystemetProvider
+          theme={config.theme ?? 'digilist'}
+          colorScheme={config.colorScheme ?? 'auto'}
+        >
           <I18nProvider initialLocale={config.locale ?? 'nb'}>
             <DialogProvider>
               <ErrorBoundary>
                 <AuthProvider
                   config={{
+                    appType: config.appType,
                     loginPath: config.authConfig?.loginPath ?? '/login',
                     debug: config.authConfig?.debug ?? false,
                   }}
@@ -205,7 +211,7 @@ export function RuntimeProvider({ config, children, queryClient }: RuntimeProvid
               </ErrorBoundary>
             </DialogProvider>
           </I18nProvider>
-        </ThemeProvider>
+        </DesignsystemetProvider>
       </QueryClientProvider>
     </RuntimeConfigContext.Provider>
   );

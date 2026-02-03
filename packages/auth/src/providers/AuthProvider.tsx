@@ -30,7 +30,9 @@
  */
 
 import { useState, useEffect, useCallback, useMemo, useSyncExternalStore, createContext, useRef } from 'react';
-import { useNavigate } from 'react-router-dom';
+// Note: We don't use useNavigate() here because AuthProvider may be rendered
+// outside of Router context (e.g., when wrapped by RuntimeProvider).
+// Use window.location.href for login redirects instead.
 import { authService } from '@digilist/client-sdk/services';
 import {
   FLOW_CONTEXT_KEY,
@@ -146,7 +148,6 @@ export function AuthProvider({ children, config }: AuthProviderProps) {
   const [accessDeniedError, setAccessDeniedError] = useState<string | null>(null);
   const [tokenExpiresAt, setTokenExpiresAt] = useState<Date | null>(null);
   const refreshTimerRef = useRef<NodeJS.Timeout | null>(null);
-  const navigate = useNavigate();
 
   const hasStoredContext = useSyncExternalStore(
     subscribe,
@@ -245,7 +246,7 @@ export function AuthProvider({ children, config }: AuthProviderProps) {
         setUser(null);
         setTokenExpiresAt(null);
         clearRefreshTimer();
-        navigate(config.loginPath || '/login', { replace: true });
+        window.location.href = config.loginPath || '/login';
       };
 
       if (typeof window !== 'undefined') {
@@ -426,7 +427,7 @@ export function AuthProvider({ children, config }: AuthProviderProps) {
     return () => {
       clearRefreshTimer();
     };
-  }, [config.appType, hasRequiredRole, accessDeniedMessage, debug, clearRefreshTimer, navigate, scheduleTokenRefresh]);
+  }, [config.appType, config.loginPath, hasRequiredRole, accessDeniedMessage, debug, clearRefreshTimer, scheduleTokenRefresh]);
 
   /**
    * Re-check session on visibility change
@@ -509,8 +510,8 @@ export function AuthProvider({ children, config }: AuthProviderProps) {
     }
 
     debug('Redirecting to login...');
-    navigate('/login', { replace: true });
-  }, [config.appType, navigate, debug]);
+    window.location.href = '/login';
+  }, [config.appType, debug]);
 
   /**
    * Handle auth callback - set user state directly (for demo login without page reload)
