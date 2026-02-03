@@ -1,0 +1,13 @@
+# Nixpacks configuration for Coolify deployment
+# This ensures pnpm is used instead of npm for the monorepo
+
+[phases.setup]
+nixPkgs = ["nodejs_22", "pnpm"]
+
+[phases.install]
+cmds = ["pnpm install --frozen-lockfile"]
+
+# Build commands are configured per-app in Coolify:
+# - backoffice: pnpm -F @xala/backoffice build
+# - minside: pnpm -F @xala/minside build
+# - web: pnpm -F @xala/web build
