@@ -4,11 +4,38 @@
  * Low-level building blocks for the design system
  */
 
+// Responsive types (must be first for Grid/Stack)
+export * from './responsive-types';
+
 export { Container } from './container';
-export type { ContainerProps } from './container';
+export type { ContainerProps, ContainerSize } from './container';
 
 export { Grid } from './grid';
-export type { GridProps } from './grid';
+export type { GridProps, GridGapSize, GridColCount, ResponsiveCols, GridPaddingSize, ResponsivePadding } from './grid';
+
+// New primitives from platform-ui
+export { Box } from './box';
+export { Center } from './center';
+export type { CenterProps } from './center';
+
+export { Divider } from './Divider';
+export type { DividerProps } from './Divider';
+
+export {
+  SimpleSidebar,
+  SidebarHeaderArea,
+  SidebarPanel,
+  SidebarScrollArea,
+} from './sidebar';
+export type {
+  SimpleSidebarProps,
+  SidebarHeaderAreaProps,
+  SidebarPanelProps,
+  SidebarScrollAreaProps,
+} from './sidebar';
+
+export { HorizontalLayout } from './horizontal-layout';
+export type { HorizontalLayoutProps } from './horizontal-layout';
 
 export { Stack } from './stack';
 export type { StackProps } from './stack';

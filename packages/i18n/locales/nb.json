@@ -73,7 +73,7 @@
     "completePlatform": "Komplett plattform",
     "completePlatformDesc": "Booking, betaling, kalender og rapportering i én løsning",
     "contactSupport": "Kontakt support",
-    "copyright": "© 2026 Digilist. Alle rettigheter reservert.",
+    "copyright": "© 2026 DIGILIST. Alle rettigheter reservert.",
     "demoAccount": {
       "adminDesc": "Full tilgang til alle funksjoner i backoffice",
       "adminEmail": "admin@demo.digilist.no",
@@ -1351,7 +1351,7 @@
           }
         }
       },
-      "digilist_booking": "Digilist Booking",
+      "digilist_booking": "DIGILIST Booking",
       "digital_laassystem": "Digital Laassystem",
       "din_booking_er_bekreftet": "Din Booking Er Bekreftet",
       "din_booking_for_moterom": "Din Booking For Moterom",
@@ -2101,7 +2101,7 @@
     "denne": {
       "guiden": {
         "viser": {
-          "deg": "Denne guiden viser deg hvordan du oppretter en booking i Digilist. \n                Prosessen er enkel og tar bare noen minutter."
+          "deg": "Denne guiden viser deg hvordan du oppretter en booking i DIGILIST. \n                Prosessen er enkel og tar bare noen minutter."
         }
       },
       "organisasjonen": {
@@ -5068,7 +5068,7 @@
       "quickLinks": "Hurtiglenker",
       "searchDocs": "Søk i dokumentasjon",
       "searchDocsDesc": "Finn svar raskt",
-      "subtitle": "Finn svar, lær om funksjoner, og kom i gang med Digilist.",
+      "subtitle": "Finn svar, lær om funksjoner, og kom i gang med DIGILIST.",
       "title": "Velkommen til dokumentasjonen"
     },
     "nav": {
@@ -5081,7 +5081,7 @@
       "faq": "Ofte stilte spørsmål",
       "faqDesc": "Vanlige spørsmål og svar",
       "home": "Oversikt",
-      "homeDesc": "Kom i gang med Digilist",
+      "homeDesc": "Kom i gang med DIGILIST",
       "integrations": "Integrasjoner",
       "integrationsDesc": "Koble til andre systemer",
       "payments": "Betalinger",
@@ -5101,7 +5101,7 @@
     "noArticles": "Ingen artikler funnet i denne seksjonen.",
     "releases": {
       "latest": "Nyeste",
-      "subtitle": "Se hva som er nytt i Digilist",
+      "subtitle": "Se hva som er nytt i DIGILIST",
       "title": "Endringslogg",
       "v240": {
         "change1": "📊 Ny rapportmodul",
@@ -6698,7 +6698,7 @@
       "organisasjon": "Åpne organisasjon"
     },
     "app": {
-      "name": "Digilist",
+      "name": "DIGILIST",
       "section": {
         "backoffice": "Backoffice",
         "minside": "Min Side",
@@ -7355,7 +7355,7 @@
       "": "Depositum (%)"
     },
     "digilist": {
-      "booking": "Digilist Booking"
+      "booking": "DIGILIST Booking"
     },
     "digital": {
       "låssystem": "Digital låssystem"
@@ -9299,7 +9299,7 @@
       "events": "Systemhendelser",
       "ip": "IP",
       "log": "Systemlogg",
-      "name": "Digilist",
+      "name": "DIGILIST",
       "system": "System",
       "workQueue": "Arbeidskø"
     },
@@ -10727,7 +10727,7 @@
       "title": "Plattformoversikt",
       "totalRevenue": "Total omsetning",
       "totalTenants": "Totalt leietakere",
-      "welcome": "Velkommen til Digilist SaaS-administrasjonspanelet."
+      "welcome": "Velkommen til DIGILIST SaaS-administrasjonspanelet."
     },
     "dashboardDesc": "Plattformoversikt",
     "disableCategory": "Deaktiver kategori",
@@ -11829,7 +11829,7 @@
       "desc": "Grunnleggende konfigurasjon for systemet",
       "systemName": "Systemnavn",
       "systemNameDesc": "Navn på systemet som vises til brukere",
-      "systemNamePlaceholder": "Digilist Booking",
+      "systemNamePlaceholder": "DIGILIST Booking",
       "timeFormat": {
         "_value": "Tidsformat",
         "12h": "12-timers (1:00 PM)",

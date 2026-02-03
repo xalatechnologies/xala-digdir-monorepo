@@ -13,6 +13,12 @@
 import '@digdir/designsystemet-css/dist/src/index.css';
 import '@digdir/designsystemet-css/dist/theme/designsystemet.css';
 
+// Common extensions from platform-ui (grid, stack, animations, buttons, etc.)
+import '@xala/ds-themes/themes/common-extensions.css';
+
+// Theme extensions
+import '@xala/ds-themes/themes/digilist-extensions.css';
+
 /**
  * Theme Loading Strategy:
  * 
@@ -21,3 +27,4 @@ import '@digdir/designsystemet-css/dist/theme/designsystemet.css';
  * changes without page reloads or CSS conflicts.
  */
 export {}; // keep this as a module
+
