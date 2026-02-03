@@ -26,7 +26,8 @@
     "report:golden-journey": "playwright show-report test-results/html"
   },
   "dependencies": {
-    "@digilist/api": "workspace:*"
+    "@digilist/api": "workspace:*",
+    "@digilist/database-schema": "workspace:*"
   },
   "devDependencies": {
     "@playwright/test": "^1.40.0",
@@ -37,9 +38,5 @@
     "postgres": "^3.4.5",
     "tsx": "^4.19.2",
     "typescript": "^5.7.2"
-  },
-  "dependencies": {
-    "@digilist/api": "workspace:*",
-    "@digilist/database-schema": "workspace:*"
   }
 }
