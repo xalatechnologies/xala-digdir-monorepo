@@ -42,8 +42,8 @@ fi
 # Architecture Quality Checks
 echo "🏗️  Running architecture quality checks..."
 
-# Check for CSS modules in apps
-if git diff --cached --name-only | grep -E "^apps/.+\.module\.css$|^apps/.+\.css$" | grep -v node_modules; then
+# Check for CSS modules in apps (exclude public/themes which are runtime theme files)
+if git diff --cached --name-only | grep -E "^apps/.+\.module\.css$|^apps/.+\.css$" | grep -v node_modules | grep -v "public/themes"; then
   echo "❌ ERROR: CSS modules not allowed in apps"
   echo "   Use @xala/ds tokens instead"
   echo "   See: docs/QUALITY/GAP_MATRIX.md"

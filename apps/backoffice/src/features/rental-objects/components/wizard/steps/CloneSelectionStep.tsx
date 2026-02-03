@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useT } from '@xala/i18n';
-import { Heading, Paragraph, Button, Card, Grid, PlusIcon, CopyIcon } from '@xala/ds';
+import { Heading, Paragraph, Button, Card, Grid, Stack, Center, PlusIcon, CopyIcon } from '@xala/ds';
 import { RentalObjectsTable } from '@/features/rental-objects/components/list/RentalObjectsTable';
 import type { RentalObject } from '@digilist/client-sdk/types';
 import { useRentalObjects } from '@digilist/client-sdk';
@@ -20,18 +20,18 @@ export function CloneSelectionStep({ onSelect }: CloneSelectionStepProps) {
 
   if (showCloneSelector) {
     return (
-      <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--ds-spacing-6)' }}>
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--ds-spacing-2)' }}>
+      <Stack direction="vertical" gap="lg">
+        <Stack direction="horizontal" justify="between" align="center">
+          <Stack direction="vertical" gap="xs">
             <Heading level={2} data-size="md">{t('rentalObjects.clone.title')}</Heading>
             <Paragraph style={{ color: 'var(--ds-color-neutral-text-subtle)' }}>
               {t('rentalObjects.clone.description')}
             </Paragraph>
-          </div>
+          </Stack>
           <Button variant="tertiary" onClick={() => setShowCloneSelector(false)} type="button">
             {t('action.cancel')}
           </Button>
-        </div>
+        </Stack>
 
         <RentalObjectsTable
           items={rentalObjects || []}
@@ -44,23 +44,23 @@ export function CloneSelectionStep({ onSelect }: CloneSelectionStepProps) {
               }
             }
           }}
-          // Simplified table props for selection mode could be added here if Table separate props were supported
-          // For now we rely on row click or selection handling
         />
-      </div>
+      </Stack>
     );
   }
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--ds-spacing-8)' }}>
-      <div style={{ textAlign: 'center', maxWidth: '600px', margin: '0 auto' }}>
-        <Heading level={2} data-size="lg">{t('rentalObjects.wizard.welcome')}</Heading>
-        <Paragraph data-size="lg" style={{ color: 'var(--ds-color-neutral-text-subtle)' }}>
-          {t('rentalObjects.wizard.welcomeDescription')}
-        </Paragraph>
-      </div>
+    <Stack direction="vertical" gap="xl">
+      <Center style={{ textAlign: 'center', maxWidth: '600px', margin: '0 auto' }}>
+        <Stack direction="vertical" gap="sm" align="center">
+          <Heading level={2} data-size="lg">{t('rentalObjects.wizard.welcome')}</Heading>
+          <Paragraph data-size="lg" style={{ color: 'var(--ds-color-neutral-text-subtle)' }}>
+            {t('rentalObjects.wizard.welcomeDescription')}
+          </Paragraph>
+        </Stack>
+      </Center>
 
-      <Grid columns="repeat(auto-fit, minmax(300px, 1fr))" gap="var(--ds-spacing-6)">
+      <Grid cols={{ base: 1, md: 2 }} gap="lg" autoFit minColWidth="300px">
         {/* Create New */}
         <Card
           style={{
@@ -72,30 +72,27 @@ export function CloneSelectionStep({ onSelect }: CloneSelectionStepProps) {
           onMouseEnter={(e) => e.currentTarget.style.borderColor = 'var(--ds-color-accent-border-default)'}
           onMouseLeave={(e) => e.currentTarget.style.borderColor = 'var(--ds-color-neutral-border-default)'}
         >
-          <div style={{ height: '100%', display: 'flex', flexDirection: 'column', gap: 'var(--ds-spacing-4)', alignItems: 'flex-start' }}>
-            <div
+          <Stack direction="vertical" gap="md" align="start" style={{ height: '100%' }}>
+            <Center
               style={{
                 width: '48px',
                 height: '48px',
                 borderRadius: 'var(--ds-border-radius-full)',
                 backgroundColor: 'var(--ds-color-accent-surface-subtle)',
                 color: 'var(--ds-color-accent-text-default)',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
               }}
             >
               <PlusIcon size={24} />
-            </div>
-            <div>
-              <Heading level={3} data-size="sm" style={{ marginBottom: 'var(--ds-spacing-1)' }}>
+            </Center>
+            <Stack direction="vertical" gap="xs">
+              <Heading level={3} data-size="sm">
                 {t('rentalObjects.wizard.startScratch')}
               </Heading>
               <Paragraph style={{ color: 'var(--ds-color-neutral-text-subtle)', margin: 0 }}>
                 {t('rentalObjects.wizard.startScratchDescription')}
               </Paragraph>
-            </div>
-          </div>
+            </Stack>
+          </Stack>
         </Card>
 
         {/* Clone */}
@@ -109,32 +106,29 @@ export function CloneSelectionStep({ onSelect }: CloneSelectionStepProps) {
           onMouseEnter={(e) => e.currentTarget.style.borderColor = 'var(--ds-color-accent-border-default)'}
           onMouseLeave={(e) => e.currentTarget.style.borderColor = 'var(--ds-color-neutral-border-default)'}
         >
-          <div style={{ height: '100%', display: 'flex', flexDirection: 'column', gap: 'var(--ds-spacing-4)', alignItems: 'flex-start' }}>
-            <div
+          <Stack direction="vertical" gap="md" align="start" style={{ height: '100%' }}>
+            <Center
               style={{
                 width: '48px',
                 height: '48px',
                 borderRadius: 'var(--ds-border-radius-full)',
                 backgroundColor: 'var(--ds-color-success-surface-subtle)',
                 color: 'var(--ds-color-success-text-default)',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
               }}
             >
               <CopyIcon size={24} />
-            </div>
-            <div>
-              <Heading level={3} data-size="sm" style={{ marginBottom: 'var(--ds-spacing-1)' }}>
+            </Center>
+            <Stack direction="vertical" gap="xs">
+              <Heading level={3} data-size="sm">
                 {t('rentalObjects.wizard.clone')}
               </Heading>
               <Paragraph style={{ color: 'var(--ds-color-neutral-text-subtle)', margin: 0 }}>
                 {t('rentalObjects.wizard.cloneDescription')}
               </Paragraph>
-            </div>
-          </div>
+            </Stack>
+          </Stack>
         </Card>
       </Grid>
-    </div>
+    </Stack>
   );
 }

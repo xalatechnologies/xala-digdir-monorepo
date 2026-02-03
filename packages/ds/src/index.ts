@@ -236,6 +236,16 @@ export {
   Card,
   Text,
   Badge,
+  // New primitives from platform-ui
+  Box,
+  Center,
+  Divider,
+  SimpleSidebar,
+  SidebarHeaderArea,
+  SidebarPanel,
+  SidebarScrollArea,
+  HorizontalLayout,
+  // Icons
   SunIcon,
   MoonIcon,
   SearchIcon,
@@ -332,7 +342,13 @@ export {
 } from './primitives';
 export type {
   ContainerProps,
+  ContainerSize,
   GridProps,
+  GridGapSize,
+  GridColCount,
+  ResponsiveCols,
+  GridPaddingSize,
+  ResponsivePadding,
   StackProps,
   IconProps,
   CardProps,
@@ -342,6 +358,18 @@ export type {
   FormFieldProps,
   ProgressProps,
   CodeBlockProps,
+  CenterProps,
+  DividerProps,
+  SimpleSidebarProps,
+  SidebarHeaderAreaProps,
+  SidebarPanelProps,
+  SidebarScrollAreaProps,
+  HorizontalLayoutProps,
+  // Responsive types
+  Breakpoint,
+  Responsive,
+  SpacingSize,
+  ResponsiveSpacing,
 } from './primitives';
 
 // Blocks - Business logic components
