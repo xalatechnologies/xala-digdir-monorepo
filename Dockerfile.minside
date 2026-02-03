@@ -8,6 +8,9 @@ WORKDIR /app
 
 # Copy package files for dependency installation
 COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
+COPY patches ./patches/
+
+# Copy all workspace package.json files
 COPY apps/minside/package.json ./apps/minside/
 COPY packages/ds/package.json ./packages/ds/
 COPY packages/ds-themes/package.json ./packages/ds-themes/
@@ -15,7 +18,7 @@ COPY packages/runtime/package.json ./packages/runtime/
 COPY packages/i18n/package.json ./packages/i18n/
 COPY packages/eslint-config/package.json ./packages/eslint-config/
 
-# Install dependencies
+# Install dependencies (with patches applied)
 RUN pnpm install --frozen-lockfile
 
 # Copy source files
